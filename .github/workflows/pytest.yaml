@@ -37,4 +37,9 @@ jobs:
             pip install -e .
             pip install pytest pytest-cov
       - name: Run pytest
-        run: pytest -v --cov nanoswea
+        run: pytest -v --cov --cov-branch --cov-report=xml
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: SWE-agent/nano-swe-agent
