@@ -24,10 +24,10 @@ class LocalEnvironment:
 class DockerEnvironment:
     def __init__(self, image: str):
         """This class executes bash commands in a Docker container using direct docker commands."""
-        self.container_id = self._start_container(image)
+        self.container_id = None
+        self._start_container(image)
 
-    @staticmethod
-    def _start_container(image: str) -> str:
+    def _start_container(self, image: str):
         """Start the Docker container and return the container ID."""
         container_name = f"nanoswea-{uuid.uuid4().hex[:8]}"
         cmd = [
@@ -51,7 +51,7 @@ class DockerEnvironment:
             check=True,
         )
         print(f"Started container {container_name} with ID {result.stdout.strip()}")
-        return result.stdout.strip()
+        self.container_id = result.stdout.strip()
 
     def execute(self, command: str, cwd: str = "/testbed") -> str:
         """Execute a command in the Docker container and return the raw output."""
