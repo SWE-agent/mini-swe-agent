@@ -37,6 +37,7 @@ dependencies = [
     "pydantic>=2",
     "tenacity",
     "datasets",
+    "rich",
 ]
 
 [project.optional-dependencies]

@@ -19,4 +19,4 @@ agent:
 model:
   model_name: "claude-sonnet-4-20250514"
 
-image: "swe-agent-tiny"
+image: "python:3.11"
