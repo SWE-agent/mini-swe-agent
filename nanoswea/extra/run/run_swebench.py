@@ -8,7 +8,7 @@ import yaml
 from datasets import load_dataset
 
 from nanoswea.agent import Agent, AgentConfig
-from nanoswea.env import DockerEnvironment
+from nanoswea.environment import DockerEnvironment
 from nanoswea.model import LitellmModel, ModelConfig
 
 DATASET_MAPPING = {
