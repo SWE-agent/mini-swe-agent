@@ -57,22 +57,21 @@ class Agent:
         console.print(f"[bold red]Assistant (step {self.model.n_calls}, ${self.model.cost:.2f}):[/bold red]\n{message}")
         self.history.append({"role": "assistant", "content": message})
 
-        is_finished, observation = self.execute_action(self.parse_action(message))
+        error, action = self.parse_action(message)
+        is_finished, observation = self.get_observation(error, action)
         self.history.append({"role": "user", "content": observation})
         console.print(f"[bold green]Observation (step {self.model.n_calls}):[/bold green]\n{observation}")
 
         return is_finished, message, observation
 
-    @staticmethod
-    def parse_action(message: str) -> str:
-        """Parse the action from the message
-        (assumes action is the first triple backticks block)
-        """
-        if match := re.search(r"```[a-zA-Z]*\n(.*?)(?=\n```|```)", message, re.DOTALL):
-            return match.group(1).strip()
-        return ""
+    def parse_action(self, message: str) -> tuple[str, str]:
+        """Parse the action from the message. Returns an optional error message and the action."""
+        actions = re.findall(r"```[a-zA-Z]*\n(.*?)(?=\n```|```)", message, re.DOTALL)
+        if len(actions) == 1:
+            return "", actions[0].strip()
+        return "Please always provide EXACTLY ONE action in triple backticks.", ""
 
-    def execute_action(self, action: str) -> tuple[bool, str]:
+    def get_observation(self, error: str, action: str) -> tuple[bool, str]:
         """Execute the action and return the observation.
         If the first line of the stdout of the action is "NANO_SWE_AGENT_FINAL_OUTPUT", assume the agent has finished its task.
 
@@ -80,8 +79,8 @@ class Agent:
             is_finished: whether the agent has finished its task
             observation: The observation or error message
         """
-        if not action:
-            return False, "Please always provide exactly one action in triple backticks."
+        if error:
+            return False, error
         if rejection_message := self.reject_action(action):
             return False, rejection_message
         try:
@@ -95,6 +94,7 @@ class Agent:
         return False, "\n".join([f"<{key}>\n{value}\n</{key}>" for key, value in output.items()])
 
     def reject_action(self, action: str) -> str:
+        """Ask the user to confirm the action. Returns a rejection message if the user rejects the action."""
         if self.config.confirm_actions:
             if response := Prompt.ask(
                 "[bold yellow]Execute?[/bold yellow] ([green][bold]Enter[/bold] to confirm[/green], or enter rejection message)"
@@ -103,7 +103,7 @@ class Agent:
         return ""
 
     def get_final_output(self, output: dict[str, str]) -> str:
-        """Check whether the agent has finished its task. Returning a non-empty string will terminate the agent."""
+        """Check whether the agent has finished its task. Returning a non-empty string as final output will terminate the agent."""
         if output.get("stdout") and output["stdout"].splitlines()[0] == "NANO_SWE_AGENT_FINAL_OUTPUT":
             return "\n".join(output["stdout"].splitlines()[1:]) or "EMPTY_OUTPUT"
         return ""
