@@ -6,10 +6,10 @@ from nanoswea.extra.model.test_models import DeterministicModel, DeterministicMo
 from nanoswea.extra.run.run_swebench import main
 
 
-def test_swebench_end_to_end(test_data, tmp_path):
+def test_swebench_end_to_end(github_test_data, tmp_path):
     """Test the complete SWEBench flow using the _test subset with deterministic model"""
 
-    model_responses = test_data["model_responses"]
+    model_responses = github_test_data["model_responses"]
     output_file = tmp_path / "results.json"
 
     with patch("nanoswea.extra.run.run_swebench.LitellmModel") as mock_model_class:

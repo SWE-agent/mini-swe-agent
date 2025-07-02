@@ -4,10 +4,9 @@ import json
 import pytest
 
 
-@pytest.fixture
-def test_data():
-    """Load test fixtures from the trajectory JSON file"""
-    json_path = Path(__file__).parent / "test_data" / "github_issue.traj.json"
+def get_test_data(trajectory_name: str) -> dict[str, list[str]]:
+    """Load test fixtures from a trajectory JSON file"""
+    json_path = Path(__file__).parent / "test_data" / f"{trajectory_name}.traj.json"
     with json_path.open() as f:
         trajectory = json.load(f)
 
@@ -26,3 +25,15 @@ def test_data():
             expected_observations.append(message["content"])
 
     return {"model_responses": model_responses, "expected_observations": expected_observations}
+
+
+@pytest.fixture
+def github_test_data():
+    """Load GitHub issue test fixtures"""
+    return get_test_data("github_issue")
+
+
+@pytest.fixture
+def local_test_data():
+    """Load local test fixtures"""
+    return get_test_data("local")

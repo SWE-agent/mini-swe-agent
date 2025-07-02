@@ -42,11 +42,11 @@ def assert_observations_match(expected_observations: list[str], history: list[di
         )
 
 
-def test_github_issue_end_to_end(test_data):
+def test_github_issue_end_to_end(github_test_data):
     """Test the complete flow from CLI to final result using real environment but deterministic model"""
 
-    model_responses = test_data["model_responses"]
-    expected_observations = test_data["expected_observations"]
+    model_responses = github_test_data["model_responses"]
+    expected_observations = github_test_data["expected_observations"]
 
     with patch("nanoswea.run_github_issue.LitellmModel") as mock_model_class:
         mock_model_class.return_value = DeterministicModel(DeterministicModelConfig(outputs=model_responses))
