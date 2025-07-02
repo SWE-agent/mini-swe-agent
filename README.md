@@ -5,30 +5,24 @@
 
 </div>
 
-nano-SWE-agent is an AI agent implemented in [100 lines of python](https://github.com/SWE-agent/nano-swe-agent/blob/main/nanoswea/agent.py)!
+`nano-SWE-agent` is an AI agent implemented in [100 lines of python](https://github.com/SWE-agent/nano-swe-agent/blob/main/nanoswea/agent.py)!
 Okay, maybe add another 100 lines for a [minimal sandboxed environment](https://github.com/SWE-agent/nano-swe-agent/blob/main/nanoswea/environment.py) 
 and [model config](https://github.com/SWE-agent/nano-swe-agent/blob/main/nanoswea/model.py) -- but that's it, and no fancy packages used!
 
-That's enough to solve XX% of the GitHub issues in SWE-bench verified benchmark, one of the most popular tests for agentic capabilities.
+- 🔥 Run instantly without installation: `pip install pipx && pipx run nano-swe-agent`
+- ⚙️ Take full control & quickly prototype your own agent ideas
+- ✅ Solves XX % of GitHub issues in SWE-Bench verified
+- 🏋 Lean assumptions-free baseline system made for reinforcement learning and finetuning
 
-nano-SWE-agent simple, readable, and an excellent starting point for building any type of AI agent project.
+The project builds on our experience building [SWE-agent](https://swe-agent.com), one of the earliest and most successful software engineering agents for research.
 
-The project builds on our experience building SWE-agent, one of the earliest and most successful software engineering agents for research.
-However, there are a couple of design differences.
-Chiefly, this project will grow by offering a family of extremely simple implementations of the agent, environment, and model classes.
-If you have a particular idea in mind, you might have to write a few lines of code -- but this will be easier than with any other project.
-
-On research side, the simplicity of this agent is perfect for training your own LM with fine tuning or reinforcement learning.
-
-## 🔥 Let's fire it up!
-
-Just try it without installing
+## 🔥 Try it without permanent installation <a target="fire"/>
 
 ```bash
 pip install pipx && pipx run nano-swe-agent
 ```
 
-Install it for experimentation
+## Install & experiment
 
 ```bash
 git clone https://github.com/SWE-agent/nano-swe-agent.git
