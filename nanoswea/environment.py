@@ -2,12 +2,15 @@ import os
 import shlex
 import subprocess
 import uuid
-
-from attr import dataclass
+from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
-class LocalEnvironmentConfig: ...
+class LocalEnvironmentConfig:
+    cwd: str = ""
+    env: dict[str, str] = field(default_factory=dict)
+    timeout: int = 30
 
 
 class LocalEnvironment:
@@ -17,7 +20,7 @@ class LocalEnvironment:
 
     def execute(self, command: str, cwd: str = ""):
         """Execute a command in the local environment and return the result as a dict."""
-        cwd = cwd or os.getcwd()
+        cwd = cwd or self.config.cwd or os.getcwd()
         return vars(
             subprocess.run(
                 command,
@@ -25,14 +28,17 @@ class LocalEnvironment:
                 capture_output=True,
                 text=True,
                 cwd=cwd,
-                timeout=30,
+                env=os.environ | self.config.env,
+                timeout=self.config.timeout,
             )
         )
 
 @dataclass
 class DockerEnvironmentConfig:
     image: str
-    cwd: str = "/testbed"
+    cwd: str = "/"
+    env: dict[str, str] = field(default_factory=dict)
+    timeout: int = 30
 
 
 class DockerEnvironment:
@@ -68,25 +74,29 @@ class DockerEnvironment:
         print(f"Started container {container_name} with ID {result.stdout.strip()}")
         self.container_id = result.stdout.strip()
 
-    def execute(self, command: str, cwd: str = ""):
+    def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
         """Execute a command in the Docker container and return the result as a dict."""
         cwd = cwd or self.config.cwd
-        if not self.container_id:
-            msg = "Container not started"
-            raise RuntimeError(msg)
+        assert self.container_id, "Container not started"
+
+        cmd = ["docker", "exec", "-w", cwd]
+        for key, value in self.config.env.items():
+            cmd.extend(["-e", f"{key}={value}"])
+        cmd.extend([self.container_id, "bash", "-c", command])
 
         return vars(
             subprocess.run(
-                ["docker", "exec", "-w", cwd, self.container_id, "bash", "-c", command],
+                cmd,
                 capture_output=True,
                 text=True,
-                timeout=30,
+                timeout=self.config.timeout,
             )
         )
 
     def cleanup(self):
         """Stop and remove the Docker container."""
         if self.container_id:
+            print(f"Stopping container {self.container_id}")
             subprocess.run(["docker", "stop", self.container_id], capture_output=True, check=False)
             subprocess.run(["docker", "rm", self.container_id], capture_output=True, check=False)
 

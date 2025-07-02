@@ -2,7 +2,7 @@ import json
 from unittest.mock import patch
 
 from nanoswea import package_dir
-from nanoswea.extra.model.test_models import DeterministicModel
+from nanoswea.extra.model.test_models import DeterministicModel, DeterministicModelConfig
 from nanoswea.extra.run.run_swebench import main
 
 
@@ -13,7 +13,7 @@ def test_swebench_end_to_end(test_data, tmp_path):
     output_file = tmp_path / "results.json"
 
     with patch("nanoswea.extra.run.run_swebench.LitellmModel") as mock_model_class:
-        mock_model_class.return_value = DeterministicModel(model_responses)
+        mock_model_class.return_value = DeterministicModel(DeterministicModelConfig(outputs=model_responses))
 
         main(subset="_test", split="test", slice_spec="0:1", output=str(output_file))
 
@@ -28,7 +28,7 @@ def test_swebench_end_to_end(test_data, tmp_path):
     # Expected format
     expected_result = {
         "swe-agent__test-repo-1": {
-            "model_name_or_path": "claude-sonnet-4-20250514",
+            "model_name_or_path": "deterministic",
             "instance_id": "swe-agent__test-repo-1",
             "model_patch": last_message,
         }

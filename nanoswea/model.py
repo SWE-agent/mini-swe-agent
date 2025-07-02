@@ -15,8 +15,7 @@ class ModelConfig:
 
 class LitellmModel:
     def __init__(self, config: ModelConfig):
-        self.model_name = config.model_name
-        self.model_kwargs = config.model_kwargs
+        self.config = config
         self.cost = 0.0
         self.n_calls = 0
 
@@ -27,7 +26,7 @@ class LitellmModel:
     )
     def _query(self, messages: list[dict[str, str]]) -> str:
         response: litellm.types.utils.ModelResponse = litellm.completion(  # type: ignore
-            model=self.model_name, messages=messages, **self.model_kwargs
+            model=self.config.model_name, messages=messages, **self.config.model_kwargs
         )
         return response
     

@@ -50,35 +50,40 @@ def update_output_file(output_path: Path, instance_id: str, model_config: ModelC
     output_path.write_text(json.dumps(output_data, indent=2))
 
 
-def process_instance(instance: dict, agent_config: AgentConfig, model_config: ModelConfig, output_path: Path) -> dict:
+def process_instance(instance: dict, output_path: Path) -> dict:
     """Process a single SWEBench instance."""
     instance_id = instance["instance_id"]
     problem_statement = instance["problem_statement"]
+
+    config = yaml.safe_load((package_dir / "config" / "extra" / "swebench.yaml").read_text())
     image_name = get_image_name(instance)
 
-    model = LitellmModel(model_config)
-    env = DockerEnvironment(DockerEnvironmentConfig(image=image_name))
-    agent = Agent(agent_config, model, env, problem_statement)
+    agent = Agent(
+        AgentConfig(**config["agent"]),
+        LitellmModel(ModelConfig(**config["model"])),
+        DockerEnvironment(DockerEnvironmentConfig(**(config["environment"] | {"image": image_name}))),
+        problem_statement,
+    )
 
     try:
         result = agent.run()
     finally:
-        update_output_file(output_path, instance_id, model_config, result)
+        update_output_file(output_path, instance_id, agent.model.config, result)
 
     print(f"Instance {instance_id} completed")
-    print(f"Cost: ${model.cost:.4f}")
-    print(f"Steps: {model.n_calls}")
+    print(f"Cost: ${agent.model.cost:.4f}")
+    print(f"Steps: {agent.model.n_calls}")
 
 
     return {
         "instance_id": instance_id,
         "result": result,
-        "cost": model.cost,
-        "steps": model.n_calls,
+        "cost": agent.model.cost,
+        "steps": agent.model.n_calls,
     }
 
 
-def process_instances(agent_config: AgentConfig, model_config: ModelConfig, instances: list[dict], output_path: Path):
+def process_instances(instances: list[dict], output_path: Path):
     """Process a list of SWEBench instances."""
     results = []
     running_cost = 0.0
@@ -90,7 +95,7 @@ def process_instances(agent_config: AgentConfig, model_config: ModelConfig, inst
         print(f"Running instance {i + 1}/{len(instances)}: {instance_id}")
         print(f"{'=' * 60}")
 
-        result = process_instance(instance, agent_config, model_config, output_path)
+        result = process_instance(instance, output_path)
         results.append(result)
         running_cost += result["cost"]
 
@@ -115,15 +120,12 @@ def run_swebench(subset: str = "lite", split: str = "dev", slice_spec: str = "",
         values = [int(x) if x else None for x in slice_spec.split(":")]
         instances = instances[slice(*values)]
 
-    config = yaml.safe_load((package_dir / "config" / "extra" / "swebench.yaml").read_text())
-    agent_config = AgentConfig(**config["agent"])
-    model_config = ModelConfig(**config["model"])
 
     output_path = Path(output)
     print(f"Running on {len(instances)} instances...")
     print(f"Results will be saved to {output_path}")
 
-    process_instances(agent_config, model_config, instances, output_path)
+    process_instances(instances, output_path)
 
 
 @app.command()

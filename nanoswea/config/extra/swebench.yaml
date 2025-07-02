@@ -19,7 +19,7 @@ agent:
   confirm_actions: false
 
 environment:
-  image: "python:3.11"
+  cwd: "/testbed"
 
 model:
   model_name: "claude-sonnet-4-20250514"

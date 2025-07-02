@@ -20,3 +20,4 @@ agent:
 
 environment:
   image: "python:3.11"
+  cwd: "/testbed"

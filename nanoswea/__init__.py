@@ -3,7 +3,7 @@
 __version__ = "1.0.0.dev3"
 
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol
 
 import dotenv
 
@@ -16,6 +16,7 @@ dotenv.load_dotenv(dotenv_path=package_dir.parent / ".env")
 class Model(Protocol):
     """Protocol for language models."""
 
+    config: Any
     cost: float
     n_calls: int
 
