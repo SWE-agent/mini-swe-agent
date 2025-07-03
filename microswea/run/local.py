@@ -10,7 +10,7 @@ from rich.console import Console
 from microswea import package_dir
 from microswea.agents.micro import Agent
 from microswea.environments.local import LocalEnvironment
-from microswea.models import get_model_class
+from microswea.models import get_model
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL_CONFIG_PATH", package_dir / "config" / "local.yaml"))
 console = Console(highlight=False)
@@ -45,21 +45,14 @@ def main(
 ) -> Agent:
     """Run micro-SWE-agent right here, right now."""
     _config = yaml.safe_load(Path(config).read_text())
-    _model = _config.get("model", {}).get("model_name")
-    if model:
-        _model = model
-    if not _model:
-        _model = os.getenv("MSWEA_MODEL_NAME")
-    if not _model:
-        _model = console.input("[bold yellow]Enter your model name: [/bold yellow]")
 
     if not problem:
         problem = get_multiline_problem_statement()
 
-    # Use get_model_class to defer model imports (can take a while), but also to switch in
+    # Use get_model to defer model imports (can take a while), but also to switch in
     # some optimized models (especially for anthropic)
     agent = Agent(
-        get_model_class(_model)(**(_config.get("model", {}) | {"model_name": _model})),
+        get_model(model, _config),
         LocalEnvironment(),
         problem,
         **(_config["agent"] | {"confirm_actions": not yolo}),

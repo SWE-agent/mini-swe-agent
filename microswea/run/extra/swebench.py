@@ -10,7 +10,7 @@ from datasets import load_dataset
 from microswea import package_dir
 from microswea.agents.micro import Agent
 from microswea.environments.docker import DockerEnvironment
-from microswea.models.litellm_model import LitellmModel
+from microswea.models import get_model
 
 app = typer.Typer()
 
@@ -59,7 +59,7 @@ def process_instance(instance: dict, output_path: Path) -> dict:
     image_name = get_image_name(instance)
 
     agent = Agent(
-        LitellmModel(**config["model"]),
+        get_model(config=config),
         DockerEnvironment(**(config["environment"] | {"image": image_name})),
         problem_statement,
         **config["agent"],

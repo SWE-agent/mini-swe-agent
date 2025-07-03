@@ -11,7 +11,7 @@ from rich.console import Console
 from microswea import package_dir
 from microswea.agents.micro import Agent
 from microswea.environments.docker import DockerEnvironment
-from microswea.models.litellm_model import LitellmModel
+from microswea.models import get_model
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", package_dir / "config" / "github_issue.yaml"))
 console = Console(highlight=False)
@@ -46,18 +46,10 @@ def main(
 
     _config = yaml.safe_load(Path(config).read_text())
 
-    _model = _config.get("model", {}).get("model_name")
-    if model:
-        _model = model
-    if not _model:
-        _model = os.getenv("MSWEA_MODEL_NAME")
-    if not _model:
-        _model = console.input("[bold yellow]Enter your model name: [/bold yellow]")
-
     problem_statement = fetch_github_issue(issue_url)
 
     agent = Agent(
-        LitellmModel(**(_config.get("model", {}) | {"model_name": _model})),
+        get_model(model, _config),
         DockerEnvironment(**_config.get("environment", {})),
         problem_statement,
         **(_config["agent"] | {"confirm_actions": False}),

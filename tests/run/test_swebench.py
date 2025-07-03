@@ -1,6 +1,7 @@
-import pytest
 import json
 from unittest.mock import patch
+
+import pytest
 
 from microswea import package_dir
 from microswea.models.test_models import DeterministicModel
@@ -14,8 +15,8 @@ def test_swebench_end_to_end(github_test_data, tmp_path):
     model_responses = github_test_data["model_responses"]
     output_file = tmp_path / "results.json"
 
-    with patch("microswea.run.extra.swebench.LitellmModel") as mock_model_class:
-        mock_model_class.return_value = DeterministicModel(outputs=model_responses)
+    with patch("microswea.run.extra.swebench.get_model") as mock_get_model:
+        mock_get_model.return_value = DeterministicModel(outputs=model_responses)
 
         main(subset="_test", split="test", slice_spec="0:1", output=str(output_file))
 
