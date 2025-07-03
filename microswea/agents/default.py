@@ -20,6 +20,14 @@ class AgentConfig:
 console = Console(highlight=False)  # Print with colors
 
 
+class NonTerminatingException(Exception):
+    """Raising this exception will add an error message to the agent history."""
+
+
+class TerminatingException(Exception):
+    """Raising this exception will terminate the agent."""
+
+
 class DefaultAgent:
     def __init__(
         self, model: Model, env: Environment, problem_statement: str, config_class: Callable = AgentConfig, **kwargs
@@ -36,23 +44,22 @@ class DefaultAgent:
         self.env = env
 
     def run(self) -> str:
-        """Run the agent and return the final observation.
-        Essentially just calls `step` until the agent is finished.
-        """
-        is_finished = False
-        while not is_finished:
-            is_finished, observation = self.step()
-        return observation
+        """Run step() until agent is finished. Return final observation."""
+        while True:
+            try:
+                self.step()
+            except NonTerminatingException as e:
+                self.messages.append({"role": "user", "content": str(e)})
+                console.print(f"[bold red]Non-terminating exception:[/bold red]\n{str(e)}")
+            except TerminatingException as e:
+                self.messages.append({"role": "user", "content": str(e)})
+                console.print(f"[bold red]Agent terminated with final output:[/bold red]\n{str(e)}")
+                return str(e)
 
-    def step(self) -> tuple[bool, str]:
-        """Query the LM and execute the action
-
-        Returns:
-            is_finished: whether the agent has finished its task
-            observation: The observation or error message
-        """
+    def step(self) -> str:
+        """Query the LM, execute the action, return the observation."""
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
-            return True, "limits_exceeded"
+            raise TerminatingException("limits_exceeded")
 
         return self.get_observation(self.query())
 
@@ -63,42 +70,32 @@ class DefaultAgent:
         self.messages.append({"role": "assistant", "content": message})
         return message
 
-    def get_observation(self, message: str) -> tuple[bool, str]:
-        """Execute the action and return the observation.
-        If the first line of the stdout of the action is "NANO_SWE_AGENT_FINAL_OUTPUT", assume the agent has finished its task.
-
-        Returns:
-            is_finished: whether the agent has finished its task
-            observation: The observation or error message
-        """
-        error, action = self.parse_action(message)
-        if error:
-            return False, error
-        is_finished, observation = self.execute_action(action)
+    def get_observation(self, message: str) -> str:
+        """Execute the action and return the observation."""
+        action = self.parse_action(message)
+        observation = self.execute_action(action)
         self.messages.append({"role": "user", "content": observation})
         console.print(f"[bold green]Observation (step {self.model.n_calls}):[/bold green]\n{observation}")
-        return is_finished, observation
+        return observation
 
-    def parse_action(self, message: str) -> tuple[str, str]:
-        """Parse the action from the message. Returns an optional error message and the action."""
+    def parse_action(self, message: str) -> str:
+        """Parse the action from the message. Returns the action."""
         actions = re.findall(r"```[a-zA-Z]*\n(.*?)(?=\n```|```)", message, re.DOTALL)
         if len(actions) == 1:
-            return "", actions[0].strip()
-        return "Please always provide EXACTLY ONE action in triple backticks.", ""
+            return actions[0].strip()
+        raise NonTerminatingException("Please always provide EXACTLY ONE action in triple backticks.")
 
-    def execute_action(self, action: str) -> tuple[bool, str]:
+    def execute_action(self, action: str) -> str:
         try:
             output = self.env.execute(action)
         except (TimeoutError, subprocess.TimeoutExpired):
-            return False, "The command timed out. Please change your command and make sure it doesn't require input."
-        except Exception as e:
-            return False, f"Error executing action: {e}"
-        if final_output := self.get_final_output(output):
-            return True, final_output
-        return False, "\n".join([f"<{key}>\n{value}\n</{key}>" for key, value in output.items()])
+            raise NonTerminatingException(
+                "The command timed out. Please change your command and make sure it doesn't require input."
+            )
+        self.has_finished(output)
+        return "\n".join([f"<{key}>\n{value}\n</{key}>" for key, value in output.items()])
 
-    def get_final_output(self, output: dict[str, str]) -> str:
-        """Check whether the agent has finished its task. Returning a non-empty string as final output will terminate the agent."""
+    def has_finished(self, output: dict[str, str]):
+        """Raises TerminatingException with final output if the agent has finished its task."""
         if output.get("stdout") and output["stdout"].splitlines()[0] == "NANO_SWE_AGENT_FINAL_OUTPUT":
-            return "\n".join(output["stdout"].splitlines()[1:]) or "EMPTY_OUTPUT"
-        return ""
+            raise TerminatingException("\n".join(output["stdout"].splitlines()[1:]) or "EMPTY_OUTPUT")

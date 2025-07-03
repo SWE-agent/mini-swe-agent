@@ -189,6 +189,10 @@ ignore = [
     # pytest
     "PT011",
     "PT018",
+    # flake8-errmsg
+    "EM101",   # exception must not use a string literal
+    "EM102",   # exception must not use an f-string literal
+    "EM103",   # exception must not use a .format(...) string directly
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
