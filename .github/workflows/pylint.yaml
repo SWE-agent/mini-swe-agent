@@ -1,5 +1,4 @@
-
-name: Pytest
+name: Pylint
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -21,7 +20,7 @@ on:
       - 'mkdocs.yml'
 
 jobs:
-  test:
+  pylint:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -35,11 +34,9 @@ jobs:
       - name: Install dependencies
         run: |
             pip install -e '.[full]'
-            pip install pytest pytest-cov
-      - name: Run pytest
-        run: pytest -v --cov --cov-branch --cov-report=xml
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: SWE-agent/micro-swe-agent
+            pip install pylint
+      - name: Run pylint (fail only on errors)
+        run: |
+          # Run pylint with errors-only flag to only fail on real errors (E and F level)
+          # This will show all messages but only exit with error code for errors, not warnings/advice
+          pylint microswea/ --errors-only 

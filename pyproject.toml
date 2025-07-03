@@ -35,13 +35,18 @@ dependencies = [
     "jinja2",
     "litellm",
     "tenacity",
-    "datasets",
     "rich",
     "python-dotenv",
     "typer",
 ]
 
 [project.optional-dependencies]
+full = [
+    "datasets",
+    "micro-swe-agent[dev]",
+    "swe-rex",
+]
+
 dev = [
     "pytest",
     "pytest-cov",
@@ -214,3 +219,15 @@ ACI = "ACI"
 [tool.typos.default.extend-words]
 # Don't correct the surname "Teh"
 aci = "aci"
+
+[tool.pylint.messages_control]
+disable = [
+    "line-too-long",           # C0301 - disable line length checks
+    "missing-docstring",       # C0111 - disable docstring requirements
+    "missing-class-docstring", # C0115 - disable class docstring requirements
+    "missing-function-docstring", # C0116 - disable function docstring requirements
+    "missing-module-docstring", # C0114 - disable module docstring requirements
+    "unspecified-encoding",    # W1514 - disable unspecified encoding warnings
+    "duplicate-code",          # R0801 - disable code duplication checks
+    "too-few-public-methods",  # R0903 - disable too few public methods warnings
+]
