@@ -40,7 +40,11 @@ class Agent:
         """
         is_finished = False
         while not is_finished:
-            is_finished, _, observation = self.step()
+            try:
+                is_finished, _, observation = self.step()
+            except KeyboardInterrupt:
+                message = Prompt.ask("[bold red]Interrupted. Do you want to pass on a message?[/bold red]")
+                self.history.append({"role": "user", "content": message})
         return observation
 
     def step(self) -> tuple[bool, str, str]:
