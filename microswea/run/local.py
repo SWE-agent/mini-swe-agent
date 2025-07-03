@@ -8,7 +8,7 @@ import yaml
 from rich.console import Console
 
 from microswea import package_dir
-from microswea.agents.default import Agent
+from microswea.agents.interactive import InteractiveAgent
 from microswea.environments.local import LocalEnvironment
 from microswea.models import get_model
 
@@ -42,7 +42,7 @@ def main(
     ),
     problem: str | None = typer.Option(None, "--problem", help="Problem statement", show_default=False),
     yolo: bool = typer.Option(False, "--yolo", help="Run without confirmation"),
-) -> Agent:
+) -> InteractiveAgent:
     """Run micro-SWE-agent right here, right now."""
     _config = yaml.safe_load(Path(config).read_text())
 
@@ -51,7 +51,7 @@ def main(
 
     # Use get_model to defer model imports (can take a while), but also to switch in
     # some optimized models (especially for anthropic)
-    agent = Agent(
+    agent = InteractiveAgent(
         get_model(model, _config),
         LocalEnvironment(),
         problem,

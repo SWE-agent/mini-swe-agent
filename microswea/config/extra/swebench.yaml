@@ -16,7 +16,6 @@ agent:
 
   step_limit: 100
   cost_limit: 3.0
-  confirm_actions: false
 
 environment:
   cwd: "/testbed"

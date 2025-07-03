@@ -1,10 +1,10 @@
 import re
 import subprocess
 from dataclasses import dataclass
+from typing import Callable
 
 from jinja2 import Template
 from rich.console import Console
-from rich.prompt import Prompt
 
 from microswea import Environment, Model
 
@@ -15,15 +15,16 @@ class AgentConfig:
     instance_template: str
     step_limit: int = 0
     cost_limit: float = 3.0
-    confirm_actions: bool = True
 
 
 console = Console(highlight=False)  # Print with colors
 
 
-class Agent:
-    def __init__(self, model: Model, env: Environment, problem_statement: str, **kwargs):
-        self.config = AgentConfig(**kwargs)
+class DefaultAgent:
+    def __init__(
+        self, model: Model, env: Environment, problem_statement: str, config_class: Callable = AgentConfig, **kwargs
+    ):
+        self.config = config_class(**kwargs)
         instance_message = Template(self.config.instance_template).render(problem_statement=problem_statement)
         console.print(f"[bold green]System template:[/bold green]\n{self.config.system_template}", highlight=False)
         console.print(f"[bold green]Instance message:[/bold green]\n{instance_message}", highlight=False)
@@ -40,34 +41,43 @@ class Agent:
         """
         is_finished = False
         while not is_finished:
-            try:
-                is_finished, _, observation = self.step()
-            except KeyboardInterrupt:
-                message = Prompt.ask("[bold red]Interrupted. Do you want to pass on a message?[/bold red]")
-                self.messages.append({"role": "user", "content": message})
+            is_finished, observation = self.step()
         return observation
 
-    def step(self) -> tuple[bool, str, str]:
+    def step(self) -> tuple[bool, str]:
         """Query the LM and execute the action
 
         Returns:
             is_finished: whether the agent has finished its task
-            response: Model response (if any)
             observation: The observation or error message
         """
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
-            return True, "", "limits_exceeded"
+            return True, "limits_exceeded"
 
+        return self.get_observation(self.query())
+
+    def query(self) -> str:
+        """Query the model and return the response."""
         message = self.model.query(self.messages)
         console.print(f"[bold red]Assistant (step {self.model.n_calls}, ${self.model.cost:.2f}):[/bold red]\n{message}")
         self.messages.append({"role": "assistant", "content": message})
+        return message
 
+    def get_observation(self, message: str) -> tuple[bool, str]:
+        """Execute the action and return the observation.
+        If the first line of the stdout of the action is "NANO_SWE_AGENT_FINAL_OUTPUT", assume the agent has finished its task.
+
+        Returns:
+            is_finished: whether the agent has finished its task
+            observation: The observation or error message
+        """
         error, action = self.parse_action(message)
-        is_finished, observation = self.get_observation(error, action)
+        if error:
+            return False, error
+        is_finished, observation = self.execute_action(action)
         self.messages.append({"role": "user", "content": observation})
         console.print(f"[bold green]Observation (step {self.model.n_calls}):[/bold green]\n{observation}")
-
-        return is_finished, message, observation
+        return is_finished, observation
 
     def parse_action(self, message: str) -> tuple[str, str]:
         """Parse the action from the message. Returns an optional error message and the action."""
@@ -76,18 +86,7 @@ class Agent:
             return "", actions[0].strip()
         return "Please always provide EXACTLY ONE action in triple backticks.", ""
 
-    def get_observation(self, error: str, action: str) -> tuple[bool, str]:
-        """Execute the action and return the observation.
-        If the first line of the stdout of the action is "NANO_SWE_AGENT_FINAL_OUTPUT", assume the agent has finished its task.
-
-        Returns:
-            is_finished: whether the agent has finished its task
-            observation: The observation or error message
-        """
-        if error:
-            return False, error
-        if rejection_message := self.reject_action(action):
-            return False, rejection_message
+    def execute_action(self, action: str) -> tuple[bool, str]:
         try:
             output = self.env.execute(action)
         except (TimeoutError, subprocess.TimeoutExpired):
@@ -97,15 +96,6 @@ class Agent:
         if final_output := self.get_final_output(output):
             return True, final_output
         return False, "\n".join([f"<{key}>\n{value}\n</{key}>" for key, value in output.items()])
-
-    def reject_action(self, action: str) -> str:
-        """Ask the user to confirm the action. Returns a rejection message if the user rejects the action."""
-        if self.config.confirm_actions:
-            if response := Prompt.ask(
-                "[bold yellow]Execute?[/bold yellow] ([green][bold]Enter[/bold] to confirm[/green], or enter rejection message)"
-            ):
-                return f"Command not executed. The user rejected your command with the following message: {response}"
-        return ""
 
     def get_final_output(self, output: dict[str, str]) -> str:
         """Check whether the agent has finished its task. Returning a non-empty string as final output will terminate the agent."""

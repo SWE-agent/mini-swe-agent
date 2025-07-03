@@ -8,7 +8,7 @@ import yaml
 from datasets import load_dataset
 
 from microswea import package_dir
-from microswea.agents.default import Agent
+from microswea.agents.default import DefaultAgent
 from microswea.environments.docker import DockerEnvironment
 from microswea.models import get_model
 
@@ -58,7 +58,7 @@ def process_instance(instance: dict, output_path: Path) -> dict:
     config = yaml.safe_load((package_dir / "config" / "extra" / "swebench.yaml").read_text())
     image_name = get_image_name(instance)
 
-    agent = Agent(
+    agent = DefaultAgent(
         get_model(config=config),
         DockerEnvironment(**(config["environment"] | {"image": image_name})),
         problem_statement,
