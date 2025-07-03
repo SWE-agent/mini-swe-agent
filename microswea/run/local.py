@@ -7,12 +7,12 @@ import typer
 import yaml
 from rich.console import Console
 
-from nanoswea import package_dir
-from nanoswea.agents.micro import Agent
-from nanoswea.environments.local import LocalEnvironment
-from nanoswea.models.litellm_model import LitellmModel
+from microswea import package_dir
+from microswea.agents.micro import Agent
+from microswea.environments.local import LocalEnvironment
+from microswea.models.litellm_model import LitellmModel
 
-DEFAULT_CONFIG = Path(os.getenv("NSWEA_LOCAL_CONFIG_PATH", package_dir / "config" / "local.yaml"))
+DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL_CONFIG_PATH", package_dir / "config" / "local.yaml"))
 console = Console(highlight=False)
 app = typer.Typer()
 
@@ -43,13 +43,13 @@ def main(
     problem: str | None = typer.Option(None, "--problem", help="Problem statement", show_default=False),
     yolo: bool = typer.Option(False, "--yolo", help="Run without confirmation"),
 ) -> Agent:
-    """Run nano-SWE-agent right here, right now."""
+    """Run micro-SWE-agent right here, right now."""
     _config = yaml.safe_load(Path(config).read_text())
     _model = _config.get("model", {}).get("model_name")
     if model:
         _model = model
     if not _model:
-        _model = os.getenv("NSWEA_MODEL_NAME")
+        _model = os.getenv("MSWEA_MODEL_NAME")
     if not _model:
         _model = console.input("[bold yellow]Enter your model name: [/bold yellow]")
 

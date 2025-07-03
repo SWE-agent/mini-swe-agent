@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "nano-swe-agent"
+name = "micro-swe-agent"
 dynamic = ["version"]
 description = "Nano SWE Agent - A simple AI software engineering agent"
 readme = "README.md"
@@ -50,22 +50,22 @@ dev = [
 ]
 
 [project.scripts]
-nswea-gh= "nanoswea.run_github_issue:app"
-nswea = "nanoswea.run_local:app"
-nano-swe-agent = "nanoswea.__main__:main"
+mswea-gh= "microswea.run_github_issue:app"
+mswea = "microswea.run_local:app"
+micro-swe-agent = "microswea.__main__:main"
 
 [tool.setuptools]
 include-package-data = true
 
 [tool.setuptools.dynamic]
-version = {attr = "nanoswea.__version__"}
+version = {attr = "microswea.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["nanoswea*"]
+include = ["microswea*"]
 
 [tool.setuptools.package-data]
-nanoswea = ["config/**/*"]
+microswea = ["config/**/*"]
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.

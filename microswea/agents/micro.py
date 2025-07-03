@@ -6,7 +6,7 @@ from jinja2 import Template
 from rich.console import Console
 from rich.prompt import Prompt
 
-from nanoswea import Environment, Model
+from microswea import Environment, Model
 
 
 @dataclass

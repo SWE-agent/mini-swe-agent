@@ -7,10 +7,10 @@ import typer
 import yaml
 from datasets import load_dataset
 
-from nanoswea import package_dir
-from nanoswea.agents.micro import Agent
-from nanoswea.environments.docker import DockerEnvironment
-from nanoswea.models.litellm_model import LitellmModel
+from microswea import package_dir
+from microswea.agents.micro import Agent
+from microswea.environments.docker import DockerEnvironment
+from microswea.models.litellm_model import LitellmModel
 
 app = typer.Typer()
 
@@ -103,7 +103,7 @@ def process_instances(instances: list[dict], output_path: Path):
 
 
 def run_swebench(subset: str = "lite", split: str = "dev", slice_spec: str = "", output: str = "results.json"):
-    """Run nano-SWE-agent on SWEBench instances.
+    """Run micro-SWE-agent on SWEBench instances.
 
     Args:
         subset: SWEBench subset to use ("lite", "verified", "full", "multimodal", "multilingual")
@@ -135,7 +135,7 @@ def main(
     slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)"),
     output: str = typer.Option("results.json", "-o", "--output", help="Output JSON file path"),
 ) -> None:
-    """Run nano-SWE-agent on SWEBench instances"""
+    """Run micro-SWE-agent on SWEBench instances"""
     run_swebench(subset=subset, split=split, slice_spec=slice_spec, output=output)
 
 

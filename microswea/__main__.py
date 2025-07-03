@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Main entry point for pipx run nano-swe-agent commands."""
+"""Main entry point for pipx run micro-swe-agent commands."""
 
 import sys
 
-from nanoswea.run.github_issue import app as github_app
-from nanoswea.run.local import app as local_app
+from microswea.run.github_issue import app as github_app
+from microswea.run.local import app as local_app
 
 
 def main() -> None:

@@ -1,9 +1,9 @@
 import json
 from unittest.mock import patch
 
-from nanoswea import package_dir
-from nanoswea.models.test_models import DeterministicModel
-from nanoswea.run.extra.swebench import main
+from microswea import package_dir
+from microswea.models.test_models import DeterministicModel
+from microswea.run.extra.swebench import main
 
 
 def test_swebench_end_to_end(github_test_data, tmp_path):
@@ -12,7 +12,7 @@ def test_swebench_end_to_end(github_test_data, tmp_path):
     model_responses = github_test_data["model_responses"]
     output_file = tmp_path / "results.json"
 
-    with patch("nanoswea.run.extra.swebench.LitellmModel") as mock_model_class:
+    with patch("microswea.run.extra.swebench.LitellmModel") as mock_model_class:
         mock_model_class.return_value = DeterministicModel(outputs=model_responses)
 
         main(subset="_test", split="test", slice_spec="0:1", output=str(output_file))

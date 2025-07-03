@@ -1,13 +1,13 @@
 import os
 from unittest.mock import patch
 
-from nanoswea.models.anthropic import AnthropicModel
-from nanoswea.models.utils.key_per_thread import get_key_per_thread
+from microswea.models.anthropic import AnthropicModel
+from microswea.models.utils.key_per_thread import get_key_per_thread
 
 
 def test_anthropic_model_single_key():
     with patch.dict(os.environ, {"ANTHROPIC_API_KEYS": "test-key"}):
-        with patch("nanoswea.models.litellm_model.LitellmModel.query") as mock_query:
+        with patch("microswea.models.litellm_model.LitellmModel.query") as mock_query:
             mock_query.return_value = "response"
 
             model = AnthropicModel(model_name="tardis")
@@ -26,7 +26,7 @@ def test_get_key_per_thread_returns_same_key():
 
 def test_anthropic_model_with_empty_api_keys():
     with patch.dict(os.environ, {"ANTHROPIC_API_KEYS": ""}):
-        with patch("nanoswea.models.litellm_model.LitellmModel.query") as mock_query:
+        with patch("microswea.models.litellm_model.LitellmModel.query") as mock_query:
             mock_query.return_value = "response"
 
             AnthropicModel(model_name="tardis").query(history=[])

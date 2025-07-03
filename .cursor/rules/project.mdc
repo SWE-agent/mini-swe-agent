@@ -3,19 +3,19 @@ description:
 globs:
 alwaysApply: true
 ---
-# nano-SWE-agent overview
+# micro-SWE-agent overview
 
-- nano-SWE-agent implements an AI software engineering agent that solves github issues and similar programming challenges
+- micro-SWE-agent implements an AI software engineering agent that solves github issues and similar programming challenges
 - The idea of this project is to write the simplest, smallest, most readable agent.
 
 The project is structured as
 
 ```bash
-nanoswea/__init__  # Protocols/interfaces for all base classes
-nanoswea/agents  # Agent control flow & loop
-nanoswea/environments  # Executing agent actions
-nanoswea/models  # LM interfaces
-nanoswea/run  # Run scripts that serve as an entry point
+microswea/__init__  # Protocols/interfaces for all base classes
+microswea/agents  # Agent control flow & loop
+microswea/environments  # Executing agent actions
+microswea/models  # LM interfaces
+microswea/run  # Run scripts that serve as an entry point
 ```
 
 - The project embraces polymorphism: Every individual class should be simple, but we offer alternatives

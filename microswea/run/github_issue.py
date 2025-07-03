@@ -8,12 +8,12 @@ import typer
 import yaml
 from rich.console import Console
 
-from nanoswea import package_dir
-from nanoswea.agents.micro import Agent
-from nanoswea.environments.docker import DockerEnvironment
-from nanoswea.models.litellm_model import LitellmModel
+from microswea import package_dir
+from microswea.agents.micro import Agent
+from microswea.environments.docker import DockerEnvironment
+from microswea.models.litellm_model import LitellmModel
 
-DEFAULT_CONFIG = Path(os.getenv("NSWEA_GITHUB_CONFIG_PATH", package_dir / "config" / "github_issue.yaml"))
+DEFAULT_CONFIG = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", package_dir / "config" / "github_issue.yaml"))
 console = Console(highlight=False)
 app = typer.Typer()
 
@@ -42,7 +42,7 @@ def main(
     config: Path = typer.Option(DEFAULT_CONFIG, "--config", help="Path to config file"),
     model: str | None = typer.Option(None, "--model", help="Model to use"),
 ) -> Agent:
-    """Run nano-SWE-agent on a GitHub issue"""
+    """Run micro-SWE-agent on a GitHub issue"""
 
     _config = yaml.safe_load(Path(config).read_text())
 
@@ -50,7 +50,7 @@ def main(
     if model:
         _model = model
     if not _model:
-        _model = os.getenv("NSWEA_MODEL_NAME")
+        _model = os.getenv("MSWEA_MODEL_NAME")
     if not _model:
         _model = console.input("[bold yellow]Enter your model name: [/bold yellow]")
 
