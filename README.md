@@ -23,7 +23,7 @@ The project builds on our experience building [SWE-agent](https://swe-agent.com)
 ```bash
 export NSWEA_MODEL_NAME="claude-sonnet-4-20250514"  # your favorite model
 export ANTHROPIC_API_KEY="xxx"  # API key for your model
-pip install pipx && pipx run --spec git+ssh://git@github.com/SWE-agent/nano-swe-agent nano-swe-agent
+pip install pipx && pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro-swe-agent
 ```
 
 ## Install & experiment
