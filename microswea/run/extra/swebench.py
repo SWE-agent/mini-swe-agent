@@ -68,7 +68,11 @@ def process_instance(instance: dict, output_path: Path) -> dict:
     try:
         result = agent.run()
     finally:
-        update_output_file(output_path, instance_id, agent.model.config, result)
+        Path("traj.json").write_text(
+            json.dumps(agent.history, indent=2),
+        )
+
+    update_output_file(output_path, instance_id, agent.model.config, result)
 
     print(f"Instance {instance_id} completed")
     print(f"Cost: ${agent.model.cost:.4f}")
