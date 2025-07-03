@@ -42,7 +42,7 @@ class DefaultAgent:
     def add_message(self, role: str, content: str):
         self.messages.append({"role": role, "content": content})
         color = "red" if role == "user" else "green"
-        console.print(f"[bold {color}]{role}:[/bold {color}]\n{content}", highlight=False)
+        console.print(f"\n[bold {color}]{role}:[/bold {color}]\n{content}", highlight=False)
 
     def run(self) -> str:
         """Run step() until agent is finished. Return final observation."""
