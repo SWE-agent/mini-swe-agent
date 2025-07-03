@@ -15,10 +15,9 @@ def get_model_class(model_name: str) -> type:
         from microswea.models.anthropic import AnthropicModel
 
         return AnthropicModel
-    else:
-        from microswea.models.litellm_model import LitellmModel
+    from microswea.models.litellm_model import LitellmModel
 
-        return LitellmModel
+    return LitellmModel
 
 
 def get_model_name(input_model_name: str |None = None, config: dict | None = None) -> str:

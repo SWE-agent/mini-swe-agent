@@ -16,14 +16,14 @@ def test_local_end_to_end(local_test_data):
         agent = main(model="tardis", config=DEFAULT_CONFIG, yolo=True, problem="Blah blah blah")  # type: ignore
 
     assert agent is not None
-    history = agent.history
+    messages = agent.messages
 
     # Verify we have the right number of messages
     # Should be: system + user (initial) + (assistant + user) * number_of_steps
     expected_total_messages = 2 + (len(model_responses) * 2)
-    assert len(history) == expected_total_messages, f"Expected {expected_total_messages} messages, got {len(history)}"
+    assert len(messages) == expected_total_messages, f"Expected {expected_total_messages} messages, got {len(messages)}"
 
-    assert_observations_match(expected_observations, history)
+    assert_observations_match(expected_observations, messages)
 
     assert agent.model.n_calls == len(model_responses), (
         f"Expected {len(model_responses)} steps, got {agent.model.n_calls}"

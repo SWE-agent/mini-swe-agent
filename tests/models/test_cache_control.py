@@ -3,8 +3,8 @@ from microswea.models.utils.cache_control import set_cache_control
 
 def test_set_cache_control_basic():
     """Test basic cache control functionality with simple input/output."""
-    # Input: A history with multiple messages including user messages
-    input_history = [
+    # Input: A messages with multiple messages including user messages
+    input_messages = [
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Hello, how are you?"},
         {"role": "assistant", "content": "I'm doing well, thank you!"},
@@ -29,21 +29,21 @@ def test_set_cache_control_basic():
         {"role": "assistant", "content": "Of course! I'd be happy to help."},
     ]
 
-    result = set_cache_control(input_history)
+    result = set_cache_control(input_messages)
 
     assert result == expected_output
 
 
 def test_set_cache_control_with_offset():
     """Test cache control with last_n_messages_offset parameter."""
-    input_history = [
+    input_messages = [
         {"role": "user", "content": "First message"},
         {"role": "user", "content": "Second message"},
         {"role": "user", "content": "Third message"},
     ]
 
     # With offset=1, should skip the last message and tag the previous ones
-    result = set_cache_control(input_history, last_n_messages_offset=1)
+    result = set_cache_control(input_messages, last_n_messages_offset=1)
 
     # Only the first two messages should have cache control
     assert "cache_control" not in result[2].get("content", {})  # Third message should not have cache control

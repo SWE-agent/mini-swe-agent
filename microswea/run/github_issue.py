@@ -9,7 +9,7 @@ import yaml
 from rich.console import Console
 
 from microswea import package_dir
-from microswea.agents.micro import Agent
+from microswea.agents.default import Agent
 from microswea.environments.docker import DockerEnvironment
 from microswea.models import get_model
 
@@ -70,7 +70,7 @@ def main(
         Path("patch.txt").write_text(result)
     finally:
         Path("traj.json").write_text(
-            json.dumps(agent.history, indent=2),
+            json.dumps(agent.messages, indent=2),
         )
         console.print(f"Total cost: [bold green]${agent.model.cost:.4f}[/bold green]")
         console.print(f"Total steps: [bold green]{agent.model.n_calls}[/bold green]")

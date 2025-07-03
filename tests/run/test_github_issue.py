@@ -16,20 +16,20 @@ def normalize_outputs(s: str) -> str:
     return "\n".join(line.rstrip() for line in s.strip().split("\n"))
 
 
-def assert_observations_match(expected_observations: list[str], history: list[dict]) -> None:
-    """Compare expected observations with actual observations from agent history
+def assert_observations_match(expected_observations: list[str], messages: list[dict]) -> None:
+    """Compare expected observations with actual observations from agent messages
 
     Args:
         expected_observations: List of expected observation strings
-        history: Agent conversation history (list of message dicts with 'role' and 'content')
+        messages: Agent conversation messages (list of message dicts with 'role' and 'content')
     """
-    # Extract actual observations from agent history
+    # Extract actual observations from agent messages
     # User messages (observations) are at indices 3, 5, 7, etc.
     actual_observations = []
     for i in range(len(expected_observations)):
         user_message_index = 3 + (i * 2)
-        assert history[user_message_index]["role"] == "user"
-        actual_observations.append(history[user_message_index]["content"])
+        assert messages[user_message_index]["role"] == "user"
+        actual_observations.append(messages[user_message_index]["content"])
 
     assert len(actual_observations) == len(expected_observations), (
         f"Expected {len(expected_observations)} observations, got {len(actual_observations)}"
@@ -57,14 +57,14 @@ def test_github_issue_end_to_end(github_test_data):
         agent = main(issue_url=github_url, model="tardis", config=DEFAULT_CONFIG)  # type: ignore
 
     assert agent is not None
-    history = agent.history
+    messages = agent.messages
 
     # Verify we have the right number of messages
     # Should be: system + user (initial) + (assistant + user) * number_of_steps
     expected_total_messages = 2 + (len(model_responses) * 2)
-    assert len(history) == expected_total_messages, f"Expected {expected_total_messages} messages, got {len(history)}"
+    assert len(messages) == expected_total_messages, f"Expected {expected_total_messages} messages, got {len(messages)}"
 
-    assert_observations_match(expected_observations, history)
+    assert_observations_match(expected_observations, messages)
 
     assert agent.model.n_calls == len(model_responses), (
         f"Expected {len(model_responses)} steps, got {agent.model.n_calls}"

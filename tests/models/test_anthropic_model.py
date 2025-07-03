@@ -11,7 +11,7 @@ def test_anthropic_model_single_key():
             mock_query.return_value = "response"
 
             model = AnthropicModel(model_name="tardis")
-            result = model.query(history=[])
+            result = model.query(messages=[])
 
             assert result == "response"
             assert mock_query.call_count == 1
@@ -29,6 +29,6 @@ def test_anthropic_model_with_empty_api_keys():
         with patch("microswea.models.litellm_model.LitellmModel.query") as mock_query:
             mock_query.return_value = "response"
 
-            AnthropicModel(model_name="tardis").query(history=[])
+            AnthropicModel(model_name="tardis").query(messages=[])
 
             assert mock_query.call_args.kwargs["api_key"] is None

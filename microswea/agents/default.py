@@ -27,7 +27,7 @@ class Agent:
         instance_message = Template(self.config.instance_template).render(problem_statement=problem_statement)
         console.print(f"[bold green]System template:[/bold green]\n{self.config.system_template}", highlight=False)
         console.print(f"[bold green]Instance message:[/bold green]\n{instance_message}", highlight=False)
-        self.history = [
+        self.messages = [
             {"role": "system", "content": self.config.system_template},
             {"role": "user", "content": instance_message},
         ]
@@ -44,7 +44,7 @@ class Agent:
                 is_finished, _, observation = self.step()
             except KeyboardInterrupt:
                 message = Prompt.ask("[bold red]Interrupted. Do you want to pass on a message?[/bold red]")
-                self.history.append({"role": "user", "content": message})
+                self.messages.append({"role": "user", "content": message})
         return observation
 
     def step(self) -> tuple[bool, str, str]:
@@ -58,13 +58,13 @@ class Agent:
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
             return True, "", "limits_exceeded"
 
-        message = self.model.query(self.history)
+        message = self.model.query(self.messages)
         console.print(f"[bold red]Assistant (step {self.model.n_calls}, ${self.model.cost:.2f}):[/bold red]\n{message}")
-        self.history.append({"role": "assistant", "content": message})
+        self.messages.append({"role": "assistant", "content": message})
 
         error, action = self.parse_action(message)
         is_finished, observation = self.get_observation(error, action)
-        self.history.append({"role": "user", "content": observation})
+        self.messages.append({"role": "user", "content": observation})
         console.print(f"[bold green]Observation (step {self.model.n_calls}):[/bold green]\n{observation}")
 
         return is_finished, message, observation

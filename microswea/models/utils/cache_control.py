@@ -29,14 +29,14 @@ def _set_cache_control(entry: dict) -> None:
         entry["cache_control"] = {"type": "ephemeral"}
 
 
-def set_cache_control(history: list[dict], last_n_messages_offset: int = 0) -> list[dict]:
-    """This history processor adds manual cache control marks to the history."""
-    new_history = []
+def set_cache_control(messages: list[dict], last_n_messages_offset: int = 0) -> list[dict]:
+    """This messages processor adds manual cache control marks to the messages."""
+    new_messages = []
     n_tagged = 0
-    for i_entry, entry in enumerate(reversed(history)):
+    for i_entry, entry in enumerate(reversed(messages)):
         _clear_cache_control(entry)
         if n_tagged < 2 and entry["role"] in ["user"] and i_entry >= last_n_messages_offset:
             _set_cache_control(entry)
             n_tagged += 1
-        new_history.append(entry)
-    return list(reversed(new_history))
+        new_messages.append(entry)
+    return list(reversed(new_messages))

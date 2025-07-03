@@ -8,7 +8,7 @@ import yaml
 from datasets import load_dataset
 
 from microswea import package_dir
-from microswea.agents.micro import Agent
+from microswea.agents.default import Agent
 from microswea.environments.docker import DockerEnvironment
 from microswea.models import get_model
 
@@ -69,7 +69,7 @@ def process_instance(instance: dict, output_path: Path) -> dict:
         result = agent.run()
     finally:
         Path("traj.json").write_text(
-            json.dumps(agent.history, indent=2),
+            json.dumps(agent.messages, indent=2),
         )
 
     update_output_file(output_path, instance_id, agent.model.config, result)
