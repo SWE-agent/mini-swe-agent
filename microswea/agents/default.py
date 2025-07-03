@@ -33,15 +33,16 @@ class DefaultAgent:
         self, model: Model, env: Environment, problem_statement: str, config_class: Callable = AgentConfig, **kwargs
     ):
         self.config = config_class(**kwargs)
-        instance_message = Template(self.config.instance_template).render(problem_statement=problem_statement)
-        console.print(f"[bold green]System template:[/bold green]\n{self.config.system_template}", highlight=False)
-        console.print(f"[bold green]Instance message:[/bold green]\n{instance_message}", highlight=False)
-        self.messages = [
-            {"role": "system", "content": self.config.system_template},
-            {"role": "user", "content": instance_message},
-        ]
+        self.messages = []
         self.model = model
         self.env = env
+        self.add_message("system", self.config.system_template)
+        self.add_message("user", Template(self.config.instance_template).render(problem_statement=problem_statement))
+
+    def add_message(self, role: str, content: str):
+        self.messages.append({"role": role, "content": content})
+        color = "red" if role == "user" else "green"
+        console.print(f"[bold {color}]{role}:[/bold {color}]\n{content}", highlight=False)
 
     def run(self) -> str:
         """Run step() until agent is finished. Return final observation."""
@@ -49,11 +50,9 @@ class DefaultAgent:
             try:
                 self.step()
             except NonTerminatingException as e:
-                self.messages.append({"role": "user", "content": str(e)})
-                console.print(f"[bold red]Non-terminating exception:[/bold red]\n{str(e)}")
+                self.add_message("user", str(e))
             except TerminatingException as e:
-                self.messages.append({"role": "user", "content": str(e)})
-                console.print(f"[bold red]Agent terminated with final output:[/bold red]\n{str(e)}")
+                self.add_message("user", str(e))
                 return str(e)
 
     def step(self) -> str:
@@ -61,22 +60,20 @@ class DefaultAgent:
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
             raise TerminatingException("limits_exceeded")
 
-        return self.get_observation(self.query())
+        message = self.query()
+        self.add_message("assistant", message)
+        observation = self.get_observation(message)
+        self.add_message("user", observation)
+        return observation
 
     def query(self) -> str:
         """Query the model and return the response."""
-        message = self.model.query(self.messages)
-        console.print(f"[bold red]Assistant (step {self.model.n_calls}, ${self.model.cost:.2f}):[/bold red]\n{message}")
-        self.messages.append({"role": "assistant", "content": message})
-        return message
+        return self.model.query(self.messages)
 
     def get_observation(self, message: str) -> str:
         """Execute the action and return the observation."""
         action = self.parse_action(message)
-        observation = self.execute_action(action)
-        self.messages.append({"role": "user", "content": observation})
-        console.print(f"[bold green]Observation (step {self.model.n_calls}):[/bold green]\n{observation}")
-        return observation
+        return self.execute_action(action)
 
     def parse_action(self, message: str) -> str:
         """Parse the action from the message. Returns the action."""
