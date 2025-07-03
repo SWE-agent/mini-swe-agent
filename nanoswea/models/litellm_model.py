@@ -24,14 +24,14 @@ class LitellmModel:
         wait=wait_exponential(multiplier=1, min=4, max=10),
         before_sleep=before_sleep_log(logger, logging.WARNING),
     )
-    def _query(self, messages: list[dict[str, str]]) -> str:
+    def _query(self, messages: list[dict[str, str]], **kwargs) -> str:
         response: litellm.types.utils.ModelResponse = litellm.completion(  # type: ignore
-            model=self.config.model_name, messages=messages, **self.config.model_kwargs
+            model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
         )
         return response
-    
-    def query(self, messages: list[dict[str, str]]) -> str:
+
+    def query(self, messages: list[dict[str, str]], **kwargs) -> str:
         self.n_calls += 1
-        response = self._query(messages)
+        response = self._query(messages, **kwargs)
         self.cost += litellm.cost_calculator.completion_cost(response)
         return response.choices[0].message.content  # type: ignore
