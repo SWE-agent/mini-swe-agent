@@ -1,6 +1,8 @@
 """Textual TUI interface for the agent."""
 
+import os
 import threading
+from pathlib import Path
 
 from textual.app import App, ComposeResult
 from textual.binding import Binding
@@ -55,58 +57,18 @@ class MessageContainer(Vertical):
 
 
 class AgentApp(App):
-    CSS = """
-    Screen {
-        layout: grid;
-        grid-size: 1;
-        grid-rows: 1fr 8 1fr;
-    }
-
-    #main {
-        height: 100%;
-        padding: 1;
-    }
-
-    Footer {
-        dock: bottom;
-        content-align: center middle;
-    }
-
-    #content {
-        height: auto;
-    }
-
-    .message-container {
-        margin: 1;
-        padding: 1;
-        background: $surface;
-        height: auto;
-        width: 100%;
-    }
-
-    .message-header {
-        text-align: left;
-        color: $primary;
-        padding: 0 1;
-        text-style: bold;
-    }
-
-    .message-content {
-        margin-top: 1;
-        padding: 0 1;
-    }
-
-    Header.running {
-        background: $error;
-    }
-    """
-
     BINDINGS = [
         Binding("r", "start_agent", "Start Agent"),
         Binding("q", "quit", "Quit"),
     ]
 
     def __init__(self, model, env, problem_statement: str):
+        # Load CSS from file, with environment variable override support
+        css_path = os.environ.get(
+            "MSWEA_LOCAL2_STYLE_PATH", str(Path(__file__).parent.parent / "config" / "local2.tcss")
+        )
+        self.__class__.CSS = Path(css_path).read_text()
+
         super().__init__()
         self.auto_follow = True
         self.agent = TextualAgent(app=self, model=model, env=env, problem_statement=problem_statement)

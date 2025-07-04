@@ -1,0 +1,43 @@
+Screen {
+    layout: grid;
+    grid-size: 1;
+    grid-rows: 1fr 8 1fr;
+}
+
+#main {
+    height: 100%;
+    padding: 1;
+}
+
+Footer {
+    dock: bottom;
+    content-align: center middle;
+}
+
+#content {
+    height: auto;
+}
+
+.message-container {
+    margin: 1;
+    padding: 1;
+    background: $surface;
+    height: auto;
+    width: 100%;
+}
+
+.message-header {
+    text-align: left;
+    color: $primary;
+    padding: 0 1;
+    text-style: bold;
+}
+
+.message-content {
+    margin-top: 1;
+    padding: 0 1;
+}
+
+Header.running {
+    background: $error;
+}
