@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Main entry point for pipx run micro-swe-agent commands."""
 
+import importlib
+import os
 import sys
 
 
@@ -13,9 +15,10 @@ def main() -> None:
         sys.argv = sys.argv[:1] + args[1:]  # Keep script name, remove "gh"
         github_app()
     else:
-        from microswea.run.local import app as local_app
+        default_module = os.getenv("MSWEA_DEFAULT_RUN", "microswea.run.local")
+        module = importlib.import_module(default_module)
         sys.argv = sys.argv[:1] + args  # Keep script name, pass all args
-        local_app()
+        module.app()
 
 
 if __name__ == "__main__":

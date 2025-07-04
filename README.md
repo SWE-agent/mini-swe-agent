@@ -52,11 +52,13 @@ But you can also just run the executables as
 python microswea/run/local.py
 ```
 
+## Configuration
+
 You can put your LM API keys in a `.env` at the repository root or make sure they're set in your shell.
 You can also set your default configs like so:
 
 ```bash
-MSWEA_LOCAL_CONFIG_PATH="/path/to/your/own/config"  # override the default config for mswea 
+MSWEA_LOCAL_CONFIG_PATH="/path/to/your/own/config"  # override the default config for `micro`
 ```
 
 ## Powering up <a target="powerup"/>
@@ -75,6 +77,8 @@ Just follow the recipe below:
 
 We aim to keep all of these components very simple, but offer lots of choice between them -- enough to cover a broad range of
 things that you might want to do.
+
+You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` environment variable to the import path of your run script.
 
 ## Contributing
 
