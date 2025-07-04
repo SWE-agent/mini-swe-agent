@@ -4,15 +4,14 @@
 To get started, let's write a simple TUI class, which should do
 """
 
-import asyncio
+import threading
 
-from textual import work
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import VerticalScroll
 from textual.widgets import Static
 
-from microswea.agents.default import DefaultAgent, NonTerminatingException, TerminatingException
+from microswea.agents.default import DefaultAgent
 from microswea.environments.local import LocalEnvironment
 from microswea.models import get_model
 
@@ -29,24 +28,33 @@ def messages_to_steps(messages: list[dict]) -> list[list[dict]]:
     return steps
 
 
+class TextualAgent(DefaultAgent):
+    def __init__(self, app: "AgentApp", *args, **kwargs):
+        self.app = app
+        self._initializing = True
+        super().__init__(*args, **kwargs)
+        self._initializing = False
+
+    def add_message(self, role: str, content: str):
+        super().add_message(role, content)
+        # Don't notify during initialization to avoid UI updates before app is ready
+        if not self._initializing:
+            # Use call_from_thread to safely update UI from background thread
+            self.app.call_from_thread(self.app.on_agent_message_added)
+
+
 class AgentApp(App):
     BINDINGS = [
-        Binding("right,l", "next_step", "Step++"),
-        Binding("left,h", "previous_step", "Step--"),
-        Binding("0", "first_step", "Step=0"),
-        Binding("$", "last_step", "Step=-1"),
-        Binding("j,down", "scroll_down", "Scroll down"),
-        Binding("k,up", "scroll_up", "Scroll up"),
-        Binding("r", "start_agent", "Start/Restart Agent"),
+        Binding("r", "start_agent", "Start Agent"),
     ]
 
     def __init__(self, model, env, problem_statement: str):
         """Create app with agent parameters."""
         super().__init__()
         # Create the agent directly
-        self.agent = DefaultAgent(model=model, env=env, problem_statement=problem_statement)
-        self.i_step = 0
         self.auto_follow = True  # Auto-advance to latest step
+        self.agent = TextualAgent(app=self, model=model, env=env, problem_statement=problem_statement)
+        self.i_step = 0
         self._agent_running = False
 
     def compose(self) -> ComposeResult:
@@ -55,8 +63,7 @@ class AgentApp(App):
 
     def on_mount(self) -> None:
         self.update_content()
-        # Start the agent automatically
-        self.action_start_agent()
+        self.run_agent_worker()
 
     @property
     def n_steps(self) -> int:
@@ -86,12 +93,6 @@ class AgentApp(App):
             self.app.sub_title = "Waiting..."
             return None
 
-        # Ensure i_step is within bounds
-        if self.i_step >= len(items):
-            self.i_step = len(items) - 1
-        elif self.i_step < 0:
-            self.i_step = 0
-
         step = items[self.i_step]
         return self._show_step_simple(step)
 
@@ -99,89 +100,28 @@ class AgentApp(App):
         """Automatically advance to the latest step"""
         if self.auto_follow and self.n_steps > 0:
             self.i_step = self.n_steps - 1
-            self.scroll_top()
             self.update_content()
             # Force a refresh to ensure the UI updates
             self.refresh()
 
-    @work(exclusive=True)
-    async def run_agent_worker(self):
-        """Run the agent step by step"""
+    def on_agent_message_added(self):
+        """Called when the agent adds a message - update UI"""
+        self.auto_advance_to_latest()
+
+    def run_agent_worker(self):
+        """Run the agent to completion in a separate thread"""
         self._agent_running = True
 
-        while True:
-            try:
-                print("stepping")
-                self.agent.step()
-                print("step done")
-                # Yield control to allow UI updates
-                await asyncio.sleep(0.1)
-            except TerminatingException as e:
-                self._agent_finished(str(e))
-                break
-            except NonTerminatingException as e:
-                self.agent.add_message("user", str(e))
-                # Yield control to allow UI updates
-                await asyncio.sleep(0.1)
-            finally:
-                # Update UI from worker thread
-                print("advancing")
-                self.auto_advance_to_latest()
-                print("advanced")
+        def agent_thread():
+            self.agent.run()
 
-    def _agent_finished(self, final_output: str) -> None:
-        """Called when agent finishes successfully"""
-        self._agent_running = False
-        self.auto_advance_to_latest()
-        self.app.sub_title = f"Step {self.i_step + 1}/{self.n_steps} - FINISHED"
-
-    def action_start_agent(self) -> None:
-        """Start or restart the agent"""
-        if not self._agent_running:
-            self.run_agent_worker()
-
-    # -----------------------------
-    # UI actions
-    # -----------------------------
-
-    def action_next_step(self) -> None:
-        if self.i_step < self.n_steps - 1:
-            self.i_step += 1
-            self.scroll_top()
-            self.update_content()
-
-    def action_previous_step(self) -> None:
-        if self.i_step > 0:
-            self.i_step -= 1
-            self.scroll_top()
-            self.update_content()
-
-    def action_first_step(self) -> None:
-        self.i_step = 0
-        self.update_content()
-
-    def action_last_step(self) -> None:
-        if self.n_steps > 0:
-            self.i_step = self.n_steps - 1
-            self.update_content()
-
-    def scroll_top(self) -> None:
-        """Resets scrolling viewport"""
-        vs = self.query_one(VerticalScroll)
-        vs.scroll_home(animate=False)
-
-    def action_scroll_down(self) -> None:
-        vs = self.query_one(VerticalScroll)
-        vs.scroll_to(y=vs.scroll_target_y + 15)
-
-    def action_scroll_up(self) -> None:
-        vs = self.query_one(VerticalScroll)
-        vs.scroll_to(y=vs.scroll_target_y - 15)
+        thread = threading.Thread(target=agent_thread, daemon=True)
+        thread.start()
 
 
 if __name__ == "__main__":
     app = AgentApp(
-        model=get_model(),
+        model=get_model("gpt-4o"),
         env=LocalEnvironment(),
         problem_statement="Write a simple Python script that prints 'Hello, world!', then test run it, then quit as a separate action",
     )
