@@ -44,8 +44,13 @@ class DefaultAgent:
 
     def add_message(self, role: str, content: str):
         self.messages.append({"role": role, "content": content})
-        color = "red" if role == "user" else "green"
-        console.print(f"\n[bold {color}]{role}:[/bold {color}]\n{content}", highlight=False)
+        if role == "assistant":
+            console.print(
+                f"\n[red][bold]Assistant[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):\n{content}",
+                highlight=False,
+            )
+        else:
+            console.print(f"\n[bold green]User[/bold green]:\n{content}", highlight=False)
 
     def run(self) -> str:
         """Run step() until agent is finished. Return final observation."""
