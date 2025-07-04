@@ -46,7 +46,7 @@ class DefaultAgent:
         self.messages.append({"role": role, "content": content})
         if role == "assistant":
             console.print(
-                f"\n[red][bold]Assistant[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):\n{content}",
+                f"\n[red][bold]Assistant[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):[/red]\n{content}",
                 highlight=False,
             )
         else:

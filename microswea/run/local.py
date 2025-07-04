@@ -29,6 +29,7 @@ def get_multiline_problem_statement() -> str:
         except EOFError:
             break
 
+    print()
     return "\n".join(lines).strip()
 
 
@@ -52,10 +53,10 @@ def main(
     # Use get_model to defer model imports (can take a while), but also to switch in
     # some optimized models (especially for anthropic)
     agent = InteractiveAgent(
-        get_model(model, _config),
+        get_model(model, _config.get("model", {})),
         LocalEnvironment(),
         problem,
-        **(_config["agent"] | {"confirm_actions": not yolo}),
+        **(_config.get("agent", {}) | {"confirm_actions": not yolo}),
     )
 
     try:
@@ -68,7 +69,7 @@ def main(
         Path("traj.json").write_text(
             json.dumps(agent.messages, indent=2),
         )
-        console.print(f"Total cost: [bold green]${agent.model.cost:.4f}[/bold green]")
+        console.print(f"Total cost: [bold green]${agent.model.cost:.2f}[/bold green]")
         console.print(f"Total steps: [bold green]{agent.model.n_calls}[/bold green]")
     return agent
 

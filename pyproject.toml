@@ -38,6 +38,7 @@ dependencies = [
     "rich",
     "python-dotenv",
     "typer",
+    "platformdirs",
 ]
 
 [project.optional-dependencies]

@@ -27,8 +27,6 @@ The project builds on our experience building [SWE-agent](https://swe-agent.com)
 ## 🔥 Run as a tool without permanent installation <a target="fire"/>
 
 ```bash
-export MSWEA_MODEL_NAME="claude-sonnet-4-20250514"  # your favorite model
-export ANTHROPIC_API_KEY="xxx"  # API key for your model
 pip install pipx && pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro-swe-agent
 ```
 
@@ -54,11 +52,14 @@ python microswea/run/local.py
 
 ## Configuration
 
-You can put your LM API keys in a `.env` at the repository root or make sure they're set in your shell.
-You can also set your default configs like so:
+All global configuration can be either set as environment variables, or
+in the `.env` file (the exact location is printed when you run `micro`).
 
 ```bash
-MSWEA_LOCAL_CONFIG_PATH="/path/to/your/own/config"  # override the default config for `micro`
+# set default config for micro
+MSWEA_LOCAL_CONFIG_PATH="/path/to/your/own/config"
+# set default model
+MSWEA_MODEL_NAME="claude-sonnet-4-20250514"
 ```
 
 ## Powering up <a target="powerup"/>

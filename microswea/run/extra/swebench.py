@@ -59,10 +59,10 @@ def process_instance(instance: dict, output_path: Path) -> dict:
     image_name = get_image_name(instance)
 
     agent = DefaultAgent(
-        get_model(config=config),
-        DockerEnvironment(**(config["environment"] | {"image": image_name})),
+        get_model(config=config.get("model", {})),
+        DockerEnvironment(**(config.get("environment", {}) | {"image": image_name})),
         problem_statement,
-        **config["agent"],
+        **config.get("agent", {}),
     )
 
     try:

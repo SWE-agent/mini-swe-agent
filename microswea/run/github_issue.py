@@ -49,10 +49,10 @@ def main(
     problem_statement = fetch_github_issue(issue_url)
 
     agent = DefaultAgent(
-        get_model(model, _config),
+        get_model(model, _config.get("model", {})),
         DockerEnvironment(**_config.get("environment", {})),
         problem_statement,
-        **(_config["agent"]),
+        **(_config.get("agent", {})),
     )
 
     repo_url = issue_url.split("/issues/")[0]

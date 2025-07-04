@@ -3,13 +3,39 @@ You can ignore this file if you explicitly set your model in your run script.
 """
 
 
+import copy
 import os
 
+from dotenv import set_key
 from rich.console import Console
 
-from microswea import Model
+from microswea import Model, global_config_file
 
 console = Console()
+
+def get_model(model_name: str | None = None, config: dict | None = None) -> Model:
+    resolved_model_name = get_model_name(model_name, config)
+    if config is None:
+        config = {}
+    config = copy.deepcopy(config)
+    config["model_name"] = resolved_model_name
+    if "model_kwargs" not in config:
+        config["model_kwargs"] = {}
+    if not config.get("model_kwargs", {}).get("api_key"):
+        config["model_kwargs"]["api_key"] = os.getenv(f"API_KEY_{resolved_model_name.upper().replace('-', '_')}") or ""
+    return get_model_class(resolved_model_name)(**config)
+
+
+def get_model_name(input_model_name: str | None = None, config: dict | None = None) -> str:
+    if config is None:
+        config = {}
+    if input_model_name:
+        return input_model_name
+    if from_env := os.getenv("MSWEA_MODEL_NAME"):
+        return from_env
+    if from_config := config.get("model", {}).get("model_name"):
+        return from_config
+    return prompt_for_model_name()
 
 
 def get_model_class(model_name: str) -> type:
@@ -22,15 +48,7 @@ def get_model_class(model_name: str) -> type:
     return LitellmModel
 
 
-def get_model_name(input_model_name: str |None = None, config: dict | None = None) -> str:
-    if config is None:
-        config = {}
-    if input_model_name:
-        return input_model_name
-    if from_env := os.getenv("MSWEA_MODEL_NAME"):
-        return from_env
-    if from_config := config.get("model", {}).get("model_name"):
-        return from_config
+def prompt_for_model_name() -> str:
     msg = (
         "[bold yellow]Choose your language model[/bold yellow]\n"
         "Popular models:\n"
@@ -38,13 +56,12 @@ def get_model_name(input_model_name: str |None = None, config: dict | None = Non
         "[bold yellow]Your language model: [/bold yellow]"
     )
     choice = console.input(msg)
-    console.print(f"To persist your choice, set the [bold green]MSWEA_MODEL_NAME={choice}[/bold green]")
-    console.print("Please also make sure that you have set the corresponding API key as the environment variable.")
+    set_key(global_config_file, "MSWEA_MODEL_NAME", choice)
+    if api_key := console.input(
+        f"\n[bold yellow]Set your language model API key[/bold yellow]\n"
+        f"[dim]Ignore this, if you have already set the key as an environment variable.[/dim]\n"
+        f"[dim]The key will be stored in [green]'{global_config_file}'[/green][/dim]\n"
+        f"[bold yellow]Key (optional) > [/bold yellow]"
+    ):
+        set_key(global_config_file, f"API_KEY_{choice.upper().replace('-', '_')}", api_key)
     return choice
-
-
-def get_model(model_name: str | None = None, config: dict | None = None) -> Model:
-    resolved_model_name = get_model_name(model_name, config)
-    if config is None:
-        config = {}
-    return get_model_class(resolved_model_name)(**(config.get("model", {}) | {"model_name": resolved_model_name}))
