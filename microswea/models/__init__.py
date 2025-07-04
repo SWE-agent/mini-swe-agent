@@ -9,6 +9,8 @@ from rich.console import Console
 
 from microswea import Model
 
+console = Console()
+
 
 def get_model_class(model_name: str) -> type:
     if any(s in model_name for s in ["anthropic", "sonnet", "opus"]):
@@ -29,7 +31,16 @@ def get_model_name(input_model_name: str |None = None, config: dict | None = Non
         return from_env
     if from_config := config.get("model", {}).get("model_name"):
         return from_config
-    return Console().input("[bold yellow]Enter your model name: [/bold yellow]")
+    msg = (
+        "[bold yellow]Choose your language model[/bold yellow]\n"
+        "Popular models:\n"
+        "[bold green]claude-3-5-sonnet-20241022[/bold green]\n[bold green]gpt-4o[/bold green]\n"
+        "[bold yellow]Your language model: [/bold yellow]"
+    )
+    choice = console.input(msg)
+    console.print(f"To persist your choice, set the [bold green]MSWEA_MODEL_NAME={choice}[/bold green]")
+    console.print("Please also make sure that you have set the corresponding API key as the environment variable.")
+    return choice
 
 
 def get_model(model_name: str | None = None, config: dict | None = None) -> Model:
