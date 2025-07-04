@@ -114,13 +114,19 @@ class ConfirmationPrompt(Static):
 
 class AgentApp(App):
     BINDINGS = [
-        Binding("r", "start_agent", "Start Agent"),
+        Binding("right,l", "next_step", "Step++"),
+        Binding("left,h", "previous_step", "Step--"),
+        Binding("0", "first_step", "Step=0"),
+        Binding("$", "last_step", "Step=-1"),
+        Binding("j,down", "scroll_down", "Scroll down"),
+        Binding("k,up", "scroll_up", "Scroll up"),
+        Binding("r", "start_agent", "Start/Restart Agent"),
         Binding("q", "quit", "Quit"),
         Binding("y", "toggle_yolo", "Toggle YOLO Mode"),
+        Binding("f", "toggle_follow", "Toggle Auto-Follow"),
     ]
 
     def __init__(self, model, env, problem_statement: str):
-        # Load CSS from file, with environment variable override support
         css_path = os.environ.get(
             "MSWEA_LOCAL2_STYLE_PATH", str(Path(__file__).parent.parent / "config" / "local2.tcss")
         )
@@ -130,6 +136,7 @@ class AgentApp(App):
         self.auto_follow = True
         self.agent = TextualAgent(app=self, model=model, env=env, problem_statement=problem_statement)
         self.i_step = 0
+        self.n_steps = 0
         self._agent_running = False
         self.title = "micro-SWE-agent"
         self._confirming_action = None
@@ -146,7 +153,6 @@ class AgentApp(App):
 
     def on_mount(self) -> None:
         self.update_content()
-        self.hide_confirmation()
         self.run_agent_worker()
 
     def hide_confirmation(self):
@@ -155,13 +161,16 @@ class AgentApp(App):
         self.query_one("#rejection-input", Input).display = False
         self.query_one("#rejection-input", Input).value = ""
         self.query_one(ConfirmationPrompt).rejection_mode = False
-        self.query_one(ConfirmationPrompt).update("Press Enter to confirm action, or BACKSPACE to reject")
+        self.query_one(ConfirmationPrompt).update(
+            "Press Enter to confirm action or BACKSPACE to reject or y to toggle YOLO mode"
+        )
 
     def show_confirmation(self, action: str):
         """Show confirmation input for an action."""
         self._confirming_action = action
-        self.query_one("#confirmation-container").display = True
-        self.query_one(ConfirmationPrompt).focus()
+        # Force to last step where the action is happening
+        if self.n_steps > 0:
+            self.i_step = self.n_steps - 1
         self.update_content()
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
@@ -172,9 +181,9 @@ class AgentApp(App):
     def confirm_action(self, rejection_message: str | None):
         """Handle confirmation result."""
         if self._confirming_action is not None:
-            self.hide_confirmation()
             self.agent.set_confirmation_result(rejection_message)
             self._confirming_action = None
+            self.hide_confirmation()
             self.update_content()
 
     def action_toggle_yolo(self):
@@ -182,9 +191,57 @@ class AgentApp(App):
         self.agent.config.confirm_actions = not self.agent.config.confirm_actions
         self.notify(f"YOLO mode {'disabled' if self.agent.config.confirm_actions else 'enabled'}")
 
+    def action_toggle_follow(self):
+        """Toggle auto-follow mode."""
+        self.auto_follow = not self.auto_follow
+        self.notify(f"Auto-follow {'enabled' if self.auto_follow else 'disabled'}")
+        if self.auto_follow and self.n_steps > 0:
+            self.i_step = self.n_steps - 1
+            self.update_content()
+
+    def action_next_step(self) -> None:
+        if self.i_step < self.n_steps - 1:
+            self.i_step += 1
+            self.auto_follow = False  # Disable auto-follow when user navigates
+            self.scroll_top()
+            self.update_content()
+
+    def action_previous_step(self) -> None:
+        if self.i_step > 0:
+            self.i_step -= 1
+            self.auto_follow = False  # Disable auto-follow when user navigates
+            self.scroll_top()
+            self.update_content()
+
+    def action_first_step(self) -> None:
+        self.i_step = 0
+        self.auto_follow = False  # Disable auto-follow when user navigates
+        self.update_content()
+
+    def action_last_step(self) -> None:
+        if self.n_steps > 0:
+            self.i_step = self.n_steps - 1
+            self.auto_follow = True  # Re-enable auto-follow when going to last step
+            self.update_content()
+
+    def scroll_top(self) -> None:
+        """Resets scrolling viewport"""
+        vs = self.query_one(VerticalScroll)
+        vs.scroll_home(animate=False)
+
+    def action_scroll_down(self) -> None:
+        vs = self.query_one(VerticalScroll)
+        vs.scroll_to(y=vs.scroll_target_y + 15)
+
+    def action_scroll_up(self) -> None:
+        vs = self.query_one(VerticalScroll)
+        vs.scroll_to(y=vs.scroll_target_y - 15)
+
     def update_content(self) -> None:
         items = messages_to_steps(self.agent.messages)
         n_steps = len(items)
+        old_n_steps = self.n_steps
+        self.n_steps = n_steps
         print("Update called and I have", n_steps, "steps: ", items)
         container = self.query_one("#content", Vertical)
 
@@ -193,7 +250,14 @@ class AgentApp(App):
             self.sub_title = "Waiting..."
             return
 
+        # Only auto-follow if agent is running and we're already on the last step
+        # or if this is the first time we have steps
         if self.auto_follow and n_steps > 0:
+            if old_n_steps == 0 or (self._agent_running and self.i_step == old_n_steps - 1):
+                self.i_step = n_steps - 1
+
+        # Ensure i_step is within bounds
+        if self.i_step >= n_steps:
             self.i_step = n_steps - 1
 
         # Clear existing content
@@ -204,14 +268,25 @@ class AgentApp(App):
             msg_container = MessageContainer(role=message["role"].upper(), content=message["content"])
             container.mount(msg_container)
 
+        # Show confirmation only if we're on the last step and there's an action to confirm
+        if self._confirming_action is not None and self.i_step == n_steps - 1:
+            self.query_one("#confirmation-container").display = True
+            prompt_text = "Press Enter to confirm action, BACKSPACE to reject"
+            self.query_one(ConfirmationPrompt).update(prompt_text)
+            self.query_one(ConfirmationPrompt).focus()
+        else:
+            self.query_one("#confirmation-container").display = False
+
         # Update status and title
-        status = "RUNNING" if self._agent_running else "STOPPED"
+        # Show STOPPED when waiting for confirmation, even if agent is technically running
+        status = "RUNNING" if self._agent_running and self._confirming_action is None else "STOPPED"
         cost = f"${self.agent.model.cost:.2f}"
         self.sub_title = f"Step {self.i_step + 1}/{n_steps} - {status} - Cost: {cost}"
 
         # Ensure header class matches running state
+        # Remove running class when waiting for confirmation, even if agent is technically running
         header = self.query_one("Header")
-        if self._agent_running:
+        if self._agent_running and self._confirming_action is None:
             header.add_class("running")
         else:
             header.remove_class("running")
