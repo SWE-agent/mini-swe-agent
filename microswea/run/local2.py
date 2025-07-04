@@ -35,6 +35,13 @@ class TextualAgent(DefaultAgent):
         if not self._initializing:
             self.app.call_from_thread(self.app.update_content)
 
+    def run(self) -> str:
+        try:
+            result = super().run()
+        finally:
+            self.app.call_from_thread(self.app.set_finished)
+        return result
+
 
 class MessageContainer(Vertical):
     def __init__(self, role: str, content: str):
@@ -57,7 +64,6 @@ class AgentApp(App):
 
     #main {
         height: 100%;
-        border: solid green;
         padding: 1;
     }
 
@@ -66,17 +72,21 @@ class AgentApp(App):
         content-align: center middle;
     }
 
+    #content {
+        height: auto;
+    }
+
     .message-container {
         margin: 1;
         padding: 1;
-        border: solid $primary-lighten-2;
         background: $surface;
+        height: auto;
+        width: 100%;
     }
 
     .message-header {
-        text-align: center;
-        background: $primary-lighten-2;
-        color: $text;
+        text-align: left;
+        color: $primary;
         padding: 0 1;
         text-style: bold;
     }
@@ -84,6 +94,10 @@ class AgentApp(App):
     .message-content {
         margin-top: 1;
         padding: 0 1;
+    }
+
+    Header.running {
+        background: $error;
     }
     """
 
@@ -132,20 +146,34 @@ class AgentApp(App):
             msg_container = MessageContainer(role=message["role"].upper(), content=message["content"])
             container.mount(msg_container)
 
+        # Update status and title
         status = "RUNNING" if self._agent_running else "STOPPED"
         self.sub_title = f"Step {self.i_step + 1}/{n_steps} - {status}"
+
+        # Ensure header class matches running state
+        header = self.query_one("Header")
+        if self._agent_running:
+            header.add_class("running")
+        else:
+            header.remove_class("running")
+
         self.refresh()
 
     def run_agent_worker(self):
         self._agent_running = True
+        self.update_content()  # Update UI immediately when starting
         thread = threading.Thread(target=self.agent.run, daemon=True)
         thread.start()
+
+    def set_finished(self):
+        self._agent_running = False
+        self.update_content()  # Update UI immediately when finishing
 
 
 if __name__ == "__main__":
     app = AgentApp(
         model=get_model("gpt-4o"),
         env=LocalEnvironment(),
-        problem_statement="Write a simple Python script that prints 'Hello, world!', then test run it, then quit as a separate action",
+        problem_statement="Write a simple Python script that prints 'Hello, world!', then test run it, then quit using echo 'MICRO_SWE_AGENT_FINAL_OUTPUT' as a standalone command",
     )
     app.run()
