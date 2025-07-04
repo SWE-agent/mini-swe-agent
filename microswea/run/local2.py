@@ -1,20 +1,73 @@
-"""Textual TUI interface for the agent."""
-
+#!/usr/bin/env python3
+import json
 import os
 import re
 import threading
 from pathlib import Path
 
+import typer
+import yaml
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Container, Vertical, VerticalScroll
 from textual.events import Key
 from textual.widgets import Footer, Header, Input, Static
 
+from microswea import package_dir
 from microswea.agents.default import DefaultAgent, NonTerminatingException
 from microswea.agents.interactive import InteractiveAgentConfig
 from microswea.environments.local import LocalEnvironment
 from microswea.models import get_model
+from microswea.run.local import get_multiline_problem_statement
+
+DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL2_CONFIG_PATH", package_dir / "config" / "local.yaml"))
+app = typer.Typer()
+
+
+@app.command()
+def main(
+    config: str = typer.Option(str(DEFAULT_CONFIG), "--config", help="Path to config file"),
+    model: str | None = typer.Option(
+        None,
+        "--model",
+        help="Model to use",
+    ),
+    problem: str | None = typer.Option(None, "--problem", help="Problem statement", show_default=False),
+    yolo: bool = typer.Option(False, "--yolo", help="Run without confirmation"),
+) -> None:
+    """Run micro-SWE-agent with textual interface."""
+    _config = yaml.safe_load(Path(config).read_text())
+
+    if not problem:
+        problem = get_multiline_problem_statement()
+        if not problem:
+            typer.echo("No problem statement provided.")
+            raise typer.Exit(1)
+
+    # Create and run the agent app
+    agent_app = AgentApp(
+        model=get_model(model, _config.get("model", {})),
+        env=LocalEnvironment(),
+        problem_statement=problem,
+        confirm_actions=not yolo,
+    )
+
+    try:
+        agent_app.run()
+    except KeyboardInterrupt:
+        typer.echo("\nKeyboardInterrupt -- goodbye")
+    finally:
+        # Save results
+        if agent_app.agent.messages:
+            Path("patch.txt").write_text(agent_app.get_final_output())
+            Path("traj.json").write_text(json.dumps(agent_app.agent.messages, indent=2))
+            typer.echo(f"Total cost: ${agent_app.agent.model.cost:.2f}")
+            typer.echo(f"Total steps: {agent_app.agent.model.n_calls}")
+
+
+def cli() -> None:
+    """CLI entry point for script execution."""
+    app()
 
 
 class TextualAgent(DefaultAgent):
@@ -133,7 +186,7 @@ class AgentApp(App):
         Binding("y", "toggle_yolo", "Toggle YOLO Mode"),
     ]
 
-    def __init__(self, model, env, problem_statement: str):
+    def __init__(self, model, env, problem_statement: str, confirm_actions: bool):
         css_path = os.environ.get(
             "MSWEA_LOCAL2_STYLE_PATH", str(Path(__file__).parent.parent / "config" / "local2.tcss")
         )
@@ -158,6 +211,9 @@ class AgentApp(App):
         # Confirmation threading
         self._action_confirmed = threading.Event()
         self._confirmation_result = None
+
+        # Agent config
+        self.agent.config.confirm_actions = confirm_actions
 
     def request_confirmation(self, action: str) -> str | None:
         """Request confirmation for an action. Returns rejection message or None."""
@@ -289,11 +345,10 @@ class AgentApp(App):
         self._agent_running = False
         self.update_content()
 
+    def get_final_output(self) -> str:
+        """Get the final output from the agent."""
+        return ""
+
 
 if __name__ == "__main__":
-    app = AgentApp(
-        model=get_model("gpt-4o"),
-        env=LocalEnvironment(),
-        problem_statement="Write a simple Python script that prints 'Hello, world!', then test run it, then quit using echo 'MICRO_SWE_AGENT_FINAL_OUTPUT' as a standalone command without any other output",
-    )
-    app.run()
+    app()

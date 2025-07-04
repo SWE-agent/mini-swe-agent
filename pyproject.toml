@@ -58,6 +58,7 @@ dev = [
 
 [project.scripts]
 micro = "microswea.__main__:main"
+micro2 = "microswea.run.local2:cli"
 micro-swe-agent = "microswea.__main__:main"
 
 [tool.setuptools]
