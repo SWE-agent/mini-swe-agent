@@ -17,19 +17,6 @@ from microswea.environments.local import LocalEnvironment
 from microswea.models import get_model
 
 
-def messages_to_steps(messages: list[dict]) -> list[list[dict]]:
-    steps = []
-    current_step = []
-    for message in messages:
-        current_step.append(message)
-        if message["role"] == "user":
-            steps.append(current_step)
-            current_step = []
-    if current_step:
-        steps.append(current_step)
-    return steps
-
-
 class TextualAgent(DefaultAgent):
     def __init__(self, app: "AgentApp", *args, **kwargs):
         self.app = app
@@ -59,6 +46,19 @@ class TextualAgent(DefaultAgent):
         return super().execute_action(action)
 
 
+def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
+    steps = []
+    current_step = []
+    for message in messages:
+        current_step.append(message)
+        if message["role"] == "user":
+            steps.append(current_step)
+            current_step = []
+    if current_step:
+        steps.append(current_step)
+    return steps
+
+
 class MessageContainer(Vertical):
     def __init__(self, role: str, content: str):
         super().__init__(classes="message-container")
@@ -72,6 +72,7 @@ class MessageContainer(Vertical):
 
 class ConfirmationContainer(Container):
     def __init__(self):
+        """This container represents the action confirmation prompt."""
         super().__init__(id="confirmation-container")
         self.rejection_mode = False
         self.can_focus = True
@@ -226,8 +227,7 @@ class AgentApp(App):
             self.update_content()
 
     def scroll_top(self) -> None:
-        vs = self.query_one(VerticalScroll)
-        vs.scroll_home(animate=False)
+        self.query_one(VerticalScroll).scroll_to(y=0, animate=False)
 
     def action_scroll_down(self) -> None:
         vs = self.query_one(VerticalScroll)
@@ -238,7 +238,7 @@ class AgentApp(App):
         vs.scroll_to(y=vs.scroll_target_y - 15)
 
     def update_content(self) -> None:
-        items = messages_to_steps(self.agent.messages)
+        items = _messages_to_steps(self.agent.messages)
         n_steps = len(items)
         old_n_steps = self.n_steps
         self.n_steps = n_steps
@@ -250,6 +250,7 @@ class AgentApp(App):
             return
 
         if self.i_step == old_n_steps - 1 and n_steps > 0:
+            # If the agent is running and we're at the last step, follow the agent's progress
             if old_n_steps == 0 or (self._agent_running and self.i_step == old_n_steps - 1):
                 self.i_step = n_steps - 1
 
