@@ -87,7 +87,10 @@ class MessageContainer(Vertical):
 
 class ConfirmationPrompt(Static):
     def __init__(self):
-        super().__init__("Press Enter to confirm action, or DELETE to reject", classes="confirmation-prompt")
+        super().__init__(
+            "Press Enter to confirm action or BACKSPACE to reject or y to toggle YOLO mode",
+            classes="confirmation-prompt",
+        )
         self.rejection_mode = False
         self.can_focus = True
 
@@ -101,7 +104,7 @@ class ConfirmationPrompt(Static):
             if event.key == "enter":
                 event.prevent_default()
                 app.confirm_action(None)
-            elif event.key == "delete":
+            elif event.key == "backspace":
                 event.prevent_default()
                 self.rejection_mode = True
                 self.update("Enter rejection message (optional) and press Enter:")
@@ -152,7 +155,7 @@ class AgentApp(App):
         self.query_one("#rejection-input", Input).display = False
         self.query_one("#rejection-input", Input).value = ""
         self.query_one(ConfirmationPrompt).rejection_mode = False
-        self.query_one(ConfirmationPrompt).update("Press Enter to confirm action, or DELETE to reject")
+        self.query_one(ConfirmationPrompt).update("Press Enter to confirm action, or BACKSPACE to reject")
 
     def show_confirmation(self, action: str):
         """Show confirmation input for an action."""
