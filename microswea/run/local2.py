@@ -4,8 +4,8 @@ import threading
 
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.containers import VerticalScroll
-from textual.widgets import Static
+from textual.containers import Container, Vertical, VerticalScroll
+from textual.widgets import Footer, Header, Static
 
 from microswea.agents.default import DefaultAgent
 from microswea.environments.local import LocalEnvironment
@@ -36,8 +36,61 @@ class TextualAgent(DefaultAgent):
             self.app.call_from_thread(self.app.update_content)
 
 
+class MessageContainer(Vertical):
+    def __init__(self, role: str, content: str):
+        super().__init__(classes="message-container")
+        self.role = role
+        self.content = content
+
+    def compose(self) -> ComposeResult:
+        yield Static(self.role, classes="message-header")
+        yield Static(self.content, classes="message-content")
+
+
 class AgentApp(App):
-    BINDINGS = [Binding("r", "start_agent", "Start Agent")]
+    CSS = """
+    Screen {
+        layout: grid;
+        grid-size: 1;
+        grid-rows: 1fr 8 1fr;
+    }
+
+    #main {
+        height: 100%;
+        border: solid green;
+        padding: 1;
+    }
+
+    Footer {
+        dock: bottom;
+        content-align: center middle;
+    }
+
+    .message-container {
+        margin: 1;
+        padding: 1;
+        border: solid $primary-lighten-2;
+        background: $surface;
+    }
+
+    .message-header {
+        text-align: center;
+        background: $primary-lighten-2;
+        color: $text;
+        padding: 0 1;
+        text-style: bold;
+    }
+
+    .message-content {
+        margin-top: 1;
+        padding: 0 1;
+    }
+    """
+
+    BINDINGS = [
+        Binding("r", "start_agent", "Start Agent"),
+        Binding("q", "quit", "Quit"),
+    ]
 
     def __init__(self, model, env, problem_statement: str):
         super().__init__()
@@ -45,10 +98,14 @@ class AgentApp(App):
         self.agent = TextualAgent(app=self, model=model, env=env, problem_statement=problem_statement)
         self.i_step = 0
         self._agent_running = False
+        self.title = "micro-SWE-agent"
 
     def compose(self) -> ComposeResult:
-        with VerticalScroll():
-            yield Static(id="content", markup=False)
+        yield Header()
+        with Container(id="main"):
+            with VerticalScroll():
+                yield Vertical(id="content")
+        yield Footer()
 
     def on_mount(self) -> None:
         self.update_content()
@@ -56,10 +113,10 @@ class AgentApp(App):
 
     def update_content(self) -> None:
         items = messages_to_steps(self.agent.messages)
-        content = self.query_one("#content", Static)
+        container = self.query_one("#content", Vertical)
 
         if not items:
-            content.update("Waiting for agent to start...")
+            container.mount(Static("Waiting for agent to start..."))
             self.sub_title = "Waiting..."
             return
 
@@ -67,11 +124,14 @@ class AgentApp(App):
         if self.auto_follow and n_steps > 0:
             self.i_step = n_steps - 1
 
-        content_str = ""
-        for message in items[self.i_step]:
-            content_str += f"{message['role'].capitalize()}: {message['content']}\n"
+        # Clear existing content
+        container.remove_children()
 
-        content.update(content_str)
+        # Add new messages
+        for message in items[self.i_step]:
+            msg_container = MessageContainer(role=message["role"].upper(), content=message["content"])
+            container.mount(msg_container)
+
         status = "RUNNING" if self._agent_running else "STOPPED"
         self.sub_title = f"Step {self.i_step + 1}/{n_steps} - {status}"
         self.refresh()
