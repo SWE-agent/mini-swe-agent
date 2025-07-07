@@ -223,6 +223,7 @@ ACI = "ACI"
 [tool.typos.default.extend-words]
 # Don't correct the surname "Teh"
 aci = "aci"
+ba = "ba"
 
 [tool.pylint.messages_control]
 disable = [
