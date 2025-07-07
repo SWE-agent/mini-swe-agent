@@ -39,6 +39,7 @@ dependencies = [
     "python-dotenv",
     "typer",
     "platformdirs",
+    "textual",
 ]
 
 [project.optional-dependencies]
