@@ -68,10 +68,10 @@ class MessageContainer(Vertical):
 
 
 class ConfirmationContainer(Container):
-    def __init__(self):
-        """This container represents the action confirmation prompt."""
+    def __init__(self, app: "AgentApp"):
         super().__init__(id="confirmation-container")
-        self.rejection_mode = False
+        self._app = app
+        self.rejecting = False
         self.can_focus = True
 
     def compose(self) -> ComposeResult:
@@ -79,32 +79,33 @@ class ConfirmationContainer(Container):
             "Press Enter to confirm action or BACKSPACE to reject or y to toggle YOLO mode",
             classes="confirmation-prompt",
         )
-        yield Input(id="rejection-input", placeholder="Enter rejection message (optional)")
+        yield Input(id="rejection-input", placeholder="Enter rejection message (optional) and/or press Enter")
 
     def on_mount(self) -> None:
         self.focus()
 
     def reset(self):
         """Reset the confirmation prompt to its initial state."""
-        self.rejection_mode = False
+        self.rejecting = False
         rejection_input = self.query_one("#rejection-input", Input)
         rejection_input.display = False
         rejection_input.value = ""
 
     def on_key(self, event: Key) -> None:
-        app = self.screen.app
-        if isinstance(app, AgentApp) and not self.rejection_mode:
+        if not self.rejecting:
             if event.key == "enter":
                 event.prevent_default()
-                app.confirm_action(None)
-                self.reset()
+                self._app._complete_confirmation(None)
             elif event.key == "backspace":
                 event.prevent_default()
-                self.rejection_mode = True
-                self.query_one(Static).update("Enter rejection message (optional) and press Enter:")
+                self.rejecting = True
                 rejection_input = self.query_one("#rejection-input", Input)
                 rejection_input.display = True
                 rejection_input.focus()
+
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        if self.rejecting:
+            self._app._complete_confirmation(event.value)
 
 
 class AgentApp(App):
@@ -138,12 +139,12 @@ class AgentApp(App):
         self.n_steps = 1
         self._agent_running = False
         self.title = "micro-SWE-agent"
-        self._confirming_action = None
-        self.confirmation_container = ConfirmationContainer()
 
-        # Confirmation threading
-        self._action_confirmed = threading.Event()
+        # Simplified confirmation state
+        self._pending_action = None
+        self._confirmation_event = threading.Event()
         self._confirmation_result = None
+        self.confirmation_container = ConfirmationContainer(self)
 
         # Agent config
         self.agent.config.confirm_actions = confirm_actions
@@ -163,11 +164,21 @@ class AgentApp(App):
 
     def request_confirmation(self, action: str) -> str | None:
         """Request confirmation for an action. Returns rejection message or None."""
-        self._action_confirmed.clear()
+        self._confirmation_event.clear()
         self._confirmation_result = None
-        self.call_from_thread(self.show_confirmation, action)
-        self._action_confirmed.wait()
+        self._pending_action = action
+        self.call_from_thread(self.update_content)
+        self._confirmation_event.wait()
         return self._confirmation_result
+
+    def _complete_confirmation(self, rejection_message: str | None):
+        """Internal method to complete the confirmation process."""
+        self._confirmation_result = rejection_message
+        self._pending_action = None
+        self.confirmation_container.display = False
+        self.confirmation_container.reset()
+        self._confirmation_event.set()
+        self.update_content()
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -181,22 +192,6 @@ class AgentApp(App):
         self._app_running = True
         self.update_content()
         self.run_agent_worker()
-
-    def show_confirmation(self, action: str):
-        self._confirming_action = action
-        self.update_content()
-
-    def on_input_submitted(self, event: Input.Submitted) -> None:
-        if self._confirming_action is not None and self.confirmation_container.rejection_mode:
-            self.confirm_action(event.value)
-
-    def confirm_action(self, rejection_message: str | None):
-        if self._confirming_action is not None:
-            self._confirmation_result = rejection_message
-            self._action_confirmed.set()
-            self._confirming_action = None
-            self.confirmation_container.display = False
-            self.update_content()
 
     def scroll_top(self) -> None:
         self.query_one(VerticalScroll).scroll_to(y=0, animate=False)
@@ -229,16 +224,17 @@ class AgentApp(App):
                 content_str = str(message["content"])
             container.mount(MessageContainer(role=message["role"].upper(), content=content_str))
 
-        self.confirmation_container.display = self._confirming_action is not None and self.i_step == len(items) - 1
+        # Show confirmation container if we have a pending action and we're on the latest step
+        self.confirmation_container.display = self._pending_action is not None and self.i_step == len(items) - 1
         if self.confirmation_container.display:
             self.confirmation_container.focus()
 
-        status = "RUNNING" if self._agent_running and self._confirming_action is None else "STOPPED"
+        status = "RUNNING" if self._agent_running and self._pending_action is None else "STOPPED"
         cost = f"${self.agent.model.cost:.2f}"
         self.sub_title = f"Step {self.i_step + 1}/{len(items)} - {status} - Cost: {cost}"
 
         header = self.query_one("Header")
-        if self._agent_running and self._confirming_action is None:
+        if self._agent_running and self._pending_action is None:
             header.add_class("running")
         else:
             header.remove_class("running")
