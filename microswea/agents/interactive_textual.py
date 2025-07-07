@@ -159,8 +159,7 @@ class AgentApp(App):
     def i_step(self, value: int) -> None:
         """Set current step index, automatically clamping to valid bounds."""
         if value != self._i_step:
-            max_step = max(0, self.n_steps - 1) if self.n_steps > 0 else 0
-            self._i_step = max(0, min(value, max_step))
+            self._i_step = max(0, min(value, self.n_steps - 1))
             self.scroll_top()
             self.update_content()
 
@@ -221,7 +220,6 @@ class AgentApp(App):
 
         if not items:
             container.mount(Static("Waiting for agent to start..."))
-            self.sub_title = "Waiting..."
             return
 
         container.remove_children()
@@ -231,14 +229,9 @@ class AgentApp(App):
                 content_str = "\n".join([item["text"] for item in message["content"]])
             else:
                 content_str = str(message["content"])
-            print(f"mounting message: {message['role']} {content_str}")
-            msg_container = MessageContainer(role=message["role"].upper(), content=content_str)
-            container.mount(msg_container)
+            container.mount(MessageContainer(role=message["role"].upper(), content=content_str))
 
-        if self._confirming_action is not None and self.i_step == len(items) - 1:
-            self.confirmation_container.display = True
-        else:
-            self.confirmation_container.display = False
+        self.confirmation_container.display = self._confirming_action is not None and self.i_step == len(items) - 1
 
         status = "RUNNING" if self._agent_running and self._confirming_action is None else "STOPPED"
         cost = f"${self.agent.model.cost:.2f}"
