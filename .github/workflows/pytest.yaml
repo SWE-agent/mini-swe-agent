@@ -35,9 +35,9 @@ jobs:
       - name: Install dependencies
         run: |
             pip install -e '.[full]'
-            pip install pytest pytest-cov
+            pip install pytest pytest-cov pytest-xdist
       - name: Run pytest
-        run: pytest -v --cov --cov-branch --cov-report=xml
+        run: pytest -v --cov --cov-branch --cov-report=xml -n auto
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:

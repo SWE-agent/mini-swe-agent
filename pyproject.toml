@@ -51,6 +51,7 @@ full = [
 dev = [
     "pytest",
     "pytest-cov",
+    "pytest-xdist",
     "pre-commit",
     "ruff",
 ]
