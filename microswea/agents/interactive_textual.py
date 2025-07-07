@@ -93,22 +93,13 @@ class ConfirmationContainer(Container):
         rejection_input.display = False
         rejection_input.value = ""
 
-    def show(self):
-        """Show the confirmation container."""
-        self.display = True
-        self.focus()
-
-    def hide(self):
-        """Hide the confirmation container and reset state."""
-        self.display = False
-        self.reset()
-
     def on_key(self, event: Key) -> None:
         app = self.screen.app
         if isinstance(app, AgentApp) and not self.rejection_mode:
             if event.key == "enter":
                 event.prevent_default()
                 app.confirm_action(None)
+                self.reset()
             elif event.key == "backspace":
                 event.prevent_default()
                 self.rejection_mode = True
@@ -180,9 +171,6 @@ class AgentApp(App):
         self.update_content()
         self.run_agent_worker()
 
-    def hide_confirmation(self):
-        self.confirmation_container.hide()
-
     def show_confirmation(self, action: str):
         self._confirming_action = action
         if self.n_steps > 0:
@@ -198,7 +186,7 @@ class AgentApp(App):
             self._confirmation_result = rejection_message
             self._action_confirmed.set()
             self._confirming_action = None
-            self.hide_confirmation()
+            self.confirmation_container.display = False
             self.update_content()
 
     def scroll_top(self) -> None:
@@ -231,9 +219,9 @@ class AgentApp(App):
             container.mount(msg_container)
 
         if self._confirming_action is not None and self.i_step == n_steps - 1:
-            self.confirmation_container.show()
+            self.confirmation_container.display = True
         else:
-            self.confirmation_container.hide()
+            self.confirmation_container.display = False
 
         status = "RUNNING" if self._agent_running and self._confirming_action is None else "STOPPED"
         cost = f"${self.agent.model.cost:.2f}"
