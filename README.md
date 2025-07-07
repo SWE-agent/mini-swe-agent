@@ -34,6 +34,16 @@ After the first time, it's enough to just run `pipx run micro-swe-agent`.
 
 </details>
 
+<details>
+
+<summary>Example prompts</summary>
+
+- Implement a Sudoku solver in python in the `sudoku` folder. Make sure the codebase is modular and well tested with pytest. 
+- Please run pytest on the current project, discover failing unittests and help me fix them. Always make sure to test the final solution.
+- Help me document & type my codebase by adding short docstrings and type hints.
+
+</details>
+
 ## 🚀 Developer version
 
 ```bash
