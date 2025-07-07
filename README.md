@@ -21,7 +21,7 @@ In fact, micro-SWE-agent
 
 - Does not have any tools other than bash — it doesn't even use the tool-calling interface of the LMs
 - Has a completely linear history — every step of the agent just appends to the messages and that's it 
-- Actions are executed as `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running)
+- Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running)
 
   
 </details>
