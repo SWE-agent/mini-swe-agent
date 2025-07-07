@@ -67,8 +67,9 @@ class MessageContainer(Vertical):
         yield Static(self.content, classes="message-content")
 
 
-class ConfirmationContainer(Container):
+class ConfirmationPromptContainer(Container):
     def __init__(self, app: "AgentApp"):
+        """This class is responsible for handling the action execution confirmation."""
         super().__init__(id="confirmation-container")
         self._app = app
         self.rejecting = False
@@ -144,23 +145,18 @@ class AgentApp(App):
 
         super().__init__()
 
-        # App state
         self._app_running = False
 
-        # Create agent (it will own a reference to this app)
-        self.agent = TextualAgent(self, model=model, env=env, problem_statement=problem_statement)
+        self.agent = TextualAgent(
+            self, model=model, env=env, problem_statement=problem_statement, confirm_actions=confirm_actions
+        )
 
-        # UI state
         self._i_step = 0
         self.n_steps = 1
         self._agent_running = False
         self.title = "micro-SWE-agent"
 
-        # Create confirmation container
-        self.confirmation_container = ConfirmationContainer(self)
-
-        # Agent config
-        self.agent.config.confirm_actions = confirm_actions
+        self.confirmation_container = ConfirmationPromptContainer(self)
 
     @property
     def i_step(self) -> int:
