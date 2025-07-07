@@ -1,11 +1,11 @@
 [
   {
     "role": "system",
-    "content": "You are a helpful assistant that can interact with a computer.\n"
+    "content": "You are a helpful assistant that can do anything."
   },
   {
     "role": "user",
-    "content": "Please solve this issue: Blah blah blah"
+    "content": "Your task: Please solve this issue: Blah blah blah. Please reply with a single shell command in triple backticks. To finish, the first line of the output of the shell command must be 'MICRO_SWE_AGENT_FINAL_OUTPUT'."
   },
   {
     "role": "assistant",
@@ -13,7 +13,7 @@
   },
   {
     "role": "user",
-    "content": "<args>\n['docker', 'exec', '-w', '/testbed', 'edb7cf9be0e9583680a40ad9d4c2244929f38a23ee7b3c8e4e9b65355a6bf6ff', 'bash', '-c', 'echo hello world']\n</args>\n<returncode>\n0\n</returncode>\n<stdout>\nhello world\n\n</stdout>\n<stderr>\n\n</stderr>"
+    "content": "Observation: {'args': ['docker', 'exec', '-w', '/', '70e8776746b5306e55485e9194adc80af0ba8a76137cd27564658ce0e0de5f5c', 'bash', '-c', \"echo 'hello world'\"], 'returncode': 0, 'stdout': 'hello world\\n', 'stderr': ''}"
   },
   {
     "role": "assistant",
