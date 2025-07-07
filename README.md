@@ -10,6 +10,14 @@
 - **🤗 Friendly:** Comes with extended variants that will turn this into your daily dev swiss army knife!
 - **🎓 Cutting edge:** Built by the Princeton & Stanford team behind [SWE-bench](https://swe-bench.com) and [SWE-agent](https://swe-agent.com).
 
+Use it to
+
+- 🔥 Instantly solve problems: `pip install pipx && pipx run micro-swe-agent`
+- ⚙️ Take full control & quickly build custom agents
+- 🏋 Fine-tune & RL with a minimal, assumption-free agen
+- 🐳 Deploy seamlessly to sandboxed environments & CI/CD
+
+
 <details>
 
 <summary>More motivation (for research)</summary>
@@ -55,13 +63,6 @@ it is radiccally simpler, because it
 - Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
 
 </details>
-
-Use it to
-
-- 🔥 Instantly solve problems: `pip install pipx && pipx run micro-swe-agent`
-- ⚙️ Take full control & quickly build custom agents
-- 🏋 Fine-tune & RL with a minimal, assumption-free agen
-- 🐳 Deploy seamlessly to sandboxed environments
 
 ## 🔥 Try it!
 
