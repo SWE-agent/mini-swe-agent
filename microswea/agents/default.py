@@ -46,11 +46,13 @@ class DefaultAgent:
         self.messages.append({"role": role, "content": content})
         if role == "assistant":
             console.print(
-                f"\n[red][bold]Assistant[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):[/red]\n{content}",
+                f"\n[red][bold]Assistant[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):[/red]\n",
+                end="",
                 highlight=False,
             )
         else:
-            console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n{content}", highlight=False)
+            console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
+        console.print(content, highlight=False, markup=False)
 
     def run(self) -> str:
         """Run step() until agent is finished. Return final observation."""
