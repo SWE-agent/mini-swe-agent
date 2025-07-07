@@ -16,8 +16,8 @@ class DockerEnvironmentConfig:
 class DockerEnvironment:
     def __init__(self, **kwargs):
         """This class executes bash commands in a Docker container using direct docker commands."""
+        self.container_id: str | None = None
         self.config = DockerEnvironmentConfig(**kwargs)
-        self.container_id = None
         self._start_container()
 
     def _start_container(self):
@@ -67,10 +67,10 @@ class DockerEnvironment:
 
     def cleanup(self):
         """Stop and remove the Docker container."""
-        if self.container_id:
-            print(f"Stopping container {self.container_id}")
-            subprocess.run(["docker", "stop", self.container_id], capture_output=True, check=False)
-            subprocess.run(["docker", "rm", self.container_id], capture_output=True, check=False)
+        if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set
+            print(f"Stopping container {self.container_id} (might take a second)")
+            subprocess.run(["docker", "stop", self.container_id], capture_output=True, check=False)  # type: ignore
+            subprocess.run(["docker", "rm", self.container_id], capture_output=True, check=False)  # type: ignore
 
     def __del__(self):
         """Cleanup container when object is destroyed."""
