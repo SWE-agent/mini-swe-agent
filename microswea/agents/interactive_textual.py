@@ -201,41 +201,8 @@ class AgentApp(App):
             self.hide_confirmation()
             self.update_content()
 
-    def action_toggle_yolo(self):
-        self.agent.config.confirm_actions = not self.agent.config.confirm_actions
-        self.notify(f"YOLO mode {'disabled' if self.agent.config.confirm_actions else 'enabled'}")
-
-    def action_next_step(self) -> None:
-        if self.i_step < self.n_steps - 1:
-            self.i_step += 1
-            self.scroll_top()
-            self.update_content()
-
-    def action_previous_step(self) -> None:
-        if self.i_step > 0:
-            self.i_step -= 1
-            self.scroll_top()
-            self.update_content()
-
-    def action_first_step(self) -> None:
-        self.i_step = 0
-        self.update_content()
-
-    def action_last_step(self) -> None:
-        if self.n_steps > 0:
-            self.i_step = self.n_steps - 1
-            self.update_content()
-
     def scroll_top(self) -> None:
         self.query_one(VerticalScroll).scroll_to(y=0, animate=False)
-
-    def action_scroll_down(self) -> None:
-        vs = self.query_one(VerticalScroll)
-        vs.scroll_to(y=vs.scroll_target_y + 15)
-
-    def action_scroll_up(self) -> None:
-        vs = self.query_one(VerticalScroll)
-        vs.scroll_to(y=vs.scroll_target_y - 15)
 
     def update_content(self) -> None:
         items = _messages_to_steps(self.agent.messages)
@@ -292,3 +259,38 @@ class AgentApp(App):
     def get_final_output(self) -> str:
         """Get the final output from the agent."""
         return ""
+
+    # --- Textual bindings ---
+
+    def action_toggle_yolo(self):
+        self.agent.config.confirm_actions = not self.agent.config.confirm_actions
+        self.notify(f"YOLO mode {'disabled' if self.agent.config.confirm_actions else 'enabled'}")
+
+    def action_next_step(self) -> None:
+        if self.i_step < self.n_steps - 1:
+            self.i_step += 1
+            self.scroll_top()
+            self.update_content()
+
+    def action_previous_step(self) -> None:
+        if self.i_step > 0:
+            self.i_step -= 1
+            self.scroll_top()
+            self.update_content()
+
+    def action_first_step(self) -> None:
+        self.i_step = 0
+        self.update_content()
+
+    def action_last_step(self) -> None:
+        if self.n_steps > 0:
+            self.i_step = self.n_steps - 1
+            self.update_content()
+
+    def action_scroll_down(self) -> None:
+        vs = self.query_one(VerticalScroll)
+        vs.scroll_to(y=vs.scroll_target_y + 15)
+
+    def action_scroll_up(self) -> None:
+        vs = self.query_one(VerticalScroll)
+        vs.scroll_to(y=vs.scroll_target_y - 15)
