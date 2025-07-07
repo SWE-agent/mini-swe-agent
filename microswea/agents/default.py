@@ -106,4 +106,4 @@ class DefaultAgent:
     def has_finished(self, output: dict[str, str]):
         """Raises TerminatingException with final output if the agent has finished its task."""
         if output.get("stdout") and output["stdout"].splitlines()[0] == "MICRO_SWE_AGENT_FINAL_OUTPUT":
-            raise TerminatingException("\n".join(output["stdout"].splitlines()[1:]) or "EMPTY_OUTPUT")
+            raise TerminatingException("\n".join(output["stdout"].splitlines()[1:]))
