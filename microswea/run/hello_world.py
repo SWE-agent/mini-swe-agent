@@ -1,7 +1,10 @@
 import os
+from pathlib import Path
 
 import typer
+import yaml
 
+from microswea import package_dir
 from microswea.agents.default import DefaultAgent
 from microswea.environments.local import LocalEnvironment
 from microswea.models.litellm_model import LitellmModel
@@ -22,6 +25,7 @@ def main(
         LitellmModel(model_name=model_name),
         LocalEnvironment(),
         problem,
+        **yaml.safe_load(Path(package_dir / "config" / "default.yaml").read_text())["agent"],
     )
     agent.run()
     return agent
