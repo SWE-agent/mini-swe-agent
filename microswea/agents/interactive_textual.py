@@ -87,8 +87,6 @@ class ConfirmationContainer(Container):
     def reset(self):
         """Reset the confirmation prompt to its initial state."""
         self.rejection_mode = False
-        self.query_one(Static).update("Press Enter to confirm action or BACKSPACE to reject or y to toggle YOLO mode")
-
         rejection_input = self.query_one("#rejection-input", Input)
         rejection_input.display = False
         rejection_input.value = ""
@@ -137,7 +135,7 @@ class AgentApp(App):
 
         # UI state
         self._i_step = 0
-        self.n_steps = 0
+        self.n_steps = 1
         self._agent_running = False
         self.title = "micro-SWE-agent"
         self._confirming_action = None
@@ -232,6 +230,8 @@ class AgentApp(App):
             container.mount(MessageContainer(role=message["role"].upper(), content=content_str))
 
         self.confirmation_container.display = self._confirming_action is not None and self.i_step == len(items) - 1
+        if self.confirmation_container.display:
+            self.confirmation_container.focus()
 
         status = "RUNNING" if self._agent_running and self._confirming_action is None else "STOPPED"
         cost = f"${self.agent.model.cost:.2f}"
