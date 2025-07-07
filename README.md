@@ -11,6 +11,21 @@
 - **🤗 Friendly:** Comes with extended variants that will turn this into your daily dev swiss army knife!
 - **🎓 Cutting edge:** Built by the Princeton & Stanford team behind [SWE-bench](https://swe-bench.com) and [SWE-agent](https://swe-agent.com).
 
+<details>
+
+<summary>What makes micro-SWE-agent different?</summary>
+
+[SWE-agent](https://swe-agent.com/latest/) jump-started the development of AI agents in 2024. Back then, we placed a lot of emphasis on tools and special interfaces for the agent.
+However, one year later, a lot of this is not needed at all to build a useful agent!
+In fact, micro-SWE-agent
+
+- Does not have any tools other than bash — it doesn't even use the tool-calling interface of the LMs
+- Has a completely linear history — every step of the agent just appends to the messages and that's it 
+- Actions are executed as `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running)
+
+  
+</details>
+
 Use it to
 
 - 🔥 Instantly solve problems: `pip install pipx && pipx run micro-swe-agent`
