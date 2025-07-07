@@ -51,7 +51,6 @@ def main(
     finally:
         # Save results
         if agent_app.agent.messages:
-            Path("patch.txt").write_text(agent_app.get_final_output())
             Path("traj.json").write_text(json.dumps(agent_app.agent.messages, indent=2))
             typer.echo(f"Total cost: ${agent_app.agent.model.cost:.2f}")
             typer.echo(f"Total steps: {agent_app.agent.model.n_calls}")

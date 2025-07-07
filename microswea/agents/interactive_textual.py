@@ -24,7 +24,7 @@ class TextualAgent(DefaultAgent):
     def add_message(self, role: str, content: str):
         super().add_message(role, content)
         if not self._initializing and self.app._app_running:
-            self.app.call_from_thread(self.app.update_content)
+            self.app.call_from_thread(self.app.on_message_added)
 
     def run(self) -> str:
         try:
@@ -136,7 +136,7 @@ class AgentApp(App):
         self.agent = TextualAgent(self, model=model, env=env, problem_statement=problem_statement)
 
         # UI state
-        self.i_step = 0
+        self._i_step = 0
         self.n_steps = 0
         self._agent_running = False
         self.title = "micro-SWE-agent"
@@ -149,6 +149,20 @@ class AgentApp(App):
 
         # Agent config
         self.agent.config.confirm_actions = confirm_actions
+
+    @property
+    def i_step(self) -> int:
+        """Current step index."""
+        return self._i_step
+
+    @i_step.setter
+    def i_step(self, value: int) -> None:
+        """Set current step index, automatically clamping to valid bounds."""
+        if value != self._i_step:
+            max_step = max(0, self.n_steps - 1) if self.n_steps > 0 else 0
+            self._i_step = max(0, min(value, max_step))
+            self.scroll_top()
+            self.update_content()
 
     def request_confirmation(self, action: str) -> str | None:
         """Request confirmation for an action. Returns rejection message or None."""
@@ -173,8 +187,6 @@ class AgentApp(App):
 
     def show_confirmation(self, action: str):
         self._confirming_action = action
-        if self.n_steps > 0:
-            self.i_step = self.n_steps - 1
         self.update_content()
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
@@ -192,40 +204,45 @@ class AgentApp(App):
     def scroll_top(self) -> None:
         self.query_one(VerticalScroll).scroll_to(y=0, animate=False)
 
-    def update_content(self) -> None:
+    def on_message_added(self) -> None:
+        auto_follow = self.i_step == self.n_steps - 1
         items = _messages_to_steps(self.agent.messages)
         n_steps = len(items)
-        old_n_steps = self.n_steps
         self.n_steps = n_steps
+
+        self.update_content()
+        if auto_follow:
+            print("auto follow triggred")
+            self.action_last_step()
+
+    def update_content(self) -> None:
         container = self.query_one("#content", Vertical)
+        items = _messages_to_steps(self.agent.messages)
 
         if not items:
             container.mount(Static("Waiting for agent to start..."))
             self.sub_title = "Waiting..."
             return
 
-        if self.i_step == old_n_steps - 1 and n_steps > 0:
-            # If the agent is running and we're at the last step, follow the agent's progress
-            if old_n_steps == 0 or (self._agent_running and self.i_step == old_n_steps - 1):
-                self.i_step = n_steps - 1
-
-        if self.i_step >= n_steps:
-            self.i_step = n_steps - 1
-
         container.remove_children()
 
         for message in items[self.i_step]:
-            msg_container = MessageContainer(role=message["role"].upper(), content=message["content"])
+            if isinstance(message["content"], list):
+                content_str = "\n".join([item["text"] for item in message["content"]])
+            else:
+                content_str = str(message["content"])
+            print(f"mounting message: {message['role']} {content_str}")
+            msg_container = MessageContainer(role=message["role"].upper(), content=content_str)
             container.mount(msg_container)
 
-        if self._confirming_action is not None and self.i_step == n_steps - 1:
+        if self._confirming_action is not None and self.i_step == len(items) - 1:
             self.confirmation_container.display = True
         else:
             self.confirmation_container.display = False
 
         status = "RUNNING" if self._agent_running and self._confirming_action is None else "STOPPED"
         cost = f"${self.agent.model.cost:.2f}"
-        self.sub_title = f"Step {self.i_step + 1}/{n_steps} - {status} - Cost: {cost}"
+        self.sub_title = f"Step {self.i_step + 1}/{len(items)} - {status} - Cost: {cost}"
 
         header = self.query_one("Header")
         if self._agent_running and self._confirming_action is None:
@@ -244,10 +261,6 @@ class AgentApp(App):
         self._agent_running = False
         self.update_content()
 
-    def get_final_output(self) -> str:
-        """Get the final output from the agent."""
-        return ""
-
     # --- Textual bindings ---
 
     def action_toggle_yolo(self):
@@ -255,25 +268,16 @@ class AgentApp(App):
         self.notify(f"YOLO mode {'disabled' if self.agent.config.confirm_actions else 'enabled'}")
 
     def action_next_step(self) -> None:
-        if self.i_step < self.n_steps - 1:
-            self.i_step += 1
-            self.scroll_top()
-            self.update_content()
+        self.i_step += 1
 
     def action_previous_step(self) -> None:
-        if self.i_step > 0:
-            self.i_step -= 1
-            self.scroll_top()
-            self.update_content()
+        self.i_step -= 1
 
     def action_first_step(self) -> None:
         self.i_step = 0
-        self.update_content()
 
     def action_last_step(self) -> None:
-        if self.n_steps > 0:
-            self.i_step = self.n_steps - 1
-            self.update_content()
+        self.i_step = self.n_steps - 1
 
     def action_scroll_down(self) -> None:
         vs = self.query_one(VerticalScroll)
