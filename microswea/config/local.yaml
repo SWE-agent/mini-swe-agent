@@ -10,9 +10,17 @@ agent:
     1. Every response must contain exactly one action
     2. The action must be enclosed in triple backticks
     3. You cannot change directories or set new environment variables
-    4. To finish, issue the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT`
+    4. To finish, issue the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT`.
+       Do not combine it with any other command.
     </IMPORTANT>
 
   step_limit: 0.
   cost_limit: 0.
   confirm_actions: true
+environment:
+  env:
+    PAGER: cat
+    MANPAGER: cat
+    LESS: -R
+    PIP_PROGRESS_BAR: 'off'
+    TQDM_DISABLE: '1'
