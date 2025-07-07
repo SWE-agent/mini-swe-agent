@@ -17,7 +17,7 @@ class DeterministicModel:
         self.cost = 0.0
         self.n_calls = 0
 
-    def query(self, messages: list[dict[str, str]]) -> str:  # noqa: ARG002
+    def query(self, messages: list[dict[str, str]], **kwargs) -> str:  # noqa: ARG002
         self.n_calls += 1
         self.current_index += 1
         return self.config.outputs[self.current_index]
