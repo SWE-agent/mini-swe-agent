@@ -15,12 +15,14 @@ app = typer.Typer()
 @app.command()
 def main(
     problem: str = typer.Option(..., "-p", "--problem", help="Problem statement", show_default=False, prompt=True),
+    model_name: str = typer.Option(
+        os.getenv("MSWEA_MODEL_NAME"),
+        "-m",
+        "--model",
+        help="Model name (defaults to MSWEA_MODEL_NAME env var)",
+        prompt="What model do you want to use? (assuming that you've set the API key as the environment variable already)",
+    ),
 ) -> DefaultAgent:
-    model_name = os.getenv("MSWEA_MODEL_NAME")
-    if not model_name:
-        model_name = input(
-            "What model do you want to use? (assuming that you've set the API key as the environment variable already)"
-        )
     agent = DefaultAgent(
         LitellmModel(model_name=model_name),
         LocalEnvironment(),
