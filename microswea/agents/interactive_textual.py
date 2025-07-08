@@ -9,7 +9,7 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Container, Vertical, VerticalScroll
 from textual.events import Key
-from textual.widgets import Footer, Header, Input, Static
+from textual.widgets import Footer, Header, Static, TextArea
 
 from microswea.agents.default import DefaultAgent, NonTerminatingException
 from microswea.agents.interactive import InteractiveAgentConfig
@@ -85,10 +85,17 @@ class ConfirmationPromptContainer(Container):
 
     def compose(self) -> ComposeResult:
         yield Static(
-            "Press Enter to confirm action or BACKSPACE to reject or y to toggle YOLO mode",
+            "Press Enter to confirm action or BACKSPACE to reject",
             classes="confirmation-prompt",
         )
-        yield Input(id="rejection-input", placeholder="Enter rejection message (optional) and/or press Enter")
+        yield TextArea(id="rejection-input")
+        rejection_help = Static(
+            "Press Ctrl+D to submit rejection message",
+            id="rejection-help",
+            classes="rejection-help",
+        )
+        rejection_help.display = False
+        yield rejection_help
 
     def request_confirmation(self, action: str) -> str | None:
         """Request confirmation for an action. Returns rejection message or None."""
@@ -105,9 +112,11 @@ class ConfirmationPromptContainer(Container):
         self._pending_action = None
         self.display = False
         self.rejecting = False
-        rejection_input = self.query_one("#rejection-input", Input)
+        rejection_input = self.query_one("#rejection-input", TextArea)
         rejection_input.display = False
-        rejection_input.value = ""
+        rejection_input.text = ""
+        rejection_help = self.query_one("#rejection-help", Static)
+        rejection_help.display = False
         # Reset agent state to RUNNING after confirmation is completed
         if rejection_message is None:
             self._app.agent_state = "RUNNING"
@@ -115,6 +124,12 @@ class ConfirmationPromptContainer(Container):
         self._app.update_content()
 
     def on_key(self, event: Key) -> None:
+        if self.rejecting and event.key == "ctrl+d":
+            event.prevent_default()
+            rejection_input = self.query_one("#rejection-input", TextArea)
+            self._complete_confirmation(rejection_input.text)
+            return
+
         if not self.rejecting:
             if event.key == "enter":
                 event.prevent_default()
@@ -122,13 +137,11 @@ class ConfirmationPromptContainer(Container):
             elif event.key == "backspace":
                 event.prevent_default()
                 self.rejecting = True
-                rejection_input = self.query_one("#rejection-input", Input)
+                rejection_input = self.query_one("#rejection-input", TextArea)
                 rejection_input.display = True
                 rejection_input.focus()
-
-    def on_input_submitted(self, event: Input.Submitted) -> None:
-        if self.rejecting:
-            self._complete_confirmation(event.value)
+                rejection_help = self.query_one("#rejection-help", Static)
+                rejection_help.display = True
 
 
 class AgentApp(App):

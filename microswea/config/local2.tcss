@@ -117,3 +117,12 @@ Header.running {
     display: none;
     margin: 1;
 }
+
+.rejection-help {
+    background: $boost;
+    border: heavy $warning;
+    padding: 1;
+    margin: 1;
+    text-align: center;
+    color: $warning;
+}
