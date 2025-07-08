@@ -108,6 +108,9 @@ class ConfirmationPromptContainer(Container):
         rejection_input = self.query_one("#rejection-input", Input)
         rejection_input.display = False
         rejection_input.value = ""
+        # Reset agent state to RUNNING after confirmation is completed
+        if rejection_message is None:
+            self._app.agent_state = "RUNNING"
         self._confirmation_event.set()
         self._app.update_content()
 
@@ -156,7 +159,7 @@ class AgentApp(App):
 
         self._i_step = 0
         self.n_steps = 1
-        self._agent_running = False
+        self.agent_state = "STOPPED"
         self.title = "micro-SWE-agent"
 
         self.confirmation_container = ConfirmationPromptContainer(self)
@@ -201,7 +204,6 @@ class AgentApp(App):
 
         self.update_content()
         if auto_follow:
-            print("auto follow triggred")
             self.action_last_step()
 
     def update_content(self) -> None:
@@ -225,7 +227,6 @@ class AgentApp(App):
             message_container.mount(Static(message["role"].upper(), classes="message-header"))
             message_container.mount(Static(content_str, classes="message-content"))
 
-        # Show confirmation container if we have a pending action and we're on the latest step
         show_confirmation_prompt = (
             self.confirmation_container._pending_action is not None and self.i_step == len(items) - 1
         )
@@ -233,12 +234,14 @@ class AgentApp(App):
             self.confirmation_container.display = True
             self.confirmation_container.focus()
 
-        status = "RUNNING" if self._agent_running and self.confirmation_container._pending_action is None else "STOPPED"
+        if self.confirmation_container._pending_action is not None:
+            self.agent_state = "AWAITING_CONFIRMATION"
+
         cost = f"${self.agent.model.cost:.2f}"
-        self.sub_title = f"Step {self.i_step + 1}/{len(items)} - {status} - Cost: {cost}"
+        self.sub_title = f"Step {self.i_step + 1}/{len(items)} - {self.agent_state} - Cost: {cost}"
 
         header = self.query_one("Header")
-        if self._agent_running and self.confirmation_container._pending_action is None:
+        if self.agent_state == "RUNNING":
             header.add_class("running")
         else:
             header.remove_class("running")
@@ -246,12 +249,12 @@ class AgentApp(App):
         self.refresh()
 
     def run_agent_worker(self):
-        self._agent_running = True
+        self.agent_state = "RUNNING"
         self.update_content()
         threading.Thread(target=self.agent.run, daemon=True).start()
 
     def set_finished(self):
-        self._agent_running = False
+        self.agent_state = "STOPPED"
         self.update_content()
 
     def on_log_message_emitted(self, record: logging.LogRecord) -> None:
