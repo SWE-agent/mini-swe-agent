@@ -76,6 +76,7 @@ class ConfirmationPromptContainer(Container):
         self._app = app
         self.rejecting = False
         self.can_focus = True
+        self.display = False
 
         # Confirmation state
         self._pending_action: str | None = None
