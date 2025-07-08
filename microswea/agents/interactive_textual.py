@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+"""
+Extension of the `default.py` agent that uses Textual for an interactive TUI.
+For a simpler version of an interactive UI, see `interactive.py`.
+"""
+
 import logging
 import os
 import re
@@ -19,21 +23,18 @@ class TextualAgent(DefaultAgent):
     def __init__(self, app: "AgentApp", *args, **kwargs):
         """Connects the DefaultAgent to the TextualApp."""
         self.app = app
-        self._initializing = True
         super().__init__(*args, config_class=InteractiveAgentConfig, **kwargs)
-        self._initializing = False
 
     def add_message(self, role: str, content: str):
         super().add_message(role, content)
-        if not self._initializing and self.app._app_running:
+        if self.app.agent_state != "UNINITIALIZED":
             self.app.call_from_thread(self.app.on_message_added)
 
     def run(self) -> str:
         try:
             result = super().run()
         finally:
-            if self.app._app_running:
-                self.app.call_from_thread(self.app.on_agent_finished)
+            self.app.call_from_thread(self.app.on_agent_finished)
         return result
 
     def execute_action(self, action: str) -> str:
@@ -126,7 +127,6 @@ class ConfirmationPromptContainer(Container):
             rejection_input = self.query_one("#rejection-input", TextArea)
             self._complete_confirmation(rejection_input.text)
             return
-
         if not self.rejecting:
             if event.key == "enter":
                 event.prevent_default()
@@ -158,22 +158,15 @@ class AgentApp(App):
             "MSWEA_LOCAL2_STYLE_PATH", str(Path(__file__).parent.parent / "config" / "local2.tcss")
         )
         self.__class__.CSS = Path(css_path).read_text()
-
         super().__init__()
-
-        self._app_running = False
-
+        self.agent_state = "UNINITIALIZED"
         self.agent = TextualAgent(
             self, model=model, env=env, problem_statement=problem_statement, confirm_actions=confirm_actions
         )
-
         self._i_step = 0
         self.n_steps = 1
-        self.agent_state = "STOPPED"
         self.title = "micro-SWE-agent"
-
         self.confirmation_container = ConfirmationPromptContainer(self)
-
         self.log_handler = AddLogEmitCallback(lambda record: self.call_from_thread(self.on_log_message_emitted, record))
         logging.getLogger().addHandler(self.log_handler)
 
@@ -189,7 +182,7 @@ class AgentApp(App):
         """Set current step index, automatically clamping to valid bounds."""
         if value != self._i_step:
             self._i_step = max(0, min(value, self.n_steps - 1))
-            self.scroll_top()
+            self.query_one(VerticalScroll).scroll_to(y=0, animate=False)
             self.update_content()
 
     def compose(self) -> ComposeResult:
@@ -201,7 +194,6 @@ class AgentApp(App):
         yield Footer()
 
     def on_mount(self) -> None:
-        self._app_running = True
         self.agent_state = "RUNNING"
         self.update_content()
         threading.Thread(target=self.agent.run, daemon=True).start()
@@ -232,27 +224,22 @@ class AgentApp(App):
         self.agent_state = "STOPPED"
         self.update_content()
 
-    def scroll_top(self) -> None:
-        self.query_one(VerticalScroll).scroll_to(y=0, animate=False)
-
     # --- UI update logic ---
 
     def update_content(self) -> None:
         container = self.query_one("#content", Vertical)
+        container.remove_children()
         items = _messages_to_steps(self.agent.messages)
 
         if not items:
             container.mount(Static("Waiting for agent to start..."))
             return
 
-        container.remove_children()
-
         for message in items[self.i_step]:
             if isinstance(message["content"], list):
                 content_str = "\n".join([item["text"] for item in message["content"]])
             else:
                 content_str = str(message["content"])
-
             message_container = Vertical(classes="message-container")
             container.mount(message_container)
             message_container.mount(Static(message["role"].upper(), classes="message-header"))
@@ -263,13 +250,10 @@ class AgentApp(App):
             if self.i_step == len(items) - 1:
                 self.confirmation_container.display = True
                 self.confirmation_container.focus()
-                vs = self.query_one(VerticalScroll)
-                vs.scroll_end(animate=False)
 
         self.sub_title = (
             f"Step {self.i_step + 1}/{len(items)} - {self.agent_state} - Cost: ${self.agent.model.cost:.2f}"
         )
-
         header = self.query_one("Header")
         header.set_class(self.agent_state == "RUNNING", "running")
 
