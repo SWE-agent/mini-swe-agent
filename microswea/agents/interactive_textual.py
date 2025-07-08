@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import logging
 import os
 import re
 import threading
@@ -41,6 +42,16 @@ class TextualAgent(DefaultAgent):
                 raise NonTerminatingException(f"Command not executed: {result}")
 
         return super().execute_action(action)
+
+
+class AddLogEmitCallback(logging.Handler):
+    def __init__(self, callback):
+        """Custom log handler that forwards messages via callback."""
+        super().__init__()
+        self.callback = callback
+
+    def emit(self, record: logging.LogRecord):
+        self.callback(record)
 
 
 def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
@@ -158,6 +169,9 @@ class AgentApp(App):
 
         self.confirmation_container = ConfirmationPromptContainer(self)
 
+        self.log_handler = AddLogEmitCallback(lambda record: self.call_from_thread(self.on_log_message_emitted, record))
+        logging.getLogger().addHandler(self.log_handler)
+
     @property
     def i_step(self) -> int:
         """Current step index."""
@@ -243,6 +257,15 @@ class AgentApp(App):
     def set_finished(self):
         self._agent_running = False
         self.update_content()
+
+    def on_log_message_emitted(self, record: logging.LogRecord) -> None:
+        """Handle log messages of warning level or higher by showing them as notifications."""
+        self.notify(f"[{record.levelname}] {record.getMessage()}", severity="warning")
+
+    def on_unmount(self) -> None:
+        """Clean up the log handler when the app shuts down."""
+        if hasattr(self, "log_handler"):
+            logging.getLogger().removeHandler(self.log_handler)
 
     # --- Textual bindings ---
 

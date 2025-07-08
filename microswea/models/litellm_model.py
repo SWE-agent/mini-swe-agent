@@ -5,7 +5,7 @@ from typing import Any
 import litellm
 from tenacity import before_sleep_log, retry, stop_after_attempt, wait_exponential
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("litellm_model")
 
 
 @dataclass
