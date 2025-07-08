@@ -17,6 +17,7 @@ from microswea.agents.interactive import InteractiveAgentConfig
 
 class TextualAgent(DefaultAgent):
     def __init__(self, app: "AgentApp", *args, **kwargs):
+        """Connects the DefaultAgent to the TextualApp."""
         self.app = app
         self._initializing = True
         super().__init__(*args, config_class=InteractiveAgentConfig, **kwargs)
@@ -55,6 +56,7 @@ class AddLogEmitCallback(logging.Handler):
 
 
 def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
+    """Group messages into "pages" as shown by the UI."""
     steps = []
     current_step = []
     for message in messages:
@@ -65,17 +67,6 @@ def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
     if current_step:
         steps.append(current_step)
     return steps
-
-
-class MessageContainer(Vertical):
-    def __init__(self, role: str, content: str):
-        super().__init__(classes="message-container")
-        self.role = role
-        self.content = content
-
-    def compose(self) -> ComposeResult:
-        yield Static(self.role, classes="message-header")
-        yield Static(self.content, classes="message-content")
 
 
 class ConfirmationPromptContainer(Container):
@@ -227,7 +218,11 @@ class AgentApp(App):
                 content_str = "\n".join([item["text"] for item in message["content"]])
             else:
                 content_str = str(message["content"])
-            container.mount(MessageContainer(role=message["role"].upper(), content=content_str))
+
+            message_container = Vertical(classes="message-container")
+            container.mount(message_container)
+            message_container.mount(Static(message["role"].upper(), classes="message-header"))
+            message_container.mount(Static(content_str, classes="message-content"))
 
         # Show confirmation container if we have a pending action and we're on the latest step
         show_confirmation_prompt = (
