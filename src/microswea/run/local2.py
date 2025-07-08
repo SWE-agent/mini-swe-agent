@@ -36,6 +36,9 @@ def main(
             typer.echo("No problem statement provided.")
             raise typer.Exit(1)
 
+    if yolo:
+        _config["agent"]["confirm_actions"] = False
+
     # Create and run the agent app
     agent_app = AgentApp(
         model=get_model(model, _config.get("model", {})),
