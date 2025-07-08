@@ -1,0 +1,186 @@
+site_name: micro-SWE-agent documentation
+# site_url: https://micro-swe-agent.com
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+    annotation: material/chevron-right-circle
+  custom_dir: docs/overrides
+  # logo: assets/micro-swe-agent.svg
+  # favicon: assets/favicon.ico
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - scheme: default
+      # primary: black  # override in custom.css
+      accent: deep orange
+      media: "(prefers-color-scheme: light)"
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      # primary: black  # override in custom.css
+      accent: deep orange
+      media: "(prefers-color-scheme: dark)"
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.indexes
+    - navigation.top
+    - content.action.edit
+    - navigation.footer
+    - content.code.copy
+    - content.footnote.tooltips
+    - header.autohide
+    - announce.dismiss
+    - content.code.annotate
+    - navigation.tabs
+    - navigation.tabs.sticky
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences
+  - pymdownx.magiclink
+  - footnotes
+  - attr_list
+  - md_in_html
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+nav:
+  - Getting Started:
+    - index.md
+    - "Quick start": installation.md
+  #   - "Installation":
+  #     - "installation/index.md"
+  #     - "From source": "installation/source.md"
+  #     - "In browser": "installation/codespaces.md"
+  #     - "Models and keys": "installation/keys.md"
+  #     - "1.0 migration": "installation/migration.md"
+  #     - "Troubleshooting": "installation/tips.md"
+  #     - "Changelog": "installation/changelog.md"
+  #   - "Tutorials":
+  #     - "Hello world": "usage/hello_world.md"
+  #     - "Command line basics": "usage/cl_tutorial.md"
+  #     - "Solving coding challenges": "usage/coding_challenges.md"
+  #     - "Trajectory inspector": "usage/inspector.md"
+  #     - "Batch mode": "usage/batch_mode.md"
+  #     - "Competitive runs": "usage/competitive_runs.md"
+  #     - "Adding custom tools": "usage/adding_custom_tools.md"
+  #     - "What's next?": "usage/whats_next.md"
+  #   - "FAQ": "faq.md"
+  # - User Guides:
+  #   - "usage/index.md"
+  #   - Project overview:
+  #     - "index": "background/index.md"
+  #     - "Architecture": "background/architecture.md"
+  #     - "Agent tools": "background/aci.md"
+  #   - "Command line interface": "usage/cli.md"
+  #   - "Output files": "usage/trajectories.md"
+  #   - Configuration:
+  #     - "index": "config/index.md"
+  #     - "Config files": "config/config.md"
+  #     - "Templates": "config/templates.md"
+  #     - "Models": "config/models.md"
+  #     - "Demonstrations": "config/demonstrations.md"
+  #     - "Tools": "config/tools.md"
+  #     - "Environments": "config/environments.md"
+  #   - Development:
+  #     - "Contribution guide": "dev/contribute.md"
+  #     - "Formatting conflicts": "dev/formatting_conflicts.md"
+  # - API Reference:
+  #   - "reference/index.md"
+  #   - Run config:
+  #     - "Run single": "reference/run_single_config.md"
+  #     - "Run batch": "reference/run_batch_config.md"
+  #   - Instance config:
+  #     - "Problem statements": "reference/problem_statements.md"
+  #     - "Repository": "reference/repo.md"
+  #     - "Batch instances": "reference/batch_instances.md"
+  #   - Agent config:
+  #     - "Agent config": "reference/agent_config.md"
+  #     - "Model config": "reference/model_config.md"
+  #     - "Templates": "reference/template_config.md"
+  #     - "Tools": "reference/tools_config.md"
+  #     - "History processors": "reference/history_processor_config.md"
+  #     - "Action parsers": "reference/parsers.md"
+  #   - "Environment config": "reference/env_config.md"
+  #   - "Tool bundle config": "reference/bundle_config.md"
+  #   - Classes:
+  #     - "Agent class": "reference/agent.md"
+  #     - "Environment class": "reference/env.md"
+  #     - "Exceptions": "reference/exceptions.md"
+  - API Reference:
+    - "reference/index.md"
+    - Agents:
+      - "DefaultAgent": "reference/agents/default.md"
+      - "InteractiveAgent": "reference/agents/interactive.md"
+      - "TextualAgent": "reference/agents/textual.md"
+    - Models:
+      - "LitellmModel": "reference/models/litellm.md"
+      - "AnthropicModel": "reference/models/anthropic.md"
+      - "DeterministicModel": "reference/models/test_models.md"
+      - "Model Utilities": "reference/models/utils.md"
+    - Environments:
+      - "LocalEnvironment": "reference/environments/local.md"
+      - "DockerEnvironment": "reference/environments/docker.md"
+      - "SwerexDockerEnvironment": "reference/environments/swerex_docker.md"
+    - Run Scripts:
+      - "Hello World": "reference/run/hello_world.md"
+      - "Local": "reference/run/local.md"
+      - "Local2 (Textual)": "reference/run/local2.md"
+      - "GitHub Issue": "reference/run/github_issue.md"
+      - "SWE-bench": "reference/run/swebench.md"
+plugins:
+  - glightbox
+  - search
+  - include-markdown
+  - mike:
+      canonical_version: latest
+      version_selector: true
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            merge_init_into_class: true
+            summary: false
+            show_root_heading: true
+            heading_level: 2
+            docstring_style: google
+            show_if_no_docstring: true
+            show_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            separate_signature: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            members_order: source
+            filters:
+              - "!^_"
+              - "!^model_config"
+              - "!^model_post_init"
+repo_url: https://github.com/SWE-agent/micro-SWE-agent
+repo_name: SWE-agent/micro-SWE-agent
+edit_uri: edit/main/docs/
+extra_javascript:
+  - assets/js/sh-annotation.js
+extra_css:
+  - assets/custom.css
+  - assets/mkdocstrings.css
+  - assets/image_theme.css
+  - assets/bubbles.css
+extra:
+  version:
+    provider: mike
+  analytics:
+    provider: google
+    property: G-SG2NC1GDRD
