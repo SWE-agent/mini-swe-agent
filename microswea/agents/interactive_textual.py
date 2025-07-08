@@ -247,9 +247,11 @@ class AgentApp(App):
 
         if self.confirmation_container._pending_action is not None:
             self.agent_state = "AWAITING_CONFIRMATION"
-            if self.i_step == len(items) - 1:
-                self.confirmation_container.display = True
-                self.confirmation_container.focus()
+        self.confirmation_container.display = (
+            self.confirmation_container._pending_action is not None and self.i_step == len(items) - 1
+        )
+        if self.confirmation_container.display:
+            self.confirmation_container.focus()
 
         self.sub_title = (
             f"Step {self.i_step + 1}/{len(items)} - {self.agent_state} - Cost: ${self.agent.model.cost:.2f}"
