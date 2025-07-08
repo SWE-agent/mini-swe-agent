@@ -14,6 +14,11 @@ alwaysApply: true
 - Do not append to the README unless specifically requested
 - Use `jinja` for formatting templates
 - Use `dataclass` for keeping track config
-- Use `pytest`, not `unittest`. <IMPORTANT>Do not mock/patch anything that you're not explicitly asked to do</IMPORTANT>
 - Do not catch exceptions unless explicitly told to.
 - Write concise, short, minimal code.
+
+## Test style
+
+- Use `pytest`, not `unittest`.
+- <IMPORTANT>Do not mock/patch anything that you're not explicitly asked to do</IMPORTANT>
+- Avoid writing trivial tests. Every test should test for at least one, preferably multiple points of failure
