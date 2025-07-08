@@ -166,9 +166,7 @@ async def test_log_message_filtering():
         model=DeterministicModel(
             outputs=[
                 "/warning Test warning message",
-                "/sleep 0.1",
                 "Normal response",
-                "/sleep 0.1",
                 "end: \n```\necho MICRO_SWE_AGENT_FINAL_OUTPUT\n```",
             ]
         ),
@@ -181,13 +179,7 @@ async def test_log_message_filtering():
     app.notify = Mock()
 
     async with app.run_test() as pilot:
-        # Wait for the agent to finish processing all messages
-        await pilot.pause(0.1)
-        while app.agent_state != "STOPPED":
-            await pilot.pause(0.1)
-
-        # Give a small buffer for any remaining async operations
-        await pilot.pause(0.1)
+        await pilot.pause(0.2)
 
         # Verify warning was emitted and handled (note the extra space in the actual format)
         app.notify.assert_called_with("[WARNING]  Test warning message", severity="warning")
