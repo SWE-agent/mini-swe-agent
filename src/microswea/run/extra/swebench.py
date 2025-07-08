@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import concurrent.futures
+import contextlib
+import io
 import json
 from pathlib import Path
 from typing import Literal
@@ -74,10 +77,6 @@ def process_instance(instance: dict, output_path: Path) -> dict:
 
     update_output_file(output_path, instance_id, agent.model.config, result)
 
-    print(f"Instance {instance_id} completed")
-    print(f"Cost: ${agent.model.cost:.4f}")
-    print(f"Steps: {agent.model.n_calls}")
-
     return {
         "instance_id": instance_id,
         "result": result,
@@ -86,8 +85,8 @@ def process_instance(instance: dict, output_path: Path) -> dict:
     }
 
 
-def process_instances(instances: list[dict], output_path: Path):
-    """Process a list of SWEBench instances."""
+def process_instances_single_threaded(instances: list[dict], output_path: Path):
+    """Process SWEBench instances sequentially."""
     results = []
     running_cost = 0.0
 
@@ -102,19 +101,61 @@ def process_instances(instances: list[dict], output_path: Path):
         results.append(result)
         running_cost += result["cost"]
 
-        # Print summary after each instance
         print(f"\nRunning total - Instances: {i + 1}/{len(instances)}, Cost: ${running_cost:.4f}")
 
+    return results
 
-def run_swebench(subset: str = "lite", split: str = "dev", slice_spec: str = "", output: str = "results.json"):
-    """Run micro-SWE-agent on SWEBench instances.
 
-    Args:
-        subset: SWEBench subset to use ("lite", "verified", "full", "multimodal", "multilingual")
-        split: Dataset split ("dev" or "test")
-        slice_spec: Slice specification (e.g., "0:5" for first 5 instances)
-        output: Output JSON file path
-    """
+def process_instances_multithreaded(instances: list[dict], output_path: Path, n_workers: int):
+    """Process SWEBench instances in parallel."""
+    results = []
+    running_cost = 0.0
+
+    def process_with_captured_output(instance):
+        instance_id = instance["instance_id"]
+
+        print(f"Starting instance {instance_id}")
+        with contextlib.redirect_stdout(io.StringIO()):
+            result = process_instance(instance, output_path)
+        print(f"Instance {instance_id} completed (${result['cost']:.4f}, {result['steps']} steps)")
+
+        return result
+
+    print(f"Starting parallel execution with {n_workers} workers...")
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=n_workers) as executor:
+        futures = [executor.submit(process_with_captured_output, instance) for instance in instances]
+
+        for future in concurrent.futures.as_completed(futures):
+            result = future.result()
+            # result["instance_id"] already has the ID we need
+            results.append(result)
+            running_cost += result["cost"]
+
+            completed = len(results)
+            print(f"\nRunning total - Instances: {completed}/{len(instances)}, Cost: ${running_cost:.4f}")
+
+    return results
+
+
+def process_instances(instances: list[dict], output_path: Path, n_workers: int = 1):
+    """Process a list of SWEBench instances."""
+    if n_workers == 1:
+        return process_instances_single_threaded(instances, output_path)
+    return process_instances_multithreaded(instances, output_path, n_workers)
+
+
+@app.command()
+def main(
+    subset: Literal["full", "verified", "lite", "multimodal", "multilingual", "_test"] = typer.Option(
+        "lite", "--subset", help="SWEBench subset to use"
+    ),
+    split: Literal["dev", "test"] = typer.Option("dev", "--split", help="Dataset split"),
+    slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)"),
+    output: str = typer.Option("results.json", "-o", "--output", help="Output JSON file path"),
+    n_workers: int = typer.Option(1, "--n-workers", help="Number of worker threads for parallel processing"),
+) -> None:
+    """Run micro-SWE-agent on SWEBench instances"""
     dataset_path = DATASET_MAPPING[subset]
     print(f"Loading dataset {dataset_path}, split {split}...")
     instances = list(load_dataset(dataset_path, split=split))
@@ -127,20 +168,7 @@ def run_swebench(subset: str = "lite", split: str = "dev", slice_spec: str = "",
     print(f"Running on {len(instances)} instances...")
     print(f"Results will be saved to {output_path}")
 
-    process_instances(instances, output_path)
-
-
-@app.command()
-def main(
-    subset: Literal["full", "verified", "lite", "multimodal", "multilingual", "_test"] = typer.Option(
-        "lite", "--subset", help="SWEBench subset to use"
-    ),
-    split: Literal["dev", "test"] = typer.Option("dev", "--split", help="Dataset split"),
-    slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)"),
-    output: str = typer.Option("results.json", "-o", "--output", help="Output JSON file path"),
-) -> None:
-    """Run micro-SWE-agent on SWEBench instances"""
-    run_swebench(subset=subset, split=split, slice_spec=slice_spec, output=output)
+    process_instances(instances, output_path, n_workers)
 
 
 if __name__ == "__main__":

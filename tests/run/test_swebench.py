@@ -9,7 +9,8 @@ from microswea.run.extra.swebench import main
 
 
 @pytest.mark.slow
-def test_swebench_end_to_end(github_test_data, tmp_path):
+@pytest.mark.parametrize("n_workers", [1, 2])
+def test_swebench_end_to_end(github_test_data, tmp_path, n_workers):
     """Test the complete SWEBench flow using the _test subset with deterministic model"""
 
     model_responses = github_test_data["model_responses"]
@@ -18,7 +19,7 @@ def test_swebench_end_to_end(github_test_data, tmp_path):
     with patch("microswea.run.extra.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
 
-        main(subset="_test", split="test", slice_spec="0:1", output=str(output_file))
+        main(subset="_test", split="test", slice_spec="0:1", output=str(output_file), n_workers=n_workers)
 
     # Extract the last observation from github_issue.traj.json
     traj_file_path = package_dir.parent.parent / "tests" / "test_data" / "github_issue.traj.json"
