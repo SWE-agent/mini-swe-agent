@@ -33,7 +33,7 @@ class TextualAgent(DefaultAgent):
             result = super().run()
         finally:
             if self.app._app_running:
-                self.app.call_from_thread(self.app.set_finished)
+                self.app.call_from_thread(self.app.on_agent_finished)
         return result
 
     def execute_action(self, action: str) -> str:
@@ -167,6 +167,8 @@ class AgentApp(App):
         self.log_handler = AddLogEmitCallback(lambda record: self.call_from_thread(self.on_log_message_emitted, record))
         logging.getLogger().addHandler(self.log_handler)
 
+    # --- Basics ---
+
     @property
     def i_step(self) -> int:
         """Current step index."""
@@ -191,10 +193,11 @@ class AgentApp(App):
     def on_mount(self) -> None:
         self._app_running = True
         self.update_content()
-        self.run_agent_worker()
+        self.agent_state = "RUNNING"
+        self.update_content()
+        threading.Thread(target=self.agent.run, daemon=True).start()
 
-    def scroll_top(self) -> None:
-        self.query_one(VerticalScroll).scroll_to(y=0, animate=False)
+    # --- Reacting to events ---
 
     def on_message_added(self) -> None:
         auto_follow = self.i_step == self.n_steps - 1
@@ -205,6 +208,24 @@ class AgentApp(App):
         self.update_content()
         if auto_follow:
             self.action_last_step()
+
+    def on_log_message_emitted(self, record: logging.LogRecord) -> None:
+        """Handle log messages of warning level or higher by showing them as notifications."""
+        self.notify(f"[{record.levelname}] {record.getMessage()}", severity="warning")
+
+    def on_unmount(self) -> None:
+        """Clean up the log handler when the app shuts down."""
+        if hasattr(self, "log_handler"):
+            logging.getLogger().removeHandler(self.log_handler)
+
+    def on_agent_finished(self):
+        self.agent_state = "STOPPED"
+        self.update_content()
+
+    def scroll_top(self) -> None:
+        self.query_one(VerticalScroll).scroll_to(y=0, animate=False)
+
+    # --- UI update logic ---
 
     def update_content(self) -> None:
         container = self.query_one("#content", Vertical)
@@ -247,24 +268,6 @@ class AgentApp(App):
             header.remove_class("running")
 
         self.refresh()
-
-    def run_agent_worker(self):
-        self.agent_state = "RUNNING"
-        self.update_content()
-        threading.Thread(target=self.agent.run, daemon=True).start()
-
-    def set_finished(self):
-        self.agent_state = "STOPPED"
-        self.update_content()
-
-    def on_log_message_emitted(self, record: logging.LogRecord) -> None:
-        """Handle log messages of warning level or higher by showing them as notifications."""
-        self.notify(f"[{record.levelname}] {record.getMessage()}", severity="warning")
-
-    def on_unmount(self) -> None:
-        """Clean up the log handler when the app shuts down."""
-        if hasattr(self, "log_handler"):
-            logging.getLogger().removeHandler(self.log_handler)
 
     # --- Textual bindings ---
 
