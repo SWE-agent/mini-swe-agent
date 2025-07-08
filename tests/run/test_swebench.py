@@ -21,7 +21,7 @@ def test_swebench_end_to_end(github_test_data, tmp_path):
         main(subset="_test", split="test", slice_spec="0:1", output=str(output_file))
 
     # Extract the last observation from github_issue.traj.json
-    traj_file_path = package_dir.parent / "tests" / "test_data" / "github_issue.traj.json"
+    traj_file_path = package_dir.parent.parent / "tests" / "test_data" / "github_issue.traj.json"
     with open(traj_file_path) as f:
         trajectory = json.load(f)
 

@@ -70,7 +70,7 @@ include-package-data = true
 version = {attr = "microswea.__version__"}
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 include = ["microswea*"]
 
 [tool.setuptools.package-data]
