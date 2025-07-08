@@ -34,7 +34,7 @@ async def test_everything_integration_test():
     app = AgentApp(
         model=DeterministicModel(
             outputs=[
-                "/sleep 0.3",
+                "/sleep 0.5",
                 "THOUGHTT 1\n ```bash\necho '1'\n```",
                 "THOUGHTT 2\n ```bash\necho '2'\n```",
                 "THOUGHTT 3\n ```bash\necho '3'\n```",
@@ -51,7 +51,7 @@ async def test_everything_integration_test():
         assert "You are a helpful assistant that can do anything." in get_screen_text(app)
         assert "press enter" not in get_screen_text(app).lower()
         assert "Step 1/1" in app.title
-        await pilot.pause(0.5)
+        await pilot.pause(0.7)
         assert "Step 2/2" in app.title
         assert app.agent_state == "AWAITING_CONFIRMATION"
         assert "AWAITING_CONFIRMATION" in app.title
