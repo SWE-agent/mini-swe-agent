@@ -205,7 +205,6 @@ class AgentApp(App):
 
     def on_mount(self) -> None:
         self._app_running = True
-        self.update_content()
         self.agent_state = "RUNNING"
         self.update_content()
         threading.Thread(target=self.agent.run, daemon=True).start()
