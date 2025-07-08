@@ -24,6 +24,7 @@ class DeterministicModel:
         self.current_index += 1
         output = self.config.outputs[self.current_index]
         if "/sleep" in output:
+            print("SLEEPING")
             time.sleep(float(output.split("/sleep")[1]))
             return self.query(messages, **kwargs)
         if "/warning" in output:
