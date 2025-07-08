@@ -18,14 +18,15 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    config: str = typer.Option(str(DEFAULT_CONFIG), "--config", help="Path to config file"),
+    config: str = typer.Option(str(DEFAULT_CONFIG), "-c", "--config", help="Path to config file"),
     model: str | None = typer.Option(
         None,
+        "-m",
         "--model",
         help="Model to use",
     ),
-    problem: str | None = typer.Option(None, "--problem", help="Problem statement", show_default=False),
-    yolo: bool = typer.Option(False, "--yolo", help="Run without confirmation"),
+    problem: str | None = typer.Option(None, "-p", "--problem", help="Problem statement", show_default=False),
+    yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
 ) -> None:
     """Run micro-SWE-agent with textual interface."""
     _config = yaml.safe_load(Path(config).read_text())

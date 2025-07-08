@@ -14,7 +14,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    problem: str = typer.Option(..., "--problem", help="Problem statement", show_default=False, prompt=True),
+    problem: str = typer.Option(..., "-p", "--problem", help="Problem statement", show_default=False, prompt=True),
 ) -> DefaultAgent:
     model_name = os.getenv("MSWEA_MODEL_NAME")
     if not model_name:

@@ -39,8 +39,8 @@ def fetch_github_issue(issue_url: str) -> str:
 @app.command()
 def main(
     issue_url: str = typer.Option(prompt="Enter GitHub issue URL", help="GitHub issue URL"),
-    config: Path = typer.Option(DEFAULT_CONFIG, "--config", help="Path to config file"),
-    model: str | None = typer.Option(None, "--model", help="Model to use"),
+    config: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
+    model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
 ) -> DefaultAgent:
     """Run micro-SWE-agent on a GitHub issue"""
 
