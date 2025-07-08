@@ -38,10 +38,8 @@ class TextualAgent(DefaultAgent):
 
     def execute_action(self, action: str) -> str:
         if self.config.confirm_actions and not any(re.match(r, action) for r in self.config.whitelist_actions):
-            result = self.app.confirmation_container.request_confirmation(action)
-            if result:
+            if result := self.app.confirmation_container.request_confirmation(action):
                 raise NonTerminatingException(f"Command not executed: {result}")
-
         return super().execute_action(action)
 
 
@@ -78,7 +76,6 @@ class ConfirmationPromptContainer(Container):
         self.can_focus = True
         self.display = False
 
-        # Confirmation state
         self._pending_action: str | None = None
         self._confirmation_event = threading.Event()
         self._confirmation_result: str | None = None
@@ -223,7 +220,8 @@ class AgentApp(App):
 
     def on_log_message_emitted(self, record: logging.LogRecord) -> None:
         """Handle log messages of warning level or higher by showing them as notifications."""
-        self.notify(f"[{record.levelname}] {record.getMessage()}", severity="warning")
+        if record.levelno >= logging.WARNING:
+            self.notify(f"[{record.levelname}] {record.getMessage()}", severity="warning")
 
     def on_unmount(self) -> None:
         """Clean up the log handler when the app shuts down."""
@@ -260,26 +258,20 @@ class AgentApp(App):
             message_container.mount(Static(message["role"].upper(), classes="message-header"))
             message_container.mount(Static(content_str, classes="message-content", markup=False))
 
-        show_confirmation_prompt = (
-            self.confirmation_container._pending_action is not None and self.i_step == len(items) - 1
-        )
-        if show_confirmation_prompt:
-            self.confirmation_container.display = True
-            self.confirmation_container.focus()
-            vs = self.query_one(VerticalScroll)
-            vs.scroll_end(animate=False)
-
         if self.confirmation_container._pending_action is not None:
             self.agent_state = "AWAITING_CONFIRMATION"
+            if self.i_step == len(items) - 1:
+                self.confirmation_container.display = True
+                self.confirmation_container.focus()
+                vs = self.query_one(VerticalScroll)
+                vs.scroll_end(animate=False)
 
-        cost = f"${self.agent.model.cost:.2f}"
-        self.sub_title = f"Step {self.i_step + 1}/{len(items)} - {self.agent_state} - Cost: {cost}"
+        self.sub_title = (
+            f"Step {self.i_step + 1}/{len(items)} - {self.agent_state} - Cost: ${self.agent.model.cost:.2f}"
+        )
 
         header = self.query_one("Header")
-        if self.agent_state == "RUNNING":
-            header.add_class("running")
-        else:
-            header.remove_class("running")
+        header.set_class(self.agent_state == "RUNNING", "running")
 
         self.refresh()
 
