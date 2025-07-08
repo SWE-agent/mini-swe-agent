@@ -1,3 +1,5 @@
+import logging
+import time
 from dataclasses import dataclass
 
 
@@ -20,4 +22,11 @@ class DeterministicModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> str:  # noqa: ARG002
         self.n_calls += 1
         self.current_index += 1
-        return self.config.outputs[self.current_index]
+        output = self.config.outputs[self.current_index]
+        if "/sleep" in output:
+            time.sleep(float(output.split("/sleep")[1]))
+            return self.query(messages, **kwargs)
+        if "/warning" in output:
+            logging.warning(output.split("/warning")[1])
+            return self.query(messages, **kwargs)
+        return output

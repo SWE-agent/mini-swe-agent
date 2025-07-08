@@ -52,6 +52,7 @@ full = [
 dev = [
     "pytest",
     "pytest-cov",
+    "pytest-asyncio",
     "pytest-xdist",
     "pre-commit",
     "ruff",
@@ -241,6 +242,7 @@ disable = [
 ]
 
 [tool.pytest.ini_options]
+asyncio_mode = "auto"
 markers = [
     "slow: marks tests as slow (deselect with '-k \"not slow\"')",
 ]
