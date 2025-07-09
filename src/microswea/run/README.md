@@ -1,5 +1,7 @@
 # Entry points / run scripts
 
+* `christmas.py` - Prints a beautiful Christmas tree and exits.
+
 ## Work locally (i.e., without a sandbox)
 
 * `hello_world.py` - Extremely simple example of how to use the `default.py` agent.
