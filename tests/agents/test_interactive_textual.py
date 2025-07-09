@@ -314,7 +314,9 @@ async def test_agent_successful_completion_notification():
 async def test_whitelist_actions_bypass_confirmation():
     """Test that whitelisted actions bypass confirmation."""
     app = AgentApp(
-        model=DeterministicModel(outputs=["Whitelisted action\n```bash\necho 'safe'\n```"]),
+        model=DeterministicModel(
+            outputs=["Whitelisted action\n```bash\necho 'safe' && echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]
+        ),
         env=LocalEnvironment(),
         task="Whitelist test",
         confirm_actions=True,
@@ -335,7 +337,7 @@ async def test_confirmation_container_multiple_actions():
         model=DeterministicModel(
             outputs=[
                 "First action\n```bash\necho '1'\n```",
-                "Second action\n```bash\necho '2'\n```",
+                "Second action\n```bash\necho '2' && echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -363,7 +365,9 @@ async def test_confirmation_container_multiple_actions():
 async def test_scrolling_behavior():
     """Test scrolling up and down behavior."""
     app = AgentApp(
-        model=DeterministicModel(outputs=["Long response" * 100]),
+        model=DeterministicModel(
+            outputs=["Long response" * 100 + "\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]
+        ),
         env=LocalEnvironment(),
         task="Scroll test",
         confirm_actions=False,
@@ -385,7 +389,7 @@ def test_log_handler_cleanup():
     initial_handlers = len(logging.getLogger().handlers)
 
     app = AgentApp(
-        model=DeterministicModel(outputs=["Simple response"]),
+        model=DeterministicModel(outputs=["Simple response\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]),
         env=LocalEnvironment(),
         task="Cleanup test",
         confirm_actions=False,
