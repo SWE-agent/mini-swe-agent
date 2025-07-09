@@ -34,7 +34,7 @@ def test_step_limit_enforcement():
         step_limit=1,
     )
 
-    exit_status, result = agent.run("Run multiple commands")
+    exit_status, _ = agent.run("Run multiple commands")
     assert exit_status == "LimitsExceeded"
     assert agent.model.n_calls == 1
 
@@ -50,7 +50,7 @@ def test_cost_limit_enforcement():
         cost_limit=0.5,
     )
 
-    exit_status, result = agent.run("Test cost limit")
+    exit_status, _ = agent.run("Test cost limit")
     assert exit_status == "LimitsExceeded"
 
 

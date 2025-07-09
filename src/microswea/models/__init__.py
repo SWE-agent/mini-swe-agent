@@ -27,8 +27,8 @@ class GlobalModelStats:
         with self._lock:
             self._cost += cost
             self._n_calls += 1
-            cost_limit = float(os.getenv("MSWEA_GLOBAL_COST_LIMIT", 0))
-            call_limit = int(os.getenv("MSWEA_GLOBAL_CALL_LIMIT", 0))
+            cost_limit = float(os.getenv("MSWEA_GLOBAL_COST_LIMIT", "0"))
+            call_limit = int(os.getenv("MSWEA_GLOBAL_CALL_LIMIT", "0"))
         if 0 < cost_limit < self._cost or 0 < call_limit < self._n_calls + 1:
             raise RuntimeError(f"Global cost/call limit exceeded: ${self._cost:.4f} / {self._n_calls + 1}")
 

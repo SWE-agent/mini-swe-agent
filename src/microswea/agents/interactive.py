@@ -47,10 +47,9 @@ class InteractiveAgent(DefaultAgent):
             )
             if user_input:
                 raise NonTerminatingException(f"Interrupted by user: {user_input}")
-            else:
-                raise NonTerminatingException(
-                    "Temporary interruption caught. Some actions may have been only partially executed."
-                )
+            raise NonTerminatingException(
+                "Temporary interruption caught. Some actions may have been only partially executed."
+            )
 
     def execute_action(self, action: str) -> str:
         # Override the execute_action method to handle user confirmation
@@ -74,11 +73,11 @@ class InteractiveAgent(DefaultAgent):
                 "[bold green]/x[/bold green] to exit yolo mode"
             )
             return self.get_response("[bold yellow]>[/bold yellow] ")
-        elif user_input.strip() == "/y":
+        if user_input.strip() == "/y":
             self.config.confirm_actions = False
             console.print("Yolo mode [bold red]enabled[/bold red].")
             return self.get_response(prompt)
-        elif user_input.strip() == "/x":
+        if user_input.strip() == "/x":
             self.config.confirm_actions = True
             console.print("Yolo mode [bold green]disabled[/bold green].")
             return self.get_response(prompt)

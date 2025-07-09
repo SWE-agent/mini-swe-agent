@@ -16,15 +16,15 @@ def get_screen_text(app: AgentApp) -> str:
     content_container = app.query_one("#content")
     for static_widget in content_container.query("Static"):
         if static_widget.display:
-            if hasattr(static_widget, "renderable") and static_widget.renderable:
-                text_parts.append(str(static_widget.renderable))
+            if hasattr(static_widget, "renderable") and static_widget.renderable:  # type: ignore[attr-defined]
+                text_parts.append(str(static_widget.renderable))  # type: ignore[attr-defined]
 
     # Also check the confirmation container if it's visible
     if app.confirmation_container.display:
         for static_widget in app.confirmation_container.query("Static"):
             if static_widget.display:
-                if hasattr(static_widget, "renderable") and static_widget.renderable:
-                    text_parts.append(str(static_widget.renderable))
+                if hasattr(static_widget, "renderable") and static_widget.renderable:  # type: ignore[attr-defined]
+                    text_parts.append(str(static_widget.renderable))  # type: ignore[attr-defined]
 
     return "\n".join(text_parts)
 
@@ -88,9 +88,9 @@ async def test_everything_integration_test():
         assert "Step 4/4" in app.title
         assert "echo '3'" in get_screen_text(app)
         # Enter yolo mode
-        assert pilot.app.agent.config.confirm_actions is True
+        assert pilot.app.agent.config.confirm_actions is True  # type: ignore[attr-defined]
         await pilot.press("y")
-        assert pilot.app.agent.config.confirm_actions is False
+        assert pilot.app.agent.config.confirm_actions is False  # type: ignore[attr-defined]
         await pilot.press("enter")  # still need to confirm once for step 3
         # next action will be executed automatically, so we see step 5 next
         await pilot.pause(0.2)
@@ -234,7 +234,7 @@ async def test_confirmation_rejection_with_message():
 
         # Type rejection message
         rejection_input = app.confirmation_container.query_one("#rejection-input")
-        rejection_input.text = "Not safe to run"
+        rejection_input.text = "Not safe to run"  # type: ignore[attr-defined]
 
         # Submit rejection
         await pilot.press("ctrl+d")
