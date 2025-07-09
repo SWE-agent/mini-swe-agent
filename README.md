@@ -64,22 +64,34 @@ it is radically simpler, because it
 - Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
 
 </details>
-
 <table>
 <tr>
 <td width="50%">
-<strong>Simple UI</strong> (<code>micro</code>)<br/>
+<strong>Simple UI</strong> (<code>micro</code>)
+</td>
+<td>
+<strong>Textual UI</strong> (<code>micro2</code>)
+</td>
+</tr>
+<tr>
+<td width="50%">
 <img width="600px" src="docs/assets/micro.png">
 </td>
 <td>
-<strong>Textual UI</strong> (<code>micro2</code>)<br/>
 <img width="600px" src="docs/assets/micro2.png">
 </td>
 </tr>
 <tr>
 <td>
-<strong>Python bindings</strong><br/>
-
+<strong>Python bindings</strong>
+</td>
+<td>
+<strong>More in the docs</strong>
+</td>
+</tr>
+<tr>
+<td>
+  
 ```python
 agent = DefaultAgent(
     LitellmModel(model_name=...),
@@ -88,13 +100,10 @@ agent = DefaultAgent(
 )
 agent.run()
 ```
-
 </td>
 <td>
-<strong>More in the docs</strong>
-  
-- TBD
 
+- TBD
 </td>
 </tr>
 </table>
