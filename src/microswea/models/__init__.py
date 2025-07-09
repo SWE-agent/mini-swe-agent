@@ -13,6 +13,10 @@ from microswea import Model, global_config_file
 console = Console()
 
 
+GLOBAL_N_CALLS = 0
+GLOBAL_COST = 0.0
+
+
 def get_model(input_model_name: str | None = None, config: dict | None = None) -> Model:
     """Get an initialized model object from any kind of user input or settings."""
     resolved_model_name = get_model_name(input_model_name, config)
