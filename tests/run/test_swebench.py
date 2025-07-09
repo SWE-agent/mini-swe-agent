@@ -50,10 +50,6 @@ def test_swebench_end_to_end(github_test_data, tmp_path, n_workers):
     output_trajectory = json.loads(traj_output_file.read_text())
     assert output_trajectory["messages"][-1]["content"] == last_message
 
-    log_output_file = tmp_path / instance_id / f"{instance_id}.output.log"
-    log_content = log_output_file.read_text()
-    assert last_message in log_content
-
 
 def test_get_image_name_with_existing_image_name():
     """Test get_image_name when image_name is already provided"""

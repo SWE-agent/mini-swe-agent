@@ -4,7 +4,6 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from jinja2 import Template
-from rich.console import Console
 
 from microswea import Environment, Model
 
@@ -22,9 +21,6 @@ class AgentConfig:
     action_observation_template: str = "Observation: {{output}}"
     step_limit: int = 0
     cost_limit: float = 3.0
-
-
-console = Console(highlight=False)  # Print with colors
 
 
 class NonTerminatingException(Exception):
@@ -60,15 +56,6 @@ class DefaultAgent:
 
     def add_message(self, role: str, content: str):
         self.messages.append({"role": role, "content": content})
-        if role == "assistant":
-            console.print(
-                f"\n[red][bold]micro-swe-agent[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):[/red]\n",
-                end="",
-                highlight=False,
-            )
-        else:
-            console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
-        console.print(content, highlight=False, markup=False)
 
     def run(self, task: str) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""

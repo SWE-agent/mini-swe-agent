@@ -23,6 +23,18 @@ class InteractiveAgent(DefaultAgent):
         super().__init__(*args, config_class=InteractiveAgentConfig, **kwargs)
         self.cost_last_confirmed = 0.0
 
+    def add_message(self, role: str, content: str):
+        super().add_message(role, content)
+        if role == "assistant":
+            console.print(
+                f"\n[red][bold]micro-swe-agent[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):[/red]\n",
+                end="",
+                highlight=False,
+            )
+        else:
+            console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
+        console.print(content, highlight=False, markup=False)
+
     def step(self) -> str:
         # Override the step method to handle user interruption
         try:
