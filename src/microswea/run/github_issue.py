@@ -66,11 +66,11 @@ def main(
     agent.env.execute(f"git clone {repo_url} /testbed", cwd="/")
 
     try:
-        result = agent.run()
+        exit_status, result = agent.run()
     except KeyboardInterrupt:
         console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
     else:
-        console.print(f"\nFinal result: {result}")
+        console.print(f"\nAgent finished with {exit_status}: {result}")
         Path("patch.txt").write_text(result)
     finally:
         Path("traj.json").write_text(

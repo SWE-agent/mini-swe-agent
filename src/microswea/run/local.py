@@ -61,7 +61,7 @@ def main(
     )
 
     try:
-        result = agent.run()
+        exit_status, result = agent.run()
     except KeyboardInterrupt:
         console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
     else:

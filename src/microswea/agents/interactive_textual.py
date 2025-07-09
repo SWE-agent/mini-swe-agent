@@ -33,12 +33,14 @@ class TextualAgent(DefaultAgent):
         if self.app.agent_state != "UNINITIALIZED":
             self.app.call_from_thread(self.app.on_message_added)
 
-    def run(self) -> str:
+    def run(self) -> tuple[str, str]:
         try:
-            result = super().run()
-        finally:
-            self.app.call_from_thread(self.app.on_agent_finished)
-        return result
+            exit_status, result = super().run()
+        except Exception as e:
+            self.app.call_from_thread(self.app.on_agent_finished, "ERROR", str(e))
+        else:
+            self.app.call_from_thread(self.app.on_agent_finished, exit_status, result)
+        return exit_status, result
 
     def execute_action(self, action: str) -> str:
         if self.config.confirm_actions and not any(re.match(r, action) for r in self.config.whitelist_actions):
@@ -219,8 +221,9 @@ class AgentApp(App):
         if hasattr(self, "log_handler"):
             logging.getLogger().removeHandler(self.log_handler)
 
-    def on_agent_finished(self):
+    def on_agent_finished(self, exit_status: str, result: str):
         self.agent_state = "STOPPED"
+        self.notify(f"Agent finished with status: {exit_status}")
         self.update_content()
 
     # --- UI update logic ---

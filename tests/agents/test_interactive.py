@@ -16,7 +16,8 @@ def test_successful_completion_with_confirmation():
             problem_statement="Test completion with confirmation",
         )
 
-        result = agent.run()
+        exit_status, result = agent.run()
+        assert exit_status == "Submitted"
         assert result == "completed"
         assert agent.model.n_calls == 1
 
@@ -41,7 +42,8 @@ def test_action_rejection_and_recovery():
             problem_statement="Test action rejection",
         )
 
-        result = agent.run()
+        exit_status, result = agent.run()
+        assert exit_status == "Submitted"
         assert result == "recovered"
         assert agent.model.n_calls == 2
         # Should have rejection message in conversation
@@ -66,7 +68,8 @@ def test_yolo_mode_activation():
             problem_statement="Test yolo mode",
         )
 
-        result = agent.run()
+        exit_status, result = agent.run()
+        assert exit_status == "Submitted"
         assert result == "yolo works"
         assert agent.config.confirm_actions is False
 
@@ -89,7 +92,8 @@ def test_yolo_mode_exit():
             problem_statement="Test yolo mode exit",
         )
 
-        result = agent.run()
+        exit_status, result = agent.run()
+        assert exit_status == "Submitted"
         assert result == "exit yolo works"
         assert agent.config.confirm_actions is True
 
@@ -112,7 +116,8 @@ def test_help_command():
                 problem_statement="Test help command",
             )
 
-            result = agent.run()
+            exit_status, result = agent.run()
+            assert exit_status == "Submitted"
             assert result == "help shown"
             # Check that help was printed
             help_calls = [call for call in mock_print.call_args_list if "/y" in str(call)]
@@ -131,7 +136,8 @@ def test_whitelisted_actions_skip_confirmation():
     )
 
     # No patch needed - should not ask for confirmation
-    result = agent.run()
+    exit_status, result = agent.run()
+    assert exit_status == "Submitted"
     assert result == "no confirmation needed"
 
 
@@ -171,8 +177,9 @@ def _test_interruption_helper(interruption_input, expected_message_fragment, pro
 
     with patch("microswea.agents.interactive.console.input", side_effect=mock_input):
         with patch.object(agent, "query", side_effect=mock_query):
-            result = agent.run()
+            exit_status, result = agent.run()
 
+    assert exit_status == "Submitted"
     assert result == "recovered from interrupt"
     # Check that the expected interruption message was added
     interrupt_messages = [msg for msg in agent.messages if expected_message_fragment in msg.get("content", "")]
@@ -216,7 +223,8 @@ def test_multiple_confirmations_and_commands():
             problem_statement="Test complex interaction flow",
         )
 
-        result = agent.run()
+        exit_status, result = agent.run()
+        assert exit_status == "Submitted"
         assert result == "complex flow completed"
         assert agent.config.confirm_actions is False  # Should be in yolo mode
         assert agent.model.n_calls == 2
@@ -234,5 +242,6 @@ def test_non_whitelisted_action_requires_confirmation():
             whitelist_actions=[r"ls.*"],  # Only ls commands whitelisted
         )
 
-        result = agent.run()
+        exit_status, result = agent.run()
+        assert exit_status == "Submitted"
         assert result == "confirmed"

@@ -182,7 +182,7 @@ async def test_log_message_filtering():
         await pilot.pause(0.2)
 
         # Verify warning was emitted and handled (note the extra space in the actual format)
-        app.notify.assert_called_with("[WARNING]  Test warning message", severity="warning")
+        app.notify.assert_any_call("[WARNING]  Test warning message", severity="warning")
 
 
 async def test_list_content_rendering():
@@ -249,11 +249,15 @@ async def test_agent_with_cost_limit():
     # Set model cost to exceed limit
     app.agent.model.cost = 0.02
 
+    # Mock the notify method to capture calls
+    app.notify = Mock()
+
     async with app.run_test() as pilot:
         await pilot.pause(0.2)
 
-        # Should eventually stop due to cost limit
-        assert "limits_exceeded" in get_screen_text(app) and app.agent_state == "STOPPED"
+        # Should eventually stop due to cost limit and notify with the exit status
+        assert app.agent_state == "STOPPED"
+        app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
 
 
 async def test_agent_with_step_limit():
@@ -266,11 +270,37 @@ async def test_agent_with_step_limit():
         step_limit=2,
     )
 
+    # Mock the notify method to capture calls
+    app.notify = Mock()
+
     async with app.run_test() as pilot:
         await pilot.pause(0.3)
 
-        # Should stop due to step limit
-        assert "limits_exceeded" in get_screen_text(app) and app.agent_state == "STOPPED"
+        # Should stop due to step limit and notify with the exit status
+        assert app.agent_state == "STOPPED"
+        app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
+
+
+async def test_agent_successful_completion_notification():
+    """Test that agent completion with 'Submitted' status triggers notification."""
+    app = AgentApp(
+        model=DeterministicModel(
+            outputs=["Completing task\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'success'\n```"]
+        ),
+        env=LocalEnvironment(),
+        problem_statement="Completion test",
+        confirm_actions=False,
+    )
+
+    # Mock the notify method to capture calls
+    app.notify = Mock()
+
+    async with app.run_test() as pilot:
+        await pilot.pause(0.2)
+
+        # Should finish with Submitted status and notify about completion
+        assert app.agent_state == "STOPPED"
+        app.notify.assert_any_call("Agent finished with status: Submitted")
 
 
 async def test_whitelist_actions_bypass_confirmation():

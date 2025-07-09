@@ -69,7 +69,7 @@ def process_instance(instance: dict, output_path: Path) -> dict:
     )
 
     try:
-        result = agent.run()
+        exit_status, result = agent.run()
     finally:
         Path("traj.json").write_text(
             json.dumps(agent.messages, indent=2),

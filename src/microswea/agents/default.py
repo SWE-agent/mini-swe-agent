@@ -28,11 +28,27 @@ console = Console(highlight=False)  # Print with colors
 
 
 class NonTerminatingException(Exception):
-    """Raising this exception will add an error message to the agent history."""
+    """Raised for conditions that can be handled by the agent."""
+
+
+class FormatError(NonTerminatingException):
+    """Raised when the LM's output is not in the expected format."""
+
+
+class ExecutionTimeoutError(NonTerminatingException):
+    """Raised when the action execution timed out."""
 
 
 class TerminatingException(Exception):
-    """Raising this exception will terminate the agent."""
+    """Raised for conditions that terminate the agent."""
+
+
+class Submitted(TerminatingException):
+    """Raised when the LM declares that the agent has finished its task."""
+
+
+class LimitsExceeded(TerminatingException):
+    """Raised when the agent has reached its cost or step limit."""
 
 
 class DefaultAgent:
@@ -58,8 +74,8 @@ class DefaultAgent:
             console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
         console.print(content, highlight=False, markup=False)
 
-    def run(self) -> str:
-        """Run step() until agent is finished. Return final observation."""
+    def run(self) -> tuple[str, str]:
+        """Run step() until agent is finished. Return exit status & message"""
         while True:
             try:
                 self.step()
@@ -67,12 +83,12 @@ class DefaultAgent:
                 self.add_message("user", str(e))
             except TerminatingException as e:
                 self.add_message("user", str(e))
-                return str(e)
+                return type(e).__name__, str(e)
 
     def step(self) -> str:
         """Query the LM, execute the action, return the observation."""
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
-            raise TerminatingException("limits_exceeded")
+            raise LimitsExceeded()
 
         message = self.query()
         self.add_message("assistant", message)
@@ -93,17 +109,17 @@ class DefaultAgent:
         actions = re.findall(r"```[a-zA-Z]*\n(.*?)(?=\n```|```)", message, re.DOTALL)
         if len(actions) == 1:
             return actions[0].strip()
-        raise NonTerminatingException(Template(self.config.format_error_template).render(actions=actions))
+        raise FormatError(Template(self.config.format_error_template).render(actions=actions))
 
     def execute_action(self, action: str) -> str:
         try:
             output = self.env.execute(action)
         except (TimeoutError, subprocess.TimeoutExpired):
-            raise NonTerminatingException(Template(self.config.timeout_template).render(action=action))
+            raise ExecutionTimeoutError(Template(self.config.timeout_template).render(action=action))
         self.has_finished(output)
         return Template(self.config.action_observation_template).render(output=output)
 
     def has_finished(self, output: dict[str, str]):
-        """Raises TerminatingException with final output if the agent has finished its task."""
+        """Raises Submitted exception with final output if the agent has finished its task."""
         if output.get("stdout") and output["stdout"].splitlines()[0] == "MICRO_SWE_AGENT_FINAL_OUTPUT":
-            raise TerminatingException("\n".join(output["stdout"].splitlines()[1:]))
+            raise Submitted("\n".join(output["stdout"].splitlines()[1:]))

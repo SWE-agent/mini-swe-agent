@@ -18,7 +18,9 @@ def test_successful_completion():
         problem_statement="Echo hello world then finish",
     )
 
-    assert agent.run() == "Task completed successfully"
+    exit_status, result = agent.run()
+    assert exit_status == "Submitted"
+    assert result == "Task completed successfully"
     assert agent.model.n_calls == 2
     assert len(agent.messages) == 6  # system, user, assistant, user, assistant, user
 
@@ -34,7 +36,8 @@ def test_step_limit_enforcement():
         step_limit=1,
     )
 
-    assert agent.run() == "limits_exceeded"
+    exit_status, result = agent.run()
+    assert exit_status == "LimitsExceeded"
     assert agent.model.n_calls == 1
 
 
@@ -50,7 +53,8 @@ def test_cost_limit_enforcement():
         cost_limit=0.5,
     )
 
-    assert agent.run() == "limits_exceeded"
+    exit_status, result = agent.run()
+    assert exit_status == "LimitsExceeded"
 
 
 def test_format_error_handling():
@@ -67,7 +71,9 @@ def test_format_error_handling():
         problem_statement="Test format errors",
     )
 
-    assert agent.run() == "done"
+    exit_status, result = agent.run()
+    assert exit_status == "Submitted"
+    assert result == "done"
     assert agent.model.n_calls == 3
     # Should have error messages in conversation
     assert (
@@ -89,7 +95,9 @@ def test_timeout_handling():
         problem_statement="Test timeout handling",
     )
 
-    assert agent.run() == "recovered"
+    exit_status, result = agent.run()
+    assert exit_status == "Submitted"
+    assert result == "recovered"
     # Should have timeout error message
     assert len([msg for msg in agent.messages if "timed out" in msg.get("content", "")]) == 1
 
@@ -144,7 +152,9 @@ def test_message_history_tracking():
     assert agent.messages[1]["role"] == "user"
     assert "Track messages" in agent.messages[1]["content"]
 
-    assert agent.run() == "done"
+    exit_status, result = agent.run()
+    assert exit_status == "Submitted"
+    assert result == "done"
 
     # After completion should have full conversation
     assert len(agent.messages) == 6
@@ -166,7 +176,9 @@ def test_multiple_steps_before_completion():
         problem_statement="Multi-step task",
     )
 
-    assert agent.run() == "completed all steps"
+    exit_status, result = agent.run()
+    assert exit_status == "Submitted"
+    assert result == "completed all steps"
     assert agent.model.n_calls == 4
 
     # Check that all intermediate outputs are captured (final step doesn't get observation due to termination)
@@ -193,6 +205,8 @@ def test_custom_config():
         cost_limit=1.0,
     )
 
-    assert agent.run() == "custom config works"
+    exit_status, result = agent.run()
+    assert exit_status == "Submitted"
+    assert result == "custom config works"
     assert agent.messages[0]["content"] == "You are a test assistant."
     assert "Test custom config" in agent.messages[1]["content"]
