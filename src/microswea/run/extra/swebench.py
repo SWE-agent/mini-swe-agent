@@ -3,6 +3,8 @@ import concurrent.futures
 import contextlib
 import io
 import json
+import random
+import re
 from pathlib import Path
 from typing import Literal
 
@@ -145,13 +147,33 @@ def process_instances(instances: list[dict], output_path: Path, n_workers: int =
     return process_instances_multithreaded(instances, output_path, n_workers)
 
 
+def filter_instances(
+    instances: list[dict], *, filter_spec: str, slice_spec: str = "", shuffle: bool = False
+) -> list[dict]:
+    """Filter and slice a list of SWEBench instances."""
+    if shuffle:
+        instances = sorted(instances.copy(), key=lambda x: x["instance_id"])
+        random.seed(42)
+        random.shuffle(instances)
+    before_filter = len(instances)
+    instances = [instance for instance in instances if re.match(filter_spec, instance["instance_id"])]
+    if (after_filter := len(instances)) != before_filter:
+        print(f"Instance filter: {before_filter} -> {after_filter} instances")
+    if slice_spec:
+        values = [int(x) if x else None for x in slice_spec.split(":")]
+        instances = instances[slice(*values)]
+        if (after_slice := len(instances)) != before_filter:
+            print(f"Instance slice: {before_filter} -> {after_slice} instances")
+    return instances
+
+
 @app.command()
 def main(
-    subset: Literal["full", "verified", "lite", "multimodal", "multilingual", "_test"] = typer.Option(
-        "lite", "--subset", help="SWEBench subset to use or path to a dataset"
-    ),
+    subset: str = typer.Option("lite", "--subset", help="SWEBench subset to use or path to a dataset"),
     split: Literal["dev", "test"] = typer.Option("dev", "--split", help="Dataset split"),
     slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)"),
+    filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex"),
+    shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances"),
     output: str = typer.Option("results.json", "-o", "--output", help="Output JSON file path"),
     n_workers: int = typer.Option(1, "--n-workers", help="Number of worker threads for parallel processing"),
 ) -> None:
@@ -163,9 +185,7 @@ def main(
     print(f"Loading dataset {dataset_path}, split {split}...")
     instances = list(load_dataset(dataset_path, split=split))
 
-    if slice_spec:
-        values = [int(x) if x else None for x in slice_spec.split(":")]
-        instances = instances[slice(*values)]
+    instances = filter_instances(instances, filter_spec=filter_spec, slice_spec=slice_spec, shuffle=shuffle)
 
     output_path = Path(output)
     print(f"Running on {len(instances)} instances...")
