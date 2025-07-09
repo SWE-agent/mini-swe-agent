@@ -15,7 +15,7 @@ Use it to
 
 - 🔥 Instantly solve problems: `pip install pipx && pipx run micro-swe-agent`
 - ⚙️ Take full control & quickly build custom agents
-- 🏋 Fine-tune & RL with a minimal, assumption-free agen
+- 🏋 Fine-tune & RL with a minimal, assumption-free agent
 - 🐳 Deploy seamlessly to sandboxed environments & CI/CD
 
 
@@ -128,7 +128,7 @@ Or with python bindings:
 
 ```python
 agent = DefaultAgent(
-    LitellmModel(model_name="claude-sonnet-4-20250514"),
+    AnthropicModel(model_name="claude-sonnet-4-20250514"),
     LocalEnvironment(),
     "Write a python sudoku game for me",
 )
