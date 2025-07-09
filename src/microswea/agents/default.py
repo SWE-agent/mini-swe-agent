@@ -86,9 +86,6 @@ class DefaultAgent:
 
     def step(self) -> str:
         """Query the LM, execute the action, return the observation."""
-        if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
-            raise LimitsExceeded()
-
         message = self.query()
         self.add_message("assistant", message)
         observation = self.get_observation(message)
@@ -97,6 +94,9 @@ class DefaultAgent:
 
     def query(self) -> str:
         """Query the model and return the response."""
+        if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
+            raise LimitsExceeded()
+
         return self.model.query(self.messages)
 
     def get_observation(self, message: str) -> str:
