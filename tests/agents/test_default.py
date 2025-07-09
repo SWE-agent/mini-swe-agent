@@ -159,6 +159,7 @@ def test_multiple_steps_before_completion():
             ]
         ),
         env=LocalEnvironment(),
+        cost_limit=5.0,  # Increase cost limit to allow all 4 calls (4.0 total cost)
     )
 
     exit_status, result = agent.run("Multi-step task")

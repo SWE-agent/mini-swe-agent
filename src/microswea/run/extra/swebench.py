@@ -10,6 +10,7 @@ import yaml
 from datasets import load_dataset
 from rich.live import Live
 
+import microswea.models
 from microswea import package_dir
 from microswea.agents.default import DefaultAgent
 from microswea.environments.docker import DockerEnvironment
@@ -115,15 +116,15 @@ def process_instance(instance: dict, output_dir: Path, model: str, progress_mana
 def process_instances_single_threaded(instances: list[dict], output_path: Path, model: str):
     """Process SWEBench instances sequentially."""
     results = []
-    running_cost = 0.0
 
     for i, instance in enumerate(instances):
         instance_id = instance["instance_id"]
 
         print(f"Running instance {i + 1}/{len(instances)}: {instance_id}")
         result = process_instance(instance, output_path, model)
-        running_cost += result["info"]["model_stats"]["instance_cost"]
-        print(f"Instance {instance_id} completed - completed {i + 1}/{len(instances)}, ${running_cost:.4f}")
+        print(
+            f"Instance {instance_id} completed - completed {i + 1}/{len(instances)}, ${microswea.models.GLOBAL_MODEL_STATS.cost:.4f}"
+        )
         results.append(result)
 
     return results

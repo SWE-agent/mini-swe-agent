@@ -45,6 +45,7 @@ async def test_everything_integration_test():
         env=LocalEnvironment(),
         task="What's up?",
         confirm_actions=True,
+        cost_limit=10.0,
     )
     async with app.run_test() as pilot:
         assert app.agent_state == "RUNNING"
@@ -92,7 +93,7 @@ async def test_everything_integration_test():
         assert pilot.app.agent.config.confirm_actions is False
         await pilot.press("enter")  # still need to confirm once for step 3
         # next action will be executed automatically, so we see step 5 next
-        await pilot.pause(0.1)
+        await pilot.pause(0.2)
         assert "Step 6/6" in app.title
         assert "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'" in get_screen_text(app)
         # await pilot.pause(0.1)

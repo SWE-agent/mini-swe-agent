@@ -1,9 +1,10 @@
 """This file provides convenience functions for selecting models.
-You can ignore this file completelyif you explicitly set your model in your run script.
+You can ignore this file completely if you explicitly set your model in your run script.
 """
 
 import copy
 import os
+import threading
 
 from dotenv import set_key
 from rich.console import Console
@@ -13,8 +14,34 @@ from microswea import Model, global_config_file
 console = Console()
 
 
-GLOBAL_N_CALLS = 0
-GLOBAL_COST = 0.0
+class GlobalModelStats:
+    """Global model statistics tracker with optional limits."""
+
+    def __init__(self):
+        self._cost = 0.0
+        self._n_calls = 0
+        self._lock = threading.Lock()
+
+    def add(self, cost: float) -> None:
+        """Add a model call with its cost, checking limits."""
+        with self._lock:
+            self._cost += cost
+            self._n_calls += 1
+            cost_limit = float(os.getenv("MSWEA_GLOBAL_COST_LIMIT", 0))
+            call_limit = int(os.getenv("MSWEA_GLOBAL_CALL_LIMIT", 0))
+        if 0 < cost_limit < self._cost or 0 < call_limit < self._n_calls + 1:
+            raise RuntimeError(f"Global cost/call limit exceeded: ${self._cost:.4f} / {self._n_calls + 1}")
+
+    @property
+    def cost(self) -> float:
+        return self._cost
+
+    @property
+    def n_calls(self) -> int:
+        return self._n_calls
+
+
+GLOBAL_MODEL_STATS = GlobalModelStats()
 
 
 def get_model(input_model_name: str | None = None, config: dict | None = None) -> Model:

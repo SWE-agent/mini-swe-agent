@@ -5,7 +5,7 @@ from typing import Any
 import litellm
 from tenacity import before_sleep_log, retry, stop_after_attempt, wait_exponential
 
-import microswea.models
+from microswea.models import GLOBAL_MODEL_STATS
 
 logger = logging.getLogger("litellm_model")
 
@@ -34,10 +34,9 @@ class LitellmModel:
         return response
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> str:
-        self.n_calls += 1
-        microswea.models.GLOBAL_N_CALLS += 1
         response = self._query(messages, **kwargs)
         cost = litellm.cost_calculator.completion_cost(response)
+        self.n_calls += 1
         self.cost += cost
-        microswea.models.GLOBAL_COST += cost
+        GLOBAL_MODEL_STATS.add(cost)
         return response.choices[0].message.content  # type: ignore

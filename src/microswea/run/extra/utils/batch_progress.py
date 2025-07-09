@@ -21,6 +21,8 @@ from rich.progress import (
 )
 from rich.table import Table
 
+import microswea.models
+
 
 def _shorten_str(s: str, max_len: int, shorten_left=False) -> str:
     if not shorten_left:
@@ -72,7 +74,7 @@ class RunBatchProgressManager:
         """
 
         self._main_task_id = self._main_progress_bar.add_task(
-            "[cyan]Overall Progress", total=num_instances, total_cost=0
+            "[cyan]Overall Progress", total=num_instances, total_cost="0.000"
         )
 
         self.render_group = Group(Table(), self._task_progress_bar, self._main_progress_bar)
@@ -102,7 +104,9 @@ class RunBatchProgressManager:
 
     def _update_total_costs(self) -> None:
         with self._lock:
-            self._main_progress_bar.update(self._main_task_id)
+            self._main_progress_bar.update(
+                self._main_task_id, total_cost=f"{microswea.models.GLOBAL_MODEL_STATS.cost:.3f}"
+            )
 
     def update_instance_status(self, instance_id: str, message: str):
         assert self._task_progress_bar is not None
