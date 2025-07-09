@@ -148,7 +148,7 @@ def process_instances(instances: list[dict], output_path: Path, n_workers: int =
 @app.command()
 def main(
     subset: Literal["full", "verified", "lite", "multimodal", "multilingual", "_test"] = typer.Option(
-        "lite", "--subset", help="SWEBench subset to use"
+        "lite", "--subset", help="SWEBench subset to use or path to a dataset"
     ),
     split: Literal["dev", "test"] = typer.Option("dev", "--split", help="Dataset split"),
     slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)"),
@@ -156,7 +156,10 @@ def main(
     n_workers: int = typer.Option(1, "--n-workers", help="Number of worker threads for parallel processing"),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""
-    dataset_path = DATASET_MAPPING[subset]
+    try:
+        dataset_path = DATASET_MAPPING[subset]
+    except KeyError:
+        dataset_path = subset
     print(f"Loading dataset {dataset_path}, split {split}...")
     instances = list(load_dataset(dataset_path, split=split))
 
