@@ -241,7 +241,8 @@ class AgentApp(App):
                 content_str = str(message["content"])
             message_container = Vertical(classes="message-container")
             container.mount(message_container)
-            message_container.mount(Static(message["role"].upper(), classes="message-header"))
+            role = message["role"].replace("assistant", "micro-swe-agent")
+            message_container.mount(Static(role.upper(), classes="message-header"))
             message_container.mount(Static(content_str, classes="message-content", markup=False))
 
         if self.confirmation_container._pending_action is not None:
