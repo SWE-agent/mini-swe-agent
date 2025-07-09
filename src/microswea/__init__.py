@@ -20,7 +20,9 @@ from rich.console import Console
 
 package_dir = Path(__file__).resolve().parent
 
-global_config_file = Path(user_config_dir("micro-swe-agent", appauthor=False, ensure_exists=True)) / ".env"
+config_dir = Path(os.getenv("MICRO_SWE_AGENT_GLOBAL_CONFIG_DIR") or user_config_dir("micro-swe-agent"))
+config_dir.mkdir(parents=True, exist_ok=True)
+global_config_file = Path(config_dir) / ".env"
 
 if not os.getenv("MICRO_SWE_AGENT_SILENT_STARTUP"):
     Console().print(
