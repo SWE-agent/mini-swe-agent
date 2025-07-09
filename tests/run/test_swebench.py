@@ -9,8 +9,8 @@ from microswea.run.extra.swebench import filter_instances, get_swebench_docker_i
 
 
 @pytest.mark.slow
-@pytest.mark.parametrize("n_workers", [1, 2])
-def test_swebench_end_to_end(github_test_data, tmp_path, n_workers):
+@pytest.mark.parametrize("workers", [1, 2])
+def test_swebench_end_to_end(github_test_data, tmp_path, workers):
     """Test the complete SWEBench flow using the _test subset with deterministic model"""
 
     model_responses = github_test_data["model_responses"]
@@ -23,7 +23,7 @@ def test_swebench_end_to_end(github_test_data, tmp_path, n_workers):
             split="test",
             slice_spec="0:1",
             output=str(tmp_path),
-            n_workers=n_workers,
+            workers=workers,
             filter_spec="swe-agent__test-repo-1",
         )
 

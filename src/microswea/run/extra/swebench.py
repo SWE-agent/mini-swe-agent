@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 import concurrent.futures
-import contextlib
-import io
 import json
 import random
 import re
 from pathlib import Path
-from typing import Literal
 
 import typer
 import yaml
 from datasets import load_dataset
+from rich.live import Live
 
 from microswea import package_dir
 from microswea.agents.default import DefaultAgent
 from microswea.environments.docker import DockerEnvironment
 from microswea.models import get_model
+from microswea.run.extra.utils.batch_progress import RunBatchProgressManager
 
 app = typer.Typer()
 
@@ -27,6 +26,23 @@ DATASET_MAPPING = {
     "multilingual": "swe-bench/SWE-Bench_Multilingual",
     "_test": "klieret/swe-bench-dummy-test-dataset",
 }
+
+
+class ProgressTrackingAgent(DefaultAgent):
+    """Simple wrapper around DefaultAgent that provides progress updates."""
+
+    def __init__(self, *args, progress_manager=None, instance_id=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.progress_manager = progress_manager
+        self.instance_id = instance_id
+
+    def step(self) -> str:
+        """Override step to provide progress updates."""
+        if self.progress_manager and self.instance_id:
+            self.progress_manager.update_instance_status(
+                self.instance_id, f"Step {self.model.n_calls + 1} (${self.model.cost:.3f})"
+            )
+        return super().step()
 
 
 def get_swebench_docker_image_name(instance: dict) -> str:
@@ -55,7 +71,7 @@ def update_preds_file(output_path: Path, instance_id: str, model_config, result:
     output_path.write_text(json.dumps(output_data, indent=2))
 
 
-def process_instance(instance: dict, output_dir: Path, model: str) -> dict:
+def process_instance(instance: dict, output_dir: Path, model: str, progress_manager=None) -> dict:
     """Process a single SWEBench instance."""
     instance_id = instance["instance_id"]
     task = instance["problem_statement"]
@@ -63,18 +79,18 @@ def process_instance(instance: dict, output_dir: Path, model: str) -> dict:
     config = yaml.safe_load((package_dir / "config" / "extra" / "swebench.yaml").read_text())
     image_name = get_swebench_docker_image_name(instance)
 
-    agent = DefaultAgent(
+    agent = ProgressTrackingAgent(
         get_model(model, config=config.get("model", {})),
         DockerEnvironment(**(config.get("environment", {}) | {"image": image_name})),
+        progress_manager=progress_manager,
+        instance_id=instance_id,
         **config.get("agent", {}),
     )
 
-    combined_output = io.StringIO()
-    with contextlib.redirect_stdout(combined_output), contextlib.redirect_stderr(combined_output):
-        try:
-            exit_status, result = agent.run(task)
-        except Exception as e:
-            exit_status, result = type(e).__name__, str(e)
+    try:
+        exit_status, result = agent.run(task)
+    except Exception as e:
+        exit_status, result = type(e).__name__, str(e)
 
     data = {
         "instance_id": instance_id,
@@ -90,8 +106,6 @@ def process_instance(instance: dict, output_dir: Path, model: str) -> dict:
     }
     instance_dir = output_dir / instance_id
     instance_dir.mkdir(parents=True, exist_ok=True)
-    output_file = instance_dir / f"{instance_id}.output.log"
-    output_file.write_text(combined_output.getvalue())
     (instance_dir / f"{instance_id}.traj.json").write_text(json.dumps(data, indent=2))
     update_preds_file(output_dir / "preds.json", instance_id, agent.model.config, result)
 
@@ -108,9 +122,9 @@ def process_instances_single_threaded(instances: list[dict], output_path: Path, 
 
         print(f"Running instance {i + 1}/{len(instances)}: {instance_id}")
         result = process_instance(instance, output_path, model)
+        running_cost += result["info"]["model_stats"]["instance_cost"]
         print(f"Instance {instance_id} completed - completed {i + 1}/{len(instances)}, ${running_cost:.4f}")
         results.append(result)
-        running_cost += result["info"]["model_stats"]["instance_cost"]
 
     return results
 
@@ -118,19 +132,32 @@ def process_instances_single_threaded(instances: list[dict], output_path: Path, 
 def process_instances_multithreaded(instances: list[dict], output_path: Path, n_workers: int, model: str):
     """Process SWEBench instances in parallel."""
     results = []
-    running_cost = 0.0
+
+    # Create progress manager
+    progress_manager = RunBatchProgressManager(len(instances))
 
     print(f"Starting parallel execution with {n_workers} workers...")
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=n_workers) as executor:
-        futures = [executor.submit(process_instance, instance, output_path, model) for instance in instances]
+    with Live(progress_manager.render_group, refresh_per_second=4):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=n_workers) as executor:
+            # Start all instances and track them
+            instance_futures = {}
+            for instance in instances:
+                instance_id = instance["instance_id"]
+                progress_manager.on_instance_start(instance_id)
+                future = executor.submit(process_instance, instance, output_path, model, progress_manager)
+                instance_futures[future] = instance_id
 
-        for future in concurrent.futures.as_completed(futures):
-            result = future.result()
-            results.append(result)
-            running_cost += result["info"]["model_stats"]["instance_cost"]
-            instance_id = result["instance_id"]
-            print(f"Instance {instance_id} completed - completed {len(results)}/{len(instances)}, ${running_cost:.4f}")
+            for future in concurrent.futures.as_completed(instance_futures):
+                instance_id = instance_futures[future]
+                try:
+                    result = future.result()
+                    results.append(result)
+                    exit_status = result["info"]["exit_status"]
+                    progress_manager.on_instance_end(instance_id, exit_status)
+                except Exception as e:
+                    progress_manager.on_uncaught_exception(instance_id, e)
+                    raise
 
     return results
 
@@ -158,12 +185,12 @@ def filter_instances(
 @app.command()
 def main(
     subset: str = typer.Option("lite", "--subset", help="SWEBench subset to use or path to a dataset"),
-    split: Literal["dev", "test"] = typer.Option("dev", "--split", help="Dataset split"),
+    split: str = typer.Option("dev", "--split", help="Dataset split"),
     slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)"),
     filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex"),
     shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances"),
     output: str = typer.Option("", "-o", "--output", help="Output directory"),
-    n_workers: int = typer.Option(1, "--n-workers", help="Number of worker threads for parallel processing"),
+    workers: int = typer.Option(1, "--workers", help="Number of worker threads for parallel processing"),
     model: str = typer.Option("", "--model", help="Model to use"),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""
@@ -181,10 +208,10 @@ def main(
     print(f"Running on {len(instances)} instances...")
     print(f"Results will be saved to {output_path}")
 
-    if n_workers == 1:
+    if workers == 1:
         process_instances_single_threaded(instances, output_path, model)
     else:
-        process_instances_multithreaded(instances, output_path, n_workers, model)
+        process_instances_multithreaded(instances, output_path, workers, model)
 
 
 if __name__ == "__main__":
