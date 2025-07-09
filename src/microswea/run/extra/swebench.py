@@ -191,8 +191,8 @@ def main(
     filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex"),
     shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances"),
     output: str = typer.Option("", "-o", "--output", help="Output directory"),
-    workers: int = typer.Option(1, "--workers", help="Number of worker threads for parallel processing"),
-    model: str = typer.Option("", "--model", help="Model to use"),
+    workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing"),
+    model: str = typer.Option("", "-m", "--model", help="Model to use"),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""
     try:
