@@ -101,7 +101,7 @@ nav:
   #     - "Run single": "reference/run_single_config.md"
   #     - "Run batch": "reference/run_batch_config.md"
   #   - Instance config:
-  #     - "Problem statements": "reference/problem_statements.md"
+  #     - "Problem statements": "reference/tasks.md"
   #     - "Repository": "reference/repo.md"
   #     - "Batch instances": "reference/batch_instances.md"
   #   - Agent config:

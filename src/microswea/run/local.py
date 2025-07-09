@@ -17,7 +17,7 @@ console = Console(highlight=False)
 app = typer.Typer()
 
 
-def get_multiline_problem_statement() -> str:
+def get_multiline_task() -> str:
     """Get a multiline problem statement from the user."""
     console.print(
         "[bold yellow]What do you want to do?[/bold yellow] (press [bold red]Ctrl+D[/bold red] in a [red]new line[/red] to finish)"
@@ -49,19 +49,18 @@ def main(
     _config = yaml.safe_load(Path(config).read_text())
 
     if not problem:
-        problem = get_multiline_problem_statement()
+        problem = get_multiline_task()
 
     # Use get_model to defer model imports (can take a while), but also to switch in
     # some optimized models (especially for anthropic)
     agent = InteractiveAgent(
         get_model(model, _config.get("model", {})),
         LocalEnvironment(),
-        problem,
         **(_config.get("agent", {}) | {"confirm_actions": not yolo}),
     )
 
     try:
-        exit_status, result = agent.run()
+        exit_status, result = agent.run(problem)
     except KeyboardInterrupt:
         console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
     else:

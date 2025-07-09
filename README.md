@@ -91,14 +91,13 @@ it is radically simpler, because it
 </tr>
 <tr>
 <td>
-  
+
 ```python
 agent = DefaultAgent(
     LitellmModel(model_name=...),
     LocalEnvironment(),
-    "Write a python sudoku game for me",
 )
-agent.run()
+agent.run("Write a python sudoku game for me")
 ```
 </td>
 <td>

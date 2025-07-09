@@ -13,7 +13,7 @@ def update_trajectory():
     traj_path = Path(__file__).parent / "github_issue.traj.json"
     trajectory = json.loads(traj_path.read_text())
 
-    problem_statement = trajectory[1]["content"]
+    task = trajectory[1]["content"]
     model_responses = [msg["content"] for msg in trajectory[2:] if msg["role"] == "assistant"]
 
     with patch("microswea.run.github_issue.get_model") as mock_get_model:

@@ -15,10 +15,9 @@ def test_successful_completion():
             ]
         ),
         env=LocalEnvironment(),
-        problem_statement="Echo hello world then finish",
     )
 
-    exit_status, result = agent.run()
+    exit_status, result = agent.run("Echo hello world then finish")
     assert exit_status == "Submitted"
     assert result == "Task completed successfully"
     assert agent.model.n_calls == 2
@@ -32,11 +31,10 @@ def test_step_limit_enforcement():
             outputs=["First command\n```bash\necho 'step1'\n```", "Second command\n```bash\necho 'step2'\n```"]
         ),
         env=LocalEnvironment(),
-        problem_statement="Run multiple commands",
         step_limit=1,
     )
 
-    exit_status, result = agent.run()
+    exit_status, result = agent.run("Run multiple commands")
     assert exit_status == "LimitsExceeded"
     assert agent.model.n_calls == 1
 
@@ -49,11 +47,10 @@ def test_cost_limit_enforcement():
     agent = DefaultAgent(
         model=model,
         env=LocalEnvironment(),
-        problem_statement="Test cost limit",
         cost_limit=0.5,
     )
 
-    exit_status, result = agent.run()
+    exit_status, result = agent.run("Test cost limit")
     assert exit_status == "LimitsExceeded"
 
 
@@ -64,14 +61,13 @@ def test_format_error_handling():
             outputs=[
                 "No code blocks here",
                 "Multiple blocks\n```bash\necho 'first'\n```\n```bash\necho 'second'\n```",
-                "Finally correct\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'done'\n```",
+                "Now correct\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'done'\n```",
             ]
         ),
         env=LocalEnvironment(),
-        problem_statement="Test format errors",
     )
 
-    exit_status, result = agent.run()
+    exit_status, result = agent.run("Test format errors")
     assert exit_status == "Submitted"
     assert result == "done"
     assert agent.model.n_calls == 3
@@ -92,10 +88,9 @@ def test_timeout_handling():
             ]
         ),
         env=LocalEnvironment(timeout=1),  # Very short timeout
-        problem_statement="Test timeout handling",
     )
 
-    exit_status, result = agent.run()
+    exit_status, result = agent.run("Test timeout handling")
     assert exit_status == "Submitted"
     assert result == "recovered"
     # Should have timeout error message
@@ -107,7 +102,6 @@ def test_parse_action_success():
     agent = DefaultAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
-        problem_statement="Test parsing",
     )
 
     # Test different valid formats
@@ -121,7 +115,6 @@ def test_parse_action_failures():
     agent = DefaultAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
-        problem_statement="Test parsing failures",
     )
 
     # No code blocks
@@ -143,16 +136,9 @@ def test_message_history_tracking():
             ]
         ),
         env=LocalEnvironment(),
-        problem_statement="Track messages",
     )
 
-    # Initial state should have system and user messages
-    assert len(agent.messages) == 2
-    assert agent.messages[0]["role"] == "system"
-    assert agent.messages[1]["role"] == "user"
-    assert "Track messages" in agent.messages[1]["content"]
-
-    exit_status, result = agent.run()
+    exit_status, result = agent.run("Track messages")
     assert exit_status == "Submitted"
     assert result == "done"
 
@@ -173,10 +159,9 @@ def test_multiple_steps_before_completion():
             ]
         ),
         env=LocalEnvironment(),
-        problem_statement="Multi-step task",
     )
 
-    exit_status, result = agent.run()
+    exit_status, result = agent.run("Multi-step task")
     assert exit_status == "Submitted"
     assert result == "completed all steps"
     assert agent.model.n_calls == 4
@@ -198,14 +183,13 @@ def test_custom_config():
             outputs=["Test response\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'custom config works'\n```"]
         ),
         env=LocalEnvironment(),
-        problem_statement="Test custom config",
         system_template="You are a test assistant.",
-        instance_template="Task: {{problem_statement}}. Return bash command.",
+        instance_template="Task: {{task}}. Return bash command.",
         step_limit=2,
         cost_limit=1.0,
     )
 
-    exit_status, result = agent.run()
+    exit_status, result = agent.run("Test custom config")
     assert exit_status == "Submitted"
     assert result == "custom config works"
     assert agent.messages[0]["content"] == "You are a test assistant."

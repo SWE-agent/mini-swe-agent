@@ -13,10 +13,9 @@ def test_successful_completion_with_confirmation():
                 outputs=["Finishing\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'completed'\n```"]
             ),
             env=LocalEnvironment(),
-            problem_statement="Test completion with confirmation",
         )
 
-        exit_status, result = agent.run()
+        exit_status, result = agent.run("Test completion with confirmation")
         assert exit_status == "Submitted"
         assert result == "completed"
         assert agent.model.n_calls == 1
@@ -39,10 +38,9 @@ def test_action_rejection_and_recovery():
                 ]
             ),
             env=LocalEnvironment(),
-            problem_statement="Test action rejection",
         )
 
-        exit_status, result = agent.run()
+        exit_status, result = agent.run("Test action rejection")
         assert exit_status == "Submitted"
         assert result == "recovered"
         assert agent.model.n_calls == 2
@@ -65,10 +63,9 @@ def test_yolo_mode_activation():
                 outputs=["Test command\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'yolo works'\n```"]
             ),
             env=LocalEnvironment(),
-            problem_statement="Test yolo mode",
         )
 
-        exit_status, result = agent.run()
+        exit_status, result = agent.run("Test yolo mode")
         assert exit_status == "Submitted"
         assert result == "yolo works"
         assert agent.config.confirm_actions is False
@@ -89,10 +86,9 @@ def test_yolo_mode_exit():
                 outputs=["Test command\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'exit yolo works'\n```"]
             ),
             env=LocalEnvironment(),
-            problem_statement="Test yolo mode exit",
         )
 
-        exit_status, result = agent.run()
+        exit_status, result = agent.run("Test yolo mode exit")
         assert exit_status == "Submitted"
         assert result == "exit yolo works"
         assert agent.config.confirm_actions is True
@@ -113,10 +109,9 @@ def test_help_command():
                     outputs=["Test help\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'help shown'\n```"]
                 ),
                 env=LocalEnvironment(),
-                problem_statement="Test help command",
             )
 
-            exit_status, result = agent.run()
+            exit_status, result = agent.run("Test help command")
             assert exit_status == "Submitted"
             assert result == "help shown"
             # Check that help was printed
@@ -131,12 +126,11 @@ def test_whitelisted_actions_skip_confirmation():
             outputs=["Whitelisted\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'no confirmation needed'\n```"]
         ),
         env=LocalEnvironment(),
-        problem_statement="Test whitelisted actions",
         whitelist_actions=[r"echo.*"],
     )
 
     # No patch needed - should not ask for confirmation
-    exit_status, result = agent.run()
+    exit_status, result = agent.run("Test whitelisted actions")
     assert exit_status == "Submitted"
     assert result == "no confirmation needed"
 
@@ -151,7 +145,6 @@ def _test_interruption_helper(interruption_input, expected_message_fragment, pro
             ]
         ),
         env=LocalEnvironment(),
-        problem_statement=problem_statement,
     )
 
     # Mock the query to raise KeyboardInterrupt on first call, then work normally
@@ -177,7 +170,7 @@ def _test_interruption_helper(interruption_input, expected_message_fragment, pro
 
     with patch("microswea.agents.interactive.console.input", side_effect=mock_input):
         with patch.object(agent, "query", side_effect=mock_query):
-            exit_status, result = agent.run()
+            exit_status, result = agent.run(problem_statement)
 
     assert exit_status == "Submitted"
     assert result == "recovered from interrupt"
@@ -220,10 +213,9 @@ def test_multiple_confirmations_and_commands():
                 ]
             ),
             env=LocalEnvironment(),
-            problem_statement="Test complex interaction flow",
         )
 
-        exit_status, result = agent.run()
+        exit_status, result = agent.run("Test complex interaction flow")
         assert exit_status == "Submitted"
         assert result == "complex flow completed"
         assert agent.config.confirm_actions is False  # Should be in yolo mode
@@ -238,10 +230,9 @@ def test_non_whitelisted_action_requires_confirmation():
                 outputs=["Non-whitelisted\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'confirmed'\n```"]
             ),
             env=LocalEnvironment(),
-            problem_statement="Test non-whitelisted action",
             whitelist_actions=[r"ls.*"],  # Only ls commands whitelisted
         )
 
-        exit_status, result = agent.run()
+        exit_status, result = agent.run("Test non-whitelisted action")
         assert exit_status == "Submitted"
         assert result == "confirmed"

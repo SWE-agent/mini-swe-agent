@@ -43,7 +43,7 @@ async def test_everything_integration_test():
             ],
         ),
         env=LocalEnvironment(),
-        problem_statement="What's up?",
+        task="What's up?",
         confirm_actions=True,
     )
     async with app.run_test() as pilot:
@@ -150,7 +150,7 @@ async def test_empty_agent_content():
     app = AgentApp(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
-        problem_statement="Empty test",
+        task="Empty test",
         confirm_actions=False,
     )
     async with app.run_test() as pilot:
@@ -171,7 +171,7 @@ async def test_log_message_filtering():
             ]
         ),
         env=LocalEnvironment(),
-        problem_statement="Log test",
+        task="Log test",
         confirm_actions=False,
     )
 
@@ -189,18 +189,25 @@ async def test_list_content_rendering():
     """Test rendering of messages with list content vs string content."""
     # Create a model that will add messages with list content
     app = AgentApp(
-        model=DeterministicModel(outputs=["Simple response"]),
+        model=DeterministicModel(outputs=["Simple response\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]),
         env=LocalEnvironment(),
-        problem_statement="Content test",
+        task="Content test",
         confirm_actions=False,
     )
 
-    # Manually add a message with list content to test rendering
-    app.agent.messages.append({"role": "assistant", "content": [{"text": "Line 1"}, {"text": "Line 2"}]})
-
     async with app.run_test() as pilot:
-        await pilot.pause(0.1)
-        app.update_content()
+        # Wait for the agent to finish its normal operation
+        await pilot.pause(0.2)
+
+        # Now manually add a message with list content to test rendering
+        app.agent.messages.append({"role": "assistant", "content": [{"text": "Line 1"}, {"text": "Line 2"}]})
+
+        # Trigger the message update logic to refresh step count and navigate to last step
+        app.on_message_added()
+
+        # Navigate to the last step to see our new message
+        app.action_last_step()
+
         assert "Line 1\nLine 2" in get_screen_text(app)
 
 
@@ -209,7 +216,7 @@ async def test_confirmation_rejection_with_message():
     app = AgentApp(
         model=DeterministicModel(outputs=["Test thought\n```bash\necho 'test'\n```"]),
         env=LocalEnvironment(),
-        problem_statement="Rejection test",
+        task="Rejection test",
         confirm_actions=True,
     )
 
@@ -241,7 +248,7 @@ async def test_agent_with_cost_limit():
     app = AgentApp(
         model=DeterministicModel(outputs=["Response 1", "Response 2"]),
         env=LocalEnvironment(),
-        problem_statement="Cost limit test",
+        task="Cost limit test",
         confirm_actions=False,
         cost_limit=0.01,  # Very low limit
     )
@@ -265,7 +272,7 @@ async def test_agent_with_step_limit():
     app = AgentApp(
         model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
         env=LocalEnvironment(),
-        problem_statement="Step limit test",
+        task="Step limit test",
         confirm_actions=False,
         step_limit=2,
     )
@@ -288,7 +295,7 @@ async def test_agent_successful_completion_notification():
             outputs=["Completing task\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'success'\n```"]
         ),
         env=LocalEnvironment(),
-        problem_statement="Completion test",
+        task="Completion test",
         confirm_actions=False,
     )
 
@@ -308,7 +315,7 @@ async def test_whitelist_actions_bypass_confirmation():
     app = AgentApp(
         model=DeterministicModel(outputs=["Whitelisted action\n```bash\necho 'safe'\n```"]),
         env=LocalEnvironment(),
-        problem_statement="Whitelist test",
+        task="Whitelist test",
         confirm_actions=True,
         whitelist_actions=[r"echo.*"],
     )
@@ -331,7 +338,7 @@ async def test_confirmation_container_multiple_actions():
             ]
         ),
         env=LocalEnvironment(),
-        problem_statement="Multiple actions test",
+        task="Multiple actions test",
         confirm_actions=True,
     )
 
@@ -357,7 +364,7 @@ async def test_scrolling_behavior():
     app = AgentApp(
         model=DeterministicModel(outputs=["Long response" * 100]),
         env=LocalEnvironment(),
-        problem_statement="Scroll test",
+        task="Scroll test",
         confirm_actions=False,
     )
 
@@ -379,7 +386,7 @@ def test_log_handler_cleanup():
     app = AgentApp(
         model=DeterministicModel(outputs=["Simple response"]),
         env=LocalEnvironment(),
-        problem_statement="Cleanup test",
+        task="Cleanup test",
         confirm_actions=False,
     )
 

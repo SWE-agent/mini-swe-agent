@@ -33,9 +33,9 @@ class TextualAgent(DefaultAgent):
         if self.app.agent_state != "UNINITIALIZED":
             self.app.call_from_thread(self.app.on_message_added)
 
-    def run(self) -> tuple[str, str]:
+    def run(self, task: str) -> tuple[str, str]:
         try:
-            exit_status, result = super().run()
+            exit_status, result = super().run(task)
         except Exception as e:
             self.app.call_from_thread(self.app.on_agent_finished, "ERROR", str(e))
         else:
@@ -158,14 +158,15 @@ class AgentApp(App):
         Binding("y", "toggle_yolo", "Toggle YOLO Mode"),
     ]
 
-    def __init__(self, model, env, problem_statement: str, **kwargs):
+    def __init__(self, model, env, task: str, **kwargs):
         css_path = os.environ.get(
             "MSWEA_LOCAL2_STYLE_PATH", str(Path(__file__).parent.parent / "config" / "local2.tcss")
         )
         self.__class__.CSS = Path(css_path).read_text()
         super().__init__()
         self.agent_state = "UNINITIALIZED"
-        self.agent = TextualAgent(self, model=model, env=env, problem_statement=problem_statement, **kwargs)
+        self.agent_task = task
+        self.agent = TextualAgent(self, model=model, env=env, **kwargs)
         self._i_step = 0
         self.n_steps = 1
         self.confirmation_container = ConfirmationPromptContainer(self)
@@ -200,7 +201,7 @@ class AgentApp(App):
         self.agent_state = "RUNNING"
         self.update_content()
         self.set_interval(1 / 8, self._update_headers)
-        threading.Thread(target=self.agent.run, daemon=True).start()
+        threading.Thread(target=lambda: self.agent.run(self.agent_task), daemon=True).start()
 
     # --- Reacting to events ---
 

@@ -26,10 +26,9 @@ def main(
     agent = DefaultAgent(
         LitellmModel(model_name=model_name),
         LocalEnvironment(),
-        problem,
         **yaml.safe_load(Path(package_dir / "config" / "default.yaml").read_text())["agent"],
     )
-    agent.run()
+    agent.run(problem)
     return agent
 
 

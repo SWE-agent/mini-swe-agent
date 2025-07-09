@@ -58,7 +58,7 @@ def update_preds_file(output_path: Path, instance_id: str, model_config, result:
 def process_instance(instance: dict, output_dir: Path, model: str) -> dict:
     """Process a single SWEBench instance."""
     instance_id = instance["instance_id"]
-    problem_statement = instance["problem_statement"]
+    task = instance["problem_statement"]
 
     config = yaml.safe_load((package_dir / "config" / "extra" / "swebench.yaml").read_text())
     image_name = get_swebench_docker_image_name(instance)
@@ -66,20 +66,20 @@ def process_instance(instance: dict, output_dir: Path, model: str) -> dict:
     agent = DefaultAgent(
         get_model(model, config=config.get("model", {})),
         DockerEnvironment(**(config.get("environment", {}) | {"image": image_name})),
-        problem_statement,
         **config.get("agent", {}),
     )
 
     combined_output = io.StringIO()
     with contextlib.redirect_stdout(combined_output), contextlib.redirect_stderr(combined_output):
         try:
-            exit_status, result = agent.run()
+            exit_status, result = agent.run(task)
         except Exception as e:
             exit_status, result = type(e).__name__, str(e)
 
     data = {
         "instance_id": instance_id,
         "info": {
+            "exit_status": exit_status,
             "submission": result,
             "model_stats": {
                 "instance_cost": agent.model.cost,

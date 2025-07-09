@@ -50,12 +50,11 @@ def main(
     if yolo:
         _agent_config["confirm_actions"] = False
 
-    problem_statement = fetch_github_issue(issue_url)
+    task = fetch_github_issue(issue_url)
 
     agent = InteractiveAgent(
         get_model(model, _config.get("model", {})),
         DockerEnvironment(**_config.get("environment", {})),
-        problem_statement,
         **_agent_config,
     )
 
@@ -66,7 +65,7 @@ def main(
     agent.env.execute(f"git clone {repo_url} /testbed", cwd="/")
 
     try:
-        exit_status, result = agent.run()
+        exit_status, result = agent.run(task)
     except KeyboardInterrupt:
         console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
     else:

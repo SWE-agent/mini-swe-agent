@@ -10,7 +10,7 @@ from microswea import package_dir
 from microswea.agents.interactive_textual import AgentApp
 from microswea.environments.local import LocalEnvironment
 from microswea.models import get_model
-from microswea.run.local import get_multiline_problem_statement
+from microswea.run.local import get_multiline_task
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL2_CONFIG_PATH", package_dir / "config" / "local.yaml"))
 app = typer.Typer()
@@ -32,7 +32,7 @@ def main(
     _config = yaml.safe_load(Path(config).read_text())
 
     if not problem:
-        problem = get_multiline_problem_statement()
+        problem = get_multiline_task()
         if not problem:
             typer.echo("No problem statement provided.")
             raise typer.Exit(1)
@@ -44,7 +44,7 @@ def main(
     agent_app = AgentApp(
         model=get_model(model, _config.get("model", {})),
         env=LocalEnvironment(),
-        problem_statement=problem,
+        task=problem,
         **_config.get("agent", {}),
     )
 

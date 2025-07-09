@@ -18,7 +18,7 @@ agent:
     To finish, issue the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT`
     without any other command.
   instance_template: |
-    Please solve this issue: {{problem_statement}}
+    Please solve this issue: {{task}}
 
     You can execute bash commands and edit files to implement the necessary changes.
 

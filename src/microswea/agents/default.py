@@ -14,7 +14,7 @@ class AgentConfig:
     # The default settings are the bare minimum to run the agent. Take a look at the config files for improved settings.
     system_template: str = "You are a helpful assistant that can do anything."
     instance_template: str = (
-        "Your task: {{problem_statement}}. Please reply with a single shell command in triple backticks. "
+        "Your task: {{task}}. Please reply with a single shell command in triple backticks. "
         "To finish, the first line of the output of the shell command must be 'MICRO_SWE_AGENT_FINAL_OUTPUT'."
     )
     timeout_template: str = "The command timed out. Please change your command and make sure it doesn't require input."
@@ -52,15 +52,11 @@ class LimitsExceeded(TerminatingException):
 
 
 class DefaultAgent:
-    def __init__(
-        self, model: Model, env: Environment, problem_statement: str, config_class: Callable = AgentConfig, **kwargs
-    ):
+    def __init__(self, model: Model, env: Environment, config_class: Callable = AgentConfig, **kwargs):
         self.config = config_class(**kwargs)
-        self.messages = []
+        self.messages: list[dict] = []
         self.model = model
         self.env = env
-        self.add_message("system", self.config.system_template)
-        self.add_message("user", Template(self.config.instance_template).render(problem_statement=problem_statement))
 
     def add_message(self, role: str, content: str):
         self.messages.append({"role": role, "content": content})
@@ -74,8 +70,11 @@ class DefaultAgent:
             console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
         console.print(content, highlight=False, markup=False)
 
-    def run(self) -> tuple[str, str]:
+    def run(self, task: str) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
+        self.messages = []
+        self.add_message("system", self.config.system_template)
+        self.add_message("user", Template(self.config.instance_template).render(task=task))
         while True:
             try:
                 self.step()
