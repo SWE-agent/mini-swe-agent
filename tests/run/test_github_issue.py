@@ -54,7 +54,7 @@ def test_github_issue_end_to_end(github_test_data):
     with patch("microswea.run.github_issue.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
         github_url = "https://github.com/SWE-agent/test-repo/issues/1"
-        agent = main(issue_url=github_url, model="tardis", config=DEFAULT_CONFIG)  # type: ignore
+        agent = main(issue_url=github_url, model="tardis", config=DEFAULT_CONFIG, yolo=True)  # type: ignore
 
     assert agent is not None
     messages = agent.messages

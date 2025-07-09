@@ -9,7 +9,7 @@ import yaml
 from rich.console import Console
 
 from microswea import package_dir
-from microswea.agents.default import DefaultAgent
+from microswea.agents.interactive import InteractiveAgent
 from microswea.environments.docker import DockerEnvironment
 from microswea.models import get_model
 
@@ -41,18 +41,22 @@ def main(
     issue_url: str = typer.Option(prompt="Enter GitHub issue URL", help="GitHub issue URL"),
     config: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
-) -> DefaultAgent:
+    yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
+) -> InteractiveAgent:
     """Run micro-SWE-agent on a GitHub issue"""
 
     _config = yaml.safe_load(Path(config).read_text())
+    _agent_config = _config.get("agent", {})
+    if yolo:
+        _agent_config["confirm_actions"] = False
 
     problem_statement = fetch_github_issue(issue_url)
 
-    agent = DefaultAgent(
+    agent = InteractiveAgent(
         get_model(model, _config.get("model", {})),
         DockerEnvironment(**_config.get("environment", {})),
         problem_statement,
-        **(_config.get("agent", {})),
+        **_agent_config,
     )
 
     repo_url = issue_url.split("/issues/")[0]
