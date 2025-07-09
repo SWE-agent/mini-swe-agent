@@ -3,6 +3,8 @@ import concurrent.futures
 import contextlib
 import io
 import json
+import random
+import re
 from pathlib import Path
 from typing import Literal
 
@@ -27,7 +29,7 @@ DATASET_MAPPING = {
 }
 
 
-def get_image_name(instance: dict) -> str:
+def get_swebench_docker_image_name(instance: dict) -> str:
     """Get the image name for a SWEBench instance."""
     image_name = instance.get("image_name", None)
     if image_name is None:
@@ -38,7 +40,7 @@ def get_image_name(instance: dict) -> str:
     return image_name
 
 
-def update_output_file(output_path: Path, instance_id: str, model_config, result: str):
+def update_preds_file(output_path: Path, instance_id: str, model_config, result: str):
     """Update the output JSON file with results from a single instance."""
     output_data = {}
     if output_path.exists():
@@ -53,39 +55,50 @@ def update_output_file(output_path: Path, instance_id: str, model_config, result
     output_path.write_text(json.dumps(output_data, indent=2))
 
 
-def process_instance(instance: dict, output_path: Path) -> dict:
+def process_instance(instance: dict, output_dir: Path, model: str) -> dict:
     """Process a single SWEBench instance."""
     instance_id = instance["instance_id"]
     problem_statement = instance["problem_statement"]
 
     config = yaml.safe_load((package_dir / "config" / "extra" / "swebench.yaml").read_text())
-    image_name = get_image_name(instance)
+    image_name = get_swebench_docker_image_name(instance)
 
     agent = DefaultAgent(
-        get_model(config=config.get("model", {})),
+        get_model(model, config=config.get("model", {})),
         DockerEnvironment(**(config.get("environment", {}) | {"image": image_name})),
         problem_statement,
         **config.get("agent", {}),
     )
 
-    try:
-        exit_status, result = agent.run()
-    finally:
-        Path("traj.json").write_text(
-            json.dumps(agent.messages, indent=2),
-        )
+    combined_output = io.StringIO()
+    with contextlib.redirect_stdout(combined_output), contextlib.redirect_stderr(combined_output):
+        try:
+            exit_status, result = agent.run()
+        except Exception as e:
+            exit_status, result = type(e).__name__, str(e)
 
-    update_output_file(output_path, instance_id, agent.model.config, result)
-
-    return {
+    data = {
         "instance_id": instance_id,
-        "result": result,
-        "cost": agent.model.cost,
-        "steps": agent.model.n_calls,
+        "info": {
+            "submission": result,
+            "model_stats": {
+                "instance_cost": agent.model.cost,
+                "api_calls": agent.model.n_calls,
+            },
+        },
+        "messages": agent.messages,
     }
+    instance_dir = output_dir / instance_id
+    instance_dir.mkdir(parents=True, exist_ok=True)
+    output_file = instance_dir / f"{instance_id}.output.log"
+    output_file.write_text(combined_output.getvalue())
+    (instance_dir / f"{instance_id}.traj.json").write_text(json.dumps(data, indent=2))
+    update_preds_file(output_dir / "preds.json", instance_id, agent.model.config, result)
+
+    return data
 
 
-def process_instances_single_threaded(instances: list[dict], output_path: Path):
+def process_instances_single_threaded(instances: list[dict], output_path: Path, model: str):
     """Process SWEBench instances sequentially."""
     results = []
     running_cost = 0.0
@@ -93,82 +106,85 @@ def process_instances_single_threaded(instances: list[dict], output_path: Path):
     for i, instance in enumerate(instances):
         instance_id = instance["instance_id"]
 
-        print(f"\n{'=' * 60}")
         print(f"Running instance {i + 1}/{len(instances)}: {instance_id}")
-        print(f"{'=' * 60}")
-
-        result = process_instance(instance, output_path)
+        result = process_instance(instance, output_path, model)
+        print(f"Instance {instance_id} completed - completed {i + 1}/{len(instances)}, ${running_cost:.4f}")
         results.append(result)
-        running_cost += result["cost"]
-
-        print(f"\nRunning total - Instances: {i + 1}/{len(instances)}, Cost: ${running_cost:.4f}")
+        running_cost += result["info"]["model_stats"]["instance_cost"]
 
     return results
 
 
-def process_instances_multithreaded(instances: list[dict], output_path: Path, n_workers: int):
+def process_instances_multithreaded(instances: list[dict], output_path: Path, n_workers: int, model: str):
     """Process SWEBench instances in parallel."""
     results = []
     running_cost = 0.0
 
-    def process_with_captured_output(instance):
-        instance_id = instance["instance_id"]
-
-        print(f"Starting instance {instance_id}")
-        with contextlib.redirect_stdout(io.StringIO()):
-            result = process_instance(instance, output_path)
-        print(f"Instance {instance_id} completed (${result['cost']:.4f}, {result['steps']} steps)")
-
-        return result
-
     print(f"Starting parallel execution with {n_workers} workers...")
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=n_workers) as executor:
-        futures = [executor.submit(process_with_captured_output, instance) for instance in instances]
+        futures = [executor.submit(process_instance, instance, output_path, model) for instance in instances]
 
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
-            # result["instance_id"] already has the ID we need
             results.append(result)
-            running_cost += result["cost"]
-
-            completed = len(results)
-            print(f"\nRunning total - Instances: {completed}/{len(instances)}, Cost: ${running_cost:.4f}")
+            running_cost += result["info"]["model_stats"]["instance_cost"]
+            instance_id = result["instance_id"]
+            print(f"Instance {instance_id} completed - completed {len(results)}/{len(instances)}, ${running_cost:.4f}")
 
     return results
 
 
-def process_instances(instances: list[dict], output_path: Path, n_workers: int = 1):
-    """Process a list of SWEBench instances."""
-    if n_workers == 1:
-        return process_instances_single_threaded(instances, output_path)
-    return process_instances_multithreaded(instances, output_path, n_workers)
+def filter_instances(
+    instances: list[dict], *, filter_spec: str, slice_spec: str = "", shuffle: bool = False
+) -> list[dict]:
+    """Filter and slice a list of SWEBench instances."""
+    if shuffle:
+        instances = sorted(instances.copy(), key=lambda x: x["instance_id"])
+        random.seed(42)
+        random.shuffle(instances)
+    before_filter = len(instances)
+    instances = [instance for instance in instances if re.match(filter_spec, instance["instance_id"])]
+    if (after_filter := len(instances)) != before_filter:
+        print(f"Instance filter: {before_filter} -> {after_filter} instances")
+    if slice_spec:
+        values = [int(x) if x else None for x in slice_spec.split(":")]
+        instances = instances[slice(*values)]
+        if (after_slice := len(instances)) != before_filter:
+            print(f"Instance slice: {before_filter} -> {after_slice} instances")
+    return instances
 
 
 @app.command()
 def main(
-    subset: Literal["full", "verified", "lite", "multimodal", "multilingual", "_test"] = typer.Option(
-        "lite", "--subset", help="SWEBench subset to use"
-    ),
+    subset: str = typer.Option("lite", "--subset", help="SWEBench subset to use or path to a dataset"),
     split: Literal["dev", "test"] = typer.Option("dev", "--split", help="Dataset split"),
     slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)"),
-    output: str = typer.Option("results.json", "-o", "--output", help="Output JSON file path"),
+    filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex"),
+    shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances"),
+    output: str = typer.Option("", "-o", "--output", help="Output directory"),
     n_workers: int = typer.Option(1, "--n-workers", help="Number of worker threads for parallel processing"),
+    model: str = typer.Option("", "--model", help="Model to use"),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""
-    dataset_path = DATASET_MAPPING[subset]
+    try:
+        dataset_path = DATASET_MAPPING[subset]
+    except KeyError:
+        dataset_path = subset
     print(f"Loading dataset {dataset_path}, split {split}...")
     instances = list(load_dataset(dataset_path, split=split))
 
-    if slice_spec:
-        values = [int(x) if x else None for x in slice_spec.split(":")]
-        instances = instances[slice(*values)]
+    instances = filter_instances(instances, filter_spec=filter_spec, slice_spec=slice_spec, shuffle=shuffle)
 
     output_path = Path(output)
+    output_path.mkdir(parents=True, exist_ok=True)
     print(f"Running on {len(instances)} instances...")
     print(f"Results will be saved to {output_path}")
 
-    process_instances(instances, output_path, n_workers)
+    if n_workers == 1:
+        process_instances_single_threaded(instances, output_path, model)
+    else:
+        process_instances_multithreaded(instances, output_path, n_workers, model)
 
 
 if __name__ == "__main__":

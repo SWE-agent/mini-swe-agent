@@ -18,9 +18,31 @@ alwaysApply: true
 10. Write concise, short, minimal code.
 11. In most cases, avoid initializing variables just to pass them to a function. Instead just pass the expression to the function directly.
 
+Here's an example for rule 11:
+
+```python
+# bad
+a = func()
+Class(a)
+
+# good
+Class(func())
+```
+
 ## Test style
 
 1. Use `pytest`, not `unittest`.
 2. <IMPORTANT>Do not mock/patch anything that you're not explicitly asked to do</IMPORTANT>
 3. Avoid writing trivial tests. Every test should test for at least one, preferably multiple points of failure
 4. Avoid splitting up code in multiple lines like this: `a=func()\n assert a=b`. Instead, just do `assert func() == b`
+
+Here's an example for rule 4:
+
+```python
+# bad
+result = func()
+assert result == b
+
+# good
+assert func() == b
+```
