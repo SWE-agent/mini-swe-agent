@@ -29,7 +29,7 @@ DATASET_MAPPING = {
 }
 
 
-def get_image_name(instance: dict) -> str:
+def get_swebench_docker_image_name(instance: dict) -> str:
     """Get the image name for a SWEBench instance."""
     image_name = instance.get("image_name", None)
     if image_name is None:
@@ -40,7 +40,7 @@ def get_image_name(instance: dict) -> str:
     return image_name
 
 
-def update_output_file(output_path: Path, instance_id: str, model_config, result: str):
+def update_preds_file(output_path: Path, instance_id: str, model_config, result: str):
     """Update the output JSON file with results from a single instance."""
     output_data = {}
     if output_path.exists():
@@ -61,7 +61,7 @@ def process_instance(instance: dict, output_path: Path) -> dict:
     problem_statement = instance["problem_statement"]
 
     config = yaml.safe_load((package_dir / "config" / "extra" / "swebench.yaml").read_text())
-    image_name = get_image_name(instance)
+    image_name = get_swebench_docker_image_name(instance)
 
     agent = DefaultAgent(
         get_model(config=config.get("model", {})),
@@ -70,21 +70,32 @@ def process_instance(instance: dict, output_path: Path) -> dict:
         **config.get("agent", {}),
     )
 
-    try:
-        result = agent.run()
-    finally:
-        Path("traj.json").write_text(
-            json.dumps(agent.messages, indent=2),
-        )
+    combined_output = io.StringIO()
+    with contextlib.redirect_stdout(combined_output), contextlib.redirect_stderr(combined_output):
+        try:
+            result = agent.run()
+        except Exception as e:
+            result = f"Exception({str(e)})"
 
-    update_output_file(output_path, instance_id, agent.model.config, result)
-
-    return {
+    data = {
         "instance_id": instance_id,
-        "result": result,
-        "cost": agent.model.cost,
-        "steps": agent.model.n_calls,
+        "info": {
+            "submission": result,
+            "model_stats": {
+                "instance_cost": agent.model.cost,
+                "api_calls": agent.model.n_calls,
+            },
+        },
+        "messages": agent.messages,
     }
+    instance_dir = output_path / instance_id
+    instance_dir.mkdir(parents=True, exist_ok=True)
+    output_file = instance_dir / f"{instance_id}.output.log"
+    output_file.write_text(combined_output.getvalue())
+    (instance_dir / f"{instance_id}.traj.json").write_text(json.dumps(data, indent=2))
+    update_preds_file(output_path / "preds.json", instance_id, agent.model.config, result)
+
+    return data
 
 
 def process_instances_single_threaded(instances: list[dict], output_path: Path):
@@ -101,7 +112,7 @@ def process_instances_single_threaded(instances: list[dict], output_path: Path):
 
         result = process_instance(instance, output_path)
         results.append(result)
-        running_cost += result["cost"]
+        running_cost += result["info"]["model_stats"]["instance_cost"]
 
         print(f"\nRunning total - Instances: {i + 1}/{len(instances)}, Cost: ${running_cost:.4f}")
 
@@ -113,29 +124,21 @@ def process_instances_multithreaded(instances: list[dict], output_path: Path, n_
     results = []
     running_cost = 0.0
 
-    def process_with_captured_output(instance):
-        instance_id = instance["instance_id"]
-
-        print(f"Starting instance {instance_id}")
-        with contextlib.redirect_stdout(io.StringIO()):
-            result = process_instance(instance, output_path)
-        print(f"Instance {instance_id} completed (${result['cost']:.4f}, {result['steps']} steps)")
-
-        return result
-
     print(f"Starting parallel execution with {n_workers} workers...")
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=n_workers) as executor:
-        futures = [executor.submit(process_with_captured_output, instance) for instance in instances]
+        futures = [executor.submit(process_instance, instance, output_path) for instance in instances]
 
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
-            # result["instance_id"] already has the ID we need
             results.append(result)
-            running_cost += result["cost"]
+            running_cost += result["info"]["model_stats"]["instance_cost"]
 
             completed = len(results)
-            print(f"\nRunning total - Instances: {completed}/{len(instances)}, Cost: ${running_cost:.4f}")
+            instance_id = result["instance_id"]
+            print(
+                f"Instance {instance_id} completed - Running total: {completed}/{len(instances)}, Cost: ${running_cost:.4f}"
+            )
 
     return results
 
@@ -174,7 +177,7 @@ def main(
     slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)"),
     filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex"),
     shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances"),
-    output: str = typer.Option("results.json", "-o", "--output", help="Output JSON file path"),
+    output: str = typer.Option("", "-o", "--output", help="Output directory"),
     n_workers: int = typer.Option(1, "--n-workers", help="Number of worker threads for parallel processing"),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""
@@ -188,6 +191,7 @@ def main(
     instances = filter_instances(instances, filter_spec=filter_spec, slice_spec=slice_spec, shuffle=shuffle)
 
     output_path = Path(output)
+    output_path.mkdir(parents=True, exist_ok=True)
     print(f"Running on {len(instances)} instances...")
     print(f"Results will be saved to {output_path}")
 
@@ -196,3 +200,5 @@ def main(
 
 if __name__ == "__main__":
     app()
+
+# todo: Add model kwarg

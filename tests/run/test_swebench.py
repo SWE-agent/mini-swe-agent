@@ -5,7 +5,7 @@ import pytest
 
 from microswea import package_dir
 from microswea.models.test_models import DeterministicModel
-from microswea.run.extra.swebench import filter_instances, get_image_name, main
+from microswea.run.extra.swebench import filter_instances, get_swebench_docker_image_name, main
 
 
 @pytest.mark.slow
@@ -14,7 +14,6 @@ def test_swebench_end_to_end(github_test_data, tmp_path, n_workers):
     """Test the complete SWEBench flow using the _test subset with deterministic model"""
 
     model_responses = github_test_data["model_responses"]
-    output_file = tmp_path / "results.json"
 
     with patch("microswea.run.extra.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
@@ -23,60 +22,64 @@ def test_swebench_end_to_end(github_test_data, tmp_path, n_workers):
             subset="_test",
             split="test",
             slice_spec="0:1",
-            output=str(output_file),
+            output=str(tmp_path),
             n_workers=n_workers,
             filter_spec="swe-agent__test-repo-1",
         )
 
-    # Extract the last observation from github_issue.traj.json
     traj_file_path = package_dir.parent.parent / "tests" / "test_data" / "github_issue.traj.json"
-    with open(traj_file_path) as f:
-        trajectory = json.load(f)
+    trajectory = json.loads(traj_file_path.read_text())
 
-    # Get the last message content as the model patch
     last_message = trajectory[-1]["content"]
 
-    # Expected format
+    instance_id = "swe-agent__test-repo-1"
     expected_result = {
-        "swe-agent__test-repo-1": {
+        instance_id: {
             "model_name_or_path": "deterministic",
-            "instance_id": "swe-agent__test-repo-1",
+            "instance_id": instance_id,
             "model_patch": last_message,
         }
     }
 
-    # Load and check actual results
-    with open(output_file) as f:
+    with open(tmp_path / "preds.json") as f:
         actual_result = json.load(f)
 
     assert actual_result == expected_result
+
+    traj_output_file = tmp_path / instance_id / f"{instance_id}.traj.json"
+    output_trajectory = json.loads(traj_output_file.read_text())
+    assert output_trajectory["messages"][-1]["content"] == last_message
+
+    log_output_file = tmp_path / instance_id / f"{instance_id}.output.log"
+    log_content = log_output_file.read_text()
+    assert last_message in log_content
 
 
 def test_get_image_name_with_existing_image_name():
     """Test get_image_name when image_name is already provided"""
     instance = {"image_name": "custom/image:tag", "instance_id": "test__repo__1"}
-    assert get_image_name(instance) == "custom/image:tag"
+    assert get_swebench_docker_image_name(instance) == "custom/image:tag"
 
 
 def test_get_image_name_without_image_name():
     """Test get_image_name when image_name needs to be constructed"""
     instance = {"instance_id": "swe-agent__test-repo__1"}
     expected = "swebench/sweb.eval.x86_64.swe-agent_1776_test-repo_1776_1:latest"
-    assert get_image_name(instance) == expected
+    assert get_swebench_docker_image_name(instance) == expected
 
 
 def test_get_image_name_with_none_image_name():
     """Test get_image_name when image_name is explicitly None"""
     instance = {"image_name": None, "instance_id": "django__django__4.0"}
     expected = "swebench/sweb.eval.x86_64.django_1776_django_1776_4.0:latest"
-    assert get_image_name(instance) == expected
+    assert get_swebench_docker_image_name(instance) == expected
 
 
 def test_get_image_name_with_complex_instance_id():
     """Test get_image_name with complex instance_id containing multiple double underscores"""
     instance = {"instance_id": "project__sub__module__version__1.2.3"}
     expected = "swebench/sweb.eval.x86_64.project_1776_sub_1776_module_1776_version_1776_1.2.3:latest"
-    assert get_image_name(instance) == expected
+    assert get_swebench_docker_image_name(instance) == expected
 
 
 def test_filter_instances_no_filters():
