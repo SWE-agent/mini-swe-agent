@@ -10,6 +10,7 @@ This file provides:
 
 __version__ = "1.0.0.dev3"
 
+import os
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -21,10 +22,11 @@ package_dir = Path(__file__).resolve().parent
 
 global_config_file = Path(user_config_dir("micro-swe-agent", appauthor=False, ensure_exists=True)) / ".env"
 
-Console().print(
-    f"👋 This is [bold green]micro-swe-agent[/bold green] version [bold green]{__version__}[/bold green].\n"
-    f"Your config is stored in [bold green]'{global_config_file}'[/bold green]"
-)
+if not os.getenv("MICRO_SWE_AGENT_SILENT_STARTUP"):
+    Console().print(
+        f"👋 This is [bold green]micro-swe-agent[/bold green] version [bold green]{__version__}[/bold green].\n"
+        f"Your config is stored in [bold green]'{global_config_file}'[/bold green]"
+    )
 dotenv.load_dotenv(dotenv_path=global_config_file)
 
 
