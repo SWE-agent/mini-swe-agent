@@ -1,3 +1,4 @@
+import os
 import shlex
 import subprocess
 import uuid
@@ -9,13 +10,23 @@ from typing import Any
 class DockerEnvironmentConfig:
     image: str
     cwd: str = "/"
+    """Working directory in which to execute commands."""
     env: dict[str, str] = field(default_factory=dict)
+    """Environment variables to set in the container."""
+    forward_env: list[str] = field(default_factory=list)
+    """Environment variables to forward to the container.
+    Variables are only forwarded if they are set in the host environment.
+    In case of conflict with `env`, the `env` variables take precedence.
+    """
     timeout: int = 30
+    """Timeout for executing commands in the container."""
 
 
 class DockerEnvironment:
     def __init__(self, **kwargs):
-        """This class executes bash commands in a Docker container using direct docker commands."""
+        """This class executes bash commands in a Docker container using direct docker commands.
+        See `DockerEnvironmentConfig` for keyword arguments.
+        """
         self.container_id: str | None = None
         self.config = DockerEnvironmentConfig(**kwargs)
         self._start_container()
@@ -52,6 +63,9 @@ class DockerEnvironment:
         assert self.container_id, "Container not started"
 
         cmd = ["docker", "exec", "-w", cwd]
+        for key in self.config.forward_env:
+            if (value := os.getenv(key)) is not None:
+                cmd.extend(["-e", f"{key}={value}"])
         for key, value in self.config.env.items():
             cmd.extend(["-e", f"{key}={value}"])
         cmd.extend([self.container_id, "bash", "-c", command])
