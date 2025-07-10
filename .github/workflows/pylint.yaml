@@ -11,6 +11,10 @@ on:
       - 'docs/**'
       - 'README.md'
       - 'mkdocs.yml'
+      - '.cursor/**'
+      - '.github/workflows/build-docs.yaml'
+      - '.github/workflows/release.yaml'
+      - '.github/workflows/pytest.yaml'
   pull_request:
     branches:
       - main
@@ -18,6 +22,10 @@ on:
       - 'docs/**'
       - 'README.md'
       - 'mkdocs.yml'
+      - '.cursor/**'
+      - '.github/workflows/build-docs.yaml'
+      - '.github/workflows/release.yaml'
+      - '.github/workflows/pytest.yaml'
 
 jobs:
   pylint:

@@ -58,6 +58,9 @@ dev = [
     "ruff",
     "mkdocs-include-markdown-plugin",
     "mkdocstrings[python]>=0.18",
+    "mike",
+    "mkdocs-material",
+    "mkdocs-glightbox",
 ]
 
 [project.scripts]
