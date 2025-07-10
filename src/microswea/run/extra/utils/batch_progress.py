@@ -105,7 +105,7 @@ class RunBatchProgressManager:
     def _update_total_costs(self) -> None:
         with self._lock:
             self._main_progress_bar.update(
-                self._main_task_id, total_cost=f"{microswea.models.GLOBAL_MODEL_STATS.cost:.3f}"
+                self._main_task_id, total_cost=f"{microswea.models.GLOBAL_MODEL_STATS.cost:.2f}"
             )
 
     def update_instance_status(self, instance_id: str, message: str):
