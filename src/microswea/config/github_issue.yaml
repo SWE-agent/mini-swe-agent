@@ -33,7 +33,8 @@ agent:
 
     1. Every response must contain exactly one action
     2. The action must be enclosed in triple backticks
-    3. You cannot change directories or set new environment variables
+    3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
+       However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
     4. To finish, issue the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT`.
        Do not combine it with any other command.
 
