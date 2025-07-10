@@ -4,19 +4,22 @@
 <h1>The 100 line AI agent that solves GitHub issues & more</h1>
 </div>
 
-- **🐜 Minimal**: Just [100 lines of python](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microswea/agents/default.py) (+100 for [env](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microswea/environments/local.py),
+In 2024, [SWE-bench](https://swe-bench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the agentic AI for software revolution. In 2025, we ask:
+**What if the agent was 100x smaller, and still worked nearly as well?**
+
+`micro` is for 
+
+- 🧪 **Researchers** who want to **benchmark, fine-tune or RL** without assumptions, bloat, or surprises
+- 🧑‍💻 **Hackers & power users** who like their tools like their scripts: **short, sharp, and readable**
+- 🐳 **Engineers** who want something **trivial to sandbox & to deploy anywhere**
+
+More to love:
+
+- **🐜 Minimal**: Just [100 lines of python](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microswea/agents/default.py) (+100 total for [env](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microswea/environments/local.py),
 [model model](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microswea/models/litellm_model.py), [script](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microswea/run/hello_world.py)) — no fancy dependencies!
-Optionally, a few more lines for interactive UIs.
 - **💪 Powerful:** Resolves XX% of GitHub issues in the [SWE-bench verified benchmark](https://www.swebench.com/).
 - **🤗 Friendly:** Comes with **two convenient UIs** that will turn this into your daily dev swiss army knife!
 - **🎓 Cutting edge:** Built by the Princeton & Stanford team behind [SWE-bench](https://swe-bench.com) and [SWE-agent](https://swe-agent.com).
-
-Use it to
-
-- 🔥 Instantly solve problems: `pip install pipx && pipx run micro-swe-agent`
-- ⚙️ Take full control & quickly build custom agents
-- 🏋 Fine-tune & RL with a minimal, assumption-free agent
-- 🐳 Deploy seamlessly to sandboxed environments & CI/CD
 
 
 <details>
