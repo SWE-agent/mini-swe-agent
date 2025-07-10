@@ -1,6 +1,9 @@
 patch.txt
-traj.json
+exit_statuses*.yaml
+preds.json
+*.traj.json
 .env
+traj.json
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
