@@ -61,30 +61,46 @@ def get_swebench_docker_image_name(instance: dict) -> str:
     return image_name
 
 
-def update_preds_file(output_path: Path, instance_id: str, model_config, result: str):
+def update_preds_file(output_path: Path, instance_id: str, model_name: str, result: str):
     """Update the output JSON file with results from a single instance."""
+    if not output_path.exists():
+        return
     with _OUTPUT_FILE_LOCK:
-        output_data = {}
-        if output_path.exists():
-            output_data = json.loads(output_path.read_text())
+        output_data = json.loads(output_path.read_text())
         output_data[instance_id] = {
-            "model_name_or_path": model_config.model_name,
+            "model_name_or_path": model_name,
             "instance_id": instance_id,
             "model_patch": result,
         }
         output_path.write_text(json.dumps(output_data, indent=2))
 
 
-def process_instance(instance: dict, output_dir: Path, model: str, progress_manager=None) -> dict:
+def remove_from_preds_file(output_path: Path, instance_id: str):
+    """Remove an instance from the predictions file."""
+    if not output_path.exists():
+        return
+    with _OUTPUT_FILE_LOCK:
+        output_data = json.loads(output_path.read_text())
+        if instance_id in output_data:
+            del output_data[instance_id]
+            output_path.write_text(json.dumps(output_data, indent=2))
+
+
+def process_instance(instance: dict, output_dir: Path, model_name: str | None, progress_manager=None) -> dict:
     """Process a single SWEBench instance."""
     instance_id = instance["instance_id"]
+    instance_dir = output_dir / instance_id
+    # avoid inconsistent state if something here fails and there's leftover previous files
+    remove_from_preds_file(output_dir / "preds.json", instance_id)
+    (instance_dir / f"{instance_id}.traj.json").unlink(missing_ok=True)
     task = instance["problem_statement"]
 
     config = yaml.safe_load((package_dir / "config" / "extra" / "swebench.yaml").read_text())
     image_name = get_swebench_docker_image_name(instance)
 
+    model = get_model(model_name, config=config.get("model", {}))
     agent = ProgressTrackingAgent(
-        get_model(model, config=config.get("model", {})),
+        model,
         DockerEnvironment(**(config.get("environment", {}) | {"image": image_name})),
         progress_manager=progress_manager,
         instance_id=instance_id,
@@ -108,15 +124,14 @@ def process_instance(instance: dict, output_dir: Path, model: str, progress_mana
         },
         "messages": agent.messages,
     }
-    instance_dir = output_dir / instance_id
     instance_dir.mkdir(parents=True, exist_ok=True)
     (instance_dir / f"{instance_id}.traj.json").write_text(json.dumps(data, indent=2))
-    update_preds_file(output_dir / "preds.json", instance_id, agent.model.config, result)
+    update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
 
     return data
 
 
-def process_instances_single_threaded(instances: list[dict], output_path: Path, model: str):
+def process_instances_single_threaded(instances: list[dict], output_path: Path, model: str | None):
     """Process SWEBench instances sequentially."""
     results = []
 
@@ -133,7 +148,7 @@ def process_instances_single_threaded(instances: list[dict], output_path: Path, 
     return results
 
 
-def process_instances_multithreaded(instances: list[dict], output_path: Path, n_workers: int, model: str):
+def process_instances_multithreaded(instances: list[dict], output_path: Path, n_workers: int, model: str | None):
     """Process SWEBench instances in parallel."""
     results = []
 
@@ -195,7 +210,7 @@ def main(
     shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances"),
     output: str = typer.Option("", "-o", "--output", help="Output directory"),
     workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing"),
-    model: str = typer.Option("", "-m", "--model", help="Model to use"),
+    model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""
     try:
