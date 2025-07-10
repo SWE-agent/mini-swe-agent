@@ -15,6 +15,11 @@ def main() -> None:
 
         sys.argv = sys.argv[:1] + args[1:]  # Keep script name, remove "gh"
         github_app()
+    elif len(args) > 0 and args[0] == "i":
+        from microswea.run.inspector import app as inspect_app
+
+        sys.argv = sys.argv[:1] + args[1:]  # Keep script name, remove "i"
+        inspect_app()
     else:
         default_module = os.getenv("MSWEA_DEFAULT_RUN", "microswea.run.local")
         module = importlib.import_module(default_module)
