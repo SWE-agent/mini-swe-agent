@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 
 import typer
+from rich.text import Text
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Container, Vertical, VerticalScroll
@@ -149,7 +150,7 @@ class TrajectoryInspector(App):
             container.mount(message_container)
             role = message["role"].replace("assistant", "micro-swe-agent")
             message_container.mount(Static(role.upper(), classes="message-header"))
-            message_container.mount(Static(content_str, classes="message-content", markup=False))
+            message_container.mount(Static(Text(content_str, no_wrap=False), classes="message-content"))
 
         # Update title with current state
         self.title = (
