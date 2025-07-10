@@ -15,7 +15,7 @@ agent:
     </format_example>
 
     Failure to follow these rules will cause your response to be rejected.
-    To finish, issue the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT`
+    To finish, issue exactly (!) the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT && git add -A && git diff --cached`
     without any other command.
   instance_template: |
     Please solve this issue: {{task}}
@@ -34,8 +34,8 @@ agent:
     1. Every response must contain exactly one action
     2. The action must be enclosed in triple backticks
     3. You cannot change directories or set new environment variables
-    4. To finish, issue the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT`.
-       Do not combine it with any other command.
+    4. To finish, issue exactly (!) the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT && git add -A && git diff --cached`
+       without any other command.
 
     ## Formatting your response
 
@@ -101,20 +101,33 @@ agent:
     {{output.stdout}}
     </stdout>
     {%- endset -%}
-    {{ full_output | truncate(1000) }}
-    {%- if full_output | length > 1000 -%}
-    <IMPORTANT>
-    Output truncated to 1000 characters.
-    Ideally, output should be less than 1000 characters. If you still need to work
-    with very long output, please redirect the output to a file and then read it
-    in chunks or search grhough it.
-    </IMPORTANT>
+    {%- if full_output | length < 10000 -%}
+    {{ full_output }}
+    {%- else -%}
+    <warning>
+    The output of your last command was too long.
+    Please try a different command that produces less output.
+    If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.
+    If you're using grep or find and it produced too much output, you can use a more selective search pattern.
+    If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.
+    </warning>
+    {%- set elided_chars = full_output | length - 10000 -%}
+    <observation_head>
+    {{ full_output[:5000] }}
+    </observation_head>
+
+    <elided_chars>
+    {{ elided_chars }} characters elided
+    </elided_chars>
+
+    <observation_tail>
+    {{ full_output[-5000:] }}
+    </observation_tail>
     {%- endif -%}
   format_error_template: |
     Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
-    If you want to end the task, please issue the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT`
-    without any other command.
-    Else, please format your response exactly as follows:
+
+    Please format your action in triple backticks as shown in <response_example>.
 
     <response_example>
     Here are some thoughts about why you want to perform the action.
@@ -123,8 +136,18 @@ agent:
     <action>
     ```
     </response_example>
+
+    If you want to finish, please submit your response by issuing the command
+    shown in triple backticks in <submission_example>.
+
+    <submission_example>
+    ```bash
+    echo MICRO_SWE_AGENT_FINAL_OUTPUT && git add -A && git diff --cached
+    ```
+    </submission_example>
+
   step_limit: 0.
-  cost_limit: 0.
+  cost_limit: 5.
 
 environment:
   cwd: "/testbed"
