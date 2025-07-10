@@ -64,22 +64,22 @@ dev = [
 ]
 
 [project.scripts]
-micro = "microswea.__main__:main"
-micro2 = "microswea.run.local2:cli"
-micro-swe-agent = "microswea.__main__:main"
+micro = "microsweagent.__main__:main"
+micro2 = "microsweagent.run.local2:cli"
+micro-swe-agent = "microsweagent.__main__:main"
 
 [tool.setuptools]
 include-package-data = true
 
 [tool.setuptools.dynamic]
-version = {attr = "microswea.__version__"}
+version = {attr = "microsweagent.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["microswea*"]
+include = ["microsweagent*"]
 
 [tool.setuptools.package-data]
-microswea = ["config/**/*"]
+microsweagent = ["config/**/*"]
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.

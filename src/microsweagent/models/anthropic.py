@@ -1,8 +1,8 @@
 import os
 
-from microswea.models.litellm_model import LitellmModel
-from microswea.models.utils.cache_control import set_cache_control
-from microswea.models.utils.key_per_thread import get_key_per_thread
+from microsweagent.models.litellm_model import LitellmModel
+from microsweagent.models.utils.cache_control import set_cache_control
+from microsweagent.models.utils.key_per_thread import get_key_per_thread
 
 
 class AnthropicModel(LitellmModel):

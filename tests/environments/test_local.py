@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from microswea.environments.local import LocalEnvironment, LocalEnvironmentConfig
+from microsweagent.environments.local import LocalEnvironment, LocalEnvironmentConfig
 
 
 def test_local_environment_config_defaults():

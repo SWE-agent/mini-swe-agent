@@ -11,11 +11,11 @@ alwaysApply: true
 The project is structured as
 
 ```bash
-microswea/__init__  # Protocols/interfaces for all base classes
-microswea/agents  # Agent control flow & loop
-microswea/environments  # Executing agent actions
-microswea/models  # LM interfaces
-microswea/run  # Run scripts that serve as an entry point
+microsweagent/__init__  # Protocols/interfaces for all base classes
+microsweagent/agents  # Agent control flow & loop
+microsweagent/environments  # Executing agent actions
+microsweagent/models  # LM interfaces
+microsweagent/run  # Run scripts that serve as an entry point
 ```
 
 - The project embraces polymorphism: Every individual class should be simple, but we offer alternatives

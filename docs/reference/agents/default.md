@@ -1,9 +1,9 @@
 # DefaultAgent
 
-::: microswea.agents.default.AgentConfig
+::: microsweagent.agents.default.AgentConfig
 
-::: microswea.agents.default.DefaultAgent
+::: microsweagent.agents.default.DefaultAgent
 
-::: microswea.agents.default.NonTerminatingException
+::: microsweagent.agents.default.NonTerminatingException
 
-::: microswea.agents.default.TerminatingException
+::: microsweagent.agents.default.TerminatingException

@@ -6,11 +6,11 @@ from pathlib import Path
 import typer
 import yaml
 
-from microswea import package_dir
-from microswea.agents.interactive_textual import AgentApp
-from microswea.environments.local import LocalEnvironment
-from microswea.models import get_model
-from microswea.run.local import get_multiline_task
+from microsweagent import package_dir
+from microsweagent.agents.interactive_textual import AgentApp
+from microsweagent.environments.local import LocalEnvironment
+from microsweagent.models import get_model
+from microsweagent.run.local import get_multiline_task
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL2_CONFIG_PATH", package_dir / "config" / "local.yaml"))
 app = typer.Typer()

@@ -7,10 +7,10 @@ import typer
 import yaml
 from rich.console import Console
 
-from microswea import package_dir
-from microswea.agents.interactive import InteractiveAgent
-from microswea.environments.local import LocalEnvironment
-from microswea.models import get_model
+from microsweagent import package_dir
+from microsweagent.agents.interactive import InteractiveAgent
+from microsweagent.environments.local import LocalEnvironment
+from microsweagent.models import get_model
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL_CONFIG_PATH", package_dir / "config" / "local.yaml"))
 console = Console(highlight=False)

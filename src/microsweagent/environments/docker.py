@@ -37,7 +37,7 @@ class DockerEnvironment:
 
     def _start_container(self):
         """Start the Docker container and return the container ID."""
-        container_name = f"microswea-{uuid.uuid4().hex[:8]}"
+        container_name = f"microsweagent-{uuid.uuid4().hex[:8]}"
         cmd = [
             self.config.executable,
             "run",

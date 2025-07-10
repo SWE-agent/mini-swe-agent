@@ -2,10 +2,10 @@
 
 Convenience functions for selecting and configuring models.
 
-::: microswea.models.get_model
+::: microsweagent.models.get_model
 
-::: microswea.models.get_model_name
+::: microsweagent.models.get_model_name
 
-::: microswea.models.get_model_class
+::: microsweagent.models.get_model_class
 
-::: microswea.models.prompt_for_model_name
+::: microsweagent.models.prompt_for_model_name

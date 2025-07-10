@@ -1,3 +1,3 @@
 # Hello World
 
-::: microswea.run.hello_world
+::: microsweagent.run.hello_world

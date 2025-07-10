@@ -12,12 +12,12 @@ import yaml
 from datasets import load_dataset
 from rich.live import Live
 
-import microswea.models
-from microswea import package_dir
-from microswea.agents.default import DefaultAgent
-from microswea.environments.docker import DockerEnvironment
-from microswea.models import get_model
-from microswea.run.extra.utils.batch_progress import RunBatchProgressManager
+import microsweagent.models
+from microsweagent import package_dir
+from microsweagent.agents.default import DefaultAgent
+from microsweagent.environments.docker import DockerEnvironment
+from microsweagent.models import get_model
+from microsweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 
 app = typer.Typer()
 
@@ -142,7 +142,7 @@ def process_instances_single_threaded(instances: list[dict], output_path: Path, 
         print(f"Running instance {i + 1}/{len(instances)}: {instance_id}")
         result = process_instance(instance, output_path, model)
         print(
-            f"Instance {instance_id} completed - completed {i + 1}/{len(instances)}, ${microswea.models.GLOBAL_MODEL_STATS.cost:.4f}"
+            f"Instance {instance_id} completed - completed {i + 1}/{len(instances)}, ${microsweagent.models.GLOBAL_MODEL_STATS.cost:.4f}"
         )
         results.append(result)
 

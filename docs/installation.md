@@ -57,7 +57,7 @@
         Or pick a [run script](reference/run/):
 
         ```bash
-        python microswea/run/hello_world.py
+        python microsweagent/run/hello_world.py
         ```
 
 ??? example "Example Prompts"

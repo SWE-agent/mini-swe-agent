@@ -1,5 +1,5 @@
 # DockerEnvironment
 
-::: microswea.environments.docker.DockerEnvironmentConfig
+::: microsweagent.environments.docker.DockerEnvironmentConfig
 
-::: microswea.environments.docker.DockerEnvironment
+::: microsweagent.environments.docker.DockerEnvironment

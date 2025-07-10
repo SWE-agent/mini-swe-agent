@@ -9,7 +9,7 @@ import threading
 from dotenv import set_key
 from rich.console import Console
 
-from microswea import Model, global_config_file
+from microsweagent import Model, global_config_file
 
 console = Console()
 
@@ -74,10 +74,10 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
 def get_model_class(model_name: str) -> type:
     """Select the best model class for a given model name."""
     if any(s in model_name for s in ["anthropic", "sonnet", "opus"]):
-        from microswea.models.anthropic import AnthropicModel
+        from microsweagent.models.anthropic import AnthropicModel
 
         return AnthropicModel
-    from microswea.models.litellm_model import LitellmModel
+    from microsweagent.models.litellm_model import LitellmModel
 
     return LitellmModel
 

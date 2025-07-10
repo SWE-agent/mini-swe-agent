@@ -5,7 +5,7 @@
 </div>
 
 
-- **🐜 Minimal**: Just [100 lines of python](https://github.com/SWE-agent/micro-swe-agent/blob/main/microswea/agents/default.py) (+100 for [env](https://github.com/SWE-agent/micro-swe-agent/blob/main/microswea/environments/local.py), [model](https://github.com/SWE-agent/micro-swe-agent/blob/main/microswea/models/litellm_model.py), [script](https://github.com/SWE-agent/micro-swe-agent/blob/main/microswea/run/hello_world.py)) — no fancy dependencies! Optionally, a few more lines for interactive UIs.
+- **🐜 Minimal**: Just [100 lines of python](https://github.com/SWE-agent/micro-swe-agent/blob/main/microsweagent/agents/default.py) (+100 for [env](https://github.com/SWE-agent/micro-swe-agent/blob/main/microsweagent/environments/local.py), [model](https://github.com/SWE-agent/micro-swe-agent/blob/main/microsweagent/models/litellm_model.py), [script](https://github.com/SWE-agent/micro-swe-agent/blob/main/microsweagent/run/hello_world.py)) — no fancy dependencies! Optionally, a few more lines for interactive UIs.
 - **💪 Powerful:** Resolves issues on the [SWE-bench verified benchmark](https://www.swebench.com/).
 - **🤗 Friendly:** Comes with **two convenient UIs** that will turn this into your daily dev swiss army knife!
 - **🎓 Cutting edge:** Built by the Princeton & Stanford team behind [SWE-bench](https://swe-bench.com) and [SWE-agent](https://swe-agent.com).

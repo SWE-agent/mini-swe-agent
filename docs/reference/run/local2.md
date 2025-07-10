@@ -1,3 +1,3 @@
 # Local2 (Textual)
 
-::: microswea.run.local2
+::: microsweagent.run.local2

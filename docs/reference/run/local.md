@@ -1,3 +1,3 @@
 # Local
 
-::: microswea.run.local
+::: microsweagent.run.local

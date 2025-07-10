@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 
 from rich.console import Console
 
-from microswea.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
+from microsweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
 
 console = Console(highlight=False)
 

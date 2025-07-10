@@ -3,9 +3,9 @@ from unittest.mock import patch
 
 import pytest
 
-from microswea import package_dir
-from microswea.models.test_models import DeterministicModel
-from microswea.run.extra.swebench import (
+from microsweagent import package_dir
+from microsweagent.models.test_models import DeterministicModel
+from microsweagent.run.extra.swebench import (
     filter_instances,
     get_swebench_docker_image_name,
     main,
@@ -21,7 +21,7 @@ def test_swebench_end_to_end(github_test_data, tmp_path, workers):
 
     model_responses = github_test_data["model_responses"]
 
-    with patch("microswea.run.extra.swebench.get_model") as mock_get_model:
+    with patch("microsweagent.run.extra.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses, cost_per_call=0.1)
 
         main(
@@ -306,7 +306,7 @@ def test_redo_existing_false_skips_existing(github_test_data, tmp_path):
     }
     preds_file.write_text(json.dumps(existing_data))
 
-    with patch("microswea.run.extra.swebench.get_model") as mock_get_model:
+    with patch("microsweagent.run.extra.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
 
         main(
@@ -340,7 +340,7 @@ def test_redo_existing_true_overwrites_existing(github_test_data, tmp_path):
     }
     preds_file.write_text(json.dumps(existing_data))
 
-    with patch("microswea.run.extra.swebench.get_model") as mock_get_model:
+    with patch("microsweagent.run.extra.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses, cost_per_call=0.1)
 
         main(
