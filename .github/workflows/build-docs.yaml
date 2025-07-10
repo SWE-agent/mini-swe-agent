@@ -47,3 +47,10 @@ jobs:
       - name: Build + Deploy Documentation
         if: github.ref == 'refs/heads/main'
         run: mike deploy --push 1.0 latest
+      - name: Push to External Docs Repository
+        if: github.ref == 'refs/heads/main'
+        env:
+          REINDEER_TOKEN: ${{ secrets.REINDEER_TOKEN }}
+        run: |
+          git remote add docs-repo https://x-access-token:${REINDEER_TOKEN}@github.com/klieret/mswea-docs.git
+          git push docs-repo gh-pages:gh-pages
