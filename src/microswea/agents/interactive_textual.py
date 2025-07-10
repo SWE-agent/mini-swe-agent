@@ -8,6 +8,7 @@ import os
 import re
 import threading
 import time
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from rich.spinner import Spinner
@@ -18,15 +19,22 @@ from textual.css.query import NoMatches
 from textual.events import Key
 from textual.widgets import Footer, Header, Static, TextArea
 
-from microswea.agents.default import DefaultAgent, NonTerminatingException
-from microswea.agents.interactive import InteractiveAgentConfig
+from microswea.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
+
+
+@dataclass
+class TextualAgentConfig(AgentConfig):
+    confirm_actions: bool = True
+    """Whether to confirm actions."""
+    whitelist_actions: list[str] = field(default_factory=list)
+    """Never confirm actions that match these regular expressions."""
 
 
 class TextualAgent(DefaultAgent):
     def __init__(self, app: "AgentApp", *args, **kwargs):
         """Connects the DefaultAgent to the TextualApp."""
         self.app = app
-        super().__init__(*args, config_class=InteractiveAgentConfig, **kwargs)
+        super().__init__(*args, config_class=TextualAgentConfig, **kwargs)
 
     def add_message(self, role: str, content: str):
         super().add_message(role, content)
