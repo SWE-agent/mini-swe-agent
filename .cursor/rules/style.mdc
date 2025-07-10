@@ -35,6 +35,7 @@ Class(func())
 2. <IMPORTANT>Do not mock/patch anything that you're not explicitly asked to do</IMPORTANT>
 3. Avoid writing trivial tests. Every test should test for at least one, preferably multiple points of failure
 4. Avoid splitting up code in multiple lines like this: `a=func()\n assert a=b`. Instead, just do `assert func() == b`
+5. The first argument to `pytest.mark.parametrize` should be a tuple (not a string! not a list!)
 
 Here's an example for rule 4:
 

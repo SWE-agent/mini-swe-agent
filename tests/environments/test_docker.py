@@ -5,6 +5,7 @@ from unittest.mock import patch
 import pytest
 
 from microswea.environments.docker import DockerEnvironment, DockerEnvironmentConfig
+from microswea.environments.podman import PodmanEnvironment, PodmanEnvironmentConfig
 
 
 def is_docker_available():
@@ -16,24 +17,52 @@ def is_docker_available():
         return False
 
 
-pytestmark = pytest.mark.skipif(not is_docker_available(), reason="Docker not available")
+def is_podman_available():
+    """Check if Podman is available and running."""
+    try:
+        subprocess.run(["podman", "version"], capture_output=True, check=True, timeout=5)
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+        return False
 
 
-def test_docker_environment_config_defaults():
+# Test parameters for both Docker and Podman
+environment_params = [
+    pytest.param(
+        DockerEnvironment,
+        DockerEnvironmentConfig,
+        "docker",
+        marks=pytest.mark.skipif(not is_docker_available(), reason="Docker not available"),
+        id="docker",
+    ),
+    pytest.param(
+        PodmanEnvironment,
+        PodmanEnvironmentConfig,
+        "podman",
+        marks=pytest.mark.skipif(not is_podman_available(), reason="Podman not available"),
+        id="podman",
+    ),
+]
+
+
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_config_defaults(env_class, config_class, executable):
     """Test that DockerEnvironmentConfig has correct default values."""
-    config = DockerEnvironmentConfig(image="python:3.11")
+    config = config_class(image="python:3.11")
 
     assert config.image == "python:3.11"
     assert config.cwd == "/"
     assert config.env == {}
     assert config.forward_env == []
     assert config.timeout == 30
+    assert config.executable == executable
 
 
 @pytest.mark.slow
-def test_docker_environment_basic_execution():
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_basic_execution(env_class, config_class, executable):
     """Test basic command execution in Docker container."""
-    env = DockerEnvironment(image="python:3.11")
+    env = env_class(image="python:3.11")
 
     try:
         result = env.execute("echo 'hello world'")
@@ -44,9 +73,10 @@ def test_docker_environment_basic_execution():
 
 
 @pytest.mark.slow
-def test_docker_environment_set_env_variables():
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_set_env_variables(env_class, config_class, executable):
     """Test setting environment variables in the container."""
-    env = DockerEnvironment(image="python:3.11", env={"TEST_VAR": "test_value", "ANOTHER_VAR": "another_value"})
+    env = env_class(image="python:3.11", env={"TEST_VAR": "test_value", "ANOTHER_VAR": "another_value"})
 
     try:
         # Test single environment variable
@@ -63,10 +93,11 @@ def test_docker_environment_set_env_variables():
 
 
 @pytest.mark.slow
-def test_docker_environment_forward_env_variables():
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_forward_env_variables(env_class, config_class, executable):
     """Test forwarding environment variables from host to container."""
     with patch.dict(os.environ, {"HOST_VAR": "host_value", "ANOTHER_HOST_VAR": "another_host_value"}):
-        env = DockerEnvironment(image="python:3.11", forward_env=["HOST_VAR", "ANOTHER_HOST_VAR"])
+        env = env_class(image="python:3.11", forward_env=["HOST_VAR", "ANOTHER_HOST_VAR"])
 
         try:
             # Test single forwarded environment variable
@@ -83,9 +114,10 @@ def test_docker_environment_forward_env_variables():
 
 
 @pytest.mark.slow
-def test_docker_environment_forward_nonexistent_env_variables():
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_forward_nonexistent_env_variables(env_class, config_class, executable):
     """Test forwarding non-existent environment variables (should be empty)."""
-    env = DockerEnvironment(image="python:3.11", forward_env=["NONEXISTENT_VAR"])
+    env = env_class(image="python:3.11", forward_env=["NONEXISTENT_VAR"])
 
     try:
         result = env.execute('echo "[$NONEXISTENT_VAR]"')
@@ -96,10 +128,11 @@ def test_docker_environment_forward_nonexistent_env_variables():
 
 
 @pytest.mark.slow
-def test_docker_environment_combined_env_and_forward():
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_combined_env_and_forward(env_class, config_class, executable):
     """Test both setting and forwarding environment variables together."""
     with patch.dict(os.environ, {"HOST_VAR": "from_host"}):
-        env = DockerEnvironment(image="python:3.11", env={"SET_VAR": "from_config"}, forward_env=["HOST_VAR"])
+        env = env_class(image="python:3.11", env={"SET_VAR": "from_config"}, forward_env=["HOST_VAR"])
 
         try:
             result = env.execute("echo $SET_VAR $HOST_VAR")
@@ -110,10 +143,11 @@ def test_docker_environment_combined_env_and_forward():
 
 
 @pytest.mark.slow
-def test_docker_environment_env_override_forward():
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_env_override_forward(env_class, config_class, executable):
     """Test that explicitly set env variables take precedence over forwarded ones."""
     with patch.dict(os.environ, {"CONFLICT_VAR": "from_host"}):
-        env = DockerEnvironment(image="python:3.11", env={"CONFLICT_VAR": "from_config"}, forward_env=["CONFLICT_VAR"])
+        env = env_class(image="python:3.11", env={"CONFLICT_VAR": "from_config"}, forward_env=["CONFLICT_VAR"])
 
         try:
             result = env.execute("echo $CONFLICT_VAR")
@@ -125,9 +159,10 @@ def test_docker_environment_env_override_forward():
 
 
 @pytest.mark.slow
-def test_docker_environment_custom_cwd():
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_custom_cwd(env_class, config_class, executable):
     """Test executing commands in a custom working directory."""
-    env = DockerEnvironment(image="python:3.11", cwd="/tmp")
+    env = env_class(image="python:3.11", cwd="/tmp")
 
     try:
         result = env.execute("pwd")
@@ -138,9 +173,10 @@ def test_docker_environment_custom_cwd():
 
 
 @pytest.mark.slow
-def test_docker_environment_cwd_parameter_override():
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_cwd_parameter_override(env_class, config_class, executable):
     """Test that the cwd parameter in execute() overrides the config cwd."""
-    env = DockerEnvironment(image="python:3.11", cwd="/")
+    env = env_class(image="python:3.11", cwd="/")
 
     try:
         result = env.execute("pwd", cwd="/tmp")
@@ -151,9 +187,10 @@ def test_docker_environment_cwd_parameter_override():
 
 
 @pytest.mark.slow
-def test_docker_environment_command_failure():
+@pytest.mark.parametrize(("env_class", "config_class", "executable"), environment_params)
+def test_docker_environment_command_failure(env_class, config_class, executable):
     """Test that command failures are properly captured."""
-    env = DockerEnvironment(image="python:3.11")
+    env = env_class(image="python:3.11")
 
     try:
         result = env.execute("exit 42")

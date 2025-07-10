@@ -20,28 +20,33 @@ class DockerEnvironmentConfig:
     """
     timeout: int = 30
     """Timeout for executing commands in the container."""
+    executable: str = "docker"
+    """Path to the docker/container executable."""
+    run_args: list[str] = field(default_factory=list)
+    """Additional arguments to pass to the docker/container executable."""
 
 
 class DockerEnvironment:
-    def __init__(self, **kwargs):
+    def __init__(self, *, config_class: type = DockerEnvironmentConfig, **kwargs):
         """This class executes bash commands in a Docker container using direct docker commands.
         See `DockerEnvironmentConfig` for keyword arguments.
         """
         self.container_id: str | None = None
-        self.config = DockerEnvironmentConfig(**kwargs)
+        self.config = config_class(**kwargs)
         self._start_container()
 
     def _start_container(self):
         """Start the Docker container and return the container ID."""
         container_name = f"microswea-{uuid.uuid4().hex[:8]}"
         cmd = [
-            "docker",
+            self.config.executable,
             "run",
             "-d",
             "--name",
             container_name,
             "-w",
-            "/testbed",
+            self.config.cwd,
+            *self.config.run_args,
             self.config.image,
             "sleep",
             "infinity",  # Keep container running
@@ -62,7 +67,7 @@ class DockerEnvironment:
         cwd = cwd or self.config.cwd
         assert self.container_id, "Container not started"
 
-        cmd = ["docker", "exec", "-w", cwd]
+        cmd = [self.config.executable, "exec", "-w", cwd]
         for key in self.config.forward_env:
             if (value := os.getenv(key)) is not None:
                 cmd.extend(["-e", f"{key}={value}"])
