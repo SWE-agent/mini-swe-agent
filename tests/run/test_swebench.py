@@ -5,7 +5,13 @@ import pytest
 
 from microswea import package_dir
 from microswea.models.test_models import DeterministicModel
-from microswea.run.extra.swebench import filter_instances, get_swebench_docker_image_name, main
+from microswea.run.extra.swebench import (
+    filter_instances,
+    get_swebench_docker_image_name,
+    main,
+    remove_from_preds_file,
+    update_preds_file,
+)
 
 
 @pytest.mark.slow
@@ -159,3 +165,199 @@ def test_filter_instances_no_matches():
     instances = [{"instance_id": "django__test1"}, {"instance_id": "flask__test2"}]
     result = filter_instances(instances, filter_spec=r"nonexistent__.*", slice_spec="")
     assert result == []
+
+
+def test_update_preds_file_new_file(tmp_path):
+    """Test update_preds_file when output file doesn't exist"""
+    output_path = tmp_path / "preds.json"
+    update_preds_file(output_path, "test__instance__1", "test_model", "test_result")
+
+    assert output_path.exists()
+    result = json.loads(output_path.read_text())
+    expected = {
+        "test__instance__1": {
+            "model_name_or_path": "test_model",
+            "instance_id": "test__instance__1",
+            "model_patch": "test_result",
+        }
+    }
+    assert result == expected
+
+
+def test_update_preds_file_existing_file(tmp_path):
+    """Test update_preds_file when output file already exists"""
+    output_path = tmp_path / "preds.json"
+
+    # Create initial file with one instance
+    initial_data = {
+        "existing__instance": {
+            "model_name_or_path": "old_model",
+            "instance_id": "existing__instance",
+            "model_patch": "old_result",
+        }
+    }
+    output_path.write_text(json.dumps(initial_data))
+
+    # Add new instance
+    update_preds_file(output_path, "new__instance", "new_model", "new_result")
+
+    result = json.loads(output_path.read_text())
+    expected = {
+        "existing__instance": {
+            "model_name_or_path": "old_model",
+            "instance_id": "existing__instance",
+            "model_patch": "old_result",
+        },
+        "new__instance": {
+            "model_name_or_path": "new_model",
+            "instance_id": "new__instance",
+            "model_patch": "new_result",
+        },
+    }
+    assert result == expected
+
+
+def test_update_preds_file_overwrite_existing(tmp_path):
+    """Test update_preds_file overwrites existing instance"""
+    output_path = tmp_path / "preds.json"
+
+    # Create initial file
+    initial_data = {
+        "test__instance": {
+            "model_name_or_path": "old_model",
+            "instance_id": "test__instance",
+            "model_patch": "old_result",
+        }
+    }
+    output_path.write_text(json.dumps(initial_data))
+
+    # Update existing instance
+    update_preds_file(output_path, "test__instance", "new_model", "new_result")
+
+    result = json.loads(output_path.read_text())
+    expected = {
+        "test__instance": {
+            "model_name_or_path": "new_model",
+            "instance_id": "test__instance",
+            "model_patch": "new_result",
+        }
+    }
+    assert result == expected
+
+
+def test_remove_from_preds_file_existing(tmp_path):
+    """Test remove_from_preds_file removes existing instance"""
+    output_path = tmp_path / "preds.json"
+
+    # Create file with multiple instances
+    initial_data = {
+        "instance1": {"model_name_or_path": "model1", "instance_id": "instance1", "model_patch": "result1"},
+        "instance2": {"model_name_or_path": "model2", "instance_id": "instance2", "model_patch": "result2"},
+    }
+    output_path.write_text(json.dumps(initial_data))
+
+    # Remove one instance
+    remove_from_preds_file(output_path, "instance1")
+
+    result = json.loads(output_path.read_text())
+    expected = {"instance2": {"model_name_or_path": "model2", "instance_id": "instance2", "model_patch": "result2"}}
+    assert result == expected
+
+
+def test_remove_from_preds_file_nonexistent_instance(tmp_path):
+    """Test remove_from_preds_file with nonexistent instance"""
+    output_path = tmp_path / "preds.json"
+
+    initial_data = {"instance1": {"model_name_or_path": "model1", "instance_id": "instance1", "model_patch": "result1"}}
+    output_path.write_text(json.dumps(initial_data))
+
+    # Try to remove nonexistent instance
+    remove_from_preds_file(output_path, "nonexistent")
+
+    # File should be unchanged
+    result = json.loads(output_path.read_text())
+    assert result == initial_data
+
+
+def test_remove_from_preds_file_no_file(tmp_path):
+    """Test remove_from_preds_file when file doesn't exist"""
+    output_path = tmp_path / "preds.json"
+
+    # Should not raise an error
+    remove_from_preds_file(output_path, "any_instance")
+
+    # File should still not exist
+    assert not output_path.exists()
+
+
+@pytest.mark.slow
+def test_redo_existing_false_skips_existing(github_test_data, tmp_path):
+    """Test that redo_existing=False skips instances that already have results"""
+    model_responses = github_test_data["model_responses"]
+
+    # Create existing preds.json with one instance
+    preds_file = tmp_path / "preds.json"
+    existing_data = {
+        "swe-agent__test-repo-1": {
+            "model_name_or_path": "previous_model",
+            "instance_id": "swe-agent__test-repo-1",
+            "model_patch": "previous_result",
+        }
+    }
+    preds_file.write_text(json.dumps(existing_data))
+
+    with patch("microswea.run.extra.swebench.get_model") as mock_get_model:
+        mock_get_model.return_value = DeterministicModel(outputs=model_responses)
+
+        main(
+            subset="_test",
+            split="test",
+            slice_spec="0:1",
+            output=str(tmp_path),
+            workers=1,
+            filter_spec="swe-agent__test-repo-1",
+            redo_existing=False,
+        )
+
+    # Should still have the original result
+    result = json.loads(preds_file.read_text())
+    assert result == existing_data
+
+
+@pytest.mark.slow
+def test_redo_existing_true_overwrites_existing(github_test_data, tmp_path):
+    """Test that redo_existing=True processes instances even if they already have results"""
+    model_responses = github_test_data["model_responses"]
+
+    # Create existing preds.json with one instance
+    preds_file = tmp_path / "preds.json"
+    existing_data = {
+        "swe-agent__test-repo-1": {
+            "model_name_or_path": "previous_model",
+            "instance_id": "swe-agent__test-repo-1",
+            "model_patch": "previous_result",
+        }
+    }
+    preds_file.write_text(json.dumps(existing_data))
+
+    with patch("microswea.run.extra.swebench.get_model") as mock_get_model:
+        mock_get_model.return_value = DeterministicModel(outputs=model_responses)
+
+        main(
+            subset="_test",
+            split="test",
+            slice_spec="0:1",
+            output=str(tmp_path),
+            workers=1,
+            filter_spec="swe-agent__test-repo-1",
+            redo_existing=True,
+        )
+
+    # Should have new result from deterministic model
+    traj_file_path = package_dir.parent.parent / "tests" / "test_data" / "github_issue.traj.json"
+    trajectory = json.loads(traj_file_path.read_text())
+    expected_result = trajectory[-1]["content"]
+
+    result = json.loads(preds_file.read_text())
+    assert result["swe-agent__test-repo-1"]["model_patch"] == expected_result
+    assert result["swe-agent__test-repo-1"]["model_name_or_path"] == "deterministic"

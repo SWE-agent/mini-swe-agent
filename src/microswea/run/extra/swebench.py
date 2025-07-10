@@ -4,6 +4,7 @@ import json
 import random
 import re
 import threading
+import time
 from pathlib import Path
 
 import typer
@@ -63,10 +64,10 @@ def get_swebench_docker_image_name(instance: dict) -> str:
 
 def update_preds_file(output_path: Path, instance_id: str, model_name: str, result: str):
     """Update the output JSON file with results from a single instance."""
-    if not output_path.exists():
-        return
     with _OUTPUT_FILE_LOCK:
-        output_data = json.loads(output_path.read_text())
+        output_data = {}
+        if output_path.exists():
+            output_data = json.loads(output_path.read_text())
         output_data[instance_id] = {
             "model_name_or_path": model_name,
             "instance_id": instance_id,
@@ -152,14 +153,12 @@ def process_instances_multithreaded(instances: list[dict], output_path: Path, n_
     """Process SWEBench instances in parallel."""
     results = []
 
-    # Create progress manager
-    progress_manager = RunBatchProgressManager(len(instances))
+    progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
     print(f"Starting parallel execution with {n_workers} workers...")
 
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=n_workers) as executor:
-            # Start all instances and track them
             instance_futures = {}
             for instance in instances:
                 instance_id = instance["instance_id"]
@@ -211,6 +210,7 @@ def main(
     output: str = typer.Option("", "-o", "--output", help="Output directory"),
     workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing"),
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
+    redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances"),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""
     try:
@@ -221,8 +221,12 @@ def main(
     instances = list(load_dataset(dataset_path, split=split))
 
     instances = filter_instances(instances, filter_spec=filter_spec, slice_spec=slice_spec, shuffle=shuffle)
-
     output_path = Path(output)
+    if not redo_existing and (output_path / "preds.json").exists():
+        existing_instances = list(json.loads((output_path / "preds.json").read_text()).keys())
+        print(f"Skipping {len(existing_instances)} existing instances")
+        instances = [instance for instance in instances if instance["instance_id"] not in existing_instances]
+
     output_path.mkdir(parents=True, exist_ok=True)
     print(f"Running on {len(instances)} instances...")
     print(f"Results will be saved to {output_path}")
