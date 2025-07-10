@@ -1,10 +1,12 @@
 import json
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
+import typer
 
-from microswea.run.inspector import TrajectoryInspector
+from microswea.run.inspector import TrajectoryInspector, main
 
 
 def get_screen_text(app: TrajectoryInspector) -> str:
@@ -302,3 +304,68 @@ async def test_trajectory_inspector_quit_binding(temp_trajectory_files):
         await pilot.pause(0.1)
 
         # App should exit gracefully (the test framework handles this)
+
+
+@patch("microswea.run.inspector.TrajectoryInspector.run")
+def test_main_with_single_file(mock_run, temp_trajectory_files):
+    """Test main function with a single trajectory file."""
+    valid_file = temp_trajectory_files[0]  # simple.traj.json
+
+    main(str(valid_file))
+
+    mock_run.assert_called_once()
+    # Verify the inspector was created with the correct file
+    assert mock_run.call_count == 1
+
+
+@patch("microswea.run.inspector.TrajectoryInspector.run")
+def test_main_with_directory_containing_trajectories(mock_run, temp_trajectory_files):
+    """Test main function with a directory containing trajectory files."""
+    directory = temp_trajectory_files[0].parent
+
+    main(str(directory))
+
+    mock_run.assert_called_once()
+
+
+@patch("microswea.run.inspector.TrajectoryInspector.run")
+def test_main_with_directory_no_trajectories(mock_run):
+    """Test main function with a directory containing no trajectory files."""
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Create some non-trajectory files
+        temp_path = Path(temp_dir)
+        (temp_path / "other.json").write_text('{"not": "trajectory"}')
+        (temp_path / "readme.txt").write_text("some text")
+
+        with pytest.raises(typer.BadParameter, match="No trajectory files found"):
+            main(str(temp_dir))
+
+        mock_run.assert_not_called()
+
+
+@patch("microswea.run.inspector.TrajectoryInspector.run")
+def test_main_with_nonexistent_path(mock_run):
+    """Test main function with a path that doesn't exist."""
+    nonexistent_path = "/this/path/does/not/exist"
+
+    with pytest.raises(typer.BadParameter, match="Path .* does not exist"):
+        main(nonexistent_path)
+
+    mock_run.assert_not_called()
+
+
+@patch("microswea.run.inspector.TrajectoryInspector.run")
+def test_main_with_current_directory_default(mock_run, temp_trajectory_files):
+    """Test main function with default argument (current directory)."""
+    directory = temp_trajectory_files[0].parent
+
+    # Change to the temp directory to test the default "." behavior
+    import os
+
+    original_cwd = os.getcwd()
+    try:
+        os.chdir(str(directory))
+        main(".")  # Explicitly test with "." since default is handled by typer
+        mock_run.assert_called_once()
+    finally:
+        os.chdir(original_cwd)
