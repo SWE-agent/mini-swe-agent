@@ -3,6 +3,7 @@ import concurrent.futures
 import json
 import random
 import re
+import threading
 from pathlib import Path
 
 import typer
@@ -27,6 +28,9 @@ DATASET_MAPPING = {
     "multilingual": "swe-bench/SWE-Bench_Multilingual",
     "_test": "klieret/swe-bench-dummy-test-dataset",
 }
+
+
+_OUTPUT_FILE_LOCK = threading.Lock()
 
 
 class ProgressTrackingAgent(DefaultAgent):
@@ -59,17 +63,16 @@ def get_swebench_docker_image_name(instance: dict) -> str:
 
 def update_preds_file(output_path: Path, instance_id: str, model_config, result: str):
     """Update the output JSON file with results from a single instance."""
-    output_data = {}
-    if output_path.exists():
-        output_data = json.loads(output_path.read_text())
-
-    output_data[instance_id] = {
-        "model_name_or_path": model_config.model_name,
-        "instance_id": instance_id,
-        "model_patch": result,
-    }
-
-    output_path.write_text(json.dumps(output_data, indent=2))
+    with _OUTPUT_FILE_LOCK:
+        output_data = {}
+        if output_path.exists():
+            output_data = json.loads(output_path.read_text())
+        output_data[instance_id] = {
+            "model_name_or_path": model_config.model_name,
+            "instance_id": instance_id,
+            "model_patch": result,
+        }
+        output_path.write_text(json.dumps(output_data, indent=2))
 
 
 def process_instance(instance: dict, output_dir: Path, model: str, progress_manager=None) -> dict:
