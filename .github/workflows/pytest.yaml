@@ -32,10 +32,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install podman
+      - name: Install podman and singularity
         run: |
             sudo apt-get update
             sudo apt-get install -y podman
+            # Install singularity/apptainer
+            sudo apt-get install -y wget
+            cd /tmp
+            wget https://github.com/apptainer/apptainer/releases/download/v1.3.4/apptainer_1.3.4_amd64.deb
+            sudo dpkg -i apptainer_1.3.4_amd64.deb || sudo apt-get install -f -y
+            # Create singularity symlink for compatibility
+            sudo ln -sf /usr/bin/apptainer /usr/bin/singularity
       - name: Install dependencies
         run: |
             pip install -e '.[full]'
