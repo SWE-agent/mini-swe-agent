@@ -1,3 +1,3 @@
 # AnthropicModel
 
-::: microswea.models.anthropic.AnthropicModel
+::: microsweagent.models.anthropic.AnthropicModel

@@ -1,8 +1,8 @@
 import pytest
 
-from microswea.agents.default import DefaultAgent, NonTerminatingException
-from microswea.environments.local import LocalEnvironment
-from microswea.models.test_models import DeterministicModel
+from microsweagent.agents.default import DefaultAgent, NonTerminatingException
+from microsweagent.environments.local import LocalEnvironment
+from microsweagent.models.test_models import DeterministicModel
 
 
 def test_successful_completion():

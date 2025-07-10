@@ -3,9 +3,9 @@ from unittest.mock import Mock
 
 import pytest
 
-from microswea.agents.interactive_textual import AddLogEmitCallback, AgentApp
-from microswea.environments.local import LocalEnvironment
-from microswea.models.test_models import DeterministicModel
+from microsweagent.agents.interactive_textual import AddLogEmitCallback, AgentApp
+from microsweagent.environments.local import LocalEnvironment
+from microsweagent.models.test_models import DeterministicModel
 
 
 def get_screen_text(app: AgentApp) -> str:
@@ -110,7 +110,7 @@ async def test_everything_integration_test():
 
 def test_messages_to_steps_edge_cases():
     """Test the _messages_to_steps function with various edge cases."""
-    from microswea.agents.interactive_textual import _messages_to_steps
+    from microsweagent.agents.interactive_textual import _messages_to_steps
 
     # Empty messages
     assert _messages_to_steps([]) == []

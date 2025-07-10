@@ -1,13 +1,13 @@
 from unittest.mock import patch
 
-from microswea.agents.interactive import InteractiveAgent
-from microswea.environments.local import LocalEnvironment
-from microswea.models.test_models import DeterministicModel
+from microsweagent.agents.interactive import InteractiveAgent
+from microsweagent.environments.local import LocalEnvironment
+from microsweagent.models.test_models import DeterministicModel
 
 
 def test_successful_completion_with_confirmation():
     """Test agent completes successfully when user confirms all actions."""
-    with patch("microswea.agents.interactive.console.input", side_effect=[""]):  # Confirm action with Enter
+    with patch("microsweagent.agents.interactive.console.input", side_effect=[""]):  # Confirm action with Enter
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=["Finishing\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'completed'\n```"]
@@ -24,7 +24,7 @@ def test_successful_completion_with_confirmation():
 def test_action_rejection_and_recovery():
     """Test agent handles action rejection and can recover."""
     with patch(
-        "microswea.agents.interactive.console.input",
+        "microsweagent.agents.interactive.console.input",
         side_effect=[
             "User rejected this action",  # Reject first action
             "",  # Confirm second action
@@ -52,7 +52,7 @@ def test_action_rejection_and_recovery():
 def test_yolo_mode_activation():
     """Test entering yolo mode disables confirmations."""
     with patch(
-        "microswea.agents.interactive.console.input",
+        "microsweagent.agents.interactive.console.input",
         side_effect=[
             "/y",  # Enter yolo mode
             "",  # This should be ignored since yolo mode is on
@@ -74,7 +74,7 @@ def test_yolo_mode_activation():
 def test_yolo_mode_exit():
     """Test exiting yolo mode re-enables confirmations."""
     with patch(
-        "microswea.agents.interactive.console.input",
+        "microsweagent.agents.interactive.console.input",
         side_effect=[
             "/y",  # Enter yolo mode
             "/x",  # Exit yolo mode
@@ -97,13 +97,13 @@ def test_yolo_mode_exit():
 def test_help_command():
     """Test help command shows help and continues normally."""
     with patch(
-        "microswea.agents.interactive.console.input",
+        "microsweagent.agents.interactive.console.input",
         side_effect=[
             "/h",  # Show help
             "",  # Confirm action after help
         ],
     ):
-        with patch("microswea.agents.interactive.console.print") as mock_print:
+        with patch("microsweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
                 model=DeterministicModel(
                     outputs=["Test help\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'help shown'\n```"]
@@ -168,7 +168,7 @@ def _test_interruption_helper(interruption_input, expected_message_fragment, pro
             return interruption_input  # For the interruption handling
         return ""  # Confirm all subsequent actions
 
-    with patch("microswea.agents.interactive.console.input", side_effect=mock_input):
+    with patch("microsweagent.agents.interactive.console.input", side_effect=mock_input):
         with patch.object(agent, "query", side_effect=mock_query):
             exit_status, result = agent.run(problem_statement)
 
@@ -197,7 +197,7 @@ def test_interruption_handling_empty_message():
 def test_multiple_confirmations_and_commands():
     """Test complex interaction with multiple confirmations and commands."""
     with patch(
-        "microswea.agents.interactive.console.input",
+        "microsweagent.agents.interactive.console.input",
         side_effect=[
             "reject first",  # Reject first action
             "/h",  # Show help for second action
@@ -224,7 +224,7 @@ def test_multiple_confirmations_and_commands():
 
 def test_non_whitelisted_action_requires_confirmation():
     """Test that non-whitelisted actions still require confirmation."""
-    with patch("microswea.agents.interactive.console.input", return_value=""):
+    with patch("microsweagent.agents.interactive.console.input", return_value=""):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=["Non-whitelisted\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'confirmed'\n```"]

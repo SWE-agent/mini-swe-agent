@@ -1,3 +1,3 @@
 # GitHub Issue
 
-::: microswea.run.github_issue
+::: microsweagent.run.github_issue

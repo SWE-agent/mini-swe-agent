@@ -1,3 +1,3 @@
 # SwerexDockerEnvironment
 
-::: microswea.environments.extra.swerex_docker.SwerexDockerEnvironment
+::: microsweagent.environments.extra.swerex_docker.SwerexDockerEnvironment

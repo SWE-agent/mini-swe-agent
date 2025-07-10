@@ -1,5 +1,5 @@
 # LocalEnvironment
 
-::: microswea.environments.local.LocalEnvironmentConfig
+::: microsweagent.environments.local.LocalEnvironmentConfig
 
-::: microswea.environments.local.LocalEnvironment
+::: microsweagent.environments.local.LocalEnvironment

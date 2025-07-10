@@ -1,5 +1,5 @@
 # InteractiveAgent
 
-::: microswea.agents.interactive.InteractiveAgentConfig
+::: microsweagent.agents.interactive.InteractiveAgentConfig
 
-::: microswea.agents.interactive.InteractiveAgent
+::: microsweagent.agents.interactive.InteractiveAgent

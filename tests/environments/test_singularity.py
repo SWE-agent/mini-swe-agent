@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
-from microswea.environments.singularity import SingularityEnvironment, SingularityEnvironmentConfig
+from microsweagent.environments.singularity import SingularityEnvironment, SingularityEnvironmentConfig
 
 
 def is_singularity_available():

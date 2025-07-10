@@ -1,5 +1,5 @@
 # DeterministicModel
 
-::: microswea.models.test_models.DeterministicModelConfig
+::: microsweagent.models.test_models.DeterministicModelConfig
 
-::: microswea.models.test_models.DeterministicModel
+::: microsweagent.models.test_models.DeterministicModel

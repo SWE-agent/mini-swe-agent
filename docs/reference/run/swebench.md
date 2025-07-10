@@ -1,3 +1,3 @@
 # SWE-bench
 
-::: microswea.run.extra.swebench
+::: microsweagent.run.extra.swebench

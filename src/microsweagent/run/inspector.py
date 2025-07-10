@@ -14,7 +14,7 @@ from textual.binding import Binding
 from textual.containers import Container, Vertical, VerticalScroll
 from textual.widgets import Footer, Header, Static
 
-from microswea.agents.interactive_textual import _messages_to_steps
+from microsweagent.agents.interactive_textual import _messages_to_steps
 
 app = typer.Typer()
 

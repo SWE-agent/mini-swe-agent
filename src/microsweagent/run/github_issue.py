@@ -8,10 +8,10 @@ import typer
 import yaml
 from rich.console import Console
 
-from microswea import package_dir
-from microswea.agents.interactive import InteractiveAgent
-from microswea.environments.docker import DockerEnvironment
-from microswea.models import get_model
+from microsweagent import package_dir
+from microsweagent.agents.interactive import InteractiveAgent
+from microsweagent.environments.docker import DockerEnvironment
+from microsweagent.models import get_model
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", package_dir / "config" / "github_issue.yaml"))
 console = Console(highlight=False)

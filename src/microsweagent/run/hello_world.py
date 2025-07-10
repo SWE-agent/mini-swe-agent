@@ -4,10 +4,10 @@ from pathlib import Path
 import typer
 import yaml
 
-from microswea import package_dir
-from microswea.agents.default import DefaultAgent
-from microswea.environments.local import LocalEnvironment
-from microswea.models.litellm_model import LitellmModel
+from microsweagent import package_dir
+from microsweagent.agents.default import DefaultAgent
+from microsweagent.environments.local import LocalEnvironment
+from microsweagent.models.litellm_model import LitellmModel
 
 app = typer.Typer()
 

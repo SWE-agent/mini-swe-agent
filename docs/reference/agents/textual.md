@@ -1,9 +1,9 @@
 # TextualAgent
 
-::: microswea.agents.interactive_textual.TextualAgent
+::: microsweagent.agents.interactive_textual.TextualAgent
 
-::: microswea.agents.interactive_textual.AgentApp
+::: microsweagent.agents.interactive_textual.AgentApp
 
-::: microswea.agents.interactive_textual.ConfirmationPromptContainer
+::: microsweagent.agents.interactive_textual.ConfirmationPromptContainer
 
-::: microswea.agents.interactive_textual.AddLogEmitCallback
+::: microsweagent.agents.interactive_textual.AddLogEmitCallback

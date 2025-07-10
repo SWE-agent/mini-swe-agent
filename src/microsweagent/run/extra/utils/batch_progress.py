@@ -21,7 +21,7 @@ from rich.progress import (
 )
 from rich.table import Table
 
-import microswea.models
+import microsweagent.models
 
 
 def _shorten_str(s: str, max_len: int, shorten_left=False) -> str:
@@ -105,7 +105,7 @@ class RunBatchProgressManager:
     def _update_total_costs(self) -> None:
         with self._lock:
             self._main_progress_bar.update(
-                self._main_task_id, total_cost=f"{microswea.models.GLOBAL_MODEL_STATS.cost:.2f}"
+                self._main_task_id, total_cost=f"{microsweagent.models.GLOBAL_MODEL_STATS.cost:.2f}"
             )
 
     def update_instance_status(self, instance_id: str, message: str):

@@ -20,7 +20,7 @@ from textual.css.query import NoMatches
 from textual.events import Key
 from textual.widgets import Footer, Header, Static, TextArea
 
-from microswea.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
+from microsweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
 
 
 @dataclass

@@ -8,8 +8,8 @@ All global configuration can be either set as environment variables, or in the `
 
 ```bash
 # Default run script entry point for the main CLI
-# (default: "microswea.run.local")
-MSWEA_DEFAULT_RUN="microswea.run.local"
+# (default: "microsweagent.run.local")
+MSWEA_DEFAULT_RUN="microsweagent.run.local"
 
 # Config path for GitHub issue script
 # (default: package_dir / "config" / "github_issue.yaml")
