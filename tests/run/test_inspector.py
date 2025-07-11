@@ -86,7 +86,7 @@ async def test_trajectory_inspector_basic_navigation(temp_trajectory_files):
     async with app.run_test() as pilot:
         # Should start with first trajectory, first step
         await pilot.pause(0.1)
-        assert "[1/2] simple.traj.json - Step 1/3" in app.title
+        assert "Trajectory 1/2 - simple.traj.json - Step 1/3" in app.title
         content = get_screen_text(app)
         assert "SYSTEM" in content
         assert "You are a helpful assistant" in content
@@ -127,28 +127,28 @@ async def test_trajectory_inspector_trajectory_navigation(temp_trajectory_files)
         await pilot.pause(0.1)
 
         # Should start with first trajectory
-        assert "[1/2] simple.traj.json" in app.title
+        assert "Trajectory 1/2 - simple.traj.json" in app.title
         content = get_screen_text(app)
         assert "You are a helpful assistant" in content
 
         # Navigate to next trajectory
         await pilot.press("L")
-        assert "[2/2] swebench.traj.json" in app.title
+        assert "Trajectory 2/2 - swebench.traj.json" in app.title
         await pilot.pause(0.1)
         content = get_screen_text(app)
         assert "You are a helpful assistant" in content
 
         # Navigate back to previous trajectory
         await pilot.press("H")
-        assert "[1/2] simple.traj.json" in app.title
+        assert "Trajectory 1/2 - simple.traj.json" in app.title
 
         # Try to navigate beyond bounds
         await pilot.press("H")  # Should stay at first
-        assert "[1/2] simple.traj.json" in app.title
+        assert "Trajectory 1/2 - simple.traj.json" in app.title
 
         await pilot.press("L")  # Go to second
         await pilot.press("L")  # Try to go beyond
-        assert "[2/2] swebench.traj.json" in app.title  # Should stay at last
+        assert "Trajectory 2/2 - swebench.traj.json" in app.title  # Should stay at last
 
 
 @pytest.mark.slow
@@ -163,7 +163,7 @@ async def test_trajectory_inspector_swebench_format(temp_trajectory_files):
         await pilot.press("L")
         await pilot.pause(0.1)
 
-        assert "[2/2] swebench.traj.json" in app.title
+        assert "Trajectory 2/2 - swebench.traj.json" in app.title
         assert "Step 1/3" in app.title
 
         # Check that list content is properly rendered - step 1 should have the initial user message

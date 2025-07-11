@@ -33,7 +33,6 @@ class TrajectoryInspector(App):
     ]
 
     def __init__(self, trajectory_files: list[Path]):
-        # Load CSS from the same file as interactive_textual.py
         css_path = os.environ.get(
             "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent / "config" / "local2.tcss")
         )
@@ -140,7 +139,6 @@ class TrajectoryInspector(App):
             self.title = "Trajectory Inspector - No Data"
             return
 
-        # Display current step - matching interactive_textual.py structure exactly
         for message in self.steps[self.i_step]:
             if isinstance(message["content"], list):
                 content_str = "\n".join([item["text"] for item in message["content"]])
@@ -152,14 +150,14 @@ class TrajectoryInspector(App):
             message_container.mount(Static(role.upper(), classes="message-header"))
             message_container.mount(Static(Text(content_str, no_wrap=False), classes="message-content"))
 
-        # Update title with current state
         self.title = (
-            f"[{self.i_trajectory + 1}/{self.n_trajectories}] "
+            f"Trajectory {self.i_trajectory + 1}/{self.n_trajectories} - "
             f"{self.current_trajectory_name} - "
             f"Step {self.i_step + 1}/{self.n_steps}"
         )
 
-    # Navigation actions
+    # --- Navigation actions ---
+
     def action_next_step(self) -> None:
         self.i_step += 1
 
