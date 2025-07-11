@@ -97,7 +97,9 @@ def remove_from_preds_file(output_path: Path, instance_id: str):
             output_path.write_text(json.dumps(output_data, indent=2))
 
 
-def process_instance(instance: dict, output_dir: Path, model_name: str | None, progress_manager=None) -> dict:
+def process_instance(
+    instance: dict, output_dir: Path, model_name: str | None, config_path: Path, progress_manager=None
+) -> dict:
     """Process a single SWEBench instance."""
     instance_id = instance["instance_id"]
     instance_dir = output_dir / instance_id
@@ -106,7 +108,7 @@ def process_instance(instance: dict, output_dir: Path, model_name: str | None, p
     (instance_dir / f"{instance_id}.traj.json").unlink(missing_ok=True)
     task = instance["problem_statement"]
 
-    config = yaml.safe_load((package_dir / "config" / "extra" / "swebench.yaml").read_text())
+    config = yaml.safe_load(config_path.read_text())
     image_name = get_swebench_docker_image_name(instance)
 
     model = get_model(model_name, config=config.get("model", {}))
@@ -142,19 +144,21 @@ def process_instance(instance: dict, output_dir: Path, model_name: str | None, p
     return data
 
 
-def process_instances_single_threaded(instances: list[dict], output_path: Path, model: str | None):
+def process_instances_single_threaded(instances: list[dict], output_path: Path, model: str | None, config: Path):
     """Process SWEBench instances sequentially."""
     for i, instance in enumerate(instances):
         instance_id = instance["instance_id"]
 
         print(f"Running instance {i + 1}/{len(instances)}: {instance_id}")
-        process_instance(instance, output_path, model)
+        process_instance(instance, output_path, model, config)
         print(
             f"Instance {instance_id} completed - completed {i + 1}/{len(instances)}, ${microsweagent.models.GLOBAL_MODEL_STATS.cost:.4f}"
         )
 
 
-def process_instances_multithreaded(instances: list[dict], output_path: Path, n_workers: int, model: str | None):
+def process_instances_multithreaded(
+    instances: list[dict], output_path: Path, n_workers: int, model: str | None, config: Path
+):
     """Process SWEBench instances in parallel with progress tracking."""
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
@@ -164,7 +168,7 @@ def process_instances_multithreaded(instances: list[dict], output_path: Path, n_
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=n_workers) as executor:
             futures = [
-                executor.submit(process_instance, instance, output_path, model, progress_manager)
+                executor.submit(process_instance, instance, output_path, model, config, progress_manager)
                 for instance in instances
             ]
             concurrent.futures.wait(futures)
@@ -201,6 +205,9 @@ def main(
     workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing"),
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances"),
+    config: Path = typer.Option(
+        package_dir / "config" / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
+    ),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""
     try:
@@ -222,9 +229,9 @@ def main(
     print(f"Results will be saved to {output_path}")
 
     if workers == 1:
-        process_instances_single_threaded(instances, output_path, model)
+        process_instances_single_threaded(instances, output_path, model, config)
     else:
-        process_instances_multithreaded(instances, output_path, workers, model)
+        process_instances_multithreaded(instances, output_path, workers, model, config)
 
 
 if __name__ == "__main__":

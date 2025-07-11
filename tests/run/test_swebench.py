@@ -31,6 +31,7 @@ def test_swebench_end_to_end(github_test_data, tmp_path, workers):
             output=str(tmp_path),
             workers=workers,
             filter_spec="swe-agent__test-repo-1",
+            config=package_dir / "config" / "extra" / "swebench.yaml",
         )
 
     traj_file_path = package_dir.parent.parent / "tests" / "test_data" / "github_issue.traj.json"
@@ -317,6 +318,7 @@ def test_redo_existing_false_skips_existing(github_test_data, tmp_path):
             workers=1,
             filter_spec="swe-agent__test-repo-1",
             redo_existing=False,
+            config=package_dir / "config" / "extra" / "swebench.yaml",
         )
 
     # Should still have the original result
@@ -351,6 +353,7 @@ def test_redo_existing_true_overwrites_existing(github_test_data, tmp_path):
             workers=1,
             filter_spec="swe-agent__test-repo-1",
             redo_existing=True,
+            config=package_dir / "config" / "extra" / "swebench.yaml",
         )
 
     # Should have new result from deterministic model
@@ -392,6 +395,7 @@ def test_exception_handling_in_agent_run(tmp_path, workers):
             output=str(tmp_path),
             workers=workers,
             filter_spec="swe-agent__test-repo-1",
+            config=package_dir / "config" / "extra" / "swebench.yaml",
         )
 
     # Check that prediction file contains exception information
@@ -428,6 +432,7 @@ def test_different_exception_types(tmp_path, workers):
             output=str(tmp_path),
             workers=workers,
             filter_spec="swe-agent__test-repo-1",
+            config=package_dir / "config" / "extra" / "swebench.yaml",
         )
 
     # Check trajectory file for correct exception type
@@ -456,6 +461,7 @@ def test_exception_handling_with_progress_manager(tmp_path):
                 output=str(tmp_path),
                 workers=2,  # Use multithreaded to test progress manager
                 filter_spec="swe-agent__test-repo-1",
+                config=package_dir / "config" / "extra" / "swebench.yaml",
             )
 
             # Verify progress manager methods were called
