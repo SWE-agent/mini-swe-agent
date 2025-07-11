@@ -66,7 +66,7 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
         return input_model_name
     if from_env := os.getenv("MSWEA_MODEL_NAME"):
         return from_env
-    if from_config := config.get("model", {}).get("model_name"):
+    if from_config := config.get("model_name"):
         return from_config
     return prompt_for_model_name()
 

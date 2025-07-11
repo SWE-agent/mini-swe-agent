@@ -6,21 +6,24 @@ from microsweagent.models.test_models import DeterministicModel
 
 
 class TestGetModelName:
+    # Common config used across tests - model_name should be direct, not nested under "model"
+    CONFIG_WITH_MODEL_NAME = {"model_name": "config-model"}
+
     def test_input_model_name_takes_precedence(self):
         """Test that explicit input_model_name overrides all other sources."""
         with patch.dict(os.environ, {"MSWEA_MODEL_NAME": "env-model"}):
-            assert get_model_name("input-model", {"model": {"model_name": "config-model"}}) == "input-model"
+            assert get_model_name("input-model", self.CONFIG_WITH_MODEL_NAME) == "input-model"
 
     def test_env_var_fallback(self):
         """Test that environment variable is used when no input provided."""
         with patch.dict(os.environ, {"MSWEA_MODEL_NAME": "env-model"}):
-            assert get_model_name(None, {"model": {"model_name": "config-model"}}) == "env-model"
+            assert get_model_name(None, self.CONFIG_WITH_MODEL_NAME) == "env-model"
 
     def test_config_fallback(self):
         """Test that config model name is used when input and env are missing."""
         with patch.dict(os.environ, {}, clear=True):
             with patch("microsweagent.models.prompt_for_model_name", return_value="prompted-model"):
-                assert get_model_name(None, {"model": {"model_name": "config-model"}}) == "config-model"
+                assert get_model_name(None, self.CONFIG_WITH_MODEL_NAME) == "config-model"
 
     def test_prompt_fallback(self):
         """Test that prompt is used when all other sources are missing."""
