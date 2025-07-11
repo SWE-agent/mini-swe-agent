@@ -6,6 +6,7 @@ import re
 import threading
 import time
 from pathlib import Path
+from unittest.mock import Mock
 
 import typer
 import yaml
@@ -37,17 +38,26 @@ _OUTPUT_FILE_LOCK = threading.Lock()
 class ProgressTrackingAgent(DefaultAgent):
     """Simple wrapper around DefaultAgent that provides progress updates."""
 
-    def __init__(self, *args, progress_manager=None, instance_id=None, **kwargs):
+    def __init__(self, *args, progress_manager: RunBatchProgressManager | None = None, instance_id: str = "", **kwargs):
         super().__init__(*args, **kwargs)
-        self.progress_manager = progress_manager
+        self.progress_manager: RunBatchProgressManager | Mock = progress_manager or Mock()
         self.instance_id = instance_id
+
+    def run(self, task: str) -> tuple[str, str]:
+        self.progress_manager.on_instance_start(self.instance_id)
+        try:
+            exit_status, result = super().run(task)
+        except Exception as e:
+            self.progress_manager.on_uncaught_exception(self.instance_id, e)
+            return type(e).__name__, str(e)
+        self.progress_manager.on_instance_end(self.instance_id, exit_status)
+        return exit_status, result
 
     def step(self) -> str:
         """Override step to provide progress updates."""
-        if self.progress_manager and self.instance_id:
-            self.progress_manager.update_instance_status(
-                self.instance_id, f"Step {self.model.n_calls + 1} (${self.model.cost:.3f})"
-            )
+        self.progress_manager.update_instance_status(
+            self.instance_id, f"Step {self.model.n_calls + 1} (${self.model.cost:.2f})"
+        )
         return super().step()
 
 
@@ -134,24 +144,18 @@ def process_instance(instance: dict, output_dir: Path, model_name: str | None, p
 
 def process_instances_single_threaded(instances: list[dict], output_path: Path, model: str | None):
     """Process SWEBench instances sequentially."""
-    results = []
-
     for i, instance in enumerate(instances):
         instance_id = instance["instance_id"]
 
         print(f"Running instance {i + 1}/{len(instances)}: {instance_id}")
-        result = process_instance(instance, output_path, model)
+        process_instance(instance, output_path, model)
         print(
             f"Instance {instance_id} completed - completed {i + 1}/{len(instances)}, ${microsweagent.models.GLOBAL_MODEL_STATS.cost:.4f}"
         )
-        results.append(result)
-
-    return results
 
 
 def process_instances_multithreaded(instances: list[dict], output_path: Path, n_workers: int, model: str | None):
-    """Process SWEBench instances in parallel."""
-    results = []
+    """Process SWEBench instances in parallel with progress tracking."""
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
@@ -159,25 +163,11 @@ def process_instances_multithreaded(instances: list[dict], output_path: Path, n_
 
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=n_workers) as executor:
-            instance_futures = {}
-            for instance in instances:
-                instance_id = instance["instance_id"]
-                progress_manager.on_instance_start(instance_id)
-                future = executor.submit(process_instance, instance, output_path, model, progress_manager)
-                instance_futures[future] = instance_id
-
-            for future in concurrent.futures.as_completed(instance_futures):
-                instance_id = instance_futures[future]
-                try:
-                    result = future.result()
-                    results.append(result)
-                    exit_status = result["info"]["exit_status"]
-                    progress_manager.on_instance_end(instance_id, exit_status)
-                except Exception as e:
-                    progress_manager.on_uncaught_exception(instance_id, e)
-                    raise
-
-    return results
+            futures = [
+                executor.submit(process_instance, instance, output_path, model, progress_manager)
+                for instance in instances
+            ]
+            concurrent.futures.wait(futures)
 
 
 def filter_instances(

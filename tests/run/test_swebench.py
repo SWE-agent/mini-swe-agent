@@ -361,3 +361,109 @@ def test_redo_existing_true_overwrites_existing(github_test_data, tmp_path):
     result = json.loads(preds_file.read_text())
     assert result["swe-agent__test-repo-1"]["model_patch"] == expected_result
     assert result["swe-agent__test-repo-1"]["model_name_or_path"] == "deterministic"
+
+
+class ExceptionModel:
+    """Test model that raises exceptions during processing."""
+
+    def __init__(self, exception_type: type[Exception] = RuntimeError, exception_message: str = "Test exception"):
+        self.exception_type = exception_type
+        self.exception_message = exception_message
+        self.cost = 0.0
+        self.n_calls = 0
+        self.config = type("Config", (), {"model_name": "exception_model"})()
+
+    def query(self, *args, **kwargs):
+        self.n_calls += 1
+        raise self.exception_type(self.exception_message)
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize("workers", [1, 2])
+def test_exception_handling_in_agent_run(tmp_path, workers):
+    """Test that exceptions during agent.run() are properly handled and recorded"""
+    with patch("microsweagent.run.extra.swebench.get_model") as mock_get_model:
+        mock_get_model.return_value = ExceptionModel(RuntimeError, "Agent processing failed")
+
+        main(
+            subset="_test",
+            split="test",
+            slice_spec="0:1",
+            output=str(tmp_path),
+            workers=workers,
+            filter_spec="swe-agent__test-repo-1",
+        )
+
+    # Check that prediction file contains exception information
+    preds_file = tmp_path / "preds.json"
+    assert preds_file.exists()
+
+    result = json.loads(preds_file.read_text())
+    instance_id = "swe-agent__test-repo-1"
+    assert instance_id in result
+    assert result[instance_id]["model_patch"] == "Agent processing failed"
+    assert result[instance_id]["model_name_or_path"] == "exception_model"
+
+    # Check that trajectory file contains exception information
+    traj_file = tmp_path / instance_id / f"{instance_id}.traj.json"
+    assert traj_file.exists()
+
+    traj_data = json.loads(traj_file.read_text())
+    assert traj_data["instance_id"] == instance_id
+    assert traj_data["info"]["exit_status"] == "RuntimeError"
+    assert traj_data["info"]["submission"] == "Agent processing failed"
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize("workers", [1, 2])
+def test_different_exception_types(tmp_path, workers):
+    """Test that different exception types are properly recorded"""
+    with patch("microsweagent.run.extra.swebench.get_model") as mock_get_model:
+        mock_get_model.return_value = ExceptionModel(ValueError, "Invalid input provided")
+
+        main(
+            subset="_test",
+            split="test",
+            slice_spec="0:1",
+            output=str(tmp_path),
+            workers=workers,
+            filter_spec="swe-agent__test-repo-1",
+        )
+
+    # Check trajectory file for correct exception type
+    instance_id = "swe-agent__test-repo-1"
+    traj_file = tmp_path / instance_id / f"{instance_id}.traj.json"
+    traj_data = json.loads(traj_file.read_text())
+
+    assert traj_data["info"]["exit_status"] == "ValueError"
+    assert traj_data["info"]["submission"] == "Invalid input provided"
+
+
+@pytest.mark.slow
+def test_exception_handling_with_progress_manager(tmp_path):
+    """Test that progress manager receives exception notifications in multithreaded mode"""
+    with patch("microsweagent.run.extra.swebench.get_model") as mock_get_model:
+        mock_get_model.return_value = ExceptionModel(ConnectionError, "Network timeout")
+
+        with patch("microsweagent.run.extra.swebench.RunBatchProgressManager") as mock_progress_class:
+            mock_progress_manager = mock_progress_class.return_value
+            mock_progress_manager.render_group = None  # For Live context manager
+
+            main(
+                subset="_test",
+                split="test",
+                slice_spec="0:1",
+                output=str(tmp_path),
+                workers=2,  # Use multithreaded to test progress manager
+                filter_spec="swe-agent__test-repo-1",
+            )
+
+            # Verify progress manager methods were called
+            mock_progress_manager.on_instance_start.assert_called_once_with("swe-agent__test-repo-1")
+            mock_progress_manager.on_uncaught_exception.assert_called_once()
+
+            # Check the exception passed to on_uncaught_exception
+            call_args = mock_progress_manager.on_uncaught_exception.call_args
+            assert call_args[0][0] == "swe-agent__test-repo-1"
+            assert isinstance(call_args[0][1], ConnectionError)
+            assert str(call_args[0][1]) == "Network timeout"
