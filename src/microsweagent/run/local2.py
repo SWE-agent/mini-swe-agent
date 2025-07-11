@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import json
 import os
 from pathlib import Path
 
@@ -11,6 +10,7 @@ from microsweagent.agents.interactive_textual import AgentApp
 from microsweagent.environments.local import LocalEnvironment
 from microsweagent.models import get_model
 from microsweagent.run.local import get_multiline_task
+from microsweagent.run.utils.save import save_traj
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL2_CONFIG_PATH", package_dir / "config" / "local.yaml"))
 app = typer.Typer()
@@ -53,11 +53,7 @@ def main(
     except KeyboardInterrupt:
         typer.echo("\nKeyboardInterrupt -- goodbye")
     finally:
-        # Save results
-        if agent_app.agent.messages:
-            Path("traj.json").write_text(json.dumps(agent_app.agent.messages, indent=2))
-            typer.echo(f"Total cost: ${agent_app.agent.model.cost:.2f}")
-            typer.echo(f"Total steps: {agent_app.agent.model.n_calls}")
+        save_traj(agent_app.agent, Path("traj.json"), exit_status=agent_app.exit_status, result=agent_app.result)
 
 
 def cli() -> None:

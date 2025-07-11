@@ -97,6 +97,9 @@ class ConfirmationPromptContainer(Container):
         self._confirmation_event = threading.Event()
         self._confirmation_result: str | None = None
 
+        self.exit_status: str | None = None
+        self.result: str | None = None
+
     def compose(self) -> ComposeResult:
         yield Static(
             "Press [bold]ENTER[/bold] to confirm action or [bold]BACKSPACE[/bold] to reject (or [bold]y[/bold] to toggle YOLO mode)",
@@ -236,6 +239,8 @@ class AgentApp(App):
     def on_agent_finished(self, exit_status: str, result: str):
         self.agent_state = "STOPPED"
         self.notify(f"Agent finished with status: {exit_status}")
+        self.exit_status = exit_status
+        self.result = result
         self.update_content()
 
     # --- UI update logic ---

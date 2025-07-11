@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import json
 import os
 from pathlib import Path
 
@@ -12,6 +11,7 @@ from microsweagent import package_dir
 from microsweagent.agents.interactive import InteractiveAgent
 from microsweagent.environments.docker import DockerEnvironment
 from microsweagent.models import get_model
+from microsweagent.run.utils.save import save_traj
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", package_dir / "config" / "github_issue.yaml"))
 console = Console(highlight=False)
@@ -64,19 +64,13 @@ def main(
 
     agent.env.execute(f"git clone {repo_url} /testbed", cwd="/")
 
+    exit_status, result = None, None
     try:
         exit_status, result = agent.run(task)
     except KeyboardInterrupt:
         console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
-    else:
-        console.print(f"\nAgent finished with {exit_status}: {result}")
-        Path("patch.txt").write_text(result)
     finally:
-        Path("traj.json").write_text(
-            json.dumps(agent.messages, indent=2),
-        )
-        console.print(f"Total cost: [bold green]${agent.model.cost:.4f}[/bold green]")
-        console.print(f"Total steps: [bold green]{agent.model.n_calls}[/bold green]")
+        save_traj(agent, Path("traj.json"), exit_status=exit_status, result=result)
     return agent
 
 

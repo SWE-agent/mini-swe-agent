@@ -27,24 +27,28 @@ def test_cli_prompts_for_model_when_no_env_vars(run_module, agent_patch_path, tm
         patch("microsweagent.models.get_model_class") as mock_get_class,
     ):
         mock_model_instance = Mock()
-        mock_model_instance.cost = 0.05
-        mock_model_instance.n_calls = 3
+        mock_model_instance.configure_mock(cost=0.05, n_calls=3)
         mock_get_class.return_value = lambda **kwargs: mock_model_instance
 
         if run_module == "microsweagent.run.local":
             mock_agent = Mock()
             mock_agent.run.return_value = ("success", "patch content")
             mock_agent.messages = [{"role": "system", "content": "test"}]
-            mock_agent.model.cost = 0.05
-            mock_agent.model.n_calls = 3
+            # Create a proper mock model with serializable attributes
+            mock_model = Mock()
+            mock_model.configure_mock(cost=0.05, n_calls=3)
+            mock_agent.model = mock_model
             mock_agent_class.return_value = mock_agent
         else:
             mock_agent_app = Mock()
             mock_agent = Mock()
             mock_agent.messages = [{"role": "system", "content": "test"}]
-            mock_agent.model.cost = 0.05
-            mock_agent.model.n_calls = 3
+            # Create a proper mock model with serializable attributes
+            mock_model = Mock()
+            mock_model.configure_mock(cost=0.05, n_calls=3)
+            mock_agent.model = mock_model
             mock_agent_app.agent = mock_agent
+            mock_agent_app.configure_mock(exit_status=None, result=None)
             mock_agent_class.return_value = mock_agent_app
 
         result = runner.invoke(module.app, ["--config", str(config_path), "--problem", "Test problem", "--yolo"])
@@ -84,24 +88,28 @@ def test_cli_multiline_input_flow(run_module, agent_patch_path, tmp_path):
         patch(multiline_patch_target, return_value=multiline_input.strip()) as mock_multiline,
     ):
         mock_model_instance = Mock()
-        mock_model_instance.cost = 0.05
-        mock_model_instance.n_calls = 3
+        mock_model_instance.configure_mock(cost=0.05, n_calls=3)
         mock_get_class.return_value = lambda **kwargs: mock_model_instance
 
         if run_module == "microsweagent.run.local":
             mock_agent = Mock()
             mock_agent.run.return_value = ("success", "patch content")
             mock_agent.messages = [{"role": "system", "content": "test"}]
-            mock_agent.model.cost = 0.05
-            mock_agent.model.n_calls = 3
+            # Create a proper mock model with serializable attributes
+            mock_model = Mock()
+            mock_model.configure_mock(cost=0.05, n_calls=3)
+            mock_agent.model = mock_model
             mock_agent_class.return_value = mock_agent
         else:
             mock_agent_app = Mock()
             mock_agent = Mock()
             mock_agent.messages = [{"role": "system", "content": "test"}]
-            mock_agent.model.cost = 0.05
-            mock_agent.model.n_calls = 3
+            # Create a proper mock model with serializable attributes
+            mock_model = Mock()
+            mock_model.configure_mock(cost=0.05, n_calls=3)
+            mock_agent.model = mock_model
             mock_agent_app.agent = mock_agent
+            mock_agent_app.configure_mock(exit_status=None, result=None)
             mock_agent_class.return_value = mock_agent_app
 
         result = runner.invoke(module.app, ["--config", str(config_path), "--yolo"])
@@ -141,24 +149,28 @@ model:
         patch("microsweagent.models.get_model_class") as mock_get_class,
     ):
         mock_model_instance = Mock()
-        mock_model_instance.cost = 0.10
-        mock_model_instance.n_calls = 5
+        mock_model_instance.configure_mock(cost=0.10, n_calls=5)
         mock_get_class.return_value = lambda **kwargs: mock_model_instance
 
         if run_module == "microsweagent.run.local":
             mock_agent = Mock()
             mock_agent.run.return_value = ("success", "patch content")
             mock_agent.messages = [{"role": "system", "content": "test"}]
-            mock_agent.model.cost = 0.10
-            mock_agent.model.n_calls = 5
+            # Create a proper mock model with serializable attributes
+            mock_model = Mock()
+            mock_model.configure_mock(cost=0.10, n_calls=5)
+            mock_agent.model = mock_model
             mock_agent_class.return_value = mock_agent
         else:
             mock_agent_app = Mock()
             mock_agent = Mock()
             mock_agent.messages = [{"role": "system", "content": "test"}]
-            mock_agent.model.cost = 0.10
-            mock_agent.model.n_calls = 5
+            # Create a proper mock model with serializable attributes
+            mock_model = Mock()
+            mock_model.configure_mock(cost=0.10, n_calls=5)
+            mock_agent.model = mock_model
             mock_agent_app.agent = mock_agent
+            mock_agent_app.configure_mock(exit_status=None, result=None)
             mock_agent_class.return_value = mock_agent_app
 
         result = runner.invoke(module.app, ["--config", str(config_path), "--problem", "Complex task", "--yolo"])
@@ -206,24 +218,28 @@ def test_model_selection_precedence(run_module, agent_patch_path, tmp_path):
         patch("microsweagent.models.get_model_class") as mock_get_class,
     ):
         mock_model_instance = Mock()
-        mock_model_instance.cost = 0.02
-        mock_model_instance.n_calls = 1
+        mock_model_instance.configure_mock(cost=0.02, n_calls=1)
         mock_get_class.return_value = lambda **kwargs: mock_model_instance
 
         if run_module == "microsweagent.run.local":
             mock_agent = Mock()
             mock_agent.run.return_value = ("success", "patch content")
             mock_agent.messages = [{"role": "system", "content": "test"}]
-            mock_agent.model.cost = 0.02
-            mock_agent.model.n_calls = 1
+            # Create a proper mock model with serializable attributes
+            mock_model = Mock()
+            mock_model.configure_mock(cost=0.02, n_calls=1)
+            mock_agent.model = mock_model
             mock_agent_class.return_value = mock_agent
         else:
             mock_agent_app = Mock()
             mock_agent = Mock()
             mock_agent.messages = [{"role": "system", "content": "test"}]
-            mock_agent.model.cost = 0.02
-            mock_agent.model.n_calls = 1
+            # Create a proper mock model with serializable attributes
+            mock_model = Mock()
+            mock_model.configure_mock(cost=0.02, n_calls=1)
+            mock_agent.model = mock_model
             mock_agent_app.agent = mock_agent
+            mock_agent_app.configure_mock(exit_status=None, result=None)
             mock_agent_class.return_value = mock_agent_app
 
         result = runner.invoke(
@@ -231,4 +247,9 @@ def test_model_selection_precedence(run_module, agent_patch_path, tmp_path):
         )
 
         assert result.exit_code == 0
+
+        # When model is explicitly provided, no prompting should occur
         mock_prompt.assert_not_called()
+
+        # Verify the model was passed correctly
+        mock_get_class.assert_called_once_with("gpt-4")

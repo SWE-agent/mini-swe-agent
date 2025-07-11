@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import json
 import os
 from pathlib import Path
 
@@ -11,6 +10,7 @@ from microsweagent import package_dir
 from microsweagent.agents.interactive import InteractiveAgent
 from microsweagent.environments.local import LocalEnvironment
 from microsweagent.models import get_model
+from microsweagent.run.utils.save import save_traj
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL_CONFIG_PATH", package_dir / "config" / "local.yaml"))
 console = Console(highlight=False)
@@ -44,6 +44,7 @@ def main(
     ),
     problem: str | None = typer.Option(None, "-p", "--problem", help="Problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
+    output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
 ) -> InteractiveAgent:
     """Run micro-SWE-agent right here, right now."""
     _config = yaml.safe_load(Path(config).read_text())
@@ -59,18 +60,14 @@ def main(
         **(_config.get("agent", {}) | {"confirm_actions": not yolo}),
     )
 
+    exit_status, result = None, None
     try:
         exit_status, result = agent.run(problem)
     except KeyboardInterrupt:
         console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
-    else:
-        Path("patch.txt").write_text(result)
     finally:
-        Path("traj.json").write_text(
-            json.dumps(agent.messages, indent=2),
-        )
-        console.print(f"Total cost: [bold green]${agent.model.cost:.2f}[/bold green]")
-        console.print(f"Total steps: [bold green]{agent.model.n_calls}[/bold green]")
+        if output:
+            save_traj(agent, output, exit_status=exit_status, result=result)
     return agent
 
 

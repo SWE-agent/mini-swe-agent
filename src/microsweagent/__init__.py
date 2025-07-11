@@ -43,17 +43,23 @@ class Model(Protocol):
     cost: float
     n_calls: int
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> str:
-        """Query the model with a list of messages and return the response."""
-        ...
+    def query(self, messages: list[dict[str, str]], **kwargs) -> str: ...
 
 
 class Environment(Protocol):
     """Protocol for execution environments."""
 
-    def execute(self, command: str, cwd: str = "") -> dict[str, str]:
-        """Execute a command in the environment and return the raw output."""
-        ...
+    def execute(self, command: str, cwd: str = "") -> dict[str, str]: ...
 
 
-__all__ = ["Model", "Environment", "package_dir", "__version__", "global_config_file"]
+class Agent(Protocol):
+    """Protocol for agents."""
+
+    model: Model
+    env: Environment
+    messages: list[dict[str, str]]
+
+    def run(self, task: str) -> tuple[str, str]: ...
+
+
+__all__ = ["Agent", "Model", "Environment", "package_dir", "__version__", "global_config_file"]
