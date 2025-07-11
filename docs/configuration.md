@@ -42,7 +42,19 @@ MSWEA_LOCAL_CONFIG_PATH="/path/to/your/own/config"
 # Default model name
 # (default: not set)
 MSWEA_MODEL_NAME="claude-sonnet-4-20250514"
+
+# Default API key
+# (default: not set)
+MSWEA_MODEL_API_KEY="sk-..."
 ```
 
-In addition, if you are prompted for a model name & API key, it will be stored in the `.env` file
-as `API_KEY_<MODEL_NAME>`.
+### Special Case: Anthropic Models
+
+For Anthropic models, you can also use `ANTHROPIC_API_KEYS` for advanced parallel execution:
+
+```bash
+# Multiple Anthropic keys for parallel execution (separated by "::")
+ANTHROPIC_API_KEYS="key1::key2::key3"
+```
+
+This allows different threads to use different API keys to avoid prompt caching conflicts when running multiple agents in parallel.

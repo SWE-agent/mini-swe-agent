@@ -51,10 +51,12 @@ def get_model(input_model_name: str | None = None, config: dict | None = None) -
         config = {}
     config = copy.deepcopy(config)
     config["model_name"] = resolved_model_name
+
+    # API key resolution (from env -> config -> None)
     if "model_kwargs" not in config:
         config["model_kwargs"] = {}
-    if not config.get("model_kwargs", {}).get("api_key"):
-        config["model_kwargs"]["api_key"] = os.getenv(f"API_KEY_{resolved_model_name.upper().replace('-', '_')}") or ""
+    if from_env := os.getenv("MSWEA_MODEL_API_KEY"):
+        config["model_kwargs"]["api_key"] = from_env
     return get_model_class(resolved_model_name)(**config)
 
 
@@ -92,11 +94,4 @@ def prompt_for_model_name() -> str:
     )
     choice = console.input(msg)
     set_key(global_config_file, "MSWEA_MODEL_NAME", choice)
-    if api_key := console.input(
-        f"\n[bold yellow]Set your language model API key[/bold yellow]\n"
-        f"[dim]Ignore this, if you have already set the key as an environment variable.[/dim]\n"
-        f"[dim]The key will be stored in [green]'{global_config_file}'[/green][/dim]\n"
-        f"[bold yellow]Key (optional) > [/bold yellow]"
-    ):
-        set_key(global_config_file, f"API_KEY_{choice.upper().replace('-', '_')}", api_key)
     return choice

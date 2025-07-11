@@ -20,7 +20,7 @@ def main(
         "-m",
         "--model",
         help="Model name (defaults to MSWEA_MODEL_NAME env var)",
-        prompt="What model do you want to use? (assuming that you've set the API key as the environment variable already)",
+        prompt="What model do you want to use?",
     ),
 ) -> DefaultAgent:
     agent = DefaultAgent(

@@ -87,3 +87,60 @@ class TestGetModel:
             assert isinstance(model, DeterministicModel)
             assert model.config.outputs == ["hello"]
             assert model.config.model_name == "test-model"
+
+    def test_env_var_overrides_config_api_key(self):
+        """Test that MSWEA_MODEL_API_KEY overrides config api_key."""
+        with patch.dict(os.environ, {"MSWEA_MODEL_API_KEY": "env-key"}):
+            with patch("microsweagent.models.get_model_class") as mock_get_class:
+                mock_get_class.return_value = lambda **kwargs: DeterministicModel(
+                    outputs=kwargs.get("outputs", ["test"]),
+                    model_name=kwargs.get("model_name", "test"),
+                )
+
+                config = {"model_kwargs": {"api_key": "config-key"}, "outputs": ["test"]}
+                model = get_model("test-model", config)
+
+                call_kwargs = mock_get_class.call_args[1]
+                assert call_kwargs["model_kwargs"]["api_key"] == "env-key"
+
+    def test_config_api_key_used_when_no_env_var(self):
+        """Test that config api_key is used when env var is not set."""
+        with patch.dict(os.environ, {}, clear=True):
+            with patch("microsweagent.models.get_model_class") as mock_get_class:
+                mock_get_class.return_value = lambda **kwargs: DeterministicModel(
+                    outputs=kwargs.get("outputs", ["test"]),
+                    model_name=kwargs.get("model_name", "test"),
+                )
+
+                config = {"model_kwargs": {"api_key": "config-key"}, "outputs": ["test"]}
+                model = get_model("test-model", config)
+                
+                call_kwargs = mock_get_class.call_args[1]
+                assert call_kwargs["model_kwargs"]["api_key"] == "config-key"
+
+    def test_env_var_sets_api_key_when_no_config_key(self):
+        """Test that MSWEA_MODEL_API_KEY is used when config has no api_key."""
+        with patch.dict(os.environ, {"MSWEA_MODEL_API_KEY": "env-key"}):
+            with patch("microsweagent.models.get_model_class") as mock_get_class:
+                mock_get_class.return_value = lambda **kwargs: DeterministicModel(
+                    outputs=kwargs.get("outputs", ["test"]),
+                    model_name=kwargs.get("model_name", "test"),
+                )
+                config = {"outputs": ["test"]}
+                model = get_model("test-model", config)
+                call_kwargs = mock_get_class.call_args[1]
+                assert call_kwargs["model_kwargs"]["api_key"] == "env-key"
+
+    def test_no_api_key_when_none_provided(self):
+        """Test that no api_key is set when neither env var nor config provide one."""
+        with patch.dict(os.environ, {}, clear=True):
+            with patch("microsweagent.models.get_model_class") as mock_get_class:
+                mock_get_class.return_value = lambda **kwargs: DeterministicModel(
+                    outputs=kwargs.get("outputs", ["test"]),
+                    model_name=kwargs.get("model_name", "test"),
+                )
+                config = {"outputs": ["test"]}
+                model = get_model("test-model", config)
+                call_kwargs = mock_get_class.call_args[1]
+                model_kwargs = call_kwargs.get("model_kwargs", {})
+                assert "api_key" not in model_kwargs
