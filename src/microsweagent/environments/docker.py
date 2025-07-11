@@ -2,6 +2,7 @@ import os
 import shlex
 import subprocess
 import uuid
+from contextlib import suppress
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -88,8 +89,10 @@ class DockerEnvironment:
         """Stop and remove the Docker container."""
         if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set
             print(f"Stopping container {self.container_id} (might take a second)")
-            subprocess.run(["docker", "stop", self.container_id], capture_output=True, check=False)  # type: ignore
-            subprocess.run(["docker", "rm", self.container_id], capture_output=True, check=False)  # type: ignore
+            with suppress(subprocess.TimeoutExpired):
+                subprocess.run(["docker", "stop", self.container_id], capture_output=True, check=False, timeout=30)  # type: ignore
+            with suppress(subprocess.TimeoutExpired):
+                subprocess.run(["docker", "rm", "-f", self.container_id], capture_output=True, check=False, timeout=30)  # type: ignore
 
     def __del__(self):
         """Cleanup container when object is destroyed."""
