@@ -28,6 +28,7 @@ DATASET_MAPPING = {
     "lite": "princeton-nlp/SWE-Bench_Lite",
     "multimodal": "princeton-nlp/SWE-Bench_Multimodal",
     "multilingual": "swe-bench/SWE-Bench_Multilingual",
+    "smith": "SWE-bench/SWE-smith",
     "_test": "klieret/swe-bench-dummy-test-dataset",
 }
 
@@ -210,10 +211,7 @@ def main(
     ),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""
-    try:
-        dataset_path = DATASET_MAPPING[subset]
-    except KeyError:
-        dataset_path = subset
+    dataset_path = DATASET_MAPPING.get(subset, subset)
     print(f"Loading dataset {dataset_path}, split {split}...")
     instances = list(load_dataset(dataset_path, split=split))
 
