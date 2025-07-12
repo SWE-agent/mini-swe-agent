@@ -5,6 +5,7 @@ import random
 import re
 import threading
 import time
+import traceback
 from pathlib import Path
 
 import typer
@@ -100,9 +101,6 @@ def process_instance(
     remove_from_preds_file(output_dir / "preds.json", instance_id)
     (instance_dir / f"{instance_id}.traj.json").unlink(missing_ok=True)
 
-    # Initialize variables that might not be defined if an exception occurs during setup
-    agent = None
-
     image_name = get_swebench_docker_image_name(instance)
     config = yaml.safe_load(config_path.read_text())
     model = get_model(model_name, config=config.get("model", {}))
@@ -111,6 +109,7 @@ def process_instance(
     progress_manager.on_instance_start(instance_id)
     progress_manager.update_instance_status(instance_id, "Pulling/starting docker")
 
+    agent = None
     try:
         env = DockerEnvironment(**(config.get("environment", {}) | {"image": image_name}))
         agent = ProgressTrackingAgent(
@@ -122,20 +121,18 @@ def process_instance(
         )
         exit_status, result = agent.run(task)
     except Exception as e:
-        progress_manager.on_uncaught_exception(instance_id, e)
         exit_status, result = type(e).__name__, str(e)
-    else:
-        progress_manager.on_instance_end(instance_id, exit_status)
+        raise e
+    finally:
+        save_traj(
+            agent,
+            instance_dir / f"{instance_id}.traj.json",
+            exit_status=exit_status,
+            result=result,
+            instance_id=instance_id,
+        )
 
-    save_traj(
-        agent,
-        instance_dir / f"{instance_id}.traj.json",
-        exit_status=exit_status,
-        result=result,
-        instance_id=instance_id,
-    )
-
-    update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
+        update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
 
 
 def filter_instances(
@@ -196,11 +193,20 @@ def main(
 
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
-            futures = [
-                executor.submit(process_instance, instance, output_path, model, config, progress_manager)
+            futures = {
+                executor.submit(process_instance, instance, output_path, model, config, progress_manager): instance[
+                    "instance_id"
+                ]
                 for instance in instances
-            ]
-            concurrent.futures.wait(futures)
+            }
+            for future in concurrent.futures.as_completed(futures):
+                try:
+                    future.result()
+                except Exception as e:
+                    instance_id = futures[future]
+                    print(f"Error in future for instance {instance_id}: {e}")
+                    traceback.print_exc()
+                    progress_manager.on_uncaught_exception(instance_id, e)
 
 
 if __name__ == "__main__":
