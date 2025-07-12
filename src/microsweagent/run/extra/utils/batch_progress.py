@@ -74,7 +74,7 @@ class RunBatchProgressManager:
         """
 
         self._main_task_id = self._main_progress_bar.add_task(
-            "[cyan]Overall Progress", total=num_instances, total_cost="0.000"
+            "[cyan]Overall Progress", total=num_instances, total_cost="0.00"
         )
 
         self.render_group = Group(Table(), self._task_progress_bar, self._main_progress_bar)
