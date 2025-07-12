@@ -191,6 +191,7 @@ def main(
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
+    futures_cancelled = False
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
             futures = {
@@ -202,6 +203,14 @@ def main(
             for future in concurrent.futures.as_completed(futures):
                 try:
                     future.result()
+                except KeyboardInterrupt:
+                    if futures_cancelled:
+                        raise
+                    print("Cancelling all pending jobs. Press ^C again to exit immediately.")
+                    for future in futures:
+                        if not future.running() and not future.done():
+                            future.cancel()
+                    futures_cancelled = True
                 except Exception as e:
                     instance_id = futures[future]
                     print(f"Error in future for instance {instance_id}: {e}")
