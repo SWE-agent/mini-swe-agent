@@ -111,6 +111,7 @@ def process_instance(
     progress_manager.update_instance_status(instance_id, "Pulling/starting docker")
 
     agent = None
+    extra_info = None
     try:
         env = DockerEnvironment(**(config.get("environment", {}) | {"image": image_name}))
         agent = ProgressTrackingAgent(
@@ -123,6 +124,7 @@ def process_instance(
         exit_status, result = agent.run(task)
     except Exception as e:
         exit_status, result = type(e).__name__, str(e)
+        extra_info = {"traceback": traceback.format_exc()}
         raise e
     finally:
         save_traj(
@@ -130,6 +132,7 @@ def process_instance(
             instance_dir / f"{instance_id}.traj.json",
             exit_status=exit_status,
             result=result,
+            extra_info=extra_info,
             instance_id=instance_id,
         )
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
