@@ -51,7 +51,7 @@ def test_cli_prompts_for_model_when_no_env_vars(run_module, agent_patch_path, tm
             mock_agent_app.configure_mock(exit_status=None, result=None)
             mock_agent_class.return_value = mock_agent_app
 
-        result = runner.invoke(module.app, ["--config", str(config_path), "--problem", "Test problem", "--yolo"])
+        result = runner.invoke(module.app, ["--config", str(config_path), "--task", "Test problem", "--yolo"])
 
         assert result.exit_code == 0
         mock_prompt.assert_called_once()
@@ -173,7 +173,7 @@ model:
             mock_agent_app.configure_mock(exit_status=None, result=None)
             mock_agent_class.return_value = mock_agent_app
 
-        result = runner.invoke(module.app, ["--config", str(config_path), "--problem", "Complex task", "--yolo"])
+        result = runner.invoke(module.app, ["--config", str(config_path), "--task", "Complex task", "--yolo"])
 
         assert result.exit_code == 0
 
@@ -243,7 +243,7 @@ def test_model_selection_precedence(run_module, agent_patch_path, tmp_path):
             mock_agent_class.return_value = mock_agent_app
 
         result = runner.invoke(
-            module.app, ["--config", str(config_path), "--model", "gpt-4", "--problem", "Simple task", "--yolo"]
+            module.app, ["--config", str(config_path), "--model", "gpt-4", "--task", "Simple task", "--yolo"]
         )
 
         assert result.exit_code == 0

@@ -18,7 +18,7 @@ app = typer.Typer()
 
 
 def get_multiline_task() -> str:
-    """Get a multiline problem statement from the user."""
+    """Get a multiline task/problem statement from the user."""
     console.print(
         "[bold yellow]What do you want to do?[/bold yellow] (press [bold red]Ctrl+D[/bold red] in a [red]new line[/red] to finish)"
     )
@@ -42,15 +42,15 @@ def main(
         "--model",
         help="Model to use",
     ),
-    problem: str | None = typer.Option(None, "-p", "--problem", help="Problem statement", show_default=False),
+    task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
 ) -> InteractiveAgent:
     """Run micro-SWE-agent right here, right now."""
     _config = yaml.safe_load(Path(config).read_text())
 
-    if not problem:
-        problem = get_multiline_task()
+    if not task:
+        task = get_multiline_task()
 
     mode = "confirm" if not yolo else "yolo"
 
@@ -64,7 +64,7 @@ def main(
 
     exit_status, result = None, None
     try:
-        exit_status, result = agent.run(problem)
+        exit_status, result = agent.run(task)
     except KeyboardInterrupt:
         console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
     finally:

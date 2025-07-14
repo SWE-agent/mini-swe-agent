@@ -25,16 +25,16 @@ def main(
         "--model",
         help="Model to use",
     ),
-    problem: str | None = typer.Option(None, "-p", "--problem", help="Problem statement", show_default=False),
+    task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
 ) -> None:
     """Run micro-SWE-agent with textual interface."""
     _config = yaml.safe_load(Path(config).read_text())
 
-    if not problem:
-        problem = get_multiline_task()
-        if not problem:
-            typer.echo("No problem statement provided.")
+    if not task:
+        task = get_multiline_task()
+        if not task:
+            typer.echo("No task/problem statement provided.")
             raise typer.Exit(1)
 
     if yolo:
@@ -44,7 +44,7 @@ def main(
     agent_app = AgentApp(
         model=get_model(model, _config.get("model", {})),
         env=LocalEnvironment(),
-        task=problem,
+        task=task,
         **_config.get("agent", {}),
     )
 

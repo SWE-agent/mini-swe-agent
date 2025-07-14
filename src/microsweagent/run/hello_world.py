@@ -14,7 +14,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
-    problem: str = typer.Option(..., "-p", "--problem", help="Problem statement", show_default=False, prompt=True),
+    task: str = typer.Option(..., "-t", "--task", help="Task/problem statement", show_default=False, prompt=True),
     model_name: str = typer.Option(
         os.getenv("MSWEA_MODEL_NAME"),
         "-m",
@@ -28,7 +28,7 @@ def main(
         LocalEnvironment(),
         **yaml.safe_load(Path(package_dir / "config" / "default.yaml").read_text())["agent"],
     )
-    agent.run(problem)
+    agent.run(task)
     return agent
 
 

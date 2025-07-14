@@ -16,7 +16,7 @@ def test_run_hello_world_end_to_end(local_test_data):
         patch("os.environ", {"MSWEA_MODEL_NAME": "tardis"}),
     ):
         mock_model_class.return_value = DeterministicModel(outputs=model_responses)
-        agent = main(problem="Blah blah blah")
+        agent = main(task="Blah blah blah")
 
     assert agent is not None
     messages = agent.messages

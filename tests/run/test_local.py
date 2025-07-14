@@ -13,7 +13,7 @@ def test_local_end_to_end(local_test_data):
 
     with patch("microsweagent.models.litellm_model.LitellmModel") as mock_model_class:
         mock_model_class.return_value = DeterministicModel(outputs=model_responses)
-        agent = main(model="tardis", config=DEFAULT_CONFIG, yolo=True, problem="Blah blah blah", output=None)  # type: ignore
+        agent = main(model="tardis", config=DEFAULT_CONFIG, yolo=True, task="Blah blah blah", output=None)  # type: ignore
 
     assert agent is not None
     messages = agent.messages
