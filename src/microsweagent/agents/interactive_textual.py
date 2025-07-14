@@ -97,9 +97,6 @@ class ConfirmationPromptContainer(Container):
         self._confirmation_event = threading.Event()
         self._confirmation_result: str | None = None
 
-        self.exit_status: str | None = None
-        self.result: str | None = None
-
     def compose(self) -> ComposeResult:
         yield Static(
             "Press [bold]ENTER[/bold] to confirm action or [bold]BACKSPACE[/bold] to reject (or [bold]y[/bold] to toggle YOLO mode)",
@@ -187,6 +184,8 @@ class AgentApp(App):
         self.log_handler = AddLogEmitCallback(lambda record: self.call_from_thread(self.on_log_message_emitted, record))
         logging.getLogger().addHandler(self.log_handler)
         self._spinner = Spinner("dots")
+        self.exit_status: str | None = None
+        self.result: str | None = None
 
     # --- Basics ---
 
