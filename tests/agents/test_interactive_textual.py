@@ -44,7 +44,7 @@ async def test_everything_integration_test():
         ),
         env=LocalEnvironment(),
         task="What's up?",
-        confirm_actions=True,
+        mode="confirm",
         cost_limit=10.0,
     )
     async with app.run_test() as pilot:
@@ -88,9 +88,9 @@ async def test_everything_integration_test():
         assert "Step 4/4" in app.title
         assert "echo '3'" in get_screen_text(app)
         # Enter yolo mode
-        assert pilot.app.agent.config.confirm_actions is True  # type: ignore[attr-defined]
+        assert pilot.app.agent.config.mode == "confirm"  # type: ignore[attr-defined]
         await pilot.press("y")
-        assert pilot.app.agent.config.confirm_actions is False  # type: ignore[attr-defined]
+        assert pilot.app.agent.config.mode == "yolo"  # type: ignore[attr-defined]
         await pilot.press("enter")  # still need to confirm once for step 3
         # next action will be executed automatically, so we see step 5 next
         await pilot.pause(0.2)
@@ -152,7 +152,7 @@ async def test_empty_agent_content():
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
         task="Empty test",
-        confirm_actions=False,
+        mode="yolo",
     )
     async with app.run_test() as pilot:
         # Initially should show waiting message
@@ -173,7 +173,7 @@ async def test_log_message_filtering():
         ),
         env=LocalEnvironment(),
         task="Log test",
-        confirm_actions=False,
+        mode="yolo",
     )
 
     # Mock the notify method to capture calls
@@ -193,7 +193,7 @@ async def test_list_content_rendering():
         model=DeterministicModel(outputs=["Simple response\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]),
         env=LocalEnvironment(),
         task="Content test",
-        confirm_actions=False,
+        mode="yolo",
     )
 
     async with app.run_test() as pilot:
@@ -218,7 +218,7 @@ async def test_confirmation_rejection_with_message():
         model=DeterministicModel(outputs=["Test thought\n```bash\necho 'test'\n```"]),
         env=LocalEnvironment(),
         task="Rejection test",
-        confirm_actions=True,
+        mode="confirm",
     )
 
     async with app.run_test() as pilot:
@@ -250,7 +250,7 @@ async def test_agent_with_cost_limit():
         model=DeterministicModel(outputs=["Response 1", "Response 2"]),
         env=LocalEnvironment(),
         task="Cost limit test",
-        confirm_actions=False,
+        mode="yolo",
         cost_limit=0.01,  # Very low limit
     )
 
@@ -274,7 +274,7 @@ async def test_agent_with_step_limit():
         model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
         env=LocalEnvironment(),
         task="Step limit test",
-        confirm_actions=False,
+        mode="yolo",
         step_limit=2,
     )
 
@@ -297,7 +297,7 @@ async def test_agent_successful_completion_notification():
         ),
         env=LocalEnvironment(),
         task="Completion test",
-        confirm_actions=False,
+        mode="yolo",
     )
 
     # Mock the notify method to capture calls
@@ -319,7 +319,7 @@ async def test_whitelist_actions_bypass_confirmation():
         ),
         env=LocalEnvironment(),
         task="Whitelist test",
-        confirm_actions=True,
+        mode="confirm",
         whitelist_actions=[r"echo.*"],
     )
 
@@ -342,7 +342,7 @@ async def test_confirmation_container_multiple_actions():
         ),
         env=LocalEnvironment(),
         task="Multiple actions test",
-        confirm_actions=True,
+        mode="confirm",
     )
 
     async with app.run_test() as pilot:
@@ -370,7 +370,7 @@ async def test_scrolling_behavior():
         ),
         env=LocalEnvironment(),
         task="Scroll test",
-        confirm_actions=False,
+        mode="yolo",
     )
 
     async with app.run_test() as pilot:
@@ -392,7 +392,7 @@ def test_log_handler_cleanup():
         model=DeterministicModel(outputs=["Simple response\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]),
         env=LocalEnvironment(),
         task="Cleanup test",
-        confirm_actions=False,
+        mode="yolo",
     )
 
     # Handler should be added

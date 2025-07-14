@@ -1,6 +1,6 @@
 """
 Extension of the `default.py` agent that uses Textual for an interactive TUI.
-For a simpler version of an interactive UI, see `interactive.py`.
+For a simpler version of an interactive UI that does not require threading and more, see `interactive.py`.
 """
 
 import logging
@@ -10,6 +10,7 @@ import threading
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Literal
 
 from rich.spinner import Spinner
 from rich.text import Text
@@ -25,8 +26,8 @@ from microsweagent.agents.default import AgentConfig, DefaultAgent, NonTerminati
 
 @dataclass
 class TextualAgentConfig(AgentConfig):
-    confirm_actions: bool = True
-    """Whether to confirm actions."""
+    mode: Literal["confirm", "yolo"] = "confirm"
+    """Mode for action execution: 'confirm' requires user confirmation, 'yolo' executes immediately."""
     whitelist_actions: list[str] = field(default_factory=list)
     """Never confirm actions that match these regular expressions."""
 
@@ -54,7 +55,7 @@ class TextualAgent(DefaultAgent):
         return exit_status, result
 
     def execute_action(self, action: str) -> str:
-        if self.config.confirm_actions and not any(re.match(r, action) for r in self.config.whitelist_actions):
+        if self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions):
             if result := self.app.confirmation_container.request_confirmation(action):
                 raise NonTerminatingException(f"Command not executed: {result}")
         return super().execute_action(action)
@@ -169,7 +170,8 @@ class AgentApp(App):
         Binding("j,down", "scroll_down", "Scroll down"),
         Binding("k,up", "scroll_up", "Scroll up"),
         Binding("q", "quit", "Quit"),
-        Binding("y", "toggle_yolo", "Toggle YOLO Mode"),
+        Binding("y", "yolo", "Switch to YOLO Mode"),
+        Binding("c", "confirm", "Switch to Confirm Mode"),
     ]
 
     def __init__(self, model, env, task: str, **kwargs):
@@ -290,9 +292,13 @@ class AgentApp(App):
 
     # --- Textual bindings ---
 
-    def action_toggle_yolo(self):
-        self.agent.config.confirm_actions = not self.agent.config.confirm_actions
-        self.notify(f"YOLO mode {'disabled' if self.agent.config.confirm_actions else 'enabled'}")
+    def action_yolo(self):
+        self.agent.config.mode = "yolo"
+        self.notify("YOLO mode enabled - actions will execute immediately")
+
+    def action_confirm(self):
+        self.agent.config.mode = "confirm"
+        self.notify("Confirm mode enabled - actions will require confirmation")
 
     def action_next_step(self) -> None:
         self.i_step += 1
