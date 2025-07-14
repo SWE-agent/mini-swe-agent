@@ -40,9 +40,12 @@ class InteractiveAgent(DefaultAgent):
 
     def query(self) -> str:
         if self.config.mode == "human":
-            if command := self.prompt_and_handle_modes("[bold yellow]>[/bold yellow] "):
-                return f"\n```bash\n{command}\n```"
-            raise NonTerminatingException("No command provided")
+            match command := self._prompt_and_handle_special("[bold yellow]>[/bold yellow] "):
+                case "/y" | "/c":
+                    # Just go to the super query, which queries the LM
+                    pass
+                case _:
+                    return f"\n```bash\n{command}\n```"
         return super().query()
 
     def step(self) -> str:
@@ -50,21 +53,19 @@ class InteractiveAgent(DefaultAgent):
         try:
             return super().step()
         except KeyboardInterrupt:
-            user_input = self.prompt_and_handle_modes(
+            interruption_message = self._prompt_and_handle_special(
                 "\n\n[bold yellow]Interrupted.[/bold yellow] "
                 "[bold green]/h[/bold green] to show help, or [green]continue with comment/command[/green]"
                 "\n[bold yellow]>[/bold yellow] "
-            )
-            if user_input:
-                raise NonTerminatingException(f"Interrupted by user: {user_input}")
-            raise NonTerminatingException(
-                "Temporary interruption caught. Some actions may have been only partially executed."
-            )
+            ).strip()
+            if not interruption_message or interruption_message in self._MODE_COMMANDS_MAPPING:
+                interruption_message = "Temporary interruption caught."
+            raise NonTerminatingException(f"Interrupted by user: {interruption_message}")
 
     def execute_action(self, action: str) -> str:
         # Override the execute_action method to handle user confirmation
         if self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions):
-            user_input = self.prompt_and_handle_modes(
+            user_input = self._prompt_and_handle_special(
                 "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
                 "[green bold]/h[/green bold] for help, "
                 "or [green]enter comment/command[/green]\n"
@@ -74,6 +75,7 @@ class InteractiveAgent(DefaultAgent):
                 case "" | "/y":
                     pass  # confirmed
                 case "/u":
+                    # Skip execution action and get back to query
                     raise NonTerminatingException("Command not executed. Switching to human mode")
                 case _:
                     raise NonTerminatingException(
@@ -81,7 +83,7 @@ class InteractiveAgent(DefaultAgent):
                     )
         return super().execute_action(action)
 
-    def prompt_and_handle_modes(self, prompt: str) -> str:
+    def _prompt_and_handle_special(self, prompt: str) -> str:
         """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""
         user_input = console.input(prompt).strip()
         if user_input == "/h":
@@ -91,12 +93,13 @@ class InteractiveAgent(DefaultAgent):
                 f"[bold green]/c[/bold green] to switch to confirmation mode\n"
                 f"[bold green]/y[/bold green] to switch to yolo mode\n"
             )
-            return self.prompt_and_handle_modes(prompt)
+            return self._prompt_and_handle_special(prompt)
         if user_input in self._MODE_COMMANDS_MAPPING:
             if self.config.mode == self._MODE_COMMANDS_MAPPING[user_input]:
-                return self.prompt_and_handle_modes(
+                return self._prompt_and_handle_special(
                     f"[bold red]Already in {self.config.mode} mode.[/bold red]\n{prompt}"
                 )
             self.config.mode = self._MODE_COMMANDS_MAPPING[user_input]
+            console.print(f"Switched to [bold green]{self.config.mode}[/bold green] mode.")
             return user_input
         return user_input
