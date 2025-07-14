@@ -148,7 +148,7 @@ agent:
     </submission_example>
 
   step_limit: 0.
-  cost_limit: 5.
+  cost_limit: 3.
 
 environment:
   cwd: "/testbed"
