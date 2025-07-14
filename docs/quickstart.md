@@ -60,7 +60,7 @@
         python microsweagent/run/hello_world.py
         ```
 
-??? example "Example Prompts"
+!!! example "Example Prompts"
 
     Try micro-SWE-agent with these example prompts:
 

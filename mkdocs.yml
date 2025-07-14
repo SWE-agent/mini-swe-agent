@@ -56,8 +56,13 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 nav:
   - Getting Started:
-    - index.md
-    - "Quick start": installation.md
+    - "Overview": index.md
+    - "Quick start": quickstart.md
+    - "Usage":
+      - "SWE-bench": usage/swebench.md
+    - "Configuration": configuration.md
+    - "FAQ": faq.md
+
   #   - "Installation":
   #     - "installation/index.md"
   #     - "From source": "installation/source.md"
