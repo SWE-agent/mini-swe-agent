@@ -27,5 +27,7 @@ class LocalEnvironment:
                 cwd=cwd,
                 env=os.environ | self.config.env,
                 timeout=self.config.timeout,
+                encoding="utf-8",
+                errors="replace",
             )
         )

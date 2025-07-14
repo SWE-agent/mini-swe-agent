@@ -82,6 +82,8 @@ class DockerEnvironment:
                 capture_output=True,
                 text=True,
                 timeout=self.config.timeout,
+                encoding="utf-8",
+                errors="replace",
             )
         )
 
