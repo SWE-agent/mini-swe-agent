@@ -132,8 +132,8 @@ def process_instance(
             result=result,
             instance_id=instance_id,
         )
-
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
+        progress_manager.on_instance_end(instance_id, exit_status)
 
 
 def filter_instances(

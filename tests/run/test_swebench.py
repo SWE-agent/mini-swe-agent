@@ -388,15 +388,19 @@ def test_exception_handling_in_agent_run(tmp_path, workers):
     with patch("microsweagent.run.extra.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = ExceptionModel(RuntimeError, "Agent processing failed")
 
-        main(
-            subset="_test",
-            split="test",
-            slice_spec="0:1",
-            output=str(tmp_path),
-            workers=workers,
-            filter_spec="swe-agent__test-repo-1",
-            config=package_dir / "config" / "extra" / "swebench.yaml",
-        )
+        with patch("microsweagent.run.extra.swebench.RunBatchProgressManager") as mock_progress_class:
+            mock_progress_manager = mock_progress_class.return_value
+            mock_progress_manager.render_group = None  # For Live context manager
+
+            main(
+                subset="_test",
+                split="test",
+                slice_spec="0:1",
+                output=str(tmp_path),
+                workers=workers,
+                filter_spec="swe-agent__test-repo-1",
+                config=package_dir / "config" / "extra" / "swebench.yaml",
+            )
 
     # Check that prediction file contains exception information
     preds_file = tmp_path / "preds.json"
@@ -425,15 +429,19 @@ def test_different_exception_types(tmp_path, workers):
     with patch("microsweagent.run.extra.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = ExceptionModel(ValueError, "Invalid input provided")
 
-        main(
-            subset="_test",
-            split="test",
-            slice_spec="0:1",
-            output=str(tmp_path),
-            workers=workers,
-            filter_spec="swe-agent__test-repo-1",
-            config=package_dir / "config" / "extra" / "swebench.yaml",
-        )
+        with patch("microsweagent.run.extra.swebench.RunBatchProgressManager") as mock_progress_class:
+            mock_progress_manager = mock_progress_class.return_value
+            mock_progress_manager.render_group = None  # For Live context manager
+
+            main(
+                subset="_test",
+                split="test",
+                slice_spec="0:1",
+                output=str(tmp_path),
+                workers=workers,
+                filter_spec="swe-agent__test-repo-1",
+                config=package_dir / "config" / "extra" / "swebench.yaml",
+            )
 
     # Check trajectory file for correct exception type
     instance_id = "swe-agent__test-repo-1"
