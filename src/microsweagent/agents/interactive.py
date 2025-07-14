@@ -40,13 +40,9 @@ class InteractiveAgent(DefaultAgent):
 
     def query(self) -> str:
         if self.config.mode == "human":
-            try:
-                command = console.input(
-                    "(enter command or hit [bold red]^C[/bold red] for menu) [bold yellow]>[/bold yellow] "
-                )
-            except KeyboardInterrupt:
-                self.menu("asdf")
-            return f"\n```bash\n{command}\n```"
+            if command := self.prompt_and_handle_modes("[bold yellow]>[/bold yellow] "):
+                return f"\n```bash\n{command}\n```"
+            raise NonTerminatingException("No command provided")
         return super().query()
 
     def step(self) -> str:
@@ -54,7 +50,7 @@ class InteractiveAgent(DefaultAgent):
         try:
             return super().step()
         except KeyboardInterrupt:
-            user_input = self.menu(
+            user_input = self.prompt_and_handle_modes(
                 "\n\n[bold yellow]Interrupted.[/bold yellow] "
                 "[bold green]/h[/bold green] to show help, or [green]continue with comment/command[/green]"
                 "\n[bold yellow]>[/bold yellow] "
@@ -68,7 +64,7 @@ class InteractiveAgent(DefaultAgent):
     def execute_action(self, action: str) -> str:
         # Override the execute_action method to handle user confirmation
         if self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions):
-            user_input = self.menu(
+            user_input = self.prompt_and_handle_modes(
                 "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
                 "[green bold]/h[/green bold] for help, "
                 "or [green]enter comment/command[/green]\n"
@@ -85,7 +81,7 @@ class InteractiveAgent(DefaultAgent):
                     )
         return super().execute_action(action)
 
-    def menu(self, prompt: str) -> str:
+    def prompt_and_handle_modes(self, prompt: str) -> str:
         """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""
         user_input = console.input(prompt).strip()
         if user_input == "/h":
@@ -95,10 +91,12 @@ class InteractiveAgent(DefaultAgent):
                 f"[bold green]/c[/bold green] to switch to confirmation mode\n"
                 f"[bold green]/y[/bold green] to switch to yolo mode\n"
             )
-            return self.menu(prompt)
+            return self.prompt_and_handle_modes(prompt)
         if user_input in self._MODE_COMMANDS_MAPPING:
             if self.config.mode == self._MODE_COMMANDS_MAPPING[user_input]:
-                return self.menu(f"[bold red]Already in {self.config.mode} mode.[/bold red]\n{prompt}")
+                return self.prompt_and_handle_modes(
+                    f"[bold red]Already in {self.config.mode} mode.[/bold red]\n{prompt}"
+                )
             self.config.mode = self._MODE_COMMANDS_MAPPING[user_input]
             return user_input
         return user_input
