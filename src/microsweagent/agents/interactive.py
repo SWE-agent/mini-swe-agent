@@ -2,6 +2,7 @@
 
 import re
 from dataclasses import dataclass, field
+from typing import Literal
 
 from rich.console import Console
 
@@ -12,13 +13,15 @@ console = Console(highlight=False)
 
 @dataclass
 class InteractiveAgentConfig(AgentConfig):
-    confirm_actions: bool = True
+    mode: Literal["human", "confirm", "yolo"] = "confirm"
     """Whether to confirm actions."""
     whitelist_actions: list[str] = field(default_factory=list)
     """Never confirm actions that match these regular expressions."""
 
 
 class InteractiveAgent(DefaultAgent):
+    _MODE_COMMANDS_MAPPING = {"/u": "human", "/c": "confirm", "/y": "yolo"}
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, config_class=InteractiveAgentConfig, **kwargs)
         self.cost_last_confirmed = 0.0
@@ -35,12 +38,19 @@ class InteractiveAgent(DefaultAgent):
             console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
         console.print(content, highlight=False, markup=False)
 
+    def query(self) -> str:
+        if self.config.mode == "human":
+            if command := self.prompt_and_handle_modes("[bold yellow]>[/bold yellow] "):
+                return f"\n```bash\n{command}\n```"
+            raise NonTerminatingException("No command provided")
+        return super().query()
+
     def step(self) -> str:
         # Override the step method to handle user interruption
         try:
             return super().step()
         except KeyboardInterrupt:
-            user_input = self.get_response(
+            user_input = self.prompt_and_handle_modes(
                 "\n\n[bold yellow]Interrupted.[/bold yellow] "
                 "[bold green]/h[/bold green] to show help, or [green]continue with comment/command[/green]"
                 "\n[bold yellow]>[/bold yellow] "
@@ -53,32 +63,40 @@ class InteractiveAgent(DefaultAgent):
 
     def execute_action(self, action: str) -> str:
         # Override the execute_action method to handle user confirmation
-        if self.config.confirm_actions and not any(re.match(r, action) for r in self.config.whitelist_actions):
-            if user_input := self.get_response(
+        if self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions):
+            user_input = self.prompt_and_handle_modes(
                 "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
                 "[green bold]/h[/green bold] for help, "
                 "or [green]enter comment/command[/green]\n"
                 "[bold yellow]>[/bold yellow] "
-            ):
-                raise NonTerminatingException(
-                    f"Command not executed. The user rejected your command with the following message: {user_input}"
-                )
+            )
+            match user_input.strip():
+                case "" | "/y":
+                    pass  # confirmed
+                case "/u":
+                    raise NonTerminatingException("Command not executed. Switching to human mode")
+                case _:
+                    raise NonTerminatingException(
+                        f"Command not executed. The user rejected your command with the following message: {user_input}"
+                    )
         return super().execute_action(action)
 
-    def get_response(self, prompt: str) -> str:
-        user_input = console.input(prompt)
-        if user_input.strip() == "/h":
+    def prompt_and_handle_modes(self, prompt: str) -> str:
+        """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""
+        user_input = console.input(prompt).strip()
+        if user_input == "/h":
             console.print(
-                "[bold green]/y[/bold green] to enter yolo mode (no need to confirm actions),\n"
-                "[bold green]/x[/bold green] to exit yolo mode"
+                f"Current mode: [bold green]{self.config.mode}[/bold green]\n"
+                f"[bold green]/u[/bold green] to switch to human mode\n"
+                f"[bold green]/c[/bold green] to switch to confirmation mode\n"
+                f"[bold green]/y[/bold green] to switch to yolo mode\n"
             )
-            return self.get_response("[bold yellow]>[/bold yellow] ")
-        if user_input.strip() == "/y":
-            self.config.confirm_actions = False
-            console.print("Yolo mode [bold red]enabled[/bold red].")
-            return self.get_response(prompt)
-        if user_input.strip() == "/x":
-            self.config.confirm_actions = True
-            console.print("Yolo mode [bold green]disabled[/bold green].")
-            return self.get_response(prompt)
+            return self.prompt_and_handle_modes(prompt)
+        if user_input in self._MODE_COMMANDS_MAPPING:
+            if self.config.mode == self._MODE_COMMANDS_MAPPING[user_input]:
+                return self.prompt_and_handle_modes(
+                    f"[bold red]Already in {self.config.mode} mode.[/bold red]\n{prompt}"
+                )
+            self.config.mode = self._MODE_COMMANDS_MAPPING[user_input]
+            return user_input
         return user_input

@@ -140,7 +140,7 @@ agent:
     </response_example>
   step_limit: 0.
   cost_limit: 0.
-  confirm_actions: true
+  mode: confirm
 environment:
   env:
     PAGER: cat
