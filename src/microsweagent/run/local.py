@@ -44,7 +44,6 @@ def main(
     ),
     problem: str | None = typer.Option(None, "-p", "--problem", help="Problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
-    human: bool = typer.Option(False, "-u", "--human", help="Run in human mode"),
     output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
 ) -> InteractiveAgent:
     """Run micro-SWE-agent right here, right now."""
@@ -53,7 +52,7 @@ def main(
     if not problem:
         problem = get_multiline_task()
 
-    mode = "human" if human else "confirm" if not yolo else "yolo"
+    mode = "confirm" if not yolo else "yolo"
 
     # Use get_model to defer model imports (can take a while), but also to switch in
     # some optimized models (especially for anthropic)

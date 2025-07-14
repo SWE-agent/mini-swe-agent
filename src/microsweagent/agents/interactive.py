@@ -1,4 +1,10 @@
-"""A small generalization of the default agent that puts the user in the loop."""
+"""A small generalization of the default agent that puts the user in the loop.
+
+There are three modes:
+- human: commands issued by the user are executed immediately
+- confirm: commands issued by the LM but not whitelisted are confirmed by the user
+- yolo: commands issued by the LM are executed immediately without confirmation
+"""
 
 import re
 from dataclasses import dataclass, field
@@ -27,6 +33,7 @@ class InteractiveAgent(DefaultAgent):
         self.cost_last_confirmed = 0.0
 
     def add_message(self, role: str, content: str):
+        # Extend supermethod to print messages
         super().add_message(role, content)
         if role == "assistant":
             console.print(
@@ -39,10 +46,10 @@ class InteractiveAgent(DefaultAgent):
         console.print(content, highlight=False, markup=False)
 
     def query(self) -> str:
+        # Extend supermethod to handle human mode
         if self.config.mode == "human":
             match command := self._prompt_and_handle_special("[bold yellow]>[/bold yellow] "):
-                case "/y" | "/c":
-                    # Just go to the super query, which queries the LM
+                case "/y" | "/c":  # Just go to the super query, which queries the LM for the next action
                     pass
                 case _:
                     return f"\n```bash\n{command}\n```"
@@ -53,6 +60,7 @@ class InteractiveAgent(DefaultAgent):
         try:
             return super().step()
         except KeyboardInterrupt:
+            # We always add a message about the interrupt and then just proceed to the next step
             interruption_message = self._prompt_and_handle_special(
                 "\n\n[bold yellow]Interrupted.[/bold yellow] "
                 "[bold green]/h[/bold green] to show help, or [green]continue with comment/command[/green]"
@@ -64,24 +72,29 @@ class InteractiveAgent(DefaultAgent):
 
     def execute_action(self, action: str) -> str:
         # Override the execute_action method to handle user confirmation
-        if self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions):
-            user_input = self._prompt_and_handle_special(
-                "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
-                "[green bold]/h[/green bold] for help, "
-                "or [green]enter comment/command[/green]\n"
-                "[bold yellow]>[/bold yellow] "
-            )
-            match user_input.strip():
-                case "" | "/y":
-                    pass  # confirmed
-                case "/u":
-                    # Skip execution action and get back to query
-                    raise NonTerminatingException("Command not executed. Switching to human mode")
-                case _:
-                    raise NonTerminatingException(
-                        f"Command not executed. The user rejected your command with the following message: {user_input}"
-                    )
+        if self.should_ask_confirmation(action):
+            self.ask_confirmation()
         return super().execute_action(action)
+
+    def should_ask_confirmation(self, action: str) -> bool:
+        return self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions)
+
+    def ask_confirmation(self) -> None:
+        prompt = (
+            "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
+            "[green bold]/h[/green bold] for help, "
+            "or [green]enter comment/command[/green]\n"
+            "[bold yellow]>[/bold yellow] "
+        )
+        match user_input := self._prompt_and_handle_special(prompt).strip():
+            case "" | "/y":
+                pass  # confirmed, do nothing
+            case "/u":  # Skip execution action and get back to query
+                raise NonTerminatingException("Command not executed. Switching to human mode")
+            case _:
+                raise NonTerminatingException(
+                    f"Command not executed. The user rejected your command with the following message: {user_input}"
+                )
 
     def _prompt_and_handle_special(self, prompt: str) -> str:
         """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""

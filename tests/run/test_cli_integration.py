@@ -187,7 +187,7 @@ model:
             assert isinstance(call_args[0][1], LocalEnvironment)
             assert call_args[1]["max_steps"] == 10
             assert call_args[1]["step_timeout"] == 30
-            assert call_args[1]["confirm_actions"] is False
+            assert call_args[1]["mode"] == "yolo"
             mock_agent.run.assert_called_once_with("Complex task")
         else:
             assert call_args[1]["model"] is mock_model_instance

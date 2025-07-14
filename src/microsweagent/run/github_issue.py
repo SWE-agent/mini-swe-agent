@@ -48,7 +48,7 @@ def main(
     _config = yaml.safe_load(Path(config).read_text())
     _agent_config = _config.get("agent", {})
     if yolo:
-        _agent_config["confirm_actions"] = False
+        _agent_config["mode"] = "yolo"
 
     task = fetch_github_issue(issue_url)
 

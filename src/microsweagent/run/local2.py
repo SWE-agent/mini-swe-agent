@@ -38,7 +38,7 @@ def main(
             raise typer.Exit(1)
 
     if yolo:
-        _config["agent"]["confirm_actions"] = False
+        _config["agent"]["mode"] = "yolo"
 
     # Create and run the agent app
     agent_app = AgentApp(
