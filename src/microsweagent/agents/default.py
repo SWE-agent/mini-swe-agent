@@ -71,39 +71,39 @@ class DefaultAgent:
                 self.add_message("user", str(e))
                 return type(e).__name__, str(e)
 
-    def step(self) -> str:
+    def step(self) -> dict:
         """Query the LM, execute the action, return the observation."""
-        message = self.query()
-        self.add_message("assistant", message)
-        observation = self.get_observation(message)
-        self.add_message("user", observation)
-        return observation
+        return self.get_observation(self.query())
 
-    def query(self) -> str:
+    def query(self) -> dict:
         """Query the model and return the response."""
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
             raise LimitsExceeded()
+        response = self.model.query(self.messages)
+        self.add_message("assistant", response["content"])
+        return response
 
-        return self.model.query(self.messages)
-
-    def get_observation(self, message: str) -> str:
+    def get_observation(self, response: dict) -> dict:
         """Execute the action and return the observation."""
-        return self.execute_action(self.parse_action(message))
+        output = self.execute_action(self.parse_action(response))
+        observation = Template(self.config.action_observation_template).render(output=output)
+        self.add_message("user", observation)
+        return output
 
-    def parse_action(self, message: str) -> str:
+    def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
-        actions = re.findall(r"```[a-zA-Z]*\n(.*?)(?=\n```|```)", message, re.DOTALL)
+        actions = re.findall(r"```[a-zA-Z]*\n(.*?)(?=\n```|```)", response["content"], re.DOTALL)
         if len(actions) == 1:
-            return actions[0].strip()
+            return {"action": actions[0].strip(), **response}
         raise FormatError(Template(self.config.format_error_template).render(actions=actions))
 
-    def execute_action(self, action: str) -> str:
+    def execute_action(self, action: dict) -> dict:
         try:
-            output = self.env.execute(action)
+            output = self.env.execute(action["action"])
         except (TimeoutError, subprocess.TimeoutExpired):
             raise ExecutionTimeoutError(Template(self.config.timeout_template).render(action=action))
         self.has_finished(output)
-        return Template(self.config.action_observation_template).render(output=output)
+        return output
 
     def has_finished(self, output: dict[str, str]):
         """Raises Submitted exception with final output if the agent has finished its task."""

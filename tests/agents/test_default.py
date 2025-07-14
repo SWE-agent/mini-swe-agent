@@ -105,9 +105,17 @@ def test_parse_action_success():
     )
 
     # Test different valid formats
-    assert agent.parse_action("```bash\necho 'test'\n```") == "echo 'test'"
-    assert agent.parse_action("```\nls -la\n```") == "ls -la"
-    assert agent.parse_action("Some text\n```bash\necho 'hello'\n```\nMore text") == "echo 'hello'"
+    result = agent.parse_action({"content": "```bash\necho 'test'\n```"})
+    assert result["action"] == "echo 'test'"
+    assert result["content"] == "```bash\necho 'test'\n```"
+
+    result = agent.parse_action({"content": "```\nls -la\n```"})
+    assert result["action"] == "ls -la"
+    assert result["content"] == "```\nls -la\n```"
+
+    result = agent.parse_action({"content": "Some text\n```bash\necho 'hello'\n```\nMore text"})
+    assert result["action"] == "echo 'hello'"
+    assert result["content"] == "Some text\n```bash\necho 'hello'\n```\nMore text"
 
 
 def test_parse_action_failures():
@@ -119,11 +127,11 @@ def test_parse_action_failures():
 
     # No code blocks
     with pytest.raises(NonTerminatingException):
-        agent.parse_action("No code blocks here")
+        agent.parse_action({"content": "No code blocks here"})
 
     # Multiple code blocks
     with pytest.raises(NonTerminatingException):
-        agent.parse_action("```bash\necho 'first'\n```\n```bash\necho 'second'\n```")
+        agent.parse_action({"content": "```bash\necho 'first'\n```\n```bash\necho 'second'\n```"})
 
 
 def test_message_history_tracking():

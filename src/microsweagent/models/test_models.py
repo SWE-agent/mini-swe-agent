@@ -22,7 +22,7 @@ class DeterministicModel:
         self.cost = 0.0
         self.n_calls = 0
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> str:  # noqa: ARG002
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         self.current_index += 1
         output = self.config.outputs[self.current_index]
         if "/sleep" in output:
@@ -35,4 +35,4 @@ class DeterministicModel:
         self.n_calls += 1
         self.cost += self.config.cost_per_call
         GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
-        return output
+        return {"content": output}

@@ -43,7 +43,7 @@ class Model(Protocol):
     cost: float
     n_calls: int
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> str: ...
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict: ...
 
 
 class Environment(Protocol):

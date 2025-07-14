@@ -41,10 +41,12 @@ class LitellmModel:
         )
         return response
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> str:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
         cost = litellm.cost_calculator.completion_cost(response)
         self.n_calls += 1
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
-        return response.choices[0].message.content  # type: ignore
+        return {
+            "content": response.choices[0].message.content,  # type: ignore
+        }

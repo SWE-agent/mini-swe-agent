@@ -10,14 +10,14 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     model = DeterministicModel(outputs=["Hello", "World"])
 
     # Test first call with defaults
-    assert model.query([{"role": "user", "content": "test"}]) == "Hello"
+    assert model.query([{"role": "user", "content": "test"}]) == {"content": "Hello"}
     assert model.n_calls == 1
     assert model.cost == 1.0
     assert microsweagent.models.GLOBAL_MODEL_STATS.n_calls == 1
     assert microsweagent.models.GLOBAL_MODEL_STATS.cost == 1.0
 
     # Test second call and sequential outputs
-    assert model.query([{"role": "user", "content": "test"}]) == "World"
+    assert model.query([{"role": "user", "content": "test"}]) == {"content": "World"}
     assert model.n_calls == 2
     assert model.cost == 2.0
     assert microsweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
@@ -29,11 +29,11 @@ def test_custom_cost_and_multiple_models(reset_global_stats):
     model1 = DeterministicModel(outputs=["Response1"], cost_per_call=2.5)
     model2 = DeterministicModel(outputs=["Response2"], cost_per_call=3.0)
 
-    assert model1.query([{"role": "user", "content": "test"}]) == "Response1"
+    assert model1.query([{"role": "user", "content": "test"}]) == {"content": "Response1"}
     assert model1.cost == 2.5
     assert microsweagent.models.GLOBAL_MODEL_STATS.cost == 2.5
 
-    assert model2.query([{"role": "user", "content": "test"}]) == "Response2"
+    assert model2.query([{"role": "user", "content": "test"}]) == {"content": "Response2"}
     assert model2.cost == 3.0
     assert microsweagent.models.GLOBAL_MODEL_STATS.cost == 5.5
     assert microsweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
@@ -55,13 +55,13 @@ def test_sleep_and_warning_commands(caplog):
     # Test sleep command - processes sleep then returns actual output (counts as 1 call)
     model = DeterministicModel(outputs=["/sleep0.1", "After sleep"])
     start_time = time.time()
-    assert model.query([{"role": "user", "content": "test"}]) == "After sleep"
+    assert model.query([{"role": "user", "content": "test"}]) == {"content": "After sleep"}
     assert time.time() - start_time >= 0.1
     assert model.n_calls == 1  # Sleep no longer counts as separate call
 
     # Test warning command - processes warning then returns actual output (counts as 1 call)
     model2 = DeterministicModel(outputs=["/warningTest message", "After warning"])
     with caplog.at_level(logging.WARNING):
-        assert model2.query([{"role": "user", "content": "test"}]) == "After warning"
+        assert model2.query([{"role": "user", "content": "test"}]) == {"content": "After warning"}
     assert model2.n_calls == 1  # Warning no longer counts as separate call
     assert "Test message" in caplog.text

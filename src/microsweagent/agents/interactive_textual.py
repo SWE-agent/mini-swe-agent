@@ -54,7 +54,7 @@ class TextualAgent(DefaultAgent):
             self.app.call_from_thread(self.app.on_agent_finished, exit_status, result)
         return exit_status, result
 
-    def execute_action(self, action: str) -> str:
+    def execute_action(self, action: str) -> dict:
         if self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions):
             if result := self.app.confirmation_container.request_confirmation(action):
                 raise NonTerminatingException(f"Command not executed: {result}")

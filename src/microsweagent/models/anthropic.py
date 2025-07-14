@@ -12,7 +12,7 @@ class AnthropicModel(LitellmModel):
     if running with multiple agents in parallel threads.
     """
 
-    def query(self, messages: list[dict], **kwargs) -> str:
+    def query(self, messages: list[dict], **kwargs) -> dict:
         api_key = None
         if rotating_keys := os.getenv("ANTHROPIC_API_KEYS"):
             api_key = get_key_per_thread(rotating_keys.split("::"))

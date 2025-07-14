@@ -45,17 +45,17 @@ class InteractiveAgent(DefaultAgent):
             console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
         console.print(content, highlight=False, markup=False)
 
-    def query(self) -> str:
+    def query(self) -> dict:
         # Extend supermethod to handle human mode
         if self.config.mode == "human":
             match command := self._prompt_and_handle_special("[bold yellow]>[/bold yellow] "):
                 case "/y" | "/c":  # Just go to the super query, which queries the LM for the next action
                     pass
                 case _:
-                    return f"\n```bash\n{command}\n```"
+                    return {"content": f"\n```bash\n{command}\n```"}
         return super().query()
 
-    def step(self) -> str:
+    def step(self) -> dict:
         # Override the step method to handle user interruption
         try:
             return super().step()
@@ -70,9 +70,9 @@ class InteractiveAgent(DefaultAgent):
                 interruption_message = "Temporary interruption caught."
             raise NonTerminatingException(f"Interrupted by user: {interruption_message}")
 
-    def execute_action(self, action: str) -> str:
+    def execute_action(self, action: dict) -> dict:
         # Override the execute_action method to handle user confirmation
-        if self.should_ask_confirmation(action):
+        if self.should_ask_confirmation(action["action"]):
             self.ask_confirmation()
         return super().execute_action(action)
 
