@@ -1,7 +1,8 @@
+import os
 import re
 import subprocess
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from jinja2 import Template
 
@@ -54,6 +55,9 @@ class DefaultAgent:
         self.model = model
         self.env = env
 
+    def render_template(self, template: str, **kwargs) -> str:
+        return Template(template).render(**kwargs, **asdict(self.config), **os.environ)
+
     def add_message(self, role: str, content: str):
         self.messages.append({"role": role, "content": content})
 
@@ -61,7 +65,7 @@ class DefaultAgent:
         """Run step() until agent is finished. Return exit status & message"""
         self.messages = []
         self.add_message("system", self.config.system_template)
-        self.add_message("user", Template(self.config.instance_template).render(task=task))
+        self.add_message("user", self.render_template(self.config.instance_template, task=task))
         while True:
             try:
                 self.step()
@@ -86,7 +90,7 @@ class DefaultAgent:
     def get_observation(self, response: dict) -> dict:
         """Execute the action and return the observation."""
         output = self.execute_action(self.parse_action(response))
-        observation = Template(self.config.action_observation_template).render(output=output)
+        observation = self.render_template(self.config.action_observation_template, output=output)
         self.add_message("user", observation)
         return output
 
@@ -95,13 +99,13 @@ class DefaultAgent:
         actions = re.findall(r"```[a-zA-Z]*\n(.*?)(?=\n```|```)", response["content"], re.DOTALL)
         if len(actions) == 1:
             return {"action": actions[0].strip(), **response}
-        raise FormatError(Template(self.config.format_error_template).render(actions=actions))
+        raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
 
     def execute_action(self, action: dict) -> dict:
         try:
             output = self.env.execute(action["action"])
         except (TimeoutError, subprocess.TimeoutExpired):
-            raise ExecutionTimeoutError(Template(self.config.timeout_template).render(action=action))
+            raise ExecutionTimeoutError(self.render_template(self.config.timeout_template, action=action))
         self.has_finished(output)
         return output
 

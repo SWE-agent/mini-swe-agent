@@ -74,7 +74,7 @@ Configuration files look like this:
 We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).
 TL;DR: You include variables with double curly braces, e.g. `{{task}}`, but you can also do fairly complicated logic like this:
 
-??? note "Dealing with long observations"
+??? note "Example: Dealing with long observations"
 
     ```jinja
     {%- set full_output -%}
@@ -111,5 +111,11 @@ TL;DR: You include variables with double curly braces, e.g. `{{task}}`, but you 
         </observation_tail>
     {%- endif -%}
     ```
+
+In all builtin agents, you can use the following variables:
+
+- Environment variables
+- Config variables
+- Explicitly passed variables (`observation`, `task` etc.) depending on the template
 
 {% include-markdown "_footer.md" %}
