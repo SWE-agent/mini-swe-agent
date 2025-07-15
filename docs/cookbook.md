@@ -136,64 +136,150 @@ You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` envi
 
 ## Advanced
 
+### Customizing execution
+
 An agent that uses python function for some actions:
 
-```python
-from microsweagent.agents.default import DefaultAgent
-import shlex
 
-def python_function(*args) -> dict:
-    ...
-    return {"stdout": "..."}
+=== "Subclassing the agent"
 
-class AgentWithPythonFunctions(DefaultAgent):
-    def execute_action(self, action: dict) -> dict:
-        if action["action"].startswith("python_function"):
-            args = shlex.split(action["action"].removeprefix("python_function").strip())
-            return python_function(*args)
-        return super().execute_action(action)
-```
+    ```python
+    from microsweagent.agents.default import DefaultAgent
+    import shlex
+
+    def python_function(*args) -> dict:
+        ...
+        return {"stdout": "..."}
+
+    class AgentWithPythonFunctions(DefaultAgent):
+        def execute_action(self, action: dict) -> dict:
+            if action["action"].startswith("python_function"):
+                args = shlex.split(action["action"].removeprefix("python_function").strip())
+                return python_function(*args)
+            return super().execute_action(action)
+    ```
+
+
+=== "Subclassing the environment"
+
+    ```python
+    from microsweagent.agents.default import DefaultAgent
+    import shlex
+
+    def python_function(*args) -> dict:
+        ...
+        return {"stdout": "..."}
+
+    class EnvironmentWithPythonFunctions(LocalEnvironment):
+        def execute(self, command: str, cwd: str = "") -> dict:
+            if command.startswith("python_function"):
+                args = shlex.split(command.removeprefix("python_function").strip())
+                return python_function(*args)
+            return super().execute(command, cwd)
+
+    agent = DefaultAgent(
+        LitellmModel(model_name=model_name),
+        EnvironmentWithPythonFunctions(),
+    )
+    ```
 
 An agent that exits when the `submit` command is issued:
 
-```python
-from microsweagent.agents.default import DefaultAgent, Submitted
+=== "Subclassing the agent"
 
-class AgentQuitsOnSubmit(DefaultAgent):
-    def execute_action(self, action: dict) -> dict:
-        if action["action"] == "submit":
-            # The `Submitted` exception will be caught by the agent and
-            # the final output will be printed.
-            raise Submitted("The agent has finished its task.")
-        return super().execute_action(action)
-```
+    ```python
+    from microsweagent.agents.default import DefaultAgent, Submitted
+
+    class AgentQuitsOnSubmit(DefaultAgent):
+        def execute_action(self, action: dict) -> dict:
+            if action["action"] == "submit":
+                # The `Submitted` exception will be caught by the agent and
+                # the final output will be printed.
+                raise Submitted("The agent has finished its task.")
+            return super().execute_action(action)
+    ```
+
+=== "Subclassing the environment"
+
+    ```python
+    from microsweagent.agents.default import DefaultAgent, Submitted
+    from microsweagent.environments.local import LocalEnvironment
+
+    class EnvironmentQuitsOnSubmit(LocalEnvironment):
+        def execute(self, command: str, cwd: str = "") -> dict:
+            if command == "submit":
+                raise Submitted("The agent has finished its task.")
+            return super().execute(command, cwd)
+
+    agent = DefaultAgent(
+        LitellmModel(model_name=model_name),
+        EnvironmentQuitsOnSubmit(),
+    )
+    ```
+
 
 An agent that validates actions before execution (also an example of how to use an extended config class):
 
-```python
-import re
-from dataclasses import dataclass
-from microsweagent.agents.default import (
-    DefaultAgent, NonTerminatingException, DefaultAgentConfig
-)
+=== "Subclassing the agent"
 
-@dataclass
-class ValidatingAgentConfig(DefaultAgentConfig):
-    forbidden_patterns: list[str] = [
-        r"rm -rf /",
-        r"sudo.*passwd",
-        r"mkfs\.",
-    ]
+    ```python
+    import re
+    from dataclasses import dataclass
+    from microsweagent.agents.default import (
+        DefaultAgent, NonTerminatingException, DefaultAgentConfig
+    )
 
-class ValidatingAgent(DefaultAgent):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, config_class=ValidatingAgentConfig)
+    @dataclass
+    class ValidatingAgentConfig(DefaultAgentConfig):
+        forbidden_patterns: list[str] = [
+            r"rm -rf /",
+            r"sudo.*passwd",
+            r"mkfs\.",
+        ]
 
-    def execute_action(self, action: dict) -> dict:
-        for pattern in self.config.forbidden_patterns:
-            if re.search(pattern, action["action"], re.IGNORECASE):
-                raise NonTerminatingException("Action blocked")
-        return super().execute_action(action)
-```
+    class ValidatingAgent(DefaultAgent):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs, config_class=ValidatingAgentConfig)
+
+        def execute_action(self, action: dict) -> dict:
+            for pattern in self.config.forbidden_patterns:
+                if re.search(pattern, action["action"], re.IGNORECASE):
+                    raise NonTerminatingException("Action blocked")
+            return super().execute_action(action)
+    ```
+
+=== "Subclassing the environment"
+
+    ```python
+    import re
+    from dataclasses import dataclass
+    from microsweagent.agents.default import (
+        DefaultAgent, NonTerminatingException, DefaultAgentConfig
+    )
+    from microsweagent.environments.local import LocalEnvironment
+
+    @dataclass
+    class EnvironmentWithForbiddenPatternsConfig(LocalEnvironmentConfig):
+        forbidden_patterns: list[str] = [
+            r"rm -rf /",
+            r"sudo.*passwd",
+            r"mkfs\.",
+        ]
+
+    class EnvironmentWithForbiddenPatterns(LocalEnvironment):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs, config_class=EnvironmentWithForbiddenPatternsConfig)
+
+        def execute(self, command: str, cwd: str = "") -> dict:
+            for pattern in self.config.forbidden_patterns:
+                if re.search(pattern, command, re.IGNORECASE):
+                    raise NonTerminatingException("Action blocked")
+            return super().execute(command, cwd)
+
+    agent = DefaultAgent(
+        LitellmModel(model_name=model_name),
+        EnvironmentWithForbiddenPatterns(),
+    )
+    ```
 
 {% include-markdown "_footer.md" %}
