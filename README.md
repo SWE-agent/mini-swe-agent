@@ -4,8 +4,8 @@
 <h1>The 100 line AI agent that solves GitHub issues & more</h1>
 </div>
 
-In 2024, [SWE-bench](https://swe-bench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the agentic AI for software revolution. In 2025, we ask:
-**What if the agent was 100x smaller, and still worked nearly as well?**
+In 2024, [SWE-bench](https://swe-bench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the agentic AI for software revolution. We now ask:
+**What if SWE-agent was 100x smaller, and still worked nearly as well?**
 
 `micro` is for
 
@@ -28,7 +28,7 @@ Here's some details:
 <summary>More motivation (for research)</summary>
 
 [SWE-agent](https://swe-agent.com/latest/) jump-started the development of AI agents in 2024. Back then, we placed a lot of emphasis on tools and special interfaces for the agent.
-However, one year later, a lot of this is not needed at all to build a useful agent!
+However, one year later, as LMs have become more capable, a lot of this is not needed at all to build a useful agent!
 In fact, micro-SWE-agent
 
 - Does not have any tools other than bash — it doesn't even use the tool-calling interface of the LMs.
@@ -52,7 +52,7 @@ Some agents are overfitted research artifacts.
 Others are UI-heavy tools, highly optimized for a specific user experience.
 Both variants are hard to understand.
 
-`micro` wants to be
+`micro` strives to be
 
 - **Simple** enough to understand at a glance
 - **Convenient** enough to use in daily workflows
@@ -196,7 +196,7 @@ You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` envi
 We happily accept contributions!
 
 <details>
-<summary>Areas of help</summary>
+<summary>Contribution Ideas</summary>
 
 - Support for more models (anything where `litellm` doesn't work out of the box)
 - Documentation, examples, tutorials, etc.
