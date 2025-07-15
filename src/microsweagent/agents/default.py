@@ -48,7 +48,7 @@ class LimitsExceeded(TerminatingException):
 
 
 class DefaultAgent:
-    def __init__(self, model: Model, env: Environment, config_class: Callable = AgentConfig, **kwargs):
+    def __init__(self, model: Model, env: Environment, *, config_class: Callable = AgentConfig, **kwargs):
         self.config = config_class(**kwargs)
         self.messages: list[dict] = []
         self.model = model
