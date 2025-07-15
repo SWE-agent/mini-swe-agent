@@ -80,7 +80,9 @@ it is radically simpler, because it
 </tr>
 <tr>
 <td width="50%">
-<img width="600px" src="docs/assets/micro.png">
+  
+https://github.com/user-attachments/assets/db69e7f3-ac50-4a31-aaa5-bfeabbe8e4d9
+
 </td>
 <td>
 <img width="600px" src="docs/assets/micro2.png">
