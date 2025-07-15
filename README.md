@@ -81,14 +81,38 @@ it is radically simpler, because it
 <tr>
 <td width="50%">
   
-https://github.com/user-attachments/assets/db69e7f3-ac50-4a31-aaa5-bfeabbe8e4d9
+  ![micro](https://github.com/user-attachments/assets/b4ac427a-8626-4516-8b5d-8b42e389e0be)
 
 </td>
 <td>
-<img width="600px" src="docs/assets/micro2.png">
+  
+  ![micro2](https://github.com/user-attachments/assets/bbdea603-1ddc-4608-8429-b11ba59cfe99)
+
 </td>
 </tr>
 <tr>
+  <td>
+    <strong>Batch inference</strong>
+  </td>
+  <td>
+    <strong>Trajectory browser</strong>
+  </td>
+<tr>
+<tr>
+
+<td>
+
+![swebench](https://github.com/user-attachments/assets/64caad12-c47d-4148-a65c-df22f2c35cde)
+  
+</td>
+
+<td>
+
+![inspector](https://github.com/user-attachments/assets/d4ec52a9-a48e-4560-b4ff-36ba4658274f)
+
+</td>
+  
+</tr>
 <td>
 <strong>Python bindings</strong>
 </td>
