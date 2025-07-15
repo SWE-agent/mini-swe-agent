@@ -1,0 +1,63 @@
+# `micro`
+
+`micro` is a REPL-style interactive command line interface for using micro-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).
+Compared to [`micro2`](micro2.md), `micro` is more lightweight and does not require threading.
+
+VIDEO HERE TODO
+
+!!! tip "Feedback wanted!"
+    Give feedback on the `micro` and `micro2` interfaces at [this github issue](https://github.com/swe-agent/micro-swe-agent/issues/161)
+    or in our [Slack channel](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ).
+
+## Command line options
+
+Useful switches:
+
+- `-h`/`--help`: Show help
+- `-t`/`--task`: Specify a task to run (else you will be prompted)
+- `-c`/`--config`: Specify a config file to use, else we will use [`local.yaml`](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent/config/local.yaml) or the config `MSWEA_LOCAL_CONFIG_PATH` environment variable (see [configuration](../configuration.md))
+- `-m`/`--model`: Specify a model to use, else we will use the model `MSWEA_MODEL_NAME` environment variable (see [configuration](../configuration.md))
+- `-y`/`--yolo`: Start in `yolo` mode (see below)
+
+## Modes of operation
+
+`micro` provides three different modes of operation
+
+- `confirm` (`/c`): The LM proposes an action and the user is prompted to confirm (press Enter) or reject (enter a rejection message)
+- `yolo` (`/y`): The action from the LM is executed immediately without confirmation
+- `human` (`/u`): The user takes over to type and execute commands
+
+You can switch between the modes with the `/c`, `/y`, and `/u` commands that you can enter any time the agent is waiting for input.
+You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to switch between modes.
+
+`micro` starts in `confirm` mode by default. To start in `yolo` mode, you can add `-y`/`--yolo` to the command line.
+
+## Implementation
+
+??? note "Default config"
+
+    - [Read on GitHub](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent/config/local.yaml)
+
+    ```yaml
+    --8<-- "src/microsweagent/config/local.yaml"
+    ```
+
+??? note "Run script"
+
+    - [Read on GitHub](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent/run/local.py)
+    - [API reference](../reference/run/local.md)
+
+    ```python
+    --8<-- "src/microsweagent/run/local.py"
+    ```
+
+??? note "Agent class"
+
+    - [Read on GitHub](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent/agents/interactive.py)
+    - [API reference](../reference/agents/interactive.md)
+
+    ```python
+    --8<-- "src/microsweagent/agents/interactive.py"
+    ```
+
+{% include-markdown "../_footer.md" %}

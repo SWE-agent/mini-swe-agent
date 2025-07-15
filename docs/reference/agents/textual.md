@@ -7,3 +7,5 @@
 ::: microsweagent.agents.interactive_textual.ConfirmationPromptContainer
 
 ::: microsweagent.agents.interactive_textual.AddLogEmitCallback
+
+{% include-markdown "../../_footer.md" %}

@@ -125,3 +125,5 @@ We happily accept contributions! Areas where we'd love help:
 - Documentation, examples, tutorials, etc.
 - Support for more environments & deployments (e.g., run it as a github action, etc.)
 - Take a look at the [issues](https://github.com/SWE-agent/micro-SWE-agent/issues) and see if there's anything you'd like to work on!
+
+{% include-markdown "_footer.md" %}

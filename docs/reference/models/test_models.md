@@ -1,5 +1,5 @@
-# DeterministicModel
+# Test Models
 
-::: microsweagent.models.test_models.DeterministicModelConfig
+::: microsweagent.models.test_models
 
-::: microsweagent.models.test_models.DeterministicModel
+{% include-markdown "../../_footer.md" %}

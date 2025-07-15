@@ -1,3 +1,5 @@
-# AnthropicModel
+# Anthropic
 
-::: microsweagent.models.anthropic.AnthropicModel
+::: microsweagent.models.anthropic
+
+{% include-markdown "../../_footer.md" %}

@@ -59,69 +59,14 @@ nav:
     - "Overview": index.md
     - "Quick start": quickstart.md
     - "Usage":
+      - "<code>micro</code>": usage/micro.md
+      - "<code>micro2</code>": usage/micro2.md
       - "SWE-bench": usage/swebench.md
+      - "Inspector": usage/inspector.md
     - "Configuration": configuration.md
+    - "Cookbook": cookbook.md
     - "FAQ": faq.md
-
-  #   - "Installation":
-  #     - "installation/index.md"
-  #     - "From source": "installation/source.md"
-  #     - "In browser": "installation/codespaces.md"
-  #     - "Models and keys": "installation/keys.md"
-  #     - "1.0 migration": "installation/migration.md"
-  #     - "Troubleshooting": "installation/tips.md"
-  #     - "Changelog": "installation/changelog.md"
-  #   - "Tutorials":
-  #     - "Hello world": "usage/hello_world.md"
-  #     - "Command line basics": "usage/cl_tutorial.md"
-  #     - "Solving coding challenges": "usage/coding_challenges.md"
-  #     - "Trajectory inspector": "usage/inspector.md"
-  #     - "Batch mode": "usage/batch_mode.md"
-  #     - "Competitive runs": "usage/competitive_runs.md"
-  #     - "Adding custom tools": "usage/adding_custom_tools.md"
-  #     - "What's next?": "usage/whats_next.md"
-  #   - "FAQ": "faq.md"
-  # - User Guides:
-  #   - "usage/index.md"
-  #   - Project overview:
-  #     - "index": "background/index.md"
-  #     - "Architecture": "background/architecture.md"
-  #     - "Agent tools": "background/aci.md"
-  #   - "Command line interface": "usage/cli.md"
-  #   - "Output files": "usage/trajectories.md"
-  #   - Configuration:
-  #     - "index": "config/index.md"
-  #     - "Config files": "config/config.md"
-  #     - "Templates": "config/templates.md"
-  #     - "Models": "config/models.md"
-  #     - "Demonstrations": "config/demonstrations.md"
-  #     - "Tools": "config/tools.md"
-  #     - "Environments": "config/environments.md"
-  #   - Development:
-  #     - "Contribution guide": "dev/contribute.md"
-  #     - "Formatting conflicts": "dev/formatting_conflicts.md"
-  # - API Reference:
-  #   - "reference/index.md"
-  #   - Run config:
-  #     - "Run single": "reference/run_single_config.md"
-  #     - "Run batch": "reference/run_batch_config.md"
-  #   - Instance config:
-  #     - "Problem statements": "reference/tasks.md"
-  #     - "Repository": "reference/repo.md"
-  #     - "Batch instances": "reference/batch_instances.md"
-  #   - Agent config:
-  #     - "Agent config": "reference/agent_config.md"
-  #     - "Model config": "reference/model_config.md"
-  #     - "Templates": "reference/template_config.md"
-  #     - "Tools": "reference/tools_config.md"
-  #     - "History processors": "reference/history_processor_config.md"
-  #     - "Action parsers": "reference/parsers.md"
-  #   - "Environment config": "reference/env_config.md"
-  #   - "Tool bundle config": "reference/bundle_config.md"
-  #   - Classes:
-  #     - "Agent class": "reference/agent.md"
-  #     - "Environment class": "reference/env.md"
-  #     - "Exceptions": "reference/exceptions.md"
+    - "Contributing": contributing.md
   - API Reference:
     - "reference/index.md"
     - Agents:
@@ -142,7 +87,8 @@ nav:
       - "Local": "reference/run/local.md"
       - "Local2 (Textual)": "reference/run/local2.md"
       - "GitHub Issue": "reference/run/github_issue.md"
-      - "SWE-bench": "reference/run/swebench.md"
+      - "SWE-bench (batch)": "reference/run/swebench.md"
+      - "SWE-bench (single)": "reference/run/swebench_single.md"
 plugins:
   - glightbox
   - search

@@ -1,5 +1,5 @@
-# LitellmModel
+# Litellm Model
 
-::: microsweagent.models.litellm_model.LitellmModelConfig
+::: microsweagent.models.litellm_model
 
-::: microsweagent.models.litellm_model.LitellmModel
+{% include-markdown "../../_footer.md" %}

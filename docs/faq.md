@@ -42,3 +42,5 @@
       can be set per-action)
 
     If you want more flexibility with these items, you can use [SWE-agent](https://swe-agent.com/) instead.
+
+{% include-markdown "_footer.md" %}

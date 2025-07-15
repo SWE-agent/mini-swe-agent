@@ -1,5 +1,5 @@
-# InteractiveAgent
+# Interactive
 
-::: microsweagent.agents.interactive.InteractiveAgentConfig
+::: microsweagent.agents.interactive
 
-::: microsweagent.agents.interactive.InteractiveAgent
+{% include-markdown "../../_footer.md" %}

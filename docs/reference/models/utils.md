@@ -9,3 +9,5 @@ Convenience functions for selecting and configuring models.
 ::: microsweagent.models.get_model_class
 
 ::: microsweagent.models.prompt_for_model_name
+
+{% include-markdown "../../_footer.md" %}

@@ -1,5 +1,5 @@
-# DockerEnvironment
+# Docker
 
-::: microsweagent.environments.docker.DockerEnvironmentConfig
+::: microsweagent.environments.docker
 
-::: microsweagent.environments.docker.DockerEnvironment
+{% include-markdown "../../_footer.md" %}

@@ -30,3 +30,5 @@ Entry points and command-line interfaces:
 - **[Local2 (Textual)](run/local2.md)** - TUI-based local execution
 - **[GitHub Issue](run/github_issue.md)** - GitHub issue solver
 - **[SWE-bench](run/swebench.md)** - SWE-bench evaluation script
+
+{% include-markdown "../_footer.md" %}
