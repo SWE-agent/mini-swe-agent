@@ -56,7 +56,7 @@ class DefaultAgent:
         self.env = env
 
     def render_template(self, template: str, **kwargs) -> str:
-        return Template(template).render(**kwargs, **asdict(self.config), **os.environ)
+        return Template(template).render(**kwargs, **asdict(self.config), **asdict(self.env.config), **os.environ)
 
     def add_message(self, role: str, content: str):
         self.messages.append({"role": role, "content": content})

@@ -115,7 +115,8 @@ TL;DR: You include variables with double curly braces, e.g. `{{task}}`, but you 
 In all builtin agents, you can use the following variables:
 
 - Environment variables
-- Config variables
+- Agent config variables
+- Environment config variables
 - Explicitly passed variables (`observation`, `task` etc.) depending on the template
 
 {% include-markdown "_footer.md" %}

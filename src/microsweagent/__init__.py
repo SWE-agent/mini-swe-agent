@@ -49,6 +49,8 @@ class Model(Protocol):
 class Environment(Protocol):
     """Protocol for execution environments."""
 
+    config: Any
+
     def execute(self, command: str, cwd: str = "") -> dict[str, str]: ...
 
 

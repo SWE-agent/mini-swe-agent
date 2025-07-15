@@ -11,9 +11,9 @@ class LocalEnvironmentConfig:
 
 
 class LocalEnvironment:
-    def __init__(self, **kwargs):
+    def __init__(self, *, config_class: type = LocalEnvironmentConfig, **kwargs):
         """This class executes bash commands directly on the local machine."""
-        self.config = LocalEnvironmentConfig(**kwargs)
+        self.config = config_class(**kwargs)
 
     def execute(self, command: str, cwd: str = ""):
         """Execute a command in the local environment and return the result as a dict."""
