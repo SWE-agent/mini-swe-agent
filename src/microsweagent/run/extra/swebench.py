@@ -44,10 +44,10 @@ class ProgressTrackingAgent(DefaultAgent):
         self.progress_manager: RunBatchProgressManager = progress_manager
         self.instance_id = instance_id
 
-    def step(self) -> str:
+    def step(self) -> dict:
         """Override step to provide progress updates."""
         self.progress_manager.update_instance_status(
-            self.instance_id, f"Step {self.model.n_calls + 1:03d} (${self.model.cost:.2f})"
+            self.instance_id, f"Step {self.model.n_calls + 1:3d} (${self.model.cost:.2f})"
         )
         return super().step()
 
@@ -192,7 +192,18 @@ def main(
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
-    futures_cancelled = False
+    def process_futures(futures: dict[concurrent.futures.Future, str]):
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                future.result()
+            except concurrent.futures.CancelledError:
+                pass
+            except Exception as e:
+                instance_id = futures[future]
+                print(f"Error in future for instance {instance_id}: {e}")
+                traceback.print_exc()
+                progress_manager.on_uncaught_exception(instance_id, e)
+
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
             futures = {
@@ -201,22 +212,14 @@ def main(
                 ]
                 for instance in instances
             }
-            for future in concurrent.futures.as_completed(futures):
-                try:
-                    future.result()
-                except KeyboardInterrupt:
-                    if futures_cancelled:
-                        raise
-                    print("Cancelling all pending jobs. Press ^C again to exit immediately.")
-                    for future in futures:
-                        if not future.running() and not future.done():
-                            future.cancel()
-                    futures_cancelled = True
-                except Exception as e:
-                    instance_id = futures[future]
-                    print(f"Error in future for instance {instance_id}: {e}")
-                    traceback.print_exc()
-                    progress_manager.on_uncaught_exception(instance_id, e)
+            try:
+                process_futures(futures)
+            except KeyboardInterrupt:
+                print("Cancelling all pending jobs. Press ^C again to exit immediately.")
+                for future in futures:
+                    if not future.running() and not future.done():
+                        future.cancel()
+                process_futures(futures)
 
 
 if __name__ == "__main__":
