@@ -63,7 +63,7 @@ class InteractiveAgent(DefaultAgent):
             # We always add a message about the interrupt and then just proceed to the next step
             interruption_message = self._prompt_and_handle_special(
                 "\n\n[bold yellow]Interrupted.[/bold yellow] "
-                "[bold green]/h[/bold green] to show help, or [green]continue with comment/command[/green]"
+                "[green]type a comment/command[/green] (/h for available commands)"
                 "\n[bold yellow]>[/bold yellow] "
             ).strip()
             if not interruption_message or interruption_message in self._MODE_COMMANDS_MAPPING:
@@ -82,8 +82,7 @@ class InteractiveAgent(DefaultAgent):
     def ask_confirmation(self) -> None:
         prompt = (
             "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
-            "[green bold]/h[/green bold] for help, "
-            "or [green]enter comment/command[/green]\n"
+            "or [green]type a comment/command[/green] (/h for available commands)\n"
             "[bold yellow]>[/bold yellow] "
         )
         match user_input := self._prompt_and_handle_special(prompt).strip():
