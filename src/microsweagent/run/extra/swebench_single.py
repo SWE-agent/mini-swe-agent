@@ -40,9 +40,10 @@ def main(
     instance: dict = instances[instance_spec]  # type: ignore
 
     _config = yaml.safe_load(get_config_path(config_path).read_text())
+    env = DockerEnvironment(**(_config.get("environment", {}) | {"image": get_swebench_docker_image_name(instance)}))
     agent = InteractiveAgent(
         get_model(model_name, _config.get("model", {})),
-        DockerEnvironment(image=get_swebench_docker_image_name(instance)),
+        env,
         **(_config.get("agent", {}) | {"mode": "yolo"}),
     )
     agent.run(instance["problem_statement"])
