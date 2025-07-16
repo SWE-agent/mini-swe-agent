@@ -74,7 +74,7 @@ class DockerEnvironment:
                 cmd.extend(["-e", f"{key}={value}"])
         for key, value in self.config.env.items():
             cmd.extend(["-e", f"{key}={value}"])
-        cmd.extend([self.container_id, "bash", "-c", f"source ~/.bashrc 2>/dev/null || true; {command}"])
+        cmd.extend([self.container_id, "bash", "-lc", command])
 
         return vars(
             subprocess.run(
