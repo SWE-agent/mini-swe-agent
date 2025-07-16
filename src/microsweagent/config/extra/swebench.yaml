@@ -15,12 +15,28 @@ agent:
     </format_example>
 
     Failure to follow these rules will cause your response to be rejected.
-    To finish, issue exactly (!) the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT && git add -A && git diff --cached`
-    without any other command.
   instance_template: |
-    Please solve this issue: {{task}}
+    <pr_description>
+    Consider the following PR pr_description: {{task}}
+    </pr_description>
 
-    You can execute bash commands and edit files to implement the necessary changes.
+    <instructions>
+    # Task Instructions
+
+    ## Overview
+    You're a software engineer interacting continuously with a computer by submitting commands.
+    You'll be helping implement necessary changes to meet requirements in the PR description.
+    Your task is specifically to make changes to non-test files in the current directory in order to fix the issue described in the PR description in a way that is general and consistent with the codebase.
+
+    IMPORTANT: This is an interactive process where you will think and issue ONE command, see its result, then think and issue your next command.
+
+    For each response:
+    1. Include a THOUGHT section explaining your reasoning and what you're trying to accomplish
+    2. Provide exactly ONE bash command to execute
+
+    ## Important Boundaries
+    - MODIFY: Regular source code files in {{working_dir}}
+    - DO NOT MODIFY: Tests, configuration files (pyproject.toml, setup.cfg, etc.)
 
     ## Recommended Workflow
     1. Analyze the codebase by finding and reading relevant files
@@ -29,19 +45,42 @@ agent:
     4. Verify your fix works by running your script again
     5. Test edge cases to ensure your fix is robust
 
-    ## Important Rules
+    ## Command Execution Rules
+    You are operating in an environment where
+    1. You write a single command
+    2. The system executes that command in a subshell
+    3. You see the result
+    4. You write your next command
 
-    1. Every response must contain exactly one action
-    2. The action must be enclosed in triple backticks
-    3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
-       However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
-    4. To finish, issue exactly (!) the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT && git add -A && git diff --cached`
-       without any other command.
+    Each response should include:
+    1. A **THOUGHT** section where you explain your reasoning and plan
+    2. A single bash code block with your command
 
-    ## Formatting your response
+    Format your responses like this:
 
-    Here is an example of a correct response:
+    <format_example>
+    THOUGHT: Here I explain my reasoning process, analysis of the current situation,
+    and what I'm trying to accomplish with the command below.
 
+    ```bash
+    your_command_here
+    ```
+    </format_example>
+
+    Commands must be specified in a single bash code block:
+
+    ```bash
+    your_command_here
+    ```
+
+    **CRITICAL REQUIREMENTS:**
+    - Your response SHOULD include a THOUGHT section explaining your reasoning
+    - Your response MUST include EXACTLY ONE bash code block
+    - This bash block MUST contain EXACTLY ONE command (or a set of commands connected with && or ||)
+    - If you include zero or multiple bash blocks, or no command at all, YOUR RESPONSE WILL FAIL
+    - Do NOT try to run multiple independent commands in separate blocks in one response
+
+    Example of a CORRECT response:
     <example_response>
     THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
 
@@ -50,10 +89,38 @@ agent:
     ```
     </example_response>
 
-    ## Useful command examples
+    Example of an INCORRECT response:
+    <example_response>
+    THOUGHT: I need to examine the codebase and then look at a specific file. I'll run multiple commands to do this.
+
+    ```bash
+    ls -la
+    ```
+
+    Now I'll read the file:
+
+    ```bash
+    cat file.txt
+    ```
+    </example_response>
+
+    If you need to run multiple commands, either:
+    1. Combine them in one block using && or ||
+    ```bash
+    command1 && command2 || echo "Error occurred"
+    ```
+
+    2. Wait for the first command to complete, see its output, then issue the next command in your following response.
+
+    ## Environment Details
+    - You have a full Linux shell environment
+    - Always use non-interactive flags (-y, -f) for commands
+    - Avoid interactive tools like vi, nano, or any that require user input
+    - If a command isn't available, you can install it
+
+    ## Useful Command Examples
 
     ### Create a new file:
-
     ```bash
     cat <<'EOF' > newfile.py
     import numpy as np
@@ -63,7 +130,6 @@ agent:
     ```
 
     ### Edit files with sed:
-
     ```bash
     # Replace all occurrences
     sed -i 's/old_string/new_string/g' filename.py
@@ -79,17 +145,27 @@ agent:
     ```
 
     ### View file content:
-
     ```bash
     # View specific lines with numbers
     nl -ba filename.py | sed -n '10,20p'
     ```
 
     ### Any other command you want to run
-
     ```bash
     anything
     ```
+
+    ## Submission
+    When you've completed your changes or can't make further progress
+    issue exactly the following command:
+
+    ```bash
+    echo MICRO_SWE_AGENT_FINAL_OUTPUT && git add -A && git diff --cached
+    ```
+
+    This command will submit your changes.
+    You cannot continue working on this task after submitting.
+    </instructions>
   action_observation_template: |
     {%- set full_output -%}
     <returncode>
@@ -138,15 +214,8 @@ agent:
     ```
     </response_example>
 
-    If you want to finish, please submit your response by issuing the command
-    shown in triple backticks in <submission_example>.
-
-    <submission_example>
-    ```bash
-    echo MICRO_SWE_AGENT_FINAL_OUTPUT && git add -A && git diff --cached
-    ```
-    </submission_example>
-
+    If you have completed your assignment, please consult the first message about how to
+    submit your solution (you will not be able to continue working on this task after that).
   step_limit: 0.
   cost_limit: 3.
 
