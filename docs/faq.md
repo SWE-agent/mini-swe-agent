@@ -27,8 +27,6 @@
 
 !!! question "What models do you support?"
 
-    micro-SWE-agent supports all models that are supported by [litellm](https://github.com/BerriAI/litellm)
-    and we're open to extend the `models/` directory with more models should `litellm` not support them.
 
 ??? question "What are the limitations of micro-SWE-agent?"
 
@@ -42,5 +40,52 @@
       can be set per-action)
 
     If you want more flexibility with these items, you can use [SWE-agent](https://swe-agent.com/) instead.
+
+??? question "Where is global configuration stored?"
+
+    The global configuration is stored in the `.env` file in the config directory.
+    The location is printed when you run `micro --help`.
+
+    The `.env` file is a simple key-value file that is read by the `dotenv` library.
+
+
+## Models
+
+!!! question "What models do you support?"
+
+    Currently, micro-SWE-agent supports all models that are supported by [litellm](https://github.com/BerriAI/litellm)
+    and we're open to extend the `models/` directory with more models should `litellm` not support them.
+
+!!! question "How do I set the API key for a model?"
+
+    The API key can be stored either as an environment variable (note that enviroinment variables are not persistent
+    unless you set them in your `~/.bashrc` or similar), or as a permanent key in the config file.
+
+    To temporarily set the API key as an environment variable, you can use the following command:
+
+    ```bash
+    export OPENAI_API_KEY=sk-test123
+    ```
+
+    To permanently set the API key in the config file, you can use the following command:
+
+    ```bash
+    micro set-key OPENAI_API_KEY sk-test123
+    ```
+
+    Alternatively, you can directly edit the `.env` file in the config directory
+    (the location is printed when you run `micro --help`).
+
+!!! question "How can I set the default model?"
+
+    The default model is stored in the config/environment as `MSWEA_MODEL_NAME`.
+    To permanently change it:
+
+    ```bash
+    micro set-key MSWEA_MODEL_NAME claude-sonnet-4-20250514
+    ```
+
+    Alternatively, you can directly edit the `.env` file in the config directory
+    (the location is printed when you run `micro --help`).
 
 {% include-markdown "_footer.md" %}

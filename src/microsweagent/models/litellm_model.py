@@ -36,9 +36,14 @@ class LitellmModel:
         ),
     )
     def _query(self, messages: list[dict[str, str]], **kwargs) -> str:
-        response: litellm.types.utils.ModelResponse = litellm.completion(  # type: ignore
-            model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
-        )
+        try:
+            response: litellm.types.utils.ModelResponse = litellm.completion(  # type: ignore
+                model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
+            )
+        except litellm.exceptions.AuthenticationError as e:
+            e.message += " You can permanently set your API key as with `micro set-key KEY VALUE`."
+            raise e
+
         return response
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:

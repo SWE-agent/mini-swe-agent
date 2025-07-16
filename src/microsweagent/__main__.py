@@ -5,6 +5,10 @@ import importlib
 import os
 import sys
 
+from dotenv import set_key
+
+from microsweagent import global_config_file
+
 
 def main() -> None:
     """Main entry point for pipx run commands."""
@@ -20,6 +24,11 @@ def main() -> None:
 
         sys.argv = sys.argv[:1] + args[1:]  # Keep script name, remove "i"
         inspect_app()
+    elif len(args) > 0 and args[0] == "set-key":
+        if len(args) != 3:
+            raise ValueError("Usage: micro set-key <key> <value>")
+
+        set_key(global_config_file, args[1], args[2])
     else:
         default_module = os.getenv("MSWEA_DEFAULT_RUN", "microsweagent.run.local")
         module = importlib.import_module(default_module)
