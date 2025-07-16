@@ -101,9 +101,9 @@ class InteractiveAgent(DefaultAgent):
         if user_input == "/h":
             console.print(
                 f"Current mode: [bold green]{self.config.mode}[/bold green]\n"
-                f"[bold green]/u[/bold green] to switch to human mode\n"
-                f"[bold green]/c[/bold green] to switch to confirmation mode\n"
-                f"[bold green]/y[/bold green] to switch to yolo mode\n"
+                f"[bold green]/y[/bold green] to switch to [bold yellow]yolo[/bold yellow] mode (execute LM commands without confirmation)\n"
+                f"[bold green]/c[/bold green] to switch to [bold yellow]confirmation[/bold yellow] mode (ask for confirmation before executing LM commands)\n"
+                f"[bold green]/u[/bold green] to switch to [bold yellow]human[/bold yellow] mode (execute commands issued by the user)\n"
             )
             return self._prompt_and_handle_special(prompt)
         if user_input in self._MODE_COMMANDS_MAPPING:
