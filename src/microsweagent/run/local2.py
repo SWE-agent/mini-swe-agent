@@ -5,20 +5,20 @@ from pathlib import Path
 import typer
 import yaml
 
-from microsweagent import package_dir
 from microsweagent.agents.interactive_textual import AgentApp
+from microsweagent.config import builtin_config_dir, get_config_path
 from microsweagent.environments.local import LocalEnvironment
 from microsweagent.models import get_model
 from microsweagent.run.local import get_multiline_task
 from microsweagent.run.utils.save import save_traj
 
-DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL2_CONFIG_PATH", package_dir / "config" / "local.yaml"))
+DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL2_CONFIG_PATH", builtin_config_dir / "local.yaml"))
 app = typer.Typer()
 
 
 @app.command()
 def main(
-    config: str = typer.Option(str(DEFAULT_CONFIG), "-c", "--config", help="Path to config file"),
+    config: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
     model: str | None = typer.Option(
         None,
         "-m",
@@ -29,7 +29,7 @@ def main(
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
 ) -> None:
     """Run micro-SWE-agent with textual interface."""
-    _config = yaml.safe_load(Path(config).read_text())
+    _config = yaml.safe_load(get_config_path(config).read_text())
 
     if not task:
         task = get_multiline_task()

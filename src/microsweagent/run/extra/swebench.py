@@ -13,8 +13,8 @@ import yaml
 from datasets import load_dataset
 from rich.live import Live
 
-from microsweagent import package_dir
 from microsweagent.agents.default import DefaultAgent
+from microsweagent.config import builtin_config_dir, get_config_path
 from microsweagent.environments.docker import DockerEnvironment
 from microsweagent.models import get_model
 from microsweagent.run.extra.utils.batch_progress import RunBatchProgressManager
@@ -92,7 +92,7 @@ def process_instance(
     instance: dict,
     output_dir: Path,
     model_name: str | None,
-    config_path: Path,
+    config_path: str | Path,
     progress_manager: RunBatchProgressManager,
 ) -> None:
     """Process a single SWEBench instance."""
@@ -103,7 +103,7 @@ def process_instance(
     (instance_dir / f"{instance_id}.traj.json").unlink(missing_ok=True)
 
     image_name = get_swebench_docker_image_name(instance)
-    config = yaml.safe_load(config_path.read_text())
+    config = yaml.safe_load(get_config_path(config_path).read_text())
     model = get_model(model_name, config=config.get("model", {}))
     task = instance["problem_statement"]
 
@@ -170,7 +170,7 @@ def main(
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances"),
     config: Path = typer.Option(
-        package_dir / "config" / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
+        builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
     ),
 ) -> None:
     """Run micro-SWE-agent on SWEBench instances"""

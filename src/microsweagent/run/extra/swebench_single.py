@@ -6,8 +6,8 @@ import typer
 import yaml
 from datasets import load_dataset
 
-from microsweagent import package_dir
 from microsweagent.agents.interactive import InteractiveAgent
+from microsweagent.config import builtin_config_dir, get_config_path
 from microsweagent.environments.docker import DockerEnvironment
 from microsweagent.models import get_model
 from microsweagent.run.extra.swebench import DATASET_MAPPING, get_swebench_docker_image_name
@@ -22,7 +22,7 @@ def main(
     instance_spec: str = typer.Option(None, "-i", "--instance", help="SWE-Bench instance ID"),
     model_name: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
     config_path: Path = typer.Option(
-        package_dir / "config" / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
+        builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
     ),
 ) -> None:
     """Run on a single SWE-Bench instance."""
@@ -39,7 +39,7 @@ def main(
         instance_spec = sorted(instances.keys())[int(instance_spec)]
     instance: dict = instances[instance_spec]  # type: ignore
 
-    _config = yaml.safe_load(config_path.read_text())
+    _config = yaml.safe_load(get_config_path(config_path).read_text())
     agent = InteractiveAgent(
         get_model(model_name, _config.get("model", {})),
         DockerEnvironment(image=get_swebench_docker_image_name(instance)),

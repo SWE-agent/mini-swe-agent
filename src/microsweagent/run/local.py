@@ -6,13 +6,13 @@ import typer
 import yaml
 from rich.console import Console
 
-from microsweagent import package_dir
 from microsweagent.agents.interactive import InteractiveAgent
+from microsweagent.config import builtin_config_dir, get_config_path
 from microsweagent.environments.local import LocalEnvironment
 from microsweagent.models import get_model
 from microsweagent.run.utils.save import save_traj
 
-DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL_CONFIG_PATH", package_dir / "config" / "local.yaml"))
+DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL_CONFIG_PATH", builtin_config_dir / "local.yaml"))
 console = Console(highlight=False)
 app = typer.Typer()
 
@@ -35,7 +35,7 @@ def get_multiline_task() -> str:
 
 @app.command()
 def main(
-    config: str = typer.Option(str(DEFAULT_CONFIG), "-c", "--config", help="Path to config file"),
+    config: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
     model: str | None = typer.Option(
         None,
         "-m",
@@ -47,7 +47,7 @@ def main(
     output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
 ) -> InteractiveAgent:
     """Run micro-SWE-agent right here, right now."""
-    _config = yaml.safe_load(Path(config).read_text())
+    _config = yaml.safe_load(get_config_path(config).read_text())
 
     if not task:
         task = get_multiline_task()
