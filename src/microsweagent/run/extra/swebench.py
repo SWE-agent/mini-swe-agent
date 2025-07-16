@@ -125,7 +125,6 @@ def process_instance(
     except Exception as e:
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
-        raise e
     finally:
         save_traj(
             agent,

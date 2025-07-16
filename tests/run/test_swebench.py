@@ -474,10 +474,7 @@ def test_exception_handling_with_progress_manager(tmp_path):
 
             # Verify progress manager methods were called
             mock_progress_manager.on_instance_start.assert_called_once_with("swe-agent__test-repo-1")
-            mock_progress_manager.on_uncaught_exception.assert_called_once()
+            mock_progress_manager.on_instance_end.assert_called_once_with("swe-agent__test-repo-1", "ConnectionError")
 
-            # Check the exception passed to on_uncaught_exception
-            call_args = mock_progress_manager.on_uncaught_exception.call_args
-            assert call_args[0][0] == "swe-agent__test-repo-1"
-            assert isinstance(call_args[0][1], ConnectionError)
-            assert str(call_args[0][1]) == "Network timeout"
+            # on_uncaught_exception should not be called since exceptions are handled properly
+            mock_progress_manager.on_uncaught_exception.assert_not_called()
