@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 from rich.console import Console
+from rich.rule import Rule
 
 from microsweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
 
@@ -58,6 +59,7 @@ class InteractiveAgent(DefaultAgent):
     def step(self) -> dict:
         # Override the step method to handle user interruption
         try:
+            console.print(Rule())
             return super().step()
         except KeyboardInterrupt:
             # We always add a message about the interrupt and then just proceed to the next step
