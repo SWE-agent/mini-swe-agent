@@ -3,7 +3,7 @@
 `micro` is a REPL-style interactive command line interface for using micro-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).
 Compared to [`micro2`](micro2.md), `micro` is more lightweight and does not require threading.
 
-VIDEO HERE TODO
+<iframe width="800" height="572" src="https://www.youtube.com/embed/dl_Sg79gKzY" title="micro-swe-agent" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" controls=0 modestbranding=1 rel=0></iframe>
 
 !!! tip "Feedback wanted!"
     Give feedback on the `micro` and `micro2` interfaces at [this github issue](https://github.com/swe-agent/micro-swe-agent/issues/161)

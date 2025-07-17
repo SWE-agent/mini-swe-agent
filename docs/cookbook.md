@@ -149,7 +149,7 @@ An agent that uses python function for some actions:
 
     def python_function(*args) -> dict:
         ...
-        return {"stdout": "..."}
+        return {"output": "..."}
 
     class AgentWithPythonFunctions(DefaultAgent):
         def execute_action(self, action: dict) -> dict:
@@ -168,7 +168,7 @@ An agent that uses python function for some actions:
 
     def python_function(*args) -> dict:
         ...
-        return {"stdout": "..."}
+        return {"output": "..."}
 
     class EnvironmentWithPythonFunctions(LocalEnvironment):
         def execute(self, command: str, cwd: str = "") -> dict:

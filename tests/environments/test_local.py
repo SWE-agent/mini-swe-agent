@@ -24,7 +24,7 @@ def test_local_environment_basic_execution():
 
     result = env.execute("echo 'hello world'")
     assert result["returncode"] == 0
-    assert "hello world" in result["stdout"]
+    assert "hello world" in result["output"]
 
 
 def test_local_environment_set_env_variables():
@@ -34,12 +34,12 @@ def test_local_environment_set_env_variables():
     # Test single environment variable
     result = env.execute("echo $TEST_VAR")
     assert result["returncode"] == 0
-    assert "test_value" in result["stdout"]
+    assert "test_value" in result["output"]
 
     # Test multiple environment variables
     result = env.execute("echo $TEST_VAR $ANOTHER_VAR")
     assert result["returncode"] == 0
-    assert "test_value another_value" in result["stdout"]
+    assert "test_value another_value" in result["output"]
 
 
 def test_local_environment_existing_env_variables():
@@ -50,7 +50,7 @@ def test_local_environment_existing_env_variables():
         # Test that both existing and new variables are available
         result = env.execute("echo $EXISTING_VAR $NEW_VAR")
         assert result["returncode"] == 0
-        assert "existing_value new_value" in result["stdout"]
+        assert "existing_value new_value" in result["output"]
 
 
 def test_local_environment_env_variable_override():
@@ -60,7 +60,7 @@ def test_local_environment_env_variable_override():
 
         result = env.execute("echo $CONFLICT_VAR")
         assert result["returncode"] == 0
-        assert "override_value" in result["stdout"]
+        assert "override_value" in result["output"]
 
 
 def test_local_environment_custom_cwd():
@@ -70,7 +70,7 @@ def test_local_environment_custom_cwd():
 
         result = env.execute("pwd")
         assert result["returncode"] == 0
-        assert temp_dir in result["stdout"]
+        assert temp_dir in result["output"]
 
 
 def test_local_environment_cwd_parameter_override():
@@ -81,7 +81,7 @@ def test_local_environment_cwd_parameter_override():
         # Execute with different cwd parameter
         result = env.execute("pwd", cwd=temp_dir2)
         assert result["returncode"] == 0
-        assert temp_dir2 in result["stdout"]
+        assert temp_dir2 in result["output"]
 
 
 def test_local_environment_default_cwd():
@@ -91,7 +91,7 @@ def test_local_environment_default_cwd():
 
     result = env.execute("pwd")
     assert result["returncode"] == 0
-    assert current_dir in result["stdout"]
+    assert current_dir in result["output"]
 
 
 def test_local_environment_command_failure():
@@ -100,8 +100,7 @@ def test_local_environment_command_failure():
 
     result = env.execute("exit 1")
     assert result["returncode"] == 1
-    assert result["stdout"] == ""
-    assert result["stderr"] == ""
+    assert result["output"] == ""
 
 
 def test_local_environment_nonexistent_command():
@@ -110,7 +109,7 @@ def test_local_environment_nonexistent_command():
 
     result = env.execute("nonexistent_command_12345")
     assert result["returncode"] != 0
-    assert "nonexistent_command_12345" in result["stderr"] or "command not found" in result["stderr"]
+    assert "nonexistent_command_12345" in result["output"] or "command not found" in result["output"]
 
 
 def test_local_environment_stderr_capture():
@@ -119,8 +118,7 @@ def test_local_environment_stderr_capture():
 
     result = env.execute("echo 'error message' >&2")
     assert result["returncode"] == 0
-    assert result["stdout"] == ""
-    assert "error message" in result["stderr"]
+    assert "error message" in result["output"]
 
 
 def test_local_environment_timeout():
@@ -161,11 +159,11 @@ def test_local_environment_multiline_output():
 
     result = env.execute("echo -e 'line1\\nline2\\nline3'")
     assert result["returncode"] == 0
-    stdout_lines = result["stdout"].strip().split("\n")
-    assert len(stdout_lines) == 3
-    assert "line1" in stdout_lines[0]
-    assert "line2" in stdout_lines[1]
-    assert "line3" in stdout_lines[2]
+    output_lines = result["output"].strip().split("\n")
+    assert len(output_lines) == 3
+    assert "line1" in output_lines[0]
+    assert "line2" in output_lines[1]
+    assert "line3" in output_lines[2]
 
 
 def test_local_environment_file_operations():
@@ -180,7 +178,7 @@ def test_local_environment_file_operations():
         # Read the file
         result = env.execute("cat test.txt")
         assert result["returncode"] == 0
-        assert "test content" in result["stdout"]
+        assert "test content" in result["output"]
 
         # Verify file exists
         test_file = Path(temp_dir) / "test.txt"
@@ -195,9 +193,9 @@ def test_local_environment_shell_features():
     # Test pipe
     result = env.execute("echo 'hello world' | grep 'world'")
     assert result["returncode"] == 0
-    assert "hello world" in result["stdout"]
+    assert "hello world" in result["output"]
 
     # Test command substitution
     result = env.execute("echo $(echo 'nested')")
     assert result["returncode"] == 0
-    assert "nested" in result["stdout"]
+    assert "nested" in result["output"]

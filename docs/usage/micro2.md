@@ -40,6 +40,10 @@ You can switch between the modes at any time by pressing the `c` or `y` keys.
 
 `micro2` starts in `confirm` mode by default. To start in `yolo` mode, you can add `-y`/`--yolo` to the command line.
 
+## FAQ
+
+> How can I copy output from the
+
 ## Implementation
 
 ??? note "Default config"

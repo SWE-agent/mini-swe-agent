@@ -18,16 +18,16 @@ class LocalEnvironment:
     def execute(self, command: str, cwd: str = ""):
         """Execute a command in the local environment and return the result as a dict."""
         cwd = cwd or self.config.cwd or os.getcwd()
-        return vars(
-            subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                cwd=cwd,
-                env=os.environ | self.config.env,
-                timeout=self.config.timeout,
-                encoding="utf-8",
-                errors="replace",
-            )
+        result = subprocess.run(
+            command,
+            shell=True,
+            text=True,
+            cwd=cwd,
+            env=os.environ | self.config.env,
+            timeout=self.config.timeout,
+            encoding="utf-8",
+            errors="replace",
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
         )
+        return {"output": result.stdout, "returncode": result.returncode}

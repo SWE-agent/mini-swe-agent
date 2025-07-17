@@ -38,7 +38,7 @@ def test_singularity_environment_basic_execution():
 
     result = env.execute("echo 'hello world'")
     assert result["returncode"] == 0
-    assert "hello world" in result["stdout"]
+    assert "hello world" in result["output"]
 
 
 @pytest.mark.slow
@@ -52,12 +52,12 @@ def test_singularity_environment_set_env_variables():
     # Test single environment variable
     result = env.execute("echo $TEST_VAR")
     assert result["returncode"] == 0
-    assert "test_value" in result["stdout"]
+    assert "test_value" in result["output"]
 
     # Test multiple environment variables
     result = env.execute("echo $TEST_VAR $ANOTHER_VAR")
     assert result["returncode"] == 0
-    assert "test_value another_value" in result["stdout"]
+    assert "test_value another_value" in result["output"]
 
 
 @pytest.mark.slow
@@ -70,12 +70,12 @@ def test_singularity_environment_forward_env_variables():
         # Test single forwarded environment variable
         result = env.execute("echo $HOST_VAR")
         assert result["returncode"] == 0
-        assert "host_value" in result["stdout"]
+        assert "host_value" in result["output"]
 
         # Test multiple forwarded environment variables
         result = env.execute("echo $HOST_VAR $ANOTHER_HOST_VAR")
         assert result["returncode"] == 0
-        assert "host_value another_host_value" in result["stdout"]
+        assert "host_value another_host_value" in result["output"]
 
 
 @pytest.mark.slow
@@ -86,7 +86,7 @@ def test_singularity_environment_forward_nonexistent_env_variables():
 
     result = env.execute('echo "[$NONEXISTENT_VAR]"')
     assert result["returncode"] == 0
-    assert "[]" in result["stdout"]  # Empty variable should result in empty string
+    assert "[]" in result["output"]  # Empty variable should result in empty string
 
 
 @pytest.mark.slow
@@ -100,7 +100,7 @@ def test_singularity_environment_combined_env_and_forward():
 
         result = env.execute("echo $SET_VAR $HOST_VAR")
         assert result["returncode"] == 0
-        assert "from_config from_host" in result["stdout"]
+        assert "from_config from_host" in result["output"]
 
 
 @pytest.mark.slow
@@ -115,7 +115,7 @@ def test_singularity_environment_env_override_forward():
         result = env.execute("echo $CONFLICT_VAR")
         assert result["returncode"] == 0
         # The explicitly set env should take precedence (comes after forwarded in singularity exec command)
-        assert "from_config" in result["stdout"]
+        assert "from_config" in result["output"]
 
 
 @pytest.mark.slow
@@ -126,7 +126,7 @@ def test_singularity_environment_custom_cwd():
 
     result = env.execute("pwd")
     assert result["returncode"] == 0
-    assert "/tmp" in result["stdout"]
+    assert "/tmp" in result["output"]
 
 
 @pytest.mark.slow
@@ -137,7 +137,7 @@ def test_singularity_environment_cwd_parameter_override():
 
     result = env.execute("pwd", cwd="/tmp")
     assert result["returncode"] == 0
-    assert "/tmp" in result["stdout"]
+    assert "/tmp" in result["output"]
 
 
 @pytest.mark.slow

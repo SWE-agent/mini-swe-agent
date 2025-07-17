@@ -76,16 +76,16 @@ class DockerEnvironment:
             cmd.extend(["-e", f"{key}={value}"])
         cmd.extend([self.container_id, "bash", "-lc", command])
 
-        return vars(
-            subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=self.config.timeout,
-                encoding="utf-8",
-                errors="replace",
-            )
+        result = subprocess.run(
+            cmd,
+            text=True,
+            timeout=self.config.timeout,
+            encoding="utf-8",
+            errors="replace",
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
         )
+        return {"output": result.stdout, "returncode": result.returncode}
 
     def cleanup(self):
         """Stop and remove the Docker container."""

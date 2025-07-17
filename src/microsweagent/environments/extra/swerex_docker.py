@@ -34,7 +34,6 @@ class SwerexDockerEnvironment:
             )
         )
         return {
-            "stdout": output.stdout,
-            "stderr": output.stderr,
+            "output": f"<stdout>\n{output.stdout}</stdout>\n<stderr>\n{output.stderr}</stderr>",
             "returncode": output.exit_code,
         }

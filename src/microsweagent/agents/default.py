@@ -96,7 +96,7 @@ class DefaultAgent:
 
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
-        actions = re.findall(r"```[a-zA-Z]*\n(.*?)(?=\n```|```)", response["content"], re.DOTALL)
+        actions = re.findall(r"```(?:bash)?\n?(.*?)(?=\n```|```)", response["content"], re.DOTALL)
         if len(actions) == 1:
             return {"action": actions[0].strip(), **response}
         raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
@@ -111,5 +111,5 @@ class DefaultAgent:
 
     def has_finished(self, output: dict[str, str]):
         """Raises Submitted exception with final output if the agent has finished its task."""
-        if output.get("stdout") and output["stdout"].splitlines()[0] == "MICRO_SWE_AGENT_FINAL_OUTPUT":
-            raise Submitted("\n".join(output["stdout"].splitlines()[1:]))
+        if output.get("output") and output["output"].lstrip().splitlines()[0] == "MICRO_SWE_AGENT_FINAL_OUTPUT":
+            raise Submitted("\n".join(output["output"].lstrip().splitlines()[1:]))
