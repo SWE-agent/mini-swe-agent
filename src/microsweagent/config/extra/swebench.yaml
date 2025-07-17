@@ -79,6 +79,8 @@ agent:
     - This bash block MUST contain EXACTLY ONE command (or a set of commands connected with && or ||)
     - If you include zero or multiple bash blocks, or no command at all, YOUR RESPONSE WILL FAIL
     - Do NOT try to run multiple independent commands in separate blocks in one response
+    - Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
+    - However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
 
     Example of a CORRECT response:
     <example_response>
