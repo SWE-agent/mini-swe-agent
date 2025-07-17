@@ -70,7 +70,7 @@ class AddLogEmitCallback(logging.Handler):
         self.callback = callback
 
     def emit(self, record: logging.LogRecord):
-        self.callback(record)
+        self.callback(record)  # type: ignore[attr-defined]
 
 
 def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
@@ -223,7 +223,8 @@ class AgentApp(App):
     # --- Reacting to events ---
 
     def on_message_added(self) -> None:
-        auto_follow = self.i_step == self.n_steps - 1
+        vs = self.query_one(VerticalScroll)
+        auto_follow = self.i_step == self.n_steps - 1 and vs.scroll_target_y <= 1
         self.n_steps = len(_messages_to_steps(self.agent.messages))
         self.update_content()
         if auto_follow:
