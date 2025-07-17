@@ -23,8 +23,8 @@ class LitellmModel:
         self.n_calls = 0
 
     @retry(
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=4, max=10),
+        stop=stop_after_attempt(10),
+        wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
         retry=retry_if_exception_type(
             (
@@ -32,6 +32,7 @@ class LitellmModel:
                 litellm.exceptions.ServiceUnavailableError,
                 litellm.exceptions.Timeout,
                 litellm.exceptions.APIConnectionError,
+                litellm.exceptions.InternalServerError,
             )
         ),
     )
