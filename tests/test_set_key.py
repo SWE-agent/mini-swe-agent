@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
-from microsweagent.__main__ import main
+from microsweagent.run.micro_extra import main
 
 
 def test_set_key_success():
@@ -14,8 +14,8 @@ def test_set_key_success():
 
     with (
         patch.object(sys, "argv", test_args),
-        patch("microsweagent.__main__.global_config_file", test_config_file),
-        patch("microsweagent.__main__.set_key") as mock_set_key,
+        patch("microsweagent.run.micro_extra.global_config_file", test_config_file),
+        patch("microsweagent.run.micro_extra.set_key") as mock_set_key,
     ):
         main()
         mock_set_key.assert_called_once_with(test_config_file, "OPENAI_API_KEY", "sk-test123")
@@ -55,8 +55,8 @@ def test_set_key_with_special_characters():
 
     with (
         patch.object(sys, "argv", test_args),
-        patch("microsweagent.__main__.global_config_file", test_config_file),
-        patch("microsweagent.__main__.set_key") as mock_set_key,
+        patch("microsweagent.run.micro_extra.global_config_file", test_config_file),
+        patch("microsweagent.run.micro_extra.set_key") as mock_set_key,
     ):
         main()
         mock_set_key.assert_called_once_with(test_config_file, "MY_API_KEY", "sk-proj-abc123!@#$%^&*()")

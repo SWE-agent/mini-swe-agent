@@ -84,8 +84,7 @@ nav:
       - "SwerexDockerEnvironment": "reference/environments/swerex_docker.md"
     - Run Scripts:
       - "Hello World": "reference/run/hello_world.md"
-      - "Local": "reference/run/local.md"
-      - "Local2 (Textual)": "reference/run/local2.md"
+      - "micro": "reference/run/micro.md"
       - "GitHub Issue": "reference/run/github_issue.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"

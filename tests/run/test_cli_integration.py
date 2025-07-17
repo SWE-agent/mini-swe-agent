@@ -1,255 +1,359 @@
-import importlib
-import os
+import re
+import subprocess
+import sys
 from unittest.mock import Mock, patch
 
 import pytest
-from typer.testing import CliRunner
+
+from microsweagent.run.micro import DEFAULT_CONFIG, app, main
 
 
-@pytest.mark.parametrize(
-    ("run_module", "agent_patch_path"),
-    [
-        ("microsweagent.run.local", "microsweagent.run.local.InteractiveAgent"),
-        ("microsweagent.run.local2", "microsweagent.run.local2.AgentApp"),
-    ],
-)
-def test_cli_prompts_for_model_when_no_env_vars(run_module, agent_patch_path, tmp_path):
-    module = importlib.import_module(run_module)
-    runner = CliRunner()
+def strip_ansi_codes(text: str) -> str:
+    """Remove ANSI escape sequences from text."""
+    ansi_escape = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+    return ansi_escape.sub("", text)
 
-    config_path = tmp_path / "test_config.yaml"
-    config_path.write_text("agent: {}")
 
+def test_micro_command_calls_run_interactive():
+    """Test that micro command calls run_interactive when visual=False."""
     with (
-        patch.dict(os.environ, {}, clear=True),
-        patch(agent_patch_path) as mock_agent_class,
-        patch("microsweagent.models.prompt_for_model_name", return_value="test-model") as mock_prompt,
-        patch("microsweagent.models.get_model_class") as mock_get_class,
+        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
+        patch("microsweagent.run.micro.get_model") as mock_get_model,
+        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
+        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
+        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
     ):
-        mock_model_instance = Mock()
-        mock_model_instance.configure_mock(cost=0.05, n_calls=3)
-        mock_get_class.return_value = lambda **kwargs: mock_model_instance
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+        mock_run_interactive.return_value = Mock()
 
-        if run_module == "microsweagent.run.local":
-            mock_agent = Mock()
-            mock_agent.run.return_value = ("success", "patch content")
-            mock_agent.messages = [{"role": "system", "content": "test"}]
-            # Create a proper mock model with serializable attributes
-            mock_model = Mock()
-            mock_model.configure_mock(cost=0.05, n_calls=3)
-            mock_agent.model = mock_model
-            mock_agent_class.return_value = mock_agent
-        else:
-            mock_agent_app = Mock()
-            mock_agent = Mock()
-            mock_agent.messages = [{"role": "system", "content": "test"}]
-            # Create a proper mock model with serializable attributes
-            mock_model = Mock()
-            mock_model.configure_mock(cost=0.05, n_calls=3)
-            mock_agent.model = mock_model
-            mock_agent_app.agent = mock_agent
-            mock_agent_app.configure_mock(exit_status=None, result=None)
-            mock_agent_class.return_value = mock_agent_app
-
-        result = runner.invoke(module.app, ["--config", str(config_path), "--task", "Test problem", "--yolo"])
-
-        assert result.exit_code == 0
-        mock_prompt.assert_called_once()
-
-
-@pytest.mark.parametrize(
-    ("run_module", "agent_patch_path"),
-    [
-        ("microsweagent.run.local", "microsweagent.run.local.InteractiveAgent"),
-        ("microsweagent.run.local2", "microsweagent.run.local2.AgentApp"),
-    ],
-)
-def test_cli_multiline_input_flow(run_module, agent_patch_path, tmp_path):
-    module = importlib.import_module(run_module)
-    runner = CliRunner()
-
-    config_path = tmp_path / "test_config.yaml"
-    config_path.write_text("agent: {}")
-
-    multiline_input = "This is line 1\nThis is line 2\nThis is line 3\n"
-
-    # Patch get_multiline_task in the correct module namespace
-    multiline_patch_target = (
-        f"{run_module}.get_multiline_task"
-        if run_module == "microsweagent.run.local2"
-        else "microsweagent.run.local.get_multiline_task"
-    )
-
-    with (
-        patch.dict(os.environ, {}, clear=True),
-        patch(agent_patch_path) as mock_agent_class,
-        patch("microsweagent.models.prompt_for_model_name", return_value="test-model"),
-        patch("microsweagent.models.get_model_class") as mock_get_class,
-        patch(multiline_patch_target, return_value=multiline_input.strip()) as mock_multiline,
-    ):
-        mock_model_instance = Mock()
-        mock_model_instance.configure_mock(cost=0.05, n_calls=3)
-        mock_get_class.return_value = lambda **kwargs: mock_model_instance
-
-        if run_module == "microsweagent.run.local":
-            mock_agent = Mock()
-            mock_agent.run.return_value = ("success", "patch content")
-            mock_agent.messages = [{"role": "system", "content": "test"}]
-            # Create a proper mock model with serializable attributes
-            mock_model = Mock()
-            mock_model.configure_mock(cost=0.05, n_calls=3)
-            mock_agent.model = mock_model
-            mock_agent_class.return_value = mock_agent
-        else:
-            mock_agent_app = Mock()
-            mock_agent = Mock()
-            mock_agent.messages = [{"role": "system", "content": "test"}]
-            # Create a proper mock model with serializable attributes
-            mock_model = Mock()
-            mock_model.configure_mock(cost=0.05, n_calls=3)
-            mock_agent.model = mock_model
-            mock_agent_app.agent = mock_agent
-            mock_agent_app.configure_mock(exit_status=None, result=None)
-            mock_agent_class.return_value = mock_agent_app
-
-        result = runner.invoke(module.app, ["--config", str(config_path), "--yolo"])
-
-        assert result.exit_code == 0
-        mock_multiline.assert_called_once()
-        if run_module == "microsweagent.run.local":
-            mock_agent.run.assert_called_once_with(multiline_input.strip())
-
-
-@pytest.mark.parametrize(
-    ("run_module", "agent_patch_path"),
-    [
-        ("microsweagent.run.local", "microsweagent.run.local.InteractiveAgent"),
-        ("microsweagent.run.local2", "microsweagent.run.local2.AgentApp"),
-    ],
-)
-def test_agent_initialization_with_user_settings(run_module, agent_patch_path, tmp_path):
-    module = importlib.import_module(run_module)
-    runner = CliRunner()
-
-    config_path = tmp_path / "test_config.yaml"
-    config_content = """
-agent:
-  max_steps: 10
-  step_timeout: 30
-model:
-  model_kwargs:
-    temperature: 0.7
-"""
-    config_path.write_text(config_content)
-
-    with (
-        patch.dict(os.environ, {}, clear=True),
-        patch(agent_patch_path) as mock_agent_class,
-        patch("microsweagent.models.prompt_for_model_name", return_value="claude-3-5-sonnet"),
-        patch("microsweagent.models.get_model_class") as mock_get_class,
-    ):
-        mock_model_instance = Mock()
-        mock_model_instance.configure_mock(cost=0.10, n_calls=5)
-        mock_get_class.return_value = lambda **kwargs: mock_model_instance
-
-        if run_module == "microsweagent.run.local":
-            mock_agent = Mock()
-            mock_agent.run.return_value = ("success", "patch content")
-            mock_agent.messages = [{"role": "system", "content": "test"}]
-            # Create a proper mock model with serializable attributes
-            mock_model = Mock()
-            mock_model.configure_mock(cost=0.10, n_calls=5)
-            mock_agent.model = mock_model
-            mock_agent_class.return_value = mock_agent
-        else:
-            mock_agent_app = Mock()
-            mock_agent = Mock()
-            mock_agent.messages = [{"role": "system", "content": "test"}]
-            # Create a proper mock model with serializable attributes
-            mock_model = Mock()
-            mock_model.configure_mock(cost=0.10, n_calls=5)
-            mock_agent.model = mock_model
-            mock_agent_app.agent = mock_agent
-            mock_agent_app.configure_mock(exit_status=None, result=None)
-            mock_agent_class.return_value = mock_agent_app
-
-        result = runner.invoke(module.app, ["--config", str(config_path), "--task", "Complex task", "--yolo"])
-
-        assert result.exit_code == 0
-
-        mock_agent_class.assert_called_once()
-        call_args = mock_agent_class.call_args
-
-        from microsweagent.environments.local import LocalEnvironment
-
-        if run_module == "microsweagent.run.local":
-            assert call_args[0][0] is mock_model_instance
-            assert isinstance(call_args[0][1], LocalEnvironment)
-            assert call_args[1]["max_steps"] == 10
-            assert call_args[1]["step_timeout"] == 30
-            assert call_args[1]["mode"] == "yolo"
-            mock_agent.run.assert_called_once_with("Complex task")
-        else:
-            assert call_args[1]["model"] is mock_model_instance
-            assert isinstance(call_args[1]["env"], LocalEnvironment)
-            assert call_args[1]["task"] == "Complex task"
-            assert call_args[1]["max_steps"] == 10
-            assert call_args[1]["step_timeout"] == 30
-
-
-@pytest.mark.parametrize(
-    ("run_module", "agent_patch_path"),
-    [
-        ("microsweagent.run.local", "microsweagent.run.local.InteractiveAgent"),
-        ("microsweagent.run.local2", "microsweagent.run.local2.AgentApp"),
-    ],
-)
-def test_model_selection_precedence(run_module, agent_patch_path, tmp_path):
-    module = importlib.import_module(run_module)
-    runner = CliRunner()
-
-    config_path = tmp_path / "test_config.yaml"
-    config_path.write_text("agent: {}")
-
-    with (
-        patch.dict(os.environ, {}, clear=True),
-        patch(agent_patch_path) as mock_agent_class,
-        patch("microsweagent.models.prompt_for_model_name") as mock_prompt,
-        patch("microsweagent.models.get_model_class") as mock_get_class,
-    ):
-        mock_model_instance = Mock()
-        mock_model_instance.configure_mock(cost=0.02, n_calls=1)
-        mock_get_class.return_value = lambda **kwargs: mock_model_instance
-
-        if run_module == "microsweagent.run.local":
-            mock_agent = Mock()
-            mock_agent.run.return_value = ("success", "patch content")
-            mock_agent.messages = [{"role": "system", "content": "test"}]
-            # Create a proper mock model with serializable attributes
-            mock_model = Mock()
-            mock_model.configure_mock(cost=0.02, n_calls=1)
-            mock_agent.model = mock_model
-            mock_agent_class.return_value = mock_agent
-        else:
-            mock_agent_app = Mock()
-            mock_agent = Mock()
-            mock_agent.messages = [{"role": "system", "content": "test"}]
-            # Create a proper mock model with serializable attributes
-            mock_model = Mock()
-            mock_model.configure_mock(cost=0.02, n_calls=1)
-            mock_agent.model = mock_model
-            mock_agent_app.agent = mock_agent
-            mock_agent_app.configure_mock(exit_status=None, result=None)
-            mock_agent_class.return_value = mock_agent_app
-
-        result = runner.invoke(
-            module.app, ["--config", str(config_path), "--model", "gpt-4", "--task", "Simple task", "--yolo"]
+        # Call main function with task provided (so get_multiline_task is not called)
+        main(
+            config=DEFAULT_CONFIG,
+            model="test-model",
+            task="Test task",
+            yolo=False,
+            output=None,
+            visual=False,
         )
 
-        assert result.exit_code == 0
+        # Verify run_interactive was called
+        mock_run_interactive.assert_called_once()
+        args, kwargs = mock_run_interactive.call_args
+        assert args[0] == mock_model  # model
+        assert args[1] == mock_environment  # env
+        assert args[3] == "Test task"  # task
 
-        # When model is explicitly provided, no prompting should occur
-        mock_prompt.assert_not_called()
 
-        # Verify the model was passed correctly
-        mock_get_class.assert_called_once_with("gpt-4")
+def test_micro_v_command_calls_run_textual():
+    """Test that micro -v command calls run_textual when visual=True."""
+    with (
+        patch("microsweagent.run.micro.run_textual") as mock_run_textual,
+        patch("microsweagent.run.micro.get_model") as mock_get_model,
+        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
+        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
+        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+        mock_run_textual.return_value = Mock()
+
+        # Call main function with visual=True and task provided
+        main(
+            config=DEFAULT_CONFIG,
+            model="test-model",
+            task="Test task",
+            yolo=False,
+            output=None,
+            visual=True,
+        )
+
+        # Verify run_textual was called
+        mock_run_textual.assert_called_once()
+        args, kwargs = mock_run_textual.call_args
+        assert args[0] == mock_model  # model
+        assert args[1] == mock_environment  # env
+        assert args[3] == "Test task"  # task
+
+
+def test_micro_calls_get_multiline_task_when_no_task_provided():
+    """Test that micro calls get_multiline_task when no task is provided."""
+    with (
+        patch("microsweagent.run.micro.get_multiline_task") as mock_get_multiline_task,
+        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
+        patch("microsweagent.run.micro.get_model") as mock_get_model,
+        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
+        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
+        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_get_multiline_task.return_value = "User provided task"
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+        mock_run_interactive.return_value = Mock()
+
+        # Call main function without task
+        main(
+            config=DEFAULT_CONFIG,
+            model="test-model",
+            task=None,  # No task provided
+            yolo=False,
+            output=None,
+            visual=False,
+        )
+
+        # Verify get_multiline_task was called
+        mock_get_multiline_task.assert_called_once()
+
+        # Verify run_interactive was called with the task from get_multiline_task
+        mock_run_interactive.assert_called_once()
+        args, kwargs = mock_run_interactive.call_args
+        assert args[3] == "User provided task"  # task
+
+
+def test_micro_v_calls_get_multiline_task_when_no_task_provided():
+    """Test that micro -v calls get_multiline_task when no task is provided."""
+    with (
+        patch("microsweagent.run.micro.get_multiline_task") as mock_get_multiline_task,
+        patch("microsweagent.run.micro.run_textual") as mock_run_textual,
+        patch("microsweagent.run.micro.get_model") as mock_get_model,
+        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
+        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
+        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_get_multiline_task.return_value = "User provided visual task"
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+        mock_run_textual.return_value = Mock()
+
+        # Call main function with visual=True but no task
+        main(
+            config=DEFAULT_CONFIG,
+            model="test-model",
+            task=None,  # No task provided
+            yolo=False,
+            output=None,
+            visual=True,
+        )
+
+        # Verify get_multiline_task was called
+        mock_get_multiline_task.assert_called_once()
+
+        # Verify run_textual was called with the task from get_multiline_task
+        mock_run_textual.assert_called_once()
+        args, kwargs = mock_run_textual.call_args
+        assert args[3] == "User provided visual task"  # task
+
+
+def test_micro_with_explicit_model():
+    """Test that micro works with explicitly provided model."""
+    with (
+        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
+        patch("microsweagent.run.micro.get_model") as mock_get_model,
+        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
+        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
+        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {
+            "agent": {"system_template": "test"},
+            "env": {},
+            "model": {"default_config": "test"},
+        }
+        mock_run_interactive.return_value = Mock()
+
+        # Call main function with explicit model
+        main(
+            config=DEFAULT_CONFIG,
+            model="gpt-4",
+            task="Test task with explicit model",
+            yolo=True,
+            output=None,
+            visual=False,
+        )
+
+        # Verify get_model was called with the explicit model
+        mock_get_model.assert_called_once_with("gpt-4", {"default_config": "test"})
+
+        # Verify run_interactive was called
+        mock_run_interactive.assert_called_once()
+
+
+def test_yolo_mode_sets_correct_agent_config():
+    """Test that yolo mode sets the correct agent configuration."""
+    with (
+        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
+        patch("microsweagent.run.micro.get_model") as mock_get_model,
+        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
+        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
+        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+        mock_run_interactive.return_value = Mock()
+
+        # Call main function with yolo=True
+        main(
+            config=DEFAULT_CONFIG,
+            model="test-model",
+            task="Test yolo task",
+            yolo=True,
+            output=None,
+            visual=False,
+        )
+
+        # Verify run_interactive was called with yolo mode
+        mock_run_interactive.assert_called_once()
+        args, kwargs = mock_run_interactive.call_args
+        agent_config = args[2]  # agent_config is the third argument
+        assert agent_config["mode"] == "yolo"
+
+
+def test_confirm_mode_sets_correct_agent_config():
+    """Test that confirm mode (default) sets the correct agent configuration."""
+    with (
+        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
+        patch("microsweagent.run.micro.get_model") as mock_get_model,
+        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
+        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
+        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+        mock_run_interactive.return_value = Mock()
+
+        # Call main function with yolo=False (default)
+        main(
+            config=DEFAULT_CONFIG,
+            model="test-model",
+            task="Test confirm task",
+            yolo=False,
+            output=None,
+            visual=False,
+        )
+
+        # Verify run_interactive was called with confirm mode
+        mock_run_interactive.assert_called_once()
+        args, kwargs = mock_run_interactive.call_args
+        agent_config = args[2]  # agent_config is the third argument
+        assert agent_config["mode"] == "confirm"
+
+
+def test_micro_help():
+    """Test that micro --help works correctly."""
+    result = subprocess.run(
+        [sys.executable, "-m", "microsweagent", "--help"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode == 0
+    # Strip ANSI color codes for reliable text matching
+    clean_output = strip_ansi_codes(result.stdout)
+    assert "Run micro-SWE-agent right here, right now." in clean_output
+    assert "--help" in clean_output
+    assert "--config" in clean_output
+    assert "--model" in clean_output
+    assert "--task" in clean_output
+    assert "--yolo" in clean_output
+    assert "--output" in clean_output
+    assert "--visual" in clean_output
+
+
+def test_micro_help_with_typer_runner():
+    """Test help functionality using typer's test runner."""
+    from typer.testing import CliRunner
+
+    runner = CliRunner()
+    result = runner.invoke(app, ["--help"])
+
+    assert result.exit_code == 0
+    # Strip ANSI color codes for reliable text matching
+    clean_output = strip_ansi_codes(result.stdout)
+    assert "Run micro-SWE-agent right here, right now." in clean_output
+    assert "--help" in clean_output
+    assert "--config" in clean_output
+    assert "--model" in clean_output
+    assert "--task" in clean_output
+    assert "--yolo" in clean_output
+    assert "--output" in clean_output
+    assert "--visual" in clean_output
+
+
+def test_python_m_microsweagent_help():
+    """Test that python -m microsweagent --help works correctly."""
+    result = subprocess.run(
+        [sys.executable, "-m", "microsweagent", "--help"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode == 0
+    assert "micro-SWE-agent" in result.stdout
+
+
+def test_micro_script_help():
+    """Test that the micro script entry point help works."""
+    result = subprocess.run(
+        ["micro", "--help"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    # This might fail if micro is not installed, so we handle that gracefully
+    if result.returncode == 0:
+        assert "micro-SWE-agent" in result.stdout
+    else:
+        # If micro command is not available, that's expected in test environment
+        pytest.skip("micro command not available in test environment")

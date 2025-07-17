@@ -1,5 +1,5 @@
 # Local
 
-::: microsweagent.run.local
+::: microsweagent.run.micro
 
 {% include-markdown "../../_footer.md" %}

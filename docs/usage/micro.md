@@ -44,11 +44,11 @@ You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to 
 
 ??? note "Run script"
 
-    - [Read on GitHub](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent/run/local.py)
-    - [API reference](../reference/run/local.md)
+    - [Read on GitHub](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent/run/micro.py)
+    - [API reference](../reference/run/micro.md)
 
     ```python
-    --8<-- "src/microsweagent/run/local.py"
+    --8<-- "src/microsweagent/run/micro.py"
     ```
 
 ??? note "Agent class"

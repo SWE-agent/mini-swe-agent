@@ -4,7 +4,7 @@
 <h1>The 100 line AI agent that solves GitHub issues & more</h1>
 </div>
 
-In 2024, [SWE-bench](https://swe-bench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the agentic AI for software revolution. 
+In 2024, [SWE-bench](https://swe-bench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the agentic AI for software revolution.
 
 We now ask: **What if SWE-agent was 100x smaller, and still worked nearly as well?**
 
@@ -75,18 +75,18 @@ it is radically simpler, because it
 <a href="https://mellow-pegasus-562d44.netlify.app/usage/micro/"><strong>Simple UI</strong></a> (<code>micro</code>)
 </td>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro2/"><strong>Textual UI</strong></a> (<code>micro2</code>)
+<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro2/"><strong>Visual UI</strong></a> (<code>micro -v</code>)
 </td>
 </tr>
 <tr>
 <td width="50%">
-  
+
   ![micro](https://github.com/user-attachments/assets/b4ac427a-8626-4516-8b5d-8b42e389e0be)
 
 </td>
 <td>
-  
-  ![micro2](https://github.com/user-attachments/assets/bbdea603-1ddc-4608-8429-b11ba59cfe99)
+
+  ![microv](https://github.com/user-attachments/assets/bbdea603-1ddc-4608-8429-b11ba59cfe99)
 
 </td>
 </tr>
@@ -103,7 +103,7 @@ it is radically simpler, because it
 <td>
 
 ![swebench](https://github.com/user-attachments/assets/64caad12-c47d-4148-a65c-df22f2c35cde)
-  
+
 </td>
 
 <td>
@@ -111,7 +111,7 @@ it is radically simpler, because it
 ![inspector](https://github.com/user-attachments/assets/d4ec52a9-a48e-4560-b4ff-36ba4658274f)
 
 </td>
-  
+
 </tr>
 <td>
 <a href="https://mellow-pegasus-562d44.netlify.app/cookbook/"><strong>Python bindings</strong></a>
@@ -147,10 +147,7 @@ agent.run("Write a sudoku game")
 
 ```bash
 pip install pipx
-# Simple UI
-pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro
-# Textual UI
-pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro2
+pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro [-v]
 ```
 
 Read more in our [documentation](https://mellow-pegasus-562d44.netlify.app/):

@@ -73,8 +73,8 @@ MSWEA_LOCAL_CONFIG_PATH="/path/to/your/own/config"
 
 ```bash
 # Default run script entry point for the main CLI
-# (default: "microsweagent.run.local")
-MSWEA_DEFAULT_RUN="microsweagent.run.local"
+# (default: "microsweagent.run.micro")
+MSWEA_DEFAULT_RUN="microsweagent.run.micro"
 ```
 
 ## Agent configuration files

@@ -129,7 +129,7 @@ agent:
     ```
     </response_example>
   step_limit: 0.
-  cost_limit: 0.
+  cost_limit: 3.
   mode: confirm
 environment:
   env:

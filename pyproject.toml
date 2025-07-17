@@ -64,9 +64,10 @@ dev = [
 ]
 
 [project.scripts]
-micro = "microsweagent.__main__:main"
-micro2 = "microsweagent.run.local2:cli"
-micro-swe-agent = "microsweagent.__main__:main"
+micro = "microsweagent.run.micro:app"
+micro-extra = "microsweagent.run.micro_extra:main"
+micro-e= "microsweagent.run.micro_extra:main"
+micro-swe-agent = "microsweagent.run.micro:app"
 
 [tool.setuptools]
 include-package-data = true

@@ -26,8 +26,7 @@ This section provides detailed documentation for all classes and modules in micr
 Entry points and command-line interfaces:
 
 - **[Hello World](run/hello_world.md)** - Simple example usage
-- **[Local](run/local.md)** - Interactive local execution
-- **[Local2 (Textual)](run/local2.md)** - TUI-based local execution
+- **[micro](run/micro.md)** - Interactive local execution
 - **[GitHub Issue](run/github_issue.md)** - GitHub issue solver
 - **[SWE-bench](run/swebench.md)** - SWE-bench evaluation script
 

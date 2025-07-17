@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
+
 import os
 from pathlib import Path
+from typing import Any
 
 import typer
 import yaml
 from rich.console import Console
 
+from microsweagent import Environment, Model
 from microsweagent.agents.interactive import InteractiveAgent
+from microsweagent.agents.interactive_textual import AgentApp
 from microsweagent.config import builtin_config_dir, get_config_path
 from microsweagent.environments.local import LocalEnvironment
 from microsweagent.models import get_model
@@ -33,6 +37,39 @@ def get_multiline_task() -> str:
     return "\n".join(lines).strip()
 
 
+def run_interactive(model: Model, env: Environment, agent_config: dict, task: str, output: Path | None = None) -> Any:
+    agent = InteractiveAgent(
+        model,
+        env,
+        **agent_config,
+    )
+
+    exit_status, result = None, None
+    try:
+        exit_status, result = agent.run(task)
+    except KeyboardInterrupt:
+        console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
+    finally:
+        if output:
+            save_traj(agent, output, exit_status=exit_status, result=result)
+    return agent
+
+
+def run_textual(model: Model, env: Environment, agent_config: dict, task: str, output: Path | None = None) -> Any:
+    agent_app = AgentApp(
+        model,
+        env,
+        task,
+        **agent_config,
+    )
+    try:
+        agent_app.run()
+    except KeyboardInterrupt:
+        typer.echo("\nKeyboardInterrupt -- goodbye")
+    finally:
+        save_traj(agent_app.agent, Path("traj.json"), exit_status=agent_app.exit_status, result=agent_app.result)
+
+
 @app.command()
 def main(
     config: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
@@ -45,7 +82,8 @@ def main(
     task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
-) -> InteractiveAgent:
+    visual: bool = typer.Option(False, "-v", "--visual", help="Use visual UI (Textual)"),
+) -> Any:
     """Run micro-SWE-agent right here, right now."""
     _config = yaml.safe_load(get_config_path(config).read_text())
 
@@ -54,23 +92,14 @@ def main(
 
     mode = "confirm" if not yolo else "yolo"
 
-    # Use get_model to defer model imports (can take a while), but also to switch in
-    # some optimized models (especially for anthropic)
-    agent = InteractiveAgent(
-        get_model(model, _config.get("model", {})),
-        LocalEnvironment(),
-        **(_config.get("agent", {}) | {"mode": mode}),
-    )
+    _model = get_model(model, _config.get("model", {}))
+    env = LocalEnvironment(**_config.get("env", {}))
+    agent_config = _config.get("agent", {}) | {"mode": mode}
 
-    exit_status, result = None, None
-    try:
-        exit_status, result = agent.run(task)
-    except KeyboardInterrupt:
-        console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
-    finally:
-        if output:
-            save_traj(agent, output, exit_status=exit_status, result=result)
-    return agent
+    if visual:
+        return run_textual(_model, env, agent_config, task, output)
+    else:
+        return run_interactive(_model, env, agent_config, task, output)
 
 
 if __name__ == "__main__":

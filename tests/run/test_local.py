@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from microsweagent.models.test_models import DeterministicModel
-from microsweagent.run.local import DEFAULT_CONFIG, main
+from microsweagent.run.micro import DEFAULT_CONFIG, main
 from tests.run.test_github_issue import assert_observations_match
 
 
@@ -13,7 +13,7 @@ def test_local_end_to_end(local_test_data):
 
     with patch("microsweagent.models.litellm_model.LitellmModel") as mock_model_class:
         mock_model_class.return_value = DeterministicModel(outputs=model_responses)
-        agent = main(model="tardis", config=DEFAULT_CONFIG, yolo=True, task="Blah blah blah", output=None)  # type: ignore
+        agent = main(model="tardis", config=DEFAULT_CONFIG, yolo=True, task="Blah blah blah", output=None, visual=False)  # type: ignore
 
     assert agent is not None
     messages = agent.messages

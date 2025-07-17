@@ -56,11 +56,11 @@ You can switch between the modes at any time by pressing the `c` or `y` keys.
 
 ??? note "Run script"
 
-    - [Read on GitHub](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent/run/local2.py)
-    - [API reference](../reference/run/local2.md)
+    - [Read on GitHub](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent/run/micro.py)
+    - [API reference](../reference/run/micro.md)
 
     ```python
-    --8<-- "src/microsweagent/run/local2.py"
+    --8<-- "src/microsweagent/run/micro.py"
     ```
 
 ??? note "Agent class"
