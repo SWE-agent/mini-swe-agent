@@ -111,5 +111,6 @@ class DefaultAgent:
 
     def has_finished(self, output: dict[str, str]):
         """Raises Submitted exception with final output if the agent has finished its task."""
-        if output.get("output") and output["output"].lstrip().splitlines()[0] == "MICRO_SWE_AGENT_FINAL_OUTPUT":
-            raise Submitted("\n".join(output["output"].lstrip().splitlines()[1:]))
+        lines = output.get("output", "").lstrip().splitlines()
+        if lines and lines[0].strip() == "MICRO_SWE_AGENT_FINAL_OUTPUT":
+            raise Submitted("\n".join(lines[1:]))
