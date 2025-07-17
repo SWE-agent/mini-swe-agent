@@ -112,6 +112,7 @@ def process_instance(
 
     agent = None
     extra_info = None
+
     try:
         env = DockerEnvironment(**(config.get("environment", {}) | {"image": image_name}))
         agent = ProgressTrackingAgent(
@@ -123,6 +124,7 @@ def process_instance(
         )
         exit_status, result = agent.run(task)
     except Exception as e:
+        print(f"Error processing instance {instance_id}: {e}\n{traceback.format_exc()}")
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
     finally:
