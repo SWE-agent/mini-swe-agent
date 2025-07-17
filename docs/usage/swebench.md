@@ -8,6 +8,15 @@ We provide two scripts to run on [SWE-bench](https://www.swebench.com/):
 
 ## FAQ
 
+> What happens to uncompleted tasks when I abort with KeyboardInterrupt?
+
+Trajectories are only saved upon completion, so most likely, you can just rerun the script to complete the tasks next time.
+However, you should still check for `KeyboardInterrupt` in `preds.json` in case some tasks were aborted but saved.
+
+> Certain tasks are being stuck even though I deleted the trajectories.
+
+The completed instances are inferred from `preds.json`. Remove the corresponding items from the file.
+
 > How can I run on a different dataset?
 
 As long as it follows the SWE-bench format, you can use `--subset /path/to/your/dataset` to run on a custom dataset.
