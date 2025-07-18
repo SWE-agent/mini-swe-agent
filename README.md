@@ -2,7 +2,7 @@
 
 <a href="https://mellow-pegasus-562d44.netlify.app/"><img src="docs/assets/micro-swe-agent-banner.svg" alt="micro-swe-agent banner" style="height: 12em"/></a>
 
-[![Docs](https://img.shields.io/badge/Docs-green?style=for-the-badge&logo=materialformkdocs&logoColor=white)](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ)
+[![Docs](https://img.shields.io/badge/Docs-green?style=for-the-badge&logo=materialformkdocs&logoColor=white)](https://mellow-pegasus-562d44.netlify.app/)
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ)
 
 [![Pytest](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/pytest.yaml/badge.svg)](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/pytest.yaml)
