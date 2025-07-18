@@ -97,6 +97,28 @@ def test_timeout_handling():
     assert len([msg for msg in agent.messages if "timed out" in msg.get("content", "")]) == 1
 
 
+def test_timeout_captures_partial_output():
+    """Test that timeout error captures partial output from commands that produce output before timing out."""
+    num1, num2 = 111, 9
+    calculation_command = f"echo $(({num1}*{num2})); sleep 10"
+    expected_output = str(num1 * num2)
+    agent = DefaultAgent(
+        model=DeterministicModel(
+            outputs=[
+                f"Output then sleep\n```bash\n{calculation_command}\n```",
+                "Quick finish\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'recovered'\n```",
+            ]
+        ),
+        env=LocalEnvironment(timeout=1),
+    )
+    exit_status, result = agent.run("Test timeout with partial output")
+    assert exit_status == "Submitted"
+    assert result == "recovered"  # final output should be `recovered` from the last command
+    timed_out_messages = [msg for msg in agent.messages if "timed out" in msg.get("content", "")]
+    assert len(timed_out_messages) == 1
+    assert expected_output in timed_out_messages[0]["content"]  # ensure timed out output is still captured
+
+
 def test_parse_action_success():
     """Test action parsing works correctly for valid formats."""
     agent = DefaultAgent(

@@ -17,7 +17,12 @@ class AgentConfig:
         "Your task: {{task}}. Please reply with a single shell command in triple backticks. "
         "To finish, the first line of the output of the shell command must be 'MICRO_SWE_AGENT_FINAL_OUTPUT'."
     )
-    timeout_template: str = "The command timed out. Please change your command and make sure it doesn't require input."
+    timeout_template: str = (
+        "The last command {{action}} timed out and has been killed.\n"
+        "The output of the command was:\n"
+        "{{output}}\n\n"
+        "Please try another command and make sure to avoid those requiring interactive input."
+    )
     format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
     action_observation_template: str = "Observation: {{output}}"
     step_limit: int = 0
@@ -104,8 +109,15 @@ class DefaultAgent:
     def execute_action(self, action: dict) -> dict:
         try:
             output = self.env.execute(action["action"])
-        except (TimeoutError, subprocess.TimeoutExpired):
-            raise ExecutionTimeoutError(self.render_template(self.config.timeout_template, action=action))
+        except subprocess.TimeoutExpired as e:
+            output = e.output.decode("utf-8") if e.output else ""
+            raise ExecutionTimeoutError(
+                self.render_template(self.config.timeout_template, action=action, output=output)
+            )
+        except TimeoutError:
+            raise ExecutionTimeoutError(
+                self.render_template(self.config.timeout_template, action=action, output="")
+            )
         self.has_finished(output)
         return output
 
