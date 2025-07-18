@@ -2,7 +2,6 @@ import os
 import shlex
 import subprocess
 import uuid
-from contextlib import suppress
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -90,11 +89,9 @@ class DockerEnvironment:
     def cleanup(self):
         """Stop and remove the Docker container."""
         if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set
-            print(f"Stopping container {self.container_id} (might take a second)")
-            with suppress(subprocess.TimeoutExpired):
-                subprocess.run(["docker", "stop", self.container_id], capture_output=True, check=False, timeout=30)  # type: ignore
-            with suppress(subprocess.TimeoutExpired):
-                subprocess.run(["docker", "rm", "-f", self.container_id], capture_output=True, check=False, timeout=30)  # type: ignore
+            print(f"Stopping container {self.container_id}")
+            cmd = f"(timeout 60 {self.config.executable} stop {self.container_id} || {self.config.executable} rm -f {self.container_id}) >/dev/null 2>&1 &"
+            subprocess.Popen(cmd, shell=True)
 
     def __del__(self):
         """Cleanup container when object is destroyed."""
