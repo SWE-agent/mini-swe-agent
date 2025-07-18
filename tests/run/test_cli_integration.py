@@ -52,6 +52,7 @@ def test_configure_if_first_time_called():
 def test_micro_command_calls_run_interactive():
     """Test that micro command calls run_interactive when visual=False."""
     with (
+        patch("microsweagent.run.micro.configure_if_first_time"),
         patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
         patch("microsweagent.run.micro.get_model") as mock_get_model,
         patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
@@ -90,6 +91,7 @@ def test_micro_command_calls_run_interactive():
 def test_micro_v_command_calls_run_textual():
     """Test that micro -v command calls run_textual when visual=True."""
     with (
+        patch("microsweagent.run.micro.configure_if_first_time"),
         patch("microsweagent.run.micro.run_textual") as mock_run_textual,
         patch("microsweagent.run.micro.get_model") as mock_get_model,
         patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
@@ -128,6 +130,7 @@ def test_micro_v_command_calls_run_textual():
 def test_micro_calls_prompt_when_no_task_provided():
     """Test that micro calls prompt when no task is provided."""
     with (
+        patch("microsweagent.run.micro.configure_if_first_time"),
         patch("microsweagent.run.micro.prompt_session.prompt") as mock_prompt,
         patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
         patch("microsweagent.run.micro.get_model") as mock_get_model,
@@ -169,6 +172,7 @@ def test_micro_calls_prompt_when_no_task_provided():
 def test_micro_v_calls_prompt_when_no_task_provided():
     """Test that micro -v calls prompt when no task is provided."""
     with (
+        patch("microsweagent.run.micro.configure_if_first_time"),
         patch("microsweagent.run.micro.prompt_session.prompt") as mock_prompt,
         patch("microsweagent.run.micro.run_textual") as mock_run_textual,
         patch("microsweagent.run.micro.get_model") as mock_get_model,
@@ -210,6 +214,7 @@ def test_micro_v_calls_prompt_when_no_task_provided():
 def test_micro_with_explicit_model():
     """Test that micro works with explicitly provided model."""
     with (
+        patch("microsweagent.run.micro.configure_if_first_time"),
         patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
         patch("microsweagent.run.micro.get_model") as mock_get_model,
         patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
@@ -251,6 +256,7 @@ def test_micro_with_explicit_model():
 def test_yolo_mode_sets_correct_agent_config():
     """Test that yolo mode sets the correct agent configuration."""
     with (
+        patch("microsweagent.run.micro.configure_if_first_time"),
         patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
         patch("microsweagent.run.micro.get_model") as mock_get_model,
         patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
@@ -288,6 +294,7 @@ def test_yolo_mode_sets_correct_agent_config():
 def test_confirm_mode_sets_correct_agent_config():
     """Test that confirm mode (default) sets the correct agent configuration."""
     with (
+        patch("microsweagent.run.micro.configure_if_first_time"),
         patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
         patch("microsweagent.run.micro.get_model") as mock_get_model,
         patch("microsweagent.run.micro.LocalEnvironment") as mock_env,

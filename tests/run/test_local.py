@@ -11,7 +11,10 @@ def test_local_end_to_end(local_test_data):
     model_responses = local_test_data["model_responses"]
     expected_observations = local_test_data["expected_observations"]
 
-    with patch("microsweagent.models.litellm_model.LitellmModel") as mock_model_class:
+    with (
+        patch("microsweagent.run.micro.configure_if_first_time"),
+        patch("microsweagent.models.litellm_model.LitellmModel") as mock_model_class,
+    ):
         mock_model_class.return_value = DeterministicModel(outputs=model_responses)
         agent = main(
             model_name="tardis",
