@@ -7,7 +7,7 @@ from microsweagent.models.test_models import DeterministicModel
 
 def test_successful_completion_with_confirmation():
     """Test agent completes successfully when user confirms all actions."""
-    with patch("microsweagent.agents.interactive.console.input", side_effect=[""]):  # Confirm action with Enter
+    with patch("microsweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # Confirm action with Enter
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=["Finishing\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'completed'\n```"]
@@ -24,7 +24,7 @@ def test_successful_completion_with_confirmation():
 def test_action_rejection_and_recovery():
     """Test agent handles action rejection and can recover."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "User rejected this action",  # Reject first action
             "",  # Confirm second action
@@ -52,7 +52,7 @@ def test_action_rejection_and_recovery():
 def test_yolo_mode_activation():
     """Test entering yolo mode disables confirmations."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Enter yolo mode
             "",  # This should be ignored since yolo mode is on
@@ -74,7 +74,7 @@ def test_yolo_mode_activation():
 def test_help_command():
     """Test help command shows help and continues normally."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/h",  # Show help
             "",  # Confirm action after help
@@ -145,7 +145,7 @@ def _test_interruption_helper(interruption_input, expected_message_fragment, pro
             return interruption_input  # For the interruption handling
         return ""  # Confirm all subsequent actions
 
-    with patch("microsweagent.agents.interactive.console.input", side_effect=mock_input):
+    with patch("microsweagent.agents.interactive.prompt_session.prompt", side_effect=mock_input):
         with patch.object(agent, "query", side_effect=mock_query):
             exit_status, result = agent.run(problem_statement)
 
@@ -174,7 +174,7 @@ def test_interruption_handling_empty_message():
 def test_multiple_confirmations_and_commands():
     """Test complex interaction with multiple confirmations and commands."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "reject first",  # Reject first action
             "/h",  # Show help for second action
@@ -201,7 +201,7 @@ def test_multiple_confirmations_and_commands():
 
 def test_non_whitelisted_action_requires_confirmation():
     """Test that non-whitelisted actions still require confirmation."""
-    with patch("microsweagent.agents.interactive.console.input", return_value=""):
+    with patch("microsweagent.agents.interactive.prompt_session.prompt", return_value=""):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=["Non-whitelisted\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'confirmed'\n```"]
@@ -221,7 +221,7 @@ def test_non_whitelisted_action_requires_confirmation():
 def test_human_mode_basic_functionality():
     """Test human mode where user enters shell commands directly."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "echo 'user command'",  # User enters shell command
             "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'human mode works'",  # User enters final command
@@ -243,7 +243,7 @@ def test_human_mode_basic_functionality():
 def test_human_mode_switch_to_yolo():
     """Test switching from human mode to yolo mode."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Switch to yolo mode from human mode
             "",  # Confirm action in yolo mode (though no confirmation needed)
@@ -267,7 +267,7 @@ def test_human_mode_switch_to_yolo():
 def test_human_mode_switch_to_confirm():
     """Test switching from human mode to confirm mode."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/c",  # Switch to confirm mode from human mode
             "",  # Confirm action in confirm mode
@@ -291,7 +291,7 @@ def test_human_mode_switch_to_confirm():
 def test_confirmation_mode_switch_to_human_with_rejection():
     """Test switching from confirm mode to human mode with /u command."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/u",  # Switch to human mode and reject action
             "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'human command after rejection'",  # Human command
@@ -320,7 +320,7 @@ def test_confirmation_mode_switch_to_human_with_rejection():
 def test_confirmation_mode_switch_to_yolo_and_continue():
     """Test switching from confirm mode to yolo mode with /y and continuing with action."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Switch to yolo mode and confirm current action
         ],
@@ -364,7 +364,7 @@ def test_mode_switch_during_keyboard_interrupt():
         return original_query(*args, **kwargs)
 
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Switch to yolo mode during interrupt
             "",  # Confirm subsequent actions (though yolo mode won't ask)
@@ -384,7 +384,7 @@ def test_mode_switch_during_keyboard_interrupt():
 def test_already_in_mode_behavior():
     """Test behavior when trying to switch to the same mode."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/c",  # Try to switch to confirm mode when already in confirm mode
             "",  # Confirm action after the "already in mode" recursive prompt
@@ -407,7 +407,7 @@ def test_already_in_mode_behavior():
 def test_all_mode_transitions_yolo_to_others():
     """Test transitions from yolo mode to other modes."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/c",  # Switch from yolo to confirm
             "",  # Confirm action in confirm mode
@@ -447,7 +447,7 @@ def test_all_mode_transitions_yolo_to_others():
 def test_all_mode_transitions_confirm_to_human():
     """Test transition from confirm mode to human mode."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/u",  # Switch from confirm to human (rejecting action)
             "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'human command'",  # User enters command in human mode
@@ -469,7 +469,7 @@ def test_help_command_from_different_contexts():
     """Test help command works from different contexts (confirmation, interrupt, human mode)."""
     # Test help during confirmation
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/h",  # Show help during confirmation
             "",  # Confirm after help
@@ -495,7 +495,7 @@ def test_help_command_from_different_contexts():
 def test_help_command_from_human_mode():
     """Test help command works from human mode."""
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/h",  # Show help in human mode
             "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'help in human mode'",  # User command after help
@@ -542,7 +542,7 @@ def test_complex_mode_switching_sequence():
         return original_query(*args, **kwargs)
 
     with patch(
-        "microsweagent.agents.interactive.console.input",
+        "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Confirm->Yolo during first action confirmation
             "/u",  # Yolo->Human during interrupt

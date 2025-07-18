@@ -10,12 +10,16 @@ import re
 from dataclasses import dataclass, field
 from typing import Literal
 
+from prompt_toolkit.history import FileHistory
+from prompt_toolkit.shortcuts import PromptSession
 from rich.console import Console
 from rich.rule import Rule
 
+from microsweagent import global_config_dir
 from microsweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
 
 console = Console(highlight=False)
+prompt_session = PromptSession(history=FileHistory(global_config_dir / "interactive_history.txt"))
 
 
 @dataclass
@@ -65,7 +69,7 @@ class InteractiveAgent(DefaultAgent):
             # We always add a message about the interrupt and then just proceed to the next step
             interruption_message = self._prompt_and_handle_special(
                 "\n\n[bold yellow]Interrupted.[/bold yellow] "
-                "[green]type a comment/command[/green] (/h for available commands)"
+                "[green]Type a comment/command[/green] (/h for available commands)"
                 "\n[bold yellow]>[/bold yellow] "
             ).strip()
             if not interruption_message or interruption_message in self._MODE_COMMANDS_MAPPING:
@@ -84,7 +88,7 @@ class InteractiveAgent(DefaultAgent):
     def ask_confirmation(self) -> None:
         prompt = (
             "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
-            "or [green]type a comment/command[/green] (/h for available commands)\n"
+            "or [green]Type a comment/command[/green] (/h for available commands)\n"
             "[bold yellow]>[/bold yellow] "
         )
         match user_input := self._prompt_and_handle_special(prompt).strip():
@@ -99,7 +103,8 @@ class InteractiveAgent(DefaultAgent):
 
     def _prompt_and_handle_special(self, prompt: str) -> str:
         """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""
-        user_input = console.input(prompt).strip()
+        console.print(prompt, end="")
+        user_input = prompt_session.prompt("")
         if user_input == "/h":
             console.print(
                 f"Current mode: [bold green]{self.config.mode}[/bold green]\n"

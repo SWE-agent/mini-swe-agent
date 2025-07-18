@@ -34,7 +34,7 @@ def test_micro_command_calls_run_interactive():
         mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
         mock_run_interactive.return_value = Mock()
 
-        # Call main function with task provided (so get_multiline_task is not called)
+        # Call main function with task provided (so prompt is not called)
         main(
             config=DEFAULT_CONFIG,
             model="test-model",
@@ -90,10 +90,10 @@ def test_micro_v_command_calls_run_textual():
         assert args[3] == "Test task"  # task
 
 
-def test_micro_calls_get_multiline_task_when_no_task_provided():
-    """Test that micro calls get_multiline_task when no task is provided."""
+def test_micro_calls_prompt_when_no_task_provided():
+    """Test that micro calls prompt when no task is provided."""
     with (
-        patch("microsweagent.run.micro.get_multiline_task") as mock_get_multiline_task,
+        patch("microsweagent.run.micro.prompt_session.prompt") as mock_prompt,
         patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
         patch("microsweagent.run.micro.get_model") as mock_get_model,
         patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
@@ -101,7 +101,7 @@ def test_micro_calls_get_multiline_task_when_no_task_provided():
         patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
-        mock_get_multiline_task.return_value = "User provided task"
+        mock_prompt.return_value = "User provided task"
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
@@ -122,19 +122,19 @@ def test_micro_calls_get_multiline_task_when_no_task_provided():
             visual=False,
         )
 
-        # Verify get_multiline_task was called
-        mock_get_multiline_task.assert_called_once()
+        # Verify prompt was called
+        mock_prompt.assert_called_once()
 
-        # Verify run_interactive was called with the task from get_multiline_task
+        # Verify run_interactive was called with the task from prompt
         mock_run_interactive.assert_called_once()
         args, kwargs = mock_run_interactive.call_args
         assert args[3] == "User provided task"  # task
 
 
-def test_micro_v_calls_get_multiline_task_when_no_task_provided():
-    """Test that micro -v calls get_multiline_task when no task is provided."""
+def test_micro_v_calls_prompt_when_no_task_provided():
+    """Test that micro -v calls prompt when no task is provided."""
     with (
-        patch("microsweagent.run.micro.get_multiline_task") as mock_get_multiline_task,
+        patch("microsweagent.run.micro.prompt_session.prompt") as mock_prompt,
         patch("microsweagent.run.micro.run_textual") as mock_run_textual,
         patch("microsweagent.run.micro.get_model") as mock_get_model,
         patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
@@ -142,7 +142,7 @@ def test_micro_v_calls_get_multiline_task_when_no_task_provided():
         patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
-        mock_get_multiline_task.return_value = "User provided visual task"
+        mock_prompt.return_value = "User provided visual task"
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
@@ -163,10 +163,10 @@ def test_micro_v_calls_get_multiline_task_when_no_task_provided():
             visual=True,
         )
 
-        # Verify get_multiline_task was called
-        mock_get_multiline_task.assert_called_once()
+        # Verify prompt was called
+        mock_prompt.assert_called_once()
 
-        # Verify run_textual was called with the task from get_multiline_task
+        # Verify run_textual was called with the task from prompt
         mock_run_textual.assert_called_once()
         args, kwargs = mock_run_textual.call_args
         assert args[3] == "User provided visual task"  # task

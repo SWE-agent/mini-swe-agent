@@ -20,9 +20,9 @@ from rich.console import Console
 
 package_dir = Path(__file__).resolve().parent
 
-config_dir = Path(os.getenv("MICRO_SWE_AGENT_GLOBAL_CONFIG_DIR") or user_config_dir("micro-swe-agent"))
-config_dir.mkdir(parents=True, exist_ok=True)
-global_config_file = Path(config_dir) / ".env"
+global_config_dir = Path(os.getenv("MICRO_SWE_AGENT_GLOBAL_CONFIG_DIR") or user_config_dir("micro-swe-agent"))
+global_config_dir.mkdir(parents=True, exist_ok=True)
+global_config_file = Path(global_config_dir) / ".env"
 
 if not os.getenv("MICRO_SWE_AGENT_SILENT_STARTUP"):
     Console().print(
@@ -64,4 +64,4 @@ class Agent(Protocol):
     def run(self, task: str) -> tuple[str, str]: ...
 
 
-__all__ = ["Agent", "Model", "Environment", "package_dir", "__version__", "global_config_file"]
+__all__ = ["Agent", "Model", "Environment", "package_dir", "__version__", "global_config_file", "global_config_dir"]
