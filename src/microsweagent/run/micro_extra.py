@@ -34,7 +34,7 @@ def main() -> None:
         inspect_app()
     elif len(args) > 0 and args[0] == "set-key":
         if len(args) != 3:
-            raise ValueError("Usage: micro set-key <key> <value>")
+            raise ValueError("Usage: micro-extra set-key <key> <value>")
 
         set_key(global_config_file, args[1], args[2])
     else:
