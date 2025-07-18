@@ -1,6 +1,16 @@
 <div align="center">
 
 <a href="https://mellow-pegasus-562d44.netlify.app/"><img src="docs/assets/micro-swe-agent-banner.svg" alt="micro-swe-agent banner" style="height: 12em"/></a>
+
+[![Docs](https://img.shields.io/badge/Docs-green?style=for-the-badge&logo=materialformkdocs&logoColor=white)](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ)
+[![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ)
+
+[![Pytest](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/pytest.yaml/badge.svg)](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/pytest.yaml)
+[![codecov](https://codecov.io/gh/SWE-agent/micro-swe-agent/graph/badge.svg?token=NlwwZAO3o5)](https://codecov.io/gh/SWE-agent/micro-swe-agent)
+[![Check Markdown links](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/check-links.yaml/badge.svg)](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/check-links.yaml)
+[![Pylint](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/pylint.yaml/badge.svg)](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/pylint.yaml)
+[![build-docs](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/build-docs.yaml/badge.svg)](https://github.com/SWE-agent/micro-swe-agent/actions/workflows/build-docs.yaml)
+
 <h1>The 100 line AI agent that solves GitHub issues & more</h1>
 </div>
 
