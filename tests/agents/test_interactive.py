@@ -558,3 +558,64 @@ def test_complex_mode_switching_sequence():
     assert exit_status == "Submitted"
     assert result == "final action"
     assert agent.config.mode == "confirm"  # Should end in confirm mode
+
+
+def test_limits_exceeded_with_user_continuation():
+    """Test that when limits are exceeded, user can provide new limits and execution continues."""
+    # Create agent with very low limits that will be exceeded
+    agent = InteractiveAgent(
+        model=DeterministicModel(
+            outputs=[
+                "Step 1\n```bash\necho 'first step'\n```",
+                "Step 2\n```bash\necho 'second step'\n```",
+                "Final step\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'completed after limit increase'\n```",
+            ],
+            cost_per_call=0.6,  # Will exceed cost_limit=0.5 on first call
+        ),
+        env=LocalEnvironment(),
+        step_limit=10,  # High enough to not interfere initially
+        cost_limit=0.5,  # Will be exceeded with first model call (cost=0.6)
+        mode="yolo",  # Use yolo mode to avoid confirmation prompts
+    )
+
+    # Mock input() to provide new limits when prompted
+    with patch("builtins.input", side_effect=["10", "5.0"]):  # New step_limit=10, cost_limit=5.0
+        with patch("microsweagent.agents.interactive.console.print"):  # Suppress console output
+            exit_status, result = agent.run("Test limits exceeded with continuation")
+
+    assert exit_status == "Submitted"
+    assert result == "completed after limit increase"
+    assert agent.model.n_calls == 3  # Should complete all 3 steps
+    assert agent.config.step_limit == 10  # Should have updated step limit
+    assert agent.config.cost_limit == 5.0  # Should have updated cost limit
+
+
+def test_limits_exceeded_multiple_times_with_continuation():
+    """Test that limits can be exceeded and updated multiple times."""
+    agent = InteractiveAgent(
+        model=DeterministicModel(
+            outputs=[
+                "Step 1\n```bash\necho 'step1'\n```",
+                "Step 2\n```bash\necho 'step2'\n```",
+                "Step 3\n```bash\necho 'step3'\n```",
+                "Step 4\n```bash\necho 'step4'\n```",
+                "Final\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'completed after multiple increases'\n```",
+            ],
+            cost_per_call=1.0,  # Standard cost per call
+        ),
+        env=LocalEnvironment(),
+        step_limit=1,  # Will be exceeded after first step
+        cost_limit=100.0,  # High enough to not interfere
+        mode="yolo",
+    )
+
+    # Mock input() to provide new limits multiple times
+    # First limit increase: step_limit=2, then step_limit=10 when exceeded again
+    with patch("builtins.input", side_effect=["2", "100.0", "10", "100.0"]):
+        with patch("microsweagent.agents.interactive.console.print"):
+            exit_status, result = agent.run("Test multiple limit increases")
+
+    assert exit_status == "Submitted"
+    assert result == "completed after multiple increases"
+    assert agent.model.n_calls == 5  # Should complete all 5 steps
+    assert agent.config.step_limit == 10  # Should have final updated step limit

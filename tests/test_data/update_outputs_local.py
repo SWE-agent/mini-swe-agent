@@ -20,7 +20,7 @@ def update_trajectory():
 
     with patch("microsweagent.run.micro.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
-        main(model="tardis", config=DEFAULT_CONFIG, output=traj_path, task=task, yolo=True)
+        main(model_name="tardis", config_spec=DEFAULT_CONFIG, output=traj_path, task=task, yolo=True)
 
 if __name__ == "__main__":
     update_trajectory()

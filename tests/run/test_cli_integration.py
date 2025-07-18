@@ -36,8 +36,8 @@ def test_micro_command_calls_run_interactive():
 
         # Call main function with task provided (so prompt is not called)
         main(
-            config=DEFAULT_CONFIG,
-            model="test-model",
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
             task="Test task",
             yolo=False,
             output=None,
@@ -74,8 +74,8 @@ def test_micro_v_command_calls_run_textual():
 
         # Call main function with visual=True and task provided
         main(
-            config=DEFAULT_CONFIG,
-            model="test-model",
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
             task="Test task",
             yolo=False,
             output=None,
@@ -114,8 +114,8 @@ def test_micro_calls_prompt_when_no_task_provided():
 
         # Call main function without task
         main(
-            config=DEFAULT_CONFIG,
-            model="test-model",
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
             task=None,  # No task provided
             yolo=False,
             output=None,
@@ -155,8 +155,8 @@ def test_micro_v_calls_prompt_when_no_task_provided():
 
         # Call main function with visual=True but no task
         main(
-            config=DEFAULT_CONFIG,
-            model="test-model",
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
             task=None,  # No task provided
             yolo=False,
             output=None,
@@ -198,8 +198,8 @@ def test_micro_with_explicit_model():
 
         # Call main function with explicit model
         main(
-            config=DEFAULT_CONFIG,
-            model="gpt-4",
+            config_spec=DEFAULT_CONFIG,
+            model_name="gpt-4",
             task="Test task with explicit model",
             yolo=True,
             output=None,
@@ -235,8 +235,8 @@ def test_yolo_mode_sets_correct_agent_config():
 
         # Call main function with yolo=True
         main(
-            config=DEFAULT_CONFIG,
-            model="test-model",
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
             task="Test yolo task",
             yolo=True,
             output=None,
@@ -272,8 +272,8 @@ def test_confirm_mode_sets_correct_agent_config():
 
         # Call main function with yolo=False (default)
         main(
-            config=DEFAULT_CONFIG,
-            model="test-model",
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
             task="Test confirm task",
             yolo=False,
             output=None,

@@ -16,7 +16,7 @@ from rich.console import Console
 from rich.rule import Rule
 
 from microsweagent import global_config_dir
-from microsweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
+from microsweagent.agents.default import AgentConfig, DefaultAgent, LimitsExceeded, NonTerminatingException
 
 console = Console(highlight=False)
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "interactive_history.txt"))
@@ -58,7 +58,16 @@ class InteractiveAgent(DefaultAgent):
                     pass
                 case _:
                     return {"content": f"\n```bash\n{command}\n```"}
-        return super().query()
+        try:
+            return super().query()
+        except LimitsExceeded:
+            console.print(
+                f"Limits exceeded. Limits: {self.config.step_limit} steps, ${self.config.cost_limit}.\n"
+                f"Current spend: {self.model.n_calls} steps, ${self.model.cost:.2f}."
+            )
+            self.config.step_limit = int(input("New step limit: "))
+            self.config.cost_limit = float(input("New cost limit: "))
+            return super().query()
 
     def step(self) -> dict:
         # Override the step method to handle user interruption

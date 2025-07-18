@@ -59,8 +59,8 @@ def run_textual(model: Model, env: Environment, agent_config: dict, task: str, o
 
 @app.command()
 def main(
-    config: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
-    model: str | None = typer.Option(
+    config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
+    model_name: str | None = typer.Option(
         None,
         "-m",
         "--model",
@@ -70,9 +70,10 @@ def main(
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
     visual: bool = typer.Option(False, "-v", "--visual", help="Use visual UI (Textual)"),
+    cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
 ) -> Any:
     """Run micro-SWE-agent right here, right now."""
-    _config = yaml.safe_load(get_config_path(config).read_text())
+    config = yaml.safe_load(get_config_path(config_spec).read_text())
 
     if not task:
         console.print(
@@ -85,16 +86,16 @@ def main(
         task = prompt_session.prompt("", multiline=True)
         console.print("[bold green]Got that, thanks![/bold green]")
 
-    mode = "confirm" if not yolo else "yolo"
-
-    _model = get_model(model, _config.get("model", {}))
-    env = LocalEnvironment(**_config.get("env", {}))
-    agent_config = _config.get("agent", {}) | {"mode": mode}
+    config["agent"]["mode"] = "confirm" if not yolo else "yolo"
+    if cost_limit:
+        config["agent"]["cost_limit"] = cost_limit
+    model = get_model(model_name, config.get("model", {}))
+    env = LocalEnvironment(**config.get("env", {}))
 
     if visual:
-        return run_textual(_model, env, agent_config, task, output)  # type: ignore[arg-type]
+        return run_textual(model, env, config["agent"], task, output)  # type: ignore[arg-type]
     else:
-        return run_interactive(_model, env, agent_config, task, output)  # type: ignore[arg-type]
+        return run_interactive(model, env, config["agent"], task, output)  # type: ignore[arg-type]
 
 
 if __name__ == "__main__":
