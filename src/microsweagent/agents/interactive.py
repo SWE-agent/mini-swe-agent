@@ -59,7 +59,8 @@ class InteractiveAgent(DefaultAgent):
                 case _:
                     return {"content": f"\n```bash\n{command}\n```"}
         try:
-            return super().query()
+            with console.status("Waiting for the LM to respond..."):
+                return super().query()
         except LimitsExceeded:
             console.print(
                 f"Limits exceeded. Limits: {self.config.step_limit} steps, ${self.config.cost_limit}.\n"
