@@ -44,6 +44,7 @@ def configure_if_first_time():
     if not os.getenv("MSWEA_CONFIGURED"):
         console.print(Rule())
         setup()
+        console.print(Rule())
 
 
 @app.command()
@@ -66,6 +67,9 @@ def setup():
             "[bold red]API key setup not completed.[/bold red] Totally fine if you have your keys as environment variables."
         )
     set_key(global_config_file, "MSWEA_CONFIGURED", "true")
+    console.print(
+        "\n[bold yellow]Config finished.[/bold yellow] If you want to revisit it, run [bold green]micro-extra config setup[/bold green]."
+    )
 
 
 @app.command()

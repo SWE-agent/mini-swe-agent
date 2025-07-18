@@ -81,11 +81,8 @@ def main(
         console.print(
             "[bold yellow]What do you want to do?\n"
             "[bold green]Up[/bold green]/[bold green]Down[/bold green] to bring up previous tasks or [bold green]Ctrl+R[/bold green] to search\n"
-            "Confirm input with [bold green]Esc, Enter[/bold green]\n"
-            ">[/bold yellow] ",
-            end="",
         )
-        task = prompt_session.prompt("", multiline=True)
+        task = prompt_session.prompt("", multiline=True, bottom_toolbar="Confirm with Esc, then Enter")
         console.print("[bold green]Got that, thanks![/bold green]")
 
     config["agent"]["mode"] = "confirm" if not yolo else "yolo"
