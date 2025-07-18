@@ -7,7 +7,9 @@ from microsweagent.models.test_models import DeterministicModel
 
 def test_successful_completion_with_confirmation():
     """Test agent completes successfully when user confirms all actions."""
-    with patch("microsweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # Confirm action with Enter
+    with patch(
+        "microsweagent.agents.interactive.prompt_session.prompt", side_effect=["", ""]
+    ):  # Confirm action with Enter, then no new task
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=["Finishing\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'completed'\n```"]
@@ -28,6 +30,7 @@ def test_action_rejection_and_recovery():
         side_effect=[
             "User rejected this action",  # Reject first action
             "",  # Confirm second action
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -56,6 +59,7 @@ def test_yolo_mode_activation():
         side_effect=[
             "/y",  # Enter yolo mode
             "",  # This should be ignored since yolo mode is on
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -78,6 +82,7 @@ def test_help_command():
         side_effect=[
             "/h",  # Show help
             "",  # Confirm action after help
+            "",  # No new task when agent wants to finish
         ],
     ):
         with patch("microsweagent.agents.interactive.console.print") as mock_print:
@@ -98,18 +103,23 @@ def test_help_command():
 
 def test_whitelisted_actions_skip_confirmation():
     """Test that whitelisted actions don't require confirmation."""
-    agent = InteractiveAgent(
-        model=DeterministicModel(
-            outputs=["Whitelisted\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'no confirmation needed'\n```"]
-        ),
-        env=LocalEnvironment(),
-        whitelist_actions=[r"echo.*"],
-    )
+    with patch(
+        "microsweagent.agents.interactive.prompt_session.prompt",
+        side_effect=[""],  # No new task when agent wants to finish
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=[
+                    "Whitelisted\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'no confirmation needed'\n```"
+                ]
+            ),
+            env=LocalEnvironment(),
+            whitelist_actions=[r"echo.*"],
+        )
 
-    # No patch needed - should not ask for confirmation
-    exit_status, result = agent.run("Test whitelisted actions")
-    assert exit_status == "Submitted"
-    assert result == "no confirmation needed"
+        exit_status, result = agent.run("Test whitelisted actions")
+        assert exit_status == "Submitted"
+        assert result == "no confirmation needed"
 
 
 def _test_interruption_helper(interruption_input, expected_message_fragment, problem_statement="Test interruption"):
@@ -180,6 +190,7 @@ def test_multiple_confirmations_and_commands():
             "/h",  # Show help for second action
             "/y",  # After help, enter yolo mode
             "",  # After yolo mode enabled, confirm (but yolo mode will skip future confirmations)
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -201,7 +212,10 @@ def test_multiple_confirmations_and_commands():
 
 def test_non_whitelisted_action_requires_confirmation():
     """Test that non-whitelisted actions still require confirmation."""
-    with patch("microsweagent.agents.interactive.prompt_session.prompt", return_value=""):
+    with patch(
+        "microsweagent.agents.interactive.prompt_session.prompt",
+        side_effect=["", ""],  # Confirm action, then no new task
+    ):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=["Non-whitelisted\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'confirmed'\n```"]
@@ -225,6 +239,7 @@ def test_human_mode_basic_functionality():
         side_effect=[
             "echo 'user command'",  # User enters shell command
             "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'human mode works'",  # User enters final command
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -247,6 +262,7 @@ def test_human_mode_switch_to_yolo():
         side_effect=[
             "/y",  # Switch to yolo mode from human mode
             "",  # Confirm action in yolo mode (though no confirmation needed)
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -271,6 +287,7 @@ def test_human_mode_switch_to_confirm():
         side_effect=[
             "/c",  # Switch to confirm mode from human mode
             "",  # Confirm action in confirm mode
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -295,6 +312,7 @@ def test_confirmation_mode_switch_to_human_with_rejection():
         side_effect=[
             "/u",  # Switch to human mode and reject action
             "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'human command after rejection'",  # Human command
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -323,6 +341,7 @@ def test_confirmation_mode_switch_to_yolo_and_continue():
         "microsweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Switch to yolo mode and confirm current action
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -388,6 +407,7 @@ def test_already_in_mode_behavior():
         side_effect=[
             "/c",  # Try to switch to confirm mode when already in confirm mode
             "",  # Confirm action after the "already in mode" recursive prompt
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -411,6 +431,7 @@ def test_all_mode_transitions_yolo_to_others():
         side_effect=[
             "/c",  # Switch from yolo to confirm
             "",  # Confirm action in confirm mode
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -451,6 +472,7 @@ def test_all_mode_transitions_confirm_to_human():
         side_effect=[
             "/u",  # Switch from confirm to human (rejecting action)
             "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'human command'",  # User enters command in human mode
+            "",  # No new task when agent wants to finish
         ],
     ):
         agent = InteractiveAgent(
@@ -473,6 +495,7 @@ def test_help_command_from_different_contexts():
         side_effect=[
             "/h",  # Show help during confirmation
             "",  # Confirm after help
+            "",  # No new task when agent wants to finish
         ],
     ):
         with patch("microsweagent.agents.interactive.console.print") as mock_print:
@@ -499,6 +522,7 @@ def test_help_command_from_human_mode():
         side_effect=[
             "/h",  # Show help in human mode
             "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'help in human mode'",  # User command after help
+            "",  # No new task when agent wants to finish
         ],
     ):
         with patch("microsweagent.agents.interactive.console.print") as mock_print:
@@ -548,8 +572,9 @@ def test_complex_mode_switching_sequence():
             "/u",  # Yolo->Human during interrupt
             "/c",  # Human->Confirm in human mode
             "",  # Confirm final action
-            "",  # Additional confirmation for any extra prompts
-            "",  # Additional confirmation for any extra prompts
+            "",  # No new task when agent wants to finish
+            "",  # Extra empty input for any additional prompts
+            "",  # Extra empty input for any additional prompts
         ],
     ):
         with patch.object(agent, "query", side_effect=mock_query):
@@ -580,8 +605,9 @@ def test_limits_exceeded_with_user_continuation():
 
     # Mock input() to provide new limits when prompted
     with patch("builtins.input", side_effect=["10", "5.0"]):  # New step_limit=10, cost_limit=5.0
-        with patch("microsweagent.agents.interactive.console.print"):  # Suppress console output
-            exit_status, result = agent.run("Test limits exceeded with continuation")
+        with patch("microsweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # No new task
+            with patch("microsweagent.agents.interactive.console.print"):  # Suppress console output
+                exit_status, result = agent.run("Test limits exceeded with continuation")
 
     assert exit_status == "Submitted"
     assert result == "completed after limit increase"
@@ -612,10 +638,135 @@ def test_limits_exceeded_multiple_times_with_continuation():
     # Mock input() to provide new limits multiple times
     # First limit increase: step_limit=2, then step_limit=10 when exceeded again
     with patch("builtins.input", side_effect=["2", "100.0", "10", "100.0"]):
-        with patch("microsweagent.agents.interactive.console.print"):
-            exit_status, result = agent.run("Test multiple limit increases")
+        with patch("microsweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # No new task
+            with patch("microsweagent.agents.interactive.console.print"):
+                exit_status, result = agent.run("Test multiple limit increases")
 
     assert exit_status == "Submitted"
     assert result == "completed after multiple increases"
     assert agent.model.n_calls == 5  # Should complete all 5 steps
     assert agent.config.step_limit == 10  # Should have final updated step limit
+
+
+def test_continue_after_completion_with_new_task():
+    """Test that user can provide a new task when agent wants to finish."""
+    with patch(
+        "microsweagent.agents.interactive.prompt_session.prompt",
+        side_effect=[
+            "",  # Confirm first action
+            "Create a new file",  # Provide new task when agent wants to finish
+            "",  # Confirm second action for new task
+            "",  # Don't provide another task after second completion (finish)
+        ],
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=[
+                    "First task\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'first task completed'\n```",
+                    "Second task\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'new task completed'\n```",
+                ]
+            ),
+            env=LocalEnvironment(),
+        )
+
+        exit_status, result = agent.run("Complete the initial task")
+        assert exit_status == "Submitted"
+        assert result == "new task completed"
+        assert agent.model.n_calls == 2
+        # Should have the new task message in conversation
+        new_task_messages = [
+            msg for msg in agent.messages if "The user added a new task: Create a new file" in msg.get("content", "")
+        ]
+        assert len(new_task_messages) == 1
+
+
+def test_continue_after_completion_without_new_task():
+    """Test that agent finishes normally when user doesn't provide a new task."""
+    with patch(
+        "microsweagent.agents.interactive.prompt_session.prompt",
+        side_effect=[
+            "",  # Confirm first action
+            "",  # Don't provide new task when agent wants to finish (empty input)
+        ],
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=[
+                    "Task completion\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'original task completed'\n```"
+                ]
+            ),
+            env=LocalEnvironment(),
+        )
+
+        exit_status, result = agent.run("Complete the task")
+        assert exit_status == "Submitted"
+        assert result == "original task completed"
+        assert agent.model.n_calls == 1
+        # Should not have any new task messages
+        new_task_messages = [msg for msg in agent.messages if "The user added a new task" in msg.get("content", "")]
+        assert len(new_task_messages) == 0
+
+
+def test_continue_after_completion_multiple_cycles():
+    """Test multiple continuation cycles with new tasks."""
+    with patch(
+        "microsweagent.agents.interactive.prompt_session.prompt",
+        side_effect=[
+            "",  # Confirm first action
+            "Second task",  # Provide first new task
+            "",  # Confirm second action
+            "Third task",  # Provide second new task
+            "",  # Confirm third action
+            "",  # Don't provide another task (finish)
+        ],
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=[
+                    "First\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'first completed'\n```",
+                    "Second\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'second completed'\n```",
+                    "Third\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'third completed'\n```",
+                ]
+            ),
+            env=LocalEnvironment(),
+        )
+
+        exit_status, result = agent.run("Initial task")
+        assert exit_status == "Submitted"
+        assert result == "third completed"
+        assert agent.model.n_calls == 3
+        # Should have both new task messages
+        new_task_messages = [msg for msg in agent.messages if "The user added a new task" in msg.get("content", "")]
+        assert len(new_task_messages) == 2
+        assert "Second task" in new_task_messages[0]["content"]
+        assert "Third task" in new_task_messages[1]["content"]
+
+
+def test_continue_after_completion_in_yolo_mode():
+    """Test continuation when starting in yolo mode (no confirmations needed)."""
+    with patch(
+        "microsweagent.agents.interactive.prompt_session.prompt",
+        side_effect=[
+            "Create a second task",  # Provide new task when agent wants to finish
+            "",  # Don't provide another task after second completion (finish)
+        ],
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=[
+                    "First\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'first completed'\n```",
+                    "Second\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'second task completed'\n```",
+                ]
+            ),
+            env=LocalEnvironment(),
+            mode="yolo",  # Start in yolo mode
+        )
+
+        exit_status, result = agent.run("Initial task")
+        assert exit_status == "Submitted"
+        assert result == "second task completed"
+        assert agent.config.mode == "yolo"
+        assert agent.model.n_calls == 2
+        # Should have the new task message
+        new_task_messages = [msg for msg in agent.messages if "Create a second task" in msg.get("content", "")]
+        assert len(new_task_messages) == 1

@@ -16,7 +16,7 @@ from rich.console import Console
 from rich.rule import Rule
 
 from microsweagent import global_config_dir
-from microsweagent.agents.default import AgentConfig, DefaultAgent, LimitsExceeded, NonTerminatingException
+from microsweagent.agents.default import AgentConfig, DefaultAgent, LimitsExceeded, NonTerminatingException, Submitted
 
 console = Console(highlight=False)
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "interactive_history.txt"))
@@ -132,3 +132,17 @@ class InteractiveAgent(DefaultAgent):
             console.print(f"Switched to [bold green]{self.config.mode}[/bold green] mode.")
             return user_input
         return user_input
+
+    def has_finished(self, output: dict[str, str]):
+        try:
+            return super().has_finished(output)
+        except Submitted as e:
+            console.print(
+                "[bold green]Agent wants to finish.[/bold green] "
+                "[green]Type a comment to give it a new task or press enter to quit.\n"
+                "[bold yellow]>[/bold yellow] ",
+                end="",
+            )
+            if new_task := self._prompt_and_handle_special("").strip():
+                raise NonTerminatingException(f"The user added a new task: {new_task}")
+            raise e

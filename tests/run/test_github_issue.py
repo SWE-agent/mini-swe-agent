@@ -78,6 +78,7 @@ def test_github_issue_end_to_end(github_test_data):
     with (
         patch("microsweagent.run.github_issue.configure_if_first_time"),
         patch("microsweagent.run.github_issue.get_model") as mock_get_model,
+        patch("microsweagent.agents.interactive.prompt_session.prompt", return_value=""),  # No new task
     ):
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
         github_url = "https://github.com/SWE-agent/test-repo/issues/1"

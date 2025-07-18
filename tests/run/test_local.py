@@ -14,6 +14,7 @@ def test_local_end_to_end(local_test_data):
     with (
         patch("microsweagent.run.micro.configure_if_first_time"),
         patch("microsweagent.models.litellm_model.LitellmModel") as mock_model_class,
+        patch("microsweagent.agents.interactive.prompt_session.prompt", return_value=""),  # No new task
     ):
         mock_model_class.return_value = DeterministicModel(outputs=model_responses)
         agent = main(
