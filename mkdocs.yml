@@ -63,8 +63,9 @@ nav:
       - "<code>micro2</code>": usage/micro2.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
-    - "Configuration": configuration.md
-    - "Cookbook": cookbook.md
+    - "Advanced":
+      - "Configuration": advanced/configuration.md
+      - "Cookbook": advanced/cookbook.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
   - API Reference:

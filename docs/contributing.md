@@ -7,7 +7,7 @@ We happily accept contributions!
 - Feedback on the `micro` and `micro2` interfaces at [this github issue](https://github.com/swe-agent/micro-swe-agent/issues/161) or in our [Slack channel](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ).
 - Documentation, examples, tutorials, etc. In particular, we're looking for
     - examples of how this library is used in the wild
-    - additional examples for the [cookbook](cookbook.md)
+    - additional examples for the [cookbook](advanced/cookbook.md)
 - Support for more models (anything where `litellm` doesn't work out of the box)
 - Support for more environments & deployments (e.g., run it as a github action, etc.)
 - Take a look at the [issues](https://github.com/SWE-agent/micro-swe-agent/issues) and look for issues marked `good-first-issue` or `help-wanted` (please read the guidelines below first)
@@ -15,7 +15,7 @@ We happily accept contributions!
 ## Design & Architecture
 
 - `micro-swe-agent` aims to stay minimalistic, hackable, and of high quality code.
-- To extend features, we prefer to add a new version of the one of the four components (see [cookbook](cookbook.md)), rather than making the existing components more complex.
+- To extend features, we prefer to add a new version of the one of the four components (see [cookbook](advanced/cookbook.md)), rather than making the existing components more complex.
 - Components should be relatively self-contained, but if there are utilities that might be shared, add a `utils` folder (like [this one](https://github.com/SWE-agent/micro-swe-agent/tree/main/src/microsweagent/models/utils)). But keep it simple!
 - If your component is a bit more specific, add it into an `extra` folder (like [this one](https://github.com/SWE-agent/micro-swe-agent/tree/main/src/microsweagent/run/extra))
 - Our target audience is anyone who doesn't shy away from modifying a bit of code (especially a run script) to get what they want.
