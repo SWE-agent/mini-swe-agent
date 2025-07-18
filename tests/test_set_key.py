@@ -7,50 +7,36 @@ import pytest
 from microsweagent.run.micro_extra import main
 
 
-def test_set_key_success():
-    """Test successful key setting with valid arguments."""
-    test_args = ["micro", "set-key", "OPENAI_API_KEY", "sk-test123"]
-    test_config_file = Path("/fake/config/.env")
-
-    with (
-        patch.object(sys, "argv", test_args),
-        patch("microsweagent.run.micro_extra.global_config_file", test_config_file),
-        patch("microsweagent.run.micro_extra.set_key") as mock_set_key,
-    ):
-        main()
-        mock_set_key.assert_called_once_with(test_config_file, "OPENAI_API_KEY", "sk-test123")
-
-
 def test_set_key_insufficient_args():
     """Test that ValueError is raised when insufficient arguments are provided."""
-    test_args = ["micro", "set-key", "OPENAI_API_KEY"]  # Missing value
+    test_args = ["micro-extra", "set-key", "OPENAI_API_KEY"]  # Missing value
 
     with patch.object(sys, "argv", test_args):
-        with pytest.raises(ValueError, match="Usage: micro set-key <key> <value>"):
+        with pytest.raises(ValueError, match="Usage: micro-extra set-key <key> <value>"):
             main()
 
 
 def test_set_key_no_value_arg():
     """Test that ValueError is raised when no arguments are provided to set-key."""
-    test_args = ["micro", "set-key"]  # Missing key and value
+    test_args = ["micro-extra", "set-key"]  # Missing key and value
 
     with patch.object(sys, "argv", test_args):
-        with pytest.raises(ValueError, match="Usage: micro set-key <key> <value>"):
+        with pytest.raises(ValueError, match="Usage: micro-extra set-key <key> <value>"):
             main()
 
 
 def test_set_key_too_many_args():
     """Test that ValueError is raised when too many arguments are provided."""
-    test_args = ["micro", "set-key", "OPENAI_API_KEY", "sk-test123", "extra"]
+    test_args = ["micro-extra", "set-key", "OPENAI_API_KEY", "sk-test123", "extra"]
 
     with patch.object(sys, "argv", test_args):
-        with pytest.raises(ValueError, match="Usage: micro set-key <key> <value>"):
+        with pytest.raises(ValueError, match="Usage: micro-extra set-key <key> <value>"):
             main()
 
 
 def test_set_key_with_special_characters():
     """Test key setting with special characters in key and value."""
-    test_args = ["micro", "set-key", "MY_API_KEY", "sk-proj-abc123!@#$%^&*()"]
+    test_args = ["micro-extra", "set-key", "MY_API_KEY", "sk-proj-abc123!@#$%^&*()"]
     test_config_file = Path("/fake/config/.env")
 
     with (
@@ -64,7 +50,7 @@ def test_set_key_with_special_characters():
 
 def test_set_key_preserves_other_commands():
     """Test that other commands still work when set-key is not called."""
-    test_args = ["micro", "gh", "issue-url"]
+    test_args = ["micro-extra", "gh", "issue-url"]
 
     with (
         patch.object(sys, "argv", test_args),
@@ -76,7 +62,7 @@ def test_set_key_preserves_other_commands():
 
 def test_set_key_does_not_interfere_with_inspector():
     """Test that inspector command still works when set-key is available."""
-    test_args = ["micro", "i", "trajectory.json"]
+    test_args = ["micro-extra", "i", "trajectory.json"]
 
     with (
         patch.object(sys, "argv", test_args),

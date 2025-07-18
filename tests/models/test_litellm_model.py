@@ -25,4 +25,4 @@ def test_authentication_error_enhanced_message():
             model._query([{"role": "user", "content": "test"}])
 
         # Check that the error message was enhanced
-        assert "You can permanently set your API key with `micro set-key KEY VALUE`." in str(exc_info.value)
+        assert "You can permanently set your API key with `micro-extra set-key KEY VALUE`." in str(exc_info.value)
