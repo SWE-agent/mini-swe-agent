@@ -12,10 +12,7 @@ Available sub-commands:
 
 import sys
 
-from dotenv import set_key
 from rich.console import Console
-
-from microsweagent import global_config_file
 
 
 def main() -> None:
@@ -25,18 +22,15 @@ def main() -> None:
     if len(args) > 0 and args[0] in ["gh", "github-issue"]:
         from microsweagent.run.github_issue import app as github_app
 
-        sys.argv = sys.argv[:1] + args[1:]  # Keep script name, remove "gh"
-        github_app()
+        github_app(args[1:], prog_name="micro-extra gh")
     elif len(args) > 0 and args[0] in ["i", "inspect", "inspector"]:
         from microsweagent.run.inspector import app as inspect_app
 
-        sys.argv = sys.argv[:1] + args[1:]  # Keep script name, remove "i"
-        inspect_app()
+        inspect_app(args[1:], prog_name="micro-extra inspect")
     elif len(args) > 0 and args[0] == "set-key":
-        if len(args) != 3:
-            raise ValueError("Usage: micro set-key <key> <value>")
+        from microsweagent.run.extra.set_key import app as set_key_app
 
-        set_key(global_config_file, args[1], args[2])
+        set_key_app(args[1:], prog_name="micro-extra set-key")
     else:
         Console().print(__doc__)
 
