@@ -427,3 +427,41 @@ def test_add_log_emit_callback():
 
     assert callback_called
     assert test_record == record
+
+
+async def test_yolo_mode_confirms_pending_action():
+    """Test that pressing 'y' to switch to YOLO mode also confirms any pending action."""
+    app = AgentApp(
+        model=DeterministicModel(
+            outputs=[
+                "Action requiring confirmation\n```bash\necho 'test' && echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```",
+            ]
+        ),
+        env=LocalEnvironment(),
+        task="YOLO confirmation test",
+        mode="confirm",
+    )
+
+    async with app.run_test() as pilot:
+        await pilot.pause(0.1)
+
+        # Wait for confirmation prompt
+        while app.agent_state != "AWAITING_CONFIRMATION":
+            await pilot.pause(0.1)
+
+        # Verify we're in confirm mode and awaiting confirmation
+        assert app.agent.config.mode == "confirm"
+        assert app.agent_state == "AWAITING_CONFIRMATION"
+        assert "echo 'test'" in get_screen_text(app)
+        assert "press [bold]enter[/bold] to confirm action" in get_screen_text(app).lower()
+
+        # Press 'y' to switch to YOLO mode - this should also confirm the pending action
+        await pilot.press("y")
+        await pilot.pause(0.1)
+
+        # Verify mode changed to yolo and action was automatically confirmed
+        assert app.agent.config.mode == "yolo"
+        assert app.agent_state != "AWAITING_CONFIRMATION"  # Should no longer be awaiting confirmation
+
+        # The action should have been executed, so we should see the next step
+        assert "Step 3/3" in app.title or app.agent_state == "STOPPED"

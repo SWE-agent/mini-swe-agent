@@ -296,6 +296,7 @@ class AgentApp(App):
 
     def action_yolo(self):
         self.agent.config.mode = "yolo"
+        self.confirmation_container._complete_confirmation(None)
         self.notify("YOLO mode enabled - actions will execute immediately")
 
     def action_confirm(self):
