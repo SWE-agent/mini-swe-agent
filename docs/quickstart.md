@@ -10,14 +10,6 @@
         pip install micro-swe-agent
         ```
 
-        Set your LM API key ([more](#models)):
-
-        ```bash
-        micro-extra set-key ANTHROPIC_API_KEY <your-api-key>
-        # or (not persistent)
-        export ANTHROPIC_API_KEY=<your-api-key>
-        ```
-
         And try our command line interface
 
         ```bash
@@ -31,15 +23,7 @@
 
         Use pipx to install & run `micro` in an isolated environment.
 
-        First [install pipx](https://pipx.pypa.io/stable/installation/), then set your LM API key ([more](#models)):
-
-        ```bash
-        micro-extra set-key ANTHROPIC_API_KEY <your-api-key>
-        # or (not persistent)
-        export ANTHROPIC_API_KEY=<your-api-key>
-        ```
-
-        and install + run:
+        First [install pipx](https://pipx.pypa.io/stable/installation/), then run:
 
         ```bash
         # Simple UI
@@ -59,15 +43,6 @@
         cd micro-swe-agent
         pip install -e .
         ```
-
-        Set your LM API key ([more](#models)):
-
-        ```bash
-        micro-extra set-key ANTHROPIC_API_KEY <your-api-key>
-        # or (not persistent)
-        export ANTHROPIC_API_KEY=<your-api-key>
-        ```
-
 
         Then run:
 
@@ -99,14 +74,14 @@
 There are several ways to set your API kyes:
 
 * Export your key as an environment variable: `export ANTHROPIC_API_KEY=<your-api-key>` (this is not persistent if you restart your shell, unless you add it to your shell config, like `~/.bashrc` or `~/.zshrc`).
-* Use `micro-extra set-key ANTHROPIC_API_KEY <your-api-key>` to put the key in the micro config file. The location of the config file is printed when you run `micro --help`.
+* Use `micro-extra config set ANTHROPIC_API_KEY <your-api-key>` to put the key in the micro config file. The location of the config file is printed when you run `micro --help`.
 * If you only use a single model, you can also set `MSWEA_MODEL_API_KEY` (as environment variable or in the config file). This takes precedence over all other keys.
 * If you run several agents in parallel, see our note about anthropic keys [here](advanced/configuration.md).
 
 ### Selecting a model
 
 * All command line interfaces allow you to set the model name with `-m` or `--model`.
-* In addition, you can set the default model with `micro-extra set-key MSWEA_MODEL_NAME <model-name>` or by editing the global config file.
+* In addition, you can set the default model with `micro-extra config set MSWEA_MODEL_NAME <model-name>` or by editing the global config file.
   If you run `micro` for the first time and do not use the `--model` flag, it will prompt you for the default model.
 * You can also set your model in a config file (key `model_name` under `model`).
 

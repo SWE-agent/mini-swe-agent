@@ -11,6 +11,7 @@ from microsweagent.agents.interactive import InteractiveAgent
 from microsweagent.config import builtin_config_dir, get_config_path
 from microsweagent.environments.docker import DockerEnvironment
 from microsweagent.models import get_model
+from microsweagent.run.extra.config import configure_if_first_time
 from microsweagent.run.utils.save import save_traj
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", builtin_config_dir / "github_issue.yaml"))
@@ -44,6 +45,7 @@ def main(
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
 ) -> InteractiveAgent:
     """Run micro-SWE-agent on a GitHub issue"""
+    configure_if_first_time()
 
     _config = yaml.safe_load(get_config_path(config).read_text())
     _agent_config = _config.get("agent", {})

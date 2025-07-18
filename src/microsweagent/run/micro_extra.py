@@ -7,7 +7,7 @@ Available sub-commands:
 
   [bold green]gh[/bold green] or [bold green]github-issue[/bold green]: Run on a GitHub issue
   [bold green]i[/bold green] or [bold green]inspect[/bold green]: Run in inspector mode
-  [bold green]set-key[/bold green]: Set a key in the config file
+  [bold green]config[/bold green]: Manage the global config file
 """
 
 import sys
@@ -27,10 +27,10 @@ def main() -> None:
         from microsweagent.run.inspector import app as inspect_app
 
         inspect_app(args[1:], prog_name="micro-extra inspect")
-    elif len(args) > 0 and args[0] == "set-key":
-        from microsweagent.run.extra.set_key import app as set_key_app
+    elif len(args) > 0 and args[0] == "config":
+        from microsweagent.run.extra.config import app as config_app
 
-        set_key_app(args[1:], prog_name="micro-extra set-key")
+        config_app(args[1:], prog_name="micro-extra config")
     else:
         Console().print(__doc__)
 

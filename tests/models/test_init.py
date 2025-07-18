@@ -1,6 +1,8 @@
 import os
 from unittest.mock import patch
 
+import pytest
+
 from microsweagent.models import get_model, get_model_class, get_model_name
 from microsweagent.models.test_models import DeterministicModel
 
@@ -22,15 +24,20 @@ class TestGetModelName:
     def test_config_fallback(self):
         """Test that config model name is used when input and env are missing."""
         with patch.dict(os.environ, {}, clear=True):
-            with patch("microsweagent.models.prompt_for_model_name", return_value="prompted-model"):
-                assert get_model_name(None, self.CONFIG_WITH_MODEL_NAME) == "config-model"
+            assert get_model_name(None, self.CONFIG_WITH_MODEL_NAME) == "config-model"
 
-    def test_prompt_fallback(self):
-        """Test that prompt is used when all other sources are missing."""
+    def test_raises_error_when_no_model_configured(self):
+        """Test that ValueError is raised when no model is configured anywhere."""
         with patch.dict(os.environ, {}, clear=True):
-            with patch("microsweagent.models.prompt_for_model_name", return_value="prompted-model"):
-                assert get_model_name(None, {}) == "prompted-model"
-                assert get_model_name(None, None) == "prompted-model"
+            with pytest.raises(
+                ValueError, match="No default model set. Please run `micro-extra config setup` to set one."
+            ):
+                get_model_name(None, {})
+
+            with pytest.raises(
+                ValueError, match="No default model set. Please run `micro-extra config setup` to set one."
+            ):
+                get_model_name(None, None)
 
 
 class TestGetModelClass:

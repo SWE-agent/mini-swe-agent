@@ -67,7 +67,7 @@
     To permanently set the API key in the config file, you can use the following command:
 
     ```bash
-    micro-extra set-key OPENAI_API_KEY sk-test123
+    micro-extra config set OPENAI_API_KEY sk-test123
     ```
 
     Alternatively, you can directly edit the `.env` file in the config directory
@@ -79,7 +79,7 @@
     To permanently change it:
 
     ```bash
-    micro-extra set-key MSWEA_MODEL_NAME claude-sonnet-4-20250514
+    micro-extra config set MSWEA_MODEL_NAME claude-sonnet-4-20250514
     ```
 
     Alternatively, you can directly edit the `.env` file in the config directory

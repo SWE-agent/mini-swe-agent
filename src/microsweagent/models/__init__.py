@@ -6,12 +6,7 @@ import copy
 import os
 import threading
 
-from dotenv import set_key
-from rich.console import Console
-
-from microsweagent import Model, global_config_file
-
-console = Console()
+from microsweagent import Model
 
 
 class GlobalModelStats:
@@ -70,28 +65,15 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
         return from_env
     if from_config := config.get("model_name"):
         return from_config
-    return prompt_for_model_name()
+    raise ValueError("No default model set. Please run `micro-extra config setup` to set one.")
 
 
 def get_model_class(model_name: str) -> type:
     """Select the best model class for a given model name."""
-    if any(s in model_name for s in ["anthropic", "sonnet", "opus"]):
+    if any(s in model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"]):
         from microsweagent.models.anthropic import AnthropicModel
 
         return AnthropicModel
     from microsweagent.models.litellm_model import LitellmModel
 
     return LitellmModel
-
-
-def prompt_for_model_name() -> str:
-    """Prompt the user for a model name and store it in the global config file."""
-    msg = (
-        "[bold yellow]Choose your language model[/bold yellow]\n"
-        "Popular models:\n"
-        "[bold green]claude-sonnet-4-20250514[/bold green]\n[bold green]gpt-4o[/bold green]\n"
-        "[bold yellow]Your language model: [/bold yellow]"
-    )
-    choice = console.input(msg)
-    set_key(global_config_file, "MSWEA_MODEL_NAME", choice)
-    return choice

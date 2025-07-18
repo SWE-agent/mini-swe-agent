@@ -44,6 +44,30 @@ def assert_observations_match(expected_observations: list[str], messages: list[d
         )
 
 
+def test_configure_if_first_time_called():
+    """Test that configure_if_first_time is called when running github_issue main."""
+    with (
+        patch("microsweagent.run.github_issue.configure_if_first_time") as mock_configure,
+        patch("microsweagent.run.github_issue.fetch_github_issue") as mock_fetch,
+        patch("microsweagent.run.github_issue.InteractiveAgent") as mock_agent,
+        patch("microsweagent.run.github_issue.get_model"),
+        patch("microsweagent.run.github_issue.DockerEnvironment"),
+        patch("microsweagent.run.github_issue.yaml.safe_load") as mock_yaml_load,
+        patch("microsweagent.run.github_issue.get_config_path") as mock_get_config_path,
+        patch("microsweagent.run.github_issue.save_traj"),
+    ):
+        mock_fetch.return_value = "Test issue"
+        mock_yaml_load.return_value = {"agent": {}, "environment": {}, "model": {}}
+        mock_get_config_path.return_value.read_text.return_value = "test config"
+        mock_agent_instance = mock_agent.return_value
+        mock_agent_instance.run.return_value = (0, "success")
+        mock_agent_instance.env.execute.return_value = None
+
+        main(issue_url="https://github.com/test/repo/issues/1", config=DEFAULT_CONFIG, model="test-model", yolo=True)
+
+        mock_configure.assert_called_once()
+
+
 @pytest.mark.slow
 def test_github_issue_end_to_end(github_test_data):
     """Test the complete flow from CLI to final result using real environment but deterministic model"""

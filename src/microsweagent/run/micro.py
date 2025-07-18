@@ -16,6 +16,7 @@ from microsweagent.agents.interactive_textual import AgentApp
 from microsweagent.config import builtin_config_dir, get_config_path
 from microsweagent.environments.local import LocalEnvironment
 from microsweagent.models import get_model
+from microsweagent.run.extra.config import configure_if_first_time
 from microsweagent.run.utils.save import save_traj
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL_CONFIG_PATH", builtin_config_dir / "local.yaml"))
@@ -73,6 +74,7 @@ def main(
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
 ) -> Any:
     """Run micro-SWE-agent right here, right now."""
+    configure_if_first_time()
     config = yaml.safe_load(get_config_path(config_spec).read_text())
 
     if not task:
