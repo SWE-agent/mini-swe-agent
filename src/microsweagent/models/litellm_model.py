@@ -3,7 +3,13 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import litellm
-from tenacity import before_sleep_log, retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+from tenacity import (
+    before_sleep_log,
+    retry,
+    retry_if_not_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 from microsweagent.models import GLOBAL_MODEL_STATS
 
@@ -26,13 +32,14 @@ class LitellmModel:
         stop=stop_after_attempt(10),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
-        retry=retry_if_exception_type(
+        retry=retry_if_not_exception_type(
             (
-                litellm.exceptions.RateLimitError,
-                litellm.exceptions.ServiceUnavailableError,
-                litellm.exceptions.Timeout,
-                litellm.exceptions.APIConnectionError,
-                litellm.exceptions.InternalServerError,
+                litellm.exceptions.UnsupportedParamsError,
+                litellm.exceptions.NotFoundError,
+                litellm.exceptions.PermissionDeniedError,
+                litellm.exceptions.ContextWindowExceededError,
+                litellm.exceptions.APIError,
+                litellm.exceptions.AuthenticationError,
             )
         ),
     )
