@@ -16,7 +16,7 @@ from microsweagent.run.utils.save import save_traj
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", builtin_config_dir / "github_issue.yaml"))
 console = Console(highlight=False)
-app = typer.Typer()
+app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
 
 def fetch_github_issue(issue_url: str) -> str:

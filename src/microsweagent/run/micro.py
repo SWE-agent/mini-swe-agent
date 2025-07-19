@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 
+"""Run micro-SWE-agent in your local environment.
+
+[not dim]
+There are two different user interfaces:
+
+[bold green]micro[/bold green] Simple REPL-style interface
+[bold green]micro -v[/bold green] Pager-style interface (Textual)
+
+More information about the usage: [bold green]https://mellow-pegasus-562d44.netlify.app/usage/micro/[/bold green]
+[/not dim]
+"""
+
 import os
 from pathlib import Path
 from typing import Any
@@ -21,7 +33,7 @@ from microsweagent.run.utils.save import save_traj
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_LOCAL_CONFIG_PATH", builtin_config_dir / "local.yaml"))
 console = Console(highlight=False)
-app = typer.Typer()
+app = typer.Typer(rich_markup_mode="rich")
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "micro_task_history.txt"))
 
 
@@ -58,9 +70,9 @@ def run_textual(model: Model, env: Environment, agent_config: dict, task: str, o
         save_traj(agent_app.agent, Path("traj.json"), exit_status=agent_app.exit_status, result=agent_app.result)
 
 
-@app.command()
+@app.command(help=__doc__)
 def main(
-    config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
+    visual: bool = typer.Option(False, "-v", "--visual", help="Use visual (pager-style) UI (Textual)"),
     model_name: str | None = typer.Option(
         None,
         "-m",
@@ -69,11 +81,10 @@ def main(
     ),
     task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
-    output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
-    visual: bool = typer.Option(False, "-v", "--visual", help="Use visual UI (Textual)"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
+    config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
+    output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
 ) -> Any:
-    """Run micro-SWE-agent right here, right now."""
     configure_if_first_time()
     config = yaml.safe_load(get_config_path(config_spec).read_text())
 

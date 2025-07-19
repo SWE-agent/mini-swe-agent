@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
 Simple trajectory inspector for browsing agent conversation trajectories.
+
+[not dim]
+More information about the usage: [bold green]https://mellow-pegasus-562d44.netlify.app/usage/inspector/[/bold green]
+[/not dim]
 """
 
 import json
@@ -16,7 +20,7 @@ from textual.widgets import Footer, Header, Static
 
 from microsweagent.agents.interactive_textual import _messages_to_steps
 
-app = typer.Typer()
+app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
 
 class TrajectoryInspector(App):
@@ -185,12 +189,10 @@ class TrajectoryInspector(App):
         vs.scroll_to(y=vs.scroll_target_y - 15)
 
 
-@app.command()
+@app.command(help=__doc__)
 def main(
     path: str = typer.Argument(".", help="Directory to search for trajectory files or specific trajectory file"),
 ) -> None:
-    """Inspect trajectory files interactively."""
-
     path_obj = Path(path)
 
     if path_obj.is_file():

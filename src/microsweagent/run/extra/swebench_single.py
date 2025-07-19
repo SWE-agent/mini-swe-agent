@@ -12,7 +12,7 @@ from microsweagent.environments.docker import DockerEnvironment
 from microsweagent.models import get_model
 from microsweagent.run.extra.swebench import DATASET_MAPPING, get_swebench_docker_image_name
 
-app = typer.Typer()
+app = typer.Typer(add_completion=False)
 
 
 @app.command()

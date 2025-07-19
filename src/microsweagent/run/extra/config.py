@@ -19,6 +19,8 @@ from microsweagent import global_config_file
 app = Typer(
     help=__doc__.format(global_config_file=global_config_file),  # type: ignore
     no_args_is_help=True,
+    rich_markup_mode="rich",
+    add_completion=False,
 )
 console = Console(highlight=False)
 

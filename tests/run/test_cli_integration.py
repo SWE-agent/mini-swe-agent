@@ -341,7 +341,7 @@ def test_micro_help():
     assert result.returncode == 0
     # Strip ANSI color codes for reliable text matching
     clean_output = strip_ansi_codes(result.stdout)
-    assert "Run micro-SWE-agent right here, right now." in clean_output
+    assert "Run micro-SWE-agent in your local environment." in clean_output
     assert "--help" in clean_output
     assert "--config" in clean_output
     assert "--model" in clean_output
@@ -361,7 +361,7 @@ def test_micro_help_with_typer_runner():
     assert result.exit_code == 0
     # Strip ANSI color codes for reliable text matching
     clean_output = strip_ansi_codes(result.stdout)
-    assert "Run micro-SWE-agent right here, right now." in clean_output
+    assert "Run micro-SWE-agent in your local environment." in clean_output
     assert "--help" in clean_output
     assert "--config" in clean_output
     assert "--model" in clean_output

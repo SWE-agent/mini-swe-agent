@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+
+"""Run micro-SWE-agent on SWEBench instances.
+
+[not dim]
+More information about the usage: [bold green]https://mellow-pegasus-562d44.netlify.app/usage/swebench/[/bold green]
+[/not dim]
+"""
+
 import concurrent.futures
 import json
 import random
@@ -20,7 +28,7 @@ from microsweagent.models import get_model
 from microsweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from microsweagent.run.utils.save import save_traj
 
-app = typer.Typer()
+app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
 DATASET_MAPPING = {
     "full": "princeton-nlp/SWE-Bench",
