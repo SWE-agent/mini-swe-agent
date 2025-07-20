@@ -18,11 +18,11 @@ from typing import Any
 
 import typer
 import yaml
+from prompt_toolkit.filters import Condition
 from prompt_toolkit.history import FileHistory
+from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.shortcuts import PromptSession
 from rich.console import Console
-from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.filters import Condition
 
 from microsweagent import Environment, Model, global_config_dir
 from microsweagent.agents.interactive import InteractiveAgent
