@@ -132,6 +132,10 @@ def main(
             if esc_pending:
                 esc_pending = False
 
+        # Attach `_reset` to the `on_text_changed` event to ensure that `esc_pending`
+        # is reset whenever the user modifies the text. This prevents submission mode
+        # from persisting while the user is actively editing, ensuring the toolbar
+        # and key bindings reflect the current state accurately.
         _session.default_buffer.on_text_changed += _reset
 
         task = _session.prompt("")
