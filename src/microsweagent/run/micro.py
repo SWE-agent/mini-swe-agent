@@ -108,7 +108,7 @@ def main(
             event.app.invalidate()
 
         @Condition
-        def _awaiting_enter() -> bool:  # noqa: WPS430 – local function used as filter
+        def _awaiting_enter() -> bool:  # noqa: WPS430 - local function used as filter
             return esc_pending
 
         @kb.add("enter", filter=_awaiting_enter, eager=True)
