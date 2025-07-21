@@ -1,7 +1,9 @@
 # `micro -v`
 
-`micro -v` is a pager-style interactive command line interface for using micro-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).
-Compared to [`micro`](micro.md), `micro -v` offers a more advanced UI based on [Textual](https://textual.textualize.io/).
+!!! abstract "Overview"
+
+    * `micro -v` is a pager-style interactive command line interface for using micro-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).
+    * Compared to [`micro`](micro.md), `micro -v` offers a more advanced UI based on [Textual](https://textual.textualize.io/).
 
 VIDEO HERE TODO
 

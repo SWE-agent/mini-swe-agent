@@ -1,10 +1,44 @@
 # SWE-bench
 
-We provide two scripts to run on [SWE-bench](https://www.swebench.com/):
+!!! abstract "Overview"
 
-- `src/microsweagent/run/extra/swebench.py`: Evaluate on SWE-bench in batch mode
-- `src/microsweagent/run/extra/swebench_single.py`: Evaluate on a single SWE-bench task
-   (used for development & debugging).
+    * We provide two scripts to run on the [SWE-bench](https://www.swebench.com/) benchmark.
+    * `micro-extra swebench` runs on all task instances in batch mode.
+    * `micro-extra swebench-single` runs on a single task instance with interactivity (useful for debugging).
+
+## Usage
+
+=== "Batch mode"
+
+    ```bash
+    micro-extra swebench
+    # or
+    python src/microsweagent/run/extra/swebench.py
+    # show help
+    micro-extra swebench --help
+    # for example
+    micro-extra swebench \
+        --model claude-sonnet-4-20250514 \
+        --subset verified \
+        --split test \
+        --workers 4
+    ```
+
+=== "Single instance (for debugging)"
+
+    ```bash
+    micro-extra swebench-single
+    # or
+    python src/microsweagent/run/extra/swebench_single.py
+    # show help
+    micro-extra swebench-single --help
+    # for example
+    micro-extra swebench-single \
+        --model claude-sonnet-4-20250514 \
+        --subset verified \
+        --split test \
+        -i 0  # instance index (alternatively, specify instance name)
+    ```
 
 ## FAQ
 

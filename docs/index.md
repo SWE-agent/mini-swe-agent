@@ -1,6 +1,5 @@
 <div align="center">
-
-<img src="assets/micro-swe-agent-banner.svg" alt="micro-swe-agent banner" style="height: 12em"/>
+<img src="assets/micro-swe-agent-banner.svg" alt="micro-swe-agent banner" style="height: 7em"/>
 <h1>The 100 line AI agent that's actually useful</h1>
 </div>
 

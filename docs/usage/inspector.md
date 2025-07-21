@@ -1,6 +1,9 @@
-# Inspector
+# Inspector: Browse agent trajectories
 
-The inspector is a tool that allows you to browse `.traj.json` files that show the history of a micro-SWE-agent run.
+!!! abstract "Overview"
+
+    * The `inspector` is a tool that allows you to browse `.traj.json` files that show the history of a micro-SWE-agent run.
+    * Quickly start it with `micro-e i` or `micro-extra inspector`.
 
 ## Usage
 
@@ -25,7 +28,15 @@ micro-e i <path_to_directory>
 - `H`: Previous trajectory
 - `L`: Next trajectory
 
+### FAQ
+
+> How can I select/copy text on the screen?
+
+Hold down the `Alt`/`Option` key and use the mouse to select the text.
+
 ## Implementation
+
+The inspector is implemented with [textual](https://textual.textualize.io/).
 
 ??? note "Implementation"
 
