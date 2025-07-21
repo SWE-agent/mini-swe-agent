@@ -89,13 +89,11 @@ def main(
     config = yaml.safe_load(get_config_path(config_spec).read_text())
 
     if not task:
-        console.print(
-            "[bold yellow]What do you want to do?\n"
-            "[bold green]Up[/bold green]/[bold green]Down[/bold green] to bring up previous tasks or [bold green]Ctrl+R[/bold green] to search history\n"
-        )
+        console.print("[bold yellow]What do you want to do?")
         task = prompt_session.prompt("", multiline=True, bottom_toolbar=[
-            ("", "Confirm with "),
-            ("bg:red bold", "Esc+Enter")
+            ("", "Submit task: "), ("fg:ansiyellow bg:black bold", "Esc+Enter"),
+            ("", " | Navigate history: "), ("fg:ansiyellow bg:black bold", "Arrow Up/Down"),
+            ("", " | Search history: "), ("fg:ansiyellow bg:black bold", "Ctrl+R"),
         ])
         console.print("[bold green]Got that, thanks![/bold green]")
 
