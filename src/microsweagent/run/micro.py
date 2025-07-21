@@ -18,6 +18,7 @@ from typing import Any
 
 import typer
 import yaml
+from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.shortcuts import PromptSession
 from rich.console import Console
@@ -89,11 +90,14 @@ def main(
     config = yaml.safe_load(get_config_path(config_spec).read_text())
 
     if not task:
-        console.print(
-            "[bold yellow]What do you want to do?\n"
-            "[bold green]Up[/bold green]/[bold green]Down[/bold green] to bring up previous tasks or [bold green]Ctrl+R[/bold green] to search history\n"
+        console.print("[bold yellow]What do you want to do?")
+        task = prompt_session.prompt(
+            "",
+            multiline=True,
+            bottom_toolbar=HTML(
+                "Confirm with <b fg='yellow'>Esc+Enter</b> | <b>Up/Down</b>: navigate history | <b>Ctrl+R</b>: search history"
+            ),
         )
-        task = prompt_session.prompt("", multiline=True, bottom_toolbar="Confirm with Esc, then Enter")
         console.print("[bold green]Got that, thanks![/bold green]")
 
     config["agent"]["mode"] = "confirm" if not yolo else "yolo"
