@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://mellow-pegasus-562d44.netlify.app/"><img src="docs/assets/micro-swe-agent-banner.svg" alt="micro-swe-agent banner" style="height: 7em"/></a>
+<a href="https://mellow-pegasus-562d44.netlify.app/"><img src="https://github.com/SWE-agent/micro-swe-agent/raw/main/docs/assets/micro-swe-agent-banner.svg" alt="micro-swe-agent banner" style="height: 7em"/></a>
 
 <h1>The 100 line AI agent that solves GitHub issues & more</h1>
 
@@ -86,12 +86,12 @@ it is radically simpler, because it
 <tr>
 <td width="50%">
 
-  ![micro](https://github.com/user-attachments/assets/b4ac427a-8626-4516-8b5d-8b42e389e0be)
+  ![micro](https://github.com/SWE-agent/swe-agent-media/blob/main/media/micro/gif/micro.gif?raw=true)
 
 </td>
 <td>
 
-  ![microv](https://github.com/user-attachments/assets/bbdea603-1ddc-4608-8429-b11ba59cfe99)
+  ![microv](https://github.com/SWE-agent/swe-agent-media/blob/main/media/micro/gif/micro2.gif?raw=true)
 
 </td>
 </tr>
@@ -107,13 +107,13 @@ it is radically simpler, because it
 
 <td>
 
-![swebench](https://github.com/user-attachments/assets/64caad12-c47d-4148-a65c-df22f2c35cde)
+![swebench](https://github.com/SWE-agent/swe-agent-media/blob/main/media/micro/gif/swebench.gif?raw=true)
 
 </td>
 
 <td>
 
-![inspector](https://github.com/user-attachments/assets/d4ec52a9-a48e-4560-b4ff-36ba4658274f)
+![inspector](https://github.com/SWE-agent/swe-agent-media/blob/main/media/micro/gif/inspector.gif?raw=true)
 
 </td>
 
@@ -169,14 +169,14 @@ Read more in our [documentation](https://mellow-pegasus-562d44.netlify.app/):
 ## 👀 More agentic AI
 
 <div align="center">
-  <a href="https://github.com/SWE-agent/SWE-agent"><img src="docs/assets/sweagent_logo_text_below.svg" alt="SWE-agent" height="120px"></a>
+  <a href="https://github.com/SWE-agent/SWE-agent"><img src="https://github.com/SWE-agent/micro-swe-agent/raw/main/docs/assets/sweagent_logo_text_below.svg" alt="SWE-agent" height="120px"></a>
    &nbsp;&nbsp;
-  <a href="https://github.com/SWE-agent/SWE-ReX"><img src="docs/assets/swerex_logo_text_below.svg" alt="SWE-ReX" height="120px"></a>
+  <a href="https://github.com/SWE-agent/SWE-ReX"><img src="https://github.com/SWE-agent/micro-swe-agent/raw/main/docs/assets/swerex_logo_text_below.svg" alt="SWE-ReX" height="120px"></a>
    &nbsp;&nbsp;
-  <a href="https://github.com/SWE-bench/SWE-bench"><img src="docs/assets/swebench_logo_text_below.svg" alt="SWE-bench" height="120px"></a>
+  <a href="https://github.com/SWE-bench/SWE-bench"><img src="https://github.com/SWE-agent/micro-swe-agent/raw/main/docs/assets/swebench_logo_text_below.svg" alt="SWE-bench" height="120px"></a>
   &nbsp;&nbsp;
-  <a href="https://github.com/SWE-bench/SWE-smith"><img src="docs/assets/swesmith_logo_text_below.svg" alt="SWE-smith" height="120px"></a>
+  <a href="https://github.com/SWE-bench/SWE-smith"><img src="https://github.com/SWE-agent/micro-swe-agent/raw/main/docs/assets/swesmith_logo_text_below.svg" alt="SWE-smith" height="120px"></a>
   &nbsp;&nbsp;
-  <a href="https://github.com/SWE-bench/sb-cli"><img src="docs/assets/sbcli_logo_text_below.svg" alt="sb-cli" height="120px"></a>
+  <a href="https://github.com/SWE-bench/sb-cli"><img src="https://github.com/SWE-agent/micro-swe-agent/raw/main/docs/assets/sbcli_logo_text_below.svg" alt="sb-cli" height="120px"></a>
 </div>
 
