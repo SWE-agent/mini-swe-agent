@@ -62,7 +62,7 @@ micro-SWE-agent comes with two convenient interfaces:
 <strong>Simple UI</strong> (<code>micro</code>)
 </td>
 <td>
-<strong>Textual UI</strong> (<code>micro2</code>)
+<strong>Textual UI</strong> (<code>micro -v</code>)
 </td>
 </tr>
 <tr>

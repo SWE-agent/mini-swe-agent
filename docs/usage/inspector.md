@@ -6,11 +6,13 @@ The inspector is a tool that allows you to browse `.traj.json` files that show t
 
 ```bash
 # Find all .traj.json files recursively from current directory
-micro i
+micro-extra inspector
+# or shorter
+micro-e i
 # Open the inspector for a specific file
-micro i <path_to_traj.json>
+micro-e i <path_to_traj.json>
 # Search for trajectory files in a specific directory
-micro i <path_to_directory>
+micro-e i <path_to_directory>
 ```
 
 ## Key bindings

@@ -79,7 +79,7 @@ it is radically simpler, because it
 <a href="https://mellow-pegasus-562d44.netlify.app/usage/micro/"><strong>Simple UI</strong></a> (<code>micro</code>)
 </td>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro2/"><strong>Visual UI</strong></a> (<code>micro -v</code>)
+<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro_v/"><strong>Visual UI</strong></a> (<code>micro -v</code>)
 </td>
 </tr>
 <tr>
@@ -157,7 +157,7 @@ pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro [-v]
 Read more in our [documentation](https://mellow-pegasus-562d44.netlify.app/):
 
 * [Quick start guide](https://mellow-pegasus-562d44.netlify.app/quickstart/)
-* More on [`micro`](https://mellow-pegasus-562d44.netlify.app/usage/micro/) and [`micro2`](https://mellow-pegasus-562d44.netlify.app/usage/micro2/)
+* More on [`micro`](https://mellow-pegasus-562d44.netlify.app/usage/micro/) and [`micro -v`](https://mellow-pegasus-562d44.netlify.app/usage/micro_v/)
 * [Configuration](https://mellow-pegasus-562d44.netlify.app/advanced/configuration/)
 * [Power up with the cookbook](https://mellow-pegasus-562d44.netlify.app/advanced/cookbook/)
 * [FAQ](https://mellow-pegasus-562d44.netlify.app/faq/)

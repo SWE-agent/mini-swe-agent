@@ -16,7 +16,7 @@
         # Simple UI
         micro
         # Textual UI
-        micro2
+        micro -v
         ```
 
     === "pipx"
@@ -29,7 +29,7 @@
         # Simple UI
         pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro
         # Textual UI
-        pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro2
+        pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro -v
         ```
 
         If the invocation doesn't immediately work, you might need to run `pipx ensurepath`.
@@ -50,7 +50,7 @@
         # Simple UI
         micro
         # Textual UI
-        micro2
+        micro -v
         ```
 
         Or pick a [run script](reference/run/):

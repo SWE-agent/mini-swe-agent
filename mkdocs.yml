@@ -60,7 +60,7 @@ nav:
     - "Quick start": quickstart.md
     - "Usage":
       - "<code>micro</code>": usage/micro.md
-      - "<code>micro2</code>": usage/micro2.md
+      - "<code>micro -v</code>": usage/micro_v.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
     - "Advanced":

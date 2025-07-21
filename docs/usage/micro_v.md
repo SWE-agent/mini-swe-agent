@@ -1,12 +1,12 @@
-# `micro2`
+# `micro -v`
 
-`micro2` is a pager-style interactive command line interface for using micro-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).
-Compared to [`micro`](micro.md), `micro2` offers a more advanced UI based on [Textual](https://textual.textualize.io/).
+`micro -v` is a pager-style interactive command line interface for using micro-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).
+Compared to [`micro`](micro.md), `micro -v` offers a more advanced UI based on [Textual](https://textual.textualize.io/).
 
 VIDEO HERE TODO
 
 !!! tip "Feedback wanted!"
-    Give feedback on the `micro` and `micro2` interfaces at [this github issue](https://github.com/swe-agent/micro-swe-agent/issues/161)
+    Give feedback on the `micro` and `micro -v` interfaces at [this github issue](https://github.com/swe-agent/micro-swe-agent/issues/161)
     or in our [Slack channel](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ).
 
 ## Command line options
@@ -32,14 +32,14 @@ Useful switches:
 
 ## Modes of operation
 
-`micro2` provides two different modes of operation
+`micro -v` provides two different modes of operation
 
 - `confirm` (`c`): The LM proposes an action and the user is prompted to confirm (press Enter)) or reject (enter a rejection message))
 - `yolo` (`y`): The action from the LM is executed immediately without confirmation
 
 You can switch between the modes at any time by pressing the `c` or `y` keys.
 
-`micro2` starts in `confirm` mode by default. To start in `yolo` mode, you can add `-y`/`--yolo` to the command line.
+`micro -v` starts in `confirm` mode by default. To start in `yolo` mode, you can add `-y`/`--yolo` to the command line.
 
 ## FAQ
 

@@ -1,12 +1,43 @@
 # Configuration
 
-## Environment variables
+## Environment variables and global configuration
 
 All global configuration can be either set as environment variables, or in the `.env` file (the exact location is printed when you run `micro`).
 
 !!! note "Precedence"
 
     Environment variables take precedence over variables set in the `.env` file.
+
+We provide several helper functions to update the global configuration.
+
+For example, to set the default model and API keys, you can run:
+
+```bash
+micro-extra config setup
+```
+
+or to update specific settings:
+
+```
+micro-extra config set KEY VALUE
+# e.g.,
+micro-extra config set MSWEA_MODEL_NAME "claude-sonnet-4-20250514"
+micro-extra config set MSWEA_MODEL_API_KEY "sk-..."
+```
+
+or to unset a key:
+
+```bash
+micro-extra config unset KEY
+# e.g.,
+micro-extra config unset MSWEA_MODEL_API_KEY
+```
+
+You can also edit the `.env` file directly and we provide a helper function for that:
+
+```bash
+micro-extra config edit
+```
 
 ### Models and keys
 
