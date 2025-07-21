@@ -18,9 +18,7 @@ from typing import Any
 
 import typer
 import yaml
-from prompt_toolkit.filters import Condition
 from prompt_toolkit.history import FileHistory
-from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.shortcuts import PromptSession
 from rich.console import Console
 
@@ -95,50 +93,10 @@ def main(
             "[bold yellow]What do you want to do?\n"
             "[bold green]Up[/bold green]/[bold green]Down[/bold green] to bring up previous tasks or [bold green]Ctrl+R[/bold green] to search history\n"
         )
-
-        esc_pending = False
-
-        kb = KeyBindings()
-
-        @kb.add("escape", eager=True)
-        def _handle_escape(event):
-            """Toggle submission mode and refresh the toolbar immediately."""
-            nonlocal esc_pending
-            esc_pending = True
-            event.app.invalidate()
-
-        @Condition
-        def _awaiting_enter() -> bool:  # noqa: WPS430 - local function used as filter
-            return esc_pending
-
-        @kb.add("enter", filter=_awaiting_enter, eager=True)
-        def _handle_enter(event):
-            nonlocal esc_pending
-            esc_pending = False
-            event.current_buffer.validate_and_handle()
-
-        def _bottom_toolbar() -> str:
-            return "Press Enter to submit" if esc_pending else "Confirm with Esc, then Enter"
-
-        _session = PromptSession(
-            history=FileHistory(global_config_dir / "micro_task_history.txt"),
-            key_bindings=kb,
-            bottom_toolbar=_bottom_toolbar,
-            multiline=True,
-        )
-
-        def _reset(_):
-            nonlocal esc_pending
-            if esc_pending:
-                esc_pending = False
-
-        # Attach `_reset` to the `on_text_changed` event to ensure that `esc_pending`
-        # is reset whenever the user modifies the text. This prevents submission mode
-        # from persisting while the user is actively editing, ensuring the toolbar
-        # and key bindings reflect the current state accurately.
-        _session.default_buffer.on_text_changed += _reset
-
-        task = _session.prompt("")
+        task = prompt_session.prompt("", multiline=True, bottom_toolbar=[
+            ("", "Confirm with "),
+            ("bg:red bold", "Esc+Enter")
+        ])
         console.print("[bold green]Got that, thanks![/bold green]")
 
     config["agent"]["mode"] = "confirm" if not yolo else "yolo"
