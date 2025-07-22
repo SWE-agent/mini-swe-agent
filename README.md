@@ -151,11 +151,25 @@ agent.run("Write a sudoku game")
 
 ## 🔥 Let's get started!
 
-(This will get simpler once we publish to PyPI)
+* Install + run in virtual environment
 
 ```bash
-pip install pipx
-pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro [-v]
+pip install pipx && pipx ensurepath && pipx run micro-swe-agent [-v]
+```
+
+* Or install in current environment
+
+```bash
+pip install micro-swe-agent && micro [-v]
+```
+
+* Or install from source
+
+```bash
+git clone https://github.com/SWE-agent/micro-swe-agent.git
+cd micro-swe-agent
+pip install -e .
+micro [-v]
 ```
 
 Read more in our [documentation](https://mellow-pegasus-562d44.netlify.app/):

@@ -27,9 +27,9 @@
 
         ```bash
         # Simple UI
-        pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro
+        pipx run micro-swe-agent
         # Textual UI
-        pipx run --spec git+ssh://git@github.com/SWE-agent/micro-swe-agent micro -v
+        pipx run micro-swe-agent -v
         ```
 
         If the invocation doesn't immediately work, you might need to run `pipx ensurepath`.
@@ -57,6 +57,14 @@
 
         ```bash
         python microsweagent/run/hello_world.py
+        ```
+
+        If you are planning to contribute, please also install the dev dependencies
+        and `pre-commit` hooks:
+
+        ```bash
+        pip install -e '.[dev]'
+        pre-commit install
         ```
 
 !!! example "Example Prompts"
