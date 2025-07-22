@@ -3,7 +3,7 @@
 """Run micro-SWE-agent on SWEBench instances.
 
 [not dim]
-More information about the usage: [bold green]https://mellow-pegasus-562d44.netlify.app/usage/swebench/[/bold green]
+More information about the usage: [bold green]https://micro-swe-agent.com/latest/usage/swebench/[/bold green]
 [/not dim]
 """
 

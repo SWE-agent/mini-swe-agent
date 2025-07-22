@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025 Kilian Adriano Lieret
+Copyright (c) 2025 Kilian A. Lieret and Carlos E. Jimenez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

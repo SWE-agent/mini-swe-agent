@@ -13,6 +13,7 @@ license = {file = "LICENSE.md"}
 keywords = ["nlp", "agents", "code"]
 authors = [
     {name = "Kilian Lieret", email = "kilian.lieret@posteo.de" },
+    {name = "Carlos E. Jimenez", email = "carlosej@princeton.edu" },
 ]
 
 # Classifiers help users find your project by categorizing it.
@@ -63,6 +64,11 @@ dev = [
     "mkdocs-material",
     "mkdocs-glightbox",
 ]
+
+[project.urls]
+Documentation = "https://micro-swe-agent.com/latest/"
+Repository = "https://github.com/SWE-agent/micro-SWE-agent"
+"Bug Tracker" = "https://github.com/SWE-agent/micro-SWE-agent/issues"
 
 [project.scripts]
 micro = "microsweagent.run.micro:app"

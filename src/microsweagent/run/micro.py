@@ -8,7 +8,7 @@ There are two different user interfaces:
 [bold green]micro[/bold green] Simple REPL-style interface
 [bold green]micro -v[/bold green] Pager-style interface (Textual)
 
-More information about the usage: [bold green]https://mellow-pegasus-562d44.netlify.app/usage/micro/[/bold green]
+More information about the usage: [bold green]https://micro-swe-agent.com/latest/usage/micro/[/bold green]
 [/not dim]
 """
 

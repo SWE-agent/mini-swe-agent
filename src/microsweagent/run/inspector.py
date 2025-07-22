@@ -3,7 +3,7 @@
 Simple trajectory inspector for browsing agent conversation trajectories.
 
 [not dim]
-More information about the usage: [bold green]https://mellow-pegasus-562d44.netlify.app/usage/inspector/[/bold green]
+More information about the usage: [bold green]https://micro-swe-agent.com/latest/usage/inspector/[/bold green]
 [/not dim]
 """
 

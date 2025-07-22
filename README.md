@@ -1,10 +1,10 @@
 <div align="center">
 
-<a href="https://mellow-pegasus-562d44.netlify.app/"><img src="https://github.com/SWE-agent/micro-swe-agent/raw/main/docs/assets/micro-swe-agent-banner.svg" alt="micro-swe-agent banner" style="height: 7em"/></a>
+<a href="https://micro-swe-agent.com/latest/"><img src="https://github.com/SWE-agent/micro-swe-agent/raw/main/docs/assets/micro-swe-agent-banner.svg" alt="micro-swe-agent banner" style="height: 7em"/></a>
 
 <h1>The 100 line AI agent that solves GitHub issues & more</h1>
 
-[![Docs](https://img.shields.io/badge/Docs-green?style=for-the-badge&logo=materialformkdocs&logoColor=white)](https://mellow-pegasus-562d44.netlify.app/)
+[![Docs](https://img.shields.io/badge/Docs-green?style=for-the-badge&logo=materialformkdocs&logoColor=white)](https://micro-swe-agent.com/latest/)
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ)
 ![PyPI - Version](https://img.shields.io/pypi/v/micro-swe-agent?style=for-the-badge&logo=python&logoColor=white&labelColor=black)
 
@@ -78,10 +78,10 @@ it is radically simpler, because it
 <table>
 <tr>
 <td width="50%">
-<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro/"><strong>Simple UI</strong></a> (<code>micro</code>)
+<a href="https://micro-swe-agent.com/latest/usage/micro/"><strong>Simple UI</strong></a> (<code>micro</code>)
 </td>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro_v/"><strong>Visual UI</strong></a> (<code>micro -v</code>)
+<a href="https://micro-swe-agent.com/latest/usage/micro_v/"><strong>Visual UI</strong></a> (<code>micro -v</code>)
 </td>
 </tr>
 <tr>
@@ -98,10 +98,10 @@ it is radically simpler, because it
 </tr>
 <tr>
   <td>
-    <a href="https://mellow-pegasus-562d44.netlify.app/usage/swebench/"><strong>Batch inference</strong></a>
+    <a href="https://micro-swe-agent.com/latest/usage/swebench/"><strong>Batch inference</strong></a>
   </td>
   <td>
-    <a href="https://mellow-pegasus-562d44.netlify.app/usage/inspector/"><strong>Trajectory browser</strong></a>
+    <a href="https://micro-swe-agent.com/latest/usage/inspector/"><strong>Trajectory browser</strong></a>
   </td>
 <tr>
 <tr>
@@ -120,7 +120,7 @@ it is radically simpler, because it
 
 </tr>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app/advanced/cookbook/"><strong>Python bindings</strong></a>
+<a href="https://micro-swe-agent.com/latest/advanced/cookbook/"><strong>Python bindings</strong></a>
 </td>
 <td>
 <a href="https://mellow-pegasus-562d44.netlify.app"><strong>More in the docs</strong></a>
@@ -139,11 +139,11 @@ agent.run("Write a sudoku game")
 </td>
 <td>
 
-* [Quick start](https://mellow-pegasus-562d44.netlify.app/quickstart/)
-* [`micro`](https://mellow-pegasus-562d44.netlify.app/usage/micro/)
-* [FAQ](https://mellow-pegasus-562d44.netlify.app/faq/)
-* [Configuration](https://mellow-pegasus-562d44.netlify.app/advanced/configuration/)
-* [Power up](https://mellow-pegasus-562d44.netlify.app/advanced/cookbook/)
+* [Quick start](https://micro-swe-agent.com/latest/quickstart/)
+* [`micro`](https://micro-swe-agent.com/latest/usage/micro/)
+* [FAQ](https://micro-swe-agent.com/latest/faq/)
+* [Configuration](https://micro-swe-agent.com/latest/advanced/configuration/)
+* [Power up](https://micro-swe-agent.com/latest/advanced/cookbook/)
 
 </td>
 </tr>
@@ -172,14 +172,14 @@ pip install -e .
 micro [-v]
 ```
 
-Read more in our [documentation](https://mellow-pegasus-562d44.netlify.app/):
+Read more in our [documentation](https://micro-swe-agent.com/latest/):
 
-* [Quick start guide](https://mellow-pegasus-562d44.netlify.app/quickstart/)
-* More on [`micro`](https://mellow-pegasus-562d44.netlify.app/usage/micro/) and [`micro -v`](https://mellow-pegasus-562d44.netlify.app/usage/micro_v/)
-* [Configuration](https://mellow-pegasus-562d44.netlify.app/advanced/configuration/)
-* [Power up with the cookbook](https://mellow-pegasus-562d44.netlify.app/advanced/cookbook/)
-* [FAQ](https://mellow-pegasus-562d44.netlify.app/faq/)
-* [Contribute!](https://mellow-pegasus-562d44.netlify.app/contributing/)
+* [Quick start guide](https://micro-swe-agent.com/latest/quickstart/)
+* More on [`micro`](https://micro-swe-agent.com/latest/usage/micro/) and [`micro -v`](https://micro-swe-agent.com/latest/usage/micro_v/)
+* [Configuration](https://micro-swe-agent.com/latest/advanced/configuration/)
+* [Power up with the cookbook](https://micro-swe-agent.com/latest/advanced/cookbook/)
+* [FAQ](https://micro-swe-agent.com/latest/faq/)
+* [Contribute!](https://micro-swe-agent.com/latest/contributing/)
 
 ## 👀 More agentic AI
 
