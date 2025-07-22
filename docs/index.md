@@ -52,77 +52,132 @@ Here's some details:
     - Has a completely linear history — every step of the agent just appends to the messages and that's it.
     - Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
 
-micro-SWE-agent comes with two convenient interfaces:
-
 </details>
 <table>
 <tr>
 <td width="50%">
-<strong>Simple UI</strong> (<code>micro</code>)
+<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro/"><strong>Simple UI</strong></a> (<code>micro</code>)
 </td>
 <td>
-<strong>Textual UI</strong> (<code>micro -v</code>)
+<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro_v/"><strong>Visual UI</strong></a> (<code>micro -v</code>)
 </td>
 </tr>
 <tr>
 <td width="50%">
-<img width="600px" src="assets/micro.png">
+  <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/micro/gif/micro.gif?raw=true" alt="micro" />
 </td>
 <td>
-<img width="600px" src="assets/micro2.png">
-</td>
-</tr>
-<tr>
-<td>
-<strong>Python bindings</strong>
-</td>
-<td>
-<strong>More in the docs</strong>
+  <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/micro/gif/micro2.gif?raw=true" alt="microv" />
 </td>
 </tr>
 <tr>
 <td>
-
-```python
-agent = DefaultAgent(
+<a href="https://mellow-pegasus-562d44.netlify.app/usage/swebench/"><strong>Batch inference</strong></a>
+</td>
+<td>
+<a href="https://mellow-pegasus-562d44.netlify.app/usage/inspector/"><strong>Trajectory browser</strong></a>
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/micro/gif/swebench.gif?raw=true" alt="swebench" />
+</td>
+<td>
+<img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/micro/gif/inspector.gif?raw=true" alt="inspector" />
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://mellow-pegasus-562d44.netlify.app/advanced/cookbook/"><strong>Python bindings</strong></a>
+</td>
+<td>
+<a href="https://mellow-pegasus-562d44.netlify.app"><strong>More in the docs</strong></a>
+</td>
+</tr>
+<tr>
+<td>
+<pre><code class="language-python">agent = DefaultAgent(
     LitellmModel(model_name=...),
     LocalEnvironment(),
 )
-agent.run("Write a python sudoku game for me")
-```
+agent.run("Write a sudoku game")</code></pre>
 </td>
 <td>
-
-- TBD
+<ul>
+<li><a href="https://mellow-pegasus-562d44.netlify.app/quickstart/">Quick start</a></li>
+<li><a href="https://mellow-pegasus-562d44.netlify.app/usage/micro/"><code>micro</code></a></li>
+<li><a href="https://mellow-pegasus-562d44.netlify.app/faq/">FAQ</a></li>
+<li><a href="https://mellow-pegasus-562d44.netlify.app/advanced/configuration/">Configuration</a></li>
+<li><a href="https://mellow-pegasus-562d44.netlify.app/advanced/cookbook/">Power up</a></li>
+</ul>
 </td>
 </tr>
 </table>
 
-## Get Started
 
-Ready to try micro-SWE-agent?
 
-**[🚀 Installation & Quick Start →](quickstart.md)**
+## Continue reading:
 
-Install with pipx in seconds or set up for development - choose your path and get started immediately!
+<div class="grid cards">
+  <a href="quickstart/" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">launch</span>
+        <span class="nav-card-title">Installation & Quick Start</span>
+      </div>
+      <p class="nav-card-description">Get started with micro-SWE-agent</p>
+    </div>
+  </a>
 
-## What's Next?
+  <a href="usage/micro/" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">flash_on</span>
+        <span class="nav-card-title">Usage: Simple UI</span>
+      </div>
+      <p class="nav-card-description">Learn to use the <code>micro</code> command</p>
+    </div>
+  </a>
 
-Ready to dive deeper? Check out:
+  <a href="usage/micro_v/" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">visibility</span>
+        <span class="nav-card-title">Usage: Visual UI</span>
+      </div>
+      <p class="nav-card-description">Try the visual interface with <code>micro -v</code></p>
+    </div>
+  </a>
 
-- **[🚀 Installation & Quick Start](quickstart.md)** - Get up and running in minutes
-- **[API Reference](reference/index.md)** - Explore all available components
-- **[Run Scripts](reference/run/hello_world.md)** - Learn how to create custom entry points
-- **[Models](reference/models/litellm.md)** - Configure different language models
-- **[Environments](reference/environments/local.md)** - Set up different execution environments
+  <a href="faq/" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">help</span>
+        <span class="nav-card-title">FAQ</span>
+      </div>
+      <p class="nav-card-description">Common questions and answers</p>
+    </div>
+  </a>
 
-## Contributing
+  <a href="advanced/configuration/" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">settings</span>
+        <span class="nav-card-title">Configuration</span>
+      </div>
+      <p class="nav-card-description">Setup and customize your agent</p>
+    </div>
+  </a>
 
-We happily accept contributions! Areas where we'd love help:
-
-- Support for more models (anything where `litellm` doesn't work out of the box)
-- Documentation, examples, tutorials, etc.
-- Support for more environments & deployments (e.g., run it as a github action, etc.)
-- Take a look at the [issues](https://github.com/SWE-agent/micro-SWE-agent/issues) and see if there's anything you'd like to work on!
+  <a href="advanced/cookbook/" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">fitness_center</span>
+        <span class="nav-card-title">Power up</span>
+      </div>
+      <p class="nav-card-description">Start hackign the agent!</p>
+    </div>
+  </a>
+</div>
 
 {% include-markdown "_footer.md" %}

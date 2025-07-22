@@ -129,6 +129,8 @@ extra_css:
   - assets/mkdocstrings.css
   - assets/image_theme.css
   - assets/bubbles.css
+  - assets/navigation_cards.css
+  - https://fonts.googleapis.com/icon?family=Material+Icons
 extra:
   version:
     provider: mike
