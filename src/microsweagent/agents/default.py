@@ -18,9 +18,8 @@ class AgentConfig:
         "To finish, the first line of the output of the shell command must be 'MICRO_SWE_AGENT_FINAL_OUTPUT'."
     )
     timeout_template: str = (
-        "The last command {{action}} timed out and has been killed.\n"
-        "The output of the command was:\n"
-        "{{output}}\n\n"
+        "The last command <command>{{action['action']}}</command> timed out and has been killed.\n"
+        "The output of the command was:\n <output>\n{{output}}\n</output>\n"
         "Please try another command and make sure to avoid those requiring interactive input."
     )
     format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
@@ -115,9 +114,7 @@ class DefaultAgent:
                 self.render_template(self.config.timeout_template, action=action, output=output)
             )
         except TimeoutError:
-            raise ExecutionTimeoutError(
-                self.render_template(self.config.timeout_template, action=action, output="")
-            )
+            raise ExecutionTimeoutError(self.render_template(self.config.timeout_template, action=action, output=""))
         self.has_finished(output)
         return output
 
