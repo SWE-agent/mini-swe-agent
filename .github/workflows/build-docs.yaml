@@ -47,16 +47,3 @@ jobs:
       - name: Build + Deploy Documentation
         if: github.ref == 'refs/heads/main'
         run: mike deploy --push 1.0 latest
-      - name: Push to External Docs Repository
-        if: github.ref == 'refs/heads/main'
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.REINDEER_TOKEN }}
-        with:
-          source-directory: 'site'
-          destination-github-username: 'klieret'
-          destination-repository-name: 'mswea-docs'
-          user-email: github-actions[bot]@users.noreply.github.com
-          user-name: github-actions[bot]
-          target-branch: gh-pages
-          commit-message: 'Update documentation from ${{ github.repository }}@${{ github.sha }}'
