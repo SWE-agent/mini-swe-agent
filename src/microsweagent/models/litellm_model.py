@@ -60,5 +60,5 @@ class LitellmModel:
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
         return {
-            "content": response.choices[0].message.content,  # type: ignore
+            "content": response.choices[0].message.content or "",  # type: ignore
         }
