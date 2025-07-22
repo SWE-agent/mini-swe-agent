@@ -168,7 +168,7 @@ async def test_log_message_filtering():
             outputs=[
                 "/warning Test warning message",
                 "Normal response",
-                "end: \n```\necho MICRO_SWE_AGENT_FINAL_OUTPUT\n```",
+                "end: \n```bash\necho MICRO_SWE_AGENT_FINAL_OUTPUT\n```",
             ]
         ),
         env=LocalEnvironment(),

@@ -131,9 +131,9 @@ def test_parse_action_success():
     assert result["action"] == "echo 'test'"
     assert result["content"] == "```bash\necho 'test'\n```"
 
-    result = agent.parse_action({"content": "```\nls -la\n```"})
+    result = agent.parse_action({"content": "```bash\nls -la\n```"})
     assert result["action"] == "ls -la"
-    assert result["content"] == "```\nls -la\n```"
+    assert result["content"] == "```bash\nls -la\n```"
 
     result = agent.parse_action({"content": "Some text\n```bash\necho 'hello'\n```\nMore text"})
     assert result["action"] == "echo 'hello'"
@@ -154,6 +154,10 @@ def test_parse_action_failures():
     # Multiple code blocks
     with pytest.raises(NonTerminatingException):
         agent.parse_action({"content": "```bash\necho 'first'\n```\n```bash\necho 'second'\n```"})
+
+    # Code block without bash language specifier
+    with pytest.raises(NonTerminatingException):
+        agent.parse_action({"content": "```\nls -la\n```"})
 
 
 def test_message_history_tracking():

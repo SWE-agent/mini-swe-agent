@@ -101,7 +101,7 @@ class DefaultAgent:
 
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
-        actions = re.findall(r"```(?:bash)?\n?(.*?)(?=\n```|```)", response["content"], re.DOTALL)
+        actions = re.findall(r"```bash\n(.*?)\n```", response["content"], re.DOTALL)
         if len(actions) == 1:
             return {"action": actions[0].strip(), **response}
         raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
@@ -115,9 +115,7 @@ class DefaultAgent:
                 self.render_template(self.config.timeout_template, action=action, output=output)
             )
         except TimeoutError:
-            raise ExecutionTimeoutError(
-                self.render_template(self.config.timeout_template, action=action, output="")
-            )
+            raise ExecutionTimeoutError(self.render_template(self.config.timeout_template, action=action, output=""))
         self.has_finished(output)
         return output
 
