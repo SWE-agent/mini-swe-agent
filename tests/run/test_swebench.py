@@ -1,4 +1,5 @@
 import json
+from dataclasses import dataclass
 from unittest.mock import patch
 
 import pytest
@@ -366,6 +367,11 @@ def test_redo_existing_true_overwrites_existing(github_test_data, tmp_path):
     assert result["swe-agent__test-repo-1"]["model_name_or_path"] == "deterministic"
 
 
+@dataclass
+class ExceptionModelConfig:
+    model_name: str = "exception_model"
+
+
 class ExceptionModel:
     """Test model that raises exceptions during processing."""
 
@@ -374,7 +380,7 @@ class ExceptionModel:
         self.exception_message = exception_message
         self.cost = 0.0
         self.n_calls = 0
-        self.config = type("Config", (), {"model_name": "exception_model"})()
+        self.config = ExceptionModelConfig()
 
     def query(self, *args, **kwargs):
         self.n_calls += 1
