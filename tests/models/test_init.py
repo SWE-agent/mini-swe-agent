@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from microsweagent.models import get_model, get_model_class, get_model_name
+from microsweagent.models import GlobalModelStats, get_model, get_model_class, get_model_name
 from microsweagent.models.test_models import DeterministicModel
 
 
@@ -177,3 +177,51 @@ class TestGetModel:
                 get_model("test-model", config)
                 model_kwargs = captured_kwargs.get("model_kwargs", {})
                 assert "api_key" not in model_kwargs
+
+
+class TestGlobalModelStats:
+    def test_prints_cost_limit_when_set(self, capsys):
+        """Test that cost limit is printed when MSWEA_GLOBAL_COST_LIMIT is set."""
+        with patch.dict(os.environ, {"MSWEA_GLOBAL_COST_LIMIT": "5.5"}, clear=True):
+            GlobalModelStats()
+            captured = capsys.readouterr()
+            assert "Global cost/call limit: $5.5000 / 0" in captured.out
+
+    def test_prints_call_limit_when_set(self, capsys):
+        """Test that call limit is printed when MSWEA_GLOBAL_CALL_LIMIT is set."""
+        with patch.dict(os.environ, {"MSWEA_GLOBAL_CALL_LIMIT": "10"}, clear=True):
+            GlobalModelStats()
+            captured = capsys.readouterr()
+            assert "Global cost/call limit: $0.0000 / 10" in captured.out
+
+    def test_prints_both_limits_when_both_set(self, capsys):
+        """Test that both limits are printed when both environment variables are set."""
+        with patch.dict(os.environ, {"MSWEA_GLOBAL_COST_LIMIT": "2.5", "MSWEA_GLOBAL_CALL_LIMIT": "5"}, clear=True):
+            GlobalModelStats()
+            captured = capsys.readouterr()
+            assert "Global cost/call limit: $2.5000 / 5" in captured.out
+
+    def test_no_print_when_silent_startup_set(self, capsys):
+        """Test that limits are not printed when MICRO_SWE_AGENT_SILENT_STARTUP is set."""
+        with patch.dict(
+            os.environ,
+            {"MSWEA_GLOBAL_COST_LIMIT": "5.0", "MSWEA_GLOBAL_CALL_LIMIT": "10", "MICRO_SWE_AGENT_SILENT_STARTUP": "1"},
+            clear=True,
+        ):
+            GlobalModelStats()
+            captured = capsys.readouterr()
+            assert "Global cost/call limit" not in captured.out
+
+    def test_no_print_when_no_limits_set(self, capsys):
+        """Test that nothing is printed when no limits are set."""
+        with patch.dict(os.environ, {}, clear=True):
+            GlobalModelStats()
+            captured = capsys.readouterr()
+            assert "Global cost/call limit" not in captured.out
+
+    def test_no_print_when_limits_are_zero(self, capsys):
+        """Test that nothing is printed when limits are explicitly set to zero."""
+        with patch.dict(os.environ, {"MSWEA_GLOBAL_COST_LIMIT": "0", "MSWEA_GLOBAL_CALL_LIMIT": "0"}, clear=True):
+            GlobalModelStats()
+            captured = capsys.readouterr()
+            assert "Global cost/call limit" not in captured.out
