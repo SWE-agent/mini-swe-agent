@@ -49,7 +49,7 @@ class LitellmModel:
                 model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
             )
         except litellm.exceptions.AuthenticationError as e:
-            e.message += " You can permanently set your API key with `micro-extra set-key KEY VALUE`."
+            e.message += " You can permanently set your API key with `micro-extra config set KEY VALUE`."
             raise e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
