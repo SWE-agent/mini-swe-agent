@@ -75,10 +75,10 @@ Here's some details:
 <table>
 <tr>
 <td width="50%">
-<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro/"><strong>Simple UI</strong></a> (<code>micro</code>)
+<a href="https://micro-swe-agent.com/usage/micro/"><strong>Simple UI</strong></a> (<code>micro</code>)
 </td>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app/usage/micro_v/"><strong>Visual UI</strong></a> (<code>micro -v</code>)
+<a href="https://micro-swe-agent.com/usage/micro_v/"><strong>Visual UI</strong></a> (<code>micro -v</code>)
 </td>
 </tr>
 <tr>
@@ -91,10 +91,10 @@ Here's some details:
 </tr>
 <tr>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app/usage/swebench/"><strong>Batch inference</strong></a>
+<a href="https://micro-swe-agent.com/usage/swebench/"><strong>Batch inference</strong></a>
 </td>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app/usage/inspector/"><strong>Trajectory browser</strong></a>
+<a href="https://micro-swe-agent.com/usage/inspector/"><strong>Trajectory browser</strong></a>
 </td>
 </tr>
 <tr>
@@ -107,10 +107,10 @@ Here's some details:
 </tr>
 <tr>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app/advanced/cookbook/"><strong>Python bindings</strong></a>
+<a href="https://micro-swe-agent.com/advanced/cookbook/"><strong>Python bindings</strong></a>
 </td>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app"><strong>More in the docs</strong></a>
+<a href="https://micro-swe-agent.com"><strong>More in the docs</strong></a>
 </td>
 </tr>
 <tr>
@@ -123,11 +123,11 @@ agent.run("Write a sudoku game")</code></pre>
 </td>
 <td>
 <ul>
-<li><a href="https://mellow-pegasus-562d44.netlify.app/quickstart/">Quick start</a></li>
-<li><a href="https://mellow-pegasus-562d44.netlify.app/usage/micro/"><code>micro</code></a></li>
-<li><a href="https://mellow-pegasus-562d44.netlify.app/faq/">FAQ</a></li>
-<li><a href="https://mellow-pegasus-562d44.netlify.app/advanced/configuration/">Configuration</a></li>
-<li><a href="https://mellow-pegasus-562d44.netlify.app/advanced/cookbook/">Power up</a></li>
+<li><a href="https://micro-swe-agent.com/quickstart/">Quick start</a></li>
+<li><a href="https://micro-swe-agent.com/usage/micro/"><code>micro</code></a></li>
+<li><a href="https://micro-swe-agent.com/faq/">FAQ</a></li>
+<li><a href="https://micro-swe-agent.com/advanced/configuration/">Configuration</a></li>
+<li><a href="https://micro-swe-agent.com/advanced/cookbook/">Power up</a></li>
 </ul>
 </td>
 </tr>

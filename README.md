@@ -146,7 +146,7 @@ What you get with both
 <a href="https://micro-swe-agent.com/latest/advanced/cookbook/"><strong>Python bindings</strong></a>
 </td>
 <td>
-<a href="https://mellow-pegasus-562d44.netlify.app"><strong>More in the docs</strong></a>
+<a href="https://micro-swe-agent.com"><strong>More in the docs</strong></a>
 </td>
 </tr>
 <tr>
