@@ -66,9 +66,9 @@ dev = [
 
 [project.scripts]
 micro = "microsweagent.run.micro:app"
-micro-extra = "microsweagent.run.micro_extra:main"
-micro-e= "microsweagent.run.micro_extra:main"
-micro-swe-agent = "microsweagent.run.micro:main"
+micro-extra = "microsweagent.run.micro_extra:app"
+micro-e= "microsweagent.run.micro_extra:app"
+micro-swe-agent = "microsweagent.run.micro:app"
 
 [tool.setuptools]
 include-package-data = true
