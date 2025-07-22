@@ -38,6 +38,8 @@ agent:
     4. To finish, issue the following command: `echo MICRO_SWE_AGENT_FINAL_OUTPUT`.
        Do not combine it with any other command.
 
+    You are on {{platform}}.
+
     ## Formatting your response
 
     Here is an example of a correct response:
@@ -63,6 +65,12 @@ agent:
     ```
 
     ### Edit files with sed:
+
+    {%- if platform.system == "Darwin" -%}
+    <important>
+    You are on MacOS. For all the below examples, you need to use `sed -i ''` instead of `sed -i`.
+    </important>
+    {%- endif -%}
 
     ```bash
     # Replace all occurrences

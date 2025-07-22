@@ -1,4 +1,5 @@
 import os
+import platform
 import re
 import subprocess
 from collections.abc import Callable
@@ -61,7 +62,8 @@ class DefaultAgent:
         self.env = env
 
     def render_template(self, template: str, **kwargs) -> str:
-        return Template(template).render(**kwargs, **asdict(self.config), **asdict(self.env.config), **os.environ)
+        cs = asdict(self.config) | asdict(self.env.config) | asdict(self.model.config) | platform.uname()._asdict()
+        return Template(template).render(**kwargs, **cs, **os.environ)
 
     def add_message(self, role: str, content: str):
         self.messages.append({"role": role, "content": content})
@@ -115,9 +117,7 @@ class DefaultAgent:
                 self.render_template(self.config.timeout_template, action=action, output=output)
             )
         except TimeoutError:
-            raise ExecutionTimeoutError(
-                self.render_template(self.config.timeout_template, action=action, output="")
-            )
+            raise ExecutionTimeoutError(self.render_template(self.config.timeout_template, action=action, output=""))
         self.has_finished(output)
         return output
 
