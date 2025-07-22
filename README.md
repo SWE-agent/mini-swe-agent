@@ -75,6 +75,29 @@ it is radically simpler, because it
 - Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
 
 </details>
+
+<details>
+<summary>Should I use SWE-agent or micro-SWE-agent?</summary>
+
+You should use [`swe-agent`](https://swe-agent.com/latest/) if
+
+- You need specific tools or want to experiment with different tools
+- You want to experiment with different history processors
+- You want very powerful yaml configuration without touching code
+
+You should use [`micro-swe-agent`](https://micro-swe-agent.com/latest/) if
+
+- You want a quick command line tool that works locally
+- You want an agent with a very simple control flow
+- You want even faster, simpler & more stable sandboxing & benchmark evaluations
+
+What you get with both
+
+- Excellent performance on SWE-Bench
+- A trajectory browser
+
+</details>
+
 <table>
 <tr>
 <td width="50%">

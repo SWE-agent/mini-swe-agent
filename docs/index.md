@@ -52,6 +52,25 @@ Here's some details:
     - Has a completely linear history — every step of the agent just appends to the messages and that's it.
     - Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
 
+??? note "Should I use SWE-agent or micro-SWE-agent?"
+
+    You should use micro-swe-agent if
+
+    - You want a quick command line tool that works locally
+    - You want an agent with a very simple control flow
+    - You want even faster, simpler & more stable sandboxing & benchmark evaluations
+
+    You should use swe-agent if
+
+    - You need specific tools or want to experiment with different tools
+    - You want to experiment with different history processors
+    - You want very powerful yaml configuration without touching code
+
+    What you get with both
+
+    - Excellent performance on SWE-Bench
+    - A trajectory browser
+
 </details>
 <table>
 <tr>
@@ -175,7 +194,7 @@ agent.run("Write a sudoku game")</code></pre>
         <span class="material-icons nav-card-icon">fitness_center</span>
         <span class="nav-card-title">Power up</span>
       </div>
-      <p class="nav-card-description">Start hackign the agent!</p>
+      <p class="nav-card-description">Start hacking the agent!</p>
     </div>
   </a>
 </div>
