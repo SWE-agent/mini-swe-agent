@@ -24,7 +24,7 @@ Here's some details:
 
 - **🐜 Minimal**: Just [100 lines of python](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microsweagent/agents/default.py) (+100 total for [env](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microsweagent/environments/local.py),
 [model](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microsweagent/models/litellm_model.py), [script](https://github.com/SWE-agent/micro-swe-agent/blob/main/src/microsweagent/run/hello_world.py)) — no fancy dependencies!
-- **💪 Powerful:** Resolves XX% of GitHub issues in the [SWE-bench verified benchmark](https://www.swebench.com/).
+- **💪 Powerful:** Resolves 65% of GitHub issues in the [SWE-bench verified benchmark](https://www.swebench.com/).
 - **🤗 Friendly:** Comes with **two convenient UIs** that will turn this into your daily dev swiss army knife!
 - **🍀 Environments:** In addition to local envs, you can use **docker**, **podman**, **singularity**, **apptainer**, and more
 - **🧪 Tested:** [![Codecov](https://img.shields.io/codecov/c/github/swe-agent/micro-swe-agent?style=flat-square)](https://codecov.io/gh/SWE-agent/micro-swe-agent)
