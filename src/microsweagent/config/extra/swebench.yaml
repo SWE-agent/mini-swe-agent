@@ -223,3 +223,6 @@ environment:
 
 model:
   model_name: "claude-sonnet-4-20250514"
+  model_kwargs:
+    temperature: 0.0
+    drop_params: true
