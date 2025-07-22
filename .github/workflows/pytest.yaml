@@ -53,7 +53,7 @@ jobs:
             sudo ln -sf /usr/bin/apptainer /usr/bin/singularity
       - name: Install dependencies
         run: |
-            pip install -e '.[full]'
+            pip install '.[full]'
             pip install pytest pytest-cov pytest-xdist
       - name: Run pytest
         run: pytest -v --cov --cov-branch --cov-report=xml -n auto
