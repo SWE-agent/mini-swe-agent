@@ -393,9 +393,92 @@ def test_micro_script_help():
         timeout=10,
     )
 
-    # This might fail if micro is not installed, so we handle that gracefully
-    if result.returncode == 0:
-        assert "micro-SWE-agent" in result.stdout
-    else:
-        # If micro command is not available, that's expected in test environment
-        pytest.skip("micro command not available in test environment")
+    assert result.returncode == 0
+    assert "micro-SWE-agent" in result.stdout
+
+
+def test_micro_swe_agent_help():
+    """Test that micro-swe-agent --help works correctly."""
+    result = subprocess.run(
+        ["micro-swe-agent", "--help"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode == 0
+    clean_output = strip_ansi_codes(result.stdout)
+    assert "micro-SWE-agent" in clean_output
+
+
+def test_micro_extra_help():
+    """Test that micro-extra --help works correctly."""
+    result = subprocess.run(
+        ["micro-extra", "--help"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode == 0
+    clean_output = strip_ansi_codes(result.stdout)
+    assert "central entry point for all extra commands" in clean_output
+    assert "config" in clean_output
+    assert "inspect" in clean_output
+    assert "github-issue" in clean_output
+    assert "swebench" in clean_output
+
+
+def test_micro_e_help():
+    """Test that micro-e --help works correctly."""
+    result = subprocess.run(
+        ["micro-e", "--help"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode == 0
+    clean_output = strip_ansi_codes(result.stdout)
+    assert "central entry point for all extra commands" in clean_output
+
+
+@pytest.mark.parametrize(
+    ("subcommand", "aliases"),
+    [
+        ("config", ["config"]),
+        ("inspect", ["inspect", "i", "inspector"]),
+        ("github-issue", ["github-issue", "gh"]),
+        ("swebench", ["swebench"]),
+        ("swebench-single", ["swebench-single"]),
+    ],
+)
+def test_micro_extra_subcommand_help(subcommand: str, aliases: list[str]):
+    """Test that micro-extra subcommands --help work correctly."""
+    for alias in aliases:
+        result = subprocess.run(
+            ["micro-extra", alias, "--help"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+
+        assert result.returncode == 0
+        # Just verify that help output is returned (content varies by subcommand)
+        assert len(result.stdout) > 0
+
+
+def test_micro_extra_config_help():
+    """Test that micro-extra config --help works correctly."""
+    result = subprocess.run(
+        ["micro-extra", "config", "--help"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode == 0
+    assert len(result.stdout) > 0
+    # Config command should have help output
+    clean_output = strip_ansi_codes(result.stdout)
+    assert "--help" in clean_output
