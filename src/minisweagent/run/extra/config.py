@@ -58,6 +58,9 @@ def setup():
     ).strip()
     if default_model:
         set_key(global_config_file, "MSWEA_MODEL_NAME", default_model)
+    console.print(
+        "[bold yellow]If you already have your API keys set as environment variables, you can ignore the next question.[/bold yellow]"
+    )
     key_name = prompt("Enter your API key name (e.g., ANTHROPIC_API_KEY): ").strip()
     key_value = None
     if key_name:
