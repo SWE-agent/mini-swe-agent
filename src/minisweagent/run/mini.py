@@ -48,8 +48,6 @@ def run_interactive(model: Model, env: Environment, agent_config: dict, task: st
     exit_status, result = None, None
     try:
         exit_status, result = agent.run(task)
-    except KeyboardInterrupt:
-        console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
     finally:
         if output:
             save_traj(agent, output, exit_status=exit_status, result=result)
@@ -65,10 +63,9 @@ def run_textual(model: Model, env: Environment, agent_config: dict, task: str, o
     )
     try:
         agent_app.run()
-    except KeyboardInterrupt:
-        typer.echo("\nKeyboardInterrupt -- goodbye")
     finally:
-        save_traj(agent_app.agent, Path("traj.json"), exit_status=agent_app.exit_status, result=agent_app.result)
+        if output:
+            save_traj(agent_app.agent, output, exit_status=agent_app.exit_status, result=agent_app.result)
 
 
 @app.command(help=__doc__)
