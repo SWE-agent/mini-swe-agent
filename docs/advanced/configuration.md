@@ -79,25 +79,22 @@ MSWEA_GLOBAL_COST_LIMIT="10.00"
 # This allows to specify them by names
 MSWEA_CONFIG_DIR="/path/to/your/own/config/dir"
 
+# Config path for mini run script
+# (default: package_dir / "config" / "mini.yaml")
+MSWEA_MINI_CONFIG_PATH="/path/to/your/own/config"
+
 # Config path for GitHub issue script
 # (default: package_dir / "config" / "github_issue.yaml")
 MSWEA_GITHUB_CONFIG_PATH="/path/to/your/github/config.yaml"
 
 # Custom style path for trajectory inspector
-# (default: package_dir / "config" / "local2.tcss")
+# (default: package_dir / "config" / "mini.tcss")
 MSWEA_INSPECTOR_STYLE_PATH="/path/to/your/inspector/style.tcss"
 
-# Config path for local2 textual interface script
-# (default: package_dir / "config" / "local.yaml")
-MSWEA_LOCAL2_CONFIG_PATH="/path/to/your/local2/config.yaml"
+# Custom style path for mini textual interface
+# (default: package_dir / "config" / "mini.tcss")
+MSWEA_MINI_STYLE_PATH="/path/to/your/mini/style.tcss"
 
-# Custom style path for local2 textual interface
-# (default: package_dir / "config" / "local2.tcss")
-MSWEA_LOCAL2_STYLE_PATH="/path/to/your/local2/style.tcss"
-
-# Config path for local run script
-# (default: package_dir / "config" / "local.yaml")
-MSWEA_LOCAL_CONFIG_PATH="/path/to/your/own/config"
 ```
 
 ## Default run files
@@ -115,7 +112,7 @@ Configuration files look like this:
 ??? note "Configuration file"
 
     ```yaml
-    --8<-- "src/minisweagent/config/local.yaml"
+    --8<-- "src/minisweagent/config/mini.yaml"
     ```
 
 We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).

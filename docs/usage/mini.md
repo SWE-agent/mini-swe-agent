@@ -17,8 +17,8 @@ Useful switches:
 
 - `-h`/`--help`: Show help
 - `-t`/`--task`: Specify a task to run (else you will be prompted)
-- `-c`/`--config`: Specify a config file to use, else we will use [`local.yaml`](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/local.yaml) or the config `MSWEA_LOCAL_CONFIG_PATH` environment variable (see [configuration](../advanced/configuration.md)).
-  It's enough to specify the name of the config file, e.g., `-c local.yaml` (see [configuration](../advanced/configuration.md) for how it is resolved).
+- `-c`/`--config`: Specify a config file to use, else we will use [`mini.yaml`](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml) or the config `MSWEA_MINI_CONFIG_PATH` environment variable (see [configuration](../advanced/configuration.md)).
+  It's enough to specify the name of the config file, e.g., `-c mini.yaml` (see [configuration](../advanced/configuration.md) for how it is resolved).
 - `-m`/`--model`: Specify a model to use, else we will use the model `MSWEA_MODEL_NAME` environment variable (see [configuration](../advanced/configuration.md))
 - `-y`/`--yolo`: Start in `yolo` mode (see below)
 
@@ -39,10 +39,10 @@ You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to 
 
 ??? note "Default config"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/local.yaml)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml)
 
     ```yaml
-    --8<-- "src/minisweagent/config/local.yaml"
+    --8<-- "src/minisweagent/config/mini.yaml"
     ```
 
 ??? note "Run script"

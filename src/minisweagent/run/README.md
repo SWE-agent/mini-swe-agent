@@ -3,8 +3,7 @@
 ## Work locally (i.e., without a sandbox)
 
 * `hello_world.py` - Extremely simple example of how to use the `default.py` agent.
-* `mini.py` - Uses the `interactive.py` agent/simple UI
-* `local2.py` - Uses the `interactive_textual.py` agent/TUI
+* `mini.py` - Uses the `interactive.py` or `interactive_textual.py` agent/simple UI
 
 ## Work with a sandbox
 
