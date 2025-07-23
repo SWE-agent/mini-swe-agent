@@ -202,10 +202,10 @@ class TestGlobalModelStats:
             assert "Global cost/call limit: $2.5000 / 5" in captured.out
 
     def test_no_print_when_silent_startup_set(self, capsys):
-        """Test that limits are not printed when MINI_SWE_AGENT_SILENT_STARTUP is set."""
+        """Test that limits are not printed when MSWEA_SILENT_STARTUP is set."""
         with patch.dict(
             os.environ,
-            {"MSWEA_GLOBAL_COST_LIMIT": "5.0", "MSWEA_GLOBAL_CALL_LIMIT": "10", "MINI_SWE_AGENT_SILENT_STARTUP": "1"},
+            {"MSWEA_GLOBAL_COST_LIMIT": "5.0", "MSWEA_GLOBAL_CALL_LIMIT": "10", "MSWEA_SILENT_STARTUP": "1"},
             clear=True,
         ):
             GlobalModelStats()
