@@ -1,5 +1,5 @@
 # Docker
 
-::: microsweagent.environments.docker
+::: minisweagent.environments.docker
 
 {% include-markdown "../../_footer.md" %}

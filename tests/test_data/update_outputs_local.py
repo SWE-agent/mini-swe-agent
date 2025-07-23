@@ -5,8 +5,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-from microsweagent.models.test_models import DeterministicModel
-from microsweagent.run.micro import DEFAULT_CONFIG, main
+from minisweagent.models.test_models import DeterministicModel
+from minisweagent.run.mini import DEFAULT_CONFIG, main
 
 
 def update_trajectory():
@@ -18,7 +18,7 @@ def update_trajectory():
     model_responses = [msg["content"] for msg in trajectory[2:] if msg["role"] == "assistant"]
     print(f"Got {len(model_responses)} model responses")
 
-    with patch("microsweagent.run.micro.get_model") as mock_get_model:
+    with patch("minisweagent.run.mini.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
         main(model_name="tardis", config_spec=DEFAULT_CONFIG, output=traj_path, task=task, yolo=True)
 

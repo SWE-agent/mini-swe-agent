@@ -1,5 +1,5 @@
 # Local
 
-::: microsweagent.environments.local
+::: minisweagent.environments.local
 
 {% include-markdown "../../_footer.md" %}

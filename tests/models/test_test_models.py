@@ -1,8 +1,8 @@
 import logging
 import time
 
-import microsweagent.models
-from microsweagent.models.test_models import DeterministicModel, DeterministicModelConfig
+import minisweagent.models
+from minisweagent.models.test_models import DeterministicModel, DeterministicModelConfig
 
 
 def test_basic_functionality_and_cost_tracking(reset_global_stats):
@@ -13,15 +13,15 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     assert model.query([{"role": "user", "content": "test"}]) == {"content": "Hello"}
     assert model.n_calls == 1
     assert model.cost == 1.0
-    assert microsweagent.models.GLOBAL_MODEL_STATS.n_calls == 1
-    assert microsweagent.models.GLOBAL_MODEL_STATS.cost == 1.0
+    assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 1
+    assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 1.0
 
     # Test second call and sequential outputs
     assert model.query([{"role": "user", "content": "test"}]) == {"content": "World"}
     assert model.n_calls == 2
     assert model.cost == 2.0
-    assert microsweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
-    assert microsweagent.models.GLOBAL_MODEL_STATS.cost == 2.0
+    assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
+    assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 2.0
 
 
 def test_custom_cost_and_multiple_models(reset_global_stats):
@@ -31,12 +31,12 @@ def test_custom_cost_and_multiple_models(reset_global_stats):
 
     assert model1.query([{"role": "user", "content": "test"}]) == {"content": "Response1"}
     assert model1.cost == 2.5
-    assert microsweagent.models.GLOBAL_MODEL_STATS.cost == 2.5
+    assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 2.5
 
     assert model2.query([{"role": "user", "content": "test"}]) == {"content": "Response2"}
     assert model2.cost == 3.0
-    assert microsweagent.models.GLOBAL_MODEL_STATS.cost == 5.5
-    assert microsweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
+    assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 5.5
+    assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
 
 
 def test_config_dataclass():

@@ -1,20 +1,20 @@
 # Agent control flow
 
-The following diagram shows the control flow of the micro agent:
+The following diagram shows the control flow of the mini agent:
 
 <div align="center">
-    <img src="/assets/micro_control_flow.svg" alt="Agent control flow" style="max-width: 600px;" />
+    <img src="/assets/mini_control_flow.svg" alt="Agent control flow" style="max-width: 600px;" />
 </div>
 
 And here is the code that implements it:
 
 ??? note "Default agent class"
 
-    - [Read on GitHub](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent/agents/default.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py)
     - [API reference](../reference/agents/default.md)
 
     ```python
-    --8<-- "src/microsweagent/agents/default.py"
+    --8<-- "src/minisweagent/agents/default.py"
     ```
 
 Essentially, `DefaultAgent.run` calls `DefaultAgent.step` in a loop until the agent has finished its task.

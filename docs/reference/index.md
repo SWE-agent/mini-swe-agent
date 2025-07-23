@@ -1,6 +1,6 @@
 # API Reference
 
-This section provides detailed documentation for all classes and modules in micro-SWE-agent.
+This section provides detailed documentation for all classes and modules in mini-SWE-agent.
 
 ## Agents
 
@@ -26,7 +26,7 @@ This section provides detailed documentation for all classes and modules in micr
 Entry points and command-line interfaces:
 
 - **[Hello World](run/hello_world.md)** - Simple example usage
-- **[micro](run/micro.md)** - Interactive local execution
+- **[mini](run/mini.md)** - Interactive local execution
 - **[GitHub Issue](run/github_issue.md)** - GitHub issue solver
 - **[SWE-bench](run/swebench.md)** - SWE-bench evaluation script
 

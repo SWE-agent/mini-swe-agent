@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "micro-swe-agent"
+name = "mini-swe-agent"
 dynamic = ["version"]
 description = "Nano SWE Agent - A simple AI software engineering agent"
 readme = "README.md"
@@ -46,7 +46,7 @@ dependencies = [
 
 [project.optional-dependencies]
 full = [
-    "micro-swe-agent[dev]",
+    "mini-swe-agent[dev]",
     "swe-rex",
 ]
 
@@ -66,28 +66,28 @@ dev = [
 ]
 
 [project.urls]
-Documentation = "https://micro-swe-agent.com/latest/"
-Repository = "https://github.com/SWE-agent/micro-SWE-agent"
-"Bug Tracker" = "https://github.com/SWE-agent/micro-SWE-agent/issues"
+Documentation = "https://mini-swe-agent.com/latest/"
+Repository = "https://github.com/SWE-agent/mini-SWE-agent"
+"Bug Tracker" = "https://github.com/SWE-agent/mini-SWE-agent/issues"
 
 [project.scripts]
-micro = "microsweagent.run.micro:app"
-micro-swe-agent = "microsweagent.run.micro:app"
-micro-extra = "microsweagent.run.micro_extra:main"
-micro-e= "microsweagent.run.micro_extra:main"
+mini = "minisweagent.run.mini:app"
+mini-swe-agent = "minisweagent.run.mini:app"
+mini-extra = "minisweagent.run.mini_extra:main"
+mini-e= "minisweagent.run.mini_extra:main"
 
 [tool.setuptools]
 include-package-data = true
 
 [tool.setuptools.dynamic]
-version = {attr = "microsweagent.__version__"}
+version = {attr = "minisweagent.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["microsweagent*"]
+include = ["minisweagent*"]
 
 [tool.setuptools.package-data]
-microsweagent = ["config/**/*"]
+minisweagent = ["config/**/*"]
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.

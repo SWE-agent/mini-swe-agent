@@ -2,7 +2,7 @@
 
 ## Environment variables and global configuration
 
-All global configuration can be either set as environment variables, or in the `.env` file (the exact location is printed when you run `micro`).
+All global configuration can be either set as environment variables, or in the `.env` file (the exact location is printed when you run `mini`).
 
 !!! note "Precedence"
 
@@ -13,30 +13,30 @@ We provide several helper functions to update the global configuration.
 For example, to set the default model and API keys, you can run:
 
 ```bash
-micro-extra config setup
+mini-extra config setup
 ```
 
 or to update specific settings:
 
 ```
-micro-extra config set KEY VALUE
+mini-extra config set KEY VALUE
 # e.g.,
-micro-extra config set MSWEA_MODEL_NAME "claude-sonnet-4-20250514"
-micro-extra config set MSWEA_MODEL_API_KEY "sk-..."
+mini-extra config set MSWEA_MODEL_NAME "claude-sonnet-4-20250514"
+mini-extra config set MSWEA_MODEL_API_KEY "sk-..."
 ```
 
 or to unset a key:
 
 ```bash
-micro-extra config unset KEY
+mini-extra config unset KEY
 # e.g.,
-micro-extra config unset MSWEA_MODEL_API_KEY
+mini-extra config unset MSWEA_MODEL_API_KEY
 ```
 
 You can also edit the `.env` file directly and we provide a helper function for that:
 
 ```bash
-micro-extra config edit
+mini-extra config edit
 ```
 
 ### Models and keys
@@ -104,8 +104,8 @@ MSWEA_LOCAL_CONFIG_PATH="/path/to/your/own/config"
 
 ```bash
 # Default run script entry point for the main CLI
-# (default: "microsweagent.run.micro")
-MSWEA_DEFAULT_RUN="microsweagent.run.micro"
+# (default: "minisweagent.run.mini")
+MSWEA_DEFAULT_RUN="minisweagent.run.mini"
 ```
 
 ## Agent configuration files
@@ -115,7 +115,7 @@ Configuration files look like this:
 ??? note "Configuration file"
 
     ```yaml
-    --8<-- "src/microsweagent/config/local.yaml"
+    --8<-- "src/minisweagent/config/local.yaml"
     ```
 
 We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).

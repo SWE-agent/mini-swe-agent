@@ -1,5 +1,5 @@
 # SWE-rex Docker
 
-::: microsweagent.environments.extra.swerex_docker
+::: minisweagent.environments.extra.swerex_docker
 
 {% include-markdown "../../_footer.md" %}

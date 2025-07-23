@@ -1,6 +1,6 @@
 import pytest
 
-from microsweagent.environments.extra.swerex_docker import SwerexDockerEnvironment
+from minisweagent.environments.extra.swerex_docker import SwerexDockerEnvironment
 
 
 @pytest.mark.slow

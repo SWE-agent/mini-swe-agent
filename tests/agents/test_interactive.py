@@ -1,18 +1,18 @@
 from unittest.mock import patch
 
-from microsweagent.agents.interactive import InteractiveAgent
-from microsweagent.environments.local import LocalEnvironment
-from microsweagent.models.test_models import DeterministicModel
+from minisweagent.agents.interactive import InteractiveAgent
+from minisweagent.environments.local import LocalEnvironment
+from minisweagent.models.test_models import DeterministicModel
 
 
 def test_successful_completion_with_confirmation():
     """Test agent completes successfully when user confirms all actions."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt", side_effect=["", ""]
+        "minisweagent.agents.interactive.prompt_session.prompt", side_effect=["", ""]
     ):  # Confirm action with Enter, then no new task
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["Finishing\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'completed'\n```"]
+                outputs=["Finishing\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'completed'\n```"]
             ),
             env=LocalEnvironment(),
         )
@@ -26,7 +26,7 @@ def test_successful_completion_with_confirmation():
 def test_action_rejection_and_recovery():
     """Test agent handles action rejection and can recover."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "User rejected this action",  # Reject first action
             "",  # Confirm second action
@@ -37,7 +37,7 @@ def test_action_rejection_and_recovery():
             model=DeterministicModel(
                 outputs=[
                     "First try\n```bash\necho 'first attempt'\n```",
-                    "Second try\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'recovered'\n```",
+                    "Second try\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'recovered'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -55,7 +55,7 @@ def test_action_rejection_and_recovery():
 def test_yolo_mode_activation():
     """Test entering yolo mode disables confirmations."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Enter yolo mode
             "",  # This should be ignored since yolo mode is on
@@ -64,7 +64,7 @@ def test_yolo_mode_activation():
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["Test command\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'yolo works'\n```"]
+                outputs=["Test command\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'yolo works'\n```"]
             ),
             env=LocalEnvironment(),
         )
@@ -78,17 +78,17 @@ def test_yolo_mode_activation():
 def test_help_command():
     """Test help command shows help and continues normally."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/h",  # Show help
             "",  # Confirm action after help
             "",  # No new task when agent wants to finish
         ],
     ):
-        with patch("microsweagent.agents.interactive.console.print") as mock_print:
+        with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
                 model=DeterministicModel(
-                    outputs=["Test help\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'help shown'\n```"]
+                    outputs=["Test help\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'help shown'\n```"]
                 ),
                 env=LocalEnvironment(),
             )
@@ -104,14 +104,12 @@ def test_help_command():
 def test_whitelisted_actions_skip_confirmation():
     """Test that whitelisted actions don't require confirmation."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[""],  # No new task when agent wants to finish
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=[
-                    "Whitelisted\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'no confirmation needed'\n```"
-                ]
+                outputs=["Whitelisted\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'no confirmation needed'\n```"]
             ),
             env=LocalEnvironment(),
             whitelist_actions=[r"echo.*"],
@@ -128,7 +126,7 @@ def _test_interruption_helper(interruption_input, expected_message_fragment, pro
         model=DeterministicModel(
             outputs=[
                 "Initial step\n```bash\necho 'will be interrupted'\n```",
-                "Recovery\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'recovered from interrupt'\n```",
+                "Recovery\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'recovered from interrupt'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -155,7 +153,7 @@ def _test_interruption_helper(interruption_input, expected_message_fragment, pro
             return interruption_input  # For the interruption handling
         return ""  # Confirm all subsequent actions
 
-    with patch("microsweagent.agents.interactive.prompt_session.prompt", side_effect=mock_input):
+    with patch("minisweagent.agents.interactive.prompt_session.prompt", side_effect=mock_input):
         with patch.object(agent, "query", side_effect=mock_query):
             exit_status, result = agent.run(problem_statement)
 
@@ -184,7 +182,7 @@ def test_interruption_handling_empty_message():
 def test_multiple_confirmations_and_commands():
     """Test complex interaction with multiple confirmations and commands."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "reject first",  # Reject first action
             "/h",  # Show help for second action
@@ -197,7 +195,7 @@ def test_multiple_confirmations_and_commands():
             model=DeterministicModel(
                 outputs=[
                     "First action\n```bash\necho 'first'\n```",
-                    "Second action\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'complex flow completed'\n```",
+                    "Second action\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'complex flow completed'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -213,12 +211,12 @@ def test_multiple_confirmations_and_commands():
 def test_non_whitelisted_action_requires_confirmation():
     """Test that non-whitelisted actions still require confirmation."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=["", ""],  # Confirm action, then no new task
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["Non-whitelisted\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'confirmed'\n```"]
+                outputs=["Non-whitelisted\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'confirmed'\n```"]
             ),
             env=LocalEnvironment(),
             whitelist_actions=[r"ls.*"],  # Only ls commands whitelisted
@@ -235,10 +233,10 @@ def test_non_whitelisted_action_requires_confirmation():
 def test_human_mode_basic_functionality():
     """Test human mode where user enters shell commands directly."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "echo 'user command'",  # User enters shell command
-            "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'human mode works'",  # User enters final command
+            "echo 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'human mode works'",  # User enters final command
             "",  # No new task when agent wants to finish
         ],
     ):
@@ -258,7 +256,7 @@ def test_human_mode_basic_functionality():
 def test_human_mode_switch_to_yolo():
     """Test switching from human mode to yolo mode."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Switch to yolo mode from human mode
             "",  # Confirm action in yolo mode (though no confirmation needed)
@@ -267,7 +265,7 @@ def test_human_mode_switch_to_yolo():
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["LM action\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'switched to yolo'\n```"]
+                outputs=["LM action\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'switched to yolo'\n```"]
             ),
             env=LocalEnvironment(),
             mode="human",
@@ -283,7 +281,7 @@ def test_human_mode_switch_to_yolo():
 def test_human_mode_switch_to_confirm():
     """Test switching from human mode to confirm mode."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/c",  # Switch to confirm mode from human mode
             "",  # Confirm action in confirm mode
@@ -292,7 +290,7 @@ def test_human_mode_switch_to_confirm():
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["LM action\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'switched to confirm'\n```"]
+                outputs=["LM action\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'switched to confirm'\n```"]
             ),
             env=LocalEnvironment(),
             mode="human",
@@ -308,10 +306,10 @@ def test_human_mode_switch_to_confirm():
 def test_confirmation_mode_switch_to_human_with_rejection():
     """Test switching from confirm mode to human mode with /u command."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/u",  # Switch to human mode and reject action
-            "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'human command after rejection'",  # Human command
+            "echo 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'human command after rejection'",  # Human command
             "",  # No new task when agent wants to finish
         ],
     ):
@@ -338,7 +336,7 @@ def test_confirmation_mode_switch_to_human_with_rejection():
 def test_confirmation_mode_switch_to_yolo_and_continue():
     """Test switching from confirm mode to yolo mode with /y and continuing with action."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Switch to yolo mode and confirm current action
             "",  # No new task when agent wants to finish
@@ -346,7 +344,7 @@ def test_confirmation_mode_switch_to_yolo_and_continue():
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["LM action\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'switched and continued'\n```"]
+                outputs=["LM action\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'switched and continued'\n```"]
             ),
             env=LocalEnvironment(),
             mode="confirm",
@@ -364,7 +362,7 @@ def test_mode_switch_during_keyboard_interrupt():
         model=DeterministicModel(
             outputs=[
                 "Initial step\n```bash\necho 'will be interrupted'\n```",
-                "Recovery\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'recovered after mode switch'\n```",
+                "Recovery\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'recovered after mode switch'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -383,7 +381,7 @@ def test_mode_switch_during_keyboard_interrupt():
         return original_query(*args, **kwargs)
 
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Switch to yolo mode during interrupt
             "",  # Confirm subsequent actions (though yolo mode won't ask)
@@ -403,7 +401,7 @@ def test_mode_switch_during_keyboard_interrupt():
 def test_already_in_mode_behavior():
     """Test behavior when trying to switch to the same mode."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/c",  # Try to switch to confirm mode when already in confirm mode
             "",  # Confirm action after the "already in mode" recursive prompt
@@ -412,7 +410,7 @@ def test_already_in_mode_behavior():
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["Test action\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'already in mode'\n```"]
+                outputs=["Test action\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'already in mode'\n```"]
             ),
             env=LocalEnvironment(),
             mode="confirm",
@@ -427,7 +425,7 @@ def test_already_in_mode_behavior():
 def test_all_mode_transitions_yolo_to_others():
     """Test transitions from yolo mode to other modes."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/c",  # Switch from yolo to confirm
             "",  # Confirm action in confirm mode
@@ -438,7 +436,7 @@ def test_all_mode_transitions_yolo_to_others():
             model=DeterministicModel(
                 outputs=[
                     "First action\n```bash\necho 'yolo action'\n```",
-                    "Second action\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'confirm action'\n```",
+                    "Second action\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'confirm action'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -468,10 +466,10 @@ def test_all_mode_transitions_yolo_to_others():
 def test_all_mode_transitions_confirm_to_human():
     """Test transition from confirm mode to human mode."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/u",  # Switch from confirm to human (rejecting action)
-            "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'human command'",  # User enters command in human mode
+            "echo 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'human command'",  # User enters command in human mode
             "",  # No new task when agent wants to finish
         ],
     ):
@@ -491,17 +489,17 @@ def test_help_command_from_different_contexts():
     """Test help command works from different contexts (confirmation, interrupt, human mode)."""
     # Test help during confirmation
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/h",  # Show help during confirmation
             "",  # Confirm after help
             "",  # No new task when agent wants to finish
         ],
     ):
-        with patch("microsweagent.agents.interactive.console.print") as mock_print:
+        with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
                 model=DeterministicModel(
-                    outputs=["Test action\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'help works'\n```"]
+                    outputs=["Test action\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'help works'\n```"]
                 ),
                 env=LocalEnvironment(),
                 mode="confirm",
@@ -518,14 +516,14 @@ def test_help_command_from_different_contexts():
 def test_help_command_from_human_mode():
     """Test help command works from human mode."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/h",  # Show help in human mode
-            "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'help in human mode'",  # User command after help
+            "echo 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'help in human mode'",  # User command after help
             "",  # No new task when agent wants to finish
         ],
     ):
-        with patch("microsweagent.agents.interactive.console.print") as mock_print:
+        with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
                 model=DeterministicModel(outputs=[]),  # LM shouldn't be called
                 env=LocalEnvironment(),
@@ -547,7 +545,7 @@ def test_complex_mode_switching_sequence():
             outputs=[
                 "Action 1\n```bash\necho 'action1'\n```",
                 "Action 2\n```bash\necho 'action2'\n```",
-                "Action 3\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'final action'\n```",
+                "Action 3\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'final action'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -566,7 +564,7 @@ def test_complex_mode_switching_sequence():
         return original_query(*args, **kwargs)
 
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/y",  # Confirm->Yolo during first action confirmation
             "/u",  # Yolo->Human during interrupt
@@ -593,7 +591,7 @@ def test_limits_exceeded_with_user_continuation():
             outputs=[
                 "Step 1\n```bash\necho 'first step'\n```",
                 "Step 2\n```bash\necho 'second step'\n```",
-                "Final step\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'completed after limit increase'\n```",
+                "Final step\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'completed after limit increase'\n```",
             ],
             cost_per_call=0.6,  # Will exceed cost_limit=0.5 on first call
         ),
@@ -605,8 +603,8 @@ def test_limits_exceeded_with_user_continuation():
 
     # Mock input() to provide new limits when prompted
     with patch("builtins.input", side_effect=["10", "5.0"]):  # New step_limit=10, cost_limit=5.0
-        with patch("microsweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # No new task
-            with patch("microsweagent.agents.interactive.console.print"):  # Suppress console output
+        with patch("minisweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # No new task
+            with patch("minisweagent.agents.interactive.console.print"):  # Suppress console output
                 exit_status, result = agent.run("Test limits exceeded with continuation")
 
     assert exit_status == "Submitted"
@@ -625,7 +623,7 @@ def test_limits_exceeded_multiple_times_with_continuation():
                 "Step 2\n```bash\necho 'step2'\n```",
                 "Step 3\n```bash\necho 'step3'\n```",
                 "Step 4\n```bash\necho 'step4'\n```",
-                "Final\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'completed after multiple increases'\n```",
+                "Final\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'completed after multiple increases'\n```",
             ],
             cost_per_call=1.0,  # Standard cost per call
         ),
@@ -638,8 +636,8 @@ def test_limits_exceeded_multiple_times_with_continuation():
     # Mock input() to provide new limits multiple times
     # First limit increase: step_limit=2, then step_limit=10 when exceeded again
     with patch("builtins.input", side_effect=["2", "100.0", "10", "100.0"]):
-        with patch("microsweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # No new task
-            with patch("microsweagent.agents.interactive.console.print"):
+        with patch("minisweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # No new task
+            with patch("minisweagent.agents.interactive.console.print"):
                 exit_status, result = agent.run("Test multiple limit increases")
 
     assert exit_status == "Submitted"
@@ -651,7 +649,7 @@ def test_limits_exceeded_multiple_times_with_continuation():
 def test_continue_after_completion_with_new_task():
     """Test that user can provide a new task when agent wants to finish."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "",  # Confirm first action
             "Create a new file",  # Provide new task when agent wants to finish
@@ -662,8 +660,8 @@ def test_continue_after_completion_with_new_task():
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "First task\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'first task completed'\n```",
-                    "Second task\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'new task completed'\n```",
+                    "First task\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'first task completed'\n```",
+                    "Second task\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'new task completed'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -683,7 +681,7 @@ def test_continue_after_completion_with_new_task():
 def test_continue_after_completion_without_new_task():
     """Test that agent finishes normally when user doesn't provide a new task."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "",  # Confirm first action
             "",  # Don't provide new task when agent wants to finish (empty input)
@@ -692,7 +690,7 @@ def test_continue_after_completion_without_new_task():
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "Task completion\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'original task completed'\n```"
+                    "Task completion\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'original task completed'\n```"
                 ]
             ),
             env=LocalEnvironment(),
@@ -710,7 +708,7 @@ def test_continue_after_completion_without_new_task():
 def test_continue_after_completion_multiple_cycles():
     """Test multiple continuation cycles with new tasks."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "",  # Confirm first action
             "Second task",  # Provide first new task
@@ -723,9 +721,9 @@ def test_continue_after_completion_multiple_cycles():
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "First\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'first completed'\n```",
-                    "Second\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'second completed'\n```",
-                    "Third\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'third completed'\n```",
+                    "First\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'first completed'\n```",
+                    "Second\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'second completed'\n```",
+                    "Third\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'third completed'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -745,7 +743,7 @@ def test_continue_after_completion_multiple_cycles():
 def test_continue_after_completion_in_yolo_mode():
     """Test continuation when starting in yolo mode (no confirmations needed)."""
     with patch(
-        "microsweagent.agents.interactive.prompt_session.prompt",
+        "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "Create a second task",  # Provide new task when agent wants to finish
             "",  # Don't provide another task after second completion (finish)
@@ -754,8 +752,8 @@ def test_continue_after_completion_in_yolo_mode():
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "First\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'first completed'\n```",
-                    "Second\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'second task completed'\n```",
+                    "First\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'first completed'\n```",
+                    "Second\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'second task completed'\n```",
                 ]
             ),
             env=LocalEnvironment(),

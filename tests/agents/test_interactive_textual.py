@@ -3,9 +3,9 @@ from unittest.mock import Mock
 
 import pytest
 
-from microsweagent.agents.interactive_textual import AddLogEmitCallback, AgentApp
-from microsweagent.environments.local import LocalEnvironment
-from microsweagent.models.test_models import DeterministicModel
+from minisweagent.agents.interactive_textual import AddLogEmitCallback, AgentApp
+from minisweagent.environments.local import LocalEnvironment
+from minisweagent.models.test_models import DeterministicModel
 
 
 def get_screen_text(app: AgentApp) -> str:
@@ -39,7 +39,7 @@ async def test_everything_integration_test():
                 "THOUGHTT 2\n ```bash\necho '2'\n```",
                 "THOUGHTT 3\n ```bash\necho '3'\n```",
                 "THOUGHTT 4\n ```bash\necho '4'\n```",
-                "FINISHING\n ```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```",
+                "FINISHING\n ```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```",
             ],
         ),
         env=LocalEnvironment(),
@@ -95,7 +95,7 @@ async def test_everything_integration_test():
         # next action will be executed automatically, so we see step 5 next
         await pilot.pause(0.2)
         assert "Step 6/6" in app.title
-        assert "echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'" in get_screen_text(app)
+        assert "echo 'MINI_SWE_AGENT_FINAL_OUTPUT'" in get_screen_text(app)
         # await pilot.pause(0.1)
         assert "STOPPED" in app.title
         assert "press enter" not in get_screen_text(app).lower()
@@ -105,12 +105,12 @@ async def test_everything_integration_test():
         assert "You are a helpful assistant that can do anything." in get_screen_text(app)
         await pilot.press("$")
         assert "Step 6/6" in app.title
-        assert "MICRO_SWE_AGENT_FINAL_OUTPUT" in get_screen_text(app)
+        assert "MINI_SWE_AGENT_FINAL_OUTPUT" in get_screen_text(app)
 
 
 def test_messages_to_steps_edge_cases():
     """Test the _messages_to_steps function with various edge cases."""
-    from microsweagent.agents.interactive_textual import _messages_to_steps
+    from minisweagent.agents.interactive_textual import _messages_to_steps
 
     # Empty messages
     assert _messages_to_steps([]) == []
@@ -168,7 +168,7 @@ async def test_log_message_filtering():
             outputs=[
                 "/warning Test warning message",
                 "Normal response",
-                "end: \n```bash\necho MICRO_SWE_AGENT_FINAL_OUTPUT\n```",
+                "end: \n```bash\necho MINI_SWE_AGENT_FINAL_OUTPUT\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -190,7 +190,7 @@ async def test_list_content_rendering():
     """Test rendering of messages with list content vs string content."""
     # Create a model that will add messages with list content
     app = AgentApp(
-        model=DeterministicModel(outputs=["Simple response\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]),
+        model=DeterministicModel(outputs=["Simple response\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```"]),
         env=LocalEnvironment(),
         task="Content test",
         mode="yolo",
@@ -293,7 +293,7 @@ async def test_agent_successful_completion_notification():
     """Test that agent completion with 'Submitted' status triggers notification."""
     app = AgentApp(
         model=DeterministicModel(
-            outputs=["Completing task\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\necho 'success'\n```"]
+            outputs=["Completing task\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'success'\n```"]
         ),
         env=LocalEnvironment(),
         task="Completion test",
@@ -315,7 +315,7 @@ async def test_whitelist_actions_bypass_confirmation():
     """Test that whitelisted actions bypass confirmation."""
     app = AgentApp(
         model=DeterministicModel(
-            outputs=["Whitelisted action\n```bash\necho 'safe' && echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]
+            outputs=["Whitelisted action\n```bash\necho 'safe' && echo 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```"]
         ),
         env=LocalEnvironment(),
         task="Whitelist test",
@@ -337,7 +337,7 @@ async def test_confirmation_container_multiple_actions():
         model=DeterministicModel(
             outputs=[
                 "First action\n```bash\necho '1'\n```",
-                "Second action\n```bash\necho '2' && echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```",
+                "Second action\n```bash\necho '2' && echo 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -366,7 +366,7 @@ async def test_scrolling_behavior():
     """Test scrolling up and down behavior."""
     app = AgentApp(
         model=DeterministicModel(
-            outputs=["Long response" * 100 + "\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]
+            outputs=["Long response" * 100 + "\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```"]
         ),
         env=LocalEnvironment(),
         task="Scroll test",
@@ -389,7 +389,7 @@ def test_log_handler_cleanup():
     initial_handlers = len(logging.getLogger().handlers)
 
     app = AgentApp(
-        model=DeterministicModel(outputs=["Simple response\n```bash\necho 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```"]),
+        model=DeterministicModel(outputs=["Simple response\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```"]),
         env=LocalEnvironment(),
         task="Cleanup test",
         mode="yolo",
@@ -434,7 +434,7 @@ async def test_yolo_mode_confirms_pending_action():
     app = AgentApp(
         model=DeterministicModel(
             outputs=[
-                "Action requiring confirmation\n```bash\necho 'test' && echo 'MICRO_SWE_AGENT_FINAL_OUTPUT'\n```",
+                "Action requiring confirmation\n```bash\necho 'test' && echo 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),

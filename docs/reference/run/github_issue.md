@@ -1,5 +1,5 @@
 # GitHub Issue
 
-::: microsweagent.run.github_issue
+::: minisweagent.run.github_issue
 
 {% include-markdown "../../_footer.md" %}

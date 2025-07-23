@@ -69,26 +69,26 @@ jobs:
         echo "Waiting for package to be available on PyPI..."
         sleep 60
 
-    - name: Test pipx run micro-swe-agent --help (Test PyPI)
+    - name: Test pipx run mini-swe-agent --help (Test PyPI)
       if: ${{ github.event.inputs.test_pypi == 'true' }}
-      run: pipx run --pip-args="--index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/" micro-swe-agent --help
+      run: pipx run --pip-args="--index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/" mini-swe-agent --help
 
-    - name: Test pipx run micro-swe-agent --help (PyPI)
+    - name: Test pipx run mini-swe-agent --help (PyPI)
       if: ${{ github.event.inputs.test_pypi != 'true' }}
-      run: pipx run micro-swe-agent --help
+      run: pipx run mini-swe-agent --help
 
     - name: Test pip install and CLI commands (Test PyPI)
       if: ${{ github.event.inputs.test_pypi == 'true' }}
       run: |
-        pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ micro-swe-agent
-        micro --help
-        micro-extra --help
-        micro-e --help
+        pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ mini-swe-agent
+        mini --help
+        mini-extra --help
+        mini-e --help
 
     - name: Test pip install and CLI commands (PyPI)
       if: ${{ github.event.inputs.test_pypi != 'true' }}
       run: |
-        pip install micro-swe-agent
-        micro --help
-        micro-extra --help
-        micro-e --help
+        pip install mini-swe-agent
+        mini --help
+        mini-extra --help
+        mini-e --help

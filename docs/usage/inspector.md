@@ -2,20 +2,20 @@
 
 !!! abstract "Overview"
 
-    * The `inspector` is a tool that allows you to browse `.traj.json` files that show the history of a micro-SWE-agent run.
-    * Quickly start it with `micro-e i` or `micro-extra inspector`.
+    * The `inspector` is a tool that allows you to browse `.traj.json` files that show the history of a mini-SWE-agent run.
+    * Quickly start it with `mini-e i` or `mini-extra inspector`.
 
 ## Usage
 
 ```bash
 # Find all .traj.json files recursively from current directory
-micro-extra inspector
+mini-extra inspector
 # or shorter
-micro-e i
+mini-e i
 # Open the inspector for a specific file
-micro-e i <path_to_traj.json>
+mini-e i <path_to_traj.json>
 # Search for trajectory files in a specific directory
-micro-e i <path_to_directory>
+mini-e i <path_to_directory>
 ```
 
 ## Key bindings
@@ -40,10 +40,10 @@ The inspector is implemented with [textual](https://textual.textualize.io/).
 
 ??? note "Implementation"
 
-    - [Read on GitHub](https://github.com/swe-agent/micro-swe-agent/blob/main/src/microsweagent//run/inspector.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent//run/inspector.py)
 
     ```python linenums="1"
-    --8<-- "src/microsweagent/run/inspector.py"
+    --8<-- "src/minisweagent/run/inspector.py"
     ```
 
 {% include-markdown "../_footer.md" %}

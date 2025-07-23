@@ -1,5 +1,5 @@
 # Anthropic
 
-::: microsweagent.models.anthropic
+::: minisweagent.models.anthropic
 
 {% include-markdown "../../_footer.md" %}

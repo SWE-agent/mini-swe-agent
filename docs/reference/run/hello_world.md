@@ -1,5 +1,5 @@
 # Hello World
 
-::: microsweagent.run.hello_world
+::: minisweagent.run.hello_world
 
 {% include-markdown "../../_footer.md" %}

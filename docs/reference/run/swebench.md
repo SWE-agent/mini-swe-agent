@@ -1,5 +1,5 @@
 # SWE-bench
 
-::: microsweagent.run.extra.swebench
+::: minisweagent.run.extra.swebench
 
 {% include-markdown "../../_footer.md" %}

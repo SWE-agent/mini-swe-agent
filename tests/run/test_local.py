@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
-from microsweagent.models.test_models import DeterministicModel
-from microsweagent.run.micro import DEFAULT_CONFIG, main
+from minisweagent.models.test_models import DeterministicModel
+from minisweagent.run.mini import DEFAULT_CONFIG, main
 from tests.run.test_github_issue import assert_observations_match
 
 
@@ -12,9 +12,9 @@ def test_local_end_to_end(local_test_data):
     expected_observations = local_test_data["expected_observations"]
 
     with (
-        patch("microsweagent.run.micro.configure_if_first_time"),
-        patch("microsweagent.models.litellm_model.LitellmModel") as mock_model_class,
-        patch("microsweagent.agents.interactive.prompt_session.prompt", return_value=""),  # No new task
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.models.litellm_model.LitellmModel") as mock_model_class,
+        patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),  # No new task
     ):
         mock_model_class.return_value = DeterministicModel(outputs=model_responses)
         agent = main(

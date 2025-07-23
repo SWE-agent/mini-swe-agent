@@ -1,5 +1,5 @@
 # Interactive
 
-::: microsweagent.agents.interactive
+::: minisweagent.agents.interactive
 
 {% include-markdown "../../_footer.md" %}

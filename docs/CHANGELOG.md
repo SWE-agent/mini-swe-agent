@@ -4,4 +4,4 @@
 
 ### Fixed
 
-* `micro-extra` and `micro-e` invocation
+* `mini-extra` and `mini-e` invocation

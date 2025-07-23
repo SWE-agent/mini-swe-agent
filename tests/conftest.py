@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from microsweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models import GLOBAL_MODEL_STATS
 
 # Global lock for tests that modify global state - this works across processes
 _global_stats_lock = threading.Lock()

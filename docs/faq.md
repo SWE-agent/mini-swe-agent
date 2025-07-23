@@ -2,11 +2,11 @@
 
 ## General
 
-!!! question "Does micro-SWE-agent work on my system?"
+!!! question "Does mini-SWE-agent work on my system?"
 
-    micro-SWE-agent should work on any system that has a bash shell or uses a container runtime to emulate one.
+    mini-SWE-agent should work on any system that has a bash shell or uses a container runtime to emulate one.
 
-??? question "Should I use SWE-agent or micro-SWE-agent?"
+??? question "Should I use SWE-agent or mini-SWE-agent?"
 
     You should use swe-agent if
 
@@ -14,7 +14,7 @@
     - You want to experiment with different history processors
     - You want very powerful yaml configuration without touching code
 
-    You should use micro-swe-agent if
+    You should use mini-swe-agent if
 
     - You want a quick command line tool that works locally
     - You want an agent with a very simple control flow
@@ -25,9 +25,9 @@
     - Excellent performance on SWE-Bench
     - A trajectory browser
 
-??? question "What are the limitations of micro-SWE-agent?"
+??? question "What are the limitations of mini-SWE-agent?"
 
-    micro-SWE-agent can be extended trivially in various ways, the following assumes the default setup.
+    mini-SWE-agent can be extended trivially in various ways, the following assumes the default setup.
     As reflected in the high SWE-bench scores, none of the following limitations are a problem in practice.
 
     - No tools other than bash
@@ -41,7 +41,7 @@
 ??? question "Where is global configuration stored?"
 
     The global configuration is stored in the `.env` file in the config directory.
-    The location is printed when you run `micro --help`.
+    The location is printed when you run `mini --help`.
 
     The `.env` file is a simple key-value file that is read by the `dotenv` library.
 
@@ -50,7 +50,7 @@
 
 !!! question "What models do you support?"
 
-    Currently, micro-SWE-agent supports all models that are supported by [litellm](https://github.com/BerriAI/litellm)
+    Currently, mini-SWE-agent supports all models that are supported by [litellm](https://github.com/BerriAI/litellm)
     and we're open to extend the `models/` directory with more models should `litellm` not support them.
 
 !!! question "How do I set the API key for a model?"
@@ -67,11 +67,11 @@
     To permanently set the API key in the config file, you can use the following command:
 
     ```bash
-    micro-extra config set OPENAI_API_KEY sk-test123
+    mini-extra config set OPENAI_API_KEY sk-test123
     ```
 
     Alternatively, you can directly edit the `.env` file in the config directory
-    (the location is printed when you run `micro --help`).
+    (the location is printed when you run `mini --help`).
 
 !!! question "How can I set the default model?"
 
@@ -79,10 +79,10 @@
     To permanently change it:
 
     ```bash
-    micro-extra config set MSWEA_MODEL_NAME claude-sonnet-4-20250514
+    mini-extra config set MSWEA_MODEL_NAME claude-sonnet-4-20250514
     ```
 
     Alternatively, you can directly edit the `.env` file in the config directory
-    (the location is printed when you run `micro --help`).
+    (the location is printed when you run `mini --help`).
 
 {% include-markdown "_footer.md" %}

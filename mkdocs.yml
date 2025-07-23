@@ -1,12 +1,12 @@
-site_name: micro-SWE-agent documentation
-# site_url: https://micro-swe-agent.com
+site_name: mini-SWE-agent documentation
+# site_url: https://mini-swe-agent.com
 theme:
   name: material
   icon:
     repo: fontawesome/brands/github
     annotation: material/chevron-right-circle
   custom_dir: docs/overrides
-  # logo: assets/micro-swe-agent.svg
+  # logo: assets/mini-swe-agent.svg
   # favicon: assets/favicon.ico
   palette:
     - media: "(prefers-color-scheme)"
@@ -59,8 +59,8 @@ nav:
     - "Overview": index.md
     - "Quick start": quickstart.md
     - "Usage":
-      - "<code>micro</code>": usage/micro.md
-      - "<code>micro -v</code>": usage/micro_v.md
+      - "<code>mini</code>": usage/mini.md
+      - "<code>mini -v</code>": usage/mini_v.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
     - "Advanced":
@@ -86,7 +86,7 @@ nav:
       - "SwerexDockerEnvironment": "reference/environments/swerex_docker.md"
     - Run Scripts:
       - "Hello World": "reference/run/hello_world.md"
-      - "micro": "reference/run/micro.md"
+      - "mini": "reference/run/mini.md"
       - "GitHub Issue": "reference/run/github_issue.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"
@@ -120,8 +120,8 @@ plugins:
               - "!^_"
               - "!^model_config"
               - "!^model_post_init"
-repo_url: https://github.com/SWE-agent/micro-SWE-agent
-repo_name: SWE-agent/micro-SWE-agent
+repo_url: https://github.com/SWE-agent/mini-SWE-agent
+repo_name: SWE-agent/mini-SWE-agent
 edit_uri: edit/main/docs/
 extra_javascript:
   - assets/js/sh-annotation.js

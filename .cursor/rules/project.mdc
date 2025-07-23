@@ -3,19 +3,19 @@ description:
 globs:
 alwaysApply: true
 ---
-# micro-SWE-agent overview
+# mini-SWE-agent overview
 
-- micro-SWE-agent implements an AI software engineering agent that solves github issues and similar programming challenges
+- mini-SWE-agent implements an AI software engineering agent that solves github issues and similar programming challenges
 - The idea of this project is to write the simplest, smallest, most readable agent.
 
 The project is structured as
 
 ```bash
-microsweagent/__init__  # Protocols/interfaces for all base classes
-microsweagent/agents  # Agent control flow & loop
-microsweagent/environments  # Executing agent actions
-microsweagent/models  # LM interfaces
-microsweagent/run  # Run scripts that serve as an entry point
+minisweagent/__init__  # Protocols/interfaces for all base classes
+minisweagent/agents  # Agent control flow & loop
+minisweagent/environments  # Executing agent actions
+minisweagent/models  # LM interfaces
+minisweagent/run  # Run scripts that serve as an entry point
 ```
 
 - The project embraces polymorphism: Every individual class should be simple, but we offer alternatives

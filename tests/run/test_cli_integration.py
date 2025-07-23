@@ -5,7 +5,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from microsweagent.run.micro import DEFAULT_CONFIG, app, main
+from minisweagent.run.mini import DEFAULT_CONFIG, app, main
 
 
 def strip_ansi_codes(text: str) -> str:
@@ -15,14 +15,14 @@ def strip_ansi_codes(text: str) -> str:
 
 
 def test_configure_if_first_time_called():
-    """Test that configure_if_first_time is called when running micro main."""
+    """Test that configure_if_first_time is called when running mini main."""
     with (
-        patch("microsweagent.run.micro.configure_if_first_time") as mock_configure,
-        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
-        patch("microsweagent.run.micro.get_model") as mock_get_model,
-        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
-        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
-        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.mini.configure_if_first_time") as mock_configure,
+        patch("minisweagent.run.mini.run_interactive") as mock_run_interactive,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -49,15 +49,15 @@ def test_configure_if_first_time_called():
         mock_configure.assert_called_once()
 
 
-def test_micro_command_calls_run_interactive():
-    """Test that micro command calls run_interactive when visual=False."""
+def test_mini_command_calls_run_interactive():
+    """Test that mini command calls run_interactive when visual=False."""
     with (
-        patch("microsweagent.run.micro.configure_if_first_time"),
-        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
-        patch("microsweagent.run.micro.get_model") as mock_get_model,
-        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
-        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
-        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.run_interactive") as mock_run_interactive,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -88,15 +88,15 @@ def test_micro_command_calls_run_interactive():
         assert args[3] == "Test task"  # task
 
 
-def test_micro_v_command_calls_run_textual():
-    """Test that micro -v command calls run_textual when visual=True."""
+def test_mini_v_command_calls_run_textual():
+    """Test that mini -v command calls run_textual when visual=True."""
     with (
-        patch("microsweagent.run.micro.configure_if_first_time"),
-        patch("microsweagent.run.micro.run_textual") as mock_run_textual,
-        patch("microsweagent.run.micro.get_model") as mock_get_model,
-        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
-        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
-        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.run_textual") as mock_run_textual,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -127,16 +127,16 @@ def test_micro_v_command_calls_run_textual():
         assert args[3] == "Test task"  # task
 
 
-def test_micro_calls_prompt_when_no_task_provided():
-    """Test that micro calls prompt when no task is provided."""
+def test_mini_calls_prompt_when_no_task_provided():
+    """Test that mini calls prompt when no task is provided."""
     with (
-        patch("microsweagent.run.micro.configure_if_first_time"),
-        patch("microsweagent.run.micro.prompt_session.prompt") as mock_prompt,
-        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
-        patch("microsweagent.run.micro.get_model") as mock_get_model,
-        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
-        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
-        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.prompt_session.prompt") as mock_prompt,
+        patch("minisweagent.run.mini.run_interactive") as mock_run_interactive,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
         mock_prompt.return_value = "User provided task"
@@ -169,16 +169,16 @@ def test_micro_calls_prompt_when_no_task_provided():
         assert args[3] == "User provided task"  # task
 
 
-def test_micro_v_calls_prompt_when_no_task_provided():
-    """Test that micro -v calls prompt when no task is provided."""
+def test_mini_v_calls_prompt_when_no_task_provided():
+    """Test that mini -v calls prompt when no task is provided."""
     with (
-        patch("microsweagent.run.micro.configure_if_first_time"),
-        patch("microsweagent.run.micro.prompt_session.prompt") as mock_prompt,
-        patch("microsweagent.run.micro.run_textual") as mock_run_textual,
-        patch("microsweagent.run.micro.get_model") as mock_get_model,
-        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
-        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
-        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.prompt_session.prompt") as mock_prompt,
+        patch("minisweagent.run.mini.run_textual") as mock_run_textual,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
         mock_prompt.return_value = "User provided visual task"
@@ -211,15 +211,15 @@ def test_micro_v_calls_prompt_when_no_task_provided():
         assert args[3] == "User provided visual task"  # task
 
 
-def test_micro_with_explicit_model():
-    """Test that micro works with explicitly provided model."""
+def test_mini_with_explicit_model():
+    """Test that mini works with explicitly provided model."""
     with (
-        patch("microsweagent.run.micro.configure_if_first_time"),
-        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
-        patch("microsweagent.run.micro.get_model") as mock_get_model,
-        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
-        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
-        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.run_interactive") as mock_run_interactive,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -256,12 +256,12 @@ def test_micro_with_explicit_model():
 def test_yolo_mode_sets_correct_agent_config():
     """Test that yolo mode sets the correct agent configuration."""
     with (
-        patch("microsweagent.run.micro.configure_if_first_time"),
-        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
-        patch("microsweagent.run.micro.get_model") as mock_get_model,
-        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
-        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
-        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.run_interactive") as mock_run_interactive,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -294,12 +294,12 @@ def test_yolo_mode_sets_correct_agent_config():
 def test_confirm_mode_sets_correct_agent_config():
     """Test that confirm mode (default) sets the correct agent configuration."""
     with (
-        patch("microsweagent.run.micro.configure_if_first_time"),
-        patch("microsweagent.run.micro.run_interactive") as mock_run_interactive,
-        patch("microsweagent.run.micro.get_model") as mock_get_model,
-        patch("microsweagent.run.micro.LocalEnvironment") as mock_env,
-        patch("microsweagent.run.micro.get_config_path") as mock_get_config_path,
-        patch("microsweagent.run.micro.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.run_interactive") as mock_run_interactive,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
     ):
         # Setup mocks
         mock_model = Mock()
@@ -329,10 +329,10 @@ def test_confirm_mode_sets_correct_agent_config():
         assert agent_config["mode"] == "confirm"
 
 
-def test_micro_help():
-    """Test that micro --help works correctly."""
+def test_mini_help():
+    """Test that mini --help works correctly."""
     result = subprocess.run(
-        [sys.executable, "-m", "microsweagent", "--help"],
+        [sys.executable, "-m", "minisweagent", "--help"],
         capture_output=True,
         text=True,
         timeout=10,
@@ -341,7 +341,7 @@ def test_micro_help():
     assert result.returncode == 0
     # Strip ANSI color codes for reliable text matching
     clean_output = strip_ansi_codes(result.stdout)
-    assert "Run micro-SWE-agent in your local environment." in clean_output
+    assert "Run mini-SWE-agent in your local environment." in clean_output
     assert "--help" in clean_output
     assert "--config" in clean_output
     assert "--model" in clean_output
@@ -351,7 +351,7 @@ def test_micro_help():
     assert "--visual" in clean_output
 
 
-def test_micro_help_with_typer_runner():
+def test_mini_help_with_typer_runner():
     """Test help functionality using typer's test runner."""
     from typer.testing import CliRunner
 
@@ -361,7 +361,7 @@ def test_micro_help_with_typer_runner():
     assert result.exit_code == 0
     # Strip ANSI color codes for reliable text matching
     clean_output = strip_ansi_codes(result.stdout)
-    assert "Run micro-SWE-agent in your local environment." in clean_output
+    assert "Run mini-SWE-agent in your local environment." in clean_output
     assert "--help" in clean_output
     assert "--config" in clean_output
     assert "--model" in clean_output
@@ -371,36 +371,36 @@ def test_micro_help_with_typer_runner():
     assert "--visual" in clean_output
 
 
-def test_python_m_microsweagent_help():
-    """Test that python -m microsweagent --help works correctly."""
+def test_python_m_minisweagent_help():
+    """Test that python -m minisweagent --help works correctly."""
     result = subprocess.run(
-        [sys.executable, "-m", "microsweagent", "--help"],
+        [sys.executable, "-m", "minisweagent", "--help"],
         capture_output=True,
         text=True,
         timeout=10,
     )
 
     assert result.returncode == 0
-    assert "micro-SWE-agent" in result.stdout
+    assert "mini-SWE-agent" in result.stdout
 
 
-def test_micro_script_help():
-    """Test that the micro script entry point help works."""
+def test_mini_script_help():
+    """Test that the mini script entry point help works."""
     result = subprocess.run(
-        ["micro", "--help"],
+        ["mini", "--help"],
         capture_output=True,
         text=True,
         timeout=10,
     )
 
     assert result.returncode == 0
-    assert "micro-SWE-agent" in result.stdout
+    assert "mini-SWE-agent" in result.stdout
 
 
-def test_micro_swe_agent_help():
-    """Test that micro-swe-agent --help works correctly."""
+def test_mini_swe_agent_help():
+    """Test that mini-swe-agent --help works correctly."""
     result = subprocess.run(
-        ["micro-swe-agent", "--help"],
+        ["mini-swe-agent", "--help"],
         capture_output=True,
         text=True,
         timeout=10,
@@ -408,13 +408,13 @@ def test_micro_swe_agent_help():
 
     assert result.returncode == 0
     clean_output = strip_ansi_codes(result.stdout)
-    assert "micro-SWE-agent" in clean_output
+    assert "mini-SWE-agent" in clean_output
 
 
-def test_micro_extra_help():
-    """Test that micro-extra --help works correctly."""
+def test_mini_extra_help():
+    """Test that mini-extra --help works correctly."""
     result = subprocess.run(
-        ["micro-extra", "--help"],
+        ["mini-extra", "--help"],
         capture_output=True,
         text=True,
         timeout=10,
@@ -429,10 +429,10 @@ def test_micro_extra_help():
     assert "swebench" in clean_output
 
 
-def test_micro_e_help():
-    """Test that micro-e --help works correctly."""
+def test_mini_e_help():
+    """Test that mini-e --help works correctly."""
     result = subprocess.run(
-        ["micro-e", "--help"],
+        ["mini-e", "--help"],
         capture_output=True,
         text=True,
         timeout=10,
@@ -453,11 +453,11 @@ def test_micro_e_help():
         ("swebench-single", ["swebench-single"]),
     ],
 )
-def test_micro_extra_subcommand_help(subcommand: str, aliases: list[str]):
-    """Test that micro-extra subcommands --help work correctly."""
+def test_mini_extra_subcommand_help(subcommand: str, aliases: list[str]):
+    """Test that mini-extra subcommands --help work correctly."""
     for alias in aliases:
         result = subprocess.run(
-            ["micro-extra", alias, "--help"],
+            ["mini-extra", alias, "--help"],
             capture_output=True,
             text=True,
             timeout=10,
@@ -468,10 +468,10 @@ def test_micro_extra_subcommand_help(subcommand: str, aliases: list[str]):
         assert len(result.stdout) > 0
 
 
-def test_micro_extra_config_help():
-    """Test that micro-extra config --help works correctly."""
+def test_mini_extra_config_help():
+    """Test that mini-extra config --help works correctly."""
     result = subprocess.run(
-        ["micro-extra", "config", "--help"],
+        ["mini-extra", "config", "--help"],
         capture_output=True,
         text=True,
         timeout=10,

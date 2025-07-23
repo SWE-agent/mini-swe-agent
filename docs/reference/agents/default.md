@@ -1,11 +1,11 @@
 # DefaultAgent
 
-::: microsweagent.agents.default.AgentConfig
+::: minisweagent.agents.default.AgentConfig
 
-::: microsweagent.agents.default.DefaultAgent
+::: minisweagent.agents.default.DefaultAgent
 
-::: microsweagent.agents.default.NonTerminatingException
+::: minisweagent.agents.default.NonTerminatingException
 
-::: microsweagent.agents.default.TerminatingException
+::: minisweagent.agents.default.TerminatingException
 
 {% include-markdown "../../_footer.md" %}
