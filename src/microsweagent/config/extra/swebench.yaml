@@ -209,7 +209,7 @@ agent:
 
     If you have completed your assignment, please consult the first message about how to
     submit your solution (you will not be able to continue working on this task after that).
-  step_limit: 0.
+  step_limit: 250
   cost_limit: 3.
 
 environment:
