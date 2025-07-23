@@ -11,12 +11,10 @@
 === "Batch mode"
 
     ```bash
-    micro-extra swebench
-    # or
-    python src/microsweagent/run/extra/swebench.py
-    # show help
     micro-extra swebench --help
-    # for example
+    # or
+    python src/microsweagent/run/extra/swebench.py --help
+    # Example:
     micro-extra swebench \
         --model claude-sonnet-4-20250514 \
         --subset verified \
@@ -27,18 +25,35 @@
 === "Single instance (for debugging)"
 
     ```bash
-    micro-extra swebench-single
-    # or
-    python src/microsweagent/run/extra/swebench_single.py
-    # show help
     micro-extra swebench-single --help
-    # for example
+    # or
+    python src/microsweagent/run/extra/swebench_single.py --help
+    # Example:
     micro-extra swebench-single \
-        --model claude-sonnet-4-20250514 \
         --subset verified \
         --split test \
-        -i 0  # instance index (alternatively, specify instance name)
+        --model claude-sonnet-4-20250514 \
+        -i sympy__sympy-15599
+    # or
+    micro-extra swebench-single \
+        --subset verified \
+        --split test \
+        -m claude-sonnet-4-20250514 \
+        -i 0  # instance index
     ```
+
+!!! tip "Evaluating on SWE-bench"
+
+    You can use the [sb-cli](https://www.swebench.com/sb-cli/) for extremely fast, cloud-based evaluations
+    (and it's free!). After installing it and getting a token, simply run:
+
+    ```bash
+    sb-cli submit swe-bench_verified test --predictions_path preds.json --run_id some-id-for-your-run
+    ```
+
+    Typically you will have results within 20 minutes (this is not limited by how many instances you run,
+    but by the slowest-to-evaluate instance in SWE-bench).
+
 
 ## FAQ
 
