@@ -1,3 +1,5 @@
+"""Basic agent class. See https://micro-swe-agent.com/latest/advanced/control_flow/ for visual explanation."""
+
 import os
 import platform
 import re

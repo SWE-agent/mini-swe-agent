@@ -65,6 +65,7 @@ nav:
       - "Inspector": usage/inspector.md
     - "Advanced":
       - "Configuration": advanced/configuration.md
+      - "Control flow": advanced/control_flow.md
       - "Cookbook": advanced/cookbook.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
