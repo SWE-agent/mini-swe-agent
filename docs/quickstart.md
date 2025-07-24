@@ -13,28 +13,61 @@
         And try our command line interface
 
         ```bash
-        # Simple UI
-        mini
-        # Textual UI
-        mini -v
+        mini  # simple UI
+        mini -v  # visual UI
+        mini-extra  # extra utilities
         ```
 
-    === "pipx"
+    === "uv (isolated)"
 
-        Use pipx to install & run `mini` in an isolated environment.
+        Use `uv`/`uvx` ([installation](https://docs.astral.sh/uv/getting-started/installation/)) to install & run the `mini` agent in an isolated environment.
 
-        First [install pipx](https://pipx.pypa.io/stable/installation/), then run:
+        Quickly install + run:
+
+        ```bash
+        uvx mini-swe-agent  # simple UI
+        uvx mini-swe-agent -v  # visual UI
+        uvx --from mini-swe-agent mini-extra  # extra utilities
+        ```
+
+        Permanently install
+
+        ```bash
+        uv tool install mini-swe-agent
+        # then
+        mini  # simple UI
+        mini -v  # visual UI
+        mini-extra  # extra utilities
+        ```
+
+    === "pipx (isolated)"
+
+        Use pipx ([installation](https://pipx.pypa.io/stable/installation/)) to install & run `mini` in an isolated environment.
+
+        Quick install + run:
 
         ```bash
         # Simple UI
         pipx run mini-swe-agent
         # Textual UI
         pipx run mini-swe-agent -v
+        # Extra utilities
+        pipx run --spec mini-swe-agent mini-extra
+        ```
+
+        or for a persistent installation (recommended):
+
+        ```bash
+        pipx install mini-swe-agent
+        # then
+        mini  # simple UI
+        mini -v  # visual UI
+        mini-extra  # extra utilities
         ```
 
         If the invocation doesn't immediately work, you might need to run `pipx ensurepath`.
 
-    === "From source"
+    === "From source/dev"
 
         For development or if you want to customize the agent:
 
@@ -47,10 +80,9 @@
         Then run:
 
         ```bash
-        # Simple UI
-        mini
-        # Textual UI
-        mini -v
+        mini  # simple UI
+        mini -v  # visual UI
+        mini-extra  # extra utilities
         ```
 
         Or pick a [run script](reference/run/):

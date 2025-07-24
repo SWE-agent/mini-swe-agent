@@ -1,5 +1,15 @@
 # Cookbook
 
+!!! abstract "Remixing & extending mini"
+
+    * This guide shows how to mix the different components of the `mini` agent to create your own custom version.
+    * You might want to first take a look at the [control flow of the default agent](control_flow.md) first
+
+
+!!! note "Development setup"
+
+    Make sure to follow the dev setup instructions in [quickstart.md](quickstart.md).
+
 We provide several different entry points to the agent,
 for example [hello world](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py),
 or the [default when calling `mini`](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/mini.py).

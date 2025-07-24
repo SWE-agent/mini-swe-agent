@@ -23,4 +23,10 @@ We happily accept contributions!
 - Many LMs write very verbose code -- please clean it up! Same goes for the tests. They should still be concise and readable.
 - Please install `pre-commit` (`pip install pre-commit && pre-commit install`) and run it before committing. This will enforce our style guide.
 
+## Development setup
+
+Make sure to follow the dev setup instructions in [quickstart.md](quickstart.md).
+
+After that you can run `pytest` with `pytest -n auto` (this parallelizes the tests across all cores for speedup).
+
 {% include-markdown "_footer.md" %}

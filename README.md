@@ -175,6 +175,8 @@ agent.run("Write a sudoku game")
 Install + run in virtual environment
 
 ```bash
+pip install uv && uvx mini-swe-agent [-v]
+# or
 pip install pipx && pipx ensurepath && pipx run mini-swe-agent [-v]
 ```
 

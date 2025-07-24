@@ -1,5 +1,10 @@
 # Configuration
 
+!!! abstract "Configuring mini"
+
+    * This guide shows how to configure the `mini` agent.
+    * Want more? See the [cookbook](cookbook.md) for subclassing & developing your own agent.
+
 ## Environment variables and global configuration
 
 All global configuration can be either set as environment variables, or in the `.env` file (the exact location is printed when you run `mini`).
