@@ -15,7 +15,7 @@ We now ask: **What if SWE-agent was 100x smaller, and still worked nearly as wel
 `mini` is for
 
 - **Researchers** who want to **benchmark, fine-tune or RL** without assumptions, bloat, or surprises
-- **Devs** who like their tools like their scripts: **short, sharp, and readable**
+- **Developers** who like their tools like their scripts: **short, sharp, and readable**
 - **Engineers** who want something **trivial to sandbox & to deploy anywhere**
 
 Here's some details:
@@ -43,7 +43,7 @@ In fact, mini-SWE-agent
   So there's no difference between the trajectory and the messages that you pass on to the LM.
 - Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
   This makes it trivial to execute the actions in sandboxes (literally just switch out `subprocess.run` with `docker exec`) and to
-  scale up effortlessly.
+  scale up effortlessly. Seriously, this is [a big deal](https://mini-swe-agent.com/latest/faq/#why-no-shell-session), trust me.
 
 This makes it perfect as a baseline system and for a system that puts the language model (rather than
 the agent scaffold) in the middle of our attention.

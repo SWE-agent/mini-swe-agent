@@ -25,6 +25,16 @@
     - Excellent performance on SWE-Bench
     - A trajectory browser
 
+??? question "How is `mini` simpler than `swe-agent`?"
+
+    `mini` is simpler than `swe-agent` because it:
+
+    - Does not have any tools other than bash — it doesn't even use the tool-calling interface of the LMs.
+      This means you don't have to install anything in any environment you're running in. `bash` is all you need.
+    - Has a completely linear history — every step of the agent just appends to the messages and that's it.
+    - Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
+      This is [avoids so many issues](#why-no-shell-session), trust me.
+
 ??? question "What are the limitations of mini-SWE-agent?"
 
     mini-SWE-agent can be extended trivially in various ways, the following assumes the default setup.
@@ -32,9 +42,9 @@
 
     - No tools other than bash
     - Actions are parsed from triple-backtick blocks (rather than assuming a function calling/tool calling format)
-    - By default, actions are executed as `subprocess.run`, i.e., every action is independent of the previous ones
+    - By default, actions are executed as `subprocess.run`, i.e., every action is independent of the previous ones.
       (meaning that the agent cannot change directories or export environment variables; however environment variables
-      can be set per-action)
+      can be set per-action). This is [avoids so many issues](#why-no-shell-session), trust me.
 
     If you want more flexibility with these items, you can use [SWE-agent](https://swe-agent.com/) instead.
 
@@ -84,5 +94,19 @@
 
     Alternatively, you can directly edit the `.env` file in the config directory
     (the location is printed when you run `mini --help`).
+
+## Minutia
+
+??? question "Why is not needed a running shell session such a big deal?"
+    <a name="why-no-shell-session"></a>
+
+    Most agents so far kept a running shell session. Every action from the agent was executed in this session.
+    However, this is far from trivial:
+
+    1. It's not obvious when a command has terminated. Essentially you're just pasting input into the shell session, and press enter—but when do you stop reading output?
+       We've experimented with various heuristics (watching PIDs, watching for the shell to go back to the prompt, etc.) but all of them were flaky.
+       The `mini` agent doesn't need any of this!
+    2. Particularly bad commands from the LM can kill the shell session. Then what?
+    3. Interrupting a command running in a shell session can also mess up the shell itself and can in particular interfere with all the following outputs you want to extract.
 
 {% include-markdown "_footer.md" %}

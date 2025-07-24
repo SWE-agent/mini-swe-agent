@@ -10,7 +10,7 @@ In 2024, [SWE-bench](https://swebench.com) & [SWE-agent](https://swe-agent.com) 
 `mini` is for
 
 - 🧪 **Researchers** who want to **benchmark, fine-tune or RL** without assumptions, bloat, or surprises
-- 🧑‍💻 **Hackers & power users** who like their tools like their scripts: **short, sharp, and readable**
+- 🧑‍💻 **Developers** who like their tools like their scripts: **short, sharp, and readable**
 - 🐳 **Engineers** who want something **trivial to sandbox & to deploy anywhere**
 
 Here's some details:
@@ -31,6 +31,7 @@ Here's some details:
     - **Does not have any tools other than bash** — it doesn't even use the tool-calling interface of the LMs. This means that you can run it with literally any model. When running in sandboxed environments you also don't need to take care of installing a single package — all it needs is bash.
     - **Has a completely linear history** — every step of the agent just appends to the messages and that's it. So there's no difference between the trajectory and the messages that you pass on to the LM.
     - **Executes actions with `subprocess.run`** — every action is completely independent (as opposed to keeping a stateful shell session running). This makes it trivial to execute the actions in sandboxes (literally just switch out `subprocess.run` with `docker exec`) and to scale up effortlessly.
+      Seriously, this is [a big deal](faq.md#why-no-shell-session), trust me.
 
     This makes it perfect as a baseline system and for a system that puts the language model (rather than the agent scaffold) in the middle of our attention.
 
