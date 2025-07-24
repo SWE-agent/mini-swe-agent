@@ -99,6 +99,10 @@
         pre-commit install
         ```
 
+!!! note "Changelog"
+
+    Please see the [github release notes](https://github.com/SWE-agent/mini-swe-agent/releases) for recent changes.
+
 !!! example "Example Prompts"
 
     Try mini-SWE-agent with these example prompts:
