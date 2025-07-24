@@ -14,7 +14,7 @@ More information about the usage: [bold green]https://mini-swe-agent.com/latest/
 
 import os
 from pathlib import Path
-from typing import Any, Union
+from typing import Any
 
 import typer
 import yaml
@@ -38,7 +38,7 @@ app = typer.Typer(rich_markup_mode="rich")
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "mini_task_history.txt"))
 
 
-def run_interactive(model: Model, env: Environment, agent_config: dict, task: str, output: Union[Path, None] = None) -> Any:
+def run_interactive(model: Model, env: Environment, agent_config: dict, task: str, output: Path | None = None) -> Any:
     agent = InteractiveAgent(
         model,
         env,
@@ -54,7 +54,7 @@ def run_interactive(model: Model, env: Environment, agent_config: dict, task: st
     return agent
 
 
-def run_textual(model: Model, env: Environment, agent_config: dict, task: str, output: Union[Path, None] = None) -> Any:
+def run_textual(model: Model, env: Environment, agent_config: dict, task: str, output: Path | None = None) -> Any:
     agent_app = AgentApp(
         model,
         env,
@@ -71,17 +71,17 @@ def run_textual(model: Model, env: Environment, agent_config: dict, task: str, o
 @app.command(help=__doc__)
 def main(
     visual: bool = typer.Option(False, "-v", "--visual", help="Use visual (pager-style) UI (Textual)"),
-    model_name: Union[str, None] = typer.Option(
+    model_name: str | None = typer.Option(
         None,
         "-m",
         "--model",
         help="Model to use",
     ),
-    task: Union[str, None] = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
+    task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
-    cost_limit: Union[float, None] = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
+    cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
     config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
-    output: Union[Path, None] = typer.Option(None, "-o", "--output", help="Output file"),
+    output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
 ) -> Any:
     configure_if_first_time()
     config = yaml.safe_load(get_config_path(config_spec).read_text())
