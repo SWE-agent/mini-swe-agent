@@ -97,10 +97,10 @@ Here's some details:
 <table>
 <tr>
 <td width="50%">
-<a href="https://mini-swe-agent.com/usage/mini/"><strong>Simple UI</strong></a> (<code>mini</code>)
+<a href="usage/mini/"><strong>Simple UI</strong></a> (<code>mini</code>)
 </td>
 <td>
-<a href="https://mini-swe-agent.com/usage/mini_v/"><strong>Visual UI</strong></a> (<code>mini -v</code>)
+<a href="usage/mini_v/"><strong>Visual UI</strong></a> (<code>mini -v</code>)
 </td>
 </tr>
 <tr>
@@ -121,10 +121,10 @@ Here's some details:
 </tr>
 <tr>
 <td>
-<a href="https://mini-swe-agent.com/usage/swebench/"><strong>Batch inference</strong></a>
+<a href="usage/swebench/"><strong>Batch inference</strong></a>
 </td>
 <td>
-<a href="https://mini-swe-agent.com/usage/inspector/"><strong>Trajectory browser</strong></a>
+<a href="usage/inspector/"><strong>Trajectory browser</strong></a>
 </td>
 </tr>
 <tr>
@@ -145,7 +145,7 @@ Here's some details:
 </tr>
 <tr>
 <td>
-<a href="https://mini-swe-agent.com/advanced/cookbook/"><strong>Python bindings</strong></a>
+<a href="advanced/cookbook/"><strong>Python bindings</strong></a>
 </td>
 <td>
 <a href="https://mini-swe-agent.com"><strong>More in the docs</strong></a>
@@ -161,11 +161,11 @@ agent.run("Write a sudoku game")</code></pre>
 </td>
 <td>
 <ul>
-<li><a href="https://mini-swe-agent.com/quickstart/">Quick start</a></li>
-<li><a href="https://mini-swe-agent.com/usage/mini/"><code>mini</code></a></li>
-<li><a href="https://mini-swe-agent.com/faq/">FAQ</a></li>
-<li><a href="https://mini-swe-agent.com/advanced/configuration/">Configuration</a></li>
-<li><a href="https://mini-swe-agent.com/advanced/cookbook/">Power up</a></li>
+<li><a href="quickstart/">Quick start</a></li>
+<li><a href="usage/mini/"><code>mini</code></a></li>
+<li><a href="faq/">FAQ</a></li>
+<li><a href="advanced/configuration/">Configuration</a></li>
+<li><a href="advanced/cookbook/">Power up</a></li>
 </ul>
 </td>
 </tr>
