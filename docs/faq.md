@@ -6,19 +6,20 @@
 
     mini-SWE-agent should work on any system that has a bash shell or uses a container runtime to emulate one.
 
-??? question "Should I use SWE-agent or mini-SWE-agent?"
+??? question "Should I use mini-SWE-agent or swe-agent?"
 
-    You should use swe-agent if
-
-    - You need specific tools or want to experiment with different tools
-    - You want to experiment with different history processors
-    - You want very powerful yaml configuration without touching code
-
-    You should use mini-swe-agent if
+    You should use `mini-swe-agent` if
 
     - You want a quick command line tool that works locally
     - You want an agent with a very simple control flow
     - You want even faster, simpler & more stable sandboxing & benchmark evaluations
+    - You are doing FT or RL and don't want to overfit to a specific agent scaffold
+
+    You should use `swe-agent` if
+
+    - You need specific tools or want to experiment with different tools
+    - You want to experiment with different history processors
+    - You want very powerful yaml configuration without touching code
 
     What you get with both
 

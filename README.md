@@ -23,8 +23,8 @@ Here's some details:
 - **Minimal**: Just [100 lines of python](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py) (+100 total for [env](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/environments/local.py),
 [model](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py), [script](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py)) — no fancy dependencies!
 - **Powerful:** Resolves 65% of GitHub issues in the [SWE-bench verified benchmark](https://www.swebench.com/) (with Claude Sonnet 4).
-- **Friendly:** Comes with **two convenient UIs** that will turn this into your daily dev swiss army knife!
-- **Environments:** In addition to local envs, you can use **docker**, **podman**, **singularity**, **apptainer**, and more
+- **Convenient:** Comes with UIs that turn this into your daily dev swiss army knife!
+- **Deployable:** In addition to local envs, you can use **docker**, **podman**, **singularity**, **apptainer**, and more
 - **Tested:** [![Codecov](https://img.shields.io/codecov/c/github/swe-agent/mini-swe-agent?style=flat-square)](https://codecov.io/gh/SWE-agent/mini-swe-agent)
 - **Cutting edge:** Built by the Princeton & Stanford team behind [SWE-bench](https://swebench.com) and [SWE-agent](https://swe-agent.com).
 
@@ -53,41 +53,37 @@ the agent scaffold) in the middle of our attention.
 <details>
 <summary>More motivation (as a tool)</summary>
 
-Some agents are overfitted research artifacts.
-Others are UI-heavy tools, highly optimized for a specific user experience.
-Both variants are hard to understand.
+Some agents are overfitted research artifacts. Others are UI-heavy frontend monsters.
 
-`mini` strives to be
+`mini` wants to be a hackable tool, not a black box.
 
 - **Simple** enough to understand at a glance
 - **Convenient** enough to use in daily workflows
 - **Flexible** to extend
 
-A hackable tool, not a black box.
-
-Unlike other agents (including our own [swe-agent](https://swe-agent.com/latest/)),
-it is radically simpler, because it
+Unlike other agents (including our own [swe-agent](https://swe-agent.com/latest/)), it is radically simpler, because it:
 
 - Does not have any tools other than bash — it doesn't even use the tool-calling interface of the LMs.
 - Has a completely linear history — every step of the agent just appends to the messages and that's it.
-- Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
+- Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running). This is [a big deal](faq.md#why-no-shell-session), trust me.
 
 </details>
 
 <details>
 <summary>Should I use SWE-agent or mini-SWE-agent?</summary>
 
-You should use [`swe-agent`](https://swe-agent.com/latest/) if
-
-- You need specific tools or want to experiment with different tools
-- You want to experiment with different history processors
-- You want very powerful yaml configuration without touching code
-
-You should use [`mini-swe-agent`](https://mini-swe-agent.com/latest/) if
+You should use `mini-swe-agent` if
 
 - You want a quick command line tool that works locally
 - You want an agent with a very simple control flow
 - You want even faster, simpler & more stable sandboxing & benchmark evaluations
+- You are doing FT or RL and don't want to overfit to a specific agent scaffold
+
+You should use `swe-agent` if
+
+- You need specific tools or want to experiment with different tools
+- You want to experiment with different history processors
+- You want very powerful yaml configuration without touching code
 
 What you get with both
 
