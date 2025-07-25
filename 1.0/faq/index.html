@@ -1676,6 +1676,11 @@ However, this is far from trivial:</p>
 <li>Particularly bad commands from the LM can kill the shell session. Then what?</li>
 <li>Interrupting a command running in a shell session can also mess up the shell itself and can in particular interfere with all the following outputs you want to extract.</li>
 </ol>
+<p><code>mini</code> is different: There is no running shell session. Every action is executed as a subprocess, that means
+every action is independent of the previous ones (it is literally a <code>subprocess.run</code>/<code>os.system</code>/<code>docker exec</code> call).</p>
+<p>This means that the agent cannot even change directories or export environment variables.
+But you don't need this! You can always prefix <code>cd /path/to/project</code> or <code>export FOO=bar</code> to every action
+(and in fact some LMs like Claude will do that even if you don't ask them to).</p>
 </details>
 <div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
