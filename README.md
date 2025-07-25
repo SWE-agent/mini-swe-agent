@@ -208,10 +208,7 @@ Read more in our [documentation](https://mini-swe-agent.com/latest/):
 
 ## Bottom line
 
-If you found this work helpful, please consider citing
-
-<details>
-<summary> SWE-agent citation</summary>
+If you found this work helpful, please consider citing the [SWE-agent paper](https://arxiv.org/abs/2405.15793) in your work:
 
 ```bibtex
 @inproceedings{yang2024sweagent,
@@ -222,7 +219,6 @@ If you found this work helpful, please consider citing
   url={https://arxiv.org/abs/2405.15793}
 }
 ```
-</details>
 
 More agentic AI:
 
