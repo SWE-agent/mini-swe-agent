@@ -37,7 +37,7 @@ However, one year later, as LMs have become more capable, a lot of this is not n
 In fact, mini-SWE-agent
 
 - **Does not have any tools other than bash** — it doesn't even use the tool-calling interface of the LMs.
-  This means that you can run it with literally any model. When running in sandboxed environments you also don't need to to take care
+  This means that you can run it with literally any model. When running in sandboxed environments you also don't need to take care
   of installing a single package — all it needs is bash.
 - **Has a completely linear history** — every step of the agent just appends to the messages and that's it.
   So there's no difference between the trajectory and the messages that you pass on to the LM.
