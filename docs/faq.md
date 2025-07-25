@@ -34,7 +34,7 @@
       This means you don't have to install anything in any environment you're running in. `bash` is all you need.
     - Has a completely linear history — every step of the agent just appends to the messages and that's it.
     - Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
-      This is [avoids so many issues](#why-no-shell-session), trust me.
+      This [avoids so many issues](#why-no-shell-session), trust me.
 
 ??? question "What are the limitations of mini-SWE-agent?"
 
@@ -45,7 +45,7 @@
     - Actions are parsed from triple-backtick blocks (rather than assuming a function calling/tool calling format)
     - By default, actions are executed as `subprocess.run`, i.e., every action is independent of the previous ones.
       (meaning that the agent cannot change directories or export environment variables; however environment variables
-      can be set per-action). This is [avoids so many issues](#why-no-shell-session), trust me.
+      can be set per-action). This [avoids so many issues](#why-no-shell-session), trust me.
 
     If you want more flexibility with these items, you can use [SWE-agent](https://swe-agent.com/) instead.
 
