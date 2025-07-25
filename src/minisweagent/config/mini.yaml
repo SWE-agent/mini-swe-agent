@@ -138,6 +138,7 @@ agent:
     <action>
     ```
     </response_example>
+  action_parser: backticks
   step_limit: 0.
   cost_limit: 3.
   mode: confirm
