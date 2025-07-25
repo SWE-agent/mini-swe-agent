@@ -110,4 +110,11 @@
     2. Particularly bad commands from the LM can kill the shell session. Then what?
     3. Interrupting a command running in a shell session can also mess up the shell itself and can in particular interfere with all the following outputs you want to extract.
 
+    `mini` is different: There is no running shell session. Every action is executed as a subprocess, that means
+    every action is independent of the previous ones (it is literally a `subprocess.run`/`os.system`/`docker exec` call).
+
+    This means that the agent cannot even change directories or export environment variables.
+    But you don't need this! You can always prefix `cd /path/to/project` or `export FOO=bar` to every action
+    (and in fact some LMs like Claude will do that even if you don't ask them to).
+
 {% include-markdown "_footer.md" %}

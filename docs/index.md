@@ -16,7 +16,7 @@
 </div>
 
 
-In 2024, [SWE-bench](https://swebench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the agentic AI for software revolution.
+In 2024, [SWE-bench](https://swebench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the coding agent revolution.
 
 We now ask: **What if the agent was 100x smaller, and still worked nearly as well?**
 
