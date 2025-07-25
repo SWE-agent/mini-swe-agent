@@ -3,15 +3,17 @@
 !!! abstract "Configuring mini"
 
     * This guide shows how to configure the `mini` agent.
+    * You should already be familiar with the [quickstart guide](../quickstart.md).
     * Want more? See the [cookbook](cookbook.md) for subclassing & developing your own agent.
 
 ## Environment variables and global configuration
 
+!!! tip "Setting up models"
+
+    This is also covered in the [quickstart guide](../quickstart.md).
+
 All global configuration can be either set as environment variables, or in the `.env` file (the exact location is printed when you run `mini`).
-
-!!! note "Precedence"
-
-    Environment variables take precedence over variables set in the `.env` file.
+Environment variables take precedence over variables set in the `.env` file.
 
 We provide several helper functions to update the global configuration.
 

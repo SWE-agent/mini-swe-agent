@@ -113,20 +113,25 @@
 
 ## Models
 
+!!! tip "TLDR: Models should be set up the first time you run `mini`"
+
+    If you missed the setup wizard, just run `mini-extra config setup`, or take a look at the following section.
+
 ### Setting API keys
 
-There are several ways to set your API kyes:
+There are several ways to set your API keys:
 
+* Recommended: Run our setup script: `mini-extra config setup`. This should also run automatically the first time you run `mini`.
+* Use `mini-extra config set ANTHROPIC_API_KEY <your-api-key>` to put the key in the `mini` [config file](advanced/configuration.md).
 * Export your key as an environment variable: `export ANTHROPIC_API_KEY=<your-api-key>` (this is not persistent if you restart your shell, unless you add it to your shell config, like `~/.bashrc` or `~/.zshrc`).
-* Use `mini-extra config set ANTHROPIC_API_KEY <your-api-key>` to put the key in the mini config file. The location of the config file is printed when you run `mini --help`.
 * If you only use a single model, you can also set `MSWEA_MODEL_API_KEY` (as environment variable or in the config file). This takes precedence over all other keys.
-* If you run several agents in parallel, see our note about anthropic keys [here](advanced/configuration.md).
+* If you run several agents in parallel, see our note about rotating anthropic keys [here](advanced/configuration.md).
 
 ### Selecting a model
 
 * All command line interfaces allow you to set the model name with `-m` or `--model`.
-* In addition, you can set the default model with `mini-extra config set MSWEA_MODEL_NAME <model-name>` or by editing the global config file.
-  If you run `mini` for the first time and do not use the `--model` flag, it will prompt you for the default model.
+* `mini-extra config setup` can set the default model for you
+* In addition, you can set the default model with `mini-extra config set MSWEA_MODEL_NAME <model-name>`, by editing the global [config file](advanced/configuration.md) (shortcut: `mini-extra config edit`), or by setting the `MSWEA_MODEL_NAME` environment variable.
 * You can also set your model in a config file (key `model_name` under `model`).
 
 {% include-markdown "_footer.md" %}
