@@ -8,7 +8,7 @@
 
 !!! note "Development setup"
 
-    Make sure to follow the dev setup instructions in [quickstart.md](quickstart.md).
+    Make sure to follow the dev setup instructions in [quickstart.md](../quickstart.md).
 
 We provide several different entry points to the agent,
 for example [hello world](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py),
