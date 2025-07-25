@@ -5,6 +5,14 @@
     * The `inspector` is a tool that allows you to browse `.traj.json` files that show the history of a mini-SWE-agent run.
     * Quickly start it with `mini-e i` or `mini-extra inspector`.
 
+<figure markdown="span">
+  <div class="gif-container gif-container-styled" data-glightbox-disabled>
+    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true"
+         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/inspector.gif?raw=true"
+         alt="inspector" data-glightbox="false" width="600" />
+  </div>
+</figure>
+
 ## Usage
 
 ```bash

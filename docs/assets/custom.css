@@ -35,3 +35,10 @@
     --md-primary-fg-color-dark
   ); /* this actually works for both light and dark themes */
 }
+
+.gif-container-styled {
+  max-width: 600px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+}

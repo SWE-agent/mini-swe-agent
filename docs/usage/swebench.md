@@ -6,6 +6,14 @@
     * `mini-extra swebench` runs on all task instances in batch mode.
     * `mini-extra swebench-single` runs on a single task instance with interactivity (useful for debugging).
 
+<figure markdown="span">
+  <div class="gif-container gif-container-styled" data-glightbox-disabled>
+    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/swebench.png?raw=true"
+         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/swebench.gif?raw=true"
+         alt="swebench" data-glightbox="false" width="600" />
+  </div>
+</figure>
+
 ## Usage
 
 === "Batch mode"

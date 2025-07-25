@@ -5,11 +5,18 @@
     * `mini` is a REPL-style interactive command line interface for using mini-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).
     * Compared to [`mini -v`](mini_v.md), `mini` is more lightweight and does not require threading.
 
-<iframe width="800" height="572" src="https://www.youtube.com/embed/dl_Sg79gKzY" title="mini-swe-agent" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" controls=0 modestbranding=1 rel=0></iframe>
-
 !!! tip "Feedback wanted!"
     Give feedback on the `mini` and `mini -v` interfaces at [this github issue](https://github.com/swe-agent/mini-swe-agent/issues/161)
     or in our [Slack channel](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ).
+
+<figure markdown="span">
+  <div class="gif-container gif-container-styled" data-glightbox-disabled>
+    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini.png?raw=true"
+         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini.gif?raw=true"
+         alt="mini" data-glightbox="false" width="600" />
+  </div>
+</figure>
+
 
 ## Command line options
 

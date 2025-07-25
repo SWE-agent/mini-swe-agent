@@ -125,8 +125,10 @@ repo_name: SWE-agent/mini-SWE-agent
 edit_uri: edit/main/docs/
 extra_javascript:
   - assets/js/sh-annotation.js
+  - assets/js/gif-controls.js
 extra_css:
   - assets/custom.css
+  - assets/gif-controls.css
   - assets/mkdocstrings.css
   - assets/image_theme.css
   - assets/bubbles.css

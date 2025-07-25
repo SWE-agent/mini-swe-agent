@@ -105,10 +105,18 @@ Here's some details:
 </tr>
 <tr>
 <td width="50%">
-  <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini.gif?raw=true" alt="mini" />
+  <div class="gif-container" data-glightbox-disabled>
+    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini.png?raw=true"
+         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini.gif?raw=true"
+         alt="mini" data-glightbox="false" />
+  </div>
 </td>
 <td>
-  <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini2.gif?raw=true" alt="miniv" />
+  <div class="gif-container" data-glightbox-disabled>
+    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini2.png?raw=true"
+         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini2.gif?raw=true"
+         alt="miniv" data-glightbox="false" />
+  </div>
 </td>
 </tr>
 <tr>
@@ -121,10 +129,18 @@ Here's some details:
 </tr>
 <tr>
 <td>
-<img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/swebench.gif?raw=true" alt="swebench" />
+<div class="gif-container" data-glightbox-disabled>
+  <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/swebench.png?raw=true"
+       data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/swebench.gif?raw=true"
+       alt="swebench" data-glightbox="false" />
+</div>
 </td>
 <td>
-<img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/inspector.gif?raw=true" alt="inspector" />
+<div class="gif-container" data-glightbox-disabled>
+  <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true"
+       data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/inspector.gif?raw=true"
+       alt="inspector" data-glightbox="false" />
+</div>
 </td>
 </tr>
 <tr>
