@@ -65,7 +65,7 @@ Unlike other agents (including our own [swe-agent](https://swe-agent.com/latest/
 
 - Does not have any tools other than bash — it doesn't even use the tool-calling interface of the LMs.
 - Has a completely linear history — every step of the agent just appends to the messages and that's it.
-- Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running). This is [a big deal](faq.md#why-no-shell-session), trust me.
+- Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running). This is [a big deal](https://mini-swe-agent.com/latest/faq/#why-no-shell-session), trust me.
 
 </details>
 
