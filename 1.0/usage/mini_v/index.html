@@ -1936,6 +1936,9 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
     <span class="n">cost_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="s2">&quot;--cost-limit&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Cost limit. Set to 0 to disable.&quot;</span><span class="p">),</span>
     <span class="n">config_spec</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_CONFIG</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to config file&quot;</span><span class="p">),</span>
     <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output file&quot;</span><span class="p">),</span>
+    <span class="n">exit_immediately</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;--exit-immediately&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Exit immediately when the agent wants to finish instead of prompting.&quot;</span>
+    <span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="n">configure_if_first_time</span><span class="p">()</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">get_config_path</span><span class="p">(</span><span class="n">config_spec</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
@@ -1956,6 +1959,8 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
     <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;confirm&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">yolo</span> <span class="k">else</span> <span class="s2">&quot;yolo&quot;</span>
     <span class="k">if</span> <span class="n">cost_limit</span><span class="p">:</span>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="s2">&quot;cost_limit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost_limit</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">visual</span> <span class="ow">and</span> <span class="n">exit_immediately</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="s2">&quot;confirm_exit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="p">{}))</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">LocalEnvironment</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="p">{}))</span>
 
@@ -2005,6 +2010,8 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether to confirm actions.&quot;&quot;&quot;</span>
     <span class="n">whitelist_actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Never confirm actions that match these regular expressions.&quot;&quot;&quot;</span>
+    <span class="n">confirm_exit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;If the agent wants to finish, do we ask for confirmation from user?&quot;&quot;&quot;</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">InteractiveAgent</span><span class="p">(</span><span class="n">DefaultAgent</span><span class="p">):</span>
@@ -2114,14 +2121,15 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">has_finished</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">Submitted</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-                <span class="s2">&quot;[bold green]Agent wants to finish.[/bold green] &quot;</span>
-                <span class="s2">&quot;[green]Type a comment to give it a new task or press enter to quit.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;[bold yellow]&gt;[/bold yellow] &quot;</span><span class="p">,</span>
-                <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="k">if</span> <span class="n">new_task</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user added a new task: </span><span class="si">{</span><span class="n">new_task</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">confirm_exit</span><span class="p">:</span>
+                <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                    <span class="s2">&quot;[bold green]Agent wants to finish.[/bold green] &quot;</span>
+                    <span class="s2">&quot;[green]Type a comment to give it a new task or press enter to quit.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;[bold yellow]&gt;[/bold yellow] &quot;</span><span class="p">,</span>
+                    <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_task</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user added a new task: </span><span class="si">{</span><span class="n">new_task</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 </code></pre></div>
 </details>
