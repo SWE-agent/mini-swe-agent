@@ -160,6 +160,72 @@ def test_parse_action_failures():
         agent.parse_action({"content": "```\nls -la\n```"})
 
 
+def test_parse_action_with_nested_bash_ticks():
+    agent = DefaultAgent(
+        model=DeterministicModel(outputs=[]),
+        env=LocalEnvironment(),
+    )
+
+    content = """
+THOUGHT: I need to update the README.md file
+
+```bash
+cat <<'EOF' > README.md
+# Docs
+
+```bash
+# Install the package
+uv pip install -e .
+```
+EOF
+```
+"""
+
+    result = agent.parse_action({"content": content})
+    assert (
+        result["action"]
+        == """cat <<'EOF' > README.md
+# Docs
+
+```bash
+# Install the package
+uv pip install -e .
+```
+EOF"""
+    )
+    assert result["content"] == content
+
+
+def test_parse_action_with_nested_bash_ticks_failure():
+    agent = DefaultAgent(
+        model=DeterministicModel(outputs=[]),
+        env=LocalEnvironment(),
+    )
+
+    multiple_code_blocks = """
+THOUGHT: I need to update the README.md file
+
+```bash
+cat <<'EOF' > README.md
+# Docs
+
+```bash
+# Install the package
+uv pip install -e .
+```
+EOF
+```
+
+```bash
+touch README.md
+```
+"""
+
+    # Multiple code blocks
+    with pytest.raises(NonTerminatingException):
+        agent.parse_action({"content": multiple_code_blocks})
+
+
 def test_message_history_tracking():
     """Test that messages are properly added and tracked."""
     agent = DefaultAgent(
