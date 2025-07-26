@@ -105,8 +105,8 @@ def main(
     config["agent"]["mode"] = "confirm" if not yolo else "yolo"
     if cost_limit:
         config["agent"]["cost_limit"] = cost_limit
-    if not visual:
-        config["agent"]["confirm_exit"] = not exit_immediately
+    if not visual and exit_immediately:
+        config["agent"]["confirm_exit"] = False
     model = get_model(model_name, config.get("model", {}))
     env = LocalEnvironment(**config.get("env", {}))
 
