@@ -104,7 +104,32 @@ class DefaultAgent:
 
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
-        actions = re.findall(r"```bash\n(.*?)\n```", response["content"], re.DOTALL)
+
+        def extract_top_level_bash_actions(text):
+            """Extract content of top-level bash blocks, avoiding those inside heredocs."""
+
+            # For heredoc blocks: match until EOF, then continue to closing ```
+            # This handles the case where there are nested ```bash blocks inside the heredoc content
+            heredoc_matches = re.findall(r"```bash\n(.*?\nEOF)\n```", text, re.DOTALL)
+
+            if heredoc_matches:
+                # Count all top-level bash blocks to detect multiple blocks
+                all_bash_starts = [m.start() for m in re.finditer(r"```bash\n", text)]
+                if len(all_bash_starts) > 1:
+                    # Check if we have multiple top-level blocks by seeing if any bash block
+                    # starts after a heredoc ends
+                    heredoc_block_matches = list(re.finditer(r"```bash\n.*?\nEOF\n```", text, re.DOTALL))
+                    if heredoc_block_matches:
+                        heredoc_end = heredoc_block_matches[0].end()
+                        # Check if there are any bash blocks after the heredoc
+                        remaining_bash = re.findall(r"```bash\n(.*?)\n```", text[heredoc_end:], re.DOTALL)
+                        if remaining_bash:
+                            return heredoc_matches + remaining_bash
+                return heredoc_matches
+            else:
+                return re.findall(r"```bash\n(.*?)\n```", text, re.DOTALL)
+
+        actions = extract_top_level_bash_actions(response["content"])
         if len(actions) == 1:
             return {"action": actions[0].strip(), **response}
         raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
