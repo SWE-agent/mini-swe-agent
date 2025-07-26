@@ -85,7 +85,7 @@
         mini-extra  # extra utilities
         ```
 
-        Or pick a [run script](reference/run/):
+        Or pick a [run script](https://github.com/SWE-agent/mini-swe-agent/tree/main/src/minisweagent/run):
 
         ```bash
         python minisweagent/run/hello_world.py
