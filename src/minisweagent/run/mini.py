@@ -83,7 +83,7 @@ def main(
     config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
     output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
     exit_immediately: bool = typer.Option(
-        True, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting."
+        False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting."
     ),
 ) -> Any:
     configure_if_first_time()
