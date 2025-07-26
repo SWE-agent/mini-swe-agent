@@ -565,7 +565,6 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
             yolo=False,
             output=None,
             visual=False,
-            exit_immediately=False,  # This should set confirm_exit=True
         )
 
         # Verify run_interactive was called with correct config
