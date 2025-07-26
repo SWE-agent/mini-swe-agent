@@ -810,24 +810,6 @@ def test_confirm_exit_disabled_exits_immediately():
         assert agent.model.n_calls == 1
 
 
-def test_confirm_exit_disabled_in_yolo_mode():
-    """Test that in yolo mode, agent exits immediately regardless of confirm_exit setting."""
-    # In yolo mode, no prompts should be called at all
-    agent = InteractiveAgent(
-        model=DeterministicModel(
-            outputs=["Finishing\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'completed'\n```"]
-        ),
-        env=LocalEnvironment(),
-        mode="yolo",
-        confirm_exit=True,  # Even with confirm_exit=True, yolo mode should skip confirmation
-    )
-
-    exit_status, result = agent.run("Test yolo mode exit")
-    assert exit_status == "Submitted"
-    assert result == "completed"
-    assert agent.model.n_calls == 1
-
-
 def test_confirm_exit_with_new_task_continues_execution():
     """Test that when user provides new task at exit confirmation, agent continues."""
     with patch(

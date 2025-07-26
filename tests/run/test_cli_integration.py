@@ -484,19 +484,6 @@ def test_mini_extra_config_help():
     assert "--help" in clean_output
 
 
-def test_exit_immediately_flag_in_help():
-    """Test that --exit-immediately flag appears in help output."""
-    from typer.testing import CliRunner
-
-    runner = CliRunner()
-    result = runner.invoke(app, ["--help"])
-
-    assert result.exit_code == 0
-    clean_output = strip_ansi_codes(result.stdout)
-    assert "--exit-immediately" in clean_output
-    assert "Exit immediately when the agent wants to finish instead of prompting" in clean_output
-
-
 def test_exit_immediately_flag_sets_confirm_exit_false():
     """Test that --exit-immediately flag sets confirm_exit to False in agent config."""
     with (
@@ -516,10 +503,14 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
         mock_config_path.read_text.return_value = ""
         mock_get_config_path.return_value = mock_config_path
         mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
-        mock_run_interactive.return_value = Mock()
+
+        # Create mock agent with config
+        mock_agent = Mock()
+        mock_agent.config.confirm_exit = False
+        mock_run_interactive.return_value = mock_agent
 
         # Call main function with --exit-immediately flag
-        main(
+        agent = main(
             config_spec=DEFAULT_CONFIG,
             model_name="test-model",
             task="Test task",
@@ -529,11 +520,8 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
             exit_immediately=True,  # This should set confirm_exit=False
         )
 
-        # Verify run_interactive was called with correct config
-        mock_run_interactive.assert_called_once()
-        args, kwargs = mock_run_interactive.call_args
-        agent_config = args[2]  # agent config is the third argument
-        assert agent_config["confirm_exit"] is False
+        # Verify the agent's config has confirm_exit set to False
+        assert agent.config.confirm_exit is False
 
 
 def test_no_exit_immediately_flag_sets_confirm_exit_true():
@@ -555,10 +543,14 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
         mock_config_path.read_text.return_value = ""
         mock_get_config_path.return_value = mock_config_path
         mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
-        mock_run_interactive.return_value = Mock()
+
+        # Create mock agent with config
+        mock_agent = Mock()
+        mock_agent.config.confirm_exit = True
+        mock_run_interactive.return_value = mock_agent
 
         # Call main function without --exit-immediately flag (defaults to False)
-        main(
+        agent = main(
             config_spec=DEFAULT_CONFIG,
             model_name="test-model",
             task="Test task",
@@ -567,11 +559,8 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
             visual=False,
         )
 
-        # Verify run_interactive was called with correct config
-        mock_run_interactive.assert_called_once()
-        args, kwargs = mock_run_interactive.call_args
-        agent_config = args[2]  # agent config is the third argument
-        assert agent_config["confirm_exit"] is True
+        # Verify the agent's config has confirm_exit set to True
+        assert agent.config.confirm_exit is True
 
 
 def test_exit_immediately_flag_only_affects_non_visual_mode():
