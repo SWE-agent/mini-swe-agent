@@ -139,7 +139,7 @@ class InteractiveAgent(DefaultAgent):
         try:
             return super().has_finished(output)
         except Submitted as e:
-            if self.config.confirm_exit and self.config.mode != "yolo":
+            if self.config.confirm_exit:
                 console.print(
                     "[bold green]Agent wants to finish.[/bold green] "
                     "[green]Type a comment to give it a new task or press enter to quit.\n"
