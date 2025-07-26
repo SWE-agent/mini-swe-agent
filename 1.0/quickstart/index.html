@@ -1656,8 +1656,13 @@ mini-extra<span class="w">  </span><span class="c1"># extra utilities</span>
 <p>If you are planning to contribute, please also install the dev dependencies
 and <code>pre-commit</code> hooks:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[dev]&#39;</span>
-pre-commit<span class="w"> </span>install
+pip<span class="w"> </span>install<span class="w"> </span>pre-commit<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pre-commit<span class="w"> </span>install
 </code></pre></div>
+<p>To check your installation, you can run <code>pytest -n auto</code> in the root folder.
+This should run all tests in parallel (should take ~3min to run).</p>
+<p>Note that there are still some extra dependencies that are not installed by default
+(basically anything that is in an <code>.../extra/...</code> folder).
+If you truly want to get the maximal package, you can run <code>pip install -e '.[full]'</code></p>
 </div>
 </div>
 </div>
