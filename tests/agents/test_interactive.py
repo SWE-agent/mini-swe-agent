@@ -768,3 +768,101 @@ def test_continue_after_completion_in_yolo_mode():
         # Should have the new task message
         new_task_messages = [msg for msg in agent.messages if "Create a second task" in msg.get("content", "")]
         assert len(new_task_messages) == 1
+
+
+def test_confirm_exit_enabled_asks_for_confirmation():
+    """Test that when confirm_exit=True, agent asks for confirmation before finishing."""
+    with patch(
+        "minisweagent.agents.interactive.prompt_session.prompt",
+        side_effect=["", ""],  # Confirm action, then no new task (empty string to exit)
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=["Finishing\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'completed'\n```"]
+            ),
+            env=LocalEnvironment(),
+            confirm_exit=True,  # Should ask for confirmation
+        )
+
+        exit_status, result = agent.run("Test confirm exit enabled")
+        assert exit_status == "Submitted"
+        assert result == "completed"
+        assert agent.model.n_calls == 1
+
+
+def test_confirm_exit_disabled_exits_immediately():
+    """Test that when confirm_exit=False, agent exits immediately without asking."""
+    with patch(
+        "minisweagent.agents.interactive.prompt_session.prompt",
+        side_effect=[""],  # Only confirm action, no exit confirmation needed
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=["Finishing\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'completed'\n```"]
+            ),
+            env=LocalEnvironment(),
+            confirm_exit=False,  # Should NOT ask for confirmation
+        )
+
+        exit_status, result = agent.run("Test confirm exit disabled")
+        assert exit_status == "Submitted"
+        assert result == "completed"
+        assert agent.model.n_calls == 1
+
+
+def test_confirm_exit_with_new_task_continues_execution():
+    """Test that when user provides new task at exit confirmation, agent continues."""
+    with patch(
+        "minisweagent.agents.interactive.prompt_session.prompt",
+        side_effect=[
+            "",  # Confirm first action
+            "Please do one more thing",  # Provide new task instead of exiting
+            "",  # Confirm second action
+            "",  # No new task on second exit confirmation
+        ],
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=[
+                    "First task\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'first done'\n```",
+                    "Additional task\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\necho 'additional done'\n```",
+                ]
+            ),
+            env=LocalEnvironment(),
+            confirm_exit=True,
+        )
+
+        exit_status, result = agent.run("Test exit with new task")
+        assert exit_status == "Submitted"
+        assert result == "additional done"
+        assert agent.model.n_calls == 2
+        # Check that the new task was added to the conversation
+        new_task_messages = [msg for msg in agent.messages if "Please do one more thing" in msg.get("content", "")]
+        assert len(new_task_messages) == 1
+
+
+def test_confirm_exit_config_field_defaults():
+    """Test that confirm_exit field has correct default value."""
+    agent = InteractiveAgent(
+        model=DeterministicModel(outputs=[]),
+        env=LocalEnvironment(),
+    )
+    # Default should be True
+    assert agent.config.confirm_exit is True
+
+
+def test_confirm_exit_config_field_can_be_set():
+    """Test that confirm_exit field can be explicitly set."""
+    agent_with_confirm = InteractiveAgent(
+        model=DeterministicModel(outputs=[]),
+        env=LocalEnvironment(),
+        confirm_exit=True,
+    )
+    assert agent_with_confirm.config.confirm_exit is True
+
+    agent_without_confirm = InteractiveAgent(
+        model=DeterministicModel(outputs=[]),
+        env=LocalEnvironment(),
+        confirm_exit=False,
+    )
+    assert agent_without_confirm.config.confirm_exit is False

@@ -482,3 +482,156 @@ def test_mini_extra_config_help():
     # Config command should have help output
     clean_output = strip_ansi_codes(result.stdout)
     assert "--help" in clean_output
+
+
+def test_exit_immediately_flag_sets_confirm_exit_false():
+    """Test that --exit-immediately flag sets confirm_exit to False in agent config."""
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.run_interactive") as mock_run_interactive,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+
+        # Create mock agent with config
+        mock_agent = Mock()
+        mock_agent.config.confirm_exit = False
+        mock_run_interactive.return_value = mock_agent
+
+        # Call main function with --exit-immediately flag
+        agent = main(
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
+            task="Test task",
+            yolo=False,
+            output=None,
+            visual=False,
+            exit_immediately=True,  # This should set confirm_exit=False
+        )
+
+        # Verify the agent's config has confirm_exit set to False
+        assert agent.config.confirm_exit is False
+
+
+def test_no_exit_immediately_flag_sets_confirm_exit_true():
+    """Test that when --exit-immediately flag is not used, confirm_exit defaults to True."""
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.run_interactive") as mock_run_interactive,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+
+        # Create mock agent with config
+        mock_agent = Mock()
+        mock_agent.config.confirm_exit = True
+        mock_run_interactive.return_value = mock_agent
+
+        # Call main function without --exit-immediately flag (defaults to False)
+        agent = main(
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
+            task="Test task",
+            yolo=False,
+            output=None,
+            visual=False,
+        )
+
+        # Verify the agent's config has confirm_exit set to True
+        assert agent.config.confirm_exit is True
+
+
+def test_exit_immediately_flag_only_affects_non_visual_mode():
+    """Test that --exit-immediately flag only affects non-visual mode."""
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.run_textual") as mock_run_textual,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+        mock_run_textual.return_value = Mock()
+
+        # Call main function in visual mode with --exit-immediately flag
+        main(
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
+            task="Test task",
+            yolo=False,
+            output=None,
+            visual=True,  # Visual mode
+            exit_immediately=True,
+        )
+
+        # Verify run_textual was called and confirm_exit is NOT set in config
+        # (because the logic only applies to non-visual mode)
+        mock_run_textual.assert_called_once()
+        args, kwargs = mock_run_textual.call_args
+        agent_config = args[2]  # agent config is the third argument
+        # In visual mode, confirm_exit should not be set by the --exit-immediately flag
+        assert "confirm_exit" not in agent_config
+
+
+def test_exit_immediately_flag_with_typer_runner():
+    """Test --exit-immediately flag using typer's test runner."""
+    from typer.testing import CliRunner
+
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.run_interactive") as mock_run_interactive,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+        mock_run_interactive.return_value = Mock()
+
+        runner = CliRunner()
+        result = runner.invoke(app, ["--task", "Test task", "--exit-immediately", "--model", "test-model"])
+
+        assert result.exit_code == 0
+        mock_run_interactive.assert_called_once()
+        args, kwargs = mock_run_interactive.call_args
+        agent_config = args[2]
+        assert agent_config["confirm_exit"] is False

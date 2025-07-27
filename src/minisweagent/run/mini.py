@@ -82,6 +82,9 @@ def main(
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
     config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
     output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
+    exit_immediately: bool = typer.Option(
+        False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting."
+    ),
 ) -> Any:
     configure_if_first_time()
     config = yaml.safe_load(get_config_path(config_spec).read_text())
@@ -102,6 +105,8 @@ def main(
     config["agent"]["mode"] = "confirm" if not yolo else "yolo"
     if cost_limit:
         config["agent"]["cost_limit"] = cost_limit
+    if not visual and exit_immediately:
+        config["agent"]["confirm_exit"] = False
     model = get_model(model_name, config.get("model", {}))
     env = LocalEnvironment(**config.get("env", {}))
 

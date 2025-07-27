@@ -28,6 +28,8 @@ class InteractiveAgentConfig(AgentConfig):
     """Whether to confirm actions."""
     whitelist_actions: list[str] = field(default_factory=list)
     """Never confirm actions that match these regular expressions."""
+    confirm_exit: bool = True
+    """If the agent wants to finish, do we ask for confirmation from user?"""
 
 
 class InteractiveAgent(DefaultAgent):
@@ -137,12 +139,13 @@ class InteractiveAgent(DefaultAgent):
         try:
             return super().has_finished(output)
         except Submitted as e:
-            console.print(
-                "[bold green]Agent wants to finish.[/bold green] "
-                "[green]Type a comment to give it a new task or press enter to quit.\n"
-                "[bold yellow]>[/bold yellow] ",
-                end="",
-            )
-            if new_task := self._prompt_and_handle_special("").strip():
-                raise NonTerminatingException(f"The user added a new task: {new_task}")
+            if self.config.confirm_exit:
+                console.print(
+                    "[bold green]Agent wants to finish.[/bold green] "
+                    "[green]Type a comment to give it a new task or press enter to quit.\n"
+                    "[bold yellow]>[/bold yellow] ",
+                    end="",
+                )
+                if new_task := self._prompt_and_handle_special("").strip():
+                    raise NonTerminatingException(f"The user added a new task: {new_task}")
             raise e
