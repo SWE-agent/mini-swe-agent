@@ -1,3 +1,4 @@
+import json
 import logging
 from dataclasses import dataclass, field
 from typing import Any
@@ -20,6 +21,7 @@ logger = logging.getLogger("litellm_model")
 class LitellmModelConfig:
     model_name: str
     model_kwargs: dict[str, Any] = field(default_factory=dict)
+    litellm_model_registry: str | None = None
 
 
 class LitellmModel:
@@ -27,6 +29,10 @@ class LitellmModel:
         self.config = LitellmModelConfig(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
+        if self.config.litellm_model_registry is not None:
+            with open(self.config.litellm_model_registry) as f:
+                model_costs = json.load(f)
+                litellm.register_model(model_costs)
 
     @retry(
         stop=stop_after_attempt(10),

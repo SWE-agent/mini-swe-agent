@@ -1,4 +1,7 @@
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, mock_open
+import json
+import tempfile
+from pathlib import Path
 
 import litellm
 import pytest
@@ -26,3 +29,50 @@ def test_authentication_error_enhanced_message():
 
         # Check that the error message was enhanced
         assert "You can permanently set your API key with `mini-extra config set KEY VALUE`." in str(exc_info.value)
+
+
+def test_model_registry_loading():
+    """Test that custom model registry is loaded and registered when provided."""
+    model_costs = {
+        "my-custom-model": {
+            "max_tokens": 4096,
+            "input_cost_per_token": 0.0001,
+            "output_cost_per_token": 0.0002,
+            "litellm_provider": "openai",
+            "mode": "chat"
+        }
+    }
+    
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        json.dump(model_costs, f)
+        registry_path = f.name
+    
+    try:
+        with patch("litellm.register_model") as mock_register:
+            model = LitellmModel(
+                model_name="my-custom-model",
+                litellm_model_registry=registry_path
+            )
+            
+            # Verify register_model was called with the correct data
+            mock_register.assert_called_once_with(model_costs)
+    finally:
+        Path(registry_path).unlink()
+
+
+def test_model_registry_none():
+    """Test that no registry loading occurs when litellm_model_registry is None."""
+    with patch("litellm.register_model") as mock_register:
+        model = LitellmModel(model_name="gpt-4", litellm_model_registry=None)
+        
+        # Verify register_model was not called
+        mock_register.assert_not_called()
+
+
+def test_model_registry_not_provided():
+    """Test that no registry loading occurs when litellm_model_registry is not provided."""
+    with patch("litellm.register_model") as mock_register:
+        model = LitellmModel(model_name="gpt-4o")
+        
+        # Verify register_model was not called
+        mock_register.assert_not_called()
