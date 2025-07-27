@@ -31,8 +31,8 @@ class LitellmModel:
         self.n_calls = 0
         if self.config.litellm_model_registry is not None:
             with open(self.config.litellm_model_registry) as f:
-                model_costs = json.load(f)
-                litellm.register_model(model_costs)
+                model_registry = json.load(f)
+                litellm.register_model(model_registry)
 
     @retry(
         stop=stop_after_attempt(10),
