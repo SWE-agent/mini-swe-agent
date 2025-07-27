@@ -1,7 +1,7 @@
-from unittest.mock import Mock, patch, mock_open
 import json
 import tempfile
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 import litellm
 import pytest
@@ -39,21 +39,18 @@ def test_model_registry_loading():
             "input_cost_per_token": 0.0001,
             "output_cost_per_token": 0.0002,
             "litellm_provider": "openai",
-            "mode": "chat"
+            "mode": "chat",
         }
     }
-    
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
         json.dump(model_costs, f)
         registry_path = f.name
-    
+
     try:
         with patch("litellm.register_model") as mock_register:
-            model = LitellmModel(
-                model_name="my-custom-model",
-                litellm_model_registry=registry_path
-            )
-            
+            model = LitellmModel(model_name="my-custom-model", litellm_model_registry=registry_path)
+
             # Verify register_model was called with the correct data
             mock_register.assert_called_once_with(model_costs)
     finally:
@@ -64,7 +61,7 @@ def test_model_registry_none():
     """Test that no registry loading occurs when litellm_model_registry is None."""
     with patch("litellm.register_model") as mock_register:
         model = LitellmModel(model_name="gpt-4", litellm_model_registry=None)
-        
+
         # Verify register_model was not called
         mock_register.assert_not_called()
 
@@ -73,6 +70,6 @@ def test_model_registry_not_provided():
     """Test that no registry loading occurs when litellm_model_registry is not provided."""
     with patch("litellm.register_model") as mock_register:
         model = LitellmModel(model_name="gpt-4o")
-        
+
         # Verify register_model was not called
         mock_register.assert_not_called()
