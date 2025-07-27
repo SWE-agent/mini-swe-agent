@@ -79,6 +79,38 @@ MSWEA_GLOBAL_CALL_LIMIT="100"
 MSWEA_GLOBAL_COST_LIMIT="10.00"
 ```
 
+#### Updating the LiteLLM model registry
+
+LiteLLM get its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file in the model config:
+
+```yaml
+model:
+  litellm_model_registry: "path/to/model_registry.json"
+  ...
+...
+```
+
+The model registry JSON file should follow LiteLLM's format:
+
+```json
+{
+  "my-custom-model": {
+    "max_tokens": 4096,
+    "input_cost_per_token": 0.0001,
+    "output_cost_per_token": 0.0002,
+    "litellm_provider": "openai",
+    "mode": "chat"
+  },
+  "my-local-model": {
+    "max_tokens": 8192,
+    "input_cost_per_token": 0.0,
+    "output_cost_per_token": 0.0,
+    "litellm_provider": "ollama",
+    "mode": "chat"
+  }
+}
+```
+
 ### Default config files
 
 ```bash
