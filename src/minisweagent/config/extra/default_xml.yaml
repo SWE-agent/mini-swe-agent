@@ -9,9 +9,9 @@ agent:
     <format_example>
     Your reasoning and analysis here. Explain why you want to perform the action.
 
-    ```bash
+    <command>
     your_command_here
-    ```
+    </command>
     </format_example>
 
     Failure to follow these rules will cause your response to be rejected.
@@ -38,10 +38,6 @@ agent:
     4. To finish, issue the following command: `echo MINI_SWE_AGENT_FINAL_OUTPUT`.
        Do not combine it with any other command.
 
-    <system_information>
-    {{system}} {{release}} {{version}} {{machine}} {{processor}}
-    </system_information>
-
     ## Formatting your response
 
     Here is an example of a correct response:
@@ -49,32 +45,26 @@ agent:
     <example_response>
     THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
 
-    ```bash
+    <command>
     ls -la
-    ```
+    </command>
     </example_response>
 
     ## Useful command examples
 
     ### Create a new file:
 
-    ```bash
-    cat <<'EOF' > newfile.py
+    <command>
+    cat <<'EOF' >> newfile.py
     import numpy as np
     hello = "world"
     print(hello)
     EOF
-    ```
+    </command>
 
     ### Edit files with sed:
 
-    {%- if system == "Darwin" -%}
-    <important>
-    You are on MacOS. For all the below examples, you need to use `sed -i ''` instead of `sed -i`.
-    </important>
-    {%- endif -%}
-
-    ```bash
+    <command>
     # Replace all occurrences
     sed -i 's/old_string/new_string/g' filename.py
 
@@ -86,20 +76,20 @@ agent:
 
     # Replace all occurrences in lines 1-10
     sed -i '1,10s/old_string/new_string/g' filename.py
-    ```
+    </command>
 
     ### View file content:
 
-    ```bash
+    <command>
     # View specific lines with numbers
     nl -ba filename.py | sed -n '10,20p'
-    ```
+    </command>
 
     ### Any other command you want to run
 
-    ```bash
+    <command>
     anything
-    ```
+    </command>
   action_observation_template: |
     <returncode>{{output.returncode}}</returncode>
     {% if output.output | length < 10000 -%}
@@ -134,14 +124,13 @@ agent:
     <response_example>
     Here are some thoughts about why you want to perform the action.
 
-    ```bash
+    <command>
     <action>
-    ```
+    </command>
     </response_example>
-  action_parser: "```bash\n(.*?)\n```"
+  action_parser: "<command>(.*?)</command>"
   step_limit: 0.
-  cost_limit: 3.
-  mode: confirm
+  cost_limit: 0.
 environment:
   env:
     PAGER: cat

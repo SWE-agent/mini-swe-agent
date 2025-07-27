@@ -128,7 +128,7 @@ agent:
     <action>
     ```
     </response_example>
-  action_parser: backticks
+  action_parser: "```bash\n(.*?)\n```"
   step_limit: 0.
   cost_limit: 0.
 
