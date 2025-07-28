@@ -8,6 +8,7 @@ import os
 import re
 import threading
 import time
+import traceback
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
@@ -19,7 +20,7 @@ from textual.binding import Binding
 from textual.containers import Container, Vertical, VerticalScroll
 from textual.css.query import NoMatches
 from textual.events import Key
-from textual.widgets import Footer, Header, Static, TextArea
+from textual.widgets import Footer, Header, Input, Static, TextArea
 
 from minisweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
 
@@ -48,6 +49,7 @@ class TextualAgent(DefaultAgent):
             exit_status, result = super().run(task)
         except Exception as e:
             result = str(e)
+            print(traceback.format_exc())
             self.app.call_from_thread(self.app.on_agent_finished, "ERROR", result)
             return "ERROR", result
         else:
@@ -58,7 +60,7 @@ class TextualAgent(DefaultAgent):
         if self.config.mode == "confirm" and not any(
             re.match(r, action["action"]) for r in self.config.whitelist_actions
         ):
-            if result := self.app.confirmation_container.request_confirmation(action["action"]):
+            if result := self.app.input_container.request_confirmation(action["action"]):
                 raise NonTerminatingException(f"Command not executed: {result}")
         return super().execute_action(action)
 
@@ -87,73 +89,173 @@ def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
     return steps
 
 
-class ConfirmationPromptContainer(Container):
+class SmartInputContainer(Container):
     def __init__(self, app: "AgentApp"):
-        """This class is responsible for handling the action execution confirmation."""
-        super().__init__(id="confirmation-container")
+        """Smart input container supporting single-line and multi-line input modes."""
+        super().__init__(id="input-container")
         self._app = app
-        self.rejecting = False
+        self.multiline_mode = False
         self.can_focus = True
         self.display = False
+        self._switching_modes = False  # Flag to prevent submissions during mode switching
 
-        self._pending_action: str | None = None
-        self._confirmation_event = threading.Event()
-        self._confirmation_result: str | None = None
+        # Threading state (renamed from confirmation specific names)
+        self._pending_prompt: str | None = None
+        self._input_event = threading.Event()
+        self._input_result: str | None = None
 
         # Create UI elements
-        self.text_input = TextArea(id="rejection-input")
-        self.text_input_help = Static(
-            "Press [bold]Ctrl+D[/bold] to submit rejection message",
-            id="rejection-help",
-            classes="rejection-help",
+        self.mode_indicator = Static(
+            "Single-line mode (Enter to submit, Ctrl+M to switch to multi-line)",
+            id="mode-indicator",
+            classes="mode-indicator",
         )
-        self.text_input_container = Container(self.text_input, self.text_input_help, id="rejection-container")
-        self.text_input_container.display = False
+        self.single_input = Input(placeholder="Type your input...", id="single-input")
+        self.multi_input = TextArea("", show_line_numbers=False, id="multi-input")
+
+        # Container for input elements
+        self.input_elements_container = Container(
+            self.mode_indicator, self.single_input, self.multi_input, id="input-elements-container"
+        )
 
     def compose(self) -> ComposeResult:
-        yield Static(
-            "Press [bold]ENTER[/bold] to confirm action or [bold]BACKSPACE[/bold] to reject (or [bold]y[/bold] to toggle YOLO mode)",
-            classes="confirmation-prompt",
-        )
-        yield self.text_input_container
+        yield self.input_elements_container
+
+    def on_mount(self) -> None:
+        """Initialize the widget state."""
+        print("SmartInputContainer mounted")
+        self.multi_input.display = False
+        self._update_mode_display(focus_input=False)
+
+    def on_focus(self) -> None:
+        """Called when the container gains focus."""
+        print("SmartInputContainer gained focus")
+        self.focus_input()
 
     def request_confirmation(self, action: str) -> str | None:
         """Request confirmation for an action. Returns rejection message or None."""
-        self._confirmation_event.clear()
-        self._confirmation_result = None
-        self._pending_action = action
-        self._app.call_from_thread(self._app.update_content)
-        self._confirmation_event.wait()
-        return self._confirmation_result
+        return self.request_input("Press ENTER to confirm or provide rejection reason")
 
-    def _complete_confirmation(self, rejection_message: str | None):
-        """Internal method to complete the confirmation process."""
-        self._confirmation_result = rejection_message
-        self._pending_action = None
+    def request_input(self, prompt: str) -> str | None:
+        """Request input from user. Returns input text or None if cancelled/confirmed empty."""
+        self._input_event.clear()
+        self._input_result = None
+        self._pending_prompt = prompt
+        self.mode_indicator.update(f"{prompt}\nSingle-line mode (Enter to submit, Ctrl+M to switch to multi-line)")
+        self._app.call_from_thread(self._app.update_content)
+        self._input_event.wait()
+        return self._input_result
+
+    def _complete_input(self, input_text: str | None):
+        """Internal method to complete the input process."""
+        print(f"_complete_input called with: '{input_text}'")
+        self._input_result = input_text
+        self._pending_prompt = None
         self.display = False
-        self.rejecting = False
-        self.text_input_container.display = False
-        self.text_input.text = ""
-        # Reset agent state to RUNNING after confirmation is completed
-        if rejection_message is None:
+        self.single_input.value = ""
+        self.multi_input.text = ""
+        self.multiline_mode = False
+        self._update_mode_display()
+        # Reset agent state to RUNNING after input is completed
+        if input_text is None:
             self._app.agent_state = "RUNNING"
-        self._confirmation_event.set()
+        self._input_event.set()
+        print("Input event set, should continue agent")
         self._app.update_content()
 
-    def on_key(self, event: Key) -> None:
-        if self.rejecting and event.key == "ctrl+d":
-            event.prevent_default()
-            self._complete_confirmation(self.text_input.text)
+    def action_toggle_mode(self) -> None:
+        """Toggle between single-line and multi-line modes."""
+        print("Mode toggle")
+        # Only toggle if we have a pending prompt (input is active)
+        if self._pending_prompt is None:
+            print("No pending prompt")
             return
-        if not self.rejecting:
-            if event.key == "enter":
-                event.prevent_default()
-                self._complete_confirmation(None)
-            elif event.key == "backspace":
-                event.prevent_default()
-                self.rejecting = True
-                self.text_input_container.display = True
-                self.text_input.focus()
+
+        self._switching_modes = True
+        self.multiline_mode = not self.multiline_mode
+        self._update_mode_display(focus_input=False)
+        self._switching_modes = False
+
+    def _update_mode_display(self, focus_input: bool = True) -> None:
+        """Update the display based on current mode."""
+        if self.multiline_mode:
+            print("Enable Multiline mode")
+            # Transfer text from single-line to multi-line
+            if self.single_input.value:
+                self.multi_input.text = self.single_input.value
+            self.single_input.display = False
+            self.multi_input.display = True
+
+            prompt_prefix = ""
+            if self._pending_prompt:
+                prompt_prefix = f"{self._pending_prompt}\n"
+            self.mode_indicator.update(
+                f"{prompt_prefix}Multi-line mode (Ctrl+D to submit, Escape to switch to single-line)"
+            )
+
+            if focus_input and self.display:
+                self.multi_input.focus()
+        else:
+            print("Enable Singleline mode")
+            # Transfer text from multi-line to single-line (if no newlines)
+            if self.multi_input.text and "\n" not in self.multi_input.text:
+                self.single_input.value = self.multi_input.text
+            elif self.multi_input.text:
+                # If multi-line text has newlines, keep it in multi-line mode
+                self.multiline_mode = True
+                return
+            self.multi_input.display = False
+            self.single_input.display = True
+
+            prompt_prefix = ""
+            if self._pending_prompt:
+                prompt_prefix = f"{self._pending_prompt}\n"
+            self.mode_indicator.update(
+                f"{prompt_prefix}Single-line mode (Enter to submit, Escape to switch to multi-line)"
+            )
+
+            if focus_input and self.display:
+                self.single_input.focus()
+
+    def focus_input(self) -> None:
+        """Focus the appropriate input widget based on current mode."""
+        if self.display:
+            if self.multiline_mode:
+                print("Focusing multi_input")
+                self.multi_input.focus()
+            else:
+                print("Focusing single_input")
+                self.single_input.focus()
+
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        """Handle single-line input submission."""
+        if self._switching_modes:
+            return  # Ignore submissions during mode switching
+        if not self.multiline_mode and event.input.id == "single-input":
+            text = event.input.value.strip()
+            # Empty submission means confirmation (no rejection message)
+            self._complete_input(text if text else None)
+
+    def on_key(self, event: Key) -> None:
+        """Handle key events."""
+        if event.key == "escape":
+            print("Mode toggle key pressed")
+            event.prevent_default()
+            event.stop()
+            self.action_toggle_mode()
+            return
+
+        if self._switching_modes:
+            return  # Ignore all key events during mode switching
+
+        if self.multiline_mode and event.key == "ctrl+d":
+            print("Multiline mode submit")
+            event.prevent_default()
+            event.stop()
+            text = self.multi_input.text.strip()
+            print(f"Text captured: '{text}'")
+            # Empty submission means confirmation (no rejection message)
+            self._complete_input(text if text else None)
 
 
 class AgentApp(App):
@@ -178,7 +280,7 @@ class AgentApp(App):
         self.agent = TextualAgent(self, model=model, env=env, **kwargs)
         self._i_step = 0
         self.n_steps = 1
-        self.confirmation_container = ConfirmationPromptContainer(self)
+        self.input_container = SmartInputContainer(self)
         self.log_handler = AddLogEmitCallback(lambda record: self.call_from_thread(self.on_log_message_emitted, record))
         logging.getLogger().addHandler(self.log_handler)
         self._spinner = Spinner("dots")
@@ -207,7 +309,7 @@ class AgentApp(App):
         with Container(id="main"):
             with self._vscroll:
                 yield Vertical(id="content")
-            yield self.confirmation_container
+            yield self.input_container
         yield Footer()
 
     def on_mount(self) -> None:
@@ -264,13 +366,13 @@ class AgentApp(App):
             message_container.mount(Static(role.upper(), classes="message-header"))
             message_container.mount(Static(Text(content_str, no_wrap=False), classes="message-content"))
 
-        if self.confirmation_container._pending_action is not None:
-            self.agent_state = "AWAITING_CONFIRMATION"
-        self.confirmation_container.display = (
-            self.confirmation_container._pending_action is not None and self.i_step == len(items) - 1
+        if self.input_container._pending_prompt is not None:
+            self.agent_state = "AWAITING_INPUT"
+        self.input_container.display = (
+            self.input_container._pending_prompt is not None and self.i_step == len(items) - 1
         )
-        if self.confirmation_container.display:
-            self.confirmation_container.focus()
+        if self.input_container.display:
+            self.input_container.focus_input()
 
         self._update_headers()
         self.refresh()
@@ -291,7 +393,7 @@ class AgentApp(App):
 
     def action_yolo(self):
         self.agent.config.mode = "yolo"
-        self.confirmation_container._complete_confirmation(None)
+        self.input_container._complete_input(None)
         self.notify("YOLO mode enabled - actions will execute immediately")
 
     def action_confirm(self):
