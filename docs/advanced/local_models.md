@@ -8,7 +8,8 @@
 
 !!! tip "Examples"
 
-    [Issue #303](https://github.com/SWE-agent/mini-swe-agent/issues/303) has several examples of how to use local models.
+    * [Issue #303](https://github.com/SWE-agent/mini-swe-agent/issues/303) has several examples of how to use local models.
+    * We also welcome concrete examples of how to use local models per pull request into this guide.
 
 ## Using litellm
 
@@ -99,3 +100,10 @@ The model registry JSON file should follow LiteLLM's format:
   }
 }
 ```
+
+## Concrete examples
+
+!!! success "Help us fill this section!"
+
+    We welcome concrete examples of how to use local models per pull request into this guide.
+    Please add your example here.
