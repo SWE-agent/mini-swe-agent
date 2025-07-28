@@ -726,6 +726,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Models and keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#updating-the-litellm-model-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating the LiteLLM model registry
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1569,6 +1584,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Models and keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#updating-the-litellm-model-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      Updating the LiteLLM model registry
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1684,6 +1714,31 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 <span class="c1"># Global cost limit in dollars (0 = no limit)</span>
 <span class="c1"># (default: 0)</span>
 <span class="nv">MSWEA_GLOBAL_COST_LIMIT</span><span class="o">=</span><span class="s2">&quot;10.00&quot;</span>
+</code></pre></div>
+<h4 id="updating-the-litellm-model-registry">Updating the LiteLLM model registry</h4>
+<p>LiteLLM get its cost and model metadata from <a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json">this file</a>. You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file in the model config:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">litellm_model_registry</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;path/to/model_registry.json&quot;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="nn">...</span>
+</code></pre></div>
+<p>The model registry JSON file should follow LiteLLM's format:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;my-custom-model&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4096</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0002</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;my-local-model&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8192</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ollama&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 <h3 id="default-config-files">Default config files</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Set a custom directory for agent config files in addition to the builtin ones</span>
