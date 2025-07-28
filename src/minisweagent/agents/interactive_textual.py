@@ -105,7 +105,7 @@ class SmartInputContainer(Container):
 
         self._prompt_display = Static("", id="prompt-display", classes="prompt-display")
         self._mode_indicator = Static(
-            "Single-line mode ([bold]Enter[/bold] to submit, [bold]Escape[/bold] to switch to multi-line)",
+            "Single-line mode ([bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line)",
             id="mode-indicator",
             classes="mode-indicator",
         )
@@ -163,11 +163,11 @@ class SmartInputContainer(Container):
         self._app.update_content()
 
     def action_toggle_mode(self) -> None:
-        """Toggle between single-line and multi-line modes."""
-        if self.pending_prompt is None:
+        """Switch from single-line to multi-line mode (one-way only)."""
+        if self.pending_prompt is None or self._multiline_mode:
             return
 
-        self._multiline_mode = not self._multiline_mode
+        self._multiline_mode = True
         self._update_mode_display()
         self.on_focus()
 
@@ -178,16 +178,13 @@ class SmartInputContainer(Container):
             self._single_input.display = False
             self._multi_input.display = True
 
-            self._mode_indicator.update(
-                "Multi-line mode ([bold]Ctrl+D[/bold] to submit, [bold]Escape[/bold] to switch to single-line)"
-            )
+            self._mode_indicator.update("Multi-line mode ([bold]Ctrl+D[/bold] to submit)")
         else:
-            self._single_input.value = "".join(self._multi_input.text.splitlines()[:1])
             self._multi_input.display = False
             self._single_input.display = True
 
             self._mode_indicator.update(
-                "Single-line mode ([bold]Enter[/bold] to submit, [bold]Escape[/bold] to switch to multi-line)"
+                "Single-line mode ([bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line input)"
             )
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
@@ -198,7 +195,7 @@ class SmartInputContainer(Container):
 
     def on_key(self, event: Key) -> None:
         """Handle key events."""
-        if event.key == "escape":
+        if event.key == "ctrl+t" and not self._multiline_mode:
             event.prevent_default()
             event.stop()
             self.action_toggle_mode()
