@@ -123,6 +123,7 @@
 !!! tip "TLDR: Models should be set up the first time you run `mini`"
 
     If you missed the setup wizard, just run `mini-extra config setup`, or take a look at the following section.
+    If you want to use local models, please check this [guide](advanced/local_models.md).
 
 ### Setting API keys
 
@@ -140,5 +141,6 @@ There are several ways to set your API keys:
 * `mini-extra config setup` can set the default model for you
 * In addition, you can set the default model with `mini-extra config set MSWEA_MODEL_NAME <model-name>`, by editing the global [config file](advanced/configuration.md) (shortcut: `mini-extra config edit`), or by setting the `MSWEA_MODEL_NAME` environment variable.
 * You can also set your model in a config file (key `model_name` under `model`).
+* If you want to use local models, please check this [guide](advanced/local_models.md).
 
 {% include-markdown "_footer.md" %}

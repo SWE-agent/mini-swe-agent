@@ -237,4 +237,12 @@ agent.run("Write a sudoku game")</code></pre>
   </a>
 </div>
 
+## 📣 New features
+
+Please check the [github release notes](https://github.com/SWE-agent/mini-swe-agent/releases) for the latest updates.
+
+## 📣 Documentation updates
+
+* Jul 27: More notes on [local models](advanced/local_models.md)
+
 {% include-markdown "_footer.md" %}

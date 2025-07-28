@@ -65,6 +65,7 @@ nav:
       - "Inspector": usage/inspector.md
     - "Advanced":
       - "Configuration": advanced/configuration.md
+      - "Local models": advanced/local_models.md
       - "Control flow": advanced/control_flow.md
       - "Cookbook": advanced/cookbook.md
     - "FAQ": faq.md
