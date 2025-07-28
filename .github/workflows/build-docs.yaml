@@ -41,9 +41,10 @@ jobs:
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
       - run: uv pip install --python ${Python_ROOT_DIR} '.[full]'
-      - name: Build Documentation
-        if: github.ref != 'refs/heads/main'
-        run: mkdocs build --strict
       - name: Build + Deploy Documentation
         if: github.ref == 'refs/heads/main'
         run: mike deploy --push 1.0 latest
+      - name: Build Documentation (strict)
+        # Do this even if we've already deployed, just so we can catch errors
+        # and mark the build as failed.
+        run: mkdocs build --strict
