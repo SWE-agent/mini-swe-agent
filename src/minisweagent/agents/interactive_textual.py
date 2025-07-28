@@ -99,103 +99,94 @@ class SmartInputContainer(Container):
         self.can_focus = True
         self.display = False
 
-        # Threading state (renamed from confirmation specific names)
-        self._pending_prompt: str | None = None
+        self.pending_prompt: str | None = None
         self._input_event = threading.Event()
         self._input_result: str | None = None
 
-        # Create UI elements
-        self.prompt_display = Static("", id="prompt-display", classes="prompt-display")
-        self.mode_indicator = Static(
+        self._prompt_display = Static("", id="prompt-display", classes="prompt-display")
+        self._mode_indicator = Static(
             "Single-line mode ([bold]Enter[/bold] to submit, [bold]Escape[/bold] to switch to multi-line)",
             id="mode-indicator",
             classes="mode-indicator",
         )
-        self.single_input = Input(placeholder="Type your input...", id="single-input")
-        self.multi_input = TextArea("", show_line_numbers=False, id="multi-input")
+        self._single_input = Input(placeholder="Type your input...", id="single-input")
+        self._multi_input = TextArea("", show_line_numbers=False, id="multi-input")
 
-        # Container for input elements
-        self.input_elements_container = Container(
-            self.prompt_display, self.mode_indicator, self.single_input, self.multi_input, id="input-elements-container"
+        self._input_elements_container = Container(
+            self._prompt_display,
+            self._mode_indicator,
+            self._single_input,
+            self._multi_input,
+            id="input-elements-container",
         )
 
     def compose(self) -> ComposeResult:
         with Vertical(classes="message-container"):
-            yield Static("[yellow]USER INPUT REQUESTED[/]", classes="message-header")
-            yield self.input_elements_container
+            yield Static("USER INPUT REQUESTED", classes="message-header input-request-header")
+            yield self._input_elements_container
 
     def on_mount(self) -> None:
         """Initialize the widget state."""
-        print("SmartInputContainer mounted")
-        self.multi_input.display = False
+        self._multi_input.display = False
         self._update_mode_display()
 
     def on_focus(self) -> None:
         """Called when the container gains focus."""
-        print("SmartInputContainer gained focus")
         if self._multiline_mode:
-            print("Focusing multi_input")
-            self.multi_input.focus()
+            self._multi_input.focus()
         else:
-            print("Focusing single_input")
-            self.single_input.focus()
+            self._single_input.focus()
 
     def request_input(self, prompt: str) -> str:
         """Request input from user. Returns input text (empty string if confirmed without reason)."""
         self._input_event.clear()
         self._input_result = None
-        self._pending_prompt = prompt
-        self.prompt_display.update(prompt)
-        self._update_mode_display()  # Update the mode indicator separately
+        self.pending_prompt = prompt
+        self._prompt_display.update(prompt)
+        self._update_mode_display()
         self._app.call_from_thread(self._app.update_content)
         self._input_event.wait()
         return self._input_result or ""
 
     def _complete_input(self, input_text: str):
         """Internal method to complete the input process."""
-        print(f"_complete_input called with: '{input_text}'")
         self._input_result = input_text
-        self._pending_prompt = None
-        self.prompt_display.update("")  # Clear the prompt
+        self.pending_prompt = None
+        self._prompt_display.update("")
         self.display = False
-        self.single_input.value = ""
-        self.multi_input.text = ""
+        self._single_input.value = ""
+        self._multi_input.text = ""
         self._multiline_mode = False
         self._update_mode_display()
-        # Reset agent state to RUNNING after input is completed
         self._app.agent_state = "RUNNING"
         self._input_event.set()
-        print("Input event set, should continue agent")
         self._app.update_content()
 
     def action_toggle_mode(self) -> None:
         """Toggle between single-line and multi-line modes."""
-        # Only toggle if we have a pending prompt (input is active)
-        if self._pending_prompt is None:
+        if self.pending_prompt is None:
             return
 
         self._multiline_mode = not self._multiline_mode
         self._update_mode_display()
-        self.on_focus()  # Focus the appropriate input after mode change
+        self.on_focus()
 
     def _update_mode_display(self) -> None:
         """Update the display based on current mode."""
         if self._multiline_mode:
-            print("Enable Multiline mode")
-            self.multi_input.text = self.single_input.value
-            self.single_input.display = False
-            self.multi_input.display = True
+            self._multi_input.text = self._single_input.value
+            self._single_input.display = False
+            self._multi_input.display = True
 
-            self.mode_indicator.update(
+            self._mode_indicator.update(
                 "Multi-line mode ([bold]Ctrl+D[/bold] to submit, [bold]Escape[/bold] to switch to single-line)"
             )
         else:
-            print("Enable Singleline mode")
-            self.single_input.value = "".join(self.multi_input.text.splitlines()[:1])
-            self.multi_input.display = False
-            self.single_input.display = True
+            self._single_input.value = "".join(self._multi_input.text.splitlines()[:1])
+            self._multi_input.display = False
+            self._single_input.display = True
 
-            self.mode_indicator.update(
+            self._mode_indicator.update(
                 "Single-line mode ([bold]Enter[/bold] to submit, [bold]Escape[/bold] to switch to multi-line)"
             )
 
@@ -203,25 +194,20 @@ class SmartInputContainer(Container):
         """Handle single-line input submission."""
         if not self._multiline_mode and event.input.id == "single-input":
             text = event.input.value.strip()
-            # Empty submission means confirmation, non-empty means rejection reason
             self._complete_input(text)
 
     def on_key(self, event: Key) -> None:
         """Handle key events."""
         if event.key == "escape":
-            print("Mode toggle key pressed")
             event.prevent_default()
             event.stop()
             self.action_toggle_mode()
             return
 
         if self._multiline_mode and event.key == "ctrl+d":
-            print("Multiline mode submit")
             event.prevent_default()
             event.stop()
-            text = self.multi_input.text.strip()
-            print(f"Text captured: '{text}'")
-            # Empty submission means confirmation, non-empty means rejection reason
+            text = self._multi_input.text.strip()
             self._complete_input(text)
 
 
@@ -334,11 +320,9 @@ class AgentApp(App):
             message_container.mount(Static(role.upper(), classes="message-header"))
             message_container.mount(Static(Text(content_str, no_wrap=False), classes="message-content"))
 
-        if self.input_container._pending_prompt is not None:
+        if self.input_container.pending_prompt is not None:
             self.agent_state = "AWAITING_INPUT"
-        self.input_container.display = (
-            self.input_container._pending_prompt is not None and self.i_step == len(items) - 1
-        )
+        self.input_container.display = self.input_container.pending_prompt is not None and self.i_step == len(items) - 1
         if self.input_container.display:
             self.input_container.on_focus()
 

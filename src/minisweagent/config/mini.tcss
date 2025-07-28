@@ -60,6 +60,10 @@ Footer {
     text-style: bold;
 }
 
+.input-request-header {
+    color: $warning;
+}
+
 .message-content {
     margin-top: 1;
     padding: 0 1;
