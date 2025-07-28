@@ -51,10 +51,13 @@ jobs:
             sudo dpkg -i apptainer_1.3.4_amd64.deb || sudo apt-get install -f -y
             # Create singularity symlink for compatibility
             sudo ln -sf /usr/bin/apptainer /usr/bin/singularity
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Install dependencies
         run: |
-            pip install -e '.[full]'
-            pip install pytest pytest-cov pytest-xdist
+            uv pip install -e '.[full]'
+            uv pip install pytest pytest-cov pytest-xdist
       - name: Run pytest
         run: pytest -v --cov --cov-branch --cov-report=xml -n auto
       - name: Upload coverage reports to Codecov

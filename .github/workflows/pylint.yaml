@@ -39,10 +39,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Install dependencies
         run: |
-            pip install -e '.[full]'
-            pip install pylint
+            uv pip install -e '.[full]'
+            uv pip install pylint
       - name: Run pylint (fail only on errors)
         run: |
           # Run pylint with errors-only flag to only fail on real errors (E and F level)
