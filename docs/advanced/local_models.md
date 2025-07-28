@@ -32,7 +32,7 @@ litellm.completion(
 ??? note "Complete model class"
 
     - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py)
-    - [API reference](../reference/models/litellm_model.md)
+    - [API reference](../reference/models/litellm.md)
 
     ```python
     --8<-- "src/minisweagent/models/litellm_model.py"
