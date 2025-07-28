@@ -77,6 +77,14 @@ jobs:
       if: ${{ github.event.inputs.test_pypi != 'true' }}
       run: pipx run mini-swe-agent --help
 
+    - name: Test uvx run mini-swe-agent --help (Test PyPI)
+      if: ${{ github.event.inputs.test_pypi == 'true' }}
+      run: uvx run --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ mini-swe-agent --help
+
+    - name: Test uvx run mini-swe-agent --help (PyPI)
+      if: ${{ github.event.inputs.test_pypi != 'true' }}
+      run: uvx run mini-swe-agent --help
+
     - name: Test pip install and CLI commands (Test PyPI)
       if: ${{ github.event.inputs.test_pypi == 'true' }}
       run: |
