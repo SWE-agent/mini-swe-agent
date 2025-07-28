@@ -101,21 +101,21 @@ class ConfirmationPromptContainer(Container):
         self._confirmation_result: str | None = None
 
         # Create UI elements
-        self.rejection_input = TextArea(id="rejection-input")
-        self.rejection_help = Static(
+        self.text_input = TextArea(id="rejection-input")
+        self.text_input_help = Static(
             "Press [bold]Ctrl+D[/bold] to submit rejection message",
             id="rejection-help",
             classes="rejection-help",
         )
-        self.rejection_container = Container(self.rejection_input, self.rejection_help, id="rejection-container")
-        self.rejection_container.display = False
+        self.text_input_container = Container(self.text_input, self.text_input_help, id="rejection-container")
+        self.text_input_container.display = False
 
     def compose(self) -> ComposeResult:
         yield Static(
             "Press [bold]ENTER[/bold] to confirm action or [bold]BACKSPACE[/bold] to reject (or [bold]y[/bold] to toggle YOLO mode)",
             classes="confirmation-prompt",
         )
-        yield self.rejection_container
+        yield self.text_input_container
 
     def request_confirmation(self, action: str) -> str | None:
         """Request confirmation for an action. Returns rejection message or None."""
@@ -132,8 +132,8 @@ class ConfirmationPromptContainer(Container):
         self._pending_action = None
         self.display = False
         self.rejecting = False
-        self.rejection_container.display = False
-        self.rejection_input.text = ""
+        self.text_input_container.display = False
+        self.text_input.text = ""
         # Reset agent state to RUNNING after confirmation is completed
         if rejection_message is None:
             self._app.agent_state = "RUNNING"
@@ -143,7 +143,7 @@ class ConfirmationPromptContainer(Container):
     def on_key(self, event: Key) -> None:
         if self.rejecting and event.key == "ctrl+d":
             event.prevent_default()
-            self._complete_confirmation(self.rejection_input.text)
+            self._complete_confirmation(self.text_input.text)
             return
         if not self.rejecting:
             if event.key == "enter":
@@ -152,8 +152,8 @@ class ConfirmationPromptContainer(Container):
             elif event.key == "backspace":
                 event.prevent_default()
                 self.rejecting = True
-                self.rejection_container.display = True
-                self.rejection_input.focus()
+                self.text_input_container.display = True
+                self.text_input.focus()
 
 
 class AgentApp(App):

@@ -233,7 +233,7 @@ async def test_confirmation_rejection_with_message():
         assert app.confirmation_container.rejecting is True
 
         # Type rejection message
-        app.confirmation_container.rejection_input.text = "Not safe to run"  # type: ignore[attr-defined]
+        app.confirmation_container.text_input.text = "Not safe to run"  # type: ignore[attr-defined]
 
         # Submit rejection
         await pilot.press("ctrl+d")
