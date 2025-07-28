@@ -692,6 +692,8 @@
       
         
       
+        
+      
     
     
     
@@ -739,6 +741,29 @@
   
   <span class="md-ellipsis">
     Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/local_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Local models
     
   </span>
   
@@ -1683,7 +1708,8 @@ If you truly want to get the maximal package, you can run <code>pip install -e '
 <h2 id="models">Models</h2>
 <div class="admonition tip">
 <p class="admonition-title">TLDR: Models should be set up the first time you run <code>mini</code></p>
-<p>If you missed the setup wizard, just run <code>mini-extra config setup</code>, or take a look at the following section.</p>
+<p>If you missed the setup wizard, just run <code>mini-extra config setup</code>, or take a look at the following section.
+If you want to use local models, please check this <a href="../advanced/local_models/">guide</a>.</p>
 </div>
 <h3 id="setting-api-keys">Setting API keys</h3>
 <p>There are several ways to set your API keys:</p>
@@ -1700,6 +1726,7 @@ If you truly want to get the maximal package, you can run <code>pip install -e '
 <li><code>mini-extra config setup</code> can set the default model for you</li>
 <li>In addition, you can set the default model with <code>mini-extra config set MSWEA_MODEL_NAME &lt;model-name&gt;</code>, by editing the global <a href="../advanced/configuration/">config file</a> (shortcut: <code>mini-extra config edit</code>), or by setting the <code>MSWEA_MODEL_NAME</code> environment variable.</li>
 <li>You can also set your model in a config file (key <code>model_name</code> under <code>model</code>).</li>
+<li>If you want to use local models, please check this <a href="../advanced/local_models/">guide</a>.</li>
 </ul>
 <div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
