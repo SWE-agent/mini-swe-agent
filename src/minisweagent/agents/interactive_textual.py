@@ -206,6 +206,14 @@ class SmartInputContainer(Container):
             event.stop()
             text = self._multi_input.text.strip()
             self._complete_input(text)
+            return
+
+        if event.key == "escape":
+            event.prevent_default()
+            event.stop()
+            self.can_focus = False
+            self._app.set_focus(None)
+            return
 
 
 class AgentApp(App):
