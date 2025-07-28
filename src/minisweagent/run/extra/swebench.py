@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 
-"""Run mini-SWE-agent on SWEBench instances.
-
-[not dim]
-More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/swebench/[/bold green]
-[/not dim]
-"""
+"""Run mini-SWE-agent on SWE-bench instances in batch mode."""
+# Read this first: https://mini-swe-agent.com/latest/usage/swebench/  (usage docs)
 
 import concurrent.futures
 import json
@@ -27,6 +23,13 @@ from minisweagent.environments.docker import DockerEnvironment
 from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from minisweagent.run.utils.save import save_traj
+
+_HELP_TEXT = """Run mini-SWE-agent on SWEBench instances.
+
+[not dim]
+More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/swebench/[/bold green]
+[/not dim]
+"""
 
 app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
@@ -168,7 +171,7 @@ def filter_instances(
     return instances
 
 
-@app.command()
+@app.command(help=_HELP_TEXT)
 def main(
     subset: str = typer.Option("lite", "--subset", help="SWEBench subset to use or path to a dataset"),
     split: str = typer.Option("dev", "--split", help="Dataset split"),
@@ -183,7 +186,6 @@ def main(
         builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
     ),
 ) -> None:
-    """Run mini-SWE-agent on SWEBench instances"""
     dataset_path = DATASET_MAPPING.get(subset, subset)
     print(f"Loading dataset {dataset_path}, split {split}...")
     instances = list(load_dataset(dataset_path, split=split))

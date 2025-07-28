@@ -1,16 +1,7 @@
 #!/usr/bin/env python3
 
-"""Run mini-SWE-agent in your local environment.
-
-[not dim]
-There are two different user interfaces:
-
-[bold green]mini[/bold green] Simple REPL-style interface
-[bold green]mini -v[/bold green] Pager-style interface (Textual)
-
-More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/mini/[/bold green]
-[/not dim]
-"""
+"""Run mini-SWE-agent in your local environment. This is the default executable `mini`."""
+# Read this first: https://mini-swe-agent.com/latest/usage/mini/  (usage)
 
 import os
 from pathlib import Path
@@ -36,6 +27,17 @@ DEFAULT_CONFIG = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "
 console = Console(highlight=False)
 app = typer.Typer(rich_markup_mode="rich")
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "mini_task_history.txt"))
+_HELP_TEXT = """Run mini-SWE-agent in your local environment.
+
+[not dim]
+There are two different user interfaces:
+
+[bold green]mini[/bold green] Simple REPL-style interface
+[bold green]mini -v[/bold green] Pager-style interface (Textual)
+
+More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/mini/[/bold green]
+[/not dim]
+"""
 
 
 def run_interactive(model: Model, env: Environment, agent_config: dict, task: str, output: Path | None = None) -> Any:
@@ -68,7 +70,7 @@ def run_textual(model: Model, env: Environment, agent_config: dict, task: str, o
             save_traj(agent_app.agent, output, exit_status=agent_app.exit_status, result=agent_app.result)
 
 
-@app.command(help=__doc__)
+@app.command(help=_HELP_TEXT)
 def main(
     visual: bool = typer.Option(False, "-v", "--visual", help="Use visual (pager-style) UI (Textual)"),
     model_name: str | None = typer.Option(
