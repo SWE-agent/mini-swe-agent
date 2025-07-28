@@ -1,12 +1,13 @@
 Screen {
     layout: grid;
     grid-size: 1;
-    grid-rows: 1fr 8 1fr;
+    grid-rows: auto 1fr auto;
 }
 
 #main {
     height: 100%;
     padding: 1;
+    layout: vertical;
 }
 
 Footer {
@@ -16,6 +17,32 @@ Footer {
 
 #content {
     height: auto;
+    min-height: 0;
+}
+
+#input-container {
+    height: auto;
+    margin-top: 0;
+    padding: 0;
+    min-height: 0;
+}
+
+#multi-input {
+    height: auto;
+    max-height: 20;
+    min-height: 3;
+}
+
+.prompt-display {
+    margin-bottom: 1;
+    padding: 0 1;
+    text-style: bold;
+}
+
+.mode-indicator {
+    margin-bottom: 1;
+    padding: 0 1;
+    color: $accent;
 }
 
 .message-container {

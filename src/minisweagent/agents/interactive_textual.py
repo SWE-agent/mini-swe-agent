@@ -107,7 +107,7 @@ class SmartInputContainer(Container):
         # Create UI elements
         self.prompt_display = Static("", id="prompt-display", classes="prompt-display")
         self.mode_indicator = Static(
-            "Single-line mode (Enter to submit, Escape to switch to multi-line)",
+            "Single-line mode ([bold]Enter[/bold] to submit, [bold]Escape[/bold] to switch to multi-line)",
             id="mode-indicator",
             classes="mode-indicator",
         )
@@ -120,7 +120,9 @@ class SmartInputContainer(Container):
         )
 
     def compose(self) -> ComposeResult:
-        yield self.input_elements_container
+        with Vertical(classes="message-container"):
+            yield Static("[yellow]USER INPUT REQUESTED[/]", classes="message-header")
+            yield self.input_elements_container
 
     def on_mount(self) -> None:
         """Initialize the widget state."""
@@ -184,14 +186,18 @@ class SmartInputContainer(Container):
             self.single_input.display = False
             self.multi_input.display = True
 
-            self.mode_indicator.update("Multi-line mode (Ctrl+D to submit, Escape to switch to single-line)")
+            self.mode_indicator.update(
+                "Multi-line mode ([bold]Ctrl+D[/bold] to submit, [bold]Escape[/bold] to switch to single-line)"
+            )
         else:
             print("Enable Singleline mode")
             self.single_input.value = self.multi_input.text
             self.multi_input.display = False
             self.single_input.display = True
 
-            self.mode_indicator.update("Single-line mode (Enter to submit, Escape to switch to multi-line)")
+            self.mode_indicator.update(
+                "Single-line mode ([bold]Enter[/bold] to submit, [bold]Escape[/bold] to switch to multi-line)"
+            )
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         """Handle single-line input submission."""
@@ -269,8 +275,9 @@ class AgentApp(App):
         yield Header()
         with Container(id="main"):
             with self._vscroll:
-                yield Vertical(id="content")
-            yield self.input_container
+                with Vertical(id="content"):
+                    pass
+                yield self.input_container
         yield Footer()
 
     def on_mount(self) -> None:
