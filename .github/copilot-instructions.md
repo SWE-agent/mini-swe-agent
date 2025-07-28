@@ -1,9 +1,3 @@
----
-description:
-globs:
-alwaysApply: true
----
-
 # Style guide
 
 1. Target python 3.10 or higher
@@ -49,3 +43,4 @@ assert result == b
 # good
 assert func() == b
 ```
+
