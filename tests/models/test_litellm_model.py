@@ -48,11 +48,14 @@ def test_model_registry_loading():
         registry_path = f.name
 
     try:
-        with patch("litellm.register_model") as mock_register:
-            _model = LitellmModel(model_name="my-custom-model", litellm_model_registry=registry_path)
+        with patch("litellm.utils.register_model") as mock_register:
+            _model = LitellmModel(model_name="my-custom-model", litellm_model_registry=Path(registry_path))
 
             # Verify register_model was called with the correct data
             mock_register.assert_called_once_with(model_costs)
+    except Exception as e:
+        print(e)
+        raise e
     finally:
         Path(registry_path).unlink()
 
