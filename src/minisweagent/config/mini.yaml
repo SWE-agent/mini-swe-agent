@@ -25,7 +25,7 @@ agent:
     ## Recommended Workflow
     1. Analyze the codebase by finding and reading relevant files.
        If present, you might want to take a look at the following files that set additional guidelines
-       for your work: CLAUDE.md, .cursor/rules/<relevant rules>
+       for your work: CLAUDE.md, .cursor/rules/<relevant rules>, .github/copilot-instructions.md
     2. Create a script to reproduce the issue
     3. Edit the source code to resolve the issue
     4. Verify your fix works by running your script again
