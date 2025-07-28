@@ -140,6 +140,9 @@ agent:
     <action>
     ```
     </response_example>
+
+    Note: In rare cases, if you need to reference a similar format in your command, you might have
+    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```bash.
   step_limit: 0.
   cost_limit: 3.
   mode: confirm
