@@ -191,7 +191,7 @@ class SmartInputContainer(Container):
             )
         else:
             print("Enable Singleline mode")
-            self.single_input.value = self.multi_input.text
+            self.single_input.value = "".join(self.multi_input.text.splitlines()[:1])
             self.multi_input.display = False
             self.single_input.display = True
 
