@@ -185,6 +185,8 @@ class AgentApp(App):
         self.exit_status: str | None = None
         self.result: str | None = None
 
+        self._vscroll = VerticalScroll()
+
     # --- Basics ---
 
     @property
@@ -197,13 +199,13 @@ class AgentApp(App):
         """Set current step index, automatically clamping to valid bounds."""
         if value != self._i_step:
             self._i_step = max(0, min(value, self.n_steps - 1))
-            self.query_one(VerticalScroll).scroll_to(y=0, animate=False)
+            self._vscroll.scroll_to(y=0, animate=False)
             self.update_content()
 
     def compose(self) -> ComposeResult:
         yield Header()
         with Container(id="main"):
-            with VerticalScroll():
+            with self._vscroll:
                 yield Vertical(id="content")
             yield self.confirmation_container
         yield Footer()
@@ -217,8 +219,7 @@ class AgentApp(App):
     # --- Reacting to events ---
 
     def on_message_added(self) -> None:
-        vs = self.query_one(VerticalScroll)
-        auto_follow = self.i_step == self.n_steps - 1 and vs.scroll_target_y <= 1
+        auto_follow = self.i_step == self.n_steps - 1 and self._vscroll.scroll_target_y <= 1
         self.n_steps = len(_messages_to_steps(self.agent.messages))
         self.update_content()
         if auto_follow:
@@ -310,9 +311,7 @@ class AgentApp(App):
         self.i_step = self.n_steps - 1
 
     def action_scroll_down(self) -> None:
-        vs = self.query_one(VerticalScroll)
-        vs.scroll_to(y=vs.scroll_target_y + 15)
+        self._vscroll.scroll_to(y=self._vscroll.scroll_target_y + 15)
 
     def action_scroll_up(self) -> None:
-        vs = self.query_one(VerticalScroll)
-        vs.scroll_to(y=vs.scroll_target_y - 15)
+        self._vscroll.scroll_to(y=self._vscroll.scroll_target_y - 15)
