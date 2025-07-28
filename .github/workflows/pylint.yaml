@@ -44,8 +44,8 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Install dependencies
         run: |
-            uv pip install -e '.[full]'
-            uv pip install pylint
+            uv pip install --python ${Python_ROOT_DIR} -e '.[full]'
+            uv pip install --python ${Python_ROOT_DIR} pylint
       - name: Run pylint (fail only on errors)
         run: |
           # Run pylint with errors-only flag to only fail on real errors (E and F level)

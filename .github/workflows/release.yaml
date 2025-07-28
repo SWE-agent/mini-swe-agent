@@ -30,7 +30,7 @@ jobs:
         curl -LsSf https://astral.sh/uv/install.sh | sh
     - name: Install build dependencies
       run: |
-        uv pip install build twine
+        uv pip install --python ${Python_ROOT_DIR} build twine
 
     - name: Build package
       run: python -m build
@@ -66,7 +66,7 @@ jobs:
     - name: Install uv and pipx
       run: |
         curl -LsSf https://astral.sh/uv/install.sh | sh
-        uv pip install pipx
+        uv pip install --python ${Python_ROOT_DIR} pipx
 
     - name: Wait for package availability
       run: |
@@ -84,7 +84,7 @@ jobs:
     - name: Test pip install and CLI commands (Test PyPI)
       if: ${{ github.event.inputs.test_pypi == 'true' }}
       run: |
-        uv pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ mini-swe-agent
+        uv pip install --python ${Python_ROOT_DIR} --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ mini-swe-agent
         mini --help
         mini-extra --help
         mini-e --help
@@ -92,7 +92,7 @@ jobs:
     - name: Test pip install and CLI commands (PyPI)
       if: ${{ github.event.inputs.test_pypi != 'true' }}
       run: |
-        uv pip install mini-swe-agent
+        uv pip install --python ${Python_ROOT_DIR} mini-swe-agent
         mini --help
         mini-extra --help
         mini-e --help
