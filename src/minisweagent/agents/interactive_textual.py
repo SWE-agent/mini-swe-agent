@@ -197,20 +197,16 @@ class SmartInputContainer(Container):
         """Handle key events."""
         if event.key == "ctrl+t" and not self._multiline_mode:
             event.prevent_default()
-            event.stop()
             self.action_toggle_mode()
             return
 
         if self._multiline_mode and event.key == "ctrl+d":
             event.prevent_default()
-            event.stop()
-            text = self._multi_input.text.strip()
-            self._complete_input(text)
+            self._complete_input(self._multi_input.text.strip())
             return
 
         if event.key == "escape":
             event.prevent_default()
-            event.stop()
             self.can_focus = False
             self._app.set_focus(None)
             return
