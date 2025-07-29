@@ -159,8 +159,11 @@ class SmartInputContainer(Container):
         self._multiline_mode = False
         self._update_mode_display()
         self._app.agent_state = "RUNNING"
-        self._input_event.set()
         self._app.update_content()
+        # Reset scroll position to bottom since input container disappearing changes layout
+        # somehow scroll_to doesn't work.
+        self._app._vscroll.scroll_y = 0
+        self._input_event.set()
 
     def action_toggle_mode(self) -> None:
         """Switch from single-line to multi-line mode (one-way only)."""
@@ -276,7 +279,7 @@ class AgentApp(App):
     # --- Reacting to events ---
 
     def on_message_added(self) -> None:
-        auto_follow = self.i_step == self.n_steps - 1 and self._vscroll.scroll_target_y <= 1
+        auto_follow = self.i_step == self.n_steps - 1 and self._vscroll.scroll_y <= 1
         self.n_steps = len(_messages_to_steps(self.agent.messages))
         self.update_content()
         if auto_follow:
