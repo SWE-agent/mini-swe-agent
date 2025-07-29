@@ -5,7 +5,7 @@
     Check out the [control flow guide](../../advanced/control_flow.md) for a visual explanation of the agent's control flow following this picture:
 
     <div align="center">
-        <img src="../../../assets/mini_control_flow.svg" alt="Agent control flow" style="max-width: 500px;" />
+        <img src="{{ 'assets/mini_control_flow.svg' | url }}" alt="Agent control flow" style="max-width: 500px;" />
     </div>
 
 ::: minisweagent.agents.default.AgentConfig

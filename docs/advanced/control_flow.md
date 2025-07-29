@@ -8,7 +8,7 @@
 The following diagram shows the control flow of the mini agent:
 
 <div align="center">
-    <img src="../../assets/mini_control_flow.svg" alt="Agent control flow" style="max-width: 600px;" />
+    <img src="{{ 'assets/mini_control_flow.svg' | url }}" alt="Agent control flow" style="max-width: 600px;" />
 </div>
 
 And here is the code that implements it:
