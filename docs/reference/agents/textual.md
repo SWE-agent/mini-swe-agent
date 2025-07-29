@@ -10,7 +10,7 @@
 
 ::: minisweagent.agents.interactive_textual.AgentApp
 
-::: minisweagent.agents.interactive_textual.ConfirmationPromptContainer
+::: minisweagent.agents.interactive_textual.SmartInputContainer
 
 ::: minisweagent.agents.interactive_textual.AddLogEmitCallback
 
