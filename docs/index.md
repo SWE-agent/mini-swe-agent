@@ -94,6 +94,7 @@ Here's some details:
     - A trajectory browser
 
 </details>
+<!-- markdown-link-check-disable -->
 <table>
 <tr>
 <td width="50%">
@@ -170,7 +171,7 @@ agent.run("Write a sudoku game")</code></pre>
 </td>
 </tr>
 </table>
-
+<!-- markdown-link-check-enable -->
 
 
 ## Continue reading:
