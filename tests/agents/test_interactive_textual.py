@@ -1,9 +1,10 @@
 import logging
+import threading
 from unittest.mock import Mock
 
 import pytest
 
-from minisweagent.agents.interactive_textual import AddLogEmitCallback, AgentApp
+from minisweagent.agents.interactive_textual import AddLogEmitCallback, AgentApp, SmartInputContainer
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models.test_models import DeterministicModel
 
@@ -481,3 +482,391 @@ async def test_yolo_mode_confirms_pending_action():
 
         # The action should have been executed, so we should see completion
         assert app.agent_state == "STOPPED" or "Step 3/3" in app.title
+
+
+# ===== SmartInputContainer Unit Tests =====
+
+from textual.app import App
+from textual.containers import Container
+
+
+class DummyTestApp(App):
+    """Minimal test app for providing Textual context."""
+
+    def __init__(self):
+        super().__init__()
+        self.agent_state = "RUNNING"
+        self.call_from_thread = Mock()
+        self.update_content = Mock()
+        self.set_focus = Mock()
+        self._vscroll = Mock()
+        self._vscroll.scroll_y = 0
+
+    def compose(self):
+        yield Container()
+
+
+def create_mock_smart_input_container(app):
+    """Create SmartInputContainer with proper mocking to avoid type issues."""
+    from typing import cast
+
+    # Create actual SmartInputContainer instance but use typing.cast to bypass type check
+    return SmartInputContainer(cast("AgentApp", app))  # type: ignore
+
+
+async def test_smart_input_container_initialization():
+    """Test SmartInputContainer initialization and default state."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = create_mock_smart_input_container(app)
+
+        assert container._app == app
+        assert container._multiline_mode is False
+        assert container.can_focus is True
+        assert container.display is False
+        assert container.pending_prompt is None
+        assert container._input_result is None
+        assert isinstance(container._input_event, threading.Event)
+
+
+async def test_smart_input_container_compose():
+    """Test that compose method exists and can be called in proper context."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = create_mock_smart_input_container(app)
+
+        # Since compose requires proper Textual context, we just verify the method exists
+        # and has the expected signature
+        assert hasattr(container, "compose")
+        assert callable(container.compose)
+
+        # Test that the container has the expected child widgets
+        assert hasattr(container, "_prompt_display")
+        assert hasattr(container, "_mode_indicator")
+        assert hasattr(container, "_single_input")
+        assert hasattr(container, "_multi_input")
+        assert hasattr(container, "_input_elements_container")
+
+
+async def test_smart_input_container_request_input():
+    """Test request_input method behavior."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = create_mock_smart_input_container(app)
+
+        # Start request_input in a thread since it blocks
+        test_prompt = "Test prompt"
+        result_container = {}
+
+        def request_thread():
+            result_container["result"] = container.request_input(test_prompt)
+
+        thread = threading.Thread(target=request_thread)
+        thread.start()
+
+        # Give thread time to start and set up
+        await asyncio.sleep(0.01)
+
+        # Check that prompt was set
+        assert container.pending_prompt == test_prompt
+        assert app.call_from_thread.called
+
+        # Complete the input with empty string (confirmation)
+        container._complete_input("")
+
+        # Wait for thread to complete
+        thread.join(timeout=1)
+
+        # Check results
+        assert result_container["result"] == ""
+        assert container.pending_prompt is None
+        assert container.display is False
+
+
+async def test_smart_input_container_complete_input():
+    """Test _complete_input method resets state correctly."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Set up initial state
+        container.pending_prompt = "Test prompt"
+        container._multiline_mode = True
+        container.display = True
+        container._single_input.value = "test"
+        container._multi_input.text = "test\nmultiline"
+
+        # Complete input
+        test_result = "User input result"
+        container._complete_input(test_result)
+
+        # Check state reset
+        assert container._input_result == test_result
+        assert container.pending_prompt is None
+        assert container.display is False
+        assert container._single_input.value == ""
+        assert container._multi_input.text == ""
+        assert container._multiline_mode is False
+        assert app.agent_state == "RUNNING"
+        assert app.update_content.called
+        assert app._vscroll.scroll_y == 0
+
+
+async def test_smart_input_container_toggle_mode():
+    """Test switching from single-line to multi-line mode."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Set up single-line mode with content
+        container.pending_prompt = "Test prompt"
+        container._multiline_mode = False
+        container._single_input.value = "test input"
+
+        # Mock focus method
+        container.on_focus = Mock()
+
+        # Toggle to multiline mode
+        container.action_toggle_mode()
+
+        # Check mode changed
+        assert container._multiline_mode is True
+        assert container.on_focus.called
+
+
+async def test_smart_input_container_toggle_mode_blocked():
+    """Test that toggle mode is blocked when no pending prompt or already in multiline."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Test with no pending prompt
+        container.pending_prompt = None
+        initial_mode = container._multiline_mode
+        container.action_toggle_mode()
+        assert container._multiline_mode == initial_mode
+
+        # Test when already in multiline mode
+        container.pending_prompt = "Test prompt"
+        container._multiline_mode = True
+        container.action_toggle_mode()
+        assert container._multiline_mode is True
+
+
+async def test_smart_input_container_single_input_submission():
+    """Test single-line input submission."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Set up for single-line mode
+        container._multiline_mode = False
+        container.pending_prompt = "Test prompt"
+
+        # Mock the complete_input method
+        container._complete_input = Mock()
+
+        # Create mock input event
+        mock_input = Mock()
+        mock_input.id = "single-input"
+        mock_input.value = "  test input  "
+
+        mock_event = Mock()
+        mock_event.input = mock_input
+
+        # Trigger submission
+        container.on_input_submitted(mock_event)
+
+        # Check that complete_input was called with stripped text
+        container._complete_input.assert_called_once_with("test input")
+
+
+async def test_smart_input_container_single_input_submission_multiline_mode():
+    """Test that single-line submission is ignored in multiline mode."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Set up for multiline mode
+        container._multiline_mode = True
+        container._complete_input = Mock()
+
+        # Create mock input event
+        mock_input = Mock()
+        mock_input.id = "single-input"
+        mock_input.value = "test input"
+
+        mock_event = Mock()
+        mock_event.input = mock_input
+
+        # Trigger submission
+        container.on_input_submitted(mock_event)
+
+        # Check that complete_input was NOT called
+        container._complete_input.assert_not_called()
+
+
+async def test_smart_input_container_key_events():
+    """Test key event handling for various scenarios."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Mock methods
+        container.action_toggle_mode = Mock()
+        container._complete_input = Mock()
+
+        # Test Ctrl+T in single-line mode
+        container._multiline_mode = False
+        mock_event = Mock()
+        mock_event.key = "ctrl+t"
+        mock_event.prevent_default = Mock()
+
+        container.on_key(mock_event)
+
+        assert mock_event.prevent_default.called
+        assert container.action_toggle_mode.called
+
+        # Reset mocks
+        container.action_toggle_mode.reset_mock()
+        mock_event.prevent_default.reset_mock()
+
+        # Test Ctrl+D in multiline mode
+        container._multiline_mode = True
+        container._multi_input.text = "  multiline\ntext  "
+        mock_event.key = "ctrl+d"
+
+        container.on_key(mock_event)
+
+        assert mock_event.prevent_default.called
+        container._complete_input.assert_called_once_with("multiline\ntext")
+
+        # Reset mocks
+        container._complete_input.reset_mock()
+        mock_event.prevent_default.reset_mock()
+
+        # Test Escape key
+        mock_event.key = "escape"
+
+        container.on_key(mock_event)
+
+        assert mock_event.prevent_default.called
+        assert container.can_focus is False
+        app.set_focus.assert_called_once_with(None)
+
+
+async def test_smart_input_container_key_events_no_action():
+    """Test key events that should not trigger any action."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Mock methods
+        container.action_toggle_mode = Mock()
+        container._complete_input = Mock()
+
+        # Test Ctrl+T in multiline mode (should not toggle)
+        container._multiline_mode = True
+        mock_event = Mock()
+        mock_event.key = "ctrl+t"
+        mock_event.prevent_default = Mock()
+
+        container.on_key(mock_event)
+
+        # Should not prevent default or call toggle
+        assert not mock_event.prevent_default.called
+        assert not container.action_toggle_mode.called
+
+        # Test Ctrl+D in single-line mode (should not complete)
+        container._multiline_mode = False
+        mock_event.key = "ctrl+d"
+        mock_event.prevent_default.reset_mock()
+
+        container.on_key(mock_event)
+
+        # Should not prevent default or complete input
+        assert not mock_event.prevent_default.called
+        assert not container._complete_input.called
+
+
+async def test_smart_input_container_update_mode_display():
+    """Test mode display updates correctly."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Mock the display properties and update method
+        container._single_input.display = True
+        container._multi_input.display = True
+        container._mode_indicator.update = Mock()
+
+        # Test single-line mode display
+        container._multiline_mode = False
+        container._update_mode_display()
+
+        assert container._single_input.display is True
+        assert container._multi_input.display is False
+        expected_single_msg = (
+            "Single-line mode ([bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line input)"
+        )
+        container._mode_indicator.update.assert_called_with(expected_single_msg)
+
+        # Reset and test multiline mode display
+        container._mode_indicator.update.reset_mock()
+        container._single_input.value = "test input"
+        container._multiline_mode = True
+        container._update_mode_display()
+
+        assert container._single_input.display is False
+        assert container._multi_input.display is True
+        assert container._multi_input.text == "test input"
+        expected_multi_msg = "Multi-line mode ([bold]Ctrl+D[/bold] to submit)"
+        container._mode_indicator.update.assert_called_with(expected_multi_msg)
+
+
+async def test_smart_input_container_on_focus():
+    """Test focus behavior in different modes."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Mock focus methods
+        container._single_input.focus = Mock()
+        container._multi_input.focus = Mock()
+
+        # Test focus in single-line mode
+        container._multiline_mode = False
+        container.on_focus()
+
+        assert container._single_input.focus.called
+        assert not container._multi_input.focus.called
+
+        # Reset and test focus in multiline mode
+        container._single_input.focus.reset_mock()
+        container._multi_input.focus.reset_mock()
+        container._multiline_mode = True
+        container.on_focus()
+
+        assert not container._single_input.focus.called
+        assert container._multi_input.focus.called
+
+
+async def test_smart_input_container_on_mount():
+    """Test widget initialization on mount."""
+    app = DummyTestApp()
+    async with app.run_test():
+        container = SmartInputContainer(app)
+
+        # Mock update method
+        container._update_mode_display = Mock()
+
+        # Trigger mount
+        container.on_mount()
+
+        # Check initialization
+        assert container._multi_input.display is False
+        assert container._update_mode_display.called
+
+
+# Import asyncio for the async tests
+import asyncio
