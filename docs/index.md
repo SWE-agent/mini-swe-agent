@@ -1,5 +1,5 @@
 <div align="center">
-<img src="{{ \'assets/mini-swe-agent-banner.svg\' | url }}" alt="mini-swe-agent banner" style="height: 7em"/>
+<img src="{{ 'assets/mini-swe-agent-banner.svg' | url }}" alt="mini-swe-agent banner" style="height: 7em"/>
 
 <h1 style="margin-bottom: 1ex;">The 100 line AI agent that's actually useful</h1>
 
