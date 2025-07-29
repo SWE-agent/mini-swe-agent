@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - check-links*
   schedule:
     - cron: "0 0 1 * *"
 
