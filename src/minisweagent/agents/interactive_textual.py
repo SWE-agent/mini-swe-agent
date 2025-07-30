@@ -22,7 +22,7 @@ from textual.css.query import NoMatches
 from textual.events import Key
 from textual.widgets import Footer, Header, Input, Static, TextArea
 
-from minisweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException
+from minisweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException, Submitted
 
 
 @dataclass
@@ -31,6 +31,8 @@ class TextualAgentConfig(AgentConfig):
     """Mode for action execution: 'confirm' requires user confirmation, 'yolo' executes immediately."""
     whitelist_actions: list[str] = field(default_factory=list)
     """Never confirm actions that match these regular expressions."""
+    confirm_exit: bool = True
+    """If the agent wants to finish, do we ask for confirmation from user?"""
 
 
 class TextualAgent(DefaultAgent):
@@ -70,6 +72,18 @@ class TextualAgent(DefaultAgent):
             if result:  # Non-empty string means rejection
                 raise NonTerminatingException(f"Command not executed: {result}")
         return super().execute_action(action)
+
+    def has_finished(self, output: dict[str, str]):
+        try:
+            return super().has_finished(output)
+        except Submitted as e:
+            if self.config.confirm_exit:
+                if new_task := self.app.input_container.request_input(
+                    "[bold green]Agent wants to finish.[/bold green] "
+                    "[green]Type a comment to give it a new task or press enter to quit.\n"
+                ).strip():
+                    raise NonTerminatingException(f"The user added a new task: {new_task}")
+            raise e
 
 
 class AddLogEmitCallback(logging.Handler):
