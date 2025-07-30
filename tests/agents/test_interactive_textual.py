@@ -30,17 +30,37 @@ def get_screen_text(app: AgentApp) -> str:
     return "\n".join(text_parts)
 
 
+async def type_text(pilot, text: str):
+    """Type text character by character using pilot.press() to simulate real user input.
+
+    This properly tests focus behavior and input handling, unlike setting .value directly.
+    """
+    for char in text:
+        # Handle special characters that need key names instead of character literals
+        if char == " ":
+            await pilot.press("space")
+        elif char == "\n":
+            await pilot.press("enter")
+        elif char == "\t":
+            await pilot.press("tab")
+        else:
+            # For regular characters, pilot.press() can handle them directly
+            await pilot.press(char)
+
+
 @pytest.mark.slow
 async def test_everything_integration_test():
     app = AgentApp(
         model=DeterministicModel(
             outputs=[
                 "/sleep 0.5",
-                "THOUGHTT 1\n ```bash\necho '1'\n```",
-                "THOUGHTT 2\n ```bash\necho '2'\n```",
-                "THOUGHTT 3\n ```bash\necho '3'\n```",
-                "THOUGHTT 4\n ```bash\necho '4'\n```",
-                "FINISHING\n ```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```",
+                "THOUGHTT 1\n ```bash\necho '1'\n```",  # step 2
+                "THOUGHTT 2\n ```bash\necho '2'\n```",  # step 3
+                "THOUGHTT 3\n ```bash\necho '3'\n```",  # step 4
+                "THOUGHTT 4\n ```bash\necho '4'\n```",  # step 5
+                "THOUGHTT 5\n ```bash\necho '5'\n```",  # step 6
+                "THOUGHTT 6\n ```bash\necho '6'\n```",  # step 7
+                "FINISHING\n ```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```",  # step 8
             ],
         ),
         env=LocalEnvironment(),
@@ -93,35 +113,44 @@ async def test_everything_integration_test():
         assert "echo '2'" in get_screen_text(app)
 
         print(">>> Reject with message - type rejection reason and submit")
-        app.input_container._single_input.value = "Not safe to execute"
+        await type_text(pilot, "Not safe to execute")
         await pilot.press("enter")
         print(get_screen_text(app))
         await pilot.pause(0.3)
-        print("--- if we didn't follow, here's some clues")
-        print(
-            f"{pilot.app.i_step=}, {pilot.app.n_steps=}, {pilot.app._vscroll.scroll_target_y=}, {pilot.app._vscroll.scroll_y=}"
-        )  # type: ignore
         assert "Step 4/4" in app.title
         assert "echo '3'" in get_screen_text(app)
-        # Enter yolo mode -- first escape from input focus
+
+        print(">>> Reject with message multiline input")
+        await pilot.press("ctrl+t")
+        await type_text(pilot, "Not safe to execute\n")
+        await pilot.press("ctrl+d")
+        print(get_screen_text(app))
+        await pilot.pause(0.3)
+        assert "Step 5/5" in app.title
+        assert "echo '4'" in get_screen_text(app)
+
+        print(">>> Enter yolo mode & confirm")
         await pilot.press("escape")
         assert pilot.app.agent.config.mode == "confirm"  # type: ignore[attr-defined]
         await pilot.press("y")
         assert pilot.app.agent.config.mode == "yolo"  # type: ignore[attr-defined]
         await pilot.press("enter")  # still need to confirm once for step 3
-        # next action will be executed automatically, so we see step 5 next
+        # next action will be executed automatically, so we see step 6 next
         await pilot.pause(0.2)
-        assert "Step 6/6" in app.title
+        assert "Step 8/8" in app.title
         assert "echo 'MINI_SWE_AGENT_FINAL_OUTPUT'" in get_screen_text(app)
         # await pilot.pause(0.1)
         assert "STOPPED" in app.title
         assert "press enter" not in get_screen_text(app).lower()
-        # More navigation
+
+        print(">>> Directly navigate to step 1")
         await pilot.press("0")
-        assert "Step 1/6" in app.title
+        assert "Step 1/8" in app.title
         assert "You are a helpful assistant that can do anything." in get_screen_text(app)
+
+        print(">>> Directly navigate to step 8")
         await pilot.press("$")
-        assert "Step 6/6" in app.title
+        assert "Step 8/8" in app.title
         assert "MINI_SWE_AGENT_FINAL_OUTPUT" in get_screen_text(app)
 
 
@@ -246,7 +275,7 @@ async def test_confirmation_rejection_with_message():
             await pilot.pause(0.1)
 
         # Type rejection message and submit
-        app.input_container._single_input.value = "Not safe to run"
+        await type_text(pilot, "Not safe to run")
         await pilot.press("enter")
         await pilot.pause(0.1)
 
