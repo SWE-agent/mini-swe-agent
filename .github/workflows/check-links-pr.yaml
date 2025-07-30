@@ -7,7 +7,6 @@ jobs:
     - uses: actions/checkout@v4
     - uses: tcort/github-action-markdown-link-check@v1
       with:
-        use-quiet-mode: 'yes'
         use-verbose-mode: 'yes'
         check-modified-files-only: 'yes'
         base-branch: 'main'

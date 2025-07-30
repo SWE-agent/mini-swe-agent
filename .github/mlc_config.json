@@ -10,19 +10,7 @@
       "pattern": ".*localhost.*"
     },
     {
-      "pattern": ".*#swerex.*"
-    },
-    {
-      "pattern": ".* url.*"
-    },
-    {
-      "pattern": ".*\\{\\{.*"
-    },
-    {
-      "pattern": ".*\\\\{\\\\{.*"
-    },
-    {
-      "pattern": ".*{{.*"
+      "pattern": "^(?!https).*(?<!\\.md)$"
     }
   ]
 }

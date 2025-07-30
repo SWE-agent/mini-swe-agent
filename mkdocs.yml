@@ -1,5 +1,5 @@
 site_name: mini-SWE-agent documentation
-# site_url: https://mini-swe-agent.com
+site_url: https://mini-swe-agent.com
 theme:
   name: material
   icon:

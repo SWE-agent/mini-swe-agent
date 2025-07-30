@@ -1,5 +1,5 @@
 <div align="center">
-<img src="{{ 'assets/mini-swe-agent-banner.svg' | url }}" alt="mini-swe-agent banner" style="height: 7em"/>
+<img src="assets/mini-swe-agent-banner.svg" alt="mini-swe-agent banner" style="height: 7em"/>
 
 <h1 style="margin-bottom: 1ex;">The 100 line AI agent that's actually useful</h1>
 
@@ -97,10 +97,10 @@ Here's some details:
 <table>
 <tr>
 <td width="50%">
-<a href="{{ "usage/mini/" | url }}"><strong>Simple UI</strong></a> (<code>mini</code>)
+<a href="usage/mini"><strong>Simple UI</strong></a> (<code>mini</code>)
 </td>
 <td>
-<a href="{{ "usage/mini_v/" | url }}"><strong>Visual UI</strong></a> (<code>mini -v</code>)
+<a href="usage/mini_v"><strong>Visual UI</strong></a> (<code>mini -v</code>)
 </td>
 </tr>
 <tr>
@@ -121,10 +121,10 @@ Here's some details:
 </tr>
 <tr>
 <td>
-<a href="{{ "usage/swebench/" | url }}"><strong>Batch inference</strong></a>
+<a href="usage/swebench/"><strong>Batch inference</strong></a>
 </td>
 <td>
-<a href="{{ "usage/inspector/" | url }}"><strong>Trajectory browser</strong></a>
+<a href="usage/inspector/"><strong>Trajectory browser</strong></a>
 </td>
 </tr>
 <tr>
@@ -145,7 +145,7 @@ Here's some details:
 </tr>
 <tr>
 <td>
-<a href="{{ "advanced/cookbook/" | url }}"><strong>Python bindings</strong></a>
+<a href="advanced/cookbook/"><strong>Python bindings</strong></a>
 </td>
 <td>
 <a href="https://mini-swe-agent.com"><strong>More in the docs</strong></a>
@@ -161,11 +161,11 @@ agent.run("Write a sudoku game")</code></pre>
 </td>
 <td>
 <ul>
-<li><a href="{{ "quickstart/" | url }}">Quick start</a></li>
-<li><a href="{{ "usage/mini/" | url }}"><code>mini</code></a></li>
-<li><a href="{{ "faq/" | url }}">FAQ</a></li>
-<li><a href="{{ "advanced/configuration/" | url }}">Configuration</a></li>
-<li><a href="{{ "advanced/cookbook/" | url }}">Power up</a></li>
+<li><a href="quickstart">Quick start</a></li>
+<li><a href="usage/mini"><code>mini</code></a></li>
+<li><a href="faq">FAQ</a></li>
+<li><a href="advanced/configuration">Configuration</a></li>
+<li><a href="advanced/cookbook">Power up</a></li>
 </ul>
 </td>
 </tr>
@@ -175,7 +175,7 @@ agent.run("Write a sudoku game")</code></pre>
 ## Continue reading:
 
 <div class="grid cards">
-  <a href="{{ "quickstart/" | url }}" class="nav-card-link">
+  <a href="quickstart/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">launch</span>
@@ -185,7 +185,7 @@ agent.run("Write a sudoku game")</code></pre>
     </div>
   </a>
 
-  <a href="{{ "usage/mini/" | url }}" class="nav-card-link">
+  <a href="usage/mini/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">flash_on</span>
@@ -195,7 +195,7 @@ agent.run("Write a sudoku game")</code></pre>
     </div>
   </a>
 
-  <a href="{{ "usage/mini_v/" | url }}" class="nav-card-link">
+  <a href="usage/mini_v/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">visibility</span>
@@ -205,7 +205,7 @@ agent.run("Write a sudoku game")</code></pre>
     </div>
   </a>
 
-  <a href="{{ "faq/" | url }}" class="nav-card-link">
+  <a href="faq/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">help</span>
@@ -215,7 +215,7 @@ agent.run("Write a sudoku game")</code></pre>
     </div>
   </a>
 
-  <a href="{{ "advanced/configuration/" | url }}" class="nav-card-link">
+  <a href="advanced/configuration/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">settings</span>
@@ -225,7 +225,7 @@ agent.run("Write a sudoku game")</code></pre>
     </div>
   </a>
 
-  <a href="{{ "advanced/cookbook/" | url }}" class="nav-card-link">
+  <a href="advanced/cookbook/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">fitness_center</span>

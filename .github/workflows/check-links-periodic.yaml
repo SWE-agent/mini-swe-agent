@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - check-links*
+      - fix-links*
   schedule:
     - cron: "0 0 1 * *"
 
@@ -16,6 +17,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: tcort/github-action-markdown-link-check@v1
         with:
-          use-quiet-mode: 'yes'
           use-verbose-mode: 'yes'
           config-file: .github/mlc_config.json
