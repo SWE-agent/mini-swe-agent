@@ -44,6 +44,12 @@ class TextualAgent(DefaultAgent):
         if self.app.agent_state != "UNINITIALIZED":
             self.app.call_from_thread(self.app.on_message_added)
 
+    def query(self) -> dict:
+        if self.config.mode == "human":
+            human_input = self.app.input_container.request_input("Enter your command:")
+            return {"content": f"\n```bash\n{human_input}\n```"}
+        return super().query()
+
     def run(self, task: str) -> tuple[str, str]:
         try:
             exit_status, result = super().run(task)
@@ -93,7 +99,7 @@ def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
 class SmartInputContainer(Container):
     def __init__(self, app: "AgentApp"):
         """Smart input container supporting single-line and multi-line input modes."""
-        super().__init__(id="input-container")
+        super().__init__(classes="smart-input-container")
         self._app = app
         self._multiline_mode = False
         self.can_focus = True
@@ -109,8 +115,8 @@ class SmartInputContainer(Container):
             id="mode-indicator",
             classes="mode-indicator",
         )
-        self._single_input = Input(placeholder="Type your input...", id="single-input")
-        self._multi_input = TextArea("", show_line_numbers=False, id="multi-input")
+        self._single_input = Input(placeholder="Type your input...")
+        self._multi_input = TextArea("", show_line_numbers=False, classes="multi-input")
 
         self._input_elements_container = Container(
             self._prompt_display,
@@ -192,7 +198,7 @@ class SmartInputContainer(Container):
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         """Handle single-line input submission."""
-        if not self._multiline_mode and event.input.id == "single-input":
+        if not self._multiline_mode:
             text = event.input.value.strip()
             self._complete_input(text)
 
@@ -226,6 +232,7 @@ class AgentApp(App):
         Binding("q", "quit", "Quit"),
         Binding("y", "yolo", "Switch to YOLO Mode"),
         Binding("c", "confirm", "Switch to Confirm Mode"),
+        Binding("u", "human", "Switch to Human Mode"),
     ]
 
     def __init__(self, model, env, task: str, **kwargs):
@@ -351,6 +358,10 @@ class AgentApp(App):
         self.agent.config.mode = "yolo"
         self.input_container._complete_input("")
         self.notify("YOLO mode enabled - actions will execute immediately")
+
+    def action_human(self):
+        self.agent.config.mode = "human"
+        self.notify("Human mode enabled - you can now type commands directly")
 
     def action_confirm(self):
         self.agent.config.mode = "confirm"

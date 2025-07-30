@@ -20,14 +20,14 @@ Footer {
     min-height: 0;
 }
 
-#input-container {
+.smart-input-container {
     height: auto;
     margin-top: 0;
     padding: 0;
     min-height: 0;
 }
 
-#multi-input {
+.multi-input {
     height: auto;
     max-height: 20;
     min-height: 3;
@@ -73,29 +73,6 @@ Header.running {
     background: $error;
 }
 
-.confirmation-modal {
-    layout: vertical;
-    background: $surface;
-    margin: 1 4;
-    min-width: 40;
-    padding: 1;
-    border: tall $primary;
-    height: auto;
-}
-
-.modal-title {
-    text-align: center;
-    text-style: bold;
-    margin-bottom: 1;
-}
-
-.modal-content {
-    margin: 1 2;
-    min-height: 1;
-    max-height: 10;
-    overflow-y: auto;
-}
-
 .button-container {
     layout: horizontal;
     align-horizontal: center;
@@ -105,54 +82,4 @@ Header.running {
 .button-container Button {
     margin: 0 1;
     min-width: 10;
-}
-
-.confirmation-container {
-    background: $boost;
-    border: heavy $primary;
-    padding: 1;
-    margin: 1;
-}
-
-.confirmation-header {
-    color: $warning;
-    text-style: bold;
-}
-
-.command-to-confirm {
-    background: $surface;
-    margin: 1 0;
-    padding: 1;
-    color: $text;
-}
-
-#confirmation-input {
-    margin-top: 1;
-}
-
-.confirmation-prompt {
-    background: $boost;
-    border: heavy $warning;
-    padding: 1;
-    margin: 1;
-    text-align: center;
-    color: $warning;
-}
-
-.confirmation-prompt:focus {
-    border: heavy $accent;
-    background: $panel;
-}
-
-#rejection-input {
-    margin: 1;
-}
-
-.rejection-help {
-    background: $boost;
-    border: heavy $warning;
-    padding: 1;
-    margin: 1;
-    text-align: center;
-    color: $warning;
 }
