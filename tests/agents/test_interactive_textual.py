@@ -68,6 +68,7 @@ async def test_everything_integration_test():
         mode="confirm",
         cost_limit=10.0,
     )
+    assert app.agent.config.confirm_exit
     async with app.run_test() as pilot:
         assert app.agent_state == "RUNNING"
         assert "You are a helpful assistant that can do anything." in get_screen_text(app)
@@ -134,16 +135,18 @@ async def test_everything_integration_test():
         assert pilot.app.agent.config.mode == "confirm"  # type: ignore[attr-defined]
         await pilot.press("y")
         assert pilot.app.agent.config.mode == "yolo"  # type: ignore[attr-defined]
-        await pilot.press("enter")  # still need to confirm once for step 3
+        # await pilot.press("enter")  # still need to confirm once for step 3
         # next action will be executed automatically, so we see step 6 next
         await pilot.pause(0.2)
         assert "Step 8/8" in app.title
         assert "echo 'MINI_SWE_AGENT_FINAL_OUTPUT'" in get_screen_text(app)
         # await pilot.pause(0.1)
-        assert "STOPPED" in app.title
-        assert "press enter" not in get_screen_text(app).lower()
+        # assert "press enter" not in get_screen_text(app).lower()
+        print(get_screen_text(app))
+        assert "AWAITING_INPUT" in app.title  # still waiting for confirmation of exit
 
         print(">>> Directly navigate to step 1")
+        await pilot.press("escape")
         await pilot.press("0")
         assert "Step 1/8" in app.title
         assert "You are a helpful assistant that can do anything." in get_screen_text(app)
@@ -337,6 +340,7 @@ async def test_agent_successful_completion_notification():
         env=LocalEnvironment(),
         task="Completion test",
         mode="yolo",
+        confirm_exit=False,
     )
 
     # Mock the notify method to capture calls
@@ -410,6 +414,7 @@ async def test_scrolling_behavior():
         env=LocalEnvironment(),
         task="Scroll test",
         mode="yolo",
+        confirm_exit=False,
     )
 
     async with app.run_test() as pilot:
