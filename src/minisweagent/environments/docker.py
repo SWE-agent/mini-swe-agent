@@ -24,6 +24,8 @@ class DockerEnvironmentConfig:
     """Path to the docker/container executable."""
     run_args: list[str] = field(default_factory=list)
     """Additional arguments to pass to the docker/container executable."""
+    container_timeout: str = "2h"
+    """Max duration to keep container running. Uses the same format as the sleep command."""
 
 
 class DockerEnvironment:
@@ -49,7 +51,7 @@ class DockerEnvironment:
             *self.config.run_args,
             self.config.image,
             "sleep",
-            "infinity",  # Keep container running
+            self.config.container_timeout,
         ]
         print(f"Starting container with command: {shlex.join(cmd)}")
         result = subprocess.run(
