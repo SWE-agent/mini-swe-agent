@@ -2,15 +2,21 @@
 The system has a root agent that completes the conversation on its own or delegate tasks to subagents.
 
 The semantics of the agents is meant to be simple: when working on a task, if the root agent wants to, it can
-sychronously delegate a task to a subagent, one at a time. All agents use the same LM and mode (human, confirm, yolo).
+synchronously delegate a task to a subagent, one at a time. All agents use the same LM and mode (human, confirm, yolo).
 """
 
-from dataclasses import dataclass, field
-from minisweagent.agents.interactive import InteractiveAgent, InteractiveAgentConfig, console, prompt_session
-from minisweagent.agents.default import LimitsExceeded
-from minisweagent.agents.utils.subagent_loader import load_subagent_prompts, load_subagent_registry, parse_subagent_spawn_command
-from typing import Optional
 import re
+from dataclasses import dataclass, field
+from typing import Optional
+
+from minisweagent.agents.default import LimitsExceeded
+from minisweagent.agents.interactive import InteractiveAgent, InteractiveAgentConfig, console, prompt_session
+from minisweagent.agents.utils.subagent_loader import (
+    load_subagent_prompts,
+    load_subagent_registry,
+    parse_subagent_spawn_command,
+)
+
 
 @dataclass
 class ManagerAgentConfig(InteractiveAgentConfig):
@@ -18,16 +24,17 @@ class ManagerAgentConfig(InteractiveAgentConfig):
     """Registry of available subagents loaded from .claude/agents directory."""
     agent_id: str = "ROOT"
     """Unique identifier for this agent instance."""
-    parent_agent: Optional['Manager'] = None
+    parent_agent: Optional["Manager"] = None
     """Reference to parent agent if this is a child agent."""
+
 
 class Manager(InteractiveAgent):
     SPAWN_TRIGGER = "MINI_SWE_AGENT_SPAWN_CHILD"
-    
+
     def __init__(self, *args, config_class=ManagerAgentConfig, **kwargs):
         super().__init__(*args, config_class=config_class, **kwargs)
-        self.agent_id = kwargs.get('agent_id', 'ROOT')
-        self.parent_agent = kwargs.get('parent_agent', None)
+        self.agent_id = kwargs.get("agent_id", "ROOT")
+        self.parent_agent = kwargs.get("parent_agent", None)
         self._child_counter = 0
 
     @property
@@ -36,7 +43,7 @@ class Manager(InteractiveAgent):
         if self.parent_agent:
             return self.parent_agent.mode
         return self.config.mode
-    
+
     @mode.setter
     def mode(self, value):
         """Setting mode affects the root"""
@@ -58,45 +65,35 @@ class Manager(InteractiveAgent):
     def _spawn_and_run_child(self, task: str, subagent_name: str) -> dict:
         """Spawn child agent and run it"""
         self._child_counter += 1
-        
+
         child_id = f"{self.agent_id}::{self._child_counter}-{subagent_name}"
         console.print(f"\n[bold cyan]━━━ Spawning {subagent_name} as {child_id} ━━━[/bold cyan]")
-        
+
         console.print(f"[cyan]Task: {task}[/cyan]\n")
-        
+
         child_kwargs = {
-            'agent_id': child_id,
-            'parent_agent': self,
+            "agent_id": child_id,
+            "parent_agent": self,
         }
-        
+
         # Load subagent config directly
         subagent_prompts = load_subagent_prompts()
         if subagent_name in subagent_prompts:
             subagent_data = subagent_prompts[subagent_name]
-            child_kwargs['system_template'] = f"{self.config.system_template}\n\n{subagent_data['content']}"
+            child_kwargs["system_template"] = f"{self.config.system_template}\n\n{subagent_data['content']}"
         else:
             raise ValueError(f"Subagent {subagent_name} not found in registry")
-        
-        child = Manager(
-            self.model, 
-            self.env, 
-            **child_kwargs
-        )
-        
+
+        child = Manager(self.model, self.env, **child_kwargs)
+
         exit_status, exit_message = child.run(task)
-        
+
         console.print(f"\n[bold cyan]━━━ {child_id} finished: {exit_status} ━━━[/bold cyan]")
-        
+
         if exit_status == "Submitted":
-            return {
-                "output": f"Agent {child_id} returned:\n{exit_message}",
-                "exit_code": 0
-            }
+            return {"output": f"Agent {child_id} returned:\n{exit_message}", "exit_code": 0}
         else:
-            return {
-                "output": f"Agent {child_id} failed with {exit_status}: {exit_message}",
-                "exit_code": 1
-            }
+            return {"output": f"Agent {child_id} failed with {exit_status}: {exit_message}", "exit_code": 1}
 
     def add_message(self, role: str, content: str):
         """Show agent ID in UI"""
@@ -147,11 +144,8 @@ class Manager(InteractiveAgent):
             return self._prompt_and_handle_special(prompt)
         if user_input in self._MODE_COMMANDS_MAPPING:
             if self.mode == self._MODE_COMMANDS_MAPPING[user_input]:
-                return self._prompt_and_handle_special(
-                    f"[bold red]Already in {self.mode} mode.[/bold red]\n{prompt}"
-                )
+                return self._prompt_and_handle_special(f"[bold red]Already in {self.mode} mode.[/bold red]\n{prompt}")
             self.mode = self._MODE_COMMANDS_MAPPING[user_input]
             console.print(f"Switched to [bold green]{self.mode}[/bold green] mode (applies to all agents).")
             return user_input
         return user_input
-

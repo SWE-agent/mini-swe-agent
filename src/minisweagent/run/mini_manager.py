@@ -12,14 +12,13 @@ from prompt_toolkit.shortcuts import PromptSession
 from rich.console import Console
 
 from minisweagent import Environment, Model, global_config_dir
-from minisweagent.agents.manager import Manager
 from minisweagent.agents.interactive_textual import AgentApp
+from minisweagent.agents.manager import Manager
 from minisweagent.config import builtin_config_dir, get_config_path
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models import get_model
 from minisweagent.run.extra.config import configure_if_first_time
 from minisweagent.run.utils.save import save_traj
-from minisweagent.agents.utils.subagent_loader import load_subagent_registry
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "manager.yaml"))
 console = Console(highlight=False)

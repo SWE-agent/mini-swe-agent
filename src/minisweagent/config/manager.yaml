@@ -22,11 +22,11 @@ agent:
       <subagent_registry>
         Available subagents:
         {{subagent_registry}}
-      
+
         To delegate a task to a specific subagent, use:
         echo "MINI_SWE_AGENT_SPAWN_CHILD::subagent-name
         Task description for the subagent"
-      
+
         You MUST specify a subagent name. Generic spawning is not allowed.
       </subagent_registry>
     </manager_system_template>
