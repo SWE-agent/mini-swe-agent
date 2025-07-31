@@ -1,7 +1,7 @@
 # Todos
 
-* spawn a new agent when it `echo`es a predefined value, like `echo MINI_SWE_AGENT_FINAL_OUTPUT`
-* the new agent has a different and fresh context
+* [x] spawn a new agent when it `echo`es a predefined value, like `echo MINI_SWE_AGENT_FINAL_OUTPUT`
+* [x] the new agent has a different and fresh context
 * [x] write to the same console (I want an indicator on the UI to know which agent I'm talking to - root / subagent)
 * [x] changing mode on the parent changes the child
 * [x] subagent registry is properly interpolated in system templates
