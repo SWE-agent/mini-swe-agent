@@ -5,16 +5,27 @@ The semantics of the agents is meant to be simple: when working on a task, if th
 sychronously delegate a task to a subagent, one at a time. All agents use the same LM and mode (human, confirm, yolo).
 """
 
+from dataclasses import dataclass, field
 from minisweagent.agents.interactive import InteractiveAgent, InteractiveAgentConfig, console, prompt_session
 from minisweagent.agents.default import LimitsExceeded
+from minisweagent.agents.utils.subagent_loader import load_subagent_prompts, load_subagent_registry, parse_subagent_spawn_command
+from typing import Optional
 import re
 
+@dataclass
+class ManagerAgentConfig(InteractiveAgentConfig):
+    subagent_registry: str = field(default_factory=load_subagent_registry)
+    """Registry of available subagents loaded from .claude/agents directory."""
+    agent_id: str = "ROOT"
+    """Unique identifier for this agent instance."""
+    parent_agent: Optional['Manager'] = None
+    """Reference to parent agent if this is a child agent."""
 
 class Manager(InteractiveAgent):
     SPAWN_TRIGGER = "MINI_SWE_AGENT_SPAWN_CHILD"
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, *args, config_class=ManagerAgentConfig, **kwargs):
+        super().__init__(*args, config_class=config_class, **kwargs)
         self.agent_id = kwargs.get('agent_id', 'ROOT')
         self.parent_agent = kwargs.get('parent_agent', None)
         self._child_counter = 0
@@ -36,28 +47,40 @@ class Manager(InteractiveAgent):
 
     def execute_action(self, action: dict) -> dict:
         """Detect spawn trigger and delegate to child"""
+        output = super().execute_action(action)
         if self.SPAWN_TRIGGER in action.get("action", ""):
-            output = super().execute_action(action)
-            lines = output.get("output", "").strip().split('\n')
-            if lines and lines[0] == self.SPAWN_TRIGGER:
-                child_task = '\n'.join(lines[1:]) if len(lines) > 1 else "Complete the delegated task"
-                return self._spawn_and_run_child(child_task)
-            return output
-        return super().execute_action(action)
+            output_text = output.get("output", "")
+            subagent_name, child_task = parse_subagent_spawn_command(output_text)
+            return self._spawn_and_run_child(child_task, subagent_name)
 
-    def _spawn_and_run_child(self, task: str) -> dict:
+        return output
+
+    def _spawn_and_run_child(self, task: str, subagent_name: str) -> dict:
         """Spawn child agent and run it"""
         self._child_counter += 1
-        child_id = f"{self.agent_id}::S{self._child_counter}"
         
-        console.print(f"\n[bold cyan]━━━ Spawning {child_id} ━━━[/bold cyan]")
+        child_id = f"{self.agent_id}::{self._child_counter}-{subagent_name}"
+        console.print(f"\n[bold cyan]━━━ Spawning {subagent_name} as {child_id} ━━━[/bold cyan]")
+        
         console.print(f"[cyan]Task: {task}[/cyan]\n")
+        
+        child_kwargs = {
+            'agent_id': child_id,
+            'parent_agent': self,
+        }
+        
+        # Load subagent config directly
+        subagent_prompts = load_subagent_prompts()
+        if subagent_name in subagent_prompts:
+            subagent_data = subagent_prompts[subagent_name]
+            child_kwargs['system_template'] = f"{self.config.system_template}\n\n{subagent_data['content']}"
+        else:
+            raise ValueError(f"Subagent {subagent_name} not found in registry")
         
         child = Manager(
             self.model, 
             self.env, 
-            agent_id=child_id,
-            parent_agent=self
+            **child_kwargs
         )
         
         exit_status, exit_message = child.run(task)
@@ -92,12 +115,6 @@ class Manager(InteractiveAgent):
 
     def query(self) -> dict:
         """Use inherited mode"""
-        if self.mode == "human":
-            match command := self._prompt_and_handle_special("[bold yellow]>[/bold yellow] "):
-                case "/y" | "/c":
-                    pass
-                case _:
-                    return {"content": f"\n```bash\n{command}\n```"}
         try:
             with console.status("Waiting for the LM to respond..."):
                 return super(InteractiveAgent, self).query()

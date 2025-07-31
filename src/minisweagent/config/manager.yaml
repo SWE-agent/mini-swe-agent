@@ -20,9 +20,14 @@ agent:
 
     <manager_system_template>
       <subagent_registry>
-        <tdd-reviewer>
-          
-        </tdd-reviewer>
+        Available subagents:
+        {{subagent_registry}}
+      
+        To delegate a task to a specific subagent, use:
+        echo "MINI_SWE_AGENT_SPAWN_CHILD::subagent-name
+        Task description for the subagent"
+      
+        You MUST specify a subagent name. Generic spawning is not allowed.
       </subagent_registry>
     </manager_system_template>
   instance_template: |
@@ -111,6 +116,15 @@ agent:
 
     ```bash
     anything
+    ```
+
+    ### Delegate to a subagent:
+
+    ```bash
+    # Example: Ask TDD reviewer to review your code changes
+    echo "MINI_SWE_AGENT_SPAWN_CHILD::tdd-reviewer
+    Please review the changes I made to the authentication module
+    and ensure they follow TDD principles"
     ```
   action_observation_template: |
     <returncode>{{output.returncode}}</returncode>

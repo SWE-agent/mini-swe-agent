@@ -72,7 +72,7 @@ class DefaultAgent:
     def run(self, task: str) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
         self.messages = []
-        self.add_message("system", self.config.system_template)
+        self.add_message("system", self.render_template(self.config.system_template))
         self.add_message("user", self.render_template(self.config.instance_template, task=task))
         while True:
             try:

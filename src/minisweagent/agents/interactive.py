@@ -35,8 +35,8 @@ class InteractiveAgentConfig(AgentConfig):
 class InteractiveAgent(DefaultAgent):
     _MODE_COMMANDS_MAPPING = {"/u": "human", "/c": "confirm", "/y": "yolo"}
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, config_class=InteractiveAgentConfig, **kwargs)
+    def __init__(self, *args, config_class=InteractiveAgentConfig, **kwargs):
+        super().__init__(*args, config_class=config_class, **kwargs)
         self.cost_last_confirmed = 0.0
 
     def add_message(self, role: str, content: str):
