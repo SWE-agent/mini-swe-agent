@@ -61,7 +61,6 @@ class TextualAgent(DefaultAgent):
             self.app.call_from_thread(self.app.on_agent_finished, "ERROR", result)
             return "ERROR", result
         else:
-            print("calling on_agent_finished with", exit_status, result)
             self.app.call_from_thread(self.app.on_agent_finished, exit_status, result)
         return exit_status, result
 
@@ -79,14 +78,11 @@ class TextualAgent(DefaultAgent):
             return super().has_finished(output)
         except Submitted as e:
             if self.config.confirm_exit:
-                print("confirming exit")
                 if new_task := self.app.input_container.request_input(
                     "[bold green]Agent wants to finish.[/bold green] "
                     "[green]Type a comment to give it a new task or press enter to quit.\n"
                 ).strip():
                     raise NonTerminatingException(f"The user added a new task: {new_task}")
-                print("no new task")
-            print("raising Submitted")
             raise e
 
 
@@ -174,7 +170,6 @@ class SmartInputContainer(Container):
 
     def _complete_input(self, input_text: str):
         """Internal method to complete the input process."""
-        print("completing input with", input_text)
         self._input_result = input_text
         self.pending_prompt = None
         self._prompt_display.update("")

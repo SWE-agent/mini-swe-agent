@@ -45,8 +45,9 @@ Useful switches:
 
 - `confirm` (`c`): The LM proposes an action and the user is prompted to confirm (press Enter)) or reject (enter a rejection message))
 - `yolo` (`y`): The action from the LM is executed immediately without confirmation
+- `human` (`u`): The user is prompted to enter a command directly
 
-You can switch between the modes at any time by pressing the `c` or `y` keys.
+You can switch between the modes at any time by pressing the `c`, `y`, or `u` keys.
 
 `mini -v` starts in `confirm` mode by default. To start in `yolo` mode, you can add `-y`/`--yolo` to the command line.
 
