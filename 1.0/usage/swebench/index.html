@@ -1670,6 +1670,11 @@ but by the slowest-to-evaluate instance in SWE-bench).</p>
 </div>
 <h2 id="faq">FAQ</h2>
 <blockquote>
+<p>Can I set global cost limits?</p>
+</blockquote>
+<p>Yes, you can set global cost limits with the <code>MSWEA_GLOBAL_CALL_LIMIT</code> and <code>MSWEA_GLOBAL_COST_LIMIT</code> environment variables/global config.
+See <a href="../../advanced/configuration/">configuration</a> for more details.</p>
+<blockquote>
 <p>What happens to uncompleted tasks when I abort with KeyboardInterrupt?</p>
 </blockquote>
 <p>Trajectories are only saved upon completion, so most likely, you can just rerun the script to complete the tasks next time.
