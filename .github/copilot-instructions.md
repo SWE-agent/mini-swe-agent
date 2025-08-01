@@ -13,6 +13,7 @@
 11. In most cases, avoid initializing variables just to pass them to a function. Instead just pass the expression to the function directly.
 12. Not every exception has to be caught. Exceptions are a good way to show problems to a user.
 13. This repository rewards minimal code. Try to be as concise as possible.
+14. Do NOT warn about print messages in tests, print statements in tests are OK!
 
 Here's an example for rule 11:
 
@@ -32,6 +33,7 @@ Class(func())
 3. Avoid writing trivial tests. Every test should test for at least one, preferably multiple points of failure
 4. Avoid splitting up code in multiple lines like this: `a=func()\n assert a=b`. Instead, just do `assert func() == b`
 5. The first argument to `pytest.mark.parametrize` should be a tuple (not a string! not a list!), the second argument must be a list (not a tuple!).
+6. Do NOT warn about print messages in tests, print statements in tests are OK!
 
 Here's an example for rule 4:
 
