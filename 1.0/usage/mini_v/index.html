@@ -628,6 +628,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#miscellaneous-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Miscellaneous tips
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#implementation" class="md-nav__link">
     <span class="md-ellipsis">
       Implementation
@@ -1622,6 +1631,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#miscellaneous-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Miscellaneous tips
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#implementation" class="md-nav__link">
     <span class="md-ellipsis">
       Implementation
@@ -1709,6 +1727,11 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
 <p>How can I select/copy text on the screen?</p>
 </blockquote>
 <p>Hold down the <code>Alt</code>/<code>Option</code> key and use the mouse to select the text.</p>
+<h2 id="miscellaneous-tips">Miscellaneous tips</h2>
+<ul>
+<li><code>mini</code> saves the full history of your last run to your global config directory.
+  The path to the directory is printed when you start <code>mini</code>.</li>
+</ul>
 <h2 id="implementation">Implementation</h2>
 <details class="note">
 <summary>Default config</summary>
@@ -1910,6 +1933,7 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.utils.save</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_traj</span>
 
 <span class="n">DEFAULT_CONFIG</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MINI_CONFIG_PATH&quot;</span><span class="p">,</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">&quot;mini.yaml&quot;</span><span class="p">))</span>
+<span class="n">DEFAULT_OUTPUT</span> <span class="o">=</span> <span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">&quot;last_mini_run.traj.json&quot;</span>
 <span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">(</span><span class="n">rich_markup_mode</span><span class="o">=</span><span class="s2">&quot;rich&quot;</span><span class="p">)</span>
 <span class="n">prompt_session</span> <span class="o">=</span> <span class="n">PromptSession</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">FileHistory</span><span class="p">(</span><span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">&quot;mini_task_history.txt&quot;</span><span class="p">))</span>
@@ -1969,7 +1993,7 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
     <span class="n">yolo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;-y&quot;</span><span class="p">,</span> <span class="s2">&quot;--yolo&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Run without confirmation&quot;</span><span class="p">),</span>
     <span class="n">cost_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="s2">&quot;--cost-limit&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Cost limit. Set to 0 to disable.&quot;</span><span class="p">),</span>
     <span class="n">config_spec</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_CONFIG</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to config file&quot;</span><span class="p">),</span>
-    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output file&quot;</span><span class="p">),</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_OUTPUT</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output trajectory file&quot;</span><span class="p">),</span>
     <span class="n">exit_immediately</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>
         <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;--exit-immediately&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Exit immediately when the agent wants to finish instead of prompting.&quot;</span>
     <span class="p">),</span>
