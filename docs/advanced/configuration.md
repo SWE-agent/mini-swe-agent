@@ -10,7 +10,7 @@
 
 !!! tip "Setting up models"
 
-    This is also covered in the [quickstart guide](../quickstart.md).
+    Setting up models is also covered in the [quickstart guide](../quickstart.md).
 
 All global configuration can be either set as environment variables, or in the `.env` file (the exact location is printed when you run `mini`).
 Environment variables take precedence over variables set in the `.env` file.
@@ -46,7 +46,19 @@ You can also edit the `.env` file directly and we provide a helper function for 
 mini-extra config edit
 ```
 
+To set environment variables (recommended for temporary experiemntation or API keys):
+
+```bash
+export KEY="value"
+# windows:
+setx KEY "value"
+```
+
 ### Models and keys
+
+!!! tip "See also"
+
+    Read the [quickstart guide](../quickstart.md) first—it already covers most of this.
 
 ```bash
 # Default model name

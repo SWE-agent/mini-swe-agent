@@ -135,6 +135,61 @@ There are several ways to set your API keys:
 * If you only use a single model, you can also set `MSWEA_MODEL_API_KEY` (as environment variable or in the config file). This takes precedence over all other keys.
 * If you run several agents in parallel, see our note about rotating anthropic keys [here](advanced/configuration.md).
 
+??? note "All the API key names"
+
+    Here's a list of all the API key names available in `litellm`:
+
+    ```
+    ALEPH_ALPHA_API_KEY
+    ALEPHALPHA_API_KEY
+    ANTHROPIC_API_KEY
+    ANYSCALE_API_KEY
+    AZURE_AI_API_KEY
+    AZURE_API_KEY
+    AZURE_OPENAI_API_KEY
+    BASETEN_API_KEY
+    CEREBRAS_API_KEY
+    CLARIFAI_API_KEY
+    CLOUDFLARE_API_KEY
+    CO_API_KEY
+    CODESTRAL_API_KEY
+    COHERE_API_KEY
+    DATABRICKS_API_KEY
+    DEEPINFRA_API_KEY
+    DEEPSEEK_API_KEY
+    FEATHERLESS_AI_API_KEY
+    FIREWORKS_AI_API_KEY
+    FIREWORKS_API_KEY
+    FIREWORKSAI_API_KEY
+    GEMINI_API_KEY
+    GROQ_API_KEY
+    HUGGINGFACE_API_KEY
+    INFINITY_API_KEY
+    MARITALK_API_KEY
+    MISTRAL_API_KEY
+    NEBIUS_API_KEY
+    NLP_CLOUD_API_KEY
+    NOVITA_API_KEY
+    NVIDIA_NIM_API_KEY
+    OLLAMA_API_KEY
+    OPENAI_API_KEY
+    OPENAI_LIKE_API_KEY
+    OPENROUTER_API_KEY
+    OR_API_KEY
+    PALM_API_KEY
+    PERPLEXITYAI_API_KEY
+    PREDIBASE_API_KEY
+    PROVIDER_API_KEY
+    REPLICATE_API_KEY
+    TOGETHERAI_API_KEY
+    VOLCENGINE_API_KEY
+    VOYAGE_API_KEY
+    WATSONX_API_KEY
+    WX_API_KEY
+    XAI_API_KEY
+    XINFERENCE_API_KEY
+    ```
+
 ### Selecting a model
 
 * All command line interfaces allow you to set the model name with `-m` or `--model`.
