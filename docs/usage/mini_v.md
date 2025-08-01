@@ -56,6 +56,11 @@ You can switch between the modes at any time by pressing the `c` or `y` keys.
 
 Hold down the `Alt`/`Option` key and use the mouse to select the text.
 
+## Miscellaneous tips
+
+- `mini` saves the full history of your last run to your global config directory.
+  The path to the directory is printed when you start `mini`.
+
 ## Implementation
 
 ??? note "Default config"

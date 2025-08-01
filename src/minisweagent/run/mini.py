@@ -24,6 +24,7 @@ from minisweagent.run.extra.config import configure_if_first_time
 from minisweagent.run.utils.save import save_traj
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
+DEFAULT_OUTPUT = global_config_dir / "last_mini_run.traj.json"
 console = Console(highlight=False)
 app = typer.Typer(rich_markup_mode="rich")
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "mini_task_history.txt"))
@@ -83,7 +84,7 @@ def main(
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
     config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
-    output: Path | None = typer.Option(None, "-o", "--output", help="Output file"),
+    output: Path | None = typer.Option(DEFAULT_OUTPUT, "-o", "--output", help="Output trajectory file"),
     exit_immediately: bool = typer.Option(
         False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting."
     ),

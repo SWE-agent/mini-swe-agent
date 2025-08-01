@@ -42,6 +42,11 @@ You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to 
 
 `mini` starts in `confirm` mode by default. To start in `yolo` mode, you can add `-y`/`--yolo` to the command line.
 
+## Miscellaneous tips
+
+- `mini` saves the full history of your last run to your global config directory.
+  The path to the directory is printed when you start `mini`.
+
 ## Implementation
 
 ??? note "Default config"
