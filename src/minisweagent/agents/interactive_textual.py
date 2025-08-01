@@ -65,8 +65,10 @@ class TextualAgent(DefaultAgent):
         return exit_status, result
 
     def execute_action(self, action: dict) -> dict:
-        if self.config.mode == "confirm" and not any(
-            re.match(r, action["action"]) for r in self.config.whitelist_actions
+        if (
+            self.config.mode == "confirm"
+            and action["action"].strip()
+            and not any(re.match(r, action["action"]) for r in self.config.whitelist_actions)
         ):
             result = self.app.input_container.request_input("Press ENTER to confirm or provide rejection reason")
             if result:  # Non-empty string means rejection
@@ -381,9 +383,9 @@ class AgentApp(App):
         self.notify("Human mode enabled - you can now type commands directly")
 
     def action_confirm(self):
-        self.agent.config.mode = "confirm"
         if self.agent.config.mode == "human" and self.input_container.pending_prompt is not None:
             self.input_container._complete_input("")  # just submit blank action
+        self.agent.config.mode = "confirm"
         self.notify("Confirm mode enabled - LM proposes commands and you confirm/reject them")
 
     def action_next_step(self) -> None:
