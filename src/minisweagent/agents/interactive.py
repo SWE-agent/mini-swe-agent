@@ -59,7 +59,9 @@ class InteractiveAgent(DefaultAgent):
                 case "/y" | "/c":  # Just go to the super query, which queries the LM for the next action
                     pass
                 case _:
-                    return {"content": f"\n```bash\n{command}\n```"}
+                    msg = {"content": f"\n```bash\n{command}\n```"}
+                    self.add_message("assistant", msg["content"])
+                    return msg
         try:
             with console.status("Waiting for the LM to respond..."):
                 return super().query()
