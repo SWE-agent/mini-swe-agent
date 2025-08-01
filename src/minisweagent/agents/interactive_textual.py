@@ -375,16 +375,19 @@ class AgentApp(App):
 
     def action_yolo(self):
         self.agent.config.mode = "yolo"
-        self.input_container._complete_input("")
-        self.notify("YOLO mode enabled - actions will execute immediately")
+        if self.input_container.pending_prompt is not None:
+            self.input_container._complete_input("")  # accept
+        self.notify("YOLO mode enabled - LM actions will execute immediately")
 
     def action_human(self):
+        if self.agent.config.mode == "confirm" and self.input_container.pending_prompt is not None:
+            self.input_container._complete_input("User switched to manual mode, this command will be ignored")
         self.agent.config.mode = "human"
         self.notify("Human mode enabled - you can now type commands directly")
 
     def action_confirm(self):
         self.agent.config.mode = "confirm"
-        self.notify("Confirm mode enabled - actions will require confirmation")
+        self.notify("Confirm mode enabled - LM proposes commands and you confirm/reject them")
 
     def action_next_step(self) -> None:
         self.i_step += 1

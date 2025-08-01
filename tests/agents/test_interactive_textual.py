@@ -130,15 +130,35 @@ async def test_everything_integration_test():
         assert "Step 5/5" in app.title
         assert "echo '4'" in get_screen_text(app)
 
+        print(">>> Switch tohuman mode")
+        await pilot.press("escape")
+        await pilot.press("u")
+
+        assert pilot.app.agent.config.mode == "human"  # type: ignore[attr-defined]
+        await pilot.pause(0.2)
+        print(get_screen_text(app))
+        assert "User switched to manual mode, this command will be ignored" in get_screen_text(app)
+        assert "Enter your command" in get_screen_text(app)
+        assert "Step 5/5" in app.title  # we didn't move because waiting for human command
+
+        print(">>> Human gives command")
+        await type_text(pilot, "echo 'human'")
+        await pilot.press("enter")
+        await pilot.pause(0.2)
+        print(get_screen_text(app))
+        assert "Step 6/6" in app.title
+        assert "human" in get_screen_text(app)  # show the observation
+
         print(">>> Enter yolo mode & confirm")
         await pilot.press("escape")
-        assert pilot.app.agent.config.mode == "confirm"  # type: ignore[attr-defined]
+        assert pilot.app.agent.config.mode == "human"  # type: ignore[attr-defined]
         await pilot.press("y")
+        # Note that this will add one step, because we're basically now executing an empty human action
         assert pilot.app.agent.config.mode == "yolo"  # type: ignore[attr-defined]
         # await pilot.press("enter")  # still need to confirm once for step 3
         # next action will be executed automatically, so we see step 6 next
         await pilot.pause(0.2)
-        assert "Step 8/8" in app.title
+        assert "Step 10/10" in app.title
         assert "echo 'MINI_SWE_AGENT_FINAL_OUTPUT'" in get_screen_text(app)
         # await pilot.pause(0.1)
         # assert "press enter" not in get_screen_text(app).lower()
@@ -148,12 +168,12 @@ async def test_everything_integration_test():
         print(">>> Directly navigate to step 1")
         await pilot.press("escape")
         await pilot.press("0")
-        assert "Step 1/8" in app.title
+        assert "Step 1/10" in app.title
         assert "You are a helpful assistant that can do anything." in get_screen_text(app)
 
-        print(">>> Directly navigate to step 8")
+        print(">>> Directly navigate to step 9")
         await pilot.press("$")
-        assert "Step 8/8" in app.title
+        assert "Step 10/10" in app.title
         assert "MINI_SWE_AGENT_FINAL_OUTPUT" in get_screen_text(app)
 
 
