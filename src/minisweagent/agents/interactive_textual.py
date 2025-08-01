@@ -387,6 +387,8 @@ class AgentApp(App):
 
     def action_confirm(self):
         self.agent.config.mode = "confirm"
+        if self.agent.config.mode == "human" and self.input_container.pending_prompt is not None:
+            self.input_container._complete_input("")  # just submit blank action
         self.notify("Confirm mode enabled - LM proposes commands and you confirm/reject them")
 
     def action_next_step(self) -> None:
