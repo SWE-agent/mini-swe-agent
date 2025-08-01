@@ -1719,8 +1719,9 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
 <ul>
 <li><code>confirm</code> (<code>c</code>): The LM proposes an action and the user is prompted to confirm (press Enter)) or reject (enter a rejection message))</li>
 <li><code>yolo</code> (<code>y</code>): The action from the LM is executed immediately without confirmation</li>
+<li><code>human</code> (<code>u</code>): The user is prompted to enter a command directly</li>
 </ul>
-<p>You can switch between the modes at any time by pressing the <code>c</code> or <code>y</code> keys.</p>
+<p>You can switch between the modes at any time by pressing the <code>c</code>, <code>y</code>, or <code>u</code> keys.</p>
 <p><code>mini -v</code> starts in <code>confirm</code> mode by default. To start in <code>yolo</code> mode, you can add <code>-y</code>/<code>--yolo</code> to the command line.</p>
 <h3 id="faq">FAQ</h3>
 <blockquote>
@@ -2017,7 +2018,7 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
     <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;confirm&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">yolo</span> <span class="k">else</span> <span class="s2">&quot;yolo&quot;</span>
     <span class="k">if</span> <span class="n">cost_limit</span><span class="p">:</span>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="s2">&quot;cost_limit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost_limit</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">visual</span> <span class="ow">and</span> <span class="n">exit_immediately</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">exit_immediately</span><span class="p">:</span>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="s2">&quot;confirm_exit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="p">{}))</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">LocalEnvironment</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="p">{}))</span>
