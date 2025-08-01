@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import threading
 from unittest.mock import Mock
@@ -60,7 +61,8 @@ async def test_everything_integration_test():
                 "THOUGHTT 4\n ```bash\necho '4'\n```",  # step 5
                 "THOUGHTT 5\n ```bash\necho '5'\n```",  # step 6
                 "THOUGHTT 6\n ```bash\necho '6'\n```",  # step 7
-                "FINISHING\n ```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```",  # step 8
+                "FINISHING\n ```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```",
+                "FINISHING2\n ```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```",
             ],
         ),
         env=LocalEnvironment(),
@@ -175,6 +177,20 @@ async def test_everything_integration_test():
         await pilot.press("$")
         assert "Step 10/10" in app.title
         assert "MINI_SWE_AGENT_FINAL_OUTPUT" in get_screen_text(app)
+
+        print(">>> Give it a new task")
+        assert "to give it a new task" in get_screen_text(app).lower()
+        await type_text(pilot, "New task")
+        await pilot.press("enter")
+        await pilot.pause(0.2)
+
+        print(">>> Exit confirmation should appear again")
+        assert "Step 11/11" in app.title
+        # assert "New task" in get_screen_text(app)
+        assert "to give it a new task" in get_screen_text(app).lower()
+        await pilot.press("enter")
+        await pilot.pause(0.2)
+        assert "STOPPED" in app.title
 
 
 def test_messages_to_steps_edge_cases():
@@ -920,7 +936,3 @@ async def test_smart_input_container_on_mount():
         # Check initialization
         assert container._multi_input.display is False
         assert container._update_mode_display.called
-
-
-# Import asyncio for the async tests
-import asyncio
