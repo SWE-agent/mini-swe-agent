@@ -23,6 +23,7 @@ def save_traj(
             },
         },
         "messages": [],
+        "trajectory_format": "mini-swe-agent-1",
     } | kwargs
     if agent is not None:
         data["info"]["model_stats"]["instance_cost"] = agent.model.cost
