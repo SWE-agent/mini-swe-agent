@@ -40,6 +40,7 @@ class TextualAgent(DefaultAgent):
         """Connects the DefaultAgent to the TextualApp."""
         self.app = app
         super().__init__(*args, config_class=TextualAgentConfig, **kwargs)
+        self._current_action_from_human = False
 
     def add_message(self, role: str, content: str):
         super().add_message(role, content)
@@ -49,7 +50,9 @@ class TextualAgent(DefaultAgent):
     def query(self) -> dict:
         if self.config.mode == "human":
             human_input = self.app.input_container.request_input("Enter your command:")
+            self._current_action_from_human = True
             return {"content": f"\n```bash\n{human_input}\n```"}
+        self._current_action_from_human = False
         return super().query()
 
     def run(self, task: str) -> tuple[str, str]:
@@ -65,6 +68,8 @@ class TextualAgent(DefaultAgent):
         return exit_status, result
 
     def execute_action(self, action: dict) -> dict:
+        if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
+            raise NonTerminatingException("Command not executed because user switched to manual mode.")
         if (
             self.config.mode == "confirm"
             and action["action"].strip()
