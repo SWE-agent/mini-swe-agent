@@ -1667,7 +1667,7 @@
 <h2 id="environment-variables-and-global-configuration">Environment variables and global configuration</h2>
 <div class="admonition tip">
 <p class="admonition-title">Setting up models</p>
-<p>This is also covered in the <a href="../../quickstart/">quickstart guide</a>.</p>
+<p>Setting up models is also covered in the <a href="../../quickstart/">quickstart guide</a>.</p>
 </div>
 <p>All global configuration can be either set as environment variables, or in the <code>.env</code> file (the exact location is printed when you run <code>mini</code>).
 Environment variables take precedence over variables set in the <code>.env</code> file.</p>
@@ -1689,7 +1689,16 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 <p>You can also edit the <code>.env</code> file directly and we provide a helper function for that:</p>
 <div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span>edit
 </code></pre></div>
+<p>To set environment variables (recommended for temporary experiemntation or API keys):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">KEY</span><span class="o">=</span><span class="s2">&quot;value&quot;</span>
+<span class="c1"># windows:</span>
+setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">&quot;value&quot;</span>
+</code></pre></div>
 <h3 id="models-and-keys">Models and keys</h3>
+<div class="admonition tip">
+<p class="admonition-title">See also</p>
+<p>Read the <a href="../../quickstart/">quickstart guide</a> first—it already covers most of this.</p>
+</div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Default model name</span>
 <span class="c1"># (default: not set)</span>
 <span class="nv">MSWEA_MODEL_NAME</span><span class="o">=</span><span class="s2">&quot;claude-sonnet-4-20250514&quot;</span>
