@@ -132,18 +132,19 @@ class SmartInputContainer(Container):
         self._input_event = threading.Event()
         self._input_result: str | None = None
 
-        self._prompt_display = Static("", id="prompt-display", classes="prompt-display")
-        self._mode_indicator = Static(
-            "Single-line mode ([bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line)",
-            id="mode-indicator",
-            classes="mode-indicator",
+        self._header_display = Static(
+            "USER INPUT REQUESTED", id="input-header-display", classes="message-header input-request-header"
+        )
+        self._hint_text = Static(
+            "[bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line input, [bold]Tab[/bold] to switch focus with other controls",
+            id="hint-text",
+            classes="hint-text",
         )
         self._single_input = Input(placeholder="Type your input...")
         self._multi_input = TextArea("", show_line_numbers=False, classes="multi-input")
 
         self._input_elements_container = Container(
-            self._prompt_display,
-            self._mode_indicator,
+            self._hint_text,
             self._single_input,
             self._multi_input,
             id="input-elements-container",
@@ -151,7 +152,7 @@ class SmartInputContainer(Container):
 
     def compose(self) -> ComposeResult:
         with Vertical(classes="message-container"):
-            yield Static("USER INPUT REQUESTED", classes="message-header input-request-header")
+            yield self._header_display
             yield self._input_elements_container
 
     def on_mount(self) -> None:
@@ -171,7 +172,7 @@ class SmartInputContainer(Container):
         self._input_event.clear()
         self._input_result = None
         self.pending_prompt = prompt
-        self._prompt_display.update(prompt)
+        self._header_display.update(prompt)
         self._update_mode_display()
         self._app.call_from_thread(self._app.update_content)
         self._input_event.wait()
@@ -181,7 +182,7 @@ class SmartInputContainer(Container):
         """Internal method to complete the input process."""
         self._input_result = input_text
         self.pending_prompt = None
-        self._prompt_display.update("")
+        self._header_display.update("USER INPUT REQUESTED")
         self.display = False
         self._single_input.value = ""
         self._multi_input.text = ""
@@ -210,14 +211,9 @@ class SmartInputContainer(Container):
             self._single_input.display = False
             self._multi_input.display = True
 
-            self._mode_indicator.update("Multi-line mode ([bold]Ctrl+D[/bold] to submit)")
         else:
             self._multi_input.display = False
             self._single_input.display = True
-
-            self._mode_indicator.update(
-                "Single-line mode ([bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line input)"
-            )
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         """Handle single-line input submission."""

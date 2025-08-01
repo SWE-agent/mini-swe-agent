@@ -599,25 +599,6 @@ async def test_smart_input_container_initialization():
         assert isinstance(container._input_event, threading.Event)
 
 
-async def test_smart_input_container_compose():
-    """Test that compose method exists and can be called in proper context."""
-    app = DummyTestApp()
-    async with app.run_test():
-        container = create_mock_smart_input_container(app)
-
-        # Since compose requires proper Textual context, we just verify the method exists
-        # and has the expected signature
-        assert hasattr(container, "compose")
-        assert callable(container.compose)
-
-        # Test that the container has the expected child widgets
-        assert hasattr(container, "_prompt_display")
-        assert hasattr(container, "_mode_indicator")
-        assert hasattr(container, "_single_input")
-        assert hasattr(container, "_multi_input")
-        assert hasattr(container, "_input_elements_container")
-
-
 async def test_smart_input_container_request_input():
     """Test request_input method behavior."""
     app = DummyTestApp()
@@ -857,41 +838,6 @@ async def test_smart_input_container_key_events_no_action():
         # Should not prevent default or complete input
         assert not mock_event.prevent_default.called
         assert not container._complete_input.called
-
-
-async def test_smart_input_container_update_mode_display():
-    """Test mode display updates correctly."""
-    app = DummyTestApp()
-    async with app.run_test():
-        container = SmartInputContainer(app)
-
-        # Mock the display properties and update method
-        container._single_input.display = True
-        container._multi_input.display = True
-        container._mode_indicator.update = Mock()
-
-        # Test single-line mode display
-        container._multiline_mode = False
-        container._update_mode_display()
-
-        assert container._single_input.display is True
-        assert container._multi_input.display is False
-        expected_single_msg = (
-            "Single-line mode ([bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line input)"
-        )
-        container._mode_indicator.update.assert_called_with(expected_single_msg)
-
-        # Reset and test multiline mode display
-        container._mode_indicator.update.reset_mock()
-        container._single_input.value = "test input"
-        container._multiline_mode = True
-        container._update_mode_display()
-
-        assert container._single_input.display is False
-        assert container._multi_input.display is True
-        assert container._multi_input.text == "test input"
-        expected_multi_msg = "Multi-line mode ([bold]Ctrl+D[/bold] to submit)"
-        container._mode_indicator.update.assert_called_with(expected_multi_msg)
 
 
 async def test_smart_input_container_on_focus():

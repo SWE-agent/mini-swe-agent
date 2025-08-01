@@ -39,10 +39,10 @@ Footer {
     text-style: bold;
 }
 
-.mode-indicator {
+.hint-text{
     margin-bottom: 1;
     padding: 0 1;
-    color: $accent;
+    color: white;
 }
 
 .message-container {
