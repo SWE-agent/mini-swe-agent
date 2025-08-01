@@ -65,6 +65,11 @@
 
 ## FAQ
 
+> Can I set global cost limits?
+
+Yes, you can set global cost limits with the `MSWEA_GLOBAL_CALL_LIMIT` and `MSWEA_GLOBAL_COST_LIMIT` environment variables/global config.
+See [configuration](../advanced/configuration.md) for more details.
+
 > What happens to uncompleted tasks when I abort with KeyboardInterrupt?
 
 Trajectories are only saved upon completion, so most likely, you can just rerun the script to complete the tasks next time.
