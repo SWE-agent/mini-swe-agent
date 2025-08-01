@@ -51,7 +51,9 @@ class TextualAgent(DefaultAgent):
         if self.config.mode == "human":
             human_input = self.app.input_container.request_input("Enter your command:")
             self._current_action_from_human = True
-            return {"content": f"\n```bash\n{human_input}\n```"}
+            msg = {"content": f"\n```bash\n{human_input}\n```"}
+            self.add_message("assistant", msg["content"])
+            return msg
         self._current_action_from_human = False
         return super().query()
 
