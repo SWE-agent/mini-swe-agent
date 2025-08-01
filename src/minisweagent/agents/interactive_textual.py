@@ -137,23 +137,21 @@ class SmartInputContainer(Container):
         )
         self._hint_text = Static(
             "[bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line input, [bold]Tab[/bold] to switch focus with other controls",
-            id="hint-text",
             classes="hint-text",
         )
         self._single_input = Input(placeholder="Type your input...")
         self._multi_input = TextArea("", show_line_numbers=False, classes="multi-input")
 
-        self._input_elements_container = Container(
+        self._input_elements_container = Vertical(
+            self._header_display,
             self._hint_text,
             self._single_input,
             self._multi_input,
-            id="input-elements-container",
+            classes="message-container",
         )
 
     def compose(self) -> ComposeResult:
-        with Vertical(classes="message-container"):
-            yield self._header_display
-            yield self._input_elements_container
+        yield self._input_elements_container
 
     def on_mount(self) -> None:
         """Initialize the widget state."""
