@@ -8,22 +8,28 @@
       
       
       
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/models/utils.html">
       
       
+        <link rel="prev" href="test_models.html">
       
-      <link rel="icon" href="/latest/assets/mini_square.svg">
+      
+        <link rel="next" href="../environments/local.html">
+      
+      
+      <link rel="icon" href="../../assets/mini_square.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
     
     
       
-        <title>mini-SWE-agent documentation</title>
+        <title>Model Utilities - mini-SWE-agent documentation</title>
       
     
     
-      <link rel="stylesheet" href="/latest/assets/stylesheets/main.7e37652d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
       
         
-        <link rel="stylesheet" href="/latest/assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,23 +54,23 @@
       
     
     
-      <link rel="stylesheet" href="/latest/assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="/latest/assets/custom.css">
+      <link rel="stylesheet" href="../../assets/custom.css">
     
-      <link rel="stylesheet" href="/latest/assets/gif-controls.css">
+      <link rel="stylesheet" href="../../assets/gif-controls.css">
     
-      <link rel="stylesheet" href="/latest/assets/mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/mkdocstrings.css">
     
-      <link rel="stylesheet" href="/latest/assets/image_theme.css">
+      <link rel="stylesheet" href="../../assets/image_theme.css">
     
-      <link rel="stylesheet" href="/latest/assets/bubbles.css">
+      <link rel="stylesheet" href="../../assets/bubbles.css">
     
-      <link rel="stylesheet" href="/latest/assets/navigation_cards.css">
+      <link rel="stylesheet" href="../../assets/navigation_cards.css">
     
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
-    <script>__md_scope=new URL("/latest",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -81,7 +87,16 @@
     
     
     
-  </head>
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -99,6 +114,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#model-utilities" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -115,9 +135,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/latest/." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
       
-  <img src="/latest/assets/mini_square.svg" alt="logo">
+  <img src="../../assets/mini_square.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -134,7 +154,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Model Utilities
             
           </span>
         </div>
@@ -251,7 +271,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/latest/index.html" class="md-tabs__link">
+        <a href="../../index.html" class="md-tabs__link">
           
   
   
@@ -269,11 +289,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="/latest/reference/index.html" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../index.html" class="md-tabs__link">
           
   
   
@@ -315,9 +337,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/latest/." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
       
-  <img src="/latest/assets/mini_square.svg" alt="logo">
+  <img src="../../assets/mini_square.svg" alt="logo">
 
     </a>
     mini-SWE-agent documentation
@@ -375,7 +397,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="/latest/index.html" class="md-nav__link ">
+            <a href="../../index.html" class="md-nav__link ">
               
   
   
@@ -410,7 +432,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/quickstart.html" class="md-nav__link">
+      <a href="../../quickstart.html" class="md-nav__link">
         
   
   
@@ -484,7 +506,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/usage/mini.html" class="md-nav__link">
+      <a href="../../usage/mini.html" class="md-nav__link">
         
   
   
@@ -507,7 +529,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/usage/mini_v.html" class="md-nav__link">
+      <a href="../../usage/mini_v.html" class="md-nav__link">
         
   
   
@@ -530,7 +552,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/usage/swebench.html" class="md-nav__link">
+      <a href="../../usage/swebench.html" class="md-nav__link">
         
   
   
@@ -553,7 +575,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/usage/inspector.html" class="md-nav__link">
+      <a href="../../usage/inspector.html" class="md-nav__link">
         
   
   
@@ -635,7 +657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/advanced/configuration.html" class="md-nav__link">
+      <a href="../../advanced/configuration.html" class="md-nav__link">
         
   
   
@@ -658,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/advanced/local_models.html" class="md-nav__link">
+      <a href="../../advanced/local_models.html" class="md-nav__link">
         
   
   
@@ -681,7 +703,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/advanced/control_flow.html" class="md-nav__link">
+      <a href="../../advanced/control_flow.html" class="md-nav__link">
         
   
   
@@ -704,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/advanced/cookbook.html" class="md-nav__link">
+      <a href="../../advanced/cookbook.html" class="md-nav__link">
         
   
   
@@ -735,7 +757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/faq.html" class="md-nav__link">
+      <a href="../../faq.html" class="md-nav__link">
         
   
   
@@ -758,7 +780,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/contributing.html" class="md-nav__link">
+      <a href="../../contributing.html" class="md-nav__link">
         
   
   
@@ -785,6 +807,8 @@
       
   
   
+    
+  
   
   
     
@@ -806,18 +830,21 @@
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="/latest/reference/index.html" class="md-nav__link ">
+            <a href="../index.html" class="md-nav__link ">
               
   
   
@@ -830,13 +857,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             API Reference
@@ -901,7 +928,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/agents/default.html" class="md-nav__link">
+      <a href="../agents/default.html" class="md-nav__link">
         
   
   
@@ -924,7 +951,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/agents/interactive.html" class="md-nav__link">
+      <a href="../agents/interactive.html" class="md-nav__link">
         
   
   
@@ -947,7 +974,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/agents/textual.html" class="md-nav__link">
+      <a href="../agents/textual.html" class="md-nav__link">
         
   
   
@@ -975,8 +1002,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -995,11 +1024,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
         
           
           <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
@@ -1015,7 +1044,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             Models
@@ -1029,7 +1058,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/models/litellm.html" class="md-nav__link">
+      <a href="litellm.html" class="md-nav__link">
         
   
   
@@ -1052,7 +1081,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/models/anthropic.html" class="md-nav__link">
+      <a href="anthropic.html" class="md-nav__link">
         
   
   
@@ -1075,7 +1104,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/models/test_models.html" class="md-nav__link">
+      <a href="test_models.html" class="md-nav__link">
         
   
   
@@ -1095,10 +1124,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/latest/reference/models/utils.html" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Model Utilities
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="utils.html" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1109,6 +1160,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#minisweagent.models.get_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minisweagent.models.get_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_model_name
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minisweagent.models.get_model_class" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_model_class
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1178,7 +1276,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/environments/local.html" class="md-nav__link">
+      <a href="../environments/local.html" class="md-nav__link">
         
   
   
@@ -1201,7 +1299,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/environments/docker.html" class="md-nav__link">
+      <a href="../environments/docker.html" class="md-nav__link">
         
   
   
@@ -1224,7 +1322,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/environments/swerex_docker.html" class="md-nav__link">
+      <a href="../environments/swerex_docker.html" class="md-nav__link">
         
   
   
@@ -1308,7 +1406,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/run/hello_world.html" class="md-nav__link">
+      <a href="../run/hello_world.html" class="md-nav__link">
         
   
   
@@ -1331,7 +1429,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/run/mini.html" class="md-nav__link">
+      <a href="../run/mini.html" class="md-nav__link">
         
   
   
@@ -1354,7 +1452,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/run/github_issue.html" class="md-nav__link">
+      <a href="../run/github_issue.html" class="md-nav__link">
         
   
   
@@ -1377,7 +1475,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/run/swebench.html" class="md-nav__link">
+      <a href="../run/swebench.html" class="md-nav__link">
         
   
   
@@ -1400,7 +1498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/latest/reference/run/swebench_single.html" class="md-nav__link">
+      <a href="../run/swebench_single.html" class="md-nav__link">
         
   
   
@@ -1448,6 +1546,43 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#minisweagent.models.get_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minisweagent.models.get_model_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_model_name
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minisweagent.models.get_model_class" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_model_class
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1459,7 +1594,225 @@
             <div class="md-content" data-md-component="content">
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+
+                  
+
+
+  
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/models/utils.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="model-utilities">Model Utilities</h1>
+<p>Convenience functions for selecting and configuring models.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="minisweagent.models.get_model" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">minisweagent.models.get_model</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_model</span><span class="p">(</span>
+    <span class="n">input_model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="minisweagent.Model">Model</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents first">
+
+        <p>Get an initialized model object from any kind of user input or settings.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/minisweagent/models/__init__.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an initialized model object from any kind of user input or settings.&quot;&quot;&quot;</span>
+    <span class="n">resolved_model_name</span> <span class="o">=</span> <span class="n">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;model_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolved_model_name</span>
+
+    <span class="c1"># API key resolution (from env -&gt; config -&gt; None)</span>
+    <span class="k">if</span> <span class="s2">&quot;model_kwargs&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;model_kwargs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MODEL_API_KEY&quot;</span><span class="p">):</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;model_kwargs&quot;</span><span class="p">][</span><span class="s2">&quot;api_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_env</span>
+    <span class="k">return</span> <span class="n">get_model_class</span><span class="p">(</span><span class="n">resolved_model_name</span><span class="p">)(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="minisweagent.models.get_model_name" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">minisweagent.models.get_model_name</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_model_name</span><span class="p">(</span>
+    <span class="n">input_model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents first">
+
+        <p>Get a model name from any kind of user input or settings.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/minisweagent/models/__init__.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a model name from any kind of user input or settings.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">input_model_name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">input_model_name</span>
+    <span class="k">if</span> <span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MODEL_NAME&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">from_env</span>
+    <span class="k">if</span> <span class="n">from_config</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_name&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">from_config</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No default model set. Please run `mini-extra config setup` to set one.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="minisweagent.models.get_model_class" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">minisweagent.models.get_model_class</span>
+
+
+</h2>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_model_class</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="type">type</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents first">
+
+        <p>Select the best model class for a given model name.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/minisweagent/models/__init__.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_class</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Select the best model class for a given model name.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">s</span> <span class="ow">in</span> <span class="n">model_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;anthropic&quot;</span><span class="p">,</span> <span class="s2">&quot;sonnet&quot;</span><span class="p">,</span> <span class="s2">&quot;opus&quot;</span><span class="p">,</span> <span class="s2">&quot;claude&quot;</span><span class="p">]):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnthropicModel</span>
+
+        <span class="k">return</span> <span class="n">AnthropicModel</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.litellm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LitellmModel</span>
+
+    <span class="k">return</span> <span class="n">LitellmModel</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><div class="grid cards">
+  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">bug_report</span>
+        <span class="nav-card-title">Something broken/unclear?</span>
+      </div>
+      <p class="nav-card-description">Open an issue on GitHub!</p>
+    </div>
+  </a>
+
+  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">help</span>
+        <span class="nav-card-title">Open-ended discussions</span>
+      </div>
+      <p class="nav-card-description">Join our Slack!</p>
+    </div>
+  </a>
+</div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+
+<!-- Floating Bubbles -->
+<div class="floating-bubbles">
+<div class="floating-bubbles-title">Our projects</div>
+  <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
+    <img src="../../assets/sweagent_logo.svg" alt="SWE-agent">
+    <span class="bubble-tooltip">SWE-agent</span>
+  </a>
+  <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
+    <img src="../../assets/swerex_logo.svg" alt="SWE-rex">
+    <span class="bubble-tooltip">SWE-ReX</span>
+  </a>
+  <a href="https://swesmith.com" class="bubble" title="SWE-smith">
+    <img src="../../assets/swesmith_logo.png" alt="SWE-smith">
+    <span class="bubble-tooltip">SWE-smith</span>
+  </a>
+  <a href="https://swebench.com" class="bubble" title="SWE-bench">
+    <img src="../../assets/swebench_logo.png" alt="SWE-bench">
+    <span class="bubble-tooltip">SWE-bench</span>
+  </a>
+  <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
+    <img src="../../assets/sbcli_logo.svg" alt="sb-cli">
+    <span class="bubble-tooltip">sb-cli</span>
+  </a>
+</div>
 
               </article>
             </div>
@@ -1478,6 +1831,44 @@
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="test_models.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: DeterministicModel">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                DeterministicModel
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../environments/local.html" class="md-footer__link md-footer__link--next" aria-label="Next: LocalEnvironment">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                LocalEnvironment
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -1504,15 +1895,17 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "/latest", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "/latest/assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="/latest/assets/javascripts/bundle.50899def.min.js"></script>
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
       
-        <script src="/latest/assets/js/sh-annotation.js"></script>
+        <script src="../../assets/js/sh-annotation.js"></script>
       
-        <script src="/latest/assets/js/gif-controls.js"></script>
+        <script src="../../assets/js/gif-controls.js"></script>
       
     
-  </body>
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
 </html>
