@@ -206,7 +206,7 @@ Read more in our [documentation](https://mini-swe-agent.com/latest/):
 * [FAQ](https://mini-swe-agent.com/latest/faq/)
 * [Contribute!](https://mini-swe-agent.com/latest/contributing/)
 
-## Bottom line
+## Attribution
 
 If you found this work helpful, please consider citing the [SWE-agent paper](https://arxiv.org/abs/2405.15793) in your work:
 
@@ -220,7 +220,7 @@ If you found this work helpful, please consider citing the [SWE-agent paper](htt
 }
 ```
 
-More agentic AI:
+Our other projects:
 
 <div align="center">
   <a href="https://github.com/SWE-agent/SWE-agent"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/sweagent_logo_text_below.svg" alt="SWE-agent" height="120px"></a>
