@@ -1,0 +1,2353 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/usage/mini_v/">
+      
+      
+        <link rel="prev" href="../mini/">
+      
+      
+        <link rel="next" href="../swebench/">
+      
+      
+      <link rel="icon" href="../../assets/mini_square.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>mini -v - mini-SWE-agent documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+  
+  
+  
+  
+  <style>:root{--md-annotation-icon:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M22%2012a10%2010%200%200%201-10%2010A10%2010%200%200%201%202%2012%2010%2010%200%200%201%2012%202a10%2010%200%200%201%2010%2010m-12%206%206-6-6-6-1.4%201.4%204.6%204.6-4.6%204.6z%22/%3E%3C/svg%3E');}</style>
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+      <link rel="stylesheet" href="../../assets/gif-controls.css">
+    
+      <link rel="stylesheet" href="../../assets/mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/image_theme.css">
+    
+      <link rel="stylesheet" href="../../assets/bubbles.css">
+    
+      <link rel="stylesheet" href="../../assets/navigation_cards.css">
+    
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SG2NC1GDRD"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SG2NC1GDRD",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SG2NC1GDRD",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mini-v" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+      
+  <img src="../../assets/mini_square.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            mini-SWE-agent documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              <code>mini -v</code>
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SWE-agent/mini-SWE-agent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SWE-agent/mini-SWE-agent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+      
+  <img src="../../assets/mini_square.svg" alt="logo">
+
+    </a>
+    mini-SWE-agent documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SWE-agent/mini-SWE-agent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SWE-agent/mini-SWE-agent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Usage
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            Usage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mini/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    <code>mini</code>
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    <code>mini -v</code>
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    <code>mini -v</code>
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#command-line-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command line options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-bindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key bindings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes-of-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modes of operation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modes of operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      FAQ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#miscellaneous-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Miscellaneous tips
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../swebench/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SWE-bench
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inspector/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Inspector
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_4" id="__nav_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/local_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Local models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/control_flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Control flow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cookbook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    API Reference
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            API Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Agents
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Agents
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/agents/default/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DefaultAgent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/agents/interactive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    InteractiveAgent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/agents/textual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TextualAgent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Models
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/litellm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LitellmModel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/anthropic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AnthropicModel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/test_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DeterministicModel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Model Utilities
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Environments
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Environments
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environments/local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LocalEnvironment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environments/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DockerEnvironment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environments/swerex_docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SwerexDockerEnvironment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Run Scripts
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            Run Scripts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/hello_world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hello World
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/mini/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    mini
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/github_issue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Issue
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/swebench/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SWE-bench (batch)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/swebench_single/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SWE-bench (single)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#command-line-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command line options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-bindings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key bindings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modes-of-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modes of operation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modes of operation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      FAQ
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#miscellaneous-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Miscellaneous tips
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+
+                  
+
+
+  
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/usage/mini_v.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="mini-v"><code>mini -v</code></h1>
+<div class="admonition abstract">
+<p class="admonition-title">Overview</p>
+<ul>
+<li><code>mini -v</code> is a pager-style interactive command line interface for using mini-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).</li>
+<li>Compared to <a href="../mini/"><code>mini</code></a>, <code>mini -v</code> offers a more advanced UI based on <a href="https://textual.textualize.io/">Textual</a>.</li>
+</ul>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Feedback wanted!</p>
+<p>Give feedback on the <code>mini</code> and <code>mini -v</code> interfaces at <a href="https://github.com/swe-agent/mini-swe-agent/issues/161">this github issue</a>
+or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ">Slack channel</a>.</p>
+</div>
+<figure>
+<br />
+<div class="gif-container gif-container-styled" data-glightbox-disabled="data-glightbox-disabled">
+    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini2.png?raw=true"
+         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini2.gif?raw=true"
+         alt="miniv" data-glightbox="false" width="600" />
+  </div>
+</figure>
+<h2 id="command-line-options">Command line options</h2>
+<p>Useful switches:</p>
+<ul>
+<li><code>-h</code>/<code>--help</code>: Show help</li>
+<li><code>-t</code>/<code>--task</code>: Specify a task to run (else you will be prompted)</li>
+<li><code>-c</code>/<code>--config</code>: Specify a config file to use, else we will use <a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml"><code>mini.yaml</code></a> or the config <code>MSWEA_MINI_CONFIG_PATH</code> environment variable (see <a href="../../advanced/configuration/">configuration</a>)
+  It's enough to specify the name of the config file, e.g., <code>-c mini.yaml</code> (see <a href="../../advanced/configuration/">configuration</a> for how it is resolved).</li>
+<li><code>-m</code>/<code>--model</code>: Specify a model to use, else we will use the model <code>MSWEA_MODEL_NAME</code> environment variable (see <a href="../../advanced/configuration/">configuration</a>)</li>
+<li><code>-y</code>/<code>--yolo</code>: Start in <code>yolo</code> mode (see below)</li>
+</ul>
+<h2 id="key-bindings">Key bindings</h2>
+<ul>
+<li><code>q</code>: Quit the agent</li>
+<li><code>c</code>: Switch to <code>confirm</code> mode</li>
+<li><code>y</code>: Switch to <code>yolo</code> mode</li>
+<li><code>h</code> or <code>LEFT</code>: Go back in history</li>
+<li><code>l</code> or <code>RIGHT</code>: Go forward in history</li>
+<li><code>j</code> or <code>DOWN</code>: Scroll down</li>
+<li><code>k</code> or <code>UP</code>: Scroll up</li>
+</ul>
+<h2 id="modes-of-operation">Modes of operation</h2>
+<p><code>mini -v</code> provides two different modes of operation</p>
+<ul>
+<li><code>confirm</code> (<code>c</code>): The LM proposes an action and the user is prompted to confirm (press Enter)) or reject (enter a rejection message))</li>
+<li><code>yolo</code> (<code>y</code>): The action from the LM is executed immediately without confirmation</li>
+<li><code>human</code> (<code>u</code>): The user is prompted to enter a command directly</li>
+</ul>
+<p>You can switch between the modes at any time by pressing the <code>c</code>, <code>y</code>, or <code>u</code> keys.</p>
+<p><code>mini -v</code> starts in <code>confirm</code> mode by default. To start in <code>yolo</code> mode, you can add <code>-y</code>/<code>--yolo</code> to the command line.</p>
+<h3 id="faq">FAQ</h3>
+<blockquote>
+<p>How can I select/copy text on the screen?</p>
+</blockquote>
+<p>Hold down the <code>Alt</code>/<code>Option</code> key and use the mouse to select the text.</p>
+<h2 id="miscellaneous-tips">Miscellaneous tips</h2>
+<ul>
+<li><code>mini</code> saves the full history of your last run to your global config directory.
+  The path to the directory is printed when you start <code>mini</code>.</li>
+</ul>
+<h2 id="implementation">Implementation</h2>
+<details class="note">
+<summary>Default config</summary>
+<ul>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml">Read on GitHub</a></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">You are a helpful assistant that can interact with a computer.</span>
+
+<span class="w">    </span><span class="no">Your response must contain exactly ONE bash code block with ONE command (or commands connected with &amp;&amp; or ||).</span>
+<span class="w">    </span><span class="no">Include a THOUGHT section before your command where you explain your reasoning process.</span>
+<span class="w">    </span><span class="no">Format your response as shown in &lt;format_example&gt;.</span>
+
+<span class="w">    </span><span class="no">&lt;format_example&gt;</span>
+<span class="w">    </span><span class="no">Your reasoning and analysis here. Explain why you want to perform the action.</span>
+
+<span class="w">    </span><span class="no">```bash</span>
+<span class="w">    </span><span class="no">your_command_here</span>
+<span class="w">    </span><span class="no">```</span>
+<span class="w">    </span><span class="no">&lt;/format_example&gt;</span>
+
+<span class="w">    </span><span class="no">Failure to follow these rules will cause your response to be rejected.</span>
+<span class="w">    </span><span class="no">To finish, issue the following command: `echo MINI_SWE_AGENT_FINAL_OUTPUT`</span>
+<span class="w">    </span><span class="no">without any other command.</span>
+<span class="w">  </span><span class="nt">instance_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Please solve this issue: {{task}}</span>
+
+<span class="w">    </span><span class="no">You can execute bash commands and edit files to implement the necessary changes.</span>
+
+<span class="w">    </span><span class="no">## Recommended Workflow</span>
+
+<span class="w">    </span><span class="no">1. If present, you might want to take a look at the following files that set additional guidelines</span>
+<span class="w">       </span><span class="no">for your work: CLAUDE.md, .github/copilot-instructions.md. Use a find command to locate all of them at once.</span>
+<span class="w">       </span><span class="no">If files corresponding to multiple AI systems are present, it&#39;s enough to read the ones for one of them.</span>
+<span class="w">    </span><span class="no">2. Analyze the codebase by finding and reading relevant files.</span>
+<span class="w">    </span><span class="no">3. Create a script to reproduce the issue</span>
+<span class="w">    </span><span class="no">4. Edit the source code to resolve the issue</span>
+<span class="w">    </span><span class="no">5. Verify your fix works by running your script again</span>
+<span class="w">    </span><span class="no">6. Test edge cases to ensure your fix is robust</span>
+
+<span class="w">    </span><span class="no">## Important Rules</span>
+
+<span class="w">    </span><span class="no">1. Every response must contain exactly one action</span>
+<span class="w">    </span><span class="no">2. The action must be enclosed in triple backticks</span>
+<span class="w">    </span><span class="no">3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.</span>
+<span class="w">       </span><span class="no">However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir &amp;&amp; ...` or write/load environment variables from files</span>
+<span class="w">    </span><span class="no">4. To finish, issue the following command: `echo MINI_SWE_AGENT_FINAL_OUTPUT`.</span>
+<span class="w">       </span><span class="no">Do not combine it with any other command.</span>
+
+<span class="w">    </span><span class="no">&lt;system_information&gt;</span>
+<span class="w">    </span><span class="no">{{system}} {{release}} {{version}} {{machine}} {{processor}}</span>
+<span class="w">    </span><span class="no">&lt;/system_information&gt;</span>
+
+<span class="w">    </span><span class="no">## Formatting your response</span>
+
+<span class="w">    </span><span class="no">Here is an example of a correct response:</span>
+
+<span class="w">    </span><span class="no">&lt;example_response&gt;</span>
+<span class="w">    </span><span class="no">THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.</span>
+
+<span class="w">    </span><span class="no">```bash</span>
+<span class="w">    </span><span class="no">ls -la</span>
+<span class="w">    </span><span class="no">```</span>
+<span class="w">    </span><span class="no">&lt;/example_response&gt;</span>
+
+<span class="w">    </span><span class="no">## Useful command examples</span>
+
+<span class="w">    </span><span class="no">### Create a new file:</span>
+
+<span class="w">    </span><span class="no">```bash</span>
+<span class="w">    </span><span class="no">cat &lt;&lt;&#39;EOF&#39; &gt; newfile.py</span>
+<span class="w">    </span><span class="no">import numpy as np</span>
+<span class="w">    </span><span class="no">hello = &quot;world&quot;</span>
+<span class="w">    </span><span class="no">print(hello)</span>
+<span class="w">    </span><span class="no">EOF</span>
+<span class="w">    </span><span class="no">```</span>
+
+<span class="w">    </span><span class="no">### Edit files with sed:</span>
+
+<span class="w">    </span><span class="no">{%- if system == &quot;Darwin&quot; -%}</span>
+<span class="w">    </span><span class="no">&lt;important&gt;</span>
+<span class="w">    </span><span class="no">You are on MacOS. For all the below examples, you need to use `sed -i &#39;&#39;` instead of `sed -i`.</span>
+<span class="w">    </span><span class="no">&lt;/important&gt;</span>
+<span class="w">    </span><span class="no">{%- endif -%}</span>
+
+<span class="w">    </span><span class="no">```bash</span>
+<span class="w">    </span><span class="no"># Replace all occurrences</span>
+<span class="w">    </span><span class="no">sed -i &#39;s/old_string/new_string/g&#39; filename.py</span>
+
+<span class="w">    </span><span class="no"># Replace only first occurrence</span>
+<span class="w">    </span><span class="no">sed -i &#39;s/old_string/new_string/&#39; filename.py</span>
+
+<span class="w">    </span><span class="no"># Replace first occurrence on line 1</span>
+<span class="w">    </span><span class="no">sed -i &#39;1s/old_string/new_string/&#39; filename.py</span>
+
+<span class="w">    </span><span class="no"># Replace all occurrences in lines 1-10</span>
+<span class="w">    </span><span class="no">sed -i &#39;1,10s/old_string/new_string/g&#39; filename.py</span>
+<span class="w">    </span><span class="no">```</span>
+
+<span class="w">    </span><span class="no">### View file content:</span>
+
+<span class="w">    </span><span class="no">```bash</span>
+<span class="w">    </span><span class="no"># View specific lines with numbers</span>
+<span class="w">    </span><span class="no">nl -ba filename.py | sed -n &#39;10,20p&#39;</span>
+<span class="w">    </span><span class="no">```</span>
+
+<span class="w">    </span><span class="no">### Any other command you want to run</span>
+
+<span class="w">    </span><span class="no">```bash</span>
+<span class="w">    </span><span class="no">anything</span>
+<span class="w">    </span><span class="no">```</span>
+<span class="w">  </span><span class="nt">action_observation_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">&lt;returncode&gt;{{output.returncode}}&lt;/returncode&gt;</span>
+<span class="w">    </span><span class="no">{% if output.output | length &lt; 10000 -%}</span>
+<span class="w">    </span><span class="no">&lt;output&gt;</span>
+<span class="w">    </span><span class="no">{{ output.output -}}</span>
+<span class="w">    </span><span class="no">&lt;/output&gt;</span>
+<span class="w">    </span><span class="no">{%- else -%}</span>
+<span class="w">    </span><span class="no">&lt;warning&gt;</span>
+<span class="w">    </span><span class="no">The output of your last command was too long.</span>
+<span class="w">    </span><span class="no">Please try a different command that produces less output.</span>
+<span class="w">    </span><span class="no">If you&#39;re looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.</span>
+<span class="w">    </span><span class="no">If you&#39;re using grep or find and it produced too much output, you can use a more selective search pattern.</span>
+<span class="w">    </span><span class="no">If you really need to see something from the full command&#39;s output, you can redirect output to a file and then search in that file.</span>
+<span class="w">    </span><span class="no">&lt;/warning&gt;</span>
+<span class="w">    </span><span class="no">{%- set elided_chars = output.output | length - 10000 -%}</span>
+<span class="w">    </span><span class="no">&lt;output_head&gt;</span>
+<span class="w">    </span><span class="no">{{ output.output[:5000] }}</span>
+<span class="w">    </span><span class="no">&lt;/output_head&gt;</span>
+<span class="w">    </span><span class="no">&lt;elided_chars&gt;</span>
+<span class="w">    </span><span class="no">{{ elided_chars }} characters elided</span>
+<span class="w">    </span><span class="no">&lt;/elided_chars&gt;</span>
+<span class="w">    </span><span class="no">&lt;output_tail&gt;</span>
+<span class="w">    </span><span class="no">{{ output.output[-5000:] }}</span>
+<span class="w">    </span><span class="no">&lt;/output_tail&gt;</span>
+<span class="w">    </span><span class="no">{%- endif -%}</span>
+<span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.</span>
+<span class="w">    </span><span class="no">If you want to end the task, please issue the following command: `echo MINI_SWE_AGENT_FINAL_OUTPUT`</span>
+<span class="w">    </span><span class="no">without any other command.</span>
+<span class="w">    </span><span class="no">Else, please format your response exactly as follows:</span>
+
+<span class="w">    </span><span class="no">&lt;response_example&gt;</span>
+<span class="w">    </span><span class="no">Here are some thoughts about why you want to perform the action.</span>
+
+<span class="w">    </span><span class="no">```bash</span>
+<span class="w">    </span><span class="no">&lt;action&gt;</span>
+<span class="w">    </span><span class="no">```</span>
+<span class="w">    </span><span class="no">&lt;/response_example&gt;</span>
+
+<span class="w">    </span><span class="no">Note: In rare cases, if you need to reference a similar format in your command, you might have</span>
+<span class="w">    </span><span class="no">to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```bash.</span>
+<span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.</span>
+<span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
+<span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confirm</span>
+<span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">PAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
+<span class="w">    </span><span class="nt">MANPAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
+<span class="w">    </span><span class="nt">LESS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-R</span>
+<span class="w">    </span><span class="nt">PIP_PROGRESS_BAR</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;off&#39;</span>
+<span class="w">    </span><span class="nt">TQDM_DISABLE</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
+<span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+</details>
+<details class="note">
+<summary>Run script</summary>
+<ul>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/mini.py">Read on GitHub</a></li>
+<li><a href="../../reference/run/mini/">API reference</a></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;Run mini-SWE-agent in your local environment. This is the default executable `mini`.&quot;&quot;&quot;</span>
+<span class="c1"># Read this first: https://mini-swe-agent.com/latest/usage/mini/  (usage)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">typer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.formatted_text</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.history</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileHistory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptSession</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">global_config_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractiveAgent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.interactive_textual</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentApp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">builtin_config_dir</span><span class="p">,</span> <span class="n">get_config_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.environments.local</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEnvironment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.extra.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_if_first_time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.utils.save</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_traj</span>
+
+<span class="n">DEFAULT_CONFIG</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MINI_CONFIG_PATH&quot;</span><span class="p">,</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">&quot;mini.yaml&quot;</span><span class="p">))</span>
+<span class="n">DEFAULT_OUTPUT</span> <span class="o">=</span> <span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">&quot;last_mini_run.traj.json&quot;</span>
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">(</span><span class="n">rich_markup_mode</span><span class="o">=</span><span class="s2">&quot;rich&quot;</span><span class="p">)</span>
+<span class="n">prompt_session</span> <span class="o">=</span> <span class="n">PromptSession</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">FileHistory</span><span class="p">(</span><span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">&quot;mini_task_history.txt&quot;</span><span class="p">))</span>
+<span class="n">_HELP_TEXT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Run mini-SWE-agent in your local environment.</span>
+
+<span class="s2">[not dim]</span>
+<span class="s2">There are two different user interfaces:</span>
+
+<span class="s2">[bold green]mini[/bold green] Simple REPL-style interface</span>
+<span class="s2">[bold green]mini -v[/bold green] Pager-style interface (Textual)</span>
+
+<span class="s2">More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/mini/[/bold green]</span>
+<span class="s2">[/not dim]</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_interactive</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">agent_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">InteractiveAgent</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">agent_config</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">save_traj</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">agent</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_textual</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">agent_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="n">agent_app</span> <span class="o">=</span> <span class="n">AgentApp</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
+        <span class="n">task</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">agent_config</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">agent_app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">save_traj</span><span class="p">(</span><span class="n">agent_app</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">agent_app</span><span class="o">.</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">agent_app</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
+    <span class="n">visual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="s2">&quot;--visual&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use visual (pager-style) UI (Textual)&quot;</span><span class="p">),</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--model&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Model to use&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--task&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Task/problem statement&quot;</span><span class="p">,</span> <span class="n">show_default</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">yolo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;-y&quot;</span><span class="p">,</span> <span class="s2">&quot;--yolo&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Run without confirmation&quot;</span><span class="p">),</span>
+    <span class="n">cost_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="s2">&quot;--cost-limit&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Cost limit. Set to 0 to disable.&quot;</span><span class="p">),</span>
+    <span class="n">config_spec</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_CONFIG</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to config file&quot;</span><span class="p">),</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_OUTPUT</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output trajectory file&quot;</span><span class="p">),</span>
+    <span class="n">exit_immediately</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;--exit-immediately&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Exit immediately when the agent wants to finish instead of prompting.&quot;</span>
+    <span class="p">),</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="n">configure_if_first_time</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">get_config_path</span><span class="p">(</span><span class="n">config_spec</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;[bold yellow]What do you want to do?&quot;</span><span class="p">)</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">prompt_session</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">multiline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bottom_toolbar</span><span class="o">=</span><span class="n">HTML</span><span class="p">(</span>
+                <span class="s2">&quot;Submit task: &lt;b fg=&#39;yellow&#39; bg=&#39;black&#39;&gt;Esc+Enter&lt;/b&gt; | &quot;</span>
+                <span class="s2">&quot;Navigate history: &lt;b fg=&#39;yellow&#39; bg=&#39;black&#39;&gt;Arrow Up/Down&lt;/b&gt; | &quot;</span>
+                <span class="s2">&quot;Search history: &lt;b fg=&#39;yellow&#39; bg=&#39;black&#39;&gt;Ctrl+R&lt;/b&gt;&quot;</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;[bold green]Got that, thanks![/bold green]&quot;</span><span class="p">)</span>
+
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;confirm&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">yolo</span> <span class="k">else</span> <span class="s2">&quot;yolo&quot;</span>
+    <span class="k">if</span> <span class="n">cost_limit</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="s2">&quot;cost_limit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost_limit</span>
+    <span class="k">if</span> <span class="n">exit_immediately</span><span class="p">:</span>
+        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">][</span><span class="s2">&quot;confirm_exit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">LocalEnvironment</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+
+    <span class="k">if</span> <span class="n">visual</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">run_textual</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">],</span> <span class="n">task</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">run_interactive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">],</span> <span class="n">task</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">()</span>
+</code></pre></div>
+</details>
+<details class="note">
+<summary>Agent class</summary>
+<ul>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/agents/interactive.py">Read on GitHub</a></li>
+<li><a href="../../reference/agents/interactive/">API reference</a></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;A small generalization of the default agent that puts the user in the loop.</span>
+
+<span class="sd">There are three modes:</span>
+<span class="sd">- human: commands issued by the user are executed immediately</span>
+<span class="sd">- confirm: commands issued by the LM but not whitelisted are confirmed by the user</span>
+<span class="sd">- yolo: commands issued by the LM are executed immediately without confirmation</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.history</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileHistory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptSession</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">global_config_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span><span class="p">,</span> <span class="n">DefaultAgent</span><span class="p">,</span> <span class="n">LimitsExceeded</span><span class="p">,</span> <span class="n">NonTerminatingException</span><span class="p">,</span> <span class="n">Submitted</span>
+
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">prompt_session</span> <span class="o">=</span> <span class="n">PromptSession</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">FileHistory</span><span class="p">(</span><span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">&quot;interactive_history.txt&quot;</span><span class="p">))</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InteractiveAgentConfig</span><span class="p">(</span><span class="n">AgentConfig</span><span class="p">):</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;confirm&quot;</span><span class="p">,</span> <span class="s2">&quot;yolo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;confirm&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether to confirm actions.&quot;&quot;&quot;</span>
+    <span class="n">whitelist_actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Never confirm actions that match these regular expressions.&quot;&quot;&quot;</span>
+    <span class="n">confirm_exit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;If the agent wants to finish, do we ask for confirmation from user?&quot;&quot;&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InteractiveAgent</span><span class="p">(</span><span class="n">DefaultAgent</span><span class="p">):</span>
+    <span class="n">_MODE_COMMANDS_MAPPING</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;/u&quot;</span><span class="p">:</span> <span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;/c&quot;</span><span class="p">:</span> <span class="s2">&quot;confirm&quot;</span><span class="p">,</span> <span class="s2">&quot;/y&quot;</span><span class="p">:</span> <span class="s2">&quot;yolo&quot;</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">config_class</span><span class="o">=</span><span class="n">InteractiveAgentConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_last_confirmed</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># Extend supermethod to print messages</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="s2">&quot;assistant&quot;</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[red][bold]mini-swe-agent[/bold] (step [bold]</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_calls</span><span class="si">}</span><span class="s2">[/bold], [bold]$</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cost</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">[/bold]):[/red]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold green]</span><span class="si">{</span><span class="n">role</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">[/bold green]:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">markup</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Extend supermethod to handle human mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span><span class="p">:</span>
+            <span class="k">match</span> <span class="n">command</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="s2">&quot;[bold yellow]&gt;[/bold yellow] &quot;</span><span class="p">):</span>
+                <span class="k">case</span> <span class="s2">&quot;/y&quot;</span> <span class="o">|</span> <span class="s2">&quot;/c&quot;</span><span class="p">:</span>  <span class="c1"># Just go to the super query, which queries the LM for the next action</span>
+                    <span class="k">pass</span>
+                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">```bash</span><span class="se">\n</span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="se">\n</span><span class="s2">```&quot;</span><span class="p">}</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+                    <span class="k">return</span> <span class="n">msg</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">console</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="s2">&quot;Waiting for the LM to respond...&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">LimitsExceeded</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Limits exceeded. Limits: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">step_limit</span><span class="si">}</span><span class="s2"> steps, $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_limit</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Current spend: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_calls</span><span class="si">}</span><span class="s2"> steps, $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cost</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">step_limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;New step limit: &quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_limit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;New cost limit: &quot;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Override the step method to handle user interruption</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="c1"># We always add a message about the interrupt and then just proceed to the next step</span>
+            <span class="n">interruption_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">[bold yellow]Interrupted.[/bold yellow] &quot;</span>
+                <span class="s2">&quot;[green]Type a comment/command[/green] (/h for available commands)&quot;</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold yellow]&gt;[/bold yellow] &quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">interruption_message</span> <span class="ow">or</span> <span class="n">interruption_message</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">:</span>
+                <span class="n">interruption_message</span> <span class="o">=</span> <span class="s2">&quot;Temporary interruption caught.&quot;</span>
+            <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Interrupted by user: </span><span class="si">{</span><span class="n">interruption_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Override the execute_action method to handle user confirmation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_ask_confirmation</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ask_confirmation</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">execute_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_ask_confirmation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;confirm&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">whitelist_actions</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ask_confirmation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], &quot;</span>
+            <span class="s2">&quot;or [green]Type a comment/command[/green] (/h for available commands)</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;[bold yellow]&gt;[/bold yellow] &quot;</span>
+        <span class="p">)</span>
+        <span class="k">match</span> <span class="n">user_input</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">case</span> <span class="s2">&quot;&quot;</span> <span class="o">|</span> <span class="s2">&quot;/y&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># confirmed, do nothing</span>
+            <span class="k">case</span> <span class="s2">&quot;/u&quot;</span><span class="p">:</span>  <span class="c1"># Skip execution action and get back to query</span>
+                <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="s2">&quot;Command not executed. Switching to human mode&quot;</span><span class="p">)</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Command not executed. The user rejected your command with the following message: </span><span class="si">{</span><span class="n">user_input</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prompt_and_handle_special</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input.&quot;&quot;&quot;</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">user_input</span> <span class="o">=</span> <span class="n">prompt_session</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s2">&quot;/h&quot;</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Current mode: [bold green]</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2">[/bold green]</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;[bold green]/y[/bold green] to switch to [bold yellow]yolo[/bold yellow] mode (execute LM commands without confirmation)</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;[bold green]/c[/bold green] to switch to [bold yellow]confirmation[/bold yellow] mode (ask for confirmation before executing LM commands)</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;[bold green]/u[/bold green] to switch to [bold yellow]human[/bold yellow] mode (execute commands issued by the user)</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">[</span><span class="n">user_input</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;[bold red]Already in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2"> mode.[/bold red]</span><span class="se">\n</span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">[</span><span class="n">user_input</span><span class="p">]</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Switched to [bold green]</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2">[/bold green] mode.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">user_input</span>
+        <span class="k">return</span> <span class="n">user_input</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">has_finished</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Submitted</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">confirm_exit</span><span class="p">:</span>
+                <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                    <span class="s2">&quot;[bold green]Agent wants to finish.[/bold green] &quot;</span>
+                    <span class="s2">&quot;[green]Type a comment to give it a new task or press enter to quit.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;[bold yellow]&gt;[/bold yellow] &quot;</span><span class="p">,</span>
+                    <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_task</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user added a new task: </span><span class="si">{</span><span class="n">new_task</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">e</span>
+</code></pre></div>
+</details>
+<div class="grid cards">
+  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">bug_report</span>
+        <span class="nav-card-title">Something broken/unclear?</span>
+      </div>
+      <p class="nav-card-description">Open an issue on GitHub!</p>
+    </div>
+  </a>
+
+  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">help</span>
+        <span class="nav-card-title">Open-ended discussions</span>
+      </div>
+      <p class="nav-card-description">Join our Slack!</p>
+    </div>
+  </a>
+</div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+
+<!-- Floating Bubbles -->
+<div class="floating-bubbles">
+<div class="floating-bubbles-title">Our projects</div>
+  <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
+    <img src="../../assets/sweagent_logo.svg" alt="SWE-agent">
+    <span class="bubble-tooltip">SWE-agent</span>
+  </a>
+  <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
+    <img src="../../assets/swerex_logo.svg" alt="SWE-rex">
+    <span class="bubble-tooltip">SWE-ReX</span>
+  </a>
+  <a href="https://swesmith.com" class="bubble" title="SWE-smith">
+    <img src="../../assets/swesmith_logo.png" alt="SWE-smith">
+    <span class="bubble-tooltip">SWE-smith</span>
+  </a>
+  <a href="https://swebench.com" class="bubble" title="SWE-bench">
+    <img src="../../assets/swebench_logo.png" alt="SWE-bench">
+    <span class="bubble-tooltip">SWE-bench</span>
+  </a>
+  <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
+    <img src="../../assets/sbcli_logo.svg" alt="sb-cli">
+    <span class="bubble-tooltip">sb-cli</span>
+  </a>
+</div>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../mini/" class="md-footer__link md-footer__link--prev" aria-label="Previous: &lt;code&gt;mini&lt;/code&gt;">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                <code>mini</code>
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../swebench/" class="md-footer__link md-footer__link--next" aria-label="Next: SWE-bench">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                SWE-bench
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="../../assets/js/sh-annotation.js"></script>
+      
+        <script src="../../assets/js/gif-controls.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
