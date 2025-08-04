@@ -141,7 +141,6 @@ class SmartInputContainer(Container):
         )
         self._single_input = Input(placeholder="Type your input...")
         self._multi_input = TextArea("", show_line_numbers=False, classes="multi-input")
-
         self._input_elements_container = Vertical(
             self._header_display,
             self._hint_text,
@@ -208,10 +207,15 @@ class SmartInputContainer(Container):
             self._multi_input.text = self._single_input.value
             self._single_input.display = False
             self._multi_input.display = True
-
+            self._hint_text.update(
+                "[bold]Ctrl+D[/bold] to submit, [bold]Tab[/bold] to switch focus with other controls"
+            )
         else:
             self._multi_input.display = False
             self._single_input.display = True
+            self._hint_text.update(
+                "[bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line input, [bold]Tab[/bold] to switch focus with other controls",
+            )
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         """Handle single-line input submission."""
