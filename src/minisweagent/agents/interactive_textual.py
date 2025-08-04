@@ -132,14 +132,10 @@ class SmartInputContainer(Container):
         self._input_event = threading.Event()
         self._input_result: str | None = None
 
-        self._header_display = Static(
-            "USER INPUT REQUESTED", id="input-header-display", classes="message-header input-request-header"
-        )
-        self._hint_text = Static(
-            classes="hint-text",
-        )
+        self._header_display = Static(id="input-header-display", classes="message-header input-request-header")
+        self._hint_text = Static(classes="hint-text")
         self._single_input = Input(placeholder="Type your input...")
-        self._multi_input = TextArea("", show_line_numbers=False, classes="multi-input")
+        self._multi_input = TextArea(show_line_numbers=False, classes="multi-input")
         self._input_elements_container = Vertical(
             self._header_display,
             self._hint_text,
@@ -178,7 +174,6 @@ class SmartInputContainer(Container):
         """Internal method to complete the input process."""
         self._input_result = input_text
         self.pending_prompt = None
-        self._header_display.update("USER INPUT REQUESTED")
         self.display = False
         self._single_input.value = ""
         self._multi_input.text = ""
