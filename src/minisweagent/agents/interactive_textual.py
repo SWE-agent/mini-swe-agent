@@ -62,11 +62,12 @@ class TextualAgent(DefaultAgent):
             exit_status, result = super().run(task)
         except Exception as e:
             result = str(e)
+            self.app.call_from_thread(self.app.action_quit)
             print(traceback.format_exc())
-            self.app.call_from_thread(self.app.on_agent_finished, "ERROR", result)
             return "ERROR", result
         else:
             self.app.call_from_thread(self.app.on_agent_finished, exit_status, result)
+        self.app.call_from_thread(self.app.action_quit)
         return exit_status, result
 
     def execute_action(self, action: dict) -> dict:
