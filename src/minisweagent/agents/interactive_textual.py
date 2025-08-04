@@ -136,7 +136,6 @@ class SmartInputContainer(Container):
             "USER INPUT REQUESTED", id="input-header-display", classes="message-header input-request-header"
         )
         self._hint_text = Static(
-            "[bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line input, [bold]Tab[/bold] to switch focus with other controls",
             classes="hint-text",
         )
         self._single_input = Input(placeholder="Type your input...")
@@ -208,14 +207,14 @@ class SmartInputContainer(Container):
             self._single_input.display = False
             self._multi_input.display = True
             self._hint_text.update(
-                "[bold]Ctrl+D[/bold] to submit, [bold]Tab[/bold] to switch focus with other controls"
+                "[reverse][bold][$accent] Ctrl+D [/][/][/] to submit, [reverse][bold][$accent] Tab [/][/][/] to switch focus with other controls"
             )
         else:
+            self._hint_text.update(
+                "[reverse][bold][$accent] Enter [/][/][/] to submit, [reverse][bold][$accent] Ctrl+T [/][/][/] to switch to multi-line input, [reverse][bold][$accent] Tab [/][/][/] to switch focus with other controls",
+            )
             self._multi_input.display = False
             self._single_input.display = True
-            self._hint_text.update(
-                "[bold]Enter[/bold] to submit, [bold]Ctrl+T[/bold] to switch to multi-line input, [bold]Tab[/bold] to switch focus with other controls",
-            )
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         """Handle single-line input submission."""
