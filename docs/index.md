@@ -22,7 +22,7 @@ We now ask: **What if the agent was 100x smaller, and still worked nearly as wel
 
 `mini` is for
 
-- **Researchers** who want to **[benchmark](https://swe-bench.com), [fine-tune](https://swe-smith.com/) or RL** without assumptions, bloat, or surprises
+- **Researchers** who want to **[benchmark](https://swe-bench.com), [fine-tune](https://swesmith.com/) or RL** without assumptions, bloat, or surprises
 - 💻 **Developers** who like their tools like their scripts: **short, sharp, and readable**
 - **Engineers** who want something **trivial to sandbox & to deploy anywhere**
 
