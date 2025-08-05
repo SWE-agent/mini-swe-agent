@@ -2642,16 +2642,18 @@
 <span class="normal">67</span>
 <span class="normal">68</span>
 <span class="normal">69</span>
-<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="normal">70</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">action_quit</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">on_agent_finished</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="n">result</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">on_agent_finished</span><span class="p">,</span> <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">action_quit</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2675,8 +2677,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
-<span class="normal">73</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
@@ -2686,7 +2687,8 @@
 <span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">execute_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">83</span>
+<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">execute_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action_from_human</span><span class="p">:</span>  <span class="c1"># threading, grrrrr</span>
         <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="s2">&quot;Command not executed because user switched to manual mode.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span>
@@ -2720,8 +2722,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">85</span>
-<span class="normal">86</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">86</span>
 <span class="normal">87</span>
 <span class="normal">88</span>
 <span class="normal">89</span>
@@ -2730,7 +2731,8 @@
 <span class="normal">92</span>
 <span class="normal">93</span>
 <span class="normal">94</span>
-<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">has_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+<span class="normal">95</span>
+<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">has_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">has_finished</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">Submitted</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -2780,8 +2782,7 @@
 
                   <details class="quote">
                     <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">253</span>
-<span class="normal">254</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
 <span class="normal">255</span>
 <span class="normal">256</span>
 <span class="normal">257</span>
@@ -2796,7 +2797,8 @@
 <span class="normal">266</span>
 <span class="normal">267</span>
 <span class="normal">268</span>
-<span class="normal">269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="normal">269</span>
+<span class="normal">270</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">css_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MSWEA_MINI_STYLE_PATH&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;config&quot;</span> <span class="o">/</span> <span class="s2">&quot;mini.tcss&quot;</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">CSS</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">css_path</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -3083,14 +3085,14 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">286</span>
-<span class="normal">287</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">287</span>
 <span class="normal">288</span>
 <span class="normal">289</span>
 <span class="normal">290</span>
 <span class="normal">291</span>
 <span class="normal">292</span>
-<span class="normal">293</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
+<span class="normal">293</span>
+<span class="normal">294</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
     <span class="k">yield</span> <span class="n">Header</span><span class="p">()</span>
     <span class="k">with</span> <span class="n">Container</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;main&quot;</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="p">:</span>
@@ -3120,11 +3122,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">295</span>
-<span class="normal">296</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">296</span>
 <span class="normal">297</span>
 <span class="normal">298</span>
-<span class="normal">299</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">299</span>
+<span class="normal">300</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="s2">&quot;RUNNING&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">set_interval</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">8</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_headers</span><span class="p">)</span>
@@ -3151,12 +3153,12 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">303</span>
-<span class="normal">304</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">304</span>
 <span class="normal">305</span>
 <span class="normal">306</span>
 <span class="normal">307</span>
-<span class="normal">308</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_message_added</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">308</span>
+<span class="normal">309</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_message_added</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">auto_follow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_y</span> <span class="o">&lt;=</span> <span class="mi">1</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">_messages_to_steps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">messages</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
@@ -3186,10 +3188,10 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">310</span>
-<span class="normal">311</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">311</span>
 <span class="normal">312</span>
-<span class="normal">313</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_log_message_emitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">313</span>
+<span class="normal">314</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_log_message_emitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle log messages of warning level or higher by showing them as notifications.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&gt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">levelname</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span><span class="p">)</span>
@@ -3217,10 +3219,10 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">315</span>
-<span class="normal">316</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">316</span>
 <span class="normal">317</span>
-<span class="normal">318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_unmount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">318</span>
+<span class="normal">319</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_unmount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean up the log handler when the app shuts down.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;log_handler&quot;</span><span class="p">):</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_handler</span><span class="p">)</span>
@@ -3246,12 +3248,12 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">320</span>
-<span class="normal">321</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">321</span>
 <span class="normal">322</span>
 <span class="normal">323</span>
 <span class="normal">324</span>
-<span class="normal">325</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_agent_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exit_status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">325</span>
+<span class="normal">326</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_agent_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exit_status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="s2">&quot;STOPPED&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agent finished with status: </span><span class="si">{</span><span class="n">exit_status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">=</span> <span class="n">exit_status</span>
@@ -3279,8 +3281,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">329</span>
-<span class="normal">330</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">330</span>
 <span class="normal">331</span>
 <span class="normal">332</span>
 <span class="normal">333</span>
@@ -3306,7 +3307,8 @@
 <span class="normal">353</span>
 <span class="normal">354</span>
 <span class="normal">355</span>
-<span class="normal">356</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">356</span>
+<span class="normal">357</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">&quot;#content&quot;</span><span class="p">,</span> <span class="n">Vertical</span><span class="p">)</span>
     <span class="n">container</span><span class="o">.</span><span class="n">remove_children</span><span class="p">()</span>
     <span class="n">items</span> <span class="o">=</span> <span class="n">_messages_to_steps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
@@ -3356,11 +3358,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">372</span>
-<span class="normal">373</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">373</span>
 <span class="normal">374</span>
 <span class="normal">375</span>
-<span class="normal">376</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_yolo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">376</span>
+<span class="normal">377</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_yolo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;yolo&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># accept</span>
@@ -3387,11 +3389,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">378</span>
-<span class="normal">379</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">379</span>
 <span class="normal">380</span>
 <span class="normal">381</span>
-<span class="normal">382</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_human</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">382</span>
+<span class="normal">383</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_human</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;confirm&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="s2">&quot;User switched to manual mode, this command will be ignored&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;human&quot;</span>
@@ -3418,11 +3420,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">384</span>
-<span class="normal">385</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">385</span>
 <span class="normal">386</span>
 <span class="normal">387</span>
-<span class="normal">388</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_confirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">388</span>
+<span class="normal">389</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_confirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;human&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># just submit blank action</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;confirm&quot;</span>
@@ -3449,8 +3451,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">390</span>
-<span class="normal">391</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">391</span>
+<span class="normal">392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">+=</span> <span class="mi">1</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3474,8 +3476,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">393</span>
-<span class="normal">394</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_previous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">394</span>
+<span class="normal">395</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_previous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">-=</span> <span class="mi">1</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3499,8 +3501,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">396</span>
-<span class="normal">397</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_first_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">397</span>
+<span class="normal">398</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_first_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">=</span> <span class="mi">0</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3524,8 +3526,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">399</span>
-<span class="normal">400</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_last_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">400</span>
+<span class="normal">401</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_last_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3549,8 +3551,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">402</span>
-<span class="normal">403</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_down</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">403</span>
+<span class="normal">404</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_down</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_to</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_target_y</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3574,8 +3576,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">405</span>
-<span class="normal">406</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">406</span>
+<span class="normal">407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_to</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_target_y</span> <span class="o">-</span> <span class="mi">15</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3618,8 +3620,7 @@
 
                   <details class="quote">
                     <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
-<span class="normal">124</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
 <span class="normal">127</span>
@@ -3640,7 +3641,8 @@
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="s2">&quot;AgentApp&quot;</span><span class="p">):</span>
+<span class="normal">145</span>
+<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="s2">&quot;AgentApp&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Smart input container supporting single-line and multi-line input modes.&quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">classes</span><span class="o">=</span><span class="s2">&quot;smart-input-container&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_app</span> <span class="o">=</span> <span class="n">app</span>
@@ -3760,8 +3762,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
-<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
     <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_elements_container</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3787,10 +3789,10 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">150</span>
-<span class="normal">151</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
 <span class="normal">152</span>
-<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">153</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the widget state.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_update_mode_display</span><span class="p">()</span>
@@ -3818,12 +3820,12 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">155</span>
-<span class="normal">156</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
 <span class="normal">159</span>
-<span class="normal">160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_focus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">160</span>
+<span class="normal">161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_focus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Called when the container gains focus.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="o">.</span><span class="n">focus</span><span class="p">()</span>
@@ -3853,8 +3855,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
-<span class="normal">163</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">163</span>
 <span class="normal">164</span>
 <span class="normal">165</span>
 <span class="normal">166</span>
@@ -3862,7 +3863,8 @@
 <span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
-<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">request_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">request_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Request input from user. Returns input text (empty string if confirmed without reason).&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_input_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_input_result</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3896,14 +3898,14 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
-<span class="normal">190</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">190</span>
 <span class="normal">191</span>
 <span class="normal">192</span>
 <span class="normal">193</span>
 <span class="normal">194</span>
 <span class="normal">195</span>
-<span class="normal">196</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_toggle_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">196</span>
+<span class="normal">197</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_toggle_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Switch from single-line to multi-line mode (one-way only).&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span><span class="p">:</span>
         <span class="k">return</span>
@@ -3935,11 +3937,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">214</span>
-<span class="normal">215</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">215</span>
 <span class="normal">216</span>
 <span class="normal">217</span>
-<span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_input_submitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Input</span><span class="o">.</span><span class="n">Submitted</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">218</span>
+<span class="normal">219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_input_submitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Input</span><span class="o">.</span><span class="n">Submitted</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle single-line input submission.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span><span class="p">:</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -3968,8 +3970,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
-<span class="normal">221</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">221</span>
 <span class="normal">222</span>
 <span class="normal">223</span>
 <span class="normal">224</span>
@@ -3984,7 +3985,8 @@
 <span class="normal">233</span>
 <span class="normal">234</span>
 <span class="normal">235</span>
-<span class="normal">236</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">236</span>
+<span class="normal">237</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle key events.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;ctrl+t&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span><span class="p">:</span>
         <span class="n">event</span><span class="o">.</span><span class="n">prevent_default</span><span class="p">()</span>
@@ -4042,10 +4044,10 @@
 
                   <details class="quote">
                     <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
-<span class="normal">100</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
 <span class="normal">101</span>
-<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom log handler that forwards messages via callback.&quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
@@ -4102,8 +4104,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
-<span class="normal">105</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
+<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
 </code></pre></div></td></tr></table></div>
             </details>
