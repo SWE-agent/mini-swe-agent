@@ -1580,7 +1580,8 @@
 <li><strong>Executes actions with <code>subprocess.run</code></strong> — every action is completely independent (as opposed to keeping a stateful shell session running). This makes it trivial to execute the actions in sandboxes (literally just switch out <code>subprocess.run</code> with <code>docker exec</code>) and to scale up effortlessly.
   Seriously, this is <a href="faq/#why-no-shell-session">a big deal</a>, trust me.</li>
 </ul>
-<p>This makes it perfect as a baseline system and for a system that puts the language model (rather than the agent scaffold) in the middle of our attention.</p>
+<p>This makes it perfect as a baseline system and for a system that puts the language model (rather than the agent scaffold) in the middle of our attention.
+You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bash only)</a> leaderboard, that evaluates the performance of different LMs with <code>mini</code>.</p>
 </details>
 <details class="note">
 <summary>Why use mini-SWE-agent as a tool?</summary>
