@@ -51,6 +51,7 @@ Here's some details:
       Seriously, this is [a big deal](faq.md#why-no-shell-session), trust me.
 
     This makes it perfect as a baseline system and for a system that puts the language model (rather than the agent scaffold) in the middle of our attention.
+    You can see the result on the [SWE-bench (bash only)](https://www.swebench.com/) leaderboard, that evaluates the performance of different LMs with `mini`.
 
 ??? note "Why use mini-SWE-agent as a tool?"
 
