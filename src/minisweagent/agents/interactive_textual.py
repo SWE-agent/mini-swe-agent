@@ -9,17 +9,19 @@ import re
 import threading
 import time
 import traceback
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
 from rich.spinner import Spinner
 from rich.text import Text
-from textual.app import App, ComposeResult
+from textual.app import App, ComposeResult, SystemCommand
 from textual.binding import Binding
 from textual.containers import Container, Vertical, VerticalScroll
 from textual.css.query import NoMatches
 from textual.events import Key
+from textual.screen import Screen
 from textual.widgets import Footer, Header, Input, Static, TextArea
 
 from minisweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException, Submitted
@@ -239,16 +241,21 @@ class SmartInputContainer(Container):
 
 class AgentApp(App):
     BINDINGS = [
-        Binding("right,l", "next_step", "Step++"),
-        Binding("left,h", "previous_step", "Step--"),
-        Binding("0", "first_step", "Step=0"),
-        Binding("$", "last_step", "Step=-1"),
+        Binding("right,l", "next_step", "Step++", tooltip="Show next step of the agent"),
+        Binding("left,h", "previous_step", "Step--", tooltip="Show previous step of the agent"),
+        Binding("0", "first_step", "Step=0", tooltip="Show first step of the agent"),
+        Binding("$", "last_step", "Step=-1", tooltip="Show last step of the agent"),
         Binding("j,down", "scroll_down", "Scroll down"),
         Binding("k,up", "scroll_up", "Scroll up"),
-        Binding("q", "quit", "Quit"),
-        Binding("y", "yolo", "Switch to YOLO Mode"),
-        Binding("c", "confirm", "Switch to Confirm Mode"),
-        Binding("u", "human", "Switch to Human Mode"),
+        Binding("q", "quit", "Quit", tooltip="Quit the agent"),
+        Binding("y", "yolo", "YOLO mode", tooltip="Switch to YOLO Mode (LM actions will execute immediately)"),
+        Binding(
+            "c",
+            "confirm",
+            "CONFIRM mode",
+            tooltip="Switch to Confirm Mode (LM proposes commands and you confirm/reject them)",
+        ),
+        Binding("u", "human", "HUMAN mode", tooltip="Switch to Human Mode (you can now type commands directly)"),
     ]
 
     def __init__(self, model, env, task: str, **kwargs):
@@ -367,6 +374,14 @@ class AgentApp(App):
             self.query_one("Header").set_class(self.agent_state == "RUNNING", "running")
         except NoMatches:  # might be called when shutting down
             pass
+
+    # --- Other textual overrides ---
+
+    def get_system_commands(self, screen: Screen) -> Iterable[SystemCommand]:
+        # Add to palette
+        yield from super().get_system_commands(screen)
+        for binding in self.BINDINGS:
+            yield SystemCommand(binding.description, binding.tooltip, binding.action)  # type: ignore[attr-defined]
 
     # --- Textual bindings ---
 
