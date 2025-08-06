@@ -2111,7 +2111,8 @@
 <span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
-<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
+<span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">visual</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>
         <span class="kc">False</span><span class="p">,</span>
@@ -2158,7 +2159,8 @@
     <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="p">{}))</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">LocalEnvironment</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="p">{}))</span>
 
-    <span class="k">if</span> <span class="n">visual</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_VISUAL_MODE_DEFAULT&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
+    <span class="c1"># Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it&#39;s essentially a XOR</span>
+    <span class="k">if</span> <span class="n">visual</span> <span class="o">==</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_VISUAL_MODE_DEFAULT&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">run_textual</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">],</span> <span class="n">task</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">run_interactive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">],</span> <span class="n">task</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
