@@ -42,11 +42,19 @@ Useful switches:
 
 ## Key bindings
 
-- `q`: Quit the agent
+!!! tip "Focused input fields"
+
+  Whenever you are prompted to enter text, the input field will be focused.
+  You can use `Tab` or `Esc` to switch between the input field controls and the general controls below.
+
+- `f1` or `?`: Show keybinding help
+- `q` (or `ctrl+q`): Quit the agent
 - `c`: Switch to `confirm` mode
-- `y`: Switch to `yolo` mode
-- `h` or `LEFT`: Go back in history
-- `l` or `RIGHT`: Go forward in history
+- `y` (or `ctrl+y`): Switch to `yolo` mode
+- `h` or `LEFT`: Go to previous step of the agent
+- `l` or `RIGHT`: Go to next step of the agent
+- `0`: Go to first step of the agent
+- `$`: Go to last step of the agent
 - `j` or `DOWN`: Scroll down
 - `k` or `UP`: Scroll up
 
