@@ -243,19 +243,20 @@ class AgentApp(App):
     BINDINGS = [
         Binding("right,l", "next_step", "Step++", tooltip="Show next step of the agent"),
         Binding("left,h", "previous_step", "Step--", tooltip="Show previous step of the agent"),
-        Binding("0", "first_step", "Step=0", tooltip="Show first step of the agent"),
-        Binding("$", "last_step", "Step=-1", tooltip="Show last step of the agent"),
-        Binding("j,down", "scroll_down", "Scroll down"),
-        Binding("k,up", "scroll_up", "Scroll up"),
-        Binding("q", "quit", "Quit", tooltip="Quit the agent"),
-        Binding("y", "yolo", "YOLO mode", tooltip="Switch to YOLO Mode (LM actions will execute immediately)"),
+        Binding("0", "first_step", "Step=0", tooltip="Show first step of the agent", show=False),
+        Binding("$", "last_step", "Step=-1", tooltip="Show last step of the agent", show=False),
+        Binding("j,down", "scroll_down", "Scroll down", show=False),
+        Binding("k,up", "scroll_up", "Scroll up", show=False),
+        Binding("q,ctrl+q", "quit", "Quit", tooltip="Quit the agent"),
+        Binding("y,ctrl+y", "yolo", "YOLO mode", tooltip="Switch to YOLO Mode (LM actions will execute immediately)"),
         Binding(
             "c",
             "confirm",
             "CONFIRM mode",
             tooltip="Switch to Confirm Mode (LM proposes commands and you confirm/reject them)",
         ),
-        Binding("u", "human", "HUMAN mode", tooltip="Switch to Human Mode (you can now type commands directly)"),
+        Binding("u,ctrl+u", "human", "HUMAN mode", tooltip="Switch to Human Mode (you can now type commands directly)"),
+        Binding("f1,question_mark", "toggle_help_panel", "Help", tooltip="Show help"),
     ]
 
     def __init__(self, model, env, task: str, **kwargs):
@@ -421,3 +422,9 @@ class AgentApp(App):
 
     def action_scroll_up(self) -> None:
         self._vscroll.scroll_to(y=self._vscroll.scroll_target_y - 15)
+
+    def action_toggle_help_panel(self) -> None:
+        if self.query("HelpPanel"):
+            self.action_hide_help_panel()
+        else:
+            self.action_show_help_panel()
