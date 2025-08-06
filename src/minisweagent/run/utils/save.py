@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from minisweagent import Agent
+from minisweagent import Agent, __version__
 
 
 def save_traj(
@@ -34,6 +34,7 @@ def save_traj(
                 "instance_cost": 0.0,
                 "api_calls": 0,
             },
+            "mini_version": __version__,
         },
         "messages": [],
         "trajectory_format": "mini-swe-agent-1",
