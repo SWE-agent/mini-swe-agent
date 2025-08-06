@@ -381,7 +381,8 @@ class AgentApp(App):
         # Add to palette
         yield from super().get_system_commands(screen)
         for binding in self.BINDINGS:
-            yield SystemCommand(binding.description, binding.tooltip, binding.action)  # type: ignore[attr-defined]
+            description = f"{binding.description} (shortcut {' OR '.join(binding.key.split(','))})"  # type: ignore[attr-defined]
+            yield SystemCommand(description, binding.tooltip, binding.action)  # type: ignore[attr-defined]
 
     # --- Textual bindings ---
 
