@@ -20,6 +20,17 @@
 
 ## Command line options
 
+Invocation
+
+```bash
+mini -v [other options]
+```
+
+!!! tip "Default visual mode"
+
+  If you want to use the visual mode by default, you can set the `MSWEA_VISUAL_MODE_DEFAULT` environment variable to `true`
+  (`mini-extra config set MSWEA_VISUAL_MODE_DEFAULT true`).
+
 Useful switches:
 
 - `-h`/`--help`: Show help

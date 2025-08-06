@@ -122,6 +122,10 @@ MSWEA_MINI_STYLE_PATH="/path/to/your/mini/style.tcss"
 # Default run script entry point for the main CLI
 # (default: "minisweagent.run.mini")
 MSWEA_DEFAULT_RUN="minisweagent.run.mini"
+
+# Set to true to use visual mode by default for the main CLI
+# (default: false)
+MSWEA_VISUAL_MODE_DEFAULT="false"
 ```
 
 ## Agent configuration files

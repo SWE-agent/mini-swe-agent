@@ -73,7 +73,12 @@ def run_textual(model: Model, env: Environment, agent_config: dict, task: str, o
 
 @app.command(help=_HELP_TEXT)
 def main(
-    visual: bool = typer.Option(False, "-v", "--visual", help="Use visual (pager-style) UI (Textual)"),
+    visual: bool = typer.Option(
+        False,
+        "-v",
+        "--visual",
+        help="Toggle (pager-style) UI (Textual) depending on the MSWEA_VISUAL_MODE_DEFAULT environment setting",
+    ),
     model_name: str | None = typer.Option(
         None,
         "-m",
@@ -113,7 +118,7 @@ def main(
     model = get_model(model_name, config.get("model", {}))
     env = LocalEnvironment(**config.get("env", {}))
 
-    if visual:
+    if visual and os.getenv("MSWEA_VISUAL_MODE_DEFAULT", "false") == "true":
         return run_textual(model, env, config["agent"], task, output)  # type: ignore[arg-type]
     else:
         return run_interactive(model, env, config["agent"], task, output)  # type: ignore[arg-type]
