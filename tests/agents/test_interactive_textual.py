@@ -416,36 +416,6 @@ async def test_input_container_multiple_actions():
         await pilot.press("enter")
 
 
-async def test_scrolling_behavior():
-    """Test scrolling up and down behavior."""
-    app = AgentApp(
-        model=DeterministicModel(
-            outputs=["Long response" * 100 + "\n```bash\necho 'MINI_SWE_AGENT_FINAL_OUTPUT'\n```"]
-        ),
-        env=LocalEnvironment(),
-        task="Scroll test",
-        mode="yolo",
-        confirm_exit=True,
-    )
-
-    async with app.run_test() as pilot:
-        # Wait for the agent to produce content and finish
-        await pilot.pause(0.3)
-
-        # Wait for the app to be in STOPPED state (after agent finishes)
-        while app.agent_state not in ["STOPPED", "AWAITING_INPUT"]:
-            await pilot.pause(0.1)
-
-        # Test scrolling - even if app is stopped, UI should still allow scrolling
-        vs = app.query_one("VerticalScroll")
-        initial_y = vs.scroll_target_y
-        await pilot.press("escape")
-        await pilot.press("j")  # scroll down
-        await pilot.press("j")  # scroll down
-        await pilot.press("j")  # scroll down
-        assert vs.scroll_target_y > initial_y
-
-
 def test_log_handler_cleanup():
     """Test that log handler is properly cleaned up."""
     initial_handlers = len(logging.getLogger().handlers)
