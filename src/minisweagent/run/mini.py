@@ -118,7 +118,8 @@ def main(
     model = get_model(model_name, config.get("model", {}))
     env = LocalEnvironment(**config.get("env", {}))
 
-    if visual and os.getenv("MSWEA_VISUAL_MODE_DEFAULT", "false") == "false":
+    # Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it's essentially a XOR
+    if visual == (os.getenv("MSWEA_VISUAL_MODE_DEFAULT", "false") == "false"):
         return run_textual(model, env, config["agent"], task, output)  # type: ignore[arg-type]
     else:
         return run_interactive(model, env, config["agent"], task, output)  # type: ignore[arg-type]
