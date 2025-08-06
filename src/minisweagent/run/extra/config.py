@@ -12,7 +12,7 @@ from dotenv import set_key, unset_key
 from prompt_toolkit import prompt
 from rich.console import Console
 from rich.rule import Rule
-from typer import Option, Typer
+from typer import Argument, Typer
 
 from minisweagent import global_config_file
 
@@ -79,16 +79,22 @@ def setup():
 
 @app.command()
 def set(
-    key: str = Option(..., help="The key to set", prompt=True),
-    value: str = Option(..., help="The value to set", prompt=True),
+    key: str | None = Argument(None, help="The key to set"),
+    value: str | None = Argument(None, help="The value to set"),
 ):
     """Set a key in the global config file."""
+    if key is None:
+        key = prompt("Enter the key to set: ")
+    if value is None:
+        value = prompt(f"Enter the value for {key}: ")
     set_key(global_config_file, key, value)
 
 
 @app.command()
-def unset(key: str = Option(..., help="The key to unset")):
+def unset(key: str | None = Argument(None, help="The key to unset")):
     """Unset a key in the global config file."""
+    if key is None:
+        key = prompt("Enter the key to unset: ")
     unset_key(global_config_file, key)
 
 

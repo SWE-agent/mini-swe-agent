@@ -110,8 +110,72 @@ class TestConfigSetup:
 class TestConfigSet:
     """Test the set function for setting individual key-value pairs."""
 
+    def test_set_with_both_arguments_provided(self, tmp_path):
+        """Test set command when both key and value are provided as arguments."""
+        config_file = tmp_path / ".env"
+
+        with patch("minisweagent.run.extra.config.global_config_file", config_file):
+            set("MSWEA_MODEL_NAME", "claude-sonnet-4-20250514")
+
+            assert config_file.exists()
+            content = config_file.read_text()
+            assert "MSWEA_MODEL_NAME='claude-sonnet-4-20250514'" in content
+
+    def test_set_with_no_arguments_prompts_for_both(self, tmp_path):
+        """Test set command when no arguments provided - should prompt for both key and value."""
+        config_file = tmp_path / ".env"
+
+        with (
+            patch("minisweagent.run.extra.config.global_config_file", config_file),
+            patch("minisweagent.run.extra.config.prompt") as mock_prompt,
+        ):
+            mock_prompt.side_effect = ["TEST_KEY", "test_value"]
+
+            set(None, None)
+
+            assert mock_prompt.call_count == 2
+            mock_prompt.assert_any_call("Enter the key to set: ")
+            mock_prompt.assert_any_call("Enter the value for TEST_KEY: ")
+
+            content = config_file.read_text()
+            assert "TEST_KEY='test_value'" in content
+
+    def test_set_with_key_only_prompts_for_value(self, tmp_path):
+        """Test set command when only key is provided - should prompt for value."""
+        config_file = tmp_path / ".env"
+
+        with (
+            patch("minisweagent.run.extra.config.global_config_file", config_file),
+            patch("minisweagent.run.extra.config.prompt") as mock_prompt,
+        ):
+            mock_prompt.return_value = "prompted_value"
+
+            set("PROVIDED_KEY", None)
+
+            mock_prompt.assert_called_once_with("Enter the value for PROVIDED_KEY: ")
+
+            content = config_file.read_text()
+            assert "PROVIDED_KEY='prompted_value'" in content
+
+    def test_set_with_value_only_prompts_for_key(self, tmp_path):
+        """Test set command when only value is provided - should prompt for key."""
+        config_file = tmp_path / ".env"
+
+        with (
+            patch("minisweagent.run.extra.config.global_config_file", config_file),
+            patch("minisweagent.run.extra.config.prompt") as mock_prompt,
+        ):
+            mock_prompt.return_value = "prompted_key"
+
+            set(None, "PROVIDED_VALUE")
+
+            mock_prompt.assert_called_once_with("Enter the key to set: ")
+
+            content = config_file.read_text()
+            assert "prompted_key='PROVIDED_VALUE'" in content
+
     def test_set_key_value(self, tmp_path):
-        """Test setting a key-value pair."""
+        """Test setting a key-value pair (legacy test for compatibility)."""
         config_file = tmp_path / ".env"
 
         with patch("minisweagent.run.extra.config.global_config_file", config_file):
@@ -159,12 +223,59 @@ class TestConfigSet:
             # Other keys should remain unchanged
             assert "OTHER_KEY=other-value" in content
 
+    def test_set_with_empty_strings_via_prompt(self, tmp_path):
+        """Test set command when prompted values are empty strings."""
+        config_file = tmp_path / ".env"
+
+        with (
+            patch("minisweagent.run.extra.config.global_config_file", config_file),
+            patch("minisweagent.run.extra.config.prompt") as mock_prompt,
+        ):
+            mock_prompt.side_effect = ["EMPTY_KEY", ""]
+
+            set(None, None)
+
+            content = config_file.read_text()
+            assert "EMPTY_KEY=''" in content
+
 
 class TestConfigUnset:
     """Test the unset function for removing key-value pairs."""
 
+    def test_unset_with_argument_provided(self, tmp_path):
+        """Test unset command when key is provided as argument."""
+        config_file = tmp_path / ".env"
+        config_file.write_text("MSWEA_MODEL_NAME='gpt-4'\nOPENAI_API_KEY='sk-test123'\n")
+
+        with patch("minisweagent.run.extra.config.global_config_file", config_file):
+            unset("MSWEA_MODEL_NAME")
+
+            content = config_file.read_text()
+            assert "MSWEA_MODEL_NAME" not in content
+            # Other keys should remain
+            assert "OPENAI_API_KEY='sk-test123'" in content
+
+    def test_unset_with_no_argument_prompts_for_key(self, tmp_path):
+        """Test unset command when no argument provided - should prompt for key."""
+        config_file = tmp_path / ".env"
+        config_file.write_text("TEST_KEY='test_value'\nOTHER_KEY='other_value'\n")
+
+        with (
+            patch("minisweagent.run.extra.config.global_config_file", config_file),
+            patch("minisweagent.run.extra.config.prompt") as mock_prompt,
+        ):
+            mock_prompt.return_value = "TEST_KEY"
+
+            unset(None)
+
+            mock_prompt.assert_called_once_with("Enter the key to unset: ")
+
+            content = config_file.read_text()
+            assert "TEST_KEY" not in content
+            assert "OTHER_KEY='other_value'" in content
+
     def test_unset_existing_key(self, tmp_path):
-        """Test unsetting an existing key."""
+        """Test unsetting an existing key (legacy test for compatibility)."""
         config_file = tmp_path / ".env"
         config_file.write_text("MSWEA_MODEL_NAME='gpt-4'\nOPENAI_API_KEY='sk-test123'\n")
 
