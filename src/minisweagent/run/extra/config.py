@@ -25,9 +25,7 @@ app = Typer(
 console = Console(highlight=False)
 
 
-_SETUP_HELP = """Welcome to Mini!
-
-To get started, we need to set up your global config file.
+_SETUP_HELP = """To get started, we need to set up your global config file.
 
 You can edit it manually or use the [bold green]mini-extra config set[/bold green] or [bold green]mini-extra config edit[/bold green] commands.
 
@@ -39,6 +37,8 @@ Here's a few popular models and the required API keys:
 [bold green]o3[/bold green] ([bold green]OPENAI_API_KEY[/bold green])
 
 [bold yellow]You can leave any setting blank to skip it.[/bold yellow]
+
+More information at https://mini-swe-agent.com/latest/quickstart/
 """
 
 

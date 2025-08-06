@@ -125,6 +125,11 @@
     If you missed the setup wizard, just run `mini-extra config setup`, or take a look at the following section.
     If you want to use local models, please check this [guide](advanced/local_models.md).
 
+!!! tip "Which model to use?"
+
+    We recommend using `claude-sonnet-4-20250514` for most tasks.
+    You can check scores of different models at our [SWE-bench (bash-only)](https://swe-bench.com) leaderboard.
+
 ### Setting API keys
 
 There are several ways to set your API keys:
