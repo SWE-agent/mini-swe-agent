@@ -66,8 +66,8 @@ class DefaultAgent:
         cs = asdict(self.config) | asdict(self.env.config) | asdict(self.model.config) | platform.uname()._asdict()
         return Template(template).render(**kwargs, **cs, **os.environ)
 
-    def add_message(self, role: str, content: str):
-        self.messages.append({"role": role, "content": content})
+    def add_message(self, role: str, content: str, **kwargs):
+        self.messages.append({"role": role, "content": content, **kwargs})
 
     def run(self, task: str) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
@@ -92,7 +92,7 @@ class DefaultAgent:
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
             raise LimitsExceeded()
         response = self.model.query(self.messages)
-        self.add_message("assistant", response["content"])
+        self.add_message("assistant", **response)
         return response
 
     def get_observation(self, response: dict) -> dict:
