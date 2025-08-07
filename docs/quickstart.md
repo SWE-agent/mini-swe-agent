@@ -204,3 +204,325 @@ There are several ways to set your API keys:
 * If you want to use local models, please check this [guide](advanced/local_models.md).
 
 {% include-markdown "_footer.md" %}
+
+
+### GPT-5 and friends <a name="gpt-5"></a>
+
+`gpt-5` and friends are not included in `litellm` yet, so we need to register them manually.
+For this, first create the following file:
+
+??? note "model_registry.json"
+
+    ```json
+    {
+        "gpt-5": {
+            "max_tokens": 128000,
+            "max_input_tokens": 400000,
+            "max_output_tokens": 128000,
+            "input_cost_per_token": 1.25e-06,
+            "output_cost_per_token": 1e-05,
+            "cache_read_input_token_cost": 1.25e-07,
+            "litellm_provider": "openai",
+            "mode": "chat",
+            "supported_endpoints": [
+                "/v1/chat/completions",
+                "/v1/batch",
+                "/v1/responses"
+            ],
+            "supported_modalities": [
+                "text",
+                "image"
+            ],
+            "supported_output_modalities": [
+                "text"
+            ],
+            "supports_pdf_input": true,
+            "supports_function_calling": true,
+            "supports_parallel_function_calling": true,
+            "supports_response_schema": true,
+            "supports_vision": true,
+            "supports_prompt_caching": true,
+            "supports_system_messages": true,
+            "supports_tool_choice": true,
+            "supports_native_streaming": true,
+            "supports_reasoning": true
+        },
+        "gpt-5-mini": {
+            "max_tokens": 128000,
+            "max_input_tokens": 400000,
+            "max_output_tokens": 128000,
+            "input_cost_per_token": 2.5e-07,
+            "output_cost_per_token": 2e-06,
+            "cache_read_input_token_cost": 2.5e-08,
+            "litellm_provider": "openai",
+            "mode": "chat",
+            "supported_endpoints": [
+                "/v1/chat/completions",
+                "/v1/batch",
+                "/v1/responses"
+            ],
+            "supported_modalities": [
+                "text",
+                "image"
+            ],
+            "supported_output_modalities": [
+                "text"
+            ],
+            "supports_pdf_input": true,
+            "supports_function_calling": true,
+            "supports_parallel_function_calling": true,
+            "supports_response_schema": true,
+            "supports_vision": true,
+            "supports_prompt_caching": true,
+            "supports_system_messages": true,
+            "supports_tool_choice": true,
+            "supports_native_streaming": true,
+            "supports_reasoning": true
+        },
+        "gpt-5-nano": {
+            "max_tokens": 128000,
+            "max_input_tokens": 400000,
+            "max_output_tokens": 128000,
+            "input_cost_per_token": 5e-08,
+            "output_cost_per_token": 4e-07,
+            "cache_read_input_token_cost": 5e-09,
+            "litellm_provider": "openai",
+            "mode": "chat",
+            "supported_endpoints": [
+                "/v1/chat/completions",
+                "/v1/batch",
+                "/v1/responses"
+            ],
+            "supported_modalities": [
+                "text",
+                "image"
+            ],
+            "supported_output_modalities": [
+                "text"
+            ],
+            "supports_pdf_input": true,
+            "supports_function_calling": true,
+            "supports_parallel_function_calling": true,
+            "supports_response_schema": true,
+            "supports_vision": true,
+            "supports_prompt_caching": true,
+            "supports_system_messages": true,
+            "supports_tool_choice": true,
+            "supports_native_streaming": true,
+            "supports_reasoning": true
+        },
+        "gpt-5-chat": {
+            "max_tokens": 32768,
+            "max_input_tokens": 1047576,
+            "max_output_tokens": 32768,
+            "input_cost_per_token": 5e-06,
+            "output_cost_per_token": 2e-05,
+            "input_cost_per_token_batches": 2.5e-06,
+            "output_cost_per_token_batches": 1e-05,
+            "cache_read_input_token_cost": 1.25e-06,
+            "litellm_provider": "openai",
+            "mode": "chat",
+            "supported_endpoints": [
+                "/v1/chat/completions",
+                "/v1/batch",
+                "/v1/responses"
+            ],
+            "supported_modalities": [
+                "text",
+                "image"
+            ],
+            "supported_output_modalities": [
+                "text"
+            ],
+            "supports_pdf_input": true,
+            "supports_function_calling": true,
+            "supports_parallel_function_calling": true,
+            "supports_response_schema": true,
+            "supports_vision": true,
+            "supports_prompt_caching": true,
+            "supports_system_messages": true,
+            "supports_tool_choice": true,
+            "supports_native_streaming": true
+        },
+        "gpt-5-chat-latest": {
+            "max_tokens": 128000,
+            "max_input_tokens": 400000,
+            "max_output_tokens": 128000,
+            "input_cost_per_token": 1.25e-06,
+            "output_cost_per_token": 1e-05,
+            "cache_read_input_token_cost": 1.25e-07,
+            "litellm_provider": "openai",
+            "mode": "chat",
+            "supported_endpoints": [
+                "/v1/chat/completions",
+                "/v1/batch",
+                "/v1/responses"
+            ],
+            "supported_modalities": [
+                "text",
+                "image"
+            ],
+            "supported_output_modalities": [
+                "text"
+            ],
+            "supports_pdf_input": true,
+            "supports_function_calling": true,
+            "supports_parallel_function_calling": true,
+            "supports_response_schema": true,
+            "supports_vision": true,
+            "supports_prompt_caching": true,
+            "supports_system_messages": true,
+            "supports_tool_choice": true,
+            "supports_native_streaming": true,
+            "supports_reasoning": true
+        },
+        "gpt-5-2025-08-07": {
+            "max_tokens": 128000,
+            "max_input_tokens": 400000,
+            "max_output_tokens": 128000,
+            "input_cost_per_token": 1.25e-06,
+            "output_cost_per_token": 1e-05,
+            "cache_read_input_token_cost": 1.25e-07,
+            "litellm_provider": "openai",
+            "mode": "chat",
+            "supported_endpoints": [
+                "/v1/chat/completions",
+                "/v1/batch",
+                "/v1/responses"
+            ],
+            "supported_modalities": [
+                "text",
+                "image"
+            ],
+            "supported_output_modalities": [
+                "text"
+            ],
+            "supports_pdf_input": true,
+            "supports_function_calling": true,
+            "supports_parallel_function_calling": true,
+            "supports_response_schema": true,
+            "supports_vision": true,
+            "supports_prompt_caching": true,
+            "supports_system_messages": true,
+            "supports_tool_choice": true,
+            "supports_native_streaming": true,
+            "supports_reasoning": true
+        },
+        "gpt-5-mini-2025-08-07": {
+            "max_tokens": 128000,
+            "max_input_tokens": 400000,
+            "max_output_tokens": 128000,
+            "input_cost_per_token": 2.5e-07,
+            "output_cost_per_token": 2e-06,
+            "cache_read_input_token_cost": 2.5e-08,
+            "litellm_provider": "openai",
+            "mode": "chat",
+            "supported_endpoints": [
+                "/v1/chat/completions",
+                "/v1/batch",
+                "/v1/responses"
+            ],
+            "supported_modalities": [
+                "text",
+                "image"
+            ],
+            "supported_output_modalities": [
+                "text"
+            ],
+            "supports_pdf_input": true,
+            "supports_function_calling": true,
+            "supports_parallel_function_calling": true,
+            "supports_response_schema": true,
+            "supports_vision": true,
+            "supports_prompt_caching": true,
+            "supports_system_messages": true,
+            "supports_tool_choice": true,
+            "supports_native_streaming": true,
+            "supports_reasoning": true
+        },
+        "gpt-5-nano-2025-08-07": {
+            "max_tokens": 128000,
+            "max_input_tokens": 400000,
+            "max_output_tokens": 128000,
+            "input_cost_per_token": 5e-08,
+            "output_cost_per_token": 4e-07,
+            "cache_read_input_token_cost": 5e-09,
+            "litellm_provider": "openai",
+            "mode": "chat",
+            "supported_endpoints": [
+                "/v1/chat/completions",
+                "/v1/batch",
+                "/v1/responses"
+            ],
+            "supported_modalities": [
+                "text",
+                "image"
+            ],
+            "supported_output_modalities": [
+                "text"
+            ],
+            "supports_pdf_input": true,
+            "supports_function_calling": true,
+            "supports_parallel_function_calling": true,
+            "supports_response_schema": true,
+            "supports_vision": true,
+            "supports_prompt_caching": true,
+            "supports_system_messages": true,
+            "supports_tool_choice": true,
+            "supports_native_streaming": true,
+            "supports_reasoning": true
+        }
+    }
+    ```
+
+Now tell `mini` where to find the file
+
+```bash
+mini-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json
+```
+
+Now you're good to go! The only thing to keep in mind is to
+
+1. Reference the model together with the provider, e.g., `openai/gpt-5` (rather than just `gpt-5`)
+2. Select a config file without temperature setting, e.g., [`mini_no_temp.yaml`](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini_no_temp.yaml)
+
+Here's a few example
+
+=== "GPT-5"
+
+    ```bash
+    mini -v -m openai/gpt-5 -c mini_no_temp
+    ```
+
+=== "GPT-5-mini"
+
+    ```bash
+    mini -v -m openai/gpt-5-mini -c mini_no_temp
+    ```
+
+=== "GPT-5-nano"
+
+    ```bash
+    mini -v -m openai/gpt-5-nano -c mini_no_temp
+    ```
+
+Or with the [visual UI](usage/mini_v.md):
+
+=== "GPT-5"
+
+    ```bash
+    mini -v -m openai/gpt-5 -c mini_no_temp
+    ```
+
+=== "GPT-5-mini"
+
+    ```bash
+    mini -v -m openai/gpt-5-mini -c mini_no_temp
+    ```
+
+=== "GPT-5-nano"
+
+    ```bash
+    mini -v -m openai/gpt-5-nano -c mini_no_temp
+    ```
+
