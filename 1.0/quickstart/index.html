@@ -514,6 +514,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#gpt-5-and-friends" class="md-nav__link">
+    <span class="md-ellipsis">
+      GPT-5 and friends
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1587,6 +1596,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#gpt-5-and-friends" class="md-nav__link">
+    <span class="md-ellipsis">
+      GPT-5 and friends
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1808,6 +1826,315 @@ XINFERENCE_API_KEY
       <p class="nav-card-description">Join our Slack!</p>
     </div>
   </a>
+</div>
+
+<h3 id="gpt-5-and-friends">GPT-5 and friends <a name="gpt-5"></a></h3>
+<p><code>gpt-5</code> and friends are not included in <code>litellm</code> yet, so we need to register them manually.
+For this, first create the following file:</p>
+<details class="note">
+<summary>model_registry.json</summary>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;gpt-5&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.25e-06</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1e-05</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cache_read_input_token_cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.25e-07</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supported_endpoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/batch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/responses&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;image&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_output_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supports_pdf_input&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_parallel_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_response_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_vision&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_prompt_caching&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_system_messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_tool_choice&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_native_streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_reasoning&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;gpt-5-mini&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5e-07</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2e-06</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cache_read_input_token_cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5e-08</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supported_endpoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/batch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/responses&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;image&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_output_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supports_pdf_input&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_parallel_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_response_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_vision&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_prompt_caching&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_system_messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_tool_choice&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_native_streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_reasoning&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;gpt-5-nano&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5e-08</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4e-07</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cache_read_input_token_cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5e-09</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supported_endpoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/batch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/responses&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;image&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_output_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supports_pdf_input&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_parallel_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_response_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_vision&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_prompt_caching&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_system_messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_tool_choice&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_native_streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_reasoning&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;gpt-5-chat&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">32768</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1047576</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">32768</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5e-06</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2e-05</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;input_cost_per_token_batches&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5e-06</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_cost_per_token_batches&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1e-05</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cache_read_input_token_cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.25e-06</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supported_endpoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/batch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/responses&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;image&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_output_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supports_pdf_input&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_parallel_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_response_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_vision&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_prompt_caching&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_system_messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_tool_choice&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_native_streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;gpt-5-chat-latest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.25e-06</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1e-05</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cache_read_input_token_cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.25e-07</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supported_endpoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/batch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/responses&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;image&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_output_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supports_pdf_input&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_parallel_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_response_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_vision&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_prompt_caching&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_system_messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_tool_choice&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_native_streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_reasoning&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;gpt-5-2025-08-07&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.25e-06</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1e-05</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cache_read_input_token_cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.25e-07</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supported_endpoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/batch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/responses&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;image&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_output_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supports_pdf_input&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_parallel_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_response_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_vision&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_prompt_caching&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_system_messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_tool_choice&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_native_streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_reasoning&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;gpt-5-mini-2025-08-07&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5e-07</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2e-06</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cache_read_input_token_cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5e-08</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supported_endpoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/batch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/responses&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;image&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_output_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supports_pdf_input&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_parallel_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_response_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_vision&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_prompt_caching&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_system_messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_tool_choice&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_native_streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_reasoning&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;gpt-5-nano-2025-08-07&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;max_output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;input_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5e-08</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;output_cost_per_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4e-07</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cache_read_input_token_cost&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">5e-09</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;litellm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supported_endpoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;/v1/chat/completions&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/batch&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;/v1/responses&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;image&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_output_modalities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;text&quot;</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supports_pdf_input&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_parallel_function_calling&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_response_schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_vision&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_prompt_caching&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_system_messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_tool_choice&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_native_streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;supports_reasoning&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+<p>Now tell <code>mini</code> where to find the file</p>
+<div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>LITELLM_MODEL_REGISTRY_PATH<span class="w"> </span>/path/to/model_registry.json
+</code></pre></div>
+<p>Now you're good to go! The only thing to keep in mind is to</p>
+<ol>
+<li>Reference the model together with the provider, e.g., <code>openai/gpt-5</code> (rather than just <code>gpt-5</code>)</li>
+<li>Select a config file without temperature setting, e.g., <a href="https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini_no_temp.yaml"><code>mini_no_temp.yaml</code></a></li>
+</ol>
+<p>Here's a few example</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">GPT-5</label><label for="__tabbed_2_2">GPT-5-mini</label><label for="__tabbed_2_3">GPT-5-nano</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>openai/gpt-5<span class="w"> </span>-c<span class="w"> </span>mini_no_temp
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>openai/gpt-5-mini<span class="w"> </span>-c<span class="w"> </span>mini_no_temp
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>openai/gpt-5-nano<span class="w"> </span>-c<span class="w"> </span>mini_no_temp
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Or with the <a href="../usage/mini_v/">visual UI</a>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">GPT-5</label><label for="__tabbed_3_2">GPT-5-mini</label><label for="__tabbed_3_3">GPT-5-nano</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>openai/gpt-5<span class="w"> </span>-c<span class="w"> </span>mini_no_temp
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>openai/gpt-5-mini<span class="w"> </span>-c<span class="w"> </span>mini_no_temp
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>openai/gpt-5-nano<span class="w"> </span>-c<span class="w"> </span>mini_no_temp
+</code></pre></div>
+</div>
+</div>
 </div>
 
 
