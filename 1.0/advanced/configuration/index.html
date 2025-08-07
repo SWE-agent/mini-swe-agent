@@ -1784,11 +1784,15 @@ setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">&quot;va
 
 <span class="w">    </span><span class="no">## Recommended Workflow</span>
 
+<span class="w">    </span><span class="no">This workflows should be done step-by-step so that you can iterate on your changes and any possible problems.</span>
+
 <span class="w">    </span><span class="no">1. Analyze the codebase by finding and reading relevant files</span>
 <span class="w">    </span><span class="no">2. Create a script to reproduce the issue</span>
 <span class="w">    </span><span class="no">3. Edit the source code to resolve the issue</span>
 <span class="w">    </span><span class="no">4. Verify your fix works by running your script again</span>
 <span class="w">    </span><span class="no">5. Test edge cases to ensure your fix is robust</span>
+<span class="w">    </span><span class="no">6. Submit your changes and finish your work by issuing the following command: `echo MINI_SWE_AGENT_FINAL_OUTPUT`.</span>
+<span class="w">       </span><span class="no">Do not combine it with any other command. &lt;important&gt;After this command, you cannot continue working on this task.&lt;/important&gt;</span>
 
 <span class="w">    </span><span class="no">## Important Rules</span>
 
@@ -1796,8 +1800,6 @@ setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">&quot;va
 <span class="w">    </span><span class="no">2. The action must be enclosed in triple backticks</span>
 <span class="w">    </span><span class="no">3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.</span>
 <span class="w">       </span><span class="no">However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir &amp;&amp; ...` or write/load environment variables from files</span>
-<span class="w">    </span><span class="no">4. To finish, issue the following command: `echo MINI_SWE_AGENT_FINAL_OUTPUT`.</span>
-<span class="w">       </span><span class="no">Do not combine it with any other command.</span>
 
 <span class="w">    </span><span class="no">&lt;system_information&gt;</span>
 <span class="w">    </span><span class="no">{{system}} {{release}} {{version}} {{machine}} {{processor}}</span>
