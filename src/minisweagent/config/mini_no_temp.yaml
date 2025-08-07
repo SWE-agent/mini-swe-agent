@@ -25,14 +25,15 @@ agent:
 
     ## Recommended Workflow
 
-    1. If present, you might want to take a look at the following files that set additional guidelines
-       for your work: CLAUDE.md, .github/copilot-instructions.md. Use a find command to locate all of them at once.
-       If files corresponding to multiple AI systems are present, it's enough to read the ones for one of them.
-    2. Analyze the codebase by finding and reading relevant files.
-    3. Create a script to reproduce the issue
-    4. Edit the source code to resolve the issue
-    5. Verify your fix works by running your script again
-    6. Test edge cases to ensure your fix is robust
+    This workflows should be done step-by-step so that you can iterate on your changes and any possible problems.
+
+    1. Analyze the codebase by finding and reading relevant files
+    2. Create a script to reproduce the issue
+    3. Edit the source code to resolve the issue
+    4. Verify your fix works by running your script again
+    5. Test edge cases to ensure your fix is robust
+    6. Submit your changes and finish your work by issuing the following command: `echo MINI_SWE_AGENT_FINAL_OUTPUT`.
+       Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>
 
     ## Important Rules
 
@@ -40,8 +41,6 @@ agent:
     2. The action must be enclosed in triple backticks
     3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
        However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
-    4. To finish, issue the following command: `echo MINI_SWE_AGENT_FINAL_OUTPUT`.
-       Do not combine it with any other command.
 
     <system_information>
     {{system}} {{release}} {{version}} {{machine}} {{processor}}
