@@ -1708,12 +1708,12 @@ If you truly want to get the maximal package, you can run <code>pip install -e '
 </ul>
 </div>
 <h2 id="models">Models</h2>
-<div class="admonition tip">
-<p class="admonition-title">TLDR: Models should be set up the first time you run <code>mini</code></p>
+<div class="admonition note">
+<p class="admonition-title">Models should be set up the first time you run <code>mini</code></p>
 <p>If you missed the setup wizard, just run <code>mini-extra config setup</code>, or take a look at the following section.
 If you want to use local models, please check this <a href="../advanced/local_models/">guide</a>.</p>
 </div>
-<div class="admonition tip">
+<div class="admonition success">
 <p class="admonition-title">Which model to use?</p>
 <p>We recommend using <code>claude-sonnet-4-20250514</code> for most tasks.
 You can check scores of different models at our <a href="https://swe-bench.com">SWE-bench (bash-only)</a> leaderboard.</p>
@@ -1721,7 +1721,7 @@ You can check scores of different models at our <a href="https://swe-bench.com">
 <h3 id="setting-api-keys">Setting API keys</h3>
 <p>There are several ways to set your API keys:</p>
 <ul>
-<li>Recommended: Run our setup script: <code>mini-extra config setup</code>. This should also run automatically the first time you run <code>mini</code>.</li>
+<li><strong>Recommended</strong>: Run our setup script: <code>mini-extra config setup</code>. This should also run automatically the first time you run <code>mini</code>.</li>
 <li>Use <code>mini-extra config set ANTHROPIC_API_KEY &lt;your-api-key&gt;</code> to put the key in the <code>mini</code> <a href="../advanced/configuration/">config file</a>.</li>
 <li>Export your key as an environment variable: <code>export ANTHROPIC_API_KEY=&lt;your-api-key&gt;</code> (this is not persistent if you restart your shell, unless you add it to your shell config, like <code>~/.bashrc</code> or <code>~/.zshrc</code>).</li>
 <li>If you only use a single model, you can also set <code>MSWEA_MODEL_API_KEY</code> (as environment variable or in the config file). This takes precedence over all other keys.</li>
@@ -1782,8 +1782,8 @@ XINFERENCE_API_KEY
 </details>
 <h3 id="selecting-a-model">Selecting a model</h3>
 <ul>
+<li><strong>Recommended</strong>: <code>mini-extra config setup</code> (should be run the first time you run <code>mini</code>) can set the default model for you</li>
 <li>All command line interfaces allow you to set the model name with <code>-m</code> or <code>--model</code>.</li>
-<li><code>mini-extra config setup</code> can set the default model for you</li>
 <li>In addition, you can set the default model with <code>mini-extra config set MSWEA_MODEL_NAME &lt;model-name&gt;</code>, by editing the global <a href="../advanced/configuration/">config file</a> (shortcut: <code>mini-extra config edit</code>), or by setting the <code>MSWEA_MODEL_NAME</code> environment variable.</li>
 <li>You can also set your model in a config file (key <code>model_name</code> under <code>model</code>).</li>
 <li>If you want to use local models, please check this <a href="../advanced/local_models/">guide</a>.</li>
