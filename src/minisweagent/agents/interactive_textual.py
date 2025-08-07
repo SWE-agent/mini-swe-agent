@@ -3,6 +3,7 @@ Extension of the `default.py` agent that uses Textual for an interactive TUI.
 For a simpler version of an interactive UI that does not require threading and more, see `interactive.py`.
 """
 
+import contextlib
 import logging
 import os
 import re
@@ -349,11 +350,13 @@ class AgentApp(App):
                 content_str = "\n".join([item["text"] for item in message["content"]])
             else:
                 content_str = str(message["content"])
-            message_container = Vertical(classes="message-container")
-            container.mount(message_container)
             role = message["role"].replace("assistant", "mini-swe-agent")
-            message_container.mount(Static(role.upper(), classes="message-header"))
-            message_container.mount(Static(Text(content_str, no_wrap=False), classes="message-content"))
+            message_container = Vertical(
+                Static(role.upper(), classes="message-header"),
+                Static(Text(content_str, no_wrap=False), classes="message-content"),
+                classes="message-container",
+            )
+            container.mount(message_container)
 
         if self.input_container.pending_prompt is not None:
             self.agent_state = "AWAITING_INPUT"
@@ -371,10 +374,8 @@ class AgentApp(App):
             spinner_frame = str(self._spinner.render(time.time())).strip()
             status_text = f"{self.agent_state} {spinner_frame}"
         self.title = f"Step {self.i_step + 1}/{self.n_steps} - {status_text} - Cost: ${self.agent.model.cost:.2f}"
-        try:
+        with contextlib.suppress(NoMatches):
             self.query_one("Header").set_class(self.agent_state == "RUNNING", "running")
-        except NoMatches:  # might be called when shutting down
-            pass
 
     # --- Other textual overrides ---
 
