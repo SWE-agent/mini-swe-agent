@@ -3,6 +3,8 @@ It's identical to the one used in swe-agent.
 """
 
 import collections
+import time
+from datetime import timedelta
 from pathlib import Path
 from threading import Lock
 
@@ -17,7 +19,6 @@ from rich.progress import (
     TaskProgressColumn,
     TextColumn,
     TimeElapsedColumn,
-    TimeRemainingColumn,
 )
 from rich.table import Table
 
@@ -49,6 +50,8 @@ class RunBatchProgressManager:
         """We need to map instance ID to the task ID that is used by the rich progress bar."""
 
         self._lock = Lock()
+        self._start_time = time.time()
+        self._total_instances = num_instances
 
         self._instances_by_exit_status = collections.defaultdict(list)
         self._main_progress_bar = Progress(
@@ -58,8 +61,7 @@ class RunBatchProgressManager:
             MofNCompleteColumn(),
             TaskProgressColumn(),
             TimeElapsedColumn(),
-            TextColumn("[cyan]eta:[/cyan]"),
-            TimeRemainingColumn(),
+            TextColumn("[cyan]{task.fields[eta]}[/cyan]"),
             # Wait 5 min before estimating speed
             speed_estimate_period=60 * 5,
         )
@@ -74,7 +76,7 @@ class RunBatchProgressManager:
         """
 
         self._main_task_id = self._main_progress_bar.add_task(
-            "[cyan]Overall Progress", total=num_instances, total_cost="0.00"
+            "[cyan]Overall Progress", total=num_instances, total_cost="0.00", eta=""
         )
 
         self.render_group = Group(Table(), self._task_progress_bar, self._main_progress_bar)
@@ -83,6 +85,16 @@ class RunBatchProgressManager:
     @property
     def n_completed(self) -> int:
         return sum(len(instances) for instances in self._instances_by_exit_status.values())
+
+    def _get_eta_text(self) -> str:
+        """Calculate estimated time remaining based on current progress."""
+        try:
+            estimated_remaining = (
+                (time.time() - self._start_time) / self.n_completed * (self._total_instances - self.n_completed)
+            )
+            return f"eta: {timedelta(seconds=int(estimated_remaining))}"
+        except ZeroDivisionError:
+            return ""
 
     def update_exit_status_table(self):
         # We cannot update the existing table, so we need to create a new one and
@@ -105,7 +117,9 @@ class RunBatchProgressManager:
     def _update_total_costs(self) -> None:
         with self._lock:
             self._main_progress_bar.update(
-                self._main_task_id, total_cost=f"{minisweagent.models.GLOBAL_MODEL_STATS.cost:.2f}"
+                self._main_task_id,
+                total_cost=f"{minisweagent.models.GLOBAL_MODEL_STATS.cost:.2f}",
+                eta=self._get_eta_text(),
             )
 
     def update_instance_status(self, instance_id: str, message: str):
@@ -135,7 +149,7 @@ class RunBatchProgressManager:
                 self._task_progress_bar.remove_task(self._spinner_tasks[instance_id])
             except KeyError:
                 pass
-            self._main_progress_bar.update(TaskID(0), advance=1)
+            self._main_progress_bar.update(TaskID(0), advance=1, eta=self._get_eta_text())
         self.update_exit_status_table()
         self._update_total_costs()
         if self._yaml_report_path is not None:
