@@ -42,7 +42,6 @@ def test_step_limit_enforcement():
 def test_cost_limit_enforcement():
     """Test agent stops when cost limit is reached."""
     model = DeterministicModel(outputs=["```bash\necho 'test'\n```"])
-    model.cost = 1.0
 
     agent = DefaultAgent(
         model=model,

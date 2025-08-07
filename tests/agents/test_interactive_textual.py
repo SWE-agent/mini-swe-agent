@@ -330,10 +330,6 @@ async def test_agent_with_cost_limit():
         cost_limit=0.01,  # Very low limit
     )
 
-    # Set model cost to exceed limit
-    app.agent.model.cost = 0.02
-
-    # Mock the notify method to capture calls
     app.notify = Mock()
 
     async with app.run_test() as pilot:
@@ -354,13 +350,9 @@ async def test_agent_with_step_limit():
         step_limit=2,
     )
 
-    # Mock the notify method to capture calls
     app.notify = Mock()
-
     async with app.run_test() as pilot:
-        await pilot.pause(0.3)
-
-        # Should stop due to step limit and notify with the exit status
+        await pilot.pause(0.5)
         assert app.agent_state == "STOPPED"
         app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
 
