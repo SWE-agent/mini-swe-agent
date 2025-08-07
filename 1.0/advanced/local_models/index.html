@@ -1651,6 +1651,7 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 </ul>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
@@ -1673,7 +1674,7 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 <span class="k">class</span><span class="w"> </span><span class="nc">LitellmModelConfig</span><span class="p">:</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-    <span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;LITELLM_MODEL_REGISTRY_PATH&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">LitellmModel</span><span class="p">:</span>
@@ -1681,7 +1682,7 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">LitellmModelConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">litellm_model_registry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">litellm_model_registry</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">litellm_model_registry</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="n">litellm</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_model</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">litellm_model_registry</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()))</span>
 
     <span class="nd">@retry</span><span class="p">(</span>
@@ -1907,12 +1908,7 @@ There are two ways to do this with <code>litellm</code>:</p>
 <li>You update the model registry (next section)</li>
 </ol>
 <h3 id="updating-the-model-registry">Updating the model registry</h3>
-<p>LiteLLM get its cost and model metadata from <a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json">this file</a>. You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file in the model config:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">litellm_model_registry</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;path/to/model_registry.json&quot;</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="nn">...</span>
-</code></pre></div>
+<p>LiteLLM get its cost and model metadata from <a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json">this file</a>. You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.</p>
 <p>The model registry JSON file should follow LiteLLM's format:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;my-custom-model&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1930,6 +1926,16 @@ There are two ways to do this with <code>litellm</code>:</p>
 <span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chat&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
+</code></pre></div>
+<p>There are two ways of setting the path to the model registry:</p>
+<ol>
+<li>Set <code>LITELLM_MODEL_REGISTRY_PATH</code> (e.g., <code>mini-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json</code>)</li>
+<li>Set <code>litellm_model_registry</code> in the agent config file</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">litellm_model_registry</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/path/to/model_registry.json&quot;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="nn">...</span>
 </code></pre></div>
 <h2 id="concrete-examples">Concrete examples</h2>
 <div class="admonition success">
