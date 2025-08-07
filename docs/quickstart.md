@@ -203,8 +203,6 @@ There are several ways to set your API keys:
 * You can also set your model in a config file (key `model_name` under `model`).
 * If you want to use local models, please check this [guide](advanced/local_models.md).
 
-{% include-markdown "_footer.md" %}
-
 
 ### GPT-5 and friends <a name="gpt-5"></a>
 
@@ -475,10 +473,10 @@ For this, first create the following file:
     }
     ```
 
-Now tell `mini` where to find the file
+Now tell `mini` where to find the file, e.g.,
 
 ```bash
-mini-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json
+mini-extra config set LITELLM_MODEL_REGISTRY_PATH $HOME/model_registry.json
 ```
 
 Now you're good to go! The only thing to keep in mind is to
@@ -526,3 +524,4 @@ Or with the [visual UI](usage/mini_v.md):
     mini -v -m openai/gpt-5-nano -c mini_no_temp
     ```
 
+{% include-markdown "_footer.md" %}
