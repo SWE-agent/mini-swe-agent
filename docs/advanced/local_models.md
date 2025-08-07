@@ -71,14 +71,7 @@ There are two ways to do this with `litellm`:
 
 ### Updating the model registry
 
-LiteLLM get its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file in the model config:
-
-```yaml
-model:
-  litellm_model_registry: "path/to/model_registry.json"
-  ...
-...
-```
+LiteLLM get its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
 
 The model registry JSON file should follow LiteLLM's format:
 
@@ -99,6 +92,18 @@ The model registry JSON file should follow LiteLLM's format:
     "mode": "chat"
   }
 }
+```
+
+There are two ways of setting the path to the model registry:
+
+1. Set `LITELLM_MODEL_REGISTRY_PATH` (e.g., `mini-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json`)
+2. Set `litellm_model_registry` in the agent config file
+
+```yaml
+model:
+  litellm_model_registry: "/path/to/model_registry.json"
+  ...
+...
 ```
 
 ## Concrete examples

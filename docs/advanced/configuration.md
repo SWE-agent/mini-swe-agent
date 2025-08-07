@@ -70,6 +70,12 @@ MSWEA_MODEL_NAME="claude-sonnet-4-20250514"
 MSWEA_MODEL_API_KEY="sk-..."
 ```
 
+To register extra models to litellm (see [local models](local_models.md) for more details), you can either specify the path in the agent file, or set
+
+```bash
+LITELLM_MODEL_REGISTRY_PATH="/path/to/your/model/registry.json"
+```
+
 For Anthropic models, you can also use `ANTHROPIC_API_KEYS` for advanced parallel execution:
 
 ```bash

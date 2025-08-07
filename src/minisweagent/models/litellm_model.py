@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -22,7 +23,7 @@ logger = logging.getLogger("litellm_model")
 class LitellmModelConfig:
     model_name: str
     model_kwargs: dict[str, Any] = field(default_factory=dict)
-    litellm_model_registry: Path | None = None
+    litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
 
 
 class LitellmModel:
@@ -30,7 +31,7 @@ class LitellmModel:
         self.config = LitellmModelConfig(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
-        if self.config.litellm_model_registry is not None:
+        if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
     @retry(
