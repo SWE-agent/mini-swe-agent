@@ -24,14 +24,11 @@ agent:
 
     ## Recommended Workflow
 
-    1. If present, you might want to take a look at the following files that set additional guidelines
-       for your work: CLAUDE.md, .github/copilot-instructions.md. Use a find command to locate all of them at once.
-       If files corresponding to multiple AI systems are present, it's enough to read the ones for one of them.
-    2. Analyze the codebase by finding and reading relevant files.
-    3. Create a script to reproduce the issue
-    4. Edit the source code to resolve the issue
-    5. Verify your fix works by running your script again
-    6. Test edge cases to ensure your fix is robust
+    1. Analyze the codebase by finding and reading relevant files.
+    2. Create a script to reproduce the issue
+    3. Edit the source code to resolve the issue
+    4. Verify your fix works by running your script again
+    5. Test edge cases to ensure your fix is robust
 
     ## Important Rules
 
