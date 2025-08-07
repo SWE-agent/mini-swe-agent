@@ -8,6 +8,9 @@ builtin_config_dir = Path(__file__).parent
 
 def get_config_path(config_spec: str | Path) -> Path:
     """Get the path to a config file."""
+    config_spec = Path(config_spec)
+    if config_spec.suffix != ".yaml":
+        config_spec = config_spec.with_suffix(".yaml")
     candidates = [
         Path(config_spec),
         Path(os.getenv("MSWEA_CONFIG_DIR", ".")) / config_spec,
