@@ -50,7 +50,7 @@ In contrast, our `mini` agent is really just this class:
     Check out the [control flow guide](../../advanced/control_flow.md) for a visual explanation of the agent's control flow following this picture:
 
     <figure markdown="span">
-      <img src="../../assets/mini_control_flow.svg" alt="Agent control flow" style="max-width: 600px;" />
+      ![Agent control flow](../../assets/mini_control_flow.svg){ width=600px }
       <figcaption>The control flow of the `mini` agent</figcaption>
     </figure>
 
