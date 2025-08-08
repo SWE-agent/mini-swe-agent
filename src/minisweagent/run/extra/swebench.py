@@ -4,13 +4,13 @@
 # Read this first: https://mini-swe-agent.com/latest/usage/swebench/  (usage docs)
 
 import concurrent.futures
-from enum import Enum
 import json
 import random
 import re
 import threading
 import time
 import traceback
+from enum import Enum
 from pathlib import Path
 
 import typer
@@ -79,7 +79,6 @@ def get_swebench_docker_image_name(instance: dict) -> str:
         id_docker_compatible = iid.replace("__", "_1776_")
         image_name = f"swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
     return image_name
-
 
 
 def get_environment(environment_type: EnvironmentType | None, config: dict, instance: dict):

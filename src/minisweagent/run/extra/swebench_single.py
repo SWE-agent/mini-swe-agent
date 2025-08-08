@@ -8,12 +8,15 @@ from datasets import load_dataset
 
 from minisweagent.agents.interactive import InteractiveAgent
 from minisweagent.config import builtin_config_dir, get_config_path
-from minisweagent.environments.docker import DockerEnvironment
-from minisweagent.environments.singularity import SingularityEnvironment
 from minisweagent.models import get_model
-from minisweagent.run.extra.swebench import DATASET_MAPPING, EnvironmentType, get_environment, get_swebench_docker_image_name
+from minisweagent.run.extra.swebench import (
+    DATASET_MAPPING,
+    EnvironmentType,
+    get_environment,
+)
 
 app = typer.Typer(add_completion=False)
+
 
 @app.command()
 def main(
