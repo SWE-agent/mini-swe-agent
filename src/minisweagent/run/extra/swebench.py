@@ -4,6 +4,7 @@
 # Read this first: https://mini-swe-agent.com/latest/usage/swebench/  (usage docs)
 
 import concurrent.futures
+from enum import Enum
 import json
 import random
 import re
@@ -20,6 +21,7 @@ from rich.live import Live
 from minisweagent.agents.default import DefaultAgent
 from minisweagent.config import builtin_config_dir, get_config_path
 from minisweagent.environments.docker import DockerEnvironment
+from minisweagent.environments.singularity import SingularityEnvironment
 from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from minisweagent.run.utils.save import save_traj
@@ -47,6 +49,11 @@ DATASET_MAPPING = {
 _OUTPUT_FILE_LOCK = threading.Lock()
 
 
+class EnvironmentType(str, Enum):
+    docker = "docker"
+    singularity = "singularity"
+
+
 class ProgressTrackingAgent(DefaultAgent):
     """Simple wrapper around DefaultAgent that provides progress updates."""
 
@@ -72,6 +79,22 @@ def get_swebench_docker_image_name(instance: dict) -> str:
         id_docker_compatible = iid.replace("__", "_1776_")
         image_name = f"swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
     return image_name
+
+
+
+def get_environment(environment_type: EnvironmentType | None, config: dict, instance: dict):
+    if not type or environment_type == EnvironmentType.docker:
+        return DockerEnvironment(
+            **(config.get("environment", {}) | {"image": get_swebench_docker_image_name(instance)})
+        )
+    else:
+        assert environment_type == EnvironmentType.singularity
+        return SingularityEnvironment(
+            **(
+                config.get("environment", {})
+                | {"image": "docker://" + get_swebench_docker_image_name(instance), "cwd": "/testbed"}
+            )
+        )
 
 
 def update_preds_file(output_path: Path, instance_id: str, model_name: str, result: str):

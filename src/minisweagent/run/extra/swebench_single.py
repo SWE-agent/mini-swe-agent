@@ -1,6 +1,5 @@
 """Run on a single SWE-Bench instance."""
 
-from enum import Enum
 from pathlib import Path
 
 import typer
@@ -12,15 +11,9 @@ from minisweagent.config import builtin_config_dir, get_config_path
 from minisweagent.environments.docker import DockerEnvironment
 from minisweagent.environments.singularity import SingularityEnvironment
 from minisweagent.models import get_model
-from minisweagent.run.extra.swebench import DATASET_MAPPING, get_swebench_docker_image_name
+from minisweagent.run.extra.swebench import DATASET_MAPPING, EnvironmentType, get_environment, get_swebench_docker_image_name
 
 app = typer.Typer(add_completion=False)
-
-
-class Environment(str, Enum):
-    docker = "docker"
-    singularity = "singularity"
-
 
 @app.command()
 def main(
@@ -31,7 +24,7 @@ def main(
     config_path: Path = typer.Option(
         builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
     ),
-    environment: Environment | None = typer.Option(None, "-e", "--environment"),
+    environment: EnvironmentType | None = typer.Option(None, "-e", "--environment"),
 ) -> None:
     """Run on a single SWE-Bench instance."""
     try:
@@ -48,18 +41,7 @@ def main(
     instance: dict = instances[instance_spec]  # type: ignore
 
     _config = yaml.safe_load(get_config_path(config_path).read_text())
-    if not environment or environment == Environment.docker:
-        env = DockerEnvironment(
-            **(_config.get("environment", {}) | {"image": get_swebench_docker_image_name(instance)})
-        )
-    else:
-        assert environment == Environment.singularity
-        env = SingularityEnvironment(
-            **(
-                _config.get("environment", {})
-                | {"image": "docker://" + get_swebench_docker_image_name(instance), "cwd": "/testbed"}
-            )
-        )
+    env = get_environment(environment, _config, instance)
     agent = InteractiveAgent(
         get_model(model_name, _config.get("model", {})),
         env,
