@@ -16,9 +16,11 @@ from minisweagent.run.extra.swebench import DATASET_MAPPING, get_swebench_docker
 
 app = typer.Typer(add_completion=False)
 
+
 class Environment(str, Enum):
     docker = "docker"
     singularity = "singularity"
+
 
 @app.command()
 def main(
@@ -47,10 +49,17 @@ def main(
 
     _config = yaml.safe_load(get_config_path(config_path).read_text())
     if not environment or environment == Environment.docker:
-        env = DockerEnvironment(**(_config.get("environment", {}) | {"image": get_swebench_docker_image_name(instance)}))
+        env = DockerEnvironment(
+            **(_config.get("environment", {}) | {"image": get_swebench_docker_image_name(instance)})
+        )
     else:
         assert environment == Environment.singularity
-        env = SingularityEnvironment(**(_config.get("environment", {}) | {"image": "docker://" + get_swebench_docker_image_name(instance), "cwd": "/testbed"}))
+        env = SingularityEnvironment(
+            **(
+                _config.get("environment", {})
+                | {"image": "docker://" + get_swebench_docker_image_name(instance), "cwd": "/testbed"}
+            )
+        )
     agent = InteractiveAgent(
         get_model(model_name, _config.get("model", {})),
         env,
