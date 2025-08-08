@@ -18,7 +18,7 @@ class AgentConfig:
     system_template: str = "You are a helpful assistant that can do anything."
     instance_template: str = (
         "Your task: {{task}}. Please reply with a single shell command in triple backticks. "
-        "To finish, the first line of the output of the shell command must be 'FINISH_TASK_AND_SUBMIT_FINAL_OUTPUT'."
+        "To finish, the first line of the output of the shell command must be 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'."
     )
     timeout_template: str = (
         "The last command <command>{{action['action']}}</command> timed out and has been killed.\n"
@@ -125,5 +125,5 @@ class DefaultAgent:
     def has_finished(self, output: dict[str, str]):
         """Raises Submitted exception with final output if the agent has finished its task."""
         lines = output.get("output", "").lstrip().splitlines()
-        if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "FINISH_TASK_AND_SUBMIT_FINAL_OUTPUT"]:
+        if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]:
             raise Submitted("\n".join(lines[1:]))

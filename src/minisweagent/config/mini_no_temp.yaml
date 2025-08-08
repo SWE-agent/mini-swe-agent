@@ -30,7 +30,7 @@ agent:
     3. Edit the source code to resolve the issue
     4. Verify your fix works by running your script again
     5. Test edge cases to ensure your fix is robust
-    6. Submit your changes and finish your work by issuing the following command: `echo FINISH_TASK_AND_SUBMIT_FINAL_OUTPUT`.
+    6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.
        Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>
 
     ## Important Rules
@@ -129,7 +129,7 @@ agent:
     {%- endif -%}
   format_error_template: |
     Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
-    If you want to end the task, please issue the following command: `echo FINISH_TASK_AND_SUBMIT_FINAL_OUTPUT`
+    If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
     without any other command.
     Else, please format your response exactly as follows:
 
