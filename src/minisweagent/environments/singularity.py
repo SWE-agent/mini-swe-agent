@@ -5,6 +5,8 @@ import subprocess
 import tempfile
 import uuid
 from dataclasses import dataclass, field
+from pathlib import Path
+import shutil
 from typing import Any
 
 
@@ -26,7 +28,7 @@ class SingularityEnvironment:
     def __init__(self, **kwargs):
         """Singularity environment. See `SingularityEnvironmentConfig` for kwargs."""
         self.config = SingularityEnvironmentConfig(**kwargs)
-        self.sandbox_dir = os.path.join(tempfile.gettempdir(), f"minisweagent-{uuid.uuid4().hex[:8]}")
+        self.sandbox_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
 
         subprocess.run(
             [self.config.executable, "build", "--sandbox", self.sandbox_dir, self.config.image],
@@ -61,3 +63,12 @@ class SingularityEnvironment:
             stderr=subprocess.STDOUT,
         )
         return {"output": result.stdout, "returncode": result.returncode}
+
+    def cleanup(self):
+        if os.path.exists(self.sandbox_dir):
+            print(f"Removing sandbox {self.sandbox_dir}")
+            shutil.rmtree(self.sandbox_dir)
+
+    def __del__(self):
+        """Cleanup sandbox when object is destroyed."""
+        self.cleanup()
