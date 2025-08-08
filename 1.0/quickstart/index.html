@@ -1806,28 +1806,6 @@ XINFERENCE_API_KEY
 <li>You can also set your model in a config file (key <code>model_name</code> under <code>model</code>).</li>
 <li>If you want to use local models, please check this <a href="../advanced/local_models/">guide</a>.</li>
 </ul>
-<div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">bug_report</span>
-        <span class="nav-card-title">Something broken/unclear?</span>
-      </div>
-      <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
-    </div>
-  </a>
-</div>
-
 <h3 id="gpt-5-and-friends">GPT-5 and friends <a name="gpt-5"></a></h3>
 <p><code>gpt-5</code> and friends are not included in <code>litellm</code> yet, so we need to register them manually.
 For this, first create the following file:</p>
@@ -2094,8 +2072,8 @@ For this, first create the following file:</p>
 <span class="p">}</span>
 </code></pre></div>
 </details>
-<p>Now tell <code>mini</code> where to find the file</p>
-<div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>LITELLM_MODEL_REGISTRY_PATH<span class="w"> </span>/path/to/model_registry.json
+<p>Now tell <code>mini</code> where to find the file, e.g.,</p>
+<div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>LITELLM_MODEL_REGISTRY_PATH<span class="w"> </span><span class="nv">$HOME</span>/model_registry.json
 </code></pre></div>
 <p>Now you're good to go! The only thing to keep in mind is to</p>
 <ol>
@@ -2135,6 +2113,27 @@ For this, first create the following file:</p>
 </code></pre></div>
 </div>
 </div>
+</div>
+<div class="grid cards">
+  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">bug_report</span>
+        <span class="nav-card-title">Something broken/unclear?</span>
+      </div>
+      <p class="nav-card-description">Open an issue on GitHub!</p>
+    </div>
+  </a>
+
+  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">help</span>
+        <span class="nav-card-title">Open-ended discussions</span>
+      </div>
+      <p class="nav-card-description">Join our Slack!</p>
+    </div>
+  </a>
 </div>
 
 
