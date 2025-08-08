@@ -22,7 +22,7 @@ Results will be added to the [*SWE-bench (bash-only)* leaderboard](https://swebe
 First of all, the mandatory bar chart:
 
 <figure markdown="span">
-  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../../../../assets/blog/gpt5/gpt5_bar.svg){ width=75% }
+  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../assets/blog/gpt5/gpt5_bar.svg){ width=75% }
 </figure>
 
 Immediately we can see that Anthropic's Claude Opus 4 is still unbeaten, and GPT-5 is on par with Claude Sonnet 4.
@@ -40,7 +40,7 @@ In contrast, our `mini` agent is really just this class:
 ??? note "Agent class"
 
     - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/agents/interactive.py)
-    - [API reference](../reference/agents/interactive.md)
+    - [API reference](../../reference/agents/interactive.md)
 
     ```python
     --8<-- "src/minisweagent/agents/default.py"
@@ -50,7 +50,7 @@ In contrast, our `mini` agent is really just this class:
     Check out the [control flow guide](../../advanced/control_flow.md) for a visual explanation of the agent's control flow following this picture:
 
     <figure markdown="span">
-      <img src="../../../../../assets/mini_control_flow.svg" alt="Agent control flow" style="max-width: 600px;" />
+      <img src="../../assets/mini_control_flow.svg" alt="Agent control flow" style="max-width: 600px;" />
       <figcaption>The control flow of the `mini` agent</figcaption>
     </figure>
 
@@ -74,12 +74,12 @@ However, most LMs succeed much much earlier (usually definitely before 50 steps)
 Here's how this looks like:
 
 <figure markdown="span">
-  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../../../../assets/blog/gpt5/gpt5_steps.svg){ width=75% }
+  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../assets/blog/gpt5/gpt5_steps.svg){ width=75% }
   <figcaption>Agents succeed fast, but fail slowly</figcaption>
 </figure>
 
 <figure markdown="span">
-  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../../../../assets/blog/gpt5/gpt5_steps_cut.svg){ width=75% }
+  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../assets/blog/gpt5/gpt5_steps_cut.svg){ width=75% }
   <figcaption>The same figure but zooming in on the left</figcaption>
 </figure>
 
@@ -96,12 +96,12 @@ What does this mean for the cost?
 If we look at agent performance & cost for different step limits, we get the following plot (here every point is the performance/cost at one specific step limit):
 
 <figure markdown="span">
-  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../../../../assets/blog/gpt5/gpt5_cost.svg){ width=75% }
+  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../assets/blog/gpt5/gpt5_cost.svg){ width=75% }
   <figcaption>Wow, gpt-5-mini is incredibly cheap!</figcaption>
 </figure>
 
 <figure markdown="span">
-  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../../../../assets/blog/gpt5/gpt5_cost_cut.svg){ width=75% }
+  ![GPT-5, GPT-5-mini, and GPT-5-nano](../../assets/blog/gpt5/gpt5_cost_cut.svg){ width=75% }
   <figcaption>Zooming in on the left</figcaption>
 </figure>
 
