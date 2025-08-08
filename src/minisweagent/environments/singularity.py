@@ -3,7 +3,9 @@
 import os
 import subprocess
 from dataclasses import dataclass, field
+import tempfile
 from typing import Any
+import uuid
 
 
 @dataclass
@@ -24,10 +26,19 @@ class SingularityEnvironment:
     def __init__(self, **kwargs):
         """Singularity environment. See `SingularityEnvironmentConfig` for kwargs."""
         self.config = SingularityEnvironmentConfig(**kwargs)
+        self.sandbox_dir = os.path.join(tempfile.gettempdir(), f"minisweagent-{uuid.uuid4().hex[:8]}")
+
+        subprocess.run(
+            [self.config.executable, "build", "--sandbox", self.sandbox_dir, self.config.image],
+            check=True,
+        )
 
     def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
         """Execute a command in a Singularity container and return the result as a dict."""
         cmd = [self.config.executable, "exec"]
+
+        # Do not inherit directories and env vars from host
+        cmd.extend(["--contain", "--cleanenv"])
 
         work_dir = cwd or self.config.cwd
         if work_dir and work_dir != "/":
@@ -39,7 +50,7 @@ class SingularityEnvironment:
         for key, value in self.config.env.items():
             cmd.extend(["--env", f"{key}={value}"])
 
-        cmd.extend([self.config.image, "bash", "-c", command])
+        cmd.extend(["--writable", self.sandbox_dir, "bash", "-c", command])
         result = subprocess.run(
             cmd,
             text=True,
