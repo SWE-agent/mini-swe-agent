@@ -65,7 +65,7 @@ class SingularityEnvironment:
         return {"output": result.stdout, "returncode": result.returncode}
 
     def cleanup(self):
-        if os.path.exists(self.sandbox_dir):
+        if Path.exists(self.sandbox_dir):
             print(f"Removing sandbox {self.sandbox_dir}")
             shutil.rmtree(self.sandbox_dir)
 
