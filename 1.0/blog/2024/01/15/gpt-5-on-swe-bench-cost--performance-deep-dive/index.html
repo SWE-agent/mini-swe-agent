@@ -2301,7 +2301,7 @@ If we look at agent performance &amp; cost for different step limits, we get the
 <p class="admonition-title">Want to run <code>mini</code> with GPT-5?</p>
 <p>Check out our <a href="../../../../../quickstart/#gpt-5">notes</a> on how to run <code>mini</code> with GPT-5.</p>
 <p>You can reproduce our numbers in this blog by following the <a href="../../../../../usage/swebench/">swebench</a> tutorial, but
-the tl;dr is to run (remove the temperature setting from the <code>swebench.yaml</code> file first, 
+the tl;dr is to run (remove the temperature setting from the <code>swebench.yaml</code> file first,
 because it's not supported by the <code>GPT-5-*</code> models):</p>
 <div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>swebench<span class="w"> </span>--subset<span class="w"> </span>verified<span class="w"> </span>--split<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--shuffle<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--model<span class="w"> </span>openai/gpt-5-mini<span class="w"> </span>-o<span class="w"> </span>gpt-5-mini<span class="w"> </span>--workers<span class="w"> </span><span class="m">10</span>
