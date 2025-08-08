@@ -31,7 +31,7 @@ def sample_simple_trajectory():
         {"role": "user", "content": "Hello, solve this problem."},
         {"role": "assistant", "content": "I'll help you solve this.\n\n```bash\nls -la\n```"},
         {"role": "user", "content": "Command output here."},
-        {"role": "assistant", "content": "Now I'll finish.\n\n```bash\necho MINI_SWE_AGENT_FINAL_OUTPUT\n```"},
+        {"role": "assistant", "content": "Now I'll finish.\n\n```bash\necho FINISH_TASK_AND_SUBMIT_FINAL_OUTPUT\n```"},
     ]
 
 
@@ -50,7 +50,7 @@ def sample_swebench_trajectory():
             {"role": "user", "content": [{"type": "text", "text": "Please solve this issue."}]},
             {"role": "assistant", "content": "I'll analyze the issue.\n\n```bash\ncat file.py\n```"},
             {"role": "user", "content": [{"type": "text", "text": "File contents here."}]},
-            {"role": "assistant", "content": "Fixed!\n\n```bash\necho MINI_SWE_AGENT_FINAL_OUTPUT\n```"},
+            {"role": "assistant", "content": "Fixed!\n\n```bash\necho FINISH_TASK_AND_SUBMIT_FINAL_OUTPUT\n```"},
         ],
     }
 
@@ -102,7 +102,7 @@ async def test_trajectory_inspector_basic_navigation(temp_trajectory_files):
         await pilot.press("$")
         assert "Step 3/3" in app.title
         assert "MINI-SWE-AGENT" in get_screen_text(app)
-        assert "echo MINI_SWE_AGENT_FINAL_OUTPUT" in get_screen_text(app)
+        assert "echo FINISH_TASK_AND_SUBMIT_FINAL_OUTPUT" in get_screen_text(app)
 
         # Navigate back to first step
         await pilot.press("0")
