@@ -91,7 +91,10 @@ nav:
       - "GitHub Issue": "reference/run/github_issue.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"
+  - Blog:
+    - blog/index.md
 plugins:
+  - blog
   - glightbox
   - search
   - include-markdown
