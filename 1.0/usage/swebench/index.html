@@ -1859,15 +1859,15 @@ The dataset needs to be loadable as <code>datasets.load_dataset(path, split=spli
 <span class="w">    </span><span class="no">```</span>
 
 <span class="w">    </span><span class="no">## Submission</span>
-<span class="w">    </span><span class="no">When you&#39;ve completed your changes or can&#39;t make further progress</span>
+<span class="w">    </span><span class="no">When you&#39;ve completed your work (reading, editing, testing), and cannot make further progress</span>
 <span class="w">    </span><span class="no">issue exactly the following command:</span>
 
 <span class="w">    </span><span class="no">```bash</span>
-<span class="w">    </span><span class="no">echo MINI_SWE_AGENT_FINAL_OUTPUT &amp;&amp; git add -A &amp;&amp; git diff --cached</span>
+<span class="w">    </span><span class="no">echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT &amp;&amp; git add -A &amp;&amp; git diff --cached</span>
 <span class="w">    </span><span class="no">```</span>
 
-<span class="w">    </span><span class="no">This command will submit your changes.</span>
-<span class="w">    </span><span class="no">You cannot continue working on this task after submitting.</span>
+<span class="w">    </span><span class="no">This command will submit your work.</span>
+<span class="w">    </span><span class="no">You cannot continue working (reading, editing, testing) in any way on this task after submitting.</span>
 <span class="w">    </span><span class="no">&lt;/instructions&gt;</span>
 <span class="w">  </span><span class="nt">action_observation_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">&lt;returncode&gt;{{output.returncode}}&lt;/returncode&gt;</span>
@@ -1925,8 +1925,8 @@ The dataset needs to be loadable as <code>datasets.load_dataset(path, split=spli
 <span class="nt">model</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;claude-sonnet-4-20250514&quot;</span>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </code></pre></div>
 </details>
 <details class="note">
