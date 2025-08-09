@@ -126,6 +126,7 @@ def process_instance(
     output_dir: Path,
     model_name: str | None,
     config_path: str | Path,
+    environment_type: EnvironmentType | None,
     progress_manager: RunBatchProgressManager,
 ) -> None:
     """Process a single SWEBench instance."""
@@ -135,7 +136,6 @@ def process_instance(
     remove_from_preds_file(output_dir / "preds.json", instance_id)
     (instance_dir / f"{instance_id}.traj.json").unlink(missing_ok=True)
 
-    image_name = get_swebench_docker_image_name(instance)
     config = yaml.safe_load(get_config_path(config_path).read_text())
     model = get_model(model_name, config=config.get("model", {}))
     task = instance["problem_statement"]
@@ -147,7 +147,7 @@ def process_instance(
     extra_info = None
 
     try:
-        env = DockerEnvironment(**(config.get("environment", {}) | {"image": image_name}))
+        env = get_environment(environment_type, config, instance)
         agent = ProgressTrackingAgent(
             model,
             env,
@@ -207,6 +207,7 @@ def main(
     config: Path = typer.Option(
         builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
     ),
+    environment: EnvironmentType | None = typer.Option(None, "-e", "--environment"),
 ) -> None:
     dataset_path = DATASET_MAPPING.get(subset, subset)
     print(f"Loading dataset {dataset_path}, split {split}...")
@@ -240,7 +241,7 @@ def main(
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
             futures = {
-                executor.submit(process_instance, instance, output_path, model, config, progress_manager): instance[
+                executor.submit(process_instance, instance, output_path, model, config, environment, progress_manager): instance[
                     "instance_id"
                 ]
                 for instance in instances
