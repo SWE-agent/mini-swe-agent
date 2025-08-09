@@ -18,6 +18,9 @@ from minisweagent.models import GLOBAL_MODEL_STATS
 
 logger = logging.getLogger("litellm_model")
 
+# Track which models we've already warned about
+_warned_models = set()
+
 
 @dataclass
 class LitellmModelConfig:
@@ -31,6 +34,7 @@ class LitellmModel:
         self.config = LitellmModelConfig(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
+        self.unknown_model_calls = 0
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
@@ -61,7 +65,25 @@ class LitellmModel:
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
-        cost = litellm.cost_calculator.completion_cost(response)
+
+        # Try to calculate cost, but don't fail if model is unknown
+        try:
+            cost = litellm.cost_calculator.completion_cost(response)
+        except (ValueError, Exception):
+            cost = 0
+            self.unknown_model_calls += 1
+
+            # Only warn once per model per session
+            if self.config.model_name not in _warned_models:
+                _warned_models.add(self.config.model_name)
+                logger.warning(
+                    f"\n⚠️  Cost tracking unavailable for '{self.config.model_name}'\n"
+                    f"   To enable cost tracking, create a model registry file:\n"
+                    f"   1. Create model_registry.json with your model's pricing\n"
+                    f"   2. Set LITELLM_MODEL_REGISTRY_PATH=/path/to/model_registry.json\n"
+                    f"   See: https://docs.litellm.ai/docs/proxy/custom_pricing\n"
+                )
+
         self.n_calls += 1
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
