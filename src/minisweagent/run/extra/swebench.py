@@ -241,9 +241,9 @@ def main(
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
             futures = {
-                executor.submit(process_instance, instance, output_path, model, config, environment, progress_manager): instance[
-                    "instance_id"
-                ]
+                executor.submit(
+                    process_instance, instance, output_path, model, config, environment, progress_manager
+                ): instance["instance_id"]
                 for instance in instances
             }
             try:
