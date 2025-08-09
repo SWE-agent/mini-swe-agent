@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
 import os
+import shutil
 import subprocess
+import tempfile
+import uuid
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 
@@ -24,10 +28,19 @@ class SingularityEnvironment:
     def __init__(self, **kwargs):
         """Singularity environment. See `SingularityEnvironmentConfig` for kwargs."""
         self.config = SingularityEnvironmentConfig(**kwargs)
+        self.sandbox_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
+
+        subprocess.run(
+            [self.config.executable, "build", "--sandbox", self.sandbox_dir, self.config.image],
+            check=True,
+        )
 
     def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
         """Execute a command in a Singularity container and return the result as a dict."""
         cmd = [self.config.executable, "exec"]
+
+        # Do not inherit directories and env vars from host
+        cmd.extend(["--contain", "--cleanenv"])
 
         work_dir = cwd or self.config.cwd
         if work_dir and work_dir != "/":
@@ -39,7 +52,7 @@ class SingularityEnvironment:
         for key, value in self.config.env.items():
             cmd.extend(["--env", f"{key}={value}"])
 
-        cmd.extend([self.config.image, "bash", "-c", command])
+        cmd.extend(["--writable", self.sandbox_dir, "bash", "-c", command])
         result = subprocess.run(
             cmd,
             text=True,
@@ -50,3 +63,12 @@ class SingularityEnvironment:
             stderr=subprocess.STDOUT,
         )
         return {"output": result.stdout, "returncode": result.returncode}
+
+    def cleanup(self):
+        if Path.exists(self.sandbox_dir):
+            print(f"Removing sandbox {self.sandbox_dir}")
+            shutil.rmtree(self.sandbox_dir)
+
+    def __del__(self):
+        """Cleanup sandbox when object is destroyed."""
+        self.cleanup()

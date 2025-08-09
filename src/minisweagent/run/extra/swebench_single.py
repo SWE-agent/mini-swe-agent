@@ -8,9 +8,12 @@ from datasets import load_dataset
 
 from minisweagent.agents.interactive import InteractiveAgent
 from minisweagent.config import builtin_config_dir, get_config_path
-from minisweagent.environments.docker import DockerEnvironment
 from minisweagent.models import get_model
-from minisweagent.run.extra.swebench import DATASET_MAPPING, get_swebench_docker_image_name
+from minisweagent.run.extra.swebench import (
+    DATASET_MAPPING,
+    EnvironmentType,
+    get_environment,
+)
 
 app = typer.Typer(add_completion=False)
 
@@ -24,6 +27,7 @@ def main(
     config_path: Path = typer.Option(
         builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
     ),
+    environment: EnvironmentType | None = typer.Option(None, "-e", "--environment"),
 ) -> None:
     """Run on a single SWE-Bench instance."""
     try:
@@ -40,7 +44,7 @@ def main(
     instance: dict = instances[instance_spec]  # type: ignore
 
     _config = yaml.safe_load(get_config_path(config_path).read_text())
-    env = DockerEnvironment(**(_config.get("environment", {}) | {"image": get_swebench_docker_image_name(instance)}))
+    env = get_environment(environment, _config, instance)
     agent = InteractiveAgent(
         get_model(model_name, _config.get("model", {})),
         env,
