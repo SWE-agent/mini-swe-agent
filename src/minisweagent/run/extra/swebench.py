@@ -82,7 +82,7 @@ def get_swebench_docker_image_name(instance: dict) -> str:
 
 
 def get_environment(environment_type: EnvironmentType | None, config: dict, instance: dict):
-    if not type or environment_type == EnvironmentType.docker:
+    if not environment_type or environment_type == EnvironmentType.docker:
         return DockerEnvironment(
             **(config.get("environment", {}) | {"image": get_swebench_docker_image_name(instance)})
         )
