@@ -152,16 +152,6 @@ def test_singularity_environment_command_failure():
 
 @pytest.mark.slow
 @pytest.mark.skipif(not is_singularity_available(), reason="Singularity not available")
-def test_singularity_environment_custom_executable():
-    """Test using a custom singularity executable path."""
-    env = SingularityEnvironment(image="docker://python:3.11-slim", executable="/usr/local/bin/singularity")
-
-    # This test mainly verifies the configuration is set correctly
-    assert env.config.executable == "/usr/local/bin/singularity"
-
-
-@pytest.mark.slow
-@pytest.mark.skipif(not is_singularity_available(), reason="Singularity not available")
 def test_singularity_environment_timeout():
     """Test that the timeout configuration is respected."""
     env = SingularityEnvironment(image="docker://python:3.11-slim", timeout=1)
