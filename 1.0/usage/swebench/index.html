@@ -1859,6 +1859,7 @@
 <li>We provide two scripts to run on the <a href="https://www.swebench.com/">SWE-bench</a> benchmark.</li>
 <li><code>mini-extra swebench</code> runs on all task instances in batch mode.</li>
 <li><code>mini-extra swebench-single</code> runs on a single task instance with interactivity (useful for debugging).</li>
+<li>You can also take a look at the runscripts to figure out how to build your own batch processing pipeline.</li>
 </ul>
 </div>
 <figure>
@@ -1870,6 +1871,11 @@
   </div>
 </figure>
 <h2 id="usage">Usage</h2>
+<div class="admonition warning">
+<p class="admonition-title">Docker container availability</p>
+<p>The docker containers for Linux assume an x86 Linux architecture;
+you might not be able to run them on other architectures.</p>
+</div>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Batch mode</label><label for="__tabbed_1_2">Single instance (for debugging)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
