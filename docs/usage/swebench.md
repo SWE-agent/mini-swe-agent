@@ -5,6 +5,7 @@
     * We provide two scripts to run on the [SWE-bench](https://www.swebench.com/) benchmark.
     * `mini-extra swebench` runs on all task instances in batch mode.
     * `mini-extra swebench-single` runs on a single task instance with interactivity (useful for debugging).
+    * You can also take a look at the runscripts to figure out how to build your own batch processing pipeline.
 
 <figure markdown="span">
   <div class="gif-container gif-container-styled" data-glightbox-disabled>
@@ -15,6 +16,11 @@
 </figure>
 
 ## Usage
+
+!!! warning "Docker container availability"
+
+    The docker containers for Linux assume an x86 Linux architecture;
+    you might not be able to run them on other architectures.
 
 === "Batch mode"
 
