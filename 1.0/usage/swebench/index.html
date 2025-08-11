@@ -1984,6 +1984,11 @@ The dataset needs to be loadable as <code>datasets.load_dataset(path, split=spli
 <p>Some progress runners are stuck at 'initializing task' for a very long time</p>
 </blockquote>
 <p>They might be pulling docker containers -- the run sshould start immediately the next time.</p>
+<blockquote>
+<p>I have some docker issues</p>
+</blockquote>
+<p>Try running the docker command manually to see what's going on (it should be printed out in the console).
+Confirm that it's running with <code>docker ps</code>, and that you can use <code>docker exec -it &lt;container-id&gt; ls</code> to get some output.</p>
 <h2 id="implementation">Implementation</h2>
 <details class="note">
 <summary>Default config</summary>
