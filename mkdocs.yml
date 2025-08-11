@@ -93,6 +93,7 @@ nav:
       - "SWE-bench (single)": "reference/run/swebench_single.md"
   - Blog:
     - blog/index.md
+  - Leaderboard: https://swebench.com
 plugins:
   - blog
   - glightbox
