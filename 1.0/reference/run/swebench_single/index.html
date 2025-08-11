@@ -1994,6 +1994,9 @@
         <span class="s2">&quot;--config&quot;</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">&quot;Path to a config file&quot;</span><span class="p">,</span>
     <span class="p">),</span>
+    <span class="n">environment</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            EnvironmentType (minisweagent.run.extra.swebench.EnvironmentType)" href="../swebench/#minisweagent.run.extra.swebench.EnvironmentType">EnvironmentType</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--environment&quot;</span>
+    <span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
@@ -2004,10 +2007,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/run/extra/swebench_single.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
@@ -2035,7 +2035,11 @@
 <span class="normal">46</span>
 <span class="normal">47</span>
 <span class="normal">48</span>
-<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;lite&quot;</span><span class="p">,</span> <span class="s2">&quot;--subset&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;SWEBench subset to use or path to a dataset&quot;</span><span class="p">),</span>
     <span class="n">split</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;--split&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Dataset split&quot;</span><span class="p">),</span>
@@ -2044,6 +2048,7 @@
     <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>
         <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">&quot;extra&quot;</span> <span class="o">/</span> <span class="s2">&quot;swebench.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to a config file&quot;</span>
     <span class="p">),</span>
+    <span class="n">environment</span><span class="p">:</span> <span class="n">EnvironmentType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--environment&quot;</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run on a single SWE-Bench instance.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -2060,7 +2065,7 @@
     <span class="n">instance</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">instances</span><span class="p">[</span><span class="n">instance_spec</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
 
     <span class="n">_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">get_config_path</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
-    <span class="n">env</span> <span class="o">=</span> <span class="n">DockerEnvironment</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;environment&quot;</span><span class="p">,</span> <span class="p">{})</span> <span class="o">|</span> <span class="p">{</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">get_swebench_docker_image_name</span><span class="p">(</span><span class="n">instance</span><span class="p">)}))</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">_config</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">InteractiveAgent</span><span class="p">(</span>
         <span class="n">get_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="p">{})),</span>
         <span class="n">env</span><span class="p">,</span>
