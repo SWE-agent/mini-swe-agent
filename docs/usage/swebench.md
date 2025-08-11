@@ -88,6 +88,11 @@ The dataset needs to be loadable as `datasets.load_dataset(path, split=split)`.
 
 They might be pulling docker containers -- the run sshould start immediately the next time.
 
+> I have some docker issues
+
+Try running the docker command manually to see what's going on (it should be printed out in the console).
+Confirm that it's running with `docker ps`, and that you can use `docker exec -it <container-id> ls` to get some output.
+
 ## Implementation
 
 ??? note "Default config"

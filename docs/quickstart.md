@@ -128,7 +128,8 @@
 !!! success "Which model to use?"
 
     We recommend using `claude-sonnet-4-20250514` for most tasks.
-    You can check scores of different models at our [SWE-bench (bash-only)](https://swe-bench.com) leaderboard.
+    For openai models, we recommend using `openai/gpt-5` or `openai/gpt-5-mini`.
+    You can check scores of different models at our [SWE-bench (bash-only)](https://swebench.com) leaderboard.
 
 ### Setting API keys
 
