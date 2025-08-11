@@ -72,6 +72,7 @@ async def test_everything_integration_test():
     )
     assert app.agent.config.confirm_exit
     async with app.run_test() as pilot:
+        await pilot.pause(0.2)
         assert app.agent_state == "RUNNING"
         assert "You are a helpful assistant that can do anything." in get_screen_text(app)
         assert "press enter" not in get_screen_text(app).lower()
