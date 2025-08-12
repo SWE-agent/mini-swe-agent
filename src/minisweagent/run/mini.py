@@ -14,9 +14,9 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.shortcuts import PromptSession
 from rich.console import Console
 
-from minisweagent import Environment, Model, global_config_dir
+from minisweagent import global_config_dir
 from minisweagent.agents.interactive import InteractiveAgent
-from minisweagent.agents.interactive_textual import AgentApp
+from minisweagent.agents.interactive_textual import TextualAgent
 from minisweagent.config import builtin_config_dir, get_config_path
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models import get_model
@@ -39,36 +39,6 @@ There are two different user interfaces:
 More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/mini/[/bold green]
 [/not dim]
 """
-
-
-def run_interactive(model: Model, env: Environment, agent_config: dict, task: str, output: Path | None = None) -> Any:
-    agent = InteractiveAgent(
-        model,
-        env,
-        **agent_config,
-    )
-
-    exit_status, result = None, None
-    try:
-        exit_status, result = agent.run(task)
-    finally:
-        if output:
-            save_traj(agent, output, exit_status=exit_status, result=result)
-    return agent
-
-
-def run_textual(model: Model, env: Environment, agent_config: dict, task: str, output: Path | None = None) -> Any:
-    agent_app = AgentApp(
-        model,
-        env,
-        task,
-        **agent_config,
-    )
-    try:
-        agent_app.run()
-    finally:
-        if output:
-            save_traj(agent_app.agent, output, exit_status=agent_app.exit_status, result=agent_app.result)
 
 
 @app.command(help=_HELP_TEXT)
@@ -119,10 +89,17 @@ def main(
     env = LocalEnvironment(**config.get("env", {}))
 
     # Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it's essentially a XOR
+    agent_class = InteractiveAgent
     if visual == (os.getenv("MSWEA_VISUAL_MODE_DEFAULT", "false") == "false"):
-        return run_textual(model, env, config["agent"], task, output)  # type: ignore[arg-type]
-    else:
-        return run_interactive(model, env, config["agent"], task, output)  # type: ignore[arg-type]
+        agent_class = TextualAgent
+    exit_status, result = None, None
+    agent = agent_class(model, env, **config.get("agent", {}))
+    try:
+        exit_status, result = agent.run(task)  # type: ignore[arg-type]
+    finally:
+        if output:
+            save_traj(agent, output, exit_status=exit_status, result=result)  # type: ignore[arg-type]
+    return agent
 
 
 if __name__ == "__main__":

@@ -37,8 +37,8 @@ class TextualAgentConfig(AgentConfig):
     """If the agent wants to finish, do we ask for confirmation from user?"""
 
 
-class TextualAgent(DefaultAgent):
-    def __init__(self, app: "AgentApp", *args, **kwargs):
+class _TextualAgent(DefaultAgent):
+    def __init__(self, app: "TextualAgent", *args, **kwargs):
         """Connects the DefaultAgent to the TextualApp."""
         self.app = app
         super().__init__(*args, config_class=TextualAgentConfig, **kwargs)
@@ -123,7 +123,7 @@ def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
 
 
 class SmartInputContainer(Container):
-    def __init__(self, app: "AgentApp"):
+    def __init__(self, app: "TextualAgent"):
         """Smart input container supporting single-line and multi-line input modes."""
         super().__init__(classes="smart-input-container")
         self._app = app
@@ -239,7 +239,7 @@ class SmartInputContainer(Container):
             return
 
 
-class AgentApp(App):
+class TextualAgent(App):
     BINDINGS = [
         Binding("right,l", "next_step", "Step++", tooltip="Show next step of the agent"),
         Binding("left,h", "previous_step", "Step--", tooltip="Show previous step of the agent"),
@@ -259,23 +259,27 @@ class AgentApp(App):
         Binding("f1,question_mark", "toggle_help_panel", "Help", tooltip="Show help"),
     ]
 
-    def __init__(self, model, env, task: str, **kwargs):
+    def __init__(self, model, env, **kwargs):
         css_path = os.environ.get("MSWEA_MINI_STYLE_PATH", str(Path(__file__).parent.parent / "config" / "mini.tcss"))
         self.__class__.CSS = Path(css_path).read_text()
         super().__init__()
         self.agent_state = "UNINITIALIZED"
-        self.agent_task = task
-        self.agent = TextualAgent(self, model=model, env=env, **kwargs)
+        self.agent = _TextualAgent(self, model=model, env=env, **kwargs)
         self._i_step = 0
         self.n_steps = 1
         self.input_container = SmartInputContainer(self)
         self.log_handler = AddLogEmitCallback(lambda record: self.call_from_thread(self.on_log_message_emitted, record))
         logging.getLogger().addHandler(self.log_handler)
         self._spinner = Spinner("dots")
-        self.exit_status: str | None = None
-        self.result: str | None = None
+        self.exit_status: str = "ExitStatusUnset"
+        self.result: str = ""
 
         self._vscroll = VerticalScroll()
+
+    def run(self, task: str) -> tuple[str, str]:
+        threading.Thread(target=lambda: self.agent.run(task), daemon=True).start()
+        super().run()
+        return self.exit_status, self.result
 
     # --- Basics ---
 
@@ -305,7 +309,18 @@ class AgentApp(App):
         self.agent_state = "RUNNING"
         self.update_content()
         self.set_interval(1 / 8, self._update_headers)
-        threading.Thread(target=lambda: self.agent.run(self.agent_task), daemon=True).start()
+
+    @property
+    def messages(self) -> list[dict]:
+        return self.agent.messages
+
+    @property
+    def model(self):
+        return self.agent.model
+
+    @property
+    def env(self):
+        return self.agent.env
 
     # --- Reacting to events ---
 

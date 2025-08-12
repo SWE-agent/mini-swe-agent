@@ -5,12 +5,12 @@ from unittest.mock import Mock
 
 import pytest
 
-from minisweagent.agents.interactive_textual import AddLogEmitCallback, AgentApp, SmartInputContainer
+from minisweagent.agents.interactive_textual import AddLogEmitCallback, SmartInputContainer, TextualAgent
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models.test_models import DeterministicModel
 
 
-def get_screen_text(app: AgentApp) -> str:
+def get_screen_text(app: TextualAgent) -> str:
     """Extract all text content from the app's UI."""
     text_parts = [app.title]
 
@@ -51,7 +51,7 @@ async def type_text(pilot, text: str):
 
 @pytest.mark.slow
 async def test_everything_integration_test():
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(
             outputs=[
                 "/sleep 0.5",
@@ -66,12 +66,13 @@ async def test_everything_integration_test():
             ],
         ),
         env=LocalEnvironment(),
-        task="What's up?",
         mode="confirm",
         cost_limit=10.0,
     )
     assert app.agent.config.confirm_exit
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("What's up?"), daemon=True).start()
         await pilot.pause(0.2)
         assert app.agent_state == "RUNNING"
         assert "You are a helpful assistant that can do anything." in get_screen_text(app)
@@ -232,13 +233,14 @@ def test_messages_to_steps_edge_cases():
 
 async def test_empty_agent_content():
     """Test app behavior with no messages."""
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
-        task="Empty test",
         mode="yolo",
     )
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("Empty test"), daemon=True).start()
         # Initially should show waiting message
         await pilot.pause(0.1)
         content = get_screen_text(app)
@@ -247,7 +249,7 @@ async def test_empty_agent_content():
 
 async def test_log_message_filtering():
     """Test that warning and error log messages trigger notifications."""
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(
             outputs=[
                 "/warning Test warning message",
@@ -256,7 +258,6 @@ async def test_log_message_filtering():
             ]
         ),
         env=LocalEnvironment(),
-        task="Log test",
         mode="yolo",
     )
 
@@ -264,6 +265,8 @@ async def test_log_message_filtering():
     app.notify = Mock()
 
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("Log test"), daemon=True).start()
         await pilot.pause(0.2)
 
         # Verify warning was emitted and handled (note the extra space in the actual format)
@@ -273,16 +276,17 @@ async def test_log_message_filtering():
 async def test_list_content_rendering():
     """Test rendering of messages with list content vs string content."""
     # Create a model that will add messages with list content
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(
             outputs=["Simple response\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
         ),
         env=LocalEnvironment(),
-        task="Content test",
         mode="yolo",
     )
 
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("Content test"), daemon=True).start()
         # Wait for the agent to finish its normal operation
         await pilot.pause(0.2)
 
@@ -300,14 +304,15 @@ async def test_list_content_rendering():
 
 async def test_confirmation_rejection_with_message():
     """Test rejecting an action with a custom message."""
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(outputs=["Test thought\n```bash\necho 'test'\n```"]),
         env=LocalEnvironment(),
-        task="Rejection test",
         mode="confirm",
     )
 
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("Rejection test"), daemon=True).start()
         await pilot.pause(0.1)
 
         # Wait for input prompt
@@ -325,10 +330,9 @@ async def test_confirmation_rejection_with_message():
 
 async def test_agent_with_cost_limit():
     """Test agent behavior when cost limit is exceeded."""
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(outputs=["Response 1", "Response 2"]),
         env=LocalEnvironment(),
-        task="Cost limit test",
         mode="yolo",
         cost_limit=0.01,  # Very low limit
     )
@@ -336,6 +340,8 @@ async def test_agent_with_cost_limit():
     app.notify = Mock()
 
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("Cost limit test"), daemon=True).start()
         await pilot.pause(0.2)
 
         # Should eventually stop due to cost limit and notify with the exit status
@@ -345,16 +351,17 @@ async def test_agent_with_cost_limit():
 
 async def test_agent_with_step_limit():
     """Test agent behavior when step limit is exceeded."""
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
         env=LocalEnvironment(),
-        task="Step limit test",
         mode="yolo",
         step_limit=2,
     )
 
     app.notify = Mock()
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("Step limit test"), daemon=True).start()
         await pilot.pause(0.5)
         assert app.agent_state == "STOPPED"
         app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
@@ -362,17 +369,18 @@ async def test_agent_with_step_limit():
 
 async def test_whitelist_actions_bypass_confirmation():
     """Test that whitelisted actions bypass confirmation."""
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(
             outputs=["Whitelisted action\n```bash\necho 'safe' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
         ),
         env=LocalEnvironment(),
-        task="Whitelist test",
         mode="confirm",
         whitelist_actions=[r"echo.*"],
     )
 
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("Whitelist test"), daemon=True).start()
         await pilot.pause(0.2)
 
         # Should execute without confirmation because echo is whitelisted
@@ -382,7 +390,7 @@ async def test_whitelist_actions_bypass_confirmation():
 
 async def test_input_container_multiple_actions():
     """Test input container handling multiple actions in sequence."""
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(
             outputs=[
                 "First action\n```bash\necho '1'\n```",
@@ -390,11 +398,12 @@ async def test_input_container_multiple_actions():
             ]
         ),
         env=LocalEnvironment(),
-        task="Multiple actions test",
         mode="confirm",
     )
 
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("Multiple actions test"), daemon=True).start()
         await pilot.pause(0.1)
 
         # Confirm first action
@@ -415,12 +424,11 @@ def test_log_handler_cleanup():
     """Test that log handler is properly cleaned up."""
     initial_handlers = len(logging.getLogger().handlers)
 
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(
             outputs=["Simple response\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
         ),
         env=LocalEnvironment(),
-        task="Cleanup test",
         mode="yolo",
     )
 
@@ -460,18 +468,19 @@ def test_add_log_emit_callback():
 
 async def test_yolo_mode_confirms_pending_action():
     """Test that pressing 'y' to switch to YOLO mode also confirms any pending action."""
-    app = AgentApp(
+    app = TextualAgent(
         model=DeterministicModel(
             outputs=[
                 "Action requiring confirmation\n```bash\necho 'test' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
-        task="YOLO confirmation test",
         mode="confirm",
     )
 
     async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("YOLO confirmation test"), daemon=True).start()
         await pilot.pause(0.1)
 
         # Wait for input prompt
@@ -527,7 +536,7 @@ def create_mock_smart_input_container(app):
     from typing import cast
 
     # Create actual SmartInputContainer instance but use typing.cast to bypass type check
-    return SmartInputContainer(cast("AgentApp", app))  # type: ignore
+    return SmartInputContainer(cast("TextualAgent", app))  # type: ignore
 
 
 async def test_smart_input_container_initialization():
