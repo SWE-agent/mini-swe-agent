@@ -782,17 +782,26 @@
   
 </li>
         
-      </ul>
-    </nav>
+          <li class="md-nav__item">
+  <a href="#settings-for-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Settings for environments
+    </span>
+  </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#default-run-files" class="md-nav__link">
     <span class="md-ellipsis">
       Default run files
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1893,17 +1902,26 @@
   
 </li>
         
-      </ul>
-    </nav>
+          <li class="md-nav__item">
+  <a href="#settings-for-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Settings for environments
+    </span>
+  </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#default-run-files" class="md-nav__link">
     <span class="md-ellipsis">
       Default run files
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2031,7 +2049,16 @@ setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">&quot;va
 <span class="c1"># (default: package_dir / &quot;config&quot; / &quot;mini.tcss&quot;)</span>
 <span class="nv">MSWEA_MINI_STYLE_PATH</span><span class="o">=</span><span class="s2">&quot;/path/to/your/mini/style.tcss&quot;</span>
 </code></pre></div>
-<h2 id="default-run-files">Default run files</h2>
+<h3 id="settings-for-environments">Settings for environments</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Path/name to the singularity/apptainer executable</span>
+<span class="c1"># (default: &quot;singularity&quot;)</span>
+<span class="nv">MSWEA_SINGULARITY_EXECUTABLE</span><span class="o">=</span><span class="s2">&quot;singularity&quot;</span>
+
+<span class="c1"># Path/name to the docker executable</span>
+<span class="c1"># (default: &quot;docker&quot;)</span>
+<span class="nv">MSWEA_DOCKER_EXECUTABLE</span><span class="o">=</span><span class="s2">&quot;docker&quot;</span>
+</code></pre></div>
+<h3 id="default-run-files">Default run files</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Default run script entry point for the main CLI</span>
 <span class="c1"># (default: &quot;minisweagent.run.mini&quot;)</span>
 <span class="nv">MSWEA_DEFAULT_RUN</span><span class="o">=</span><span class="s2">&quot;minisweagent.run.mini&quot;</span>

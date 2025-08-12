@@ -2196,7 +2196,9 @@
     <span class="n">env</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dict">dict</span></span><span class="p">(),</span>
     <span class="n">forward_env</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="list">list</span></span><span class="p">(),</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-    <span class="n">executable</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;docker&quot;</span><span class="p">,</span>
+    <span class="n">executable</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
+        <span class="s2">&quot;MSWEA_DOCKER_EXECUTABLE&quot;</span><span class="p">,</span> <span class="s2">&quot;docker&quot;</span>
+    <span class="p">),</span>
     <span class="n">run_args</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="list">list</span></span><span class="p">(),</span>
     <span class="n">container_timeout</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;2h&quot;</span><span class="p">,</span>
 <span class="p">)</span>
@@ -2360,7 +2362,9 @@ In case of conflict with <code>env</code>, the <code>env</code> variables take p
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">executable</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">&#39;docker&#39;</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">executable</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
+    <span class="s2">&quot;MSWEA_DOCKER_EXECUTABLE&quot;</span><span class="p">,</span> <span class="s2">&quot;docker&quot;</span>
+<span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
