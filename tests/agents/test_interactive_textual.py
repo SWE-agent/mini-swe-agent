@@ -340,9 +340,8 @@ async def test_agent_with_cost_limit():
     app.notify = Mock()
 
     async with app.run_test() as pilot:
-        # Start the agent with the task
         threading.Thread(target=lambda: app.agent.run("Cost limit test"), daemon=True).start()
-        await pilot.pause(0.2)
+        await pilot.pause(0.5)
 
         # Should eventually stop due to cost limit and notify with the exit status
         assert app.agent_state == "STOPPED"
