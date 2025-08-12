@@ -2145,9 +2145,9 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptSession</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">global_config_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">global_config_dir</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractiveAgent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.interactive_textual</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentApp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.interactive_textual</span><span class="w"> </span><span class="kn">import</span> <span class="n">TextualAgent</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">builtin_config_dir</span><span class="p">,</span> <span class="n">get_config_path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.environments.local</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalEnvironment</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model</span>
@@ -2170,36 +2170,6 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="s2">More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/mini/[/bold green]</span>
 <span class="s2">[/not dim]</span>
 <span class="s2">&quot;&quot;&quot;</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">run_interactive</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">agent_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="n">agent</span> <span class="o">=</span> <span class="n">InteractiveAgent</span><span class="p">(</span>
-        <span class="n">model</span><span class="p">,</span>
-        <span class="n">env</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">agent_config</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-            <span class="n">save_traj</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">agent</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">run_textual</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">agent_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="n">agent_app</span> <span class="o">=</span> <span class="n">AgentApp</span><span class="p">(</span>
-        <span class="n">model</span><span class="p">,</span>
-        <span class="n">env</span><span class="p">,</span>
-        <span class="n">task</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">agent_config</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">agent_app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-            <span class="n">save_traj</span><span class="p">(</span><span class="n">agent_app</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">agent_app</span><span class="o">.</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">agent_app</span><span class="o">.</span><span class="n">result</span><span class="p">)</span>
 
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
@@ -2250,10 +2220,17 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
     <span class="n">env</span> <span class="o">=</span> <span class="n">LocalEnvironment</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env&quot;</span><span class="p">,</span> <span class="p">{}))</span>
 
     <span class="c1"># Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it&#39;s essentially a XOR</span>
+    <span class="n">agent_class</span> <span class="o">=</span> <span class="n">InteractiveAgent</span>
     <span class="k">if</span> <span class="n">visual</span> <span class="o">==</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_VISUAL_MODE_DEFAULT&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">run_textual</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">],</span> <span class="n">task</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">run_interactive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">],</span> <span class="n">task</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="n">agent_class</span> <span class="o">=</span> <span class="n">TextualAgent</span>
+    <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">agent_class</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">save_traj</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="k">return</span> <span class="n">agent</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
