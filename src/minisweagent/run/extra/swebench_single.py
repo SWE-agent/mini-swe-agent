@@ -21,7 +21,7 @@ app = typer.Typer(add_completion=False)
 def main(
     subset: str = typer.Option("lite", "--subset", help="SWEBench subset to use or path to a dataset"),
     split: str = typer.Option("dev", "--split", help="Dataset split"),
-    instance_spec: str = typer.Option(None, "-i", "--instance", help="SWE-Bench instance ID"),
+    instance_spec: str = typer.Option(0, "-i", "--instance", help="SWE-Bench instance ID"),
     model_name: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
     config_path: Path = typer.Option(
         builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
