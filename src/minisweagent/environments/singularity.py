@@ -20,7 +20,7 @@ class SingularityEnvironmentConfig:
     """Environment variables to forward to the container."""
     timeout: int = 30
     """Timeout for executing commands in the container."""
-    executable: str = "singularity"
+    executable: str = os.getenv("MSWEA_SINGULARITY_EXECUTABLE", "singularity")
     """Path to the singularity executable."""
 
 

@@ -119,10 +119,21 @@ MSWEA_INSPECTOR_STYLE_PATH="/path/to/your/inspector/style.tcss"
 # Custom style path for mini textual interface
 # (default: package_dir / "config" / "mini.tcss")
 MSWEA_MINI_STYLE_PATH="/path/to/your/mini/style.tcss"
-
 ```
 
-## Default run files
+### Settings for environments
+
+```bash
+# Path/name to the singularity/apptainer executable
+# (default: "singularity")
+MSWEA_SINGULARITY_EXECUTABLE="singularity"
+
+# Path/name to the docker executable
+# (default: "docker")
+MSWEA_DOCKER_EXECUTABLE="docker"
+```
+
+### Default run files
 
 ```bash
 # Default run script entry point for the main CLI

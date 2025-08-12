@@ -191,7 +191,9 @@ def main(
     config_spec: Path = typer.Option(
         builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
     ),
-    environment_class: str | None = typer.Option(None, "--environment-class", help="Environment type to use"),
+    environment_class: str | None = typer.Option(
+        None, "--environment-class", help="Environment type to use. Recommended are docker or singularity"
+    ),
 ) -> None:
     dataset_path = DATASET_MAPPING.get(subset, subset)
     print(f"Loading dataset {dataset_path}, split {split}...")
