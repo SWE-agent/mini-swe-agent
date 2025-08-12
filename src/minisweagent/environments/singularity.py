@@ -52,7 +52,7 @@ class SingularityEnvironment:
         for key, value in self.config.env.items():
             cmd.extend(["--env", f"{key}={value}"])
 
-        cmd.extend(["--writable", self.sandbox_dir, "bash", "-c", command])
+        cmd.extend(["--writable", str(self.sandbox_dir), "bash", "-c", command])
         result = subprocess.run(
             cmd,
             text=True,

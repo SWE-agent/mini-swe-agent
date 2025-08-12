@@ -5,7 +5,6 @@ import yaml
 
 from minisweagent import package_dir
 from minisweagent.models.test_models import DeterministicModel
-from minisweagent.run.extra.swebench import EnvironmentType
 from minisweagent.run.extra.swebench_single import main
 
 
@@ -26,7 +25,7 @@ def test_swebench_single_end_to_end(github_test_data):
                 instance_spec="swe-agent__test-repo-1",
                 model_name="deterministic",
                 config_path=package_dir / "config" / "extra" / "swebench.yaml",
-                environment=EnvironmentType.docker,
+                environment_class="docker",
             )
 
         # Verify model was called with correct parameters
@@ -54,7 +53,7 @@ def test_swebench_single_with_custom_config(github_test_data, tmp_path):
                 instance_spec="swe-agent__test-repo-1",
                 model_name="deterministic",
                 config_path=config_file,
-                environment=EnvironmentType.docker,
+                environment_class="docker",
             )
 
         # Verify model was called with config
@@ -78,7 +77,7 @@ def test_swebench_single_default_parameters(github_test_data):
                 instance_spec="swe-agent__test-repo-1",
                 model_name=None,
                 config_path=package_dir / "config" / "extra" / "swebench.yaml",
-                environment=EnvironmentType.docker,
+                environment_class="docker",
             )
 
             # Verify model was called

@@ -10,7 +10,6 @@ import re
 import threading
 import time
 import traceback
-from enum import Enum
 from pathlib import Path
 
 import typer
@@ -18,10 +17,10 @@ import yaml
 from datasets import load_dataset
 from rich.live import Live
 
+from minisweagent import Environment
 from minisweagent.agents.default import DefaultAgent
 from minisweagent.config import builtin_config_dir, get_config_path
-from minisweagent.environments.docker import DockerEnvironment
-from minisweagent.environments.singularity import SingularityEnvironment
+from minisweagent.environments import get_environment
 from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from minisweagent.run.utils.save import save_traj
@@ -47,11 +46,6 @@ DATASET_MAPPING = {
 
 
 _OUTPUT_FILE_LOCK = threading.Lock()
-
-
-class EnvironmentType(str, Enum):
-    docker = "docker"
-    singularity = "singularity"
 
 
 class ProgressTrackingAgent(DefaultAgent):
@@ -81,19 +75,13 @@ def get_swebench_docker_image_name(instance: dict) -> str:
     return image_name
 
 
-def get_environment(environment_type: EnvironmentType | None, config: dict, instance: dict):
-    if not environment_type or environment_type == EnvironmentType.docker:
-        return DockerEnvironment(
-            **(config.get("environment", {}) | {"image": get_swebench_docker_image_name(instance)})
-        )
-    else:
-        assert environment_type == EnvironmentType.singularity
-        return SingularityEnvironment(
-            **(
-                config.get("environment", {})
-                | {"image": "docker://" + get_swebench_docker_image_name(instance), "cwd": "/testbed"}
-            )
-        )
+def get_sb_environment(config: dict, instance: dict) -> Environment:
+    image_name = get_swebench_docker_image_name(instance)
+    env_config = config.get("environment", {})
+    if env_config.get("environment_class") == "singularity":
+        image_name = "docker://" + image_name
+    env_config["image"] = image_name
+    return get_environment(env_config, default_type="docker")
 
 
 def update_preds_file(output_path: Path, instance_id: str, model_name: str, result: str):
@@ -124,9 +112,7 @@ def remove_from_preds_file(output_path: Path, instance_id: str):
 def process_instance(
     instance: dict,
     output_dir: Path,
-    model_name: str | None,
-    config_path: str | Path,
-    environment_type: EnvironmentType | None,
+    config: dict,
     progress_manager: RunBatchProgressManager,
 ) -> None:
     """Process a single SWEBench instance."""
@@ -135,9 +121,7 @@ def process_instance(
     # avoid inconsistent state if something here fails and there's leftover previous files
     remove_from_preds_file(output_dir / "preds.json", instance_id)
     (instance_dir / f"{instance_id}.traj.json").unlink(missing_ok=True)
-
-    config = yaml.safe_load(get_config_path(config_path).read_text())
-    model = get_model(model_name, config=config.get("model", {}))
+    model = get_model(config=config.get("model", {}))
     task = instance["problem_statement"]
 
     progress_manager.on_instance_start(instance_id)
@@ -147,7 +131,7 @@ def process_instance(
     extra_info = None
 
     try:
-        env = get_environment(environment_type, config, instance)
+        env = get_sb_environment(config, instance)
         agent = ProgressTrackingAgent(
             model,
             env,
@@ -204,10 +188,10 @@ def main(
     workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing"),
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances"),
-    config: Path = typer.Option(
+    config_spec: Path = typer.Option(
         builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
     ),
-    environment: EnvironmentType | None = typer.Option(None, "-e", "--environment"),
+    environment_class: str | None = typer.Option(None, "--environment-class", help="Environment type to use"),
 ) -> None:
     dataset_path = DATASET_MAPPING.get(subset, subset)
     print(f"Loading dataset {dataset_path}, split {split}...")
@@ -223,6 +207,10 @@ def main(
     output_path.mkdir(parents=True, exist_ok=True)
     print(f"Running on {len(instances)} instances...")
     print(f"Results will be saved to {output_path}")
+
+    config = yaml.safe_load(get_config_path(config_spec).read_text())
+    config.setdefault("environment", {}).setdefault("environment_class", environment_class)
+    config.setdefault("model", {}).setdefault("model_name", model)
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
@@ -241,9 +229,9 @@ def main(
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
             futures = {
-                executor.submit(
-                    process_instance, instance, output_path, model, config, environment, progress_manager
-                ): instance["instance_id"]
+                executor.submit(process_instance, instance, output_path, config, progress_manager): instance[
+                    "instance_id"
+                ]
                 for instance in instances
             }
             try:
