@@ -8,7 +8,7 @@
 
 ::: minisweagent.agents.interactive_textual.TextualAgent
 
-::: minisweagent.agents.interactive_textual.AgentApp
+::: minisweagent.agents.interactive_textual.TextualAgentConfig
 
 ::: minisweagent.agents.interactive_textual.SmartInputContainer
 
