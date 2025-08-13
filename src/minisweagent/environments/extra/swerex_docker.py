@@ -29,11 +29,11 @@ class SwerexDockerEnvironment:
         output = asyncio.run(
             self.deployment.runtime.execute(
                 RexCommand(
-                    command=command, shell=True, check=False, cwd=cwd or self.config.cwd, timeout=self.config.timeout
+                    command=command, shell=True, check=False, cwd=cwd or self.config.cwd, timeout=self.config.timeout, merge_output_streams=True,
                 )
             )
         )
         return {
-            "output": f"<stdout>\n{output.stdout}</stdout>\n<stderr>\n{output.stderr}</stderr>",
+            "output": output.stdout,
             "returncode": output.exit_code,
         }
