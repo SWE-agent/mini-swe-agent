@@ -1935,19 +1935,23 @@ mini-extra<span class="w"> </span>swebench<span class="w"> </span><span class="s
 </code></pre></div>
 <p>Basic flags:</p>
 <ul>
+<li><code>-o</code>, <code>--output</code> - Output directory</li>
 <li><code>-m</code>, <code>--model</code> - Model to use</li>
 <li><code>-c</code>, <code>--config</code> - Path to a config file (default: <code>swebench.yaml</code> in the <code>config</code> directory)</li>
-<li><code>-i</code>, <code>--instance</code> - SWE-Bench instance ID (default: <code>0</code>)</li>
+<li><code>-w</code>, <code>--workers</code> - Number of worker threads for parallel processing (default: <code>1</code>)</li>
 </ul>
 <p>Data selection flags:</p>
 <ul>
 <li><code>--subset</code> - SWEBench subset to use or path to a dataset (default: <code>lite</code>)</li>
 <li><code>--split</code> - Dataset split (default: <code>dev</code>)</li>
+<li><code>--slice</code> - Slice specification (e.g., '0:5' for first 5 instances)</li>
+<li><code>--filter</code> - Filter instance IDs by regex</li>
+<li><code>--shuffle</code> - Shuffle instances (default: <code>False</code>)</li>
+<li><code>--redo-existing</code> - Redo existing instances (default: <code>False</code>)</li>
 </ul>
 <p>Advanced flags:</p>
 <ul>
 <li><code>--environment-class</code> - Environment type to use (recommended: <code>docker</code> or <code>singularity</code>)</li>
-<li><code>--exit-immediately</code> - Exit immediately when the agent wants to finish instead of prompting (default: <code>False</code>)</li>
 </ul>
 </div>
 <div class="tabbed-block">
@@ -1972,23 +1976,19 @@ mini-extra<span class="w"> </span>swebench-single<span class="w"> </span><span c
 add the <code>--exit-immediately</code> flag.</p>
 <p>Basic flags:</p>
 <ul>
-<li><code>-o</code>, <code>--output</code> - Output directory</li>
 <li><code>-m</code>, <code>--model</code> - Model to use</li>
 <li><code>-c</code>, <code>--config</code> - Path to a config file (default: <code>swebench.yaml</code> in the <code>config</code> directory)</li>
-<li><code>-w</code>, <code>--workers</code> - Number of worker threads for parallel processing (default: <code>1</code>)</li>
 </ul>
 <p>Data selection flags:</p>
 <ul>
 <li><code>--subset</code> - SWEBench subset to use or path to a dataset (default: <code>lite</code>)</li>
 <li><code>--split</code> - Dataset split (default: <code>dev</code>)</li>
-<li><code>--slice</code> - Slice specification (e.g., '0:5' for first 5 instances)</li>
-<li><code>--filter</code> - Filter instance IDs by regex</li>
-<li><code>--shuffle</code> - Shuffle instances (default: <code>False</code>)</li>
-<li><code>--redo-existing</code> - Redo existing instances (default: <code>False</code>)</li>
+<li><code>-i</code>, <code>--instance</code> - SWE-Bench instance ID (default: <code>0</code>)</li>
 </ul>
 <p>Advanced flags:</p>
 <ul>
 <li><code>--environment-class</code> - Environment type to use (recommended: <code>docker</code> or <code>singularity</code>)</li>
+<li><code>--exit-immediately</code> - Exit immediately when the agent wants to finish instead of prompting (default: <code>False</code>)</li>
 </ul>
 </div>
 </div>
