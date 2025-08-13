@@ -177,24 +177,22 @@ def filter_instances(
     return instances
 
 
+# fmt: off
 @app.command(help=_HELP_TEXT)
 def main(
-    subset: str = typer.Option("lite", "--subset", help="SWEBench subset to use or path to a dataset"),
-    split: str = typer.Option("dev", "--split", help="Dataset split"),
-    slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)"),
-    filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex"),
-    shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances"),
-    output: str = typer.Option("", "-o", "--output", help="Output directory"),
-    workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing"),
-    model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
-    redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances"),
-    config_spec: Path = typer.Option(
-        builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
-    ),
-    environment_class: str | None = typer.Option(
-        None, "--environment-class", help="Environment type to use. Recommended are docker or singularity"
-    ),
+    subset: str = typer.Option("lite", "--subset", help="SWEBench subset to use or path to a dataset", rich_help_panel="Data selection"),
+    split: str = typer.Option("dev", "--split", help="Dataset split", rich_help_panel="Data selection"),
+    slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)", rich_help_panel="Data selection"),
+    filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex", rich_help_panel="Data selection"),
+    shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances", rich_help_panel="Data selection"),
+    output: str = typer.Option("", "-o", "--output", help="Output directory", rich_help_panel="Basic"),
+    workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing", rich_help_panel="Basic"),
+    model: str | None = typer.Option(None, "-m", "--model", help="Model to use", rich_help_panel="Basic"),
+    redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
+    config_spec: Path = typer.Option( builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file", rich_help_panel="Basic"),
+    environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
 ) -> None:
+    # fmt: on
     dataset_path = DATASET_MAPPING.get(subset, subset)
     print(f"Loading dataset {dataset_path}, split {split}...")
     instances = list(load_dataset(dataset_path, split=split))

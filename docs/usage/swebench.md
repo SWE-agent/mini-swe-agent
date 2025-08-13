@@ -22,39 +22,86 @@
     The docker containers for Linux assume an x86 Linux architecture;
     you might not be able to run them on other architectures.
 
-=== "Batch mode"
 
-    ```bash
-    mini-extra swebench --help
-    # or
-    python src/minisweagent/run/extra/swebench.py --help
-    # Example:
-    mini-extra swebench \
-        --model claude-sonnet-4-20250514 \
-        --subset verified \
-        --split test \
-        --workers 4
-    ```
+!!! tip "Quickstart"
 
-=== "Single instance (for debugging)"
+    === "Batch mode"
 
-    ```bash
-    mini-extra swebench-single --help
-    # or
-    python src/minisweagent/run/extra/swebench_single.py --help
-    # Example:
-    mini-extra swebench-single \
-        --subset verified \
-        --split test \
-        --model claude-sonnet-4-20250514 \
-        -i sympy__sympy-15599
-    # or
-    mini-extra swebench-single \
-        --subset verified \
-        --split test \
-        -m claude-sonnet-4-20250514 \
-        -i 0  # instance index
-    ```
+        Batch mode runs on all task instances in parallel.
+
+        ```bash
+        mini-extra swebench --help
+        # or
+        python src/minisweagent/run/extra/swebench.py --help
+        # Example:
+        mini-extra swebench \
+            --model claude-sonnet-4-20250514 \
+            --subset verified \
+            --split test \
+            --workers 4
+        ```
+
+        Basic flags:
+
+        - `-m`, `--model` - Model to use
+        - `-c`, `--config` - Path to a config file (default: `swebench.yaml` in the `config` directory)
+        - `-i`, `--instance` - SWE-Bench instance ID (default: `0`)
+
+        Data selection flags:
+
+        - `--subset` - SWEBench subset to use or path to a dataset (default: `lite`)
+        - `--split` - Dataset split (default: `dev`)
+
+        Advanced flags:
+
+        - `--environment-class` - Environment type to use (recommended: `docker` or `singularity`)
+        - `--exit-immediately` - Exit immediately when the agent wants to finish instead of prompting (default: `False`)
+
+    === "Single instance (for debugging)"
+
+        Single instance mode runs on a single task instance with interactivity (useful for debugging).
+
+        ```bash
+        mini-extra swebench-single --help
+        # or
+        python src/minisweagent/run/extra/swebench_single.py --help
+        # Example:
+        mini-extra swebench-single \
+            --subset verified \
+            --split test \
+            --model claude-sonnet-4-20250514 \
+            -i sympy__sympy-15599
+        # or
+        mini-extra swebench-single \
+            --subset verified \
+            --split test \
+            -m claude-sonnet-4-20250514 \
+            -i 0  # instance index
+        ```
+
+        Note: If you want to run the script without prompting for confirmation at exit,
+        add the `--exit-immediately` flag.
+
+        Basic flags:
+
+        - `-o`, `--output` - Output directory
+        - `-m`, `--model` - Model to use
+        - `-c`, `--config` - Path to a config file (default: `swebench.yaml` in the `config` directory)
+        - `-w`, `--workers` - Number of worker threads for parallel processing (default: `1`)
+
+        Data selection flags:
+
+        - `--subset` - SWEBench subset to use or path to a dataset (default: `lite`)
+        - `--split` - Dataset split (default: `dev`)
+        - `--slice` - Slice specification (e.g., '0:5' for first 5 instances)
+        - `--filter` - Filter instance IDs by regex
+        - `--shuffle` - Shuffle instances (default: `False`)
+        - `--redo-existing` - Redo existing instances (default: `False`)
+
+        Advanced flags:
+
+        - `--environment-class` - Environment type to use (recommended: `docker` or `singularity`)
+
 
 !!! tip "Evaluating on SWE-bench"
 
