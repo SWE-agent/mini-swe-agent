@@ -27,6 +27,9 @@ def main(
         builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file"
     ),
     environment_class: str | None = typer.Option(None, "--environment-class"),
+    exit_immediately: bool = typer.Option(
+        False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting."
+    ),
 ) -> None:
     """Run on a single SWE-Bench instance."""
     dataset_path = DATASET_MAPPING.get(subset, subset)
@@ -41,6 +44,8 @@ def main(
 
     config = yaml.safe_load(get_config_path(config_path).read_text())
     config.setdefault("environment", {}).setdefault("environment_class", environment_class)
+    if exit_immediately:
+        config.setdefault("agent", {})["confirm_exit"] = False
     env = get_sb_environment(config, instance)
     agent = InteractiveAgent(
         get_model(model_name, config.get("model", {})),
