@@ -61,7 +61,7 @@ class Agent(Protocol):
     env: Environment
     messages: list[dict[str, str]]
 
-    def run(self, task: str) -> tuple[str, str]: ...
+    def run(self, task: str, **kwargs) -> tuple[str, str]: ...
 
 
 __all__ = ["Agent", "Model", "Environment", "package_dir", "__version__", "global_config_file", "global_config_dir"]

@@ -59,9 +59,9 @@ class _TextualAgent(DefaultAgent):
         self._current_action_from_human = False
         return super().query()
 
-    def run(self, task: str) -> tuple[str, str]:
+    def run(self, task: str, **kwargs) -> tuple[str, str]:
         try:
-            exit_status, result = super().run(task)
+            exit_status, result = super().run(task, **kwargs)
         except Exception as e:
             result = str(e)
             self.app.call_from_thread(self.app.action_quit)

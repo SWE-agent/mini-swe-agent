@@ -69,11 +69,11 @@ class DefaultAgent:
     def add_message(self, role: str, content: str, **kwargs):
         self.messages.append({"role": role, "content": content, **kwargs})
 
-    def run(self, task: str) -> tuple[str, str]:
+    def run(self, task: str, **kwargs) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
         self.messages = []
         self.add_message("system", self.render_template(self.config.system_template))
-        self.add_message("user", self.render_template(self.config.instance_template, task=task))
+        self.add_message("user", self.render_template(self.config.instance_template, task=task, **kwargs))
         while True:
             try:
                 self.step()
