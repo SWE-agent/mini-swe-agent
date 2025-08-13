@@ -41,14 +41,15 @@ def main(
     instance: dict = instances[instance_spec]  # type: ignore
 
     config = yaml.safe_load(get_config_path(config_path).read_text())
-    config.setdefault("environment", {}).setdefault("environment_class", environment_class)
+    if environment_class is not None:
+        config.setdefault("environment", {})["environment_class"] = environment_class
     if exit_immediately:
         config.setdefault("agent", {})["confirm_exit"] = False
     env = get_sb_environment(config, instance)
     agent = InteractiveAgent(
         get_model(model_name, config.get("model", {})),
         env,
-        **(config.get("agent", {}) | {"mode": "yolo"}),
+        **({"mode": "yolo"} | config.get("agent", {})),
     )
     agent.run(instance["problem_statement"])
 

@@ -209,8 +209,10 @@ def main(
     print(f"Results will be saved to {output_path}")
 
     config = yaml.safe_load(get_config_path(config_spec).read_text())
-    config.setdefault("environment", {}).setdefault("environment_class", environment_class)
-    config.setdefault("model", {}).setdefault("model_name", model)
+    if environment_class is not None:
+        config.setdefault("environment", {})["environment_class"] = environment_class
+    if model is not None:
+        config.setdefault("model", {})["model_name"] = model
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
