@@ -2,7 +2,7 @@ import os
 import shlex
 import subprocess
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from minisweagent.environments.utils.template_vars import get_remote_template_vars
@@ -40,7 +40,7 @@ class DockerEnvironment:
         self._start_container()
 
     def get_template_vars(self) -> dict[str, Any]:
-        return get_remote_template_vars(self)
+        return asdict(self.config) | get_remote_template_vars(self)
 
     def _start_container(self):
         """Start the Docker container and return the container ID."""

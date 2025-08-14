@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import tempfile
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -38,7 +38,7 @@ class SingularityEnvironment:
         )
 
     def get_template_vars(self) -> dict[str, Any]:
-        return get_remote_template_vars(self)
+        return asdict(self.config) | get_remote_template_vars(self)
 
     def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
         """Execute a command in a Singularity container and return the result as a dict."""
