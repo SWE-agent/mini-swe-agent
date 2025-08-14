@@ -9,8 +9,6 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-from minisweagent.environments.utils.template_vars import get_remote_template_vars
-
 
 @dataclass
 class SingularityEnvironmentConfig:
@@ -31,14 +29,13 @@ class SingularityEnvironment:
         """Singularity environment. See `SingularityEnvironmentConfig` for kwargs."""
         self.config = SingularityEnvironmentConfig(**kwargs)
         self.sandbox_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
-
         subprocess.run(
             [self.config.executable, "build", "--sandbox", self.sandbox_dir, self.config.image],
             check=True,
         )
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | get_remote_template_vars(self)
+        return asdict(self.config)
 
     def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
         """Execute a command in a Singularity container and return the result as a dict."""

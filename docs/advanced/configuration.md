@@ -193,7 +193,7 @@ TL;DR: You include variables with double curly braces, e.g. `{{task}}`, but you 
 
 In all builtin agents, you can use the following variables:
 
-- Environment variables
+- Environment variables (`LocalEnvironment` only, see discussion [here](https://github.com/SWE-agent/mini-swe-agent/pull/425))
 - Agent config variables
 - Environment config variables
 - Explicitly passed variables (`observation`, `task` etc.) depending on the template

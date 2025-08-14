@@ -5,8 +5,6 @@ from typing import Any
 from swerex.deployment.docker import DockerDeployment
 from swerex.runtime.abstract import Command as RexCommand
 
-from minisweagent.environments.utils.template_vars import get_remote_template_vars
-
 
 @dataclass
 class SwerexDockerEnvironmentConfig:
@@ -46,4 +44,4 @@ class SwerexDockerEnvironment:
         }
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | get_remote_template_vars(self)
+        return asdict(self.config)
