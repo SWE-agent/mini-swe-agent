@@ -1,5 +1,6 @@
 import asyncio
-from dataclasses import dataclass, field
+import json
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from swerex.deployment.docker import DockerDeployment
@@ -42,3 +43,12 @@ class SwerexDockerEnvironment:
             "output": output.stdout,
             "returncode": output.exit_code,
         }
+
+    def get_template_vars(self) -> dict[str, Any]:
+        try:
+            platform_info = json.loads(
+                self.execute("python -c 'import platform; print(platform.uname()._asdict())'")["output"]
+            )
+        except ValueError:
+            platform_info = {}
+        return platform_info | asdict(self.config)

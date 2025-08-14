@@ -1,7 +1,5 @@
 """Basic agent class. See https://mini-swe-agent.com/latest/advanced/control_flow/ for visual explanation."""
 
-import os
-import platform
 import re
 import subprocess
 from collections.abc import Callable
@@ -63,8 +61,8 @@ class DefaultAgent:
         self.env = env
 
     def render_template(self, template: str, **kwargs) -> str:
-        cs = asdict(self.config) | asdict(self.env.config) | asdict(self.model.config) | platform.uname()._asdict()
-        return Template(template).render(**kwargs, **cs, **os.environ)
+        cs = asdict(self.config) | self.env.get_template_vars() | asdict(self.model.config)
+        return Template(template).render(**kwargs, **cs)
 
     def add_message(self, role: str, content: str, **kwargs):
         self.messages.append({"role": role, "content": content, **kwargs})

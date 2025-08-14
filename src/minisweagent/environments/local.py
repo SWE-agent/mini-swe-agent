@@ -1,6 +1,8 @@
 import os
+import platform
 import subprocess
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
+from typing import Any
 
 
 @dataclass
@@ -31,3 +33,6 @@ class LocalEnvironment:
             stderr=subprocess.STDOUT,
         )
         return {"output": result.stdout, "returncode": result.returncode}
+
+    def get_template_vars(self) -> dict[str, Any]:
+        return asdict(self.config) | platform.uname()._asdict() | os.environ

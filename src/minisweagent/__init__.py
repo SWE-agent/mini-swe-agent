@@ -53,6 +53,8 @@ class Environment(Protocol):
 
     def execute(self, command: str, cwd: str = "") -> dict[str, str]: ...
 
+    def get_template_vars(self) -> dict[str, Any]: ...
+
 
 class Agent(Protocol):
     """Protocol for agents."""

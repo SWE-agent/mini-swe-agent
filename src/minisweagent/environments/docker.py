@@ -5,6 +5,8 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Any
 
+from minisweagent.environments.utils.template_vars import get_remote_template_vars
+
 
 @dataclass
 class DockerEnvironmentConfig:
@@ -36,6 +38,9 @@ class DockerEnvironment:
         self.container_id: str | None = None
         self.config = config_class(**kwargs)
         self._start_container()
+
+    def get_template_vars(self) -> dict[str, Any]:
+        return get_remote_template_vars(self)
 
     def _start_container(self):
         """Start the Docker container and return the container ID."""
