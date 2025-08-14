@@ -1,5 +1,6 @@
 import json
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -387,6 +388,9 @@ class ExceptionModel:
     def query(self, *args, **kwargs):
         self.n_calls += 1
         raise self.exception_type(self.exception_message)
+
+    def get_template_vars(self) -> dict[str, Any]:
+        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
 
 @pytest.mark.slow
