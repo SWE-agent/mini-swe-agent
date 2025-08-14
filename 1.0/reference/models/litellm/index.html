@@ -1255,6 +1255,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_model.LitellmModel.get_template_vars" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_template_vars
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2038,6 +2047,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_model.LitellmModel.get_template_vars" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_template_vars
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2409,6 +2427,31 @@
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
     <span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="minisweagent.models.litellm_model.LitellmModel.get_template_vars" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_template_vars</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_template_vars</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/minisweagent/models/litellm_model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s2">&quot;n_model_calls&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">&quot;model_cost&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
