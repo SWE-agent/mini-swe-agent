@@ -230,3 +230,21 @@ def test_custom_config():
     assert result == "custom config works\n"
     assert agent.messages[0]["content"] == "You are a test assistant."
     assert "Test custom config" in agent.messages[1]["content"]
+
+
+def test_render_template_model_stats():
+    """Test that render_template has access to n_model_calls and model_cost from model."""
+    agent = DefaultAgent(
+        model=DeterministicModel(outputs=["output1", "output2"]),
+        env=LocalEnvironment(),
+    )
+
+    # Make some model calls to generate stats
+    agent.model.query([])
+    agent.model.query([])
+
+    # Test template rendering with model stats
+    template = "Calls: {{n_model_calls}}, Cost: {{model_cost}}"
+    result = agent.render_template(template)
+
+    assert result == "Calls: 2, Cost: 2.0"

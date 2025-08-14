@@ -61,7 +61,7 @@ class DefaultAgent:
         self.env = env
 
     def render_template(self, template: str, **kwargs) -> str:
-        cs = asdict(self.config) | self.env.get_template_vars() | asdict(self.model.config)
+        cs = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
         return Template(template).render(**kwargs, **cs)
 
     def add_message(self, role: str, content: str, **kwargs):

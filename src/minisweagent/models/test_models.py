@@ -1,6 +1,7 @@
 import logging
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from typing import Any
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 
@@ -36,3 +37,6 @@ class DeterministicModel:
         self.cost += self.config.cost_per_call
         GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
         return {"content": output}
+
+    def get_template_vars(self) -> dict[str, Any]:
+        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}

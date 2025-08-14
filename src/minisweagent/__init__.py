@@ -45,6 +45,8 @@ class Model(Protocol):
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict: ...
 
+    def get_template_vars(self) -> dict[str, Any]: ...
+
 
 class Environment(Protocol):
     """Protocol for execution environments."""

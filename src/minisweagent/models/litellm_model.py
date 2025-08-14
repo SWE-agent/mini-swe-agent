@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -68,3 +68,6 @@ class LitellmModel:
         return {
             "content": response.choices[0].message.content or "",  # type: ignore
         }
+
+    def get_template_vars(self) -> dict[str, Any]:
+        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
