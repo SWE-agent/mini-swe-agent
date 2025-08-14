@@ -59,19 +59,21 @@ class DefaultAgent:
         self.messages: list[dict] = []
         self.model = model
         self.env = env
+        self.extra_template_vars = {}
 
     def render_template(self, template: str, **kwargs) -> str:
-        cs = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
-        return Template(template).render(**kwargs, **cs)
+        template_vars = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
+        return Template(template).render(**kwargs, **template_vars, **self.extra_template_vars)
 
     def add_message(self, role: str, content: str, **kwargs):
         self.messages.append({"role": role, "content": content, **kwargs})
 
     def run(self, task: str, **kwargs) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
+        self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
         self.add_message("system", self.render_template(self.config.system_template))
-        self.add_message("user", self.render_template(self.config.instance_template, task=task, **kwargs))
+        self.add_message("user", self.render_template(self.config.instance_template))
         while True:
             try:
                 self.step()
