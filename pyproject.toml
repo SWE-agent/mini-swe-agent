@@ -47,7 +47,7 @@ dependencies = [
 [project.optional-dependencies]
 full = [
     "mini-swe-agent[dev]",
-    "swe-rex",
+    "swe-rex>=1.4.0",
 ]
 
 dev = [
