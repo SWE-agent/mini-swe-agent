@@ -16,10 +16,15 @@ class TestGetModelName:
         with patch.dict(os.environ, {"MSWEA_MODEL_NAME": "env-model"}):
             assert get_model_name("input-model", self.CONFIG_WITH_MODEL_NAME) == "input-model"
 
-    def test_env_var_fallback(self):
-        """Test that environment variable is used when no input provided."""
+    def test_config_takes_precedence_over_env(self):
+        """Test that config takes precedence over environment variable."""
         with patch.dict(os.environ, {"MSWEA_MODEL_NAME": "env-model"}):
-            assert get_model_name(None, self.CONFIG_WITH_MODEL_NAME) == "env-model"
+            assert get_model_name(None, self.CONFIG_WITH_MODEL_NAME) == "config-model"
+
+    def test_env_var_fallback(self):
+        """Test that environment variable is used when no config provided."""
+        with patch.dict(os.environ, {"MSWEA_MODEL_NAME": "env-model"}):
+            assert get_model_name(None, {}) == "env-model"
 
     def test_config_fallback(self):
         """Test that config model name is used when input and env are missing."""
