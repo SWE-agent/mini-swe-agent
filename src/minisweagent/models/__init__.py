@@ -72,6 +72,10 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
 
 def get_model_class(model_name: str) -> type:
     """Select the best model class for a given model name."""
+    if model_name.lower() == "roulette":
+        from minisweagent.models.roulette import RouletteModel
+
+        return RouletteModel
     if any(s in model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"]):
         from minisweagent.models.anthropic import AnthropicModel
 
