@@ -58,6 +58,7 @@ def main(
         **({"mode": "yolo"} | config.get("agent", {})),
     )
 
+    exit_status, result = None, None
     try:
         exit_status, result = agent.run(instance["problem_statement"])  # type: ignore[arg-type]
     finally:
