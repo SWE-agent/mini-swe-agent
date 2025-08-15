@@ -39,9 +39,9 @@ class InteractiveAgent(DefaultAgent):
         super().__init__(*args, config_class=config_class, **kwargs)
         self.cost_last_confirmed = 0.0
 
-    def add_message(self, role: str, content: str):
+    def add_message(self, role: str, content: str, **kwargs):
         # Extend supermethod to print messages
-        super().add_message(role, content)
+        super().add_message(role, content, **kwargs)
         if role == "assistant":
             console.print(
                 f"\n[red][bold]mini-swe-agent[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):[/red]\n",

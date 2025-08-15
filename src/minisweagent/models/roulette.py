@@ -8,13 +8,14 @@ from minisweagent.models import get_model
 
 @dataclass
 class RouletteModelConfig:
-    model_configs: list[dict]
+    model_kwargs: list[dict]
+    model_name: str ="roulette"
 
 
 class RouletteModel:
     def __init__(self, *, config_class: Callable = RouletteModelConfig, **kwargs):
         self.config = config_class(**kwargs)
-        self.models = [get_model(config) for config in self.config.model_configs]
+        self.models = [get_model(config=config) for config in self.config.model_kwargs]
 
     @property
     def cost(self) -> float:
