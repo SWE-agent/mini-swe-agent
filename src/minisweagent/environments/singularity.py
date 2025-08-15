@@ -9,6 +9,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from minisweagent.utils.log import get_logger
+
 
 @dataclass
 class SingularityEnvironmentConfig:
@@ -27,6 +29,7 @@ class SingularityEnvironmentConfig:
 class SingularityEnvironment:
     def __init__(self, **kwargs):
         """Singularity environment. See `SingularityEnvironmentConfig` for kwargs."""
+        self.logger = get_logger("minisweagent.environment")
         self.config = SingularityEnvironmentConfig(**kwargs)
         self.sandbox_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
         subprocess.run(
@@ -68,7 +71,7 @@ class SingularityEnvironment:
 
     def cleanup(self):
         if self.sandbox_dir.exists():
-            print(f"Removing sandbox {self.sandbox_dir}")
+            self.logger.info(f"Removing sandbox {self.sandbox_dir}")
             shutil.rmtree(self.sandbox_dir)
 
     def __del__(self):

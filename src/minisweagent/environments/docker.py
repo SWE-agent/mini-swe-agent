@@ -5,6 +5,8 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from minisweagent.utils.log import get_logger
+
 
 @dataclass
 class DockerEnvironmentConfig:
@@ -33,6 +35,7 @@ class DockerEnvironment:
         """This class executes bash commands in a Docker container using direct docker commands.
         See `DockerEnvironmentConfig` for keyword arguments.
         """
+        self.logger = get_logger("minisweagent.environment")
         self.container_id: str | None = None
         self.config = config_class(**kwargs)
         self._start_container()
@@ -56,7 +59,7 @@ class DockerEnvironment:
             "sleep",
             self.config.container_timeout,
         ]
-        print(f"Starting container with command: {shlex.join(cmd)}")
+        self.logger.debug(f"Starting container with command: {shlex.join(cmd)}")
         result = subprocess.run(
             cmd,
             capture_output=True,
@@ -64,7 +67,7 @@ class DockerEnvironment:
             timeout=120,  # docker pull might take a while
             check=True,
         )
-        print(f"Started container {container_name} with ID {result.stdout.strip()}")
+        self.logger.info(f"Started container {container_name} with ID {result.stdout.strip()}")
         self.container_id = result.stdout.strip()
 
     def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
@@ -94,7 +97,7 @@ class DockerEnvironment:
     def cleanup(self):
         """Stop and remove the Docker container."""
         if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set
-            print(f"Stopping container {self.container_id}")
+            self.logger.info(f"Stopping container {self.container_id}")
             cmd = f"(timeout 60 {self.config.executable} stop {self.container_id} || {self.config.executable} rm -f {self.container_id}) >/dev/null 2>&1 &"
             subprocess.Popen(cmd, shell=True)
 

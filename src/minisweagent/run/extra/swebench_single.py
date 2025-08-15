@@ -13,6 +13,7 @@ from minisweagent.run.extra.swebench import (
     DATASET_MAPPING,
     get_sb_environment,
 )
+from minisweagent.utils.log import logger
 
 app = typer.Typer(add_completion=False)
 
@@ -31,7 +32,7 @@ def main(
     # fmt: on
     """Run on a single SWE-Bench instance."""
     dataset_path = DATASET_MAPPING.get(subset, subset)
-    print(f"Loading dataset from {dataset_path}, split {split}...")
+    logger.info(f"Loading dataset from {dataset_path}, split {split}...")
     instances = {
         inst["instance_id"]: inst  # type: ignore
         for inst in load_dataset(dataset_path, split=split)

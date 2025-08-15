@@ -24,6 +24,7 @@ from minisweagent.environments import get_environment
 from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from minisweagent.run.utils.save import save_traj
+from minisweagent.utils.log import add_file_handlers, logger
 
 _HELP_TEXT = """Run mini-SWE-agent on SWEBench instances.
 
@@ -141,7 +142,7 @@ def process_instance(
         )
         exit_status, result = agent.run(task)
     except Exception as e:
-        print(f"Error processing instance {instance_id}: {e}\n{traceback.format_exc()}")
+        logger.error(f"Error processing instance {instance_id}: {e}", exc_info=True)
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
     finally:
@@ -152,6 +153,7 @@ def process_instance(
             result=result,
             extra_info=extra_info,
             instance_id=instance_id,
+            print_fct=logger.info,
         )
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
         progress_manager.on_instance_end(instance_id, exit_status)
@@ -168,12 +170,12 @@ def filter_instances(
     before_filter = len(instances)
     instances = [instance for instance in instances if re.match(filter_spec, instance["instance_id"])]
     if (after_filter := len(instances)) != before_filter:
-        print(f"Instance filter: {before_filter} -> {after_filter} instances")
+        logger.info(f"Instance filter: {before_filter} -> {after_filter} instances")
     if slice_spec:
         values = [int(x) if x else None for x in slice_spec.split(":")]
         instances = instances[slice(*values)]
         if (after_slice := len(instances)) != before_filter:
-            print(f"Instance slice: {before_filter} -> {after_slice} instances")
+            logger.info(f"Instance slice: {before_filter} -> {after_slice} instances")
     return instances
 
 
@@ -193,20 +195,22 @@ def main(
     environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
 ) -> None:
     # fmt: on
+    output_path = Path(output)
+    output_path.mkdir(parents=True, exist_ok=True)
+    logger.info(f"Results will be saved to {output_path}")
+    add_file_handlers(output_path / "minisweagent.log")
+
     dataset_path = DATASET_MAPPING.get(subset, subset)
-    print(f"Loading dataset {dataset_path}, split {split}...")
+    logger.info(f"Loading dataset {dataset_path}, split {split}...")
     instances = list(load_dataset(dataset_path, split=split))
 
     instances = filter_instances(instances, filter_spec=filter_spec, slice_spec=slice_spec, shuffle=shuffle)
-    output_path = Path(output)
     if not redo_existing and (output_path / "preds.json").exists():
         existing_instances = list(json.loads((output_path / "preds.json").read_text()).keys())
-        print(f"Skipping {len(existing_instances)} existing instances")
+        logger.info(f"Skipping {len(existing_instances)} existing instances")
         instances = [instance for instance in instances if instance["instance_id"] not in existing_instances]
+    logger.info(f"Running on {len(instances)} instances...")
 
-    output_path.mkdir(parents=True, exist_ok=True)
-    print(f"Running on {len(instances)} instances...")
-    print(f"Results will be saved to {output_path}")
 
     config = yaml.safe_load(get_config_path(config_spec).read_text())
     if environment_class is not None:
@@ -224,8 +228,7 @@ def main(
                 pass
             except Exception as e:
                 instance_id = futures[future]
-                print(f"Error in future for instance {instance_id}: {e}")
-                traceback.print_exc()
+                logger.error(f"Error in future for instance {instance_id}: {e}", exc_info=True)
                 progress_manager.on_uncaught_exception(instance_id, e)
 
     with Live(progress_manager.render_group, refresh_per_second=4):
@@ -239,7 +242,7 @@ def main(
             try:
                 process_futures(futures)
             except KeyboardInterrupt:
-                print("Cancelling all pending jobs. Press ^C again to exit immediately.")
+                logger.info("Cancelling all pending jobs. Press ^C again to exit immediately.")
                 for future in futures:
                     if not future.running() and not future.done():
                         future.cancel()

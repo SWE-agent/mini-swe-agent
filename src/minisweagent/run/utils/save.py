@@ -1,4 +1,5 @@
 import json
+from collections.abc import Callable
 from pathlib import Path
 
 from minisweagent import Agent, __version__
@@ -12,6 +13,7 @@ def save_traj(
     exit_status: str | None = None,
     result: str | None = None,
     extra_info: dict | None = None,
+    print_fct: Callable = print,
     **kwargs,
 ):
     """Save the trajectory of the agent to a file.
@@ -49,4 +51,4 @@ def save_traj(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2))
     if print_path:
-        print(f"Saved trajectory to '{path}'")
+        print_fct(f"Saved trajectory to '{path}'")
