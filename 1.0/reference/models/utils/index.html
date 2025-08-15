@@ -1988,10 +1988,10 @@
         <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">input_model_name</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">input_model_name</span>
-    <span class="k">if</span> <span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MODEL_NAME&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">from_env</span>
     <span class="k">if</span> <span class="n">from_config</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_name&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">from_config</span>
+    <span class="k">if</span> <span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MODEL_NAME&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">from_env</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No default model set. Please run `mini-extra config setup` to set one.&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
