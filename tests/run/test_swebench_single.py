@@ -28,6 +28,7 @@ def test_swebench_single_end_to_end(github_test_data):
                 config_path=package_dir / "config" / "extra" / "swebench.yaml",
                 environment_class="docker",
                 exit_immediately=False,
+                output=package_dir / "test_output.json",
             )
 
         # Verify model was called with correct parameters
@@ -55,6 +56,7 @@ def test_swebench_single_end_to_end_exit_immediately(github_test_data):
             config_path=package_dir / "config" / "extra" / "swebench.yaml",
             environment_class="docker",
             exit_immediately=True,
+            output=package_dir / "test_output.json",
         )
 
         # Verify model was called with correct parameters
