@@ -1539,6 +1539,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_OUTPUT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#minisweagent.run.extra.swebench_single.main" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
@@ -1867,6 +1876,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_OUTPUT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#minisweagent.run.extra.swebench_single.main" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
@@ -1960,6 +1978,30 @@
 
 </div>
 
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">DEFAULT_OUTPUT</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">DEFAULT_OUTPUT</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n"><span title="minisweagent.global_config_dir">global_config_dir</span></span> <span class="o">/</span> <span class="s2">&quot;last_swebench_single_run.traj.json&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
 
 
 <div class="doc doc-object doc-function">
@@ -2015,6 +2057,18 @@
         <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">&quot;Exit immediately when the agent wants to finish instead of prompting.&quot;</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">,</span>
     <span class="p">),</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
+        <span class="n"><a class="autorefs autorefs-internal" title="            DEFAULT_OUTPUT
+
+
+  
+      module-attribute
+   (minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT)" href="#minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT">DEFAULT_OUTPUT</a></span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">&quot;Output trajectory file&quot;</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
@@ -2025,11 +2079,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/run/extra/swebench_single.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
 <span class="normal">27</span>
 <span class="normal">28</span>
 <span class="normal">29</span>
@@ -2058,7 +2108,17 @@
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
-<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;lite&quot;</span><span class="p">,</span> <span class="s2">&quot;--subset&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;SWEBench subset to use or path to a dataset&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Data selection&quot;</span><span class="p">),</span>
     <span class="n">split</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;--split&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Dataset split&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Data selection&quot;</span><span class="p">),</span>
@@ -2067,6 +2127,7 @@
     <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">&quot;extra&quot;</span> <span class="o">/</span> <span class="s2">&quot;swebench.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to a config file&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
     <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--environment-class&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Advanced&quot;</span><span class="p">),</span>
     <span class="n">exit_immediately</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;--exit-immediately&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Exit immediately when the agent wants to finish instead of prompting.&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_OUTPUT</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output trajectory file&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># fmt: on</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run on a single SWE-Bench instance.&quot;&quot;&quot;</span>
@@ -2091,7 +2152,12 @@
         <span class="n">env</span><span class="p">,</span>
         <span class="o">**</span><span class="p">({</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;yolo&quot;</span><span class="p">}</span> <span class="o">|</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="p">{})),</span>
     <span class="p">)</span>
-    <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="s2">&quot;problem_statement&quot;</span><span class="p">])</span>
+
+    <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="s2">&quot;problem_statement&quot;</span><span class="p">])</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">save_traj</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

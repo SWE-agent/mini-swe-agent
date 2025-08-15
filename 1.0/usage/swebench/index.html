@@ -1978,6 +1978,7 @@ add the <code>--exit-immediately</code> flag.</p>
 <ul>
 <li><code>-m</code>, <code>--model</code> - Model to use</li>
 <li><code>-c</code>, <code>--config</code> - Path to a config file (default: <code>swebench.yaml</code> in the <code>config</code> directory)</li>
+<li><code>-o</code>, <code>--output</code> - Output trajectory file (default: saves to global config directory)</li>
 </ul>
 <p>Data selection flags:</p>
 <ul>
@@ -2545,6 +2546,7 @@ Confirm that it's running with <code>docker ps</code>, and that you can use <cod
 <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">global_config_dir</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractiveAgent</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">builtin_config_dir</span><span class="p">,</span> <span class="n">get_config_path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model</span>
@@ -2552,9 +2554,12 @@ Confirm that it's running with <code>docker ps</code>, and that you can use <cod
     <span class="n">DATASET_MAPPING</span><span class="p">,</span>
     <span class="n">get_sb_environment</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.utils.save</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_traj</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.utils.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">logger</span>
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">(</span><span class="n">add_completion</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">DEFAULT_OUTPUT</span> <span class="o">=</span> <span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">&quot;last_swebench_single_run.traj.json&quot;</span>
 
 
 <span class="c1"># fmt: off</span>
@@ -2567,6 +2572,7 @@ Confirm that it's running with <code>docker ps</code>, and that you can use <cod
     <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">&quot;extra&quot;</span> <span class="o">/</span> <span class="s2">&quot;swebench.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to a config file&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
     <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--environment-class&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Advanced&quot;</span><span class="p">),</span>
     <span class="n">exit_immediately</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;--exit-immediately&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Exit immediately when the agent wants to finish instead of prompting.&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_OUTPUT</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output trajectory file&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># fmt: on</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run on a single SWE-Bench instance.&quot;&quot;&quot;</span>
@@ -2591,7 +2597,12 @@ Confirm that it's running with <code>docker ps</code>, and that you can use <cod
         <span class="n">env</span><span class="p">,</span>
         <span class="o">**</span><span class="p">({</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;yolo&quot;</span><span class="p">}</span> <span class="o">|</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="p">{})),</span>
     <span class="p">)</span>
-    <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="s2">&quot;problem_statement&quot;</span><span class="p">])</span>
+
+    <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="s2">&quot;problem_statement&quot;</span><span class="p">])</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">save_traj</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
