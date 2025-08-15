@@ -6,6 +6,7 @@ import typer
 import yaml
 from datasets import load_dataset
 
+from minisweagent import global_config_dir
 from minisweagent.agents.interactive import InteractiveAgent
 from minisweagent.config import builtin_config_dir, get_config_path
 from minisweagent.models import get_model
@@ -13,9 +14,12 @@ from minisweagent.run.extra.swebench import (
     DATASET_MAPPING,
     get_sb_environment,
 )
+from minisweagent.run.utils.save import save_traj
 from minisweagent.utils.log import logger
 
 app = typer.Typer(add_completion=False)
+
+DEFAULT_OUTPUT = global_config_dir / "last_swebench_single_run.traj.json"
 
 
 # fmt: off
@@ -28,6 +32,7 @@ def main(
     config_path: Path = typer.Option( builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file", rich_help_panel="Basic"),
     environment_class: str | None = typer.Option(None, "--environment-class", rich_help_panel="Advanced"),
     exit_immediately: bool = typer.Option( False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting.", rich_help_panel="Basic"),
+    output: Path = typer.Option(DEFAULT_OUTPUT, "-o", "--output", help="Output trajectory file", rich_help_panel="Basic"),
 ) -> None:
     # fmt: on
     """Run on a single SWE-Bench instance."""
@@ -52,7 +57,11 @@ def main(
         env,
         **({"mode": "yolo"} | config.get("agent", {})),
     )
-    agent.run(instance["problem_statement"])
+
+    try:
+        exit_status, result = agent.run(instance["problem_statement"])  # type: ignore[arg-type]
+    finally:
+        save_traj(agent, output, exit_status=exit_status, result=result)  # type: ignore[arg-type]
 
 
 if __name__ == "__main__":

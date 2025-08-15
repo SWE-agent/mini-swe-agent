@@ -90,6 +90,7 @@
 
         - `-m`, `--model` - Model to use
         - `-c`, `--config` - Path to a config file (default: `swebench.yaml` in the `config` directory)
+        - `-o`, `--output` - Output trajectory file (default: saves to global config directory)
 
         Data selection flags:
 
