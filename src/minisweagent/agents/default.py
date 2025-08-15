@@ -70,6 +70,7 @@ class DefaultAgent:
 
     def run(self, task: str, **kwargs) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
+        self.model.reset()  # Reset model stats before running
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
         self.add_message("system", self.render_template(self.config.system_template))

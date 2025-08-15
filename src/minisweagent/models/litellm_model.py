@@ -34,6 +34,11 @@ class LitellmModel:
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
+    def reset(self):
+        """Reset the model stats."""
+        self.cost = 0.0
+        self.n_calls = 0
+
     @retry(
         stop=stop_after_attempt(10),
         wait=wait_exponential(multiplier=1, min=4, max=60),
