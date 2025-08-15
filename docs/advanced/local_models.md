@@ -14,7 +14,7 @@
 ## Using litellm
 
 Currently, all models are supported via [`litellm`](https://www.litellm.ai/)
-(but if you have specific needs, we're open to add more specific model classes in the [`models](https://github.com/SWE-agent/mini-swe-agent/tree/main/src/minisweagent/models) submodule).
+(but if you have specific needs, we're open to add more specific model classes in the [`models`](https://github.com/SWE-agent/mini-swe-agent/tree/main/src/minisweagent/models) submodule).
 
 If you use local models, you most likely need to add some extra keywords to the `litellm` call.
 This is done with the `model_kwargs` dictionary which is directly passed to `litellm.completion`.
@@ -29,15 +29,6 @@ litellm.completion(
 )
 ```
 
-??? note "Complete model class"
-
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py)
-    - [API reference](../reference/models/litellm.md)
-
-    ```python
-    --8<-- "src/minisweagent/models/litellm_model.py"
-    ```
-
 You can set `model_kwargs` in an agent config file like the following one:
 
 ??? note "Default configuration file"
@@ -46,12 +37,6 @@ You can set `model_kwargs` in an agent config file like the following one:
     --8<-- "src/minisweagent/config/mini.yaml"
     ```
 
-!!! tip "Updating the default `mini` configuration file"
-
-    You can set the `MSWEA_MINI_CONFIG_PATH` setting to set path to the default `mini` configuration file.
-    This will allow you to override the default configuration file with your own.
-    See the [configuration guide](configuration.md) for more details.
-
 In the last section, you can add
 
 ```yaml
@@ -59,9 +44,27 @@ model:
   model_name: "my-local-model"
   model_kwargs:
     custom_llm_provider: "openai"
+    api_base="https://..."
     ...
   ...
 ```
+
+!!! tip "Updating the default `mini` configuration file"
+
+    You can set the `MSWEA_MINI_CONFIG_PATH` setting to set path to the default `mini` configuration file.
+    This will allow you to override the default configuration file with your own.
+    See the [configuration guide](configuration.md) for more details.
+
+If this is not enough, our model class should be simple to modify:
+
+??? note "Complete model class"
+
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py)
+    - [API reference](../reference/models/litellm.md)
+
+    ```python
+    --8<-- "src/minisweagent/models/litellm_model.py"
+    ```
 
 The other part that you most likely need to figure out are costs.
 There are two ways to do this with `litellm`:
