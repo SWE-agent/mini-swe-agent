@@ -44,8 +44,8 @@ class _TextualAgent(DefaultAgent):
         super().__init__(*args, config_class=TextualAgentConfig, **kwargs)
         self._current_action_from_human = False
 
-    def add_message(self, role: str, content: str):
-        super().add_message(role, content)
+    def add_message(self, role: str, content: str, **kwargs):
+        super().add_message(role, content, **kwargs)
         if self.app.agent_state != "UNINITIALIZED":
             self.app.call_from_thread(self.app.on_message_added)
 
@@ -276,8 +276,8 @@ class TextualAgent(App):
 
         self._vscroll = VerticalScroll()
 
-    def run(self, task: str) -> tuple[str, str]:
-        threading.Thread(target=lambda: self.agent.run(task), daemon=True).start()
+    def run(self, task: str, **kwargs) -> tuple[str, str]:
+        threading.Thread(target=lambda: self.agent.run(task, **kwargs), daemon=True).start()
         super().run()
         return self.exit_status, self.result
 
