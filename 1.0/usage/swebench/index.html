@@ -2303,7 +2303,7 @@ Confirm that it's running with <code>docker ps</code>, and that you can use <cod
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.extra.utils.batch_progress</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunBatchProgressManager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.utils.save</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_traj</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.utils.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_file_handlers</span><span class="p">,</span> <span class="n">logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.utils.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_file_handler</span><span class="p">,</span> <span class="n">logger</span>
 
 <span class="n">_HELP_TEXT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Run mini-SWE-agent on SWEBench instances.</span>
 
@@ -2477,7 +2477,7 @@ Confirm that it's running with <code>docker ps</code>, and that you can use <cod
     <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
     <span class="n">output_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results will be saved to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">add_file_handlers</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;minisweagent.log&quot;</span><span class="p">)</span>
+    <span class="n">add_file_handler</span><span class="p">(</span><span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;minisweagent.log&quot;</span><span class="p">)</span>
 
     <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">DATASET_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">subset</span><span class="p">,</span> <span class="n">subset</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading dataset </span><span class="si">{</span><span class="n">dataset_path</span><span class="si">}</span><span class="s2">, split </span><span class="si">{</span><span class="n">split</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
