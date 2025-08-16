@@ -71,7 +71,6 @@ class SingularityEnvironment:
 
     def cleanup(self):
         if self.sandbox_dir.exists():
-            self.logger.info(f"Removing sandbox {self.sandbox_dir}")
             shutil.rmtree(self.sandbox_dir)
 
     def __del__(self):
