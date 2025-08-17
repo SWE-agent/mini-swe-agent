@@ -18,6 +18,8 @@ import dotenv
 from platformdirs import user_config_dir
 from rich.console import Console
 
+from minisweagent.utils.log import logger
+
 package_dir = Path(__file__).resolve().parent
 
 global_config_dir = Path(os.getenv("MSWEA_GLOBAL_CONFIG_DIR") or user_config_dir("mini-swe-agent"))
@@ -68,4 +70,13 @@ class Agent(Protocol):
     def run(self, task: str, **kwargs) -> tuple[str, str]: ...
 
 
-__all__ = ["Agent", "Model", "Environment", "package_dir", "__version__", "global_config_file", "global_config_dir"]
+__all__ = [
+    "Agent",
+    "Model",
+    "Environment",
+    "package_dir",
+    "__version__",
+    "global_config_file",
+    "global_config_dir",
+    "logger",
+]

@@ -3,44 +3,34 @@ from pathlib import Path
 
 from rich.logging import RichHandler
 
-MINI_LOGGERS = {}
-_MINI_HANDLERS = []
 
-
-def get_logger(name: str) -> logging.Logger:
-    if name in MINI_LOGGERS:
-        return MINI_LOGGERS[name]
-    logger = logging.getLogger(name)
+def _setup_root_logger() -> None:
+    logger = logging.getLogger("minisweagent")
     logger.setLevel(logging.DEBUG)
-    handler = RichHandler(
+    _handler = RichHandler(
         show_path=False,
         show_time=False,
         show_level=False,
-        markup=False,
+        markup=True,
     )
-    formatter = logging.Formatter("%(name)s: %(levelname)s: %(message)s")
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    for handler in _MINI_HANDLERS:
-        logger.addHandler(handler)
-    MINI_LOGGERS[name] = logger
-    return logger
+    _formatter = logging.Formatter("%(name)s: %(levelname)s: %(message)s")
+    _handler.setFormatter(_formatter)
+    logger.addHandler(_handler)
 
 
-def add_handler(handler: logging.Handler) -> None:
-    """Add a handler to all existing and future mini loggers."""
-    _MINI_HANDLERS.append(handler)
-    for logger in MINI_LOGGERS.values():
-        logger.addHandler(handler)
-
-
-def add_file_handler(path: Path | str, level: int = logging.DEBUG) -> None:
-    """Add a file handler to all existing and future mini loggers."""
+def add_file_handler(path: Path | str, level: int = logging.DEBUG, *, print_path: bool = True) -> None:
+    logger = logging.getLogger("minisweagent")
     handler = logging.FileHandler(path)
     handler.setLevel(level)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
-    add_handler(handler)
+    logger.addHandler(handler)
+    if print_path:
+        print(f"Logging to '{path}'")
 
 
-logger = get_logger("minisweagent")
+_setup_root_logger()
+logger = logging.getLogger("minisweagent")
+
+
+__all__ = ["logger"]

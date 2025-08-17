@@ -1,11 +1,10 @@
+import logging
 import os
 import shlex
 import subprocess
 import uuid
 from dataclasses import asdict, dataclass, field
 from typing import Any
-
-from minisweagent.utils.log import get_logger
 
 
 @dataclass
@@ -35,7 +34,7 @@ class DockerEnvironment:
         """This class executes bash commands in a Docker container using direct docker commands.
         See `DockerEnvironmentConfig` for keyword arguments.
         """
-        self.logger = get_logger("minisweagent.environment")
+        self.logger = logging.getLogger("minisweagent.environment")
         self.container_id: str | None = None
         self.config = config_class(**kwargs)
         self._start_container()
