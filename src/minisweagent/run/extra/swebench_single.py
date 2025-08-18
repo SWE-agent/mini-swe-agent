@@ -1,5 +1,6 @@
 """Run on a single SWE-Bench instance."""
 
+import traceback
 from pathlib import Path
 
 import typer
@@ -58,11 +59,15 @@ def main(
         **({"mode": "yolo"} | config.get("agent", {})),
     )
 
-    exit_status, result = None, None
+    exit_status, result, extra_info = None, None, None
     try:
         exit_status, result = agent.run(instance["problem_statement"])  # type: ignore[arg-type]
+    except Exception as e:
+        logger.error(f"Error processing instance {instance_spec}: {e}", exc_info=True)
+        exit_status, result = type(e).__name__, str(e)
+        extra_info = {"traceback": traceback.format_exc()}
     finally:
-        save_traj(agent, output, exit_status=exit_status, result=result)  # type: ignore[arg-type]
+        save_traj(agent, output, exit_status=exit_status, result=result, extra_info=extra_info)  # type: ignore[arg-type]
 
 
 if __name__ == "__main__":

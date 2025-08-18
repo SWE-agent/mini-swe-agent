@@ -4,6 +4,7 @@
 # Read this first: https://mini-swe-agent.com/latest/usage/mini/  (usage)
 
 import os
+import traceback
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,7 @@ from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models import get_model
 from minisweagent.run.extra.config import configure_if_first_time
 from minisweagent.run.utils.save import save_traj
+from minisweagent.utils.log import logger
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
 DEFAULT_OUTPUT = global_config_dir / "last_mini_run.traj.json"
@@ -92,13 +94,18 @@ def main(
     agent_class = InteractiveAgent
     if visual == (os.getenv("MSWEA_VISUAL_MODE_DEFAULT", "false") == "false"):
         agent_class = TextualAgent
-    exit_status, result = None, None
+
     agent = agent_class(model, env, **config.get("agent", {}))
+    exit_status, result, extra_info = None, None, None
     try:
         exit_status, result = agent.run(task)  # type: ignore[arg-type]
+    except Exception as e:
+        logger.error(f"Error running agent: {e}", exc_info=True)
+        exit_status, result = type(e).__name__, str(e)
+        extra_info = {"traceback": traceback.format_exc()}
     finally:
         if output:
-            save_traj(agent, output, exit_status=exit_status, result=result)  # type: ignore[arg-type]
+            save_traj(agent, output, exit_status=exit_status, result=result, extra_info=extra_info)  # type: ignore[arg-type]
     return agent
 
 
