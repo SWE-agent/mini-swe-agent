@@ -41,29 +41,19 @@ More information about the usage: [bold green]https://mini-swe-agent.com/latest/
 """
 
 
+# fmt: off
 @app.command(help=_HELP_TEXT)
 def main(
-    visual: bool = typer.Option(
-        False,
-        "-v",
-        "--visual",
-        help="Toggle (pager-style) UI (Textual) depending on the MSWEA_VISUAL_MODE_DEFAULT environment setting",
-    ),
-    model_name: str | None = typer.Option(
-        None,
-        "-m",
-        "--model",
-        help="Model to use",
-    ),
+    visual: bool = typer.Option(False, "-v", "--visual", help="Toggle (pager-style) UI (Textual) depending on the MSWEA_VISUAL_MODE_DEFAULT environment setting",),
+    model_name: str | None = typer.Option( None, "-m", "--model", help="Model to use",),
     task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
     config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
     output: Path | None = typer.Option(DEFAULT_OUTPUT, "-o", "--output", help="Output trajectory file"),
-    exit_immediately: bool = typer.Option(
-        False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting."
-    ),
+    exit_immediately: bool = typer.Option( False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting."),
 ) -> Any:
+    # fmt: on
     configure_if_first_time()
     config = yaml.safe_load(get_config_path(config_spec).read_text())
 
