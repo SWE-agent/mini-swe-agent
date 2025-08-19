@@ -30,7 +30,6 @@ jobs:
 
     - name: Change to test repo directory
       run: cd test-repo
-
     - name: Run mini with task
       working-directory: test-repo
       env:
