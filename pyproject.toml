@@ -42,6 +42,7 @@ dependencies = [
     "platformdirs",
     "textual",
     "prompt_toolkit",
+    "openai <= 1.99.5",  # https://github.com/SWE-agent/mini-swe-agent/issues/446
 ]
 
 [project.optional-dependencies]
