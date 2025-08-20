@@ -190,6 +190,7 @@ def main(
     output: str = typer.Option("", "-o", "--output", help="Output directory", rich_help_panel="Basic"),
     workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing", rich_help_panel="Basic"),
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use", rich_help_panel="Basic"),
+    model_class: str | None = typer.Option(None, "-c", "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
     config_spec: Path = typer.Option( builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file", rich_help_panel="Basic"),
     environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
@@ -217,6 +218,8 @@ def main(
         config.setdefault("environment", {})["environment_class"] = environment_class
     if model is not None:
         config.setdefault("model", {})["model_name"] = model
+    if model_class is not None:
+        config.setdefault("model", {})["model_class"] = model_class
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
