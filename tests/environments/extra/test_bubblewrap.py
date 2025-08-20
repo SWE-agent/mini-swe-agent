@@ -1,9 +1,8 @@
 import os
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from unittest.mock import patch
-import shutil
 
 import pytest
 
@@ -225,7 +224,7 @@ def test_bubblewrap_environment_cleanup():
     working_dir = env.working_dir
 
     assert working_dir.exists()
-    
+
     env.cleanup()
     assert not working_dir.exists()
 
@@ -259,13 +258,13 @@ def test_bubblewrap_environment_get_template_vars():
 
     try:
         template_vars = env.get_template_vars()
-        
+
         # Should contain config data
         assert "env" in template_vars
         assert template_vars["env"]["TEST_VAR"] == "test_value"
         assert "timeout" in template_vars
         assert template_vars["timeout"] == 30
-        
+
         # Should contain platform info
         assert "system" in template_vars
         assert "machine" in template_vars
