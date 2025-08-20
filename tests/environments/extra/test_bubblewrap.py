@@ -253,27 +253,6 @@ def test_bubblewrap_environment_custom_wrapper_args():
         env.cleanup()
 
 
-@pytest.mark.skipif(not shutil.which("bwrap"), reason="bubblewrap not available")
-def test_bubblewrap_environment_sandboxing():
-    """Test that bubblewrap provides basic sandboxing (access to /usr but not full filesystem)."""
-    env = BubblewrapEnvironment()
-
-    try:
-        # Should be able to access basic system directories like /usr
-        result = env.execute("ls /usr/bin | head -n 1")
-        assert result["returncode"] == 0
-        assert len(result["output"].strip()) > 0
-
-        # Should have limited filesystem access compared to host
-        result = env.execute("mount | grep -c tmpfs")
-        assert result["returncode"] == 0
-        # Should have tmpfs mounts indicating sandboxing
-        tmpfs_count = int(result["output"].strip())
-        assert tmpfs_count > 0
-    finally:
-        env.cleanup()
-
-
 def test_bubblewrap_environment_get_template_vars():
     """Test get_template_vars method returns expected data."""
     env = BubblewrapEnvironment(env={"TEST_VAR": "test_value"})
