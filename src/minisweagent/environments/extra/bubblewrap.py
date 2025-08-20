@@ -36,6 +36,9 @@ class BubblewrapEnvironmentConfig:
             "/dev",
             "--unshare-all",
             "--share-net",
+            "--setenv",
+            "PATH",
+            "/usr/local/bin:/usr/sbin:/usr/bin:/bin"
         ]
     )
     """Arguments to pass to the bubblewrap executable."""

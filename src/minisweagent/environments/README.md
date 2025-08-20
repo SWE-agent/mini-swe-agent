@@ -7,3 +7,4 @@
 ## Extras
 
 * `extra/swerex_docker.py` - Execute environments with docker via [swerex](https://github.com/swe-agent/swe-rex)
+* `extra/bubblewrap.py` - Execute environments with [bubblewrap](https://github.com/containers/bubblewrap)
