@@ -17,7 +17,16 @@ class BubblewrapEnvironmentConfig:
     timeout: int = 30
     executable: str = os.getenv("MSWEA_BUBBLEWRAP_EXECUTABLE", "bwrap")
     """Path to the bubblewrap executable."""
-    wrapper_args: list[str] = []
+    wrapper_args: list[str] = field(default_factory=lambda: [
+        "--ro-bind", "/usr", "/usr",
+        "--ro-bind", "/bin", "/bin", 
+        "--ro-bind", "/lib", "/lib",
+        "--tmpfs", "/tmp",
+        "--proc", "/proc",
+        "--dev", "/dev",
+        "--unshare-all",
+        "--share-net"
+    ])
     """Arguments to pass to the bubblewrap executable."""
 
 
@@ -29,16 +38,26 @@ class BubblewrapEnvironment:
         self.logger = logging.getLogger("minisweagent.environment")
         self.config = config_class(**kwargs)
         self.working_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
+        self.working_dir.mkdir(parents=True, exist_ok=True)
 
-    def execute(self, command: str, cwd: str = ""):
+    def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
         """Execute a command in the bubblewrap environment and return the result as a dict."""
-        cwd = cwd or self.config.cwd or self.working_dir
+        cwd = cwd or self.config.cwd or str(self.working_dir)
 
-        cmd = [self.config.executable] + self.config.wrapper_args + ["bash", "-c", command]
+        cmd = [self.config.executable] + self.config.wrapper_args + [
+            "--bind", cwd, cwd,
+            "--chdir", cwd
+        ]
+        
+        # Add environment variables
+        for key, value in self.config.env.items():
+            cmd.extend(["--setenv", key, value])
+        
+        cmd.extend(["bash", "-c", command])
+        
         result = subprocess.run(
             cmd,
             text=True,
-            cwd=cwd,
             timeout=self.config.timeout,
             encoding="utf-8",
             errors="replace",
