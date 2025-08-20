@@ -91,11 +91,9 @@ nav:
       - "GitHub Issue": "reference/run/github_issue.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"
-  - Blog:
-    - blog/index.md
+  - Blog: https://www.swebench.com/SWE-bench/blog/category/mini-swe-agent/
   - Leaderboard: https://swebench.com
 plugins:
-  - blog
   - glightbox
   - search
   - include-markdown
