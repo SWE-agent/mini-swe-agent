@@ -3,6 +3,7 @@ You can ignore this file completely if you explicitly set your model in your run
 """
 
 import copy
+import importlib
 import os
 import threading
 
@@ -54,7 +55,9 @@ def get_model(input_model_name: str | None = None, config: dict | None = None) -
         config["model_kwargs"] = {}
     if from_env := os.getenv("MSWEA_MODEL_API_KEY"):
         config["model_kwargs"]["api_key"] = from_env
-    return get_model_class(resolved_model_name)(**config)
+
+    model_class = config.pop("model_class", "")
+    return get_model_class(resolved_model_name, model_class)(**config)
 
 
 def get_model_name(input_model_name: str | None = None, config: dict | None = None) -> str:
@@ -70,12 +73,36 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
     raise ValueError("No default model set. Please run `mini-extra config setup` to set one.")
 
 
-def get_model_class(model_name: str) -> type:
-    """Select the best model class for a given model name."""
+_MODEL_CLASS_MAPPING = {
+    "anthropic": "minisweagent.models.anthropic.AnthropicModel",
+    "litellm": "minisweagent.models.litellm_model.LitellmModel",
+}
+
+
+def get_model_class(model_name: str, model_class: str = "") -> type:
+    """Select the best model class.
+
+    If a model_class is provided (as shortcut name, or as full import path,
+    e.g., "anthropic" or "minisweagent.models.anthropic.AnthropicModel"),
+    it takes precedence over the `model_name`.
+    Otherwise, the model_name is used to select the best model class.
+    """
+    if model_class:
+        full_path = _MODEL_CLASS_MAPPING.get(model_class, model_class)
+        try:
+            module_name, class_name = full_path.rsplit(".", 1)
+            module = importlib.import_module(module_name)
+            return getattr(module, class_name)
+        except (ValueError, ImportError, AttributeError):
+            msg = f"Unknown model class: {model_class} (resolved to {full_path}, available: {_MODEL_CLASS_MAPPING})"
+            raise ValueError(msg)
+
     if any(s in model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"]):
         from minisweagent.models.anthropic import AnthropicModel
 
         return AnthropicModel
+
+    # Default to LitellmModel
     from minisweagent.models.litellm_model import LitellmModel
 
     return LitellmModel

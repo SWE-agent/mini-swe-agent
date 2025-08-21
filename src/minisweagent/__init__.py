@@ -66,6 +66,7 @@ class Agent(Protocol):
     model: Model
     env: Environment
     messages: list[dict[str, str]]
+    config: Any
 
     def run(self, task: str, **kwargs) -> tuple[str, str]: ...
 
