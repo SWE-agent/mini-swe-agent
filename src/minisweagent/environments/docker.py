@@ -30,11 +30,11 @@ class DockerEnvironmentConfig:
 
 
 class DockerEnvironment:
-    def __init__(self, *, config_class: type = DockerEnvironmentConfig, **kwargs):
+    def __init__(self, *, config_class: type = DockerEnvironmentConfig, logger: logging.Logger | None = None, **kwargs):
         """This class executes bash commands in a Docker container using direct docker commands.
         See `DockerEnvironmentConfig` for keyword arguments.
         """
-        self.logger = logging.getLogger("minisweagent.environment")
+        self.logger = logger or logging.getLogger("minisweagent.environment")
         self.container_id: str | None = None
         self.config = config_class(**kwargs)
         self._start_container()

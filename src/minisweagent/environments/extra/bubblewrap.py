@@ -65,11 +65,13 @@ class BubblewrapEnvironmentConfig:
 
 
 class BubblewrapEnvironment:
-    def __init__(self, *, config_class: type = BubblewrapEnvironmentConfig, **kwargs):
+    def __init__(
+        self, *, config_class: type = BubblewrapEnvironmentConfig, logger: logging.Logger | None = None, **kwargs
+    ):
         """This class executes bash commands in a bubblewrap environment and a separate working
         directory for each environment. See `BubblewrapEnvironmentConfig` for kwargs.
         """
-        self.logger = logging.getLogger("minisweagent.environment")
+        self.logger = logger or logging.getLogger("minisweagent.environment")
         self.config = config_class(**kwargs)
         self.working_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
         self.working_dir.mkdir(parents=True)

@@ -26,10 +26,12 @@ class SingularityEnvironmentConfig:
 
 
 class SingularityEnvironment:
-    def __init__(self, **kwargs):
+    def __init__(
+        self, *, config_class: type = SingularityEnvironmentConfig, logger: logging.Logger | None = None, **kwargs
+    ):
         """Singularity environment. See `SingularityEnvironmentConfig` for kwargs."""
-        self.logger = logging.getLogger("minisweagent.environment")
-        self.config = SingularityEnvironmentConfig(**kwargs)
+        self.logger = logger or logging.getLogger("minisweagent.environment")
+        self.config = config_class(**kwargs)
         self.sandbox_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
         subprocess.run(
             [self.config.executable, "build", "--sandbox", self.sandbox_dir, self.config.image],
