@@ -4,15 +4,15 @@ agent:
     Your response must contain exactly ONE bash code block with ONE command (or commands connected with && or ||).
 
     Include a THOUGHT section before your command where you explain your reasoning process.
-    Format your response as shown in <format_example>.
+    Format your response as shown in <example>.
 
-    <format_example>
+    <example>
     THOUGHT: Your reasoning and analysis here
 
     ```bash
     your_command_here
     ```
-    </format_example>
+    </example>
 
     Failure to follow these rules will cause your response to be rejected.
   instance_template: |
@@ -59,14 +59,14 @@ agent:
 
     Format your responses like this:
 
-    <format_example>
+    <example>
     THOUGHT: Here I explain my reasoning process, analysis of the current situation,
     and what I'm trying to accomplish with the command below.
 
     ```bash
     your_command_here
     ```
-    </format_example>
+    </example>
 
     Commands must be specified in a single bash code block:
 
@@ -89,21 +89,6 @@ agent:
 
     ```bash
     ls -la
-    ```
-    </example_response>
-
-    Example of an INCORRECT response:
-    <example_response>
-    THOUGHT: I need to examine the codebase and then look at a specific file. I'll run multiple commands to do this.
-
-    ```bash
-    ls -la
-    ```
-
-    Now I'll read the file:
-
-    ```bash
-    cat file.txt
     ```
     </example_response>
 
@@ -136,13 +121,19 @@ agent:
     ```bash
     # Replace all occurrences
     sed -i 's/old_string/new_string/g' filename.py
+    ```
 
+    ```bash
     # Replace only first occurrence
     sed -i 's/old_string/new_string/' filename.py
+    ```
 
+    ```bash
     # Replace first occurrence on line 1
     sed -i '1s/old_string/new_string/' filename.py
+    ```
 
+    ```bash
     # Replace all occurrences in lines 1-10
     sed -i '1,10s/old_string/new_string/g' filename.py
     ```
