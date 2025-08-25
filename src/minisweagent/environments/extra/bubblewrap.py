@@ -1,3 +1,15 @@
+"""
+[Bubblewrap](https://github.com/containers/bubblewrap) is a low-level, unprivileged sandboxing tool for Linux that enables running applications
+in isolated environments with restricted access to the operating system and user data.
+This environment uses bubblewrap to execute commands in a sandboxed environment.
+
+!!! warning
+    This environment is experimental.
+
+!!! warning
+    This environment is not supported on Windows.
+"""
+
 import logging
 import os
 import platform
@@ -13,8 +25,11 @@ from typing import Any
 @dataclass
 class BubblewrapEnvironmentConfig:
     cwd: str = ""
+    """Working directory for the sandbox."""
     env: dict[str, str] = field(default_factory=dict)
+    """Dictionary of environment variables to set in the sandbox."""
     timeout: int = 30
+    """Timeout for the command in seconds."""
     executable: str = os.getenv("MSWEA_BUBBLEWRAP_EXECUTABLE", "bwrap")
     """Path to the bubblewrap executable."""
     wrapper_args: list[str] = field(

@@ -85,6 +85,7 @@ nav:
       - "LocalEnvironment": "reference/environments/local.md"
       - "DockerEnvironment": "reference/environments/docker.md"
       - "SwerexDockerEnvironment": "reference/environments/swerex_docker.md"
+      - "BubblewrapEnvironment": "reference/environments/bubblewrap.md"
     - Run Scripts:
       - "Hello World": "reference/run/hello_world.md"
       - "mini": "reference/run/mini.md"
