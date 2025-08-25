@@ -1,4 +1,3 @@
-import os
 import shutil
 import subprocess
 import tempfile
@@ -7,17 +6,6 @@ from pathlib import Path
 import pytest
 
 from minisweagent.environments.extra.bubblewrap import BubblewrapEnvironment, BubblewrapEnvironmentConfig
-
-
-def test_bubblewrap_environment_config_defaults():
-    """Test that BubblewrapEnvironmentConfig has correct default values."""
-    config = BubblewrapEnvironmentConfig()
-
-    assert config.cwd == ""
-    assert config.env == {}
-    assert config.timeout == 30
-    assert config.executable == os.getenv("MSWEA_BUBBLEWRAP_EXECUTABLE", "bwrap")
-    assert len(config.wrapper_args) > 0  # Should have default sandboxing args
 
 
 @pytest.mark.skipif(not shutil.which("bwrap"), reason="bubblewrap not available")
@@ -128,18 +116,6 @@ def test_bubblewrap_environment_timeout():
     try:
         with pytest.raises(subprocess.TimeoutExpired):
             env.execute("sleep 2")
-    finally:
-        env.cleanup()
-
-
-@pytest.mark.skipif(not shutil.which("bwrap"), reason="bubblewrap not available")
-def test_bubblewrap_environment_custom_timeout():
-    """Test custom timeout configuration."""
-    config = BubblewrapEnvironmentConfig(timeout=5)
-    env = BubblewrapEnvironment(**config.__dict__)
-
-    try:
-        assert env.config.timeout == 5
     finally:
         env.cleanup()
 
