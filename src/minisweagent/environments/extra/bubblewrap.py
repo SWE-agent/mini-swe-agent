@@ -19,8 +19,7 @@ class BubblewrapEnvironmentConfig:
     """Path to the bubblewrap executable."""
     wrapper_args: list[str] = field(
         default_factory=lambda: [
-            "--unshare-user",
-            "--disable-userns",
+            "--unshare-user-try",
             "--ro-bind",
             "/usr",
             "/usr",
