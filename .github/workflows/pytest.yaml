@@ -45,7 +45,9 @@ jobs:
       - name: Install podman
         run: sudo apt-get install -y podman
       - name: Install bubblewrap
-        run: sudo apt-get install -y bubblewrap
+        run: |
+          sudo apt-get install -y bubblewrap
+          sudo chmod u+s $(which bwrap)  # ensure we can set uid permissions
       - name: Install singularity/apptainer
         run: |
             sudo apt-get install -y wget
