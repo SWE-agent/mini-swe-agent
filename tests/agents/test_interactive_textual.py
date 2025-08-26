@@ -341,7 +341,12 @@ async def test_agent_with_cost_limit():
 
     async with app.run_test() as pilot:
         threading.Thread(target=lambda: app.agent.run("Cost limit test"), daemon=True).start()
-        await pilot.pause(0.5)
+        for _ in range(50):
+            await pilot.pause(0.1)
+            if app.agent_state == "STOPPED":
+                break
+        else:
+            raise AssertionError("Agent did not stop within 5 seconds")
 
         # Should eventually stop due to cost limit and notify with the exit status
         assert app.agent_state == "STOPPED"
@@ -361,7 +366,12 @@ async def test_agent_with_step_limit():
     async with app.run_test() as pilot:
         # Start the agent with the task
         threading.Thread(target=lambda: app.agent.run("Step limit test"), daemon=True).start()
-        await pilot.pause(0.5)
+        for _ in range(50):
+            await pilot.pause(0.1)
+            if app.agent_state == "STOPPED":
+                break
+        else:
+            raise AssertionError("Agent did not stop within 5 seconds")
         assert app.agent_state == "STOPPED"
         app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
 
