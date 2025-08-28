@@ -47,7 +47,9 @@ class SingularityEnvironment:
             except subprocess.CalledProcessError as e:
                 self.cleanup()
                 if attempt == max_retries - 1:
-                    self.logger.error(f"Error building image {self.config.image}, stdout: {e.stdout}, stderr: {e.stderr}")
+                    self.logger.error(
+                        f"Error building image {self.config.image}, stdout: {e.stdout}, stderr: {e.stderr}"
+                    )
                     raise
 
     def get_template_vars(self) -> dict[str, Any]:
