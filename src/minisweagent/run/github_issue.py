@@ -48,7 +48,7 @@ def main(
     configure_if_first_time()
 
     _config = yaml.safe_load(get_config_path(config).read_text())
-    _agent_config = _config.get("agent", {})
+    _agent_config = _config.setdefault("agent", {})
     if yolo:
         _agent_config["mode"] = "yolo"
 

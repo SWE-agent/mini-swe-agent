@@ -78,7 +78,7 @@ def get_swebench_docker_image_name(instance: dict) -> str:
 
 def get_sb_environment(config: dict, instance: dict) -> Environment:
     image_name = get_swebench_docker_image_name(instance)
-    env_config = config.get("environment", {})
+    env_config = config.setdefault("environment", {})
     if env_config.get("environment_class") == "singularity":
         image_name = "docker://" + image_name
     env_config["image"] = image_name
