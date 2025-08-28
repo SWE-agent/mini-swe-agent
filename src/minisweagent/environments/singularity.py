@@ -41,6 +41,7 @@ class SingularityEnvironment:
                 subprocess.run(
                     [self.config.executable, "build", "--sandbox", self.sandbox_dir, self.config.image],
                     check=True,
+                    capture_output=True,
                 )
                 break
             except subprocess.CalledProcessError:
