@@ -32,11 +32,20 @@ class SingularityEnvironment:
         """Singularity environment. See `SingularityEnvironmentConfig` for kwargs."""
         self.logger = logger or logging.getLogger("minisweagent.environment")
         self.config = config_class(**kwargs)
-        self.sandbox_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
-        subprocess.run(
-            [self.config.executable, "build", "--sandbox", self.sandbox_dir, self.config.image],
-            check=True,
-        )
+
+        # Building the sandbox can fail (very rarely), so we retry it
+        max_retries = 3
+        for attempt in range(max_retries):
+            self.sandbox_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
+            try:
+                subprocess.run(
+                    [self.config.executable, "build", "--sandbox", self.sandbox_dir, self.config.image],
+                    check=True,
+                )
+                break
+            except subprocess.CalledProcessError:
+                if attempt == max_retries - 1:
+                    raise
 
     def get_template_vars(self) -> dict[str, Any]:
         return asdict(self.config)
