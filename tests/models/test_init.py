@@ -183,6 +183,16 @@ class TestGetModel:
                 model_kwargs = captured_kwargs.get("model_kwargs", {})
                 assert "api_key" not in model_kwargs
 
+    def test_get_deterministic_model(self):
+        """Test that get_model can instantiate DeterministicModel via model_class parameter."""
+        config = {"outputs": ["hello", "world"], "cost_per_call": 2.0}
+        model = get_model("test-model", config | {"model_class": "deterministic"})
+
+        assert isinstance(model, DeterministicModel)
+        assert model.config.outputs == ["hello", "world"]
+        assert model.config.cost_per_call == 2.0
+        assert model.config.model_name == "test-model"
+
 
 class TestGlobalModelStats:
     def test_prints_cost_limit_when_set(self, capsys):

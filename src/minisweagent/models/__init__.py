@@ -50,14 +50,12 @@ def get_model(input_model_name: str | None = None, config: dict | None = None) -
     config = copy.deepcopy(config)
     config["model_name"] = resolved_model_name
 
-    # API key resolution (from env -> config -> None)
-    if "model_kwargs" not in config:
-        config["model_kwargs"] = {}
-    if from_env := os.getenv("MSWEA_MODEL_API_KEY"):
-        config["model_kwargs"]["api_key"] = from_env
+    model_class = get_model_class(resolved_model_name, config.pop("model_class", ""))
 
-    model_class = config.pop("model_class", "")
-    return get_model_class(resolved_model_name, model_class)(**config)
+    if from_env := os.getenv("MSWEA_MODEL_API_KEY") and not str(type(model_class)).endswith("DeterministicModel"):
+        config.setdefault("model_kwargs", {})["api_key"] = from_env
+
+    return model_class(**config)
 
 
 def get_model_name(input_model_name: str | None = None, config: dict | None = None) -> str:
@@ -76,6 +74,7 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
 _MODEL_CLASS_MAPPING = {
     "anthropic": "minisweagent.models.anthropic.AnthropicModel",
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
+    "deterministic": "minisweagent.models.test_models.DeterministicModel",
 }
 
 
