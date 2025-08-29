@@ -364,11 +364,13 @@ class TextualAgent(App):
                 content_str = "\n".join([item["text"] for item in message["content"]])
             else:
                 content_str = str(message["content"])
-            message_container = Vertical(classes="message-container")
-            container.mount(message_container)
             role = message["role"].replace("assistant", "mini-swe-agent")
-            message_container.mount(Static(role.upper(), classes="message-header"))
-            message_container.mount(Static(Text(content_str, no_wrap=False), classes="message-content"))
+            message_container = Vertical(
+                Static(role.upper(), classes="message-header"),
+                Static(Text(content_str, no_wrap=False), classes="message-content"),
+                classes="message-container",
+            )
+            container.mount(message_container)
 
         if self.input_container.pending_prompt is not None:
             self.agent_state = "AWAITING_INPUT"
