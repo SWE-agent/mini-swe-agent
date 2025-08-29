@@ -212,6 +212,7 @@ def main(
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
     config_spec: Path = typer.Option( builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file", rich_help_panel="Basic"),
     environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
+    run_eval: bool = typer.Option(False, "--run-eval", help="Whether to run evaluation after generation.", rich_help_panel="Advanced")
 ) -> None:
     # fmt: on
     output_path = Path(output)
@@ -255,7 +256,7 @@ def main(
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
             futures = {
-                executor.submit(process_instance, instance, output_path, config, progress_manager): instance[
+                executor.submit(process_instance, instance, output_path, config, progress_manager, run_eval): instance[
                     "instance_id"
                 ]
                 for instance in instances
