@@ -93,7 +93,7 @@ def remove_from_preds_file(output_path: Path, instance_id: str):
 def evaluate_instance(instance, instance_id, result, config):
     from minisweagent.run.extra.swebench_eval import evaluate_result
 
-    eval_result = False
+    eval_result = None
     try:
         eval_result, error = evaluate_result(instance, result, instance_id, "swebench", config)
         logger.error(f"Error during evaluation {error}")
@@ -143,7 +143,7 @@ def process_instance(
         kwargs = {}
         if run_eval:
             eval_result = evaluate_instance(instance, instance_id, result, config)
-            kwargs["resolved"] = eval_result
+            kwargs["eval_report"] = eval_result
         save_traj(
             agent,
             instance_dir / f"{instance_id}.traj.json",
