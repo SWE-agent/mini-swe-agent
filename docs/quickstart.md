@@ -203,7 +203,7 @@ There are several ways to set your API keys:
 !!! note "Model names and providers."
 
     We support most models using [`litellm`](https://github.com/BerriAI/litellm).
-    You can find a list of their supported models and the [here](https://docs.litellm.ai/docs/providers).
+    You can find a list of their supported models [here](https://docs.litellm.ai/docs/providers).
     Please always include the provider in the model name, e.g., `anthropic/claude-...`.
 
 * **Recommended**: `mini-extra config setup` (should be run the first time you run `mini`) can set the default model for you
