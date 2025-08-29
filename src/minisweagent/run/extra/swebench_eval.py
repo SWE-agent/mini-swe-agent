@@ -90,14 +90,12 @@ def evaluate_result(instance, model_patch, instance_id, dataset, sweagent_config
         shutil.copy(eval_script_path,  os.path.join(str(env.sandbox_dir), "tmp"))
 
     # Set +x
-    obs = env.execute("ls", cwd="/tmp")
-    print("observation for ls: ", obs)
     logger.info("chmod /tmp/eval.sh", extra={'msg_type': 'ACTION'})
     obs = env.execute("chmod +x /tmp/eval.sh",  cwd="/")
-    logger.info(f"observation logs: {obs['output']}, {obs['returncode']}", extra={'msg_type': 'OBSERVATION'})
-    assert obs["returncode"] == 0, f"Got bad observation: {obs} for environment dir: {env.sandbox_dir}"
+    assert obs["returncode"] == 0, f"Got bad observation: {obs} while executing `chmod +x /tmp/eval.sh` for environment dir: {env.sandbox_dir}"
 
     # Apply patch
+    # TODO (sumanthrh): This is from SkyAgent: https://github.com/NovaSky-AI/SkyRL/tree/main/skyagent, should probably just match the eval function in SWE-Bench repo
     exec_command = (
         'cd /testbed && '
         "(git apply -v /tmp/patch.diff && echo 'APPLY_PATCH_PASS' || "
