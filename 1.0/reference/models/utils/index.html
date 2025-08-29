@@ -1752,9 +1752,7 @@
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an initialized model object from any kind of user input or settings.&quot;&quot;&quot;</span>
     <span class="n">resolved_model_name</span> <span class="o">=</span> <span class="n">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1762,14 +1760,12 @@
     <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="n">config</span><span class="p">[</span><span class="s2">&quot;model_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolved_model_name</span>
 
-    <span class="c1"># API key resolution (from env -&gt; config -&gt; None)</span>
-    <span class="k">if</span> <span class="s2">&quot;model_kwargs&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;model_kwargs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MODEL_API_KEY&quot;</span><span class="p">):</span>
-        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;model_kwargs&quot;</span><span class="p">][</span><span class="s2">&quot;api_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_env</span>
+    <span class="n">model_class</span> <span class="o">=</span> <span class="n">get_model_class</span><span class="p">(</span><span class="n">resolved_model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model_class&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
-    <span class="n">model_class</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model_class&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">get_model_class</span><span class="p">(</span><span class="n">resolved_model_name</span><span class="p">,</span> <span class="n">model_class</span><span class="p">)(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MODEL_API_KEY&quot;</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">model_class</span><span class="p">))</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;DeterministicModel&quot;</span><span class="p">):</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;model_kwargs&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;api_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_env</span>
+
+    <span class="k">return</span> <span class="n">model_class</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1797,7 +1793,9 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/models/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">63</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
 <span class="normal">64</span>
 <span class="normal">65</span>
 <span class="normal">66</span>
@@ -1805,9 +1803,7 @@
 <span class="normal">68</span>
 <span class="normal">69</span>
 <span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a model name from any kind of user input or settings.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1848,7 +1844,8 @@ Otherwise, the model_name is used to select the best model class.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/models/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 82</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 81</span>
+<span class="normal"> 82</span>
 <span class="normal"> 83</span>
 <span class="normal"> 84</span>
 <span class="normal"> 85</span>
@@ -1873,8 +1870,7 @@ Otherwise, the model_name is used to select the best model class.</p>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_class</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_class</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Select the best model class.</span>
 
 <span class="sd">    If a model_class is provided (as shortcut name, or as full import path,</span>
