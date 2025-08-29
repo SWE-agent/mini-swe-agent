@@ -106,17 +106,17 @@ class TestGetModel:
             # Capture the arguments passed to the model constructor
             captured_kwargs = {}
 
+            class MockModel:
+                def __init__(self, **kwargs):
+                    captured_kwargs.update(kwargs)
+
             def mock_model_constructor(**kwargs):
-                captured_kwargs.update(kwargs)
-                return DeterministicModel(
-                    outputs=kwargs.get("outputs", ["test"]),
-                    model_name=kwargs.get("model_name", "test"),
-                )
+                return MockModel(**kwargs)
 
             with patch("minisweagent.models.get_model_class") as mock_get_class:
                 mock_get_class.return_value = mock_model_constructor
 
-                config = {"model_kwargs": {"api_key": "config-key"}, "outputs": ["test"]}
+                config = {"model_kwargs": {"api_key": "config-key"}}
                 get_model("test-model", config)
 
                 assert captured_kwargs["model_kwargs"]["api_key"] == "env-key"
@@ -127,17 +127,17 @@ class TestGetModel:
             # Capture the arguments passed to the model constructor
             captured_kwargs = {}
 
+            class MockModel:
+                def __init__(self, **kwargs):
+                    captured_kwargs.update(kwargs)
+
             def mock_model_constructor(**kwargs):
-                captured_kwargs.update(kwargs)
-                return DeterministicModel(
-                    outputs=kwargs.get("outputs", ["test"]),
-                    model_name=kwargs.get("model_name", "test"),
-                )
+                return MockModel(**kwargs)
 
             with patch("minisweagent.models.get_model_class") as mock_get_class:
                 mock_get_class.return_value = mock_model_constructor
 
-                config = {"model_kwargs": {"api_key": "config-key"}, "outputs": ["test"]}
+                config = {"model_kwargs": {"api_key": "config-key"}}
                 get_model("test-model", config)
 
                 assert captured_kwargs["model_kwargs"]["api_key"] == "config-key"
@@ -148,17 +148,17 @@ class TestGetModel:
             # Capture the arguments passed to the model constructor
             captured_kwargs = {}
 
+            class MockModel:
+                def __init__(self, **kwargs):
+                    captured_kwargs.update(kwargs)
+
             def mock_model_constructor(**kwargs):
-                captured_kwargs.update(kwargs)
-                return DeterministicModel(
-                    outputs=kwargs.get("outputs", ["test"]),
-                    model_name=kwargs.get("model_name", "test"),
-                )
+                return MockModel(**kwargs)
 
             with patch("minisweagent.models.get_model_class") as mock_get_class:
                 mock_get_class.return_value = mock_model_constructor
 
-                config = {"outputs": ["test"]}
+                config = {}
                 get_model("test-model", config)
                 assert captured_kwargs["model_kwargs"]["api_key"] == "env-key"
 
@@ -168,17 +168,17 @@ class TestGetModel:
             # Capture the arguments passed to the model constructor
             captured_kwargs = {}
 
+            class MockModel:
+                def __init__(self, **kwargs):
+                    captured_kwargs.update(kwargs)
+
             def mock_model_constructor(**kwargs):
-                captured_kwargs.update(kwargs)
-                return DeterministicModel(
-                    outputs=kwargs.get("outputs", ["test"]),
-                    model_name=kwargs.get("model_name", "test"),
-                )
+                return MockModel(**kwargs)
 
             with patch("minisweagent.models.get_model_class") as mock_get_class:
                 mock_get_class.return_value = mock_model_constructor
 
-                config = {"outputs": ["test"]}
+                config = {}
                 get_model("test-model", config)
                 model_kwargs = captured_kwargs.get("model_kwargs", {})
                 assert "api_key" not in model_kwargs
