@@ -284,6 +284,10 @@ class TextualAgent(App):
     # --- Basics ---
 
     @property
+    def config(self):
+        return self.agent.config
+
+    @property
     def i_step(self) -> int:
         """Current step index."""
         return self._i_step
