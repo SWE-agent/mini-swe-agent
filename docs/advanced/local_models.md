@@ -97,6 +97,10 @@ The model registry JSON file should follow LiteLLM's format:
 }
 ```
 
+!!! warning "Model names"
+
+    Model names are case sensitive. Please make sure you have an exact match.
+
 There are two ways of setting the path to the model registry:
 
 1. Set `LITELLM_MODEL_REGISTRY_PATH` (e.g., `mini-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json`)
