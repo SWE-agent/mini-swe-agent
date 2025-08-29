@@ -167,7 +167,7 @@ def test_singularity_environment_timeout():
 @pytest.mark.skipif(not is_singularity_available(), reason="Singularity not available")
 @pytest.mark.parametrize("is_writeable", [False, True])
 def test_singularity_environment_writeable_tmp(is_writeable):
-    """Test that the timeout configuration is respected."""
+    """Test that the `writeable_tmp` config parameter behaves as expected."""
 
     env = SingularityEnvironment(image="docker://python:3.11-slim", writeable_tmp=is_writeable)
     dst_in_container = "tmp"
@@ -180,6 +180,7 @@ def test_singularity_environment_writeable_tmp(is_writeable):
         result = env.execute("ls", cwd="/tmp")
         assert result["returncode"] == 0
         if is_writeable:
+            # If `tmp` is writeable, then the file should be persistent and there should be a non-empty result
             assert len(result['output']) > 0
         else:
             # if tmp is not writeable, then the directory gets reset at .execute
