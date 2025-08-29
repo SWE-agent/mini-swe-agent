@@ -1,6 +1,10 @@
 import os
+from re import I
 import subprocess
 from unittest.mock import patch
+import shutil
+import ast
+import tempfile 
 
 import pytest
 
@@ -159,3 +163,25 @@ def test_singularity_environment_timeout():
     # This should timeout and raise TimeoutExpired
     with pytest.raises(subprocess.TimeoutExpired):
         env.execute("sleep 5")
+
+@pytest.mark.slow
+@pytest.mark.skipif(not is_singularity_available(), reason="Singularity not available")
+@pytest.mark.parametrize("is_writeable", [False, True])
+def test_singularity_environment_writeable_tmp(is_writeable):
+    """Test that the timeout configuration is respected."""
+
+    env = SingularityEnvironment(image="docker://python:3.11-slim", writeable_tmp=is_writeable)
+    dst_in_container = "tmp"
+
+    with tempfile.NamedTemporaryFile() as tmpfile:
+        filepath = tmpfile.name
+        dst_full_path = os.path.join(env.sandbox_dir, dst_in_container)
+        shutil.copy(filepath, dst_full_path)
+
+        result = env.execute("ls", cwd="/tmp")
+        assert result["returncode"] == 0
+        if is_writeable:
+            assert len(result['output']) > 0
+        else:
+            # if tmp is not writeable, then the directory gets reset at .execute
+            assert not len(result['output'])

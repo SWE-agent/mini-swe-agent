@@ -25,6 +25,7 @@ from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from minisweagent.run.utils.save import save_traj
 from minisweagent.utils.log import add_file_handler, logger
+from minisweagent.run.extra.eval import evaluate_result
 
 _HELP_TEXT = """Run mini-SWE-agent on SWEBench instances.
 
@@ -146,6 +147,14 @@ def process_instance(
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
     finally:
+        reward = False
+        try:
+            reward, error = evaluate_result(instance, result, instance_id, "swebench", config)
+            print("Error during evaluation", error)
+            print("traceback", traceback.format_exc())
+        except Exception as e:
+            print("Error during evaluation: ", e)
+            print("traceback", traceback.format_exc())
         save_traj(
             agent,
             instance_dir / f"{instance_id}.traj.json",
