@@ -146,6 +146,26 @@ They might be pulling docker containers -- the run sshould start immediately the
 Try running the docker command manually to see what's going on (it should be printed out in the console).
 Confirm that it's running with `docker ps`, and that you can use `docker exec -it <container-id> ls` to get some output.
 
+> Can I run a startup command in the environment?
+
+Yes, you can use the `run.env_startup_command` config option to run a command in the environment before the agent starts.
+For example:
+
+```yaml
+run:
+  env_startup_command: "apt-get update && apt-get install -y python3-pip"
+```
+
+The command is rendered with the instance variables as template variables using `jinja2`.
+For example, you could use
+
+```yaml
+run:
+  env_startup_command: "git clone {{ repo_url }} . --force"
+```
+
+which might be particularly useful when running with environments like [`bubblewrap`](../reference/environments/bubblewrap.md).
+
 ## Implementation
 
 ??? note "Default config"

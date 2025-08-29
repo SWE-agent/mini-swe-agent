@@ -15,6 +15,7 @@ from pathlib import Path
 import typer
 import yaml
 from datasets import load_dataset
+from jinja2 import Template
 from rich.live import Live
 
 from minisweagent import Environment
@@ -77,12 +78,18 @@ def get_swebench_docker_image_name(instance: dict) -> str:
 
 
 def get_sb_environment(config: dict, instance: dict) -> Environment:
-    image_name = get_swebench_docker_image_name(instance)
     env_config = config.setdefault("environment", {})
-    if env_config.get("environment_class") == "singularity":
-        image_name = "docker://" + image_name
-    env_config["image"] = image_name
-    return get_environment(env_config, default_type="docker")
+    env_config["environment_class"] = env_config.get("environment_class", "docker")
+    image_name = get_swebench_docker_image_name(instance)
+    if env_config["environment_class"] == "docker":
+        env_config["image"] = image_name
+    elif env_config["environment_class"] == "singularity":
+        env_config["image"] = "docker://" + image_name
+    env = get_environment(env_config)
+    if startup_command := config.get("run", {}).get("env_startup_command"):
+        startup_command = Template(startup_command).render(**instance)
+        env.execute(startup_command)
+    return env
 
 
 def update_preds_file(output_path: Path, instance_id: str, model_name: str, result: str):
