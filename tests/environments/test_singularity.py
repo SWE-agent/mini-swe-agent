@@ -1,5 +1,4 @@
 import os
-from re import I
 import subprocess
 from unittest.mock import patch
 import shutil
