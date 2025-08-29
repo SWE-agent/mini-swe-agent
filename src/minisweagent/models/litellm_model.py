@@ -61,7 +61,15 @@ class LitellmModel:
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
-        cost = litellm.cost_calculator.completion_cost(response)
+        try:
+            cost = litellm.cost_calculator.completion_cost(response)
+        except Exception as e:
+            logger.critical(
+                f"Error calculating cost for model {self.config.model_name}: {e}. "
+                "Please check the 'Updating the model registry' section in the documentation. "
+                "http://bit.ly/4p31bi4 Still stuck? Please open a github issue for help!"
+            )
+            raise
         self.n_calls += 1
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
