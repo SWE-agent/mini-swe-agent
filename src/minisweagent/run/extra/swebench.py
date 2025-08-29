@@ -17,15 +17,13 @@ import yaml
 from datasets import load_dataset
 from rich.live import Live
 
-from minisweagent import Environment
 from minisweagent.agents.default import DefaultAgent
 from minisweagent.config import builtin_config_dir, get_config_path
-from minisweagent.environments import get_environment
 from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
+from minisweagent.run.extra.utils.swebench_utils import get_sb_environment
 from minisweagent.run.utils.save import save_traj
 from minisweagent.utils.log import add_file_handler, logger
-from minisweagent.run.extra.utils.swebench_utils import get_sb_environment, get_swebench_docker_image_name
 
 _HELP_TEXT = """Run mini-SWE-agent on SWEBench instances.
 
@@ -90,18 +88,22 @@ def remove_from_preds_file(output_path: Path, instance_id: str):
             del output_data[instance_id]
             output_path.write_text(json.dumps(output_data, indent=2))
 
+
 def evaluate_instance(instance, instance_id, result, config):
     from minisweagent.run.extra.swebench_eval import evaluate_result
 
-    eval_result = None
+    eval_result = {}
     try:
         eval_result, error = evaluate_result(instance, result, instance_id, "swebench", config)
         logger.error(f"Error during evaluation {error}")
         logger.error(f"traceback {traceback.format_exc()}")
+        eval_result["evaluation_error"] = error
     except Exception as e:
         logger.error(f"Error during evaluation {e}")
         logger.error(f"traceback {traceback.format_exc()}")
+        eval_result["evaluation_error"] = e
     return eval_result
+
 
 def process_instance(
     instance: dict,
@@ -142,6 +144,7 @@ def process_instance(
     finally:
         kwargs = {}
         if run_eval:
+            progress_manager.update_instance_status(instance_id, "Running evaluation")
             eval_result = evaluate_instance(instance, instance_id, result, config)
             kwargs["eval_report"] = eval_result
         save_traj(
@@ -151,8 +154,8 @@ def process_instance(
             result=result,
             extra_info=extra_info,
             instance_id=instance_id,
-            print_fct=logger.info,     
-            **kwargs,       
+            print_fct=logger.info,
+            **kwargs,
         )
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
         progress_manager.on_instance_end(instance_id, exit_status)

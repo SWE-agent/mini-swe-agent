@@ -47,7 +47,7 @@ dependencies = [
 
 [project.optional-dependencies]
 full = [
-    "mini-swe-agent[dev]",
+    "mini-swe-agent[dev,eval]",
     "swe-rex>=1.4.0",
 ]
 
@@ -64,6 +64,10 @@ dev = [
     "mike",
     "mkdocs-material",
     "mkdocs-glightbox",
+]
+
+eval = [
+    "swebench@git+https://github.com/SWE-bench/SWE-bench",
 ]
 
 [project.urls]

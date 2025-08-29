@@ -1,13 +1,5 @@
-
-
 from minisweagent import Environment
-from minisweagent.agents.default import DefaultAgent
-from minisweagent.config import builtin_config_dir, get_config_path
 from minisweagent.environments import get_environment
-from minisweagent.models import get_model
-from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
-from minisweagent.run.utils.save import save_traj
-from minisweagent.utils.log import add_file_handler, logger
 
 
 def get_swebench_docker_image_name(instance: dict) -> str:
@@ -19,6 +11,7 @@ def get_swebench_docker_image_name(instance: dict) -> str:
         id_docker_compatible = iid.replace("__", "_1776_")
         image_name = f"swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
     return image_name
+
 
 def get_sb_environment(config: dict, instance: dict) -> Environment:
     image_name = get_swebench_docker_image_name(instance)

@@ -25,7 +25,7 @@ class SingularityEnvironmentConfig:
     """Path to the singularity executable."""
     sandbox_build_retries: int = 3
     """Number of retries for building the sandbox if an error occurs."""
-    writeable_tmp: bool = False 
+    writeable_tmp: bool = False
     """Allow for a writeable /tmp directory in the sandbox. This is helpful for adding evaluation scripts outside of the working directory"""
 
 
