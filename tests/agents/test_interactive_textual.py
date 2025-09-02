@@ -18,15 +18,15 @@ def get_screen_text(app: TextualAgent) -> str:
     content_container = app.query_one("#content")
     for static_widget in content_container.query("Static"):
         if static_widget.display:
-            if hasattr(static_widget, "renderable") and static_widget.renderable:  # type: ignore[attr-defined]
-                text_parts.append(str(static_widget.renderable))  # type: ignore[attr-defined]
+            if hasattr(static_widget, "content") and static_widget.content:  # type: ignore[attr-defined]
+                text_parts.append(str(static_widget.content))  # type: ignore[attr-defined]
 
     # Also check the input container if it's visible
     if app.input_container.display:
         for static_widget in app.input_container.query("Static"):
             if static_widget.display:
-                if hasattr(static_widget, "renderable") and static_widget.renderable:  # type: ignore[attr-defined]
-                    text_parts.append(str(static_widget.renderable))  # type: ignore[attr-defined]
+                if hasattr(static_widget, "content") and static_widget.content:  # type: ignore[attr-defined]
+                    text_parts.append(str(static_widget.content))  # type: ignore[attr-defined]
 
     return "\n".join(text_parts)
 
