@@ -124,25 +124,11 @@
     === "Local evaluation"
 
         You can also use a local installation of [SWE-bench](https://github.com/SWE-bench/SWE-bench)
-        for evaluation.
-
-        However, you will need to convert the `preds.json` output to a jsonl file like this:
-
-        ```python
-        from pathlib import Path
-        import json
-
-        preds = json.loads(Path("preds.json").read_text())
-        data = [{"instance_id": key, **value} for key, value in preds.items()]
-        jsonl = [json.dumps(d) for d in data]
-        Path("all_preds.jsonl").write_text("\\n".join(jsonl))
-        ```
-
-        Then, using SWE-bench, run:
+        for evaluation:
 
         ```bash
         python -m swebench.harness.run_evaluation \
-            --dataset_name princeton-nlp/SWE-bench_Lite \
+            --dataset_name princeton-nlp/SWE-bench_Verified \
             --predictions_path all_preds.jsonl \
             --max_workers <num_workers> \
             --run_id <run_id>
