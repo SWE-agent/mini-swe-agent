@@ -29,6 +29,8 @@ class DockerEnvironmentConfig:
     """
     container_timeout: str = "2h"
     """Max duration to keep container running. Uses the same format as the sleep command."""
+    pull_timeout: int = 120
+    """Timeout in seconds for pulling images"""
 
 
 class DockerEnvironment:
@@ -65,7 +67,7 @@ class DockerEnvironment:
             cmd,
             capture_output=True,
             text=True,
-            timeout=120,  # docker pull might take a while
+            timeout=self.config.pull_timeout,  # docker pull might take a while
             check=True,
         )
         self.logger.info(f"Started container {container_name} with ID {result.stdout.strip()}")
