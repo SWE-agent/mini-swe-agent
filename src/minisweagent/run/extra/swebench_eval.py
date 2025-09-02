@@ -5,9 +5,6 @@
 
 import concurrent.futures
 import json
-import random
-import re
-import tempfile
 import threading
 import time
 import traceback
@@ -19,13 +16,10 @@ import yaml
 from datasets import load_dataset
 from rich.live import Live
 
-from minisweagent.agents.default import DefaultAgent
 from minisweagent.config import builtin_config_dir, get_config_path
-from minisweagent.environments.docker import DockerEnvironment
-from minisweagent.environments.singularity import SingularityEnvironment, SingularityEnvironmentConfig
 from minisweagent.models import get_model
+from minisweagent.run.extra.swebench import filter_instances, get_sb_environment
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
-from minisweagent.run.extra.utils.swebench_utils import get_sb_environment
 from minisweagent.utils.log import add_file_handler, logger
 
 _HELP_TEXT = """Evaluate mini-SWE-agent trajectories for SWEBench."""
@@ -34,22 +28,6 @@ app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
 
 _OUTPUT_FILE_LOCK = threading.Lock()
-
-
-class ProgressTrackingAgent(DefaultAgent):
-    """Simple wrapper around DefaultAgent that provides progress updates."""
-
-    def __init__(self, *args, progress_manager: RunBatchProgressManager, instance_id: str = "", **kwargs):
-        super().__init__(*args, **kwargs)
-        self.progress_manager: RunBatchProgressManager = progress_manager
-        self.instance_id = instance_id
-
-    def step(self) -> dict:
-        """Override step to provide progress updates."""
-        self.progress_manager.update_instance_status(
-            self.instance_id, f"Step {self.model.n_calls + 1:3d} (${self.model.cost:.2f})"
-        )
-        return super().step()
 
 
 def update_evals_file(output_path: Path, instance_id: str, model_name: str, model_patch: str, eval_report: dict):
@@ -97,11 +75,6 @@ def evaluate_instance(
     env = None
     try:
         env = get_sb_environment(config, instance)
-        assert isinstance(env, SingularityEnvironment | DockerEnvironment), (
-            "Evaluation only supports Docker or Singularity at the moment"
-        )
-        if isinstance(env.config, SingularityEnvironmentConfig):
-            env.config.writeable_tmp = True  # override to true for copying patch files
     except Exception as e:
         ret["eval_error"] = f"Env creation failed with {e}"
         logger.info(f"Starting environment failed with exception: {e}\n, {traceback.format_exc()}")
@@ -109,12 +82,10 @@ def evaluate_instance(
         return
 
     # apply git patch
-    with tempfile.NamedTemporaryFile() as tmpfile:
-        with open(tmpfile.name, "w") as f:
-            f.write(instance_result["model_patch"])
-        env.copy_to(tmpfile.name, "/tmp/patch.diff")
-
-    obs = env.execute("git apply /tmp/patch.diff")
+    # NOTE (sumanthrh): This applies patch in-line, and the maximum patch size is limited by the OS limits for `ARG_MAX`.
+    # In modern systems, this is typically ~ 1 MB, which is pretty generous.
+    # For simplicity, we assume that large patches greater than `ARG_MAX` are meant to fail
+    obs = env.execute(f"git apply <<<'EOF'\n{instance_result['model_patch']}\nEOF")
 
     if obs["returncode"] != 0:
         ret["eval_error"] = obs["output"]
@@ -129,30 +100,10 @@ def evaluate_instance(
     update_evals_file(output_path, instance_id, model.config.model_name, instance_result["model_patch"], ret)
 
 
-def filter_instances(
-    instances: list[dict], *, filter_spec: str, slice_spec: str = "", shuffle: bool = False
-) -> list[dict]:
-    """Filter and slice a list of SWEBench instances."""
-    if shuffle:
-        instances = sorted(instances.copy(), key=lambda x: x["instance_id"])
-        random.seed(42)
-        random.shuffle(instances)
-    before_filter = len(instances)
-    instances = [instance for instance in instances if re.match(filter_spec, instance["instance_id"])]
-    if (after_filter := len(instances)) != before_filter:
-        logger.info(f"Instance filter: {before_filter} -> {after_filter} instances")
-    if slice_spec:
-        values = [int(x) if x else None for x in slice_spec.split(":")]
-        instances = instances[slice(*values)]
-        if (after_slice := len(instances)) != before_filter:
-            logger.info(f"Instance slice: {before_filter} -> {after_slice} instances")
-    return instances
-
-
 # fmt: off
 @app.command(help=_HELP_TEXT)
 def main(
-    dataset: str = typer.Option("SumanthRH/SWE-Bench_Verified", "--dataset", help="Path to the SWEBench dataset to use", rich_help_panel="Data selection"),
+    dataset: str = typer.Option("SumanthRH/SWE-Bench_Verified", "--dataset", help="Path to the SWEBench dataset to use. Should include a `eval_script` column specifying the evaluation script for each instance", rich_help_panel="Data selection"),
     split: str = typer.Option("dev", "--split", help="Dataset split", rich_help_panel="Data selection"),
     slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)", rich_help_panel="Data selection"),
     filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex", rich_help_panel="Data selection"),

@@ -25,8 +25,6 @@ class SingularityEnvironmentConfig:
     """Path to the singularity executable."""
     sandbox_build_retries: int = 3
     """Number of retries for building the sandbox if an error occurs."""
-    writeable_tmp: bool = False
-    """Allow for a writeable /tmp directory in the sandbox. This is helpful for adding evaluation scripts outside of the working directory"""
 
 
 class SingularityEnvironment:
@@ -69,9 +67,6 @@ class SingularityEnvironment:
         # Do not inherit directories and env vars from host
         cmd.extend(["--contain", "--cleanenv"])
 
-        if self.config.writeable_tmp:
-            cmd.extend(["--no-mount", "tmp"])
-
         work_dir = cwd or self.config.cwd
         if work_dir and work_dir != "/":
             cmd.extend(["--pwd", work_dir])
@@ -89,15 +84,6 @@ class SingularityEnvironment:
             timeout=self.config.timeout,
             encoding="utf-8",
             errors="replace",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
-        return {"output": result.stdout, "returncode": result.returncode}
-
-    def copy_to(self, local_filepath: str, dst_filepath: str):
-        cmd = ["cp", local_filepath, str(self.sandbox_dir / dst_filepath.lstrip("/"))]
-        result = subprocess.run(
-            cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         )

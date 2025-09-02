@@ -1,8 +1,5 @@
 import os
-import shutil
 import subprocess
-import tempfile
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -162,27 +159,3 @@ def test_singularity_environment_timeout():
     # This should timeout and raise TimeoutExpired
     with pytest.raises(subprocess.TimeoutExpired):
         env.execute("sleep 5")
-
-
-@pytest.mark.slow
-@pytest.mark.skipif(not is_singularity_available(), reason="Singularity not available")
-@pytest.mark.parametrize("is_writeable", [False, True])
-def test_singularity_environment_writeable_tmp(is_writeable):
-    """Test that the `writeable_tmp` config parameter behaves as expected."""
-
-    env = SingularityEnvironment(image="docker://python:3.11-slim", writeable_tmp=is_writeable)
-    dst_in_container = "tmp"
-
-    with tempfile.NamedTemporaryFile() as tmpfile:
-        filepath = tmpfile.name
-        dst_full_path = Path(env.sandbox_dir) / dst_in_container
-        shutil.copy(filepath, dst_full_path)
-
-        result = env.execute("ls", cwd="/tmp")
-        assert result["returncode"] == 0
-        if is_writeable:
-            # If `tmp` is writeable, then the file should be persistent and there should be a non-empty result
-            assert len(result["output"]) > 0
-        else:
-            # if tmp is not writeable, then the directory gets reset at .execute
-            assert not len(result["output"])
