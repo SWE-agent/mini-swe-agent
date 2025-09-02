@@ -1740,6 +1740,7 @@ you might not be able to run them on other architectures.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Quickstart</p>
+<p>We provide two different scripts: <code>swebench</code> and <code>swebench-single</code>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Batch mode</label><label for="__tabbed_1_2">Single instance (for debugging)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -1818,12 +1819,39 @@ add the <code>--exit-immediately</code> flag.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Evaluating on SWE-bench</p>
+<p>You have two options to evaluate on SWE-bench: Our free cloud-based evaluation or the SWE-bench CLI.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Cloud-based evaluation</label><label for="__tabbed_2_2">Local evaluation</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>You can use the <a href="https://www.swebench.com/sb-cli/">sb-cli</a> for extremely fast, cloud-based evaluations
 (and it's free!). After installing it and getting a token, simply run:</p>
 <div class="highlight"><pre><span></span><code>sb-cli<span class="w"> </span>submit<span class="w"> </span>swe-bench_verified<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--predictions_path<span class="w"> </span>preds.json<span class="w"> </span>--run_id<span class="w"> </span>some-id-for-your-run
 </code></pre></div>
 <p>Typically you will have results within 20 minutes (this is not limited by how many instances you run,
 but by the slowest-to-evaluate instance in SWE-bench).</p>
+</div>
+<div class="tabbed-block">
+<p>You can also use a local installation of <a href="https://github.com/SWE-bench/SWE-bench">SWE-bench</a>
+for evaluation.</p>
+<p>However, you will need to convert the <code>preds.json</code> output to a jsonl file like this:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="n">preds</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;preds.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;instance_id&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">value</span><span class="p">}</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">preds</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+<span class="n">jsonl</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+<span class="n">Path</span><span class="p">(</span><span class="s2">&quot;all_preds.jsonl&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">jsonl</span><span class="p">))</span>
+</code></pre></div>
+<p>Then, using SWE-bench, run:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>swebench.harness.run_evaluation<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--dataset_name<span class="w"> </span>princeton-nlp/SWE-bench_Lite<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictions_path<span class="w"> </span>all_preds.jsonl<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--max_workers<span class="w"> </span>&lt;num_workers&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run_id<span class="w"> </span>&lt;run_id&gt;
+</code></pre></div>
+</div>
+</div>
+</div>
 </div>
 <h2 id="faq">FAQ</h2>
 <blockquote>
