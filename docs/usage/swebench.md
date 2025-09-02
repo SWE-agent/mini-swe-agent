@@ -25,6 +25,8 @@
 
 !!! tip "Quickstart"
 
+    We provide two different scripts: `swebench` and `swebench-single`:
+
     === "Batch mode"
 
         Batch mode runs on all task instances in parallel.
@@ -105,16 +107,46 @@
 
 !!! tip "Evaluating on SWE-bench"
 
-    You can use the [sb-cli](https://www.swebench.com/sb-cli/) for extremely fast, cloud-based evaluations
-    (and it's free!). After installing it and getting a token, simply run:
+    You have two options to evaluate on SWE-bench: Our free cloud-based evaluation or the SWE-bench CLI.
 
-    ```bash
-    sb-cli submit swe-bench_verified test --predictions_path preds.json --run_id some-id-for-your-run
-    ```
+    === "Cloud-based evaluation"
 
-    Typically you will have results within 20 minutes (this is not limited by how many instances you run,
-    but by the slowest-to-evaluate instance in SWE-bench).
+        You can use the [sb-cli](https://www.swebench.com/sb-cli/) for extremely fast, cloud-based evaluations
+        (and it's free!). After installing it and getting a token, simply run:
 
+        ```bash
+        sb-cli submit swe-bench_verified test --predictions_path preds.json --run_id some-id-for-your-run
+        ```
+
+        Typically you will have results within 20 minutes (this is not limited by how many instances you run,
+        but by the slowest-to-evaluate instance in SWE-bench).
+
+    === "Local evaluation"
+
+        You can also use a local installation of [SWE-bench](https://github.com/SWE-bench/SWE-bench)
+        for evaluation.
+
+        However, you will need to convert the `preds.json` output to a jsonl file like this:
+
+        ```python
+        from pathlib import Path
+        import json
+
+        preds = json.loads(Path("preds.json").read_text())
+        data = [{"instance_id": key, **value} for key, value in preds.items()]
+        jsonl = [json.dumps(d) for d in data]
+        Path("all_preds.jsonl").write_text("\\n".join(jsonl))
+        ```
+
+        Then, using SWE-bench, run:
+
+        ```bash
+        python -m swebench.harness.run_evaluation \
+            --dataset_name princeton-nlp/SWE-bench_Lite \
+            --predictions_path all_preds.jsonl \
+            --max_workers <num_workers> \
+            --run_id <run_id>
+        ```
 
 ## FAQ
 
