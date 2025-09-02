@@ -1854,6 +1854,20 @@ The dataset needs to be loadable as <code>datasets.load_dataset(path, split=spli
 </blockquote>
 <p>Try running the docker command manually to see what's going on (it should be printed out in the console).
 Confirm that it's running with <code>docker ps</code>, and that you can use <code>docker exec -it &lt;container-id&gt; ls</code> to get some output.</p>
+<blockquote>
+<p>Can I run a startup command in the environment?</p>
+</blockquote>
+<p>Yes, you can use the <code>run.env_startup_command</code> config option to run a command in the environment before the agent starts.
+For example:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">run</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">env_startup_command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;apt-get</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">&amp;&amp;</span><span class="nv"> </span><span class="s">apt-get</span><span class="nv"> </span><span class="s">install</span><span class="nv"> </span><span class="s">-y</span><span class="nv"> </span><span class="s">python3-pip&quot;</span>
+</code></pre></div>
+<p>The command is rendered with the instance variables as template variables using <code>jinja2</code>.
+For example, you could use</p>
+<div class="highlight"><pre><span></span><code><span class="nt">run</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">env_startup_command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;git</span><span class="nv"> </span><span class="s">clone</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">repo_url</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">.</span><span class="nv"> </span><span class="s">--force&quot;</span>
+</code></pre></div>
+<p>which might be particularly useful when running with environments like <a href="../../reference/environments/bubblewrap/"><code>bubblewrap</code></a>.</p>
 <h2 id="implementation">Implementation</h2>
 <details class="note">
 <summary>Default config</summary>
@@ -2115,6 +2129,7 @@ Confirm that it's running with <code>docker ps</code>, and that you can use <cod
 <span class="kn">import</span><span class="w"> </span><span class="nn">typer</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jinja2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Template</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.live</span><span class="w"> </span><span class="kn">import</span> <span class="n">Live</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span>
@@ -2177,12 +2192,20 @@ Confirm that it's running with <code>docker ps</code>, and that you can use <cod
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_sb_environment</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Environment</span><span class="p">:</span>
-    <span class="n">image_name</span> <span class="o">=</span> <span class="n">get_swebench_docker_image_name</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
     <span class="n">env_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;environment&quot;</span><span class="p">,</span> <span class="p">{})</span>
-    <span class="k">if</span> <span class="n">env_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;environment_class&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;singularity&quot;</span><span class="p">:</span>
-        <span class="n">image_name</span> <span class="o">=</span> <span class="s2">&quot;docker://&quot;</span> <span class="o">+</span> <span class="n">image_name</span>
-    <span class="n">env_config</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image_name</span>
-    <span class="k">return</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">env_config</span><span class="p">,</span> <span class="n">default_type</span><span class="o">=</span><span class="s2">&quot;docker&quot;</span><span class="p">)</span>
+    <span class="n">env_config</span><span class="p">[</span><span class="s2">&quot;environment_class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;environment_class&quot;</span><span class="p">,</span> <span class="s2">&quot;docker&quot;</span><span class="p">)</span>
+    <span class="n">image_name</span> <span class="o">=</span> <span class="n">get_swebench_docker_image_name</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">&quot;environment_class&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;docker&quot;</span><span class="p">:</span>
+        <span class="n">env_config</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image_name</span>
+    <span class="k">elif</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">&quot;environment_class&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;singularity&quot;</span><span class="p">:</span>
+        <span class="n">env_config</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;docker://&quot;</span> <span class="o">+</span> <span class="n">image_name</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">env_config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">startup_command</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env_startup_command&quot;</span><span class="p">):</span>
+        <span class="n">startup_command</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">startup_command</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">instance</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">startup_command</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">out</span><span class="p">[</span><span class="s2">&quot;returncode&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error executing startup command: </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">env</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">update_preds_file</span><span class="p">(</span><span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
