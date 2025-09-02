@@ -13,12 +13,17 @@ def get_screen_text(app: TrajectoryInspector) -> str:
     """Extract all text content from the app's UI."""
     text_parts = []
 
+    def _append_visible_static_text(container):
+        for static_widget in container.query("Static"):
+            if static_widget.display:
+                if hasattr(static_widget, "content") and static_widget.content:  # type: ignore[attr-defined]
+                    text_parts.append(str(static_widget.content))  # type: ignore[attr-defined]
+                elif hasattr(static_widget, "renderable") and static_widget.renderable:  # type: ignore[attr-defined]
+                    text_parts.append(str(static_widget.renderable))  # type: ignore[attr-defined]
+
     # Get all Static widgets in the main content container
     content_container = app.query_one("#content")
-    for static_widget in content_container.query("Static"):
-        if static_widget.display:
-            if hasattr(static_widget, "renderable") and static_widget.renderable:  # type: ignore[attr-defined]
-                text_parts.append(str(static_widget.renderable))  # type: ignore[attr-defined]
+    _append_visible_static_text(content_container)
 
     return "\n".join(text_parts)
 
