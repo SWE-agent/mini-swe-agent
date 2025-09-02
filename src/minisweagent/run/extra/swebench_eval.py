@@ -8,6 +8,7 @@ import json
 import threading
 import time
 import traceback
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -85,7 +86,10 @@ def evaluate_instance(
     # NOTE (sumanthrh): This applies patch in-line, and the maximum patch size is limited by the OS limits for `ARG_MAX`.
     # In modern systems, this is typically ~ 1 MB, which is pretty generous.
     # For simplicity, we assume that large patches greater than `ARG_MAX` are meant to fail
-    obs = env.execute(f"git apply <<<'EOF'\n{instance_result['model_patch']}\nEOF")
+    delimiter = f"PATCH_{uuid.uuid4().hex}"  # unlikely to collide with symbols in the patch
+    command = f"git apply <<'{delimiter}'\n{instance_result['model_patch']}\n{delimiter}"
+
+    obs = env.execute(command)
 
     if obs["returncode"] != 0:
         ret["eval_error"] = obs["output"]
