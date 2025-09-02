@@ -94,6 +94,15 @@ class SingularityEnvironment:
         )
         return {"output": result.stdout, "returncode": result.returncode}
 
+    def copy_to(self, local_filepath: str, dst_filepath: str):
+        cmd = ["cp", local_filepath, str(self.sandbox_dir / dst_filepath.lstrip("/"))]
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+        return {"output": result.stdout, "returncode": result.returncode}
+
     def cleanup(self):
         shutil.rmtree(self.sandbox_dir, ignore_errors=True)
 

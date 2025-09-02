@@ -95,6 +95,15 @@ class DockerEnvironment:
         )
         return {"output": result.stdout, "returncode": result.returncode}
 
+    def copy_to(self, local_filepath: str, dst_filepath: str):
+        cmd = [self.config.executable, "cp", local_filepath, f"{self.container_id}:{dst_filepath}"]
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+        return {"output": result.stdout, "returncode": result.returncode}
+
     def cleanup(self):
         """Stop and remove the Docker container."""
         if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set

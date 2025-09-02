@@ -1,155 +1,230 @@
-import shutil
+#!/usr/bin/env python3
+
+"""Evaluate mini-SWE-agent trajectories for SWE-bench."""
+# Read this first: https://mini-swe-agent.com/latest/usage/swebench/  (usage docs)
+
+import concurrent.futures
+import json
+import random
+import re
 import tempfile
+import threading
 import time
+import traceback
 from pathlib import Path
 from typing import Any
 
-from minisweagent.environments.singularity import SingularityEnvironment
+import typer
+import yaml
+from datasets import load_dataset
+from rich.live import Live
+
+from minisweagent.agents.default import DefaultAgent
+from minisweagent.config import builtin_config_dir, get_config_path
+from minisweagent.environments.docker import DockerEnvironment
+from minisweagent.environments.singularity import SingularityEnvironment, SingularityEnvironmentConfig
+from minisweagent.models import get_model
+from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from minisweagent.run.extra.utils.swebench_utils import get_sb_environment
-from minisweagent.utils.log import logger
+from minisweagent.utils.log import add_file_handler, logger
+
+_HELP_TEXT = """Evaluate mini-SWE-agent trajectories for SWEBench."""
+
+app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
 
-def evaluate_result(instance, model_patch, instance_id, dataset, sweagent_config) -> tuple[dict[str, Any], str]:
-    """Apply patch and evaluate the solution."""
-    from swebench.harness.constants import (
-        APPLY_PATCH_FAIL,
-        APPLY_PATCH_PASS,
-    )
-    from swebench.harness.grading import get_eval_report
-    from swebench.harness.test_spec.test_spec import make_test_spec
+_OUTPUT_FILE_LOCK = threading.Lock()
 
-    if not model_patch:
-        return {}, f"No git patch found for instance {instance_id}"
+
+class ProgressTrackingAgent(DefaultAgent):
+    """Simple wrapper around DefaultAgent that provides progress updates."""
+
+    def __init__(self, *args, progress_manager: RunBatchProgressManager, instance_id: str = "", **kwargs):
+        super().__init__(*args, **kwargs)
+        self.progress_manager: RunBatchProgressManager = progress_manager
+        self.instance_id = instance_id
+
+    def step(self) -> dict:
+        """Override step to provide progress updates."""
+        self.progress_manager.update_instance_status(
+            self.instance_id, f"Step {self.model.n_calls + 1:3d} (${self.model.cost:.2f})"
+        )
+        return super().step()
+
+
+def update_evals_file(output_path: Path, instance_id: str, model_name: str, model_patch: str, eval_report: dict):
+    """Update the output JSON file with results from a single instance."""
+    with _OUTPUT_FILE_LOCK:
+        output_data = {}
+        if output_path.exists():
+            output_data = json.loads(output_path.read_text())
+        output_data[instance_id] = {
+            "model_name_or_path": model_name,
+            "instance_id": instance_id,
+            "model_patch": model_patch,
+            "eval_report": eval_report,
+        }
+        output_path.write_text(json.dumps(output_data, indent=2))
+
+
+def remove_from_evals_file(output_path: Path, instance_id: str):
+    """Remove an instance from the predictions file."""
+    if not output_path.exists():
+        return
+    with _OUTPUT_FILE_LOCK:
+        output_data = json.loads(output_path.read_text())
+        if instance_id in output_data:
+            del output_data[instance_id]
+            output_path.write_text(json.dumps(output_data, indent=2))
+
+
+def evaluate_instance(
+    instance: dict,
+    output_dir: Path,
+    instance_result: dict[str, Any],
+    config: dict,
+) -> None:
+    """Process a single SWEBench instance."""
+    instance_id = instance["instance_id"]
+    output_path = output_dir / "evals.json"
+
+    # avoid inconsistent state if something here fails and there's leftover previous files
+    remove_from_evals_file(output_path, instance_id)
+    model = get_model(config=config.get("model", {}))
+
+    ret = {"instance_id": instance_id, "resolved": False, "eval_error": None}
 
     env = None
     try:
-        sweagent_config.setdefault("environment", {})
-        sweagent_config["environment"]["writeable_tmp"] = True
-        env = get_sb_environment(sweagent_config, instance)
-        assert isinstance(env, SingularityEnvironment), "SWEBench Evaluation only supports Singularity environment"
-        assert hasattr(env, "sandbox_dir"), "expected Singularity Env with 'sandbox_dir' attribute"
+        env = get_sb_environment(config, instance)
+        assert isinstance(env, SingularityEnvironment | DockerEnvironment), (
+            "Evaluation only supports Docker or Singularity at the moment"
+        )
+        if isinstance(env.config, SingularityEnvironmentConfig):
+            env.config.writeable_tmp = True  # override to true for copying patch files
     except Exception as e:
-        return {}, f"Env creation failed with {e}"
+        ret["eval_error"] = f"Env creation failed with {e}"
+        logger.info(f"Starting environment failed with exception: {e}\n, {traceback.format_exc()}")
+        update_evals_file(output_path, instance_id, model.config.model_name, instance_result["model_patch"], ret)
+        return
 
-    test_spec = make_test_spec(instance=instance)
+    # apply git patch
+    with tempfile.NamedTemporaryFile() as tmpfile:
+        with open(tmpfile.name, "w") as f:
+            f.write(instance_result["model_patch"])
+        env.copy_to(tmpfile.name, "/tmp/patch.diff")
 
-    # Get patch and save it to /tmp/patch.diff
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_dir = Path(temp_dir)
-        # Patch file
-        patch_file_path = temp_dir / "patch.diff"
-        with open(patch_file_path, "w") as f:
-            f.write(model_patch)
-        dst = env.sandbox_dir / "tmp"
-        shutil.copy(patch_file_path, dst)
-        # Eval script
-        eval_script_path = temp_dir / "eval.sh"
-        with open(eval_script_path, "w") as f:
-            f.write(test_spec.eval_script)
-        shutil.copy(eval_script_path, dst)
+    obs = env.execute("git apply /tmp/patch.diff")
 
-    # Set +x
-    logger.info("chmod /tmp/eval.sh", extra={"msg_type": "ACTION"})
-    obs = env.execute("chmod +x /tmp/eval.sh", cwd="/")
-    assert obs["returncode"] == 0, (
-        f"Got bad observation: {obs} while executing `chmod +x /tmp/eval.sh` for environment dir: {env.sandbox_dir}"
-    )
-
-    # Apply patch
-    # TODO (sumanthrh): This is from SkyAgent: https://github.com/NovaSky-AI/SkyRL/tree/main/skyagent, should probably just match the eval function in SWE-Bench repo
-    exec_command = (
-        "cd /testbed && "
-        "(git apply -v /tmp/patch.diff && echo 'APPLY_PATCH_PASS' || "
-        "(echo 'Failed to apply patch with git apply, trying with patch command...' && "
-        "(patch --batch --fuzz=5 -p1 -i /tmp/patch.diff && echo 'APPLY_PATCH_PASS' || "
-        "echo 'APPLY_PATCH_FAIL')))"
-    )
-    obs = env.execute(exec_command, cwd="/")
-    apply_patch_output = obs["output"]
-    assert isinstance(apply_patch_output, str)
-
-    if "APPLY_PATCH_FAIL" in apply_patch_output:
-        raise Exception(f"Instance {instance_id} {APPLY_PATCH_FAIL}:\n{apply_patch_output}")
-    elif "APPLY_PATCH_PASS" in apply_patch_output:
-        logger.info(f"[{instance_id}] {APPLY_PATCH_PASS}:\n{apply_patch_output}")
-
-        # Run eval script in background and save output to log file
-        log_file = "/tmp/eval_output.log"
-        command = f"/tmp/eval.sh > {log_file} 2>&1 & echo $!"
-        obs = env.execute(command, cwd="/")
-
-        if isinstance(obs, dict) and obs["returncode"] == 0:
-            pid = obs["output"].split()[-1].strip()
-            logger.info(f"[{instance_id}] Evaluation process started with PID: {pid}")
-
-            # Poll for completion
-            start_time = time.time()
-            timeout = 1200  # 20 minutes
-            while True:
-                seconds_elapsed = time.time() - start_time
-                if seconds_elapsed > timeout:
-                    raise Exception(f"[{instance_id}] Evaluation timed out after {timeout} seconds")
-                command = f"ps -p {pid} > /dev/null; echo $?"
-                check_obs = env.execute(command, cwd="/")
-                if isinstance(check_obs, dict) and check_obs["output"].split()[-1].strip() == "1":
-                    logger.info(f"[{instance_id}] Evaluation process completed after {seconds_elapsed} seconds")
-                    break
-                logger.info(f"[{instance_id}] [{seconds_elapsed:.0f}s] Evaluation still running, waiting...")
-                time.sleep(30)  # Wait for 30 seconds before checking again
-
-            # Read the log file
-            command = f"cat {log_file}"
-            cat_obs = env.execute(command, cwd="/")
-
-            # Grade answer
-            if isinstance(cat_obs, dict) and cat_obs["returncode"] == 0:
-                test_output = cat_obs["output"]
-                assert isinstance(test_output, str)
-                # instance['test_result']['test_output'] = test_output
-
-                # Get report from test output
-                logger.info(f"[{instance_id}] Grading answer...")
-
-                with tempfile.TemporaryDirectory() as temp_dir:
-                    temp_dir = Path(temp_dir)
-
-                    # Create a directory structure that matches the expected format
-                    # NOTE: this is a hack to make the eval report format consistent
-                    # with the original SWE-Bench eval script
-
-                    log_dir = temp_dir / "logs" / instance_id.lower()
-                    log_dir.mkdir(exist_ok=True, parents=True)
-                    test_output_path = log_dir / "test_output.txt"
-                    with open(test_output_path, "w") as f:
-                        f.write(test_output)
-                    try:
-                        extra_kwargs = {}
-                        extra_kwargs["test_log_path"] = str(test_output_path)
-                        extra_kwargs["test_spec"] = test_spec
-                        extra_kwargs["include_tests_status"] = True
-
-                        _report = get_eval_report(
-                            prediction={
-                                "model_patch": model_patch,
-                                "instance_id": instance_id,
-                            },
-                            test_log_path=test_output_path,
-                            test_spec=test_spec,
-                            include_tests_status=True,
-                        )
-                        # in swe-smith, the report is a single dict
-                        # in swe-gym and swe-bench, the report is a dict with instance_id
-                        report = _report[instance_id]
-                        logger.info(
-                            f"[{instance_id}] report: {report}\nResult for [{instance_id}]: resolved: {report['resolved']}"
-                        )
-                        return report, "NOERROR"
-                    except Exception as e:
-                        logger.error(f"[{instance_id}] Error when getting eval report: {e}")
-                        return {}, f"Error when getting eval report: {e}"
-        else:
-            raise Exception(f"[{instance_id}] Error when starting eval:\n{obs['output']}")
+    if obs["returncode"] != 0:
+        ret["eval_error"] = obs["output"]
     else:
-        raise Exception(f"[{instance_id}] Unexpected output when applying patch:\n{apply_patch_output}")
-    # make linter happy
-    return {}, ""
+        # run eval script in-line
+        eval_script = instance["eval_script"]
+        eval_cmd = f"bash <<'EOF'\n{eval_script}\nEOF"
+        obs = env.execute(eval_cmd)
+        # use the return value
+        ret["resolved"] = obs["returncode"] == 0
+        ret["eval_error"] = obs["output"] if not ret["resolved"] else None
+    update_evals_file(output_path, instance_id, model.config.model_name, instance_result["model_patch"], ret)
+
+
+def filter_instances(
+    instances: list[dict], *, filter_spec: str, slice_spec: str = "", shuffle: bool = False
+) -> list[dict]:
+    """Filter and slice a list of SWEBench instances."""
+    if shuffle:
+        instances = sorted(instances.copy(), key=lambda x: x["instance_id"])
+        random.seed(42)
+        random.shuffle(instances)
+    before_filter = len(instances)
+    instances = [instance for instance in instances if re.match(filter_spec, instance["instance_id"])]
+    if (after_filter := len(instances)) != before_filter:
+        logger.info(f"Instance filter: {before_filter} -> {after_filter} instances")
+    if slice_spec:
+        values = [int(x) if x else None for x in slice_spec.split(":")]
+        instances = instances[slice(*values)]
+        if (after_slice := len(instances)) != before_filter:
+            logger.info(f"Instance slice: {before_filter} -> {after_slice} instances")
+    return instances
+
+
+# fmt: off
+@app.command(help=_HELP_TEXT)
+def main(
+    dataset: str = typer.Option("SumanthRH/SWE-Bench_Verified", "--dataset", help="Path to the SWEBench dataset to use", rich_help_panel="Data selection"),
+    split: str = typer.Option("dev", "--split", help="Dataset split", rich_help_panel="Data selection"),
+    slice_spec: str = typer.Option("", "--slice", help="Slice specification (e.g., '0:5' for first 5 instances)", rich_help_panel="Data selection"),
+    filter_spec: str = typer.Option("", "--filter", help="Filter instance IDs by regex", rich_help_panel="Data selection"),
+    shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances", rich_help_panel="Data selection"),
+    output: str = typer.Option("", "-o", "--output", help="Output directory. Should contain a preds.json file with model predictions", rich_help_panel="Basic"),
+    workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing", rich_help_panel="Basic"),
+    model: str | None = typer.Option(None, "-m", "--model", help="Model to use", rich_help_panel="Basic"),
+    model_class: str | None = typer.Option(None, "-c", "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
+    redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
+    config_spec: Path = typer.Option( builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file", rich_help_panel="Basic"),
+    environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
+) -> None:
+    # fmt: on
+    output_path = Path(output)
+
+    predictions_file = output_path / "preds.json"
+    if not predictions_file.exists():
+        raise FileNotFoundError(f"Expected a `preds.json` file in output directory {output_path}")
+    logger.info(f"Results will be saved to {output_path}")
+    add_file_handler(output_path / "minisweagent_eval.log")
+
+    logger.info(f"Loading dataset {dataset}, split {split}...")
+    instances = list(load_dataset(dataset, split=split))
+
+    instances = filter_instances(instances, filter_spec=filter_spec, slice_spec=slice_spec, shuffle=shuffle)
+    if not redo_existing and (output_path / "evals.json").exists():
+        existing_instances = list(json.loads((output_path / "evals.json").read_text()).keys())
+        logger.info(f"Skipping {len(existing_instances)} existing instances")
+        instances = [instance for instance in instances if instance["instance_id"] not in existing_instances]
+    logger.info(f"Running on {len(instances)} instances...")
+
+    with open(output_path / "preds.json") as f:
+        predictions = json.load(f)
+
+    config = yaml.safe_load(get_config_path(config_spec).read_text())
+    if environment_class is not None:
+        config.setdefault("environment", {})["environment_class"] = environment_class
+    if model is not None:
+        config.setdefault("model", {})["model_name"] = model
+    if model_class is not None:
+        config.setdefault("model", {})["model_class"] = model_class
+
+    progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_eval_{time.time()}.yaml")
+
+    def process_futures(futures: dict[concurrent.futures.Future, str]):
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                future.result()
+            except concurrent.futures.CancelledError:
+                pass
+            except Exception as e:
+                instance_id = futures[future]
+                logger.error(f"Error in future for instance {instance_id}: {e}", exc_info=True)
+                progress_manager.on_uncaught_exception(instance_id, e)
+
+    with Live(progress_manager.render_group, refresh_per_second=4):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = {
+                executor.submit(evaluate_instance, instance, output_path, predictions[instance["instance_id"]], config): instance[
+                    "instance_id"
+                ]
+                for instance in instances
+            }
+            try:
+                process_futures(futures)
+            except KeyboardInterrupt:
+                logger.info("Cancelling all pending jobs. Press ^C again to exit immediately.")
+                for future in futures:
+                    if not future.running() and not future.done():
+                        future.cancel()
+                process_futures(futures)
+
+
+if __name__ == "__main__":
+    app()

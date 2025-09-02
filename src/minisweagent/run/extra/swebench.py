@@ -17,11 +17,12 @@ import yaml
 from datasets import load_dataset
 from rich.live import Live
 
+from minisweagent import Environment
 from minisweagent.agents.default import DefaultAgent
 from minisweagent.config import builtin_config_dir, get_config_path
+from minisweagent.environments import get_environment
 from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
-from minisweagent.run.extra.utils.swebench_utils import get_sb_environment
 from minisweagent.run.utils.save import save_traj
 from minisweagent.utils.log import add_file_handler, logger
 
@@ -64,6 +65,26 @@ class ProgressTrackingAgent(DefaultAgent):
         return super().step()
 
 
+def get_swebench_docker_image_name(instance: dict) -> str:
+    """Get the image name for a SWEBench instance."""
+    image_name = instance.get("image_name", None)
+    if image_name is None:
+        # Docker doesn't allow double underscore, so we replace them with a magic token
+        iid = instance["instance_id"]
+        id_docker_compatible = iid.replace("__", "_1776_")
+        image_name = f"swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
+    return image_name
+
+
+def get_sb_environment(config: dict, instance: dict) -> Environment:
+    image_name = get_swebench_docker_image_name(instance)
+    env_config = config.setdefault("environment", {})
+    if env_config.get("environment_class") == "singularity":
+        image_name = "docker://" + image_name
+    env_config["image"] = image_name
+    return get_environment(env_config, default_type="docker")
+
+
 def update_preds_file(output_path: Path, instance_id: str, model_name: str, result: str):
     """Update the output JSON file with results from a single instance."""
     with _OUTPUT_FILE_LOCK:
@@ -89,28 +110,11 @@ def remove_from_preds_file(output_path: Path, instance_id: str):
             output_path.write_text(json.dumps(output_data, indent=2))
 
 
-def evaluate_instance(instance, instance_id, result, config):
-    from minisweagent.run.extra.swebench_eval import evaluate_result
-
-    eval_result = {}
-    try:
-        eval_result, error = evaluate_result(instance, result, instance_id, "swebench", config)
-        logger.error(f"Error during evaluation {error}")
-        logger.error(f"traceback {traceback.format_exc()}")
-        eval_result["evaluation_error"] = error
-    except Exception as e:
-        logger.error(f"Error during evaluation {e}")
-        logger.error(f"traceback {traceback.format_exc()}")
-        eval_result["evaluation_error"] = e
-    return eval_result
-
-
 def process_instance(
     instance: dict,
     output_dir: Path,
     config: dict,
     progress_manager: RunBatchProgressManager,
-    run_eval: bool = False,
 ) -> None:
     """Process a single SWEBench instance."""
     instance_id = instance["instance_id"]
@@ -142,11 +146,6 @@ def process_instance(
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
     finally:
-        kwargs = {}
-        if run_eval:
-            progress_manager.update_instance_status(instance_id, "Running evaluation")
-            eval_result = evaluate_instance(instance, instance_id, result, config)
-            kwargs["eval_report"] = eval_result
         save_traj(
             agent,
             instance_dir / f"{instance_id}.traj.json",
@@ -155,7 +154,6 @@ def process_instance(
             extra_info=extra_info,
             instance_id=instance_id,
             print_fct=logger.info,
-            **kwargs,
         )
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
         progress_manager.on_instance_end(instance_id, exit_status)
@@ -196,7 +194,6 @@ def main(
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
     config_spec: Path = typer.Option( builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file", rich_help_panel="Basic"),
     environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
-    run_eval: bool = typer.Option(False, "--run-eval", help="Whether to run evaluation after generation.", rich_help_panel="Advanced")
 ) -> None:
     # fmt: on
     output_path = Path(output)
@@ -240,7 +237,7 @@ def main(
     with Live(progress_manager.render_group, refresh_per_second=4):
         with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
             futures = {
-                executor.submit(process_instance, instance, output_path, config, progress_manager, run_eval): instance[
+                executor.submit(process_instance, instance, output_path, config, progress_manager): instance[
                     "instance_id"
                 ]
                 for instance in instances
