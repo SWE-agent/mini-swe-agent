@@ -30,7 +30,7 @@ class DockerEnvironmentConfig:
     container_timeout: str = "2h"
     """Max duration to keep container running. Uses the same format as the sleep command."""
     pull_timeout: int = 120
-    """Timeout in seconds for pulling images"""
+    """Timeout in seconds for pulling images."""
 
 
 class DockerEnvironment:
