@@ -14,19 +14,21 @@ def get_screen_text(app: TextualAgent) -> str:
     """Extract all text content from the app's UI."""
     text_parts = [app.title]
 
-    # Get all Static widgets in the main content container
-    content_container = app.query_one("#content")
-    for static_widget in content_container.query("Static"):
-        if static_widget.display:
-            if hasattr(static_widget, "content") and static_widget.content:  # type: ignore[attr-defined]
-                text_parts.append(str(static_widget.content))  # type: ignore[attr-defined]
-
-    # Also check the input container if it's visible
-    if app.input_container.display:
-        for static_widget in app.input_container.query("Static"):
+    def _append_visible_static_text(container):
+        for static_widget in container.query("Static"):
             if static_widget.display:
                 if hasattr(static_widget, "content") and static_widget.content:  # type: ignore[attr-defined]
                     text_parts.append(str(static_widget.content))  # type: ignore[attr-defined]
+                elif hasattr(static_widget, "renderable") and static_widget.renderable:  # type: ignore[attr-defined]
+                    text_parts.append(str(static_widget.renderable))  # type: ignore[attr-defined]
+
+    # Get all Static widgets in the main content container
+    content_container = app.query_one("#content")
+    _append_visible_static_text(content_container)
+
+    # Also check the input container if it's visible
+    if app.input_container.display:
+        _append_visible_static_text(app.input_container)
 
     return "\n".join(text_parts)
 
