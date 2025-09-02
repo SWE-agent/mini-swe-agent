@@ -25,7 +25,7 @@
 
         - `-o`, `--output` - Output directory containing generated trajectories in a `preds.json` file. This is the output from `mini-extra swebench` or `mini-extra swebench-single`.
         - `-m`, `--model` - Model to use
-        - `-c`, `--config` - Path to a config file (default: `swebench_eval.yaml` in the `config` directory)
+        - `-c`, `--config` - Path to a config file (default: `swebench.yaml` in the `config` directory)
         - `-w`, `--workers` - Number of worker threads for parallel processing (default: `1`)
 
         Data selection flags:
@@ -65,10 +65,10 @@
 
 ??? note "Default config"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/extra/swebench_eval.yaml)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/extra/swebench.yaml)
 
     ```yaml
-    --8<-- "src/minisweagent/config/extra/swebench_eval.yaml"
+    --8<-- "src/minisweagent/config/extra/swebench.yaml"
     ```
 
 ??? note "`swebench_eval.py` run script"
