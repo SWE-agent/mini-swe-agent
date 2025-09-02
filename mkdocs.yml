@@ -68,6 +68,7 @@ nav:
       - "Local models": advanced/local_models.md
       - "Control flow": advanced/control_flow.md
       - "Cookbook": advanced/cookbook.md
+      - "SWE-bench Evaluation": advanced/swebench_eval.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
   - API Reference:

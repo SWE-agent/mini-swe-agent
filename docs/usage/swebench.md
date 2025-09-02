@@ -6,6 +6,7 @@
     * `mini-extra swebench` runs on all task instances in batch mode.
     * `mini-extra swebench-single` runs on a single task instance with interactivity (useful for debugging).
     * You can also take a look at the runscripts to figure out how to build your own batch processing pipeline.
+    * For evaluation, we provide `mini-extra swebench-eval` to evaluate the trajectories on SWE-bench. Refer to [swebench-eval](../advanced/swebench_eval.md) for more details.
 
 <figure markdown="span">
   <div class="gif-container gif-container-styled" data-glightbox-disabled>
@@ -139,7 +140,7 @@ The dataset needs to be loadable as `datasets.load_dataset(path, split=split)`.
 
 > Some progress runners are stuck at 'initializing task' for a very long time
 
-They might be pulling docker containers -- the run sshould start immediately the next time.
+They might be pulling docker containers -- the run should start immediately the next time.
 
 > I have some docker issues
 
