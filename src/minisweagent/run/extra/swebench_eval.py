@@ -63,7 +63,7 @@ def evaluate_instance(
     instance_result: dict[str, Any],
     config: dict,
 ) -> None:
-    """Process a single SWEBench instance."""
+    """Evaluate a single SWEBench instance."""
     instance_id = instance["instance_id"]
     output_path = output_dir / "evals.json"
 
