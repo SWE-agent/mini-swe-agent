@@ -491,6 +491,7 @@ def test_mini_e_help():
         ("github-issue", ["github-issue", "gh"]),
         ("swebench", ["swebench"]),
         ("swebench-single", ["swebench-single"]),
+        ("swebench-eval", ["swebench-eval"]),
     ],
 )
 def test_mini_extra_subcommand_help(subcommand: str, aliases: list[str]):
