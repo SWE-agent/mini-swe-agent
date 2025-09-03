@@ -88,6 +88,22 @@ def test_get_image_name_with_complex_instance_id():
     assert get_swebench_docker_image_name(instance) == expected
 
 
+def test_get_image_name_with_ghcr_custom_image_prefix():
+    """Test get_image_name with ghcr image_prefix argument. Image name should be unchanged"""
+    instance = {"instance_id": "swe-agent__test-repo__1"}
+    prefix = "ghcr.io/epoch-research/swe-bench.eval.x86_64"
+    expected = f"{prefix}.swe-agent__test-repo__1:latest"
+    assert get_swebench_docker_image_name(instance, image_prefix=prefix) == expected
+
+
+def test_get_image_name_with_non_ghcr_custom_image_prefix():
+    """Test get_image_name with non-ghcr image_prefix argument. Image name should be modified with 1776"""
+    instance = {"instance_id": "swe-agent__test-repo__1"}
+    prefix = "docker.io/epoch-research/swe-bench.eval.x86_64"
+    expected = f"{prefix}.swe-agent_1776_test-repo_1776_1:latest"
+    assert get_swebench_docker_image_name(instance, image_prefix=prefix) == expected
+
+
 def test_filter_instances_no_filters():
     """Test filter_instances with no filtering applied"""
     instances = [{"instance_id": "repo1__test1"}, {"instance_id": "repo2__test2"}, {"instance_id": "repo3__test3"}]

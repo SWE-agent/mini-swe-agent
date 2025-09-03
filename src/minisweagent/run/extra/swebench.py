@@ -46,6 +46,7 @@ DATASET_MAPPING = {
     "_test": "klieret/swe-bench-dummy-test-dataset",
 }
 
+DEFAULT_IMAGE_PREFIX = "swebench/sweb.eval.x86_64"
 
 _OUTPUT_FILE_LOCK = threading.Lock()
 
@@ -66,21 +67,23 @@ class ProgressTrackingAgent(DefaultAgent):
         return super().step()
 
 
-def get_swebench_docker_image_name(instance: dict) -> str:
+def get_swebench_docker_image_name(instance: dict, *, image_prefix: str = DEFAULT_IMAGE_PREFIX) -> str:
     """Get the image name for a SWEBench instance."""
     image_name = instance.get("image_name", None)
     if image_name is None:
-        # Docker doesn't allow double underscore, so we replace them with a magic token
         iid = instance["instance_id"]
-        id_docker_compatible = iid.replace("__", "_1776_")
-        image_name = f"swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
+        # Docker doesn't allow double underscore, so we replace them with a magic token
+        # ghcr does allow double underscores, so we don't do this replacement there
+        if not image_prefix.startswith("ghcr.io"):
+            iid = iid.replace("__", "_1776_")
+        image_name = f"{image_prefix}.{iid}:latest".lower()
     return image_name
 
 
 def get_sb_environment(config: dict, instance: dict) -> Environment:
     env_config = config.setdefault("environment", {})
     env_config["environment_class"] = env_config.get("environment_class", "docker")
-    image_name = get_swebench_docker_image_name(instance)
+    image_name = get_swebench_docker_image_name(instance, image_prefix=config.get("image_prefix", DEFAULT_IMAGE_PREFIX))
     if env_config["environment_class"] == "docker":
         env_config["image"] = image_name
     elif env_config["environment_class"] == "singularity":
@@ -198,6 +201,7 @@ def main(
     shuffle: bool = typer.Option(False, "--shuffle", help="Shuffle instances", rich_help_panel="Data selection"),
     output: str = typer.Option("", "-o", "--output", help="Output directory", rich_help_panel="Basic"),
     workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing", rich_help_panel="Basic"),
+    image_prefix: str = typer.Option(DEFAULT_IMAGE_PREFIX, "--image-prefix", help="Prefix for swebench docker image", rich_help_panel="Advanced"),
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use", rich_help_panel="Basic"),
     model_class: str | None = typer.Option(None, "-c", "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
@@ -229,6 +233,7 @@ def main(
         config.setdefault("model", {})["model_name"] = model
     if model_class is not None:
         config.setdefault("model", {})["model_class"] = model_class
+    config["image_prefix"] = image_prefix
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
