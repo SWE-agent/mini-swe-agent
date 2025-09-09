@@ -75,6 +75,9 @@ class LitellmModel:
         GLOBAL_MODEL_STATS.add(cost)
         return {
             "content": response.choices[0].message.content or "",  # type: ignore
+            "extra": {
+                "response": response,
+            },
         }
 
     def get_template_vars(self) -> dict[str, Any]:
