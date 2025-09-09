@@ -47,6 +47,7 @@ def test_configure_if_first_time_called():
             yolo=False,
             output=None,
             visual=False,
+            model_class=None,
         )
 
         # Verify configure_if_first_time was called
@@ -86,6 +87,7 @@ def test_mini_command_calls_run_interactive():
             yolo=False,
             output=None,
             visual=False,
+            model_class=None,
         )
 
         # Verify InteractiveAgent was instantiated
@@ -130,6 +132,7 @@ def test_mini_v_command_calls_run_textual():
             yolo=False,
             output=None,
             visual=True,
+            model_class=None,
         )
 
         # Verify TextualAgent was instantiated
@@ -176,6 +179,7 @@ def test_mini_calls_prompt_when_no_task_provided():
             yolo=False,
             output=None,
             visual=False,
+            model_class=None,
         )
 
         # Verify prompt was called
@@ -222,6 +226,7 @@ def test_mini_v_calls_prompt_when_no_task_provided():
             yolo=False,
             output=None,
             visual=True,
+            model_class=None,
         )
 
         # Verify prompt was called
@@ -270,6 +275,7 @@ def test_mini_with_explicit_model():
             yolo=True,
             output=None,
             visual=False,
+            model_class=None,
         )
 
         # Verify get_model was called with the explicit model
@@ -314,6 +320,7 @@ def test_yolo_mode_sets_correct_agent_config():
             yolo=True,
             output=None,
             visual=False,
+            model_class=None,
         )
 
         # Verify InteractiveAgent was called with yolo mode
@@ -358,6 +365,7 @@ def test_confirm_mode_sets_correct_agent_config():
             yolo=False,
             output=None,
             visual=False,
+            model_class=None,
         )
 
         # Verify InteractiveAgent was called with confirm mode
@@ -559,6 +567,7 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
             output=None,
             visual=False,
             exit_immediately=True,  # This should set confirm_exit=False
+            model_class=None,
         )
 
         # Verify the agent's config has confirm_exit set to False
@@ -599,6 +608,7 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
             yolo=False,
             output=None,
             visual=False,
+            model_class=None,
         )
 
         # Verify the agent's config has confirm_exit set to True
