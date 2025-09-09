@@ -37,13 +37,16 @@ def fetch_github_issue(issue_url: str) -> str:
     return f"GitHub Issue: {title}\n\n{body}"
 
 
+# fmt: off
 @app.command()
 def main(
     issue_url: str = typer.Option(prompt="Enter GitHub issue URL", help="GitHub issue URL"),
     config: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
+    model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
 ) -> InteractiveAgent:
+    # fmt: on
     """Run mini-SWE-agent on a GitHub issue"""
     configure_if_first_time()
 
@@ -51,6 +54,8 @@ def main(
     _agent_config = _config.setdefault("agent", {})
     if yolo:
         _agent_config["mode"] = "yolo"
+    if model_class is not None:
+        _config.setdefault("model", {})["model_class"] = model_class
 
     task = fetch_github_issue(issue_url)
 
