@@ -116,23 +116,3 @@ class OpenRouterModel:
 
     def get_template_vars(self) -> dict[str, Any]:
         return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
-
-
-if __name__ == "__main__":
-    # Simple test - hardcode your model here
-    model = OpenRouterModel(
-        model_name="moonshotai/kimi-k2-0905",  # Change this to your preferred model
-        # model_kwargs can include temperature, max_tokens, etc.
-        model_kwargs={"temperature": 0.7, "max_tokens": 100},
-    )
-
-    messages = [{"role": "user", "content": "Hello! What is 2+2?"}]
-
-    try:
-        print("Making OpenRouter API call...")
-        response = model.query(messages)
-        print(f"Response: {response}")
-        print(f"Model cost for this call: ${model.cost:.6f}")
-        print(f"Total calls made: {model.n_calls}")
-    except Exception as e:
-        print(f"Error: {e}")
