@@ -63,9 +63,12 @@ nav:
       - "<code>mini -v</code>": usage/mini_v.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
+    - "Models":
+      - "Quick start": models/quickstart.md
+      - "Local models": models/local_models.md
+      - "Troubleshooting": models/troubleshooting.md
     - "Advanced":
       - "Configuration": advanced/configuration.md
-      - "Local models": advanced/local_models.md
       - "Control flow": advanced/control_flow.md
       - "Cookbook": advanced/cookbook.md
     - "FAQ": faq.md

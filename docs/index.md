@@ -243,6 +243,6 @@ Please check the [github release notes](https://github.com/SWE-agent/mini-swe-ag
 
 ## 📣 Documentation updates
 
-* Jul 27: More notes on [local models](advanced/local_models.md)
+* Jul 27: More notes on [local models](models/local_models.md)
 
 {% include-markdown "_footer.md" %}
