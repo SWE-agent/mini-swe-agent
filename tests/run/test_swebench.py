@@ -70,14 +70,14 @@ def test_get_image_name_with_existing_image_name():
 def test_get_image_name_without_image_name():
     """Test get_image_name when image_name needs to be constructed"""
     instance = {"instance_id": "swe-agent__test-repo__1"}
-    expected = "swebench/sweb.eval.x86_64.swe-agent_1776_test-repo_1776_1:latest"
+    expected = "docker.io/swebench/sweb.eval.x86_64.swe-agent_1776_test-repo_1776_1:latest"
     assert get_swebench_docker_image_name(instance) == expected
 
 
 def test_get_image_name_with_none_image_name():
     """Test get_image_name when image_name is explicitly None"""
     instance = {"image_name": None, "instance_id": "django__django__4.0"}
-    expected = "swebench/sweb.eval.x86_64.django_1776_django_1776_4.0:latest"
+    expected = "docker.io/swebench/sweb.eval.x86_64.django_1776_django_1776_4.0:latest"
     assert get_swebench_docker_image_name(instance) == expected
 
 
