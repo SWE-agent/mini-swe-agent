@@ -84,7 +84,7 @@ def test_get_image_name_with_none_image_name():
 def test_get_image_name_with_complex_instance_id():
     """Test get_image_name with complex instance_id containing multiple double underscores"""
     instance = {"instance_id": "project__sub__module__version__1.2.3"}
-    expected = "swebench/sweb.eval.x86_64.project_1776_sub_1776_module_1776_version_1776_1.2.3:latest"
+    expected = "docker.io/swebench/sweb.eval.x86_64.project_1776_sub_1776_module_1776_version_1776_1.2.3:latest"
     assert get_swebench_docker_image_name(instance) == expected
 
 
