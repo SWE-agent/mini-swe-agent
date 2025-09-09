@@ -333,7 +333,7 @@ def test_yolo_mode_sets_correct_agent_config():
 
 
 def test_confirm_mode_sets_correct_agent_config():
-    """Test that confirm mode (default) sets the correct agent configuration."""
+    """Test that when yolo=False, no explicit mode is set (defaults to None)."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
         patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
@@ -368,11 +368,11 @@ def test_confirm_mode_sets_correct_agent_config():
             model_class=None,
         )
 
-        # Verify InteractiveAgent was called with confirm mode
+        # Verify InteractiveAgent was called with no explicit mode (defaults to None)
         mock_interactive_agent_class.assert_called_once()
         args, kwargs = mock_interactive_agent_class.call_args
-        # The agent_config should contain the mode as a keyword argument
-        assert kwargs.get("mode") == "confirm"
+        # The agent_config should not contain mode when yolo=False (defaults to None)
+        assert kwargs.get("mode") is None
         # Verify agent.run was called
         mock_agent.run.assert_called_once_with("Test confirm task")
 
