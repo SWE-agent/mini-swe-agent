@@ -2201,7 +2201,7 @@ For example, you could use</p>
         <span class="c1"># Docker doesn't allow double underscore, so we replace them with a magic token</span>
         <span class="n">iid</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"instance_id"</span><span class="p">]</span>
         <span class="n">id_docker_compatible</span> <span class="o">=</span> <span class="n">iid</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"__"</span><span class="p">,</span> <span class="s2">"_1776_"</span><span class="p">)</span>
-        <span class="n">image_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"swebench/sweb.eval.x86_64.</span><span class="si">{</span><span class="n">id_docker_compatible</span><span class="si">}</span><span class="s2">:latest"</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">image_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"docker.io/swebench/sweb.eval.x86_64.</span><span class="si">{</span><span class="n">id_docker_compatible</span><span class="si">}</span><span class="s2">:latest"</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">image_name</span>
 
 
