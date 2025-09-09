@@ -60,7 +60,7 @@ class SingularityEnvironment:
     def get_template_vars(self) -> dict[str, Any]:
         return asdict(self.config)
 
-    def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
+    def execute(self, command: str, cwd: str = "", timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in a Singularity container and return the result as a dict."""
         cmd = [self.config.executable, "exec"]
 
@@ -81,7 +81,7 @@ class SingularityEnvironment:
         result = subprocess.run(
             cmd,
             text=True,
-            timeout=self.config.timeout,
+            timeout=timeout if timeout is not None else self.config.timeout,
             encoding="utf-8",
             errors="replace",
             stdout=subprocess.PIPE,

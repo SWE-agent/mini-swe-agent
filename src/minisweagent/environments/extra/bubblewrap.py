@@ -77,7 +77,7 @@ class BubblewrapEnvironment:
         self.working_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
         self.working_dir.mkdir(parents=True)
 
-    def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
+    def execute(self, command: str, cwd: str = "", timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the bubblewrap environment and return the result as a dict."""
         cwd = cwd or self.config.cwd or str(self.working_dir)
 
@@ -92,7 +92,7 @@ class BubblewrapEnvironment:
         result = subprocess.run(
             cmd,
             text=True,
-            timeout=self.config.timeout,
+            timeout=timeout if timeout is not None else self.config.timeout,
             encoding="utf-8",
             errors="replace",
             stdout=subprocess.PIPE,
