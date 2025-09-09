@@ -102,17 +102,6 @@ def get_model_class(model_name: str, model_class: str = "") -> type:
 
         return AnthropicModel
 
-    if any(s in model_name.lower() for s in ["openrouter", "open-router"]):
-        # Check if it's specifically requesting the claude version
-        if "claude" in model_name.lower():
-            from minisweagent.models.openrouter_model_claude import OpenRouterModel
-
-            return OpenRouterModel
-        else:
-            from minisweagent.models.openrouter_model import OpenRouterModel
-
-            return OpenRouterModel
-
     # Default to LitellmModel
     from minisweagent.models.litellm_model import LitellmModel
 
