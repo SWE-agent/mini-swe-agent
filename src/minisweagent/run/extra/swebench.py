@@ -73,7 +73,7 @@ def get_swebench_docker_image_name(instance: dict) -> str:
         # Docker doesn't allow double underscore, so we replace them with a magic token
         iid = instance["instance_id"]
         id_docker_compatible = iid.replace("__", "_1776_")
-        image_name = f"swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
+        image_name = f"docker.io/swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
     return image_name
 
 
@@ -81,10 +81,8 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     env_config = config.setdefault("environment", {})
     env_config["environment_class"] = env_config.get("environment_class", "docker")
     image_name = get_swebench_docker_image_name(instance)
-    if env_config["environment_class"] == "docker":
+    if env_config["environment_class"] in {"docker", "singularity"}:
         env_config["image"] = image_name
-    elif env_config["environment_class"] == "singularity":
-        env_config["image"] = "docker://" + image_name
     env = get_environment(env_config)
     if startup_command := config.get("run", {}).get("env_startup_command"):
         startup_command = Template(startup_command).render(**instance)
