@@ -15,7 +15,7 @@ from pathlib import Path
 import typer
 import yaml
 from datasets import load_dataset
-from jinja2 import Template
+from jinja2 import StrictUndefined, Template
 from rich.live import Live
 
 from minisweagent import Environment
@@ -87,7 +87,7 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
         env_config["image"] = "docker://" + image_name
     env = get_environment(env_config)
     if startup_command := config.get("run", {}).get("env_startup_command"):
-        startup_command = Template(startup_command).render(**instance)
+        startup_command = Template(startup_command, undefined=StrictUndefined).render(**instance)
         out = env.execute(startup_command)
         if out["returncode"] != 0:
             raise RuntimeError(f"Error executing startup command: {out}")

@@ -5,7 +5,7 @@ import subprocess
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 
-from jinja2 import Template
+from jinja2 import StrictUndefined, Template
 
 from minisweagent import Environment, Model
 
@@ -63,7 +63,9 @@ class DefaultAgent:
 
     def render_template(self, template: str, **kwargs) -> str:
         template_vars = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
-        return Template(template).render(**kwargs, **template_vars, **self.extra_template_vars)
+        return Template(template, undefined=StrictUndefined).render(
+            **kwargs, **template_vars, **self.extra_template_vars
+        )
 
     def add_message(self, role: str, content: str, **kwargs):
         self.messages.append({"role": role, "content": content, **kwargs})
