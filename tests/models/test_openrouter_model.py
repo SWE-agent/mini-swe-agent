@@ -80,7 +80,7 @@ def test_openrouter_model_successful_query(mock_response):
 
             # Verify response
             assert result["content"] == "Hello! 2+2 equals 4."
-            assert result["response"] == mock_response
+            assert result["extra"]["response"] == mock_response
 
             # Verify cost tracking
             assert model.cost == 0.000243
