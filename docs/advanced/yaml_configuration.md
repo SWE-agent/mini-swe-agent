@@ -7,6 +7,8 @@
     * For global environment settings (API keys, default model, etc., basically anything that can be set as environment variables), see [global configuration](global_configuration.md).
     * Want more? See the [cookbook](cookbook.md) for subclassing & developing your own agent.
 
+## Overall structure
+
 Configuration files look like this:
 
 ??? note "Configuration file"
@@ -15,7 +17,16 @@ Configuration files look like this:
     --8<-- "src/minisweagent/config/mini.yaml"
     ```
 
-## Prompt templates
+We use the following top-level keys:
+
+- `agent`: Agent configuration (prompt templates, cost limits etc.)
+- `environment`: Environment configuration (if you want to run in a docker container, etc.)
+- `model`: Model configuration (model name, reasoning strength, etc.)
+- `run`: Run configuration (output file, etc.)
+
+## Agent configuration
+
+### Prompt templates
 
 We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).
 TL;DR: You include variables with double curly braces, e.g. `{{task}}`, but you can also do fairly complicated logic like this:
