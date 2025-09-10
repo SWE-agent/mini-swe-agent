@@ -2104,8 +2104,8 @@ See the <a href="../../advanced/configuration/">configuration guide</a> for more
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"Error calculating cost for model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. "</span>
-                <span class="s2">"Please check the 'Updating the model registry' section in the documentation. "</span>
-                <span class="s2">"http://bit.ly/4p31bi4 Still stuck? Please open a github issue for help!"</span>
+                <span class="s2">"Please check the 'Updating the model registry' section in the documentation at "</span>
+                <span class="s2">"https://klieret.short.gy/litellm-model-registry Still stuck? Please open a github issue for help!"</span>
             <span class="p">)</span>
             <span class="k">raise</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
