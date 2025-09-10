@@ -24,7 +24,7 @@ class SwerexDockerEnvironment:
         self.deployment = DockerDeployment(image=self.config.image, **self.config.deployment_extra_kwargs)
         asyncio.run(self.deployment.start())
 
-    def execute(self, command: str, cwd: str = "", timeout: int | None = None) -> dict[str, Any]:
+    def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the environment and return the raw output."""
         output = asyncio.run(
             self.deployment.runtime.execute(
@@ -33,7 +33,7 @@ class SwerexDockerEnvironment:
                     shell=True,
                     check=False,
                     cwd=cwd or self.config.cwd,
-                    timeout=timeout if timeout is not None else self.config.timeout,
+                    timeout=timeout or self.config.timeout,
                     merge_output_streams=True,
                 )
             )
