@@ -76,7 +76,7 @@ class LitellmModel:
         return {
             "content": response.choices[0].message.content or "",  # type: ignore
             "extra": {
-                "response": response.json(),
+                "response": response.model_dump(),
             },
         }
 
