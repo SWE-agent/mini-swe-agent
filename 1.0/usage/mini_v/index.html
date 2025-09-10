@@ -887,6 +887,8 @@
       
         
       
+        
+      
     
     
     
@@ -906,7 +908,7 @@
   
   
   <span class="md-ellipsis">
-    Advanced
+    Guides
     
   </span>
   
@@ -917,7 +919,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Advanced
+            Guides
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -928,12 +930,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../../advanced/configuration/" class="md-nav__link">
+      <a href="../../advanced/global_configuration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Configuration
+    Global configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/yaml_configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Yaml config files
     
   </span>
   
@@ -1913,9 +1938,9 @@ or in our <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s
 <ul>
 <li><code>-h</code>/<code>--help</code>: Show help</li>
 <li><code>-t</code>/<code>--task</code>: Specify a task to run (else you will be prompted)</li>
-<li><code>-c</code>/<code>--config</code>: Specify a config file to use, else we will use <a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml"><code>mini.yaml</code></a> or the config <code>MSWEA_MINI_CONFIG_PATH</code> environment variable (see <a href="../../advanced/configuration/">configuration</a>)
-  It's enough to specify the name of the config file, e.g., <code>-c mini.yaml</code> (see <a href="../../advanced/configuration/">configuration</a> for how it is resolved).</li>
-<li><code>-m</code>/<code>--model</code>: Specify a model to use, else we will use the model <code>MSWEA_MODEL_NAME</code> environment variable (see <a href="../../advanced/configuration/">configuration</a>)</li>
+<li><code>-c</code>/<code>--config</code>: Specify a config file to use, else we will use <a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml"><code>mini.yaml</code></a> or the config <code>MSWEA_MINI_CONFIG_PATH</code> environment variable (see <a href="../../advanced/global_configuration/">global configuration</a>)
+  It's enough to specify the name of the config file, e.g., <code>-c mini.yaml</code> (see <a href="../../advanced/global_configuration/">global configuration</a> for how it is resolved).</li>
+<li><code>-m</code>/<code>--model</code>: Specify a model to use, else we will use the model <code>MSWEA_MODEL_NAME</code> environment variable (see <a href="../../advanced/global_configuration/">global configuration</a>)</li>
 <li><code>-y</code>/<code>--yolo</code>: Start in <code>yolo</code> mode (see below)</li>
 </ul>
 <h2 id="key-bindings">Key bindings</h2>
