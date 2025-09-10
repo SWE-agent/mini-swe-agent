@@ -67,8 +67,9 @@ nav:
       - "Quick start": models/quickstart.md
       - "Local models": models/local_models.md
       - "Troubleshooting": models/troubleshooting.md
-    - "Advanced":
-      - "Configuration": advanced/configuration.md
+    - "Guides":
+      - "Global configuration": advanced/global_configuration.md
+      - "Yaml config files": advanced/yaml_configuration.md
       - "Control flow": advanced/control_flow.md
       - "Cookbook": advanced/cookbook.md
     - "FAQ": faq.md

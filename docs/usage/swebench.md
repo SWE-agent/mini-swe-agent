@@ -139,7 +139,7 @@
 > Can I set global cost limits?
 
 Yes, you can set global cost limits with the `MSWEA_GLOBAL_CALL_LIMIT` and `MSWEA_GLOBAL_COST_LIMIT` environment variables/global config.
-See [configuration](../advanced/configuration.md) for more details.
+See [global configuration](../advanced/global_configuration.md) for more details.
 
 > What happens to uncompleted tasks when I abort with KeyboardInterrupt?
 
