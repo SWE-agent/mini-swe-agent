@@ -168,7 +168,8 @@ agent.run("Write a sudoku game")
 * [Quick start](https://mini-swe-agent.com/latest/quickstart/)
 * [`mini`](https://mini-swe-agent.com/latest/usage/mini/)
 * [FAQ](https://mini-swe-agent.com/latest/faq/)
-* [Configuration](https://mini-swe-agent.com/latest/advanced/configuration/)
+* [Global configuration](https://mini-swe-agent.com/latest/advanced/global_configuration/)
+* [Yaml configuration files](https://mini-swe-agent.com/latest/advanced/yaml_configuration/)
 * [Power up](https://mini-swe-agent.com/latest/advanced/cookbook/)
 
 </td>
@@ -204,7 +205,8 @@ Read more in our [documentation](https://mini-swe-agent.com/latest/):
 
 * [Quick start guide](https://mini-swe-agent.com/latest/quickstart/)
 * More on [`mini`](https://mini-swe-agent.com/latest/usage/mini/) and [`mini -v`](https://mini-swe-agent.com/latest/usage/mini_v/)
-* [Configuration](https://mini-swe-agent.com/latest/advanced/configuration/)
+* [Global configuration](https://mini-swe-agent.com/latest/advanced/global_configuration/)
+* [Yaml configuration files](https://mini-swe-agent.com/latest/advanced/yaml_configuration/)
 * [Power up with the cookbook](https://mini-swe-agent.com/latest/advanced/cookbook/)
 * [FAQ](https://mini-swe-agent.com/latest/faq/)
 * [Contribute!](https://mini-swe-agent.com/latest/contributing/)
