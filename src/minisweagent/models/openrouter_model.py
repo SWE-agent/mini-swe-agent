@@ -110,7 +110,7 @@ class OpenRouterModel:
         return {
             "content": response["choices"][0]["message"]["content"] or "",
             "extra": {
-                "response": response.json(),
+                "response": response,  # already is json
             },
         }
 
