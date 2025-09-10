@@ -26,6 +26,12 @@ We use the following top-level keys:
 
 ## Agent configuration
 
+Different agent classes might have slightly different configuration options.
+You can find the full list of options in the [API reference](../reference/agents/default.md).
+
+To use a different agent class, you can set the `agent_class` key to the name of the agent class you want to use
+or even to an import path (to use your own custom agent class even if it is not yet part of the mini-SWE-agent package).
+
 ### Prompt templates
 
 We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).
