@@ -61,12 +61,7 @@ class SingularityEnvironment:
         return asdict(self.config)
 
     def execute(self, command: str, cwd: str = "", timeout: int | None = None) -> dict[str, Any]:
-        """Execute a command in a Singularity container and return the result as a dict.
-
-        Args:
-            cwd: Override for the current working directory
-            timeout: Override for command timeout
-        """
+        """Execute a command in a Singularity container and return the result as a dict."""
         cmd = [self.config.executable, "exec"]
 
         # Do not inherit directories and env vars from host
