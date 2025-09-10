@@ -72,6 +72,7 @@ nav:
       - "Yaml config files": advanced/yaml_configuration.md
       - "Control flow": advanced/control_flow.md
       - "Cookbook": advanced/cookbook.md
+      - "SWE-bench Evaluation": advanced/swebench_eval.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
   - API Reference:
