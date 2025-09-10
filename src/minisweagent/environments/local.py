@@ -18,7 +18,12 @@ class LocalEnvironment:
         self.config = config_class(**kwargs)
 
     def execute(self, command: str, cwd: str = "", timeout: int | None = None):
-        """Execute a command in the local environment and return the result as a dict."""
+        """Execute a command in the local environment and return the result as a dict.
+
+        Args:
+            cwd: Override for the current working directory
+            timeout: Override for command timeout
+        """
         cwd = cwd or self.config.cwd or os.getcwd()
         result = subprocess.run(
             command,
