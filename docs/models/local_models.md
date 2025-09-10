@@ -119,3 +119,5 @@ model:
 
     We welcome concrete examples of how to use local models per pull request into this guide.
     Please add your example here.
+
+--8<-- "docs/_footer.md"

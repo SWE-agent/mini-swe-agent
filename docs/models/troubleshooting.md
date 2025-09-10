@@ -71,3 +71,5 @@ You need to switch to a config file that does not specify temperature, e.g., `mi
 To do this, add `-c mini_no_temp` to your `mini` command.
 
 We are working on a better solution for this (see [this issue](https://github.com/SWE-agent/mini-swe-agent/issues/488)).
+
+--8<-- "docs/_footer.md"

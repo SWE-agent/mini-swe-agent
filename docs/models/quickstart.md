@@ -108,3 +108,5 @@ There are several ways to set your API keys:
 
 To find the corresponding API key, check the previous section.
 
+--8<-- "docs/_footer.md"
+
