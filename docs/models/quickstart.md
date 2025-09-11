@@ -108,5 +108,85 @@ There are several ways to set your API keys:
 
 To find the corresponding API key, check the previous section.
 
+## Extra settings
+
+To configure reasoning efforts or similar settings, you need to edit the [agent config file](../advanced/yaml_configuration.md).
+
+Here's a few examples:
+
+=== "Temperature"
+
+    ```yaml
+    model:
+      model_kwargs:
+        model_name: "anthropic/claude-sonnet-4-20250514"
+        temperature: 0.0
+    ```
+
+    Note that temperature isn't supported by all models.
+
+=== "GPT-5 reasoning effort"
+
+    ```yaml
+    model:
+      model_name: "gpt-5-mini"
+      model_kwargs:
+        drop_params: true
+        reasoning_effort: "high"
+        verbosity: "medium"
+    ```
+
+=== "OpenRouter"
+
+    This example explicitly sets the model class to `openrouter` (see the next section for more details).
+    It also explicitly sets the providers to disable switching between them.
+
+    ```yaml
+    model:
+        model_name: "moonshotai/kimi-k2-0905"
+        model_class: "openrouter"
+        model_kwargs:
+            temperature: 0.0
+            provider:
+            allow_fallbacks: false
+            only: ["Moonshot AI"]
+    ```
+
+=== "Local models"
+
+    ```yaml
+    model:
+      model_name: "my-local-model"
+      model_kwargs:
+        custom_llm_provider: "openai"
+        api_base="https://..."
+        ...
+    ```
+
+    See [this guide](local_models.md) for more details on local models.
+    In particular, you need to configure token costs for local models.
+
+## Model classes
+
+We support the various models through different backends.
+By default (if you only specify the model name), we pick the best backend for you.
+This will almost always default to `litellm` (with Anthropic models being a special case as they need to have explicit cache breakpoint handling).
+
+However, there are a few other backends that you can use and specify with the `--model-class` flag or the
+`model.model_class` key in the [agent config file](../advanced/yaml_configuration.md).
+
+* **`litellm`** ([`LitellmModel`](../reference/models/litellm.md)) - **Default and recommended**. Supports most models through [litellm](https://github.com/BerriAI/litellm). Works with OpenAI, Anthropic, Google, and many other providers.
+
+* **`anthropic`** ([`AnthropicModel`](../reference/models/anthropic.md)) - Wrapper around `LitellmModel` for Anthropic models that adds cache breakpoint handling.
+
+* **`openrouter`** ([`OpenRouterModel`](../reference/models/openrouter.md)) - Direct integration with [OpenRouter](https://openrouter.ai/) API for accessing various models through a single endpoint.
+
+On top, there's a few more exotic model classes that you can use:
+
+* **`deterministic`** ([`DeterministicModel`](../reference/models/test_models.md)) - Returns predefined responses for testing and development purposes.
+* **`minisweagent.models.extra.roulette.RouletteModel` and `minisweagent.models.extra.roulette.InterleavingModel`** ([`RouletteModel`](../reference/models/extra.md) and [`InterleavingModel`](../reference/models/extra.md)) - Randomly selects or interleaves multiple configured models for each query. See [this blog post](https://www.swebench.com/SWE-bench/blog/2025/08/19/mini-roulette/) for more details.
+
+As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the mini-SWE-agent package).
+
 --8<-- "docs/_footer.md"
 

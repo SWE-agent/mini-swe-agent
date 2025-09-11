@@ -71,7 +71,7 @@ nav:
       - "Global configuration": advanced/global_configuration.md
       - "Yaml config files": advanced/yaml_configuration.md
       - "Control flow": advanced/control_flow.md
-      - "Cookbook": advanced/cookbook.md
+      - "Python bindings": advanced/cookbook.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
   - API Reference:
@@ -83,7 +83,9 @@ nav:
     - Models:
       - "LitellmModel": "reference/models/litellm.md"
       - "AnthropicModel": "reference/models/anthropic.md"
+      - "OpenRouterModel": "reference/models/openrouter.md"
       - "DeterministicModel": "reference/models/test_models.md"
+      - "Extra Models": "reference/models/extra.md"
       - "Model Utilities": "reference/models/utils.md"
     - Environments:
       - "LocalEnvironment": "reference/environments/local.md"
