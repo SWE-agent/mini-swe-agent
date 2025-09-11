@@ -767,6 +767,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#extra-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extra settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model classes
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -962,7 +980,7 @@
   
   
   <span class="md-ellipsis">
-    Cookbook
+    Python bindings
     
   </span>
   
@@ -1241,6 +1259,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1328,12 +1350,58 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/models/openrouter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OpenRouterModel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/models/test_models/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     DeterministicModel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Extra Models
     
   </span>
   
@@ -1792,6 +1860,24 @@
   <a href="#selecting-a-model" class="md-nav__link">
     <span class="md-ellipsis">
       Selecting a model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extra settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model classes
     </span>
   </a>
   
@@ -3363,6 +3449,77 @@ xai/grok-vision-beta
 </details>
 </div>
 <p>To find the corresponding API key, check the previous section.</p>
+<h2 id="extra-settings">Extra settings</h2>
+<p>To configure reasoning efforts or similar settings, you need to edit the <a href="../../advanced/yaml_configuration/">agent config file</a>.</p>
+<p>Here's a few examples:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><input id="__tabbed_1_4" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Temperature</label><label for="__tabbed_1_2">GPT-5 reasoning effort</label><label for="__tabbed_1_3">OpenRouter</label><label for="__tabbed_1_4">Local models</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"anthropic/claude-sonnet-4-20250514"</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</code></pre></div>
+<p>Note that temperature isn't supported by all models.</p>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"gpt-5-mini"</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">reasoning_effort</span><span class="p">:</span><span class="w"> </span><span class="s">"high"</span>
+<span class="w">    </span><span class="nt">verbosity</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>This example explicitly sets the model class to <code>openrouter</code> (see the next section for more details).
+It also explicitly sets the providers to disable switching between them.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"moonshotai/kimi-k2-0905"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"openrouter"</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">        </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">allow_fallbacks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">          </span><span class="nt">only</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"Moonshot</span><span class="nv"> </span><span class="s">AI"</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"my-local-model"</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">custom_llm_provider</span><span class="p">:</span><span class="w"> </span><span class="s">"openai"</span>
+<span class="w">    </span><span class="nt">api_base</span><span class="p">:</span><span class="w"> </span><span class="s">"https://..."</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</code></pre></div>
+<p>See <a href="../local_models/">this guide</a> for more details on local models.
+In particular, you need to configure token costs for local models.</p>
+</div>
+</div>
+</div>
+<h2 id="model-classes">Model classes</h2>
+<p>We support the various models through different backends.
+By default (if you only specify the model name), we pick the best backend for you.
+This will almost always default to <code>litellm</code> (with Anthropic models being a special case as they need to have explicit cache breakpoint handling).</p>
+<p>However, there are a few other backends that you can use and specify with the <code>--model-class</code> flag or the
+<code>model.model_class</code> key in the <a href="../../advanced/yaml_configuration/">agent config file</a>.</p>
+<ul>
+<li>
+<p><strong><code>litellm</code></strong> (<a href="../../reference/models/litellm/"><code>LitellmModel</code></a>) - <strong>Default and recommended</strong>. Supports most models through <a href="https://github.com/BerriAI/litellm">litellm</a>. Works with OpenAI, Anthropic, Google, and many other providers.</p>
+</li>
+<li>
+<p><strong><code>anthropic</code></strong> (<a href="../../reference/models/anthropic/"><code>AnthropicModel</code></a>) - Wrapper around <code>LitellmModel</code> for Anthropic models that adds cache breakpoint handling.</p>
+</li>
+<li>
+<p><strong><code>openrouter</code></strong> (<a href="../../reference/models/openrouter/"><code>OpenRouterModel</code></a>) - Direct integration with <a href="https://openrouter.ai/">OpenRouter</a> API for accessing various models through a single endpoint.</p>
+</li>
+</ul>
+<p>On top, there's a few more exotic model classes that you can use:</p>
+<ul>
+<li><strong><code>deterministic</code></strong> (<a href="../../reference/models/test_models/"><code>DeterministicModel</code></a>) - Returns predefined responses for testing and development purposes.</li>
+<li><strong><code>minisweagent.models.extra.roulette.RouletteModel</code> and <code>minisweagent.models.extra.roulette.InterleavingModel</code></strong> (<a href="../../reference/models/extra/"><code>RouletteModel</code></a> and <a href="../../reference/models/extra/"><code>InterleavingModel</code></a>) - Randomly selects or interleaves multiple configured models for each query. See <a href="https://www.swebench.com/SWE-bench/blog/2025/08/19/mini-roulette/">this blog post</a> for more details.</li>
+</ul>
+<p>As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the mini-SWE-agent package).</p>
 <div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
