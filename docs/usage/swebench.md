@@ -155,14 +155,22 @@ The completed instances are inferred from `preds.json`. Remove the corresponding
 As long as it follows the SWE-bench format, you can use `--subset /path/to/your/dataset` to run on a custom dataset.
 The dataset needs to be loadable as `datasets.load_dataset(path, split=split)`.
 
-> Some progress runners are stuck at 'initializing task' for a very long time
+> Some progress runners are stuck at 'initializing task' for a very long time / time out
 
 They might be pulling docker containers -- the run sshould start immediately the next time.
+If you see timeouts because of `docker pull` operations, you might want to increase `environment.pull_timeout`
+from the default of `120` (seconds).
 
 > I have some docker issues
 
 Try running the docker command manually to see what's going on (it should be printed out in the console).
 Confirm that it's running with `docker ps`, and that you can use `docker exec -it <container-id> ls` to get some output.
+
+> Docker isn't available on my HPC cluster.
+
+You can use the singularity/apptainer backend by setting `environment.environment_class` to `singularity`
+in your [agent config file](../advanced/yaml_configuration.md)
+or specify `--environment-class singularity` from the command line
 
 > Can I run a startup command in the environment?
 
