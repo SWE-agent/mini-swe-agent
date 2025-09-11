@@ -2038,14 +2038,22 @@ However, you should still check for <code>KeyboardInterrupt</code> in <code>pred
 <p>As long as it follows the SWE-bench format, you can use <code>--subset /path/to/your/dataset</code> to run on a custom dataset.
 The dataset needs to be loadable as <code>datasets.load_dataset(path, split=split)</code>.</p>
 <blockquote>
-<p>Some progress runners are stuck at 'initializing task' for a very long time</p>
+<p>Some progress runners are stuck at 'initializing task' for a very long time / time out</p>
 </blockquote>
-<p>They might be pulling docker containers -- the run sshould start immediately the next time.</p>
+<p>They might be pulling docker containers -- the run should start immediately the next time.
+If you see timeouts because of <code>docker pull</code> operations, you might want to increase <code>environment.pull_timeout</code>
+from the default of <code>120</code> (seconds).</p>
 <blockquote>
 <p>I have some docker issues</p>
 </blockquote>
 <p>Try running the docker command manually to see what's going on (it should be printed out in the console).
 Confirm that it's running with <code>docker ps</code>, and that you can use <code>docker exec -it &lt;container-id&gt; ls</code> to get some output.</p>
+<blockquote>
+<p>Docker isn't available on my HPC cluster.</p>
+</blockquote>
+<p>You can use the singularity/apptainer backend by setting <code>environment.environment_class</code> to <code>singularity</code>
+in your <a href="../../advanced/yaml_configuration/">agent config file</a>
+or specify <code>--environment-class singularity</code> from the command line</p>
 <blockquote>
 <p>Can I run a startup command in the environment?</p>
 </blockquote>
