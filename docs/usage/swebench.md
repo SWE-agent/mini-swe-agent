@@ -157,7 +157,7 @@ The dataset needs to be loadable as `datasets.load_dataset(path, split=split)`.
 
 > Some progress runners are stuck at 'initializing task' for a very long time / time out
 
-They might be pulling docker containers -- the run sshould start immediately the next time.
+They might be pulling docker containers -- the run should start immediately the next time.
 If you see timeouts because of `docker pull` operations, you might want to increase `environment.pull_timeout`
 from the default of `120` (seconds).
 
