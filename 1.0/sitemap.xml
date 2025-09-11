@@ -33,6 +33,10 @@
          <lastmod>2025-09-11</lastmod>
     </url>
     <url>
+         <loc>https://mini-swe-agent.com/latest/advanced/environments/</loc>
+         <lastmod>2025-09-11</lastmod>
+    </url>
+    <url>
          <loc>https://mini-swe-agent.com/latest/advanced/global_configuration/</loc>
          <lastmod>2025-09-11</lastmod>
     </url>
@@ -82,6 +86,10 @@
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/local/</loc>
+         <lastmod>2025-09-11</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/reference/environments/singularity/</loc>
          <lastmod>2025-09-11</lastmod>
     </url>
     <url>

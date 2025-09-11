@@ -5,28 +5,28 @@
       
       
       
-        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/models/test_models/">
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/advanced/environments/">
       
       
-        <link rel="prev" href="../openrouter/">
+        <link rel="prev" href="../yaml_configuration/">
       
       
-        <link rel="next" href="../extra/">
+        <link rel="next" href="../control_flow/">
       
       
-      <link rel="icon" href="../../../assets/mini_square.svg">
+      <link rel="icon" href="../../assets/mini_square.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
     
     
       
-        <title>DeterministicModel - mini-SWE-agent documentation</title>
+        <title>Environments - mini-SWE-agent documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.7e37652d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -51,23 +51,23 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../assets/custom.css">
+      <link rel="stylesheet" href="../../assets/custom.css">
     
-      <link rel="stylesheet" href="../../../assets/gif-controls.css">
+      <link rel="stylesheet" href="../../assets/gif-controls.css">
     
-      <link rel="stylesheet" href="../../../assets/mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../assets/image_theme.css">
+      <link rel="stylesheet" href="../../assets/image_theme.css">
     
-      <link rel="stylesheet" href="../../../assets/bubbles.css">
+      <link rel="stylesheet" href="../../assets/bubbles.css">
     
-      <link rel="stylesheet" href="../../../assets/navigation_cards.css">
+      <link rel="stylesheet" href="../../assets/navigation_cards.css">
     
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -84,7 +84,7 @@
     
     
     
-  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
             html.glightbox-open { overflow: initial; height: 100%; }
             .gslide-title { margin-top: 0px; user-select: text; }
             .gslide-desc { color: #666; user-select: text; }
@@ -113,7 +113,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#test-models" class="md-skip">
+        <a href="#environment-classes" class="md-skip">
           Skip to content
         </a>
       
@@ -133,9 +133,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
       
-  <img src="../../../assets/mini_square.svg" alt="logo">
+  <img src="../../assets/mini_square.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -152,7 +152,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              DeterministicModel
+              Environments
             
           </span>
         </div>
@@ -265,11 +265,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../.." class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../.." class="md-tabs__link">
           
   
   
@@ -287,13 +289,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
           
   
   
@@ -373,9 +373,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
       
-  <img src="../../../assets/mini_square.svg" alt="logo">
+  <img src="../../assets/mini_square.svg" alt="logo">
 
     </a>
     mini-SWE-agent documentation
@@ -399,6 +399,8 @@
       
   
   
+    
+  
   
   
     
@@ -424,18 +426,21 @@
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1">
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../.." class="md-nav__link ">
+            <a href="../.." class="md-nav__link ">
               
   
   
@@ -448,13 +453,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             Getting Started
@@ -470,7 +475,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../quickstart/" class="md-nav__link">
+      <a href="../../quickstart/" class="md-nav__link">
         
   
   
@@ -544,7 +549,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/mini/" class="md-nav__link">
+      <a href="../../usage/mini/" class="md-nav__link">
         
   
   
@@ -567,7 +572,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/mini_v/" class="md-nav__link">
+      <a href="../../usage/mini_v/" class="md-nav__link">
         
   
   
@@ -590,7 +595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/swebench/" class="md-nav__link">
+      <a href="../../usage/swebench/" class="md-nav__link">
         
   
   
@@ -613,7 +618,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/inspector/" class="md-nav__link">
+      <a href="../../usage/inspector/" class="md-nav__link">
         
   
   
@@ -693,7 +698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../models/quickstart/" class="md-nav__link">
+      <a href="../../models/quickstart/" class="md-nav__link">
         
   
   
@@ -716,7 +721,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../models/local_models/" class="md-nav__link">
+      <a href="../../models/local_models/" class="md-nav__link">
         
   
   
@@ -739,7 +744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../models/troubleshooting/" class="md-nav__link">
+      <a href="../../models/troubleshooting/" class="md-nav__link">
         
   
   
@@ -767,8 +772,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -789,11 +796,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5">
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5" checked>
         
           
           <label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="0">
@@ -809,7 +816,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
             Guides
@@ -823,7 +830,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/global_configuration/" class="md-nav__link">
+      <a href="../global_configuration/" class="md-nav__link">
         
   
   
@@ -846,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/yaml_configuration/" class="md-nav__link">
+      <a href="../yaml_configuration/" class="md-nav__link">
         
   
   
@@ -866,10 +873,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../advanced/environments/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -880,6 +896,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -892,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/control_flow/" class="md-nav__link">
+      <a href="../control_flow/" class="md-nav__link">
         
   
   
@@ -915,7 +932,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/cookbook/" class="md-nav__link">
+      <a href="../cookbook/" class="md-nav__link">
         
   
   
@@ -946,7 +963,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   
@@ -969,7 +986,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   
@@ -996,8 +1013,6 @@
       
   
   
-    
-  
   
   
     
@@ -1019,21 +1034,18 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   
@@ -1046,13 +1058,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             API Reference
@@ -1117,7 +1129,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/default/" class="md-nav__link">
+      <a href="../../reference/agents/default/" class="md-nav__link">
         
   
   
@@ -1140,7 +1152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/interactive/" class="md-nav__link">
+      <a href="../../reference/agents/interactive/" class="md-nav__link">
         
   
   
@@ -1163,7 +1175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/textual/" class="md-nav__link">
+      <a href="../../reference/agents/textual/" class="md-nav__link">
         
   
   
@@ -1191,10 +1203,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -1217,11 +1227,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3">
         
           
           <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
@@ -1237,7 +1247,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             Models
@@ -1251,7 +1261,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../litellm/" class="md-nav__link">
+      <a href="../../reference/models/litellm/" class="md-nav__link">
         
   
   
@@ -1274,7 +1284,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../anthropic/" class="md-nav__link">
+      <a href="../../reference/models/anthropic/" class="md-nav__link">
         
   
   
@@ -1297,7 +1307,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../openrouter/" class="md-nav__link">
+      <a href="../../reference/models/openrouter/" class="md-nav__link">
         
   
   
@@ -1317,32 +1327,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    DeterministicModel
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../reference/models/test_models/" class="md-nav__link">
         
   
   
@@ -1353,152 +1341,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;test_models
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="&nbsp;test_models">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModelConfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DeterministicModelConfig
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="&nbsp;DeterministicModelConfig">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModelConfig.outputs" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;outputs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModelConfig.model_name" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;model_name
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModelConfig.cost_per_call" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;cost_per_call
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DeterministicModel
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="&nbsp;DeterministicModel">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.config" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;config
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.current_index" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;current_index
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.cost" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;cost
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.n_calls" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;n_calls
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.query" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;query
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.get_template_vars" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_template_vars
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1511,7 +1353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../extra/" class="md-nav__link">
+      <a href="../../reference/models/extra/" class="md-nav__link">
         
   
   
@@ -1534,7 +1376,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../utils/" class="md-nav__link">
+      <a href="../../reference/models/utils/" class="md-nav__link">
         
   
   
@@ -1618,7 +1460,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/local/" class="md-nav__link">
+      <a href="../../reference/environments/local/" class="md-nav__link">
         
   
   
@@ -1641,7 +1483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/docker/" class="md-nav__link">
+      <a href="../../reference/environments/docker/" class="md-nav__link">
         
   
   
@@ -1664,7 +1506,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/singularity/" class="md-nav__link">
+      <a href="../../reference/environments/singularity/" class="md-nav__link">
         
   
   
@@ -1687,7 +1529,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/swerex_docker/" class="md-nav__link">
+      <a href="../../reference/environments/swerex_docker/" class="md-nav__link">
         
   
   
@@ -1710,7 +1552,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/bubblewrap/" class="md-nav__link">
+      <a href="../../reference/environments/bubblewrap/" class="md-nav__link">
         
   
   
@@ -1794,7 +1636,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../run/hello_world/" class="md-nav__link">
+      <a href="../../reference/run/hello_world/" class="md-nav__link">
         
   
   
@@ -1817,7 +1659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../run/mini/" class="md-nav__link">
+      <a href="../../reference/run/mini/" class="md-nav__link">
         
   
   
@@ -1840,7 +1682,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../run/github_issue/" class="md-nav__link">
+      <a href="../../reference/run/github_issue/" class="md-nav__link">
         
   
   
@@ -1863,7 +1705,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../run/swebench/" class="md-nav__link">
+      <a href="../../reference/run/swebench/" class="md-nav__link">
         
   
   
@@ -1886,7 +1728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../run/swebench_single/" class="md-nav__link">
+      <a href="../../reference/run/swebench_single/" class="md-nav__link">
         
   
   
@@ -1981,140 +1823,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;test_models
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="&nbsp;test_models">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModelConfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DeterministicModelConfig
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="&nbsp;DeterministicModelConfig">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModelConfig.outputs" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;outputs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModelConfig.model_name" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;model_name
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModelConfig.cost_per_call" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;cost_per_call
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DeterministicModel
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="&nbsp;DeterministicModel">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.config" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;config
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.current_index" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;current_index
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.cost" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;cost
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.n_calls" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;n_calls
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.query" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;query
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.test_models.DeterministicModel.get_template_vars" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_template_vars
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -2130,7 +1838,7 @@
 
 
   
-    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/models/test_models.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/advanced/environments.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"></path></svg>
     </a>
@@ -2138,420 +1846,32 @@
   
 
 
-<h1 id="test-models">Test Models</h1>
-
-
-<div class="doc doc-object doc-module">
-
-
-
-<h2 id="minisweagent.models.test_models" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.models.test_models</span>
-
-
-</h2>
-
-    <div class="doc doc-contents first">
-
-
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h3 id="minisweagent.models.test_models.DeterministicModelConfig" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">DeterministicModelConfig</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">DeterministicModelConfig</span><span class="p">(</span>
-    <span class="n">outputs</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">],</span>
-    <span class="n">model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">"deterministic"</span><span class="p">,</span>
-    <span class="n">cost_per_call</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="minisweagent.models.test_models.DeterministicModelConfig.outputs" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">outputs</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">outputs</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="minisweagent.models.test_models.DeterministicModelConfig.model_name" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">model_name</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'deterministic'</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="minisweagent.models.test_models.DeterministicModelConfig.cost_per_call" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">cost_per_call</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">cost_per_call</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">1.0</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h3 id="minisweagent.models.test_models.DeterministicModel" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">DeterministicModel</span>
-
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">DeterministicModel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-
-        <p>Initialize with a list of outputs to return in sequence.</p>
-
-
-
-
-
-
-
-
-                  <details class="quote">
-                    <summary>Source code in <code>src/minisweagent/models/test_models.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Initialize with a list of outputs to return in sequence.</span>
-<span class="sd">    """</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">DeterministicModelConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">=</span> <span class="mi">0</span>
-</code></pre></div></td></tr></tbody></table></div>
-                  </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="minisweagent.models.test_models.DeterministicModel.config" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">config</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">config</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            DeterministicModelConfig
-
-
-  
-      dataclass
-   (minisweagent.models.test_models.DeterministicModelConfig)" href="#minisweagent.models.test_models.DeterministicModelConfig">DeterministicModelConfig</a></span><span class="p">(</span><span class="o">**</span><span class="n"><span title="minisweagent.models.test_models.DeterministicModel(kwargs)">kwargs</span></span><span class="p">)</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="minisweagent.models.test_models.DeterministicModel.current_index" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">current_index</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">current_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="minisweagent.models.test_models.DeterministicModel.cost" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">cost</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="minisweagent.models.test_models.DeterministicModel.n_calls" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">n_calls</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">n_calls</span> <span class="o">=</span> <span class="mi">0</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="minisweagent.models.test_models.DeterministicModel.query" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">query</span>
-
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">query</span><span class="p">(</span><span class="n">messages</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-
-            <details class="quote">
-              <summary>Source code in <code>src/minisweagent/models/test_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span><span class="p">]</span>
-    <span class="k">if</span> <span class="s2">"/sleep"</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"SLEEPING"</span><span class="p">)</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/sleep"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">"/warning"</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/warning"</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_per_call</span>
-    <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_per_call</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">"content"</span><span class="p">:</span> <span class="n">output</span><span class="p">}</span>
-</code></pre></div></td></tr></tbody></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="minisweagent.models.test_models.DeterministicModel.get_template_vars" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_template_vars</span>
-
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_template_vars</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-
-            <details class="quote">
-              <summary>Source code in <code>src/minisweagent/models/test_models.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
-<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
-</code></pre></div></td></tr></tbody></table></div>
-            </details>
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-
-
-
-  </div>
-
-    </div>
-
-</div><div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">bug_report</span>
-        <span class="nav-card-title">Something broken/unclear?</span>
-      </div>
-      <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
-    </div>
-  </a>
-</div>
+<h1 id="environment-classes">Environment classes</h1>
+<p>We support various environments for executing code through different backends.</p>
+<p>If you run <code>mini</code>, you will run in the <code>local</code> environment by default.</p>
+<p>However, particularly for evaluating on SWE-bench, we offer multiple environment backends that you can use.</p>
+<p>You can specify the environment class with the <code>--environment-class</code> flag or the
+<code>environment.environment_class</code> key in the <a href="../yaml_configuration/">agent config file</a>.</p>
+<ul>
+<li>
+<p><strong><code>local</code></strong> (<a href="../../reference/environments/local/"><code>LocalEnvironment</code></a>). Executes commands directly on the host machine using <code>subprocess.run</code>. No isolation. Directly works in your current python environment.</p>
+</li>
+<li>
+<p><strong><code>docker</code></strong> (<a href="../../reference/environments/docker/"><code>DockerEnvironment</code></a>). Executes commands with <code>docker exec</code>.</p>
+</li>
+<li>
+<p><strong><code>singularity</code></strong> (<a href="../../reference/environments/singularity/"><code>SingularityEnvironment</code></a>) - Executes commands in Singularity/Apptainer containers. Good alternative to Docker in HPC environments where Docker is not available.</p>
+</li>
+</ul>
+<p>On top, there are a few more specialized environment classes that you can use:</p>
+<ul>
+<li>
+<p><strong><code>swerex_docker</code></strong> (<a href="../../reference/environments/swerex_docker/"><code>SwerexDockerEnvironment</code></a>) - Docker execution through <a href="https://github.com/swe-agent/swe-rex">SWE-ReX</a></p>
+</li>
+<li>
+<p><strong><code>bubblewrap</code></strong> (<a href="../../reference/environments/bubblewrap/"><code>BubblewrapEnvironment</code></a>) - <strong>Linux only</strong>. Uses <a href="https://github.com/containers/bubblewrap">bubblewrap</a> for lightweight, unprivileged sandboxing. Experimental.</p>
+</li>
+</ul>
 
 
 
@@ -2572,23 +1892,23 @@
 <div class="floating-bubbles">
 <div class="floating-bubbles-title">Our projects</div>
   <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
-    <img src="../../../assets/sweagent_logo.svg" alt="SWE-agent">
+    <img src="../../assets/sweagent_logo.svg" alt="SWE-agent">
     <span class="bubble-tooltip">SWE-agent</span>
   </a>
   <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
-    <img src="../../../assets/swerex_logo.svg" alt="SWE-rex">
+    <img src="../../assets/swerex_logo.svg" alt="SWE-rex">
     <span class="bubble-tooltip">SWE-ReX</span>
   </a>
   <a href="https://swesmith.com" class="bubble" title="SWE-smith">
-    <img src="../../../assets/swesmith_logo.png" alt="SWE-smith">
+    <img src="../../assets/swesmith_logo.png" alt="SWE-smith">
     <span class="bubble-tooltip">SWE-smith</span>
   </a>
   <a href="https://swebench.com" class="bubble" title="SWE-bench">
-    <img src="../../../assets/swebench_logo.png" alt="SWE-bench">
+    <img src="../../assets/swebench_logo.png" alt="SWE-bench">
     <span class="bubble-tooltip">SWE-bench</span>
   </a>
   <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
-    <img src="../../../assets/sbcli_logo.svg" alt="sb-cli">
+    <img src="../../assets/sbcli_logo.svg" alt="sb-cli">
     <span class="bubble-tooltip">sb-cli</span>
   </a>
 </div>
@@ -2615,7 +1935,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer">
         
           
-          <a href="../openrouter/" class="md-footer__link md-footer__link--prev" aria-label="Previous: OpenRouterModel">
+          <a href="../yaml_configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Yaml config files">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -2625,20 +1945,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                OpenRouterModel
+                Yaml config files
               </div>
             </div>
           </a>
         
         
           
-          <a href="../extra/" class="md-footer__link md-footer__link--next" aria-label="Next: Extra Models">
+          <a href="../control_flow/" class="md-footer__link md-footer__link--next" aria-label="Next: Control flow">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Extra Models
+                Control flow
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2674,14 +1994,14 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      <script src="../../assets/javascripts/bundle.92b07e13.min.js"></script>
       
-        <script src="../../../assets/js/sh-annotation.js"></script>
+        <script src="../../assets/js/sh-annotation.js"></script>
       
-        <script src="../../../assets/js/gif-controls.js"></script>
+        <script src="../../assets/js/gif-controls.js"></script>
       
     
   
