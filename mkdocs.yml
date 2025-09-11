@@ -70,6 +70,7 @@ nav:
     - "Guides":
       - "Global configuration": advanced/global_configuration.md
       - "Yaml config files": advanced/yaml_configuration.md
+      - "Environments": advanced/environments.md
       - "Control flow": advanced/control_flow.md
       - "Python bindings": advanced/cookbook.md
     - "FAQ": faq.md
@@ -90,6 +91,7 @@ nav:
     - Environments:
       - "LocalEnvironment": "reference/environments/local.md"
       - "DockerEnvironment": "reference/environments/docker.md"
+      - "SingularityEnvironment": "reference/environments/singularity.md"
       - "SwerexDockerEnvironment": "reference/environments/swerex_docker.md"
       - "BubblewrapEnvironment": "reference/environments/bubblewrap.md"
     - Run Scripts:

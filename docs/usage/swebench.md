@@ -184,6 +184,10 @@ run:
 
 which might be particularly useful when running with environments like [`bubblewrap`](../reference/environments/bubblewrap.md).
 
+> What environment can I use for SWE-bench?
+
+See [this guide](../advanced/environments.md) for more details.
+
 ## Implementation
 
 ??? note "Default config"

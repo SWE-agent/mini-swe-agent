@@ -77,4 +77,16 @@ In all builtin agents, you can use the following variables:
 - Environment config variables
 - Explicitly passed variables (`observation`, `task` etc.) depending on the template
 
+## Model configuration
+
+See [this guide](../models/quickstart.md) for more details on model configuration.
+
+## Environment configuration
+
+See [this guide](../advanced/environments.md) for more details on environment configuration.
+
+## Run configuration
+
+See the information in "Usage".
+
 {% include-markdown "_footer.md" %}
