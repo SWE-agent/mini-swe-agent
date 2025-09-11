@@ -159,7 +159,7 @@ Here's a few examples:
       model_name: "my-local-model"
       model_kwargs:
         custom_llm_provider: "openai"
-        api_base="https://..."
+        api_base: "https://..."
         ...
     ```
 
