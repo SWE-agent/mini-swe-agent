@@ -148,8 +148,8 @@ Here's a few examples:
         model_kwargs:
             temperature: 0.0
             provider:
-            allow_fallbacks: false
-            only: ["Moonshot AI"]
+              allow_fallbacks: false
+              only: ["Moonshot AI"]
     ```
 
 === "Local models"
