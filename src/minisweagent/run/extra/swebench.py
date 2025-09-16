@@ -222,7 +222,7 @@ def main(
     logger.info(f"Running on {len(instances)} instances...")
 
     config_path = get_config_path(config_spec)
-    logger.info(f"Loading agent config from [bold green]'{config_path}'[/bold green]")
+    logger.info(f"Loading agent config from '{config_path}'")
     config = yaml.safe_load(config_path.read_text())
     if environment_class is not None:
         config.setdefault("environment", {})["environment_class"] = environment_class
