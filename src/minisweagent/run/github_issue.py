@@ -50,7 +50,9 @@ def main(
     """Run mini-SWE-agent on a GitHub issue"""
     configure_if_first_time()
 
-    _config = yaml.safe_load(get_config_path(config).read_text())
+    config_path = get_config_path(config)
+    console.print(f"Loading agent config from [bold green]'{config_path}'[/bold green]")
+    _config = yaml.safe_load(config_path.read_text())
     _agent_config = _config.setdefault("agent", {})
     if yolo:
         _agent_config["mode"] = "yolo"

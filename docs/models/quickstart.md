@@ -111,6 +111,7 @@ To find the corresponding API key, check the previous section.
 ## Extra settings
 
 To configure reasoning efforts or similar settings, you need to edit the [agent config file](../advanced/yaml_configuration.md).
+In newer versions, the location of the config file is printed when you run `mini` ("agent config" in the output).
 
 Here's a few examples:
 

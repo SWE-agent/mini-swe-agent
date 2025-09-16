@@ -221,8 +221,9 @@ def main(
         instances = [instance for instance in instances if instance["instance_id"] not in existing_instances]
     logger.info(f"Running on {len(instances)} instances...")
 
-
-    config = yaml.safe_load(get_config_path(config_spec).read_text())
+    config_path = get_config_path(config_spec)
+    logger.info(f"Loading agent config from [bold green]'{config_path}'[/bold green]")
+    config = yaml.safe_load(config_path.read_text())
     if environment_class is not None:
         config.setdefault("environment", {})["environment_class"] = environment_class
     if model is not None:

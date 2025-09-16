@@ -58,7 +58,9 @@ def main(
 ) -> Any:
     # fmt: on
     configure_if_first_time()
-    config = yaml.safe_load(get_config_path(config_spec).read_text())
+    config_path = get_config_path(config_spec)
+    console.print(f"Loading agent config from [bold green]'{config_path}'[/bold green]")
+    config = yaml.safe_load(config_path.read_text())
 
     if not task:
         console.print("[bold yellow]What do you want to do?")
