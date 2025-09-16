@@ -115,9 +115,48 @@ model:
 
 ## Concrete examples
 
-!!! success "Help us fill this section!"
+### Setup local vllm server
+To set up local vllm server and run mini-swe-agent, we can either setup a litellm proxy server, or, we can directly set up vllm server then use LiteLLM to hook it to mini-swe-agent infra.   
+Take Qwen/Qwen3-Coder-30B-A3B-Instruct as an example. After we spin up the vllm server, first, we update the model registry. We can create a `model_registry.json` file at the root directory of the repo, and add:
+```python
+"hosted_vllm/Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8": {
+   "max_tokens": 132000,
+   "input_cost_per_token": 5e-08,
+   "output_cost_per_token": 4e-07,
+   "litellm_provider": "hosted_vllm",
+   "mode": "chat"
+}
+```
+You can source it like this: `LITELLM_MODEL_REGISTRY_PATH="/path/to/your/model/registry.json"`
+Then we can create a new yaml file at `src/minisweagent/config/extra/', let's name it `swebench_qwen.yaml`. We can copy the template in `swebench.yaml` and add:
+```python
+  model:
+    model_name: hosted_vllm/Qwen/Qwen3-Coder-30B-A3B-Instruct
+    litellm_model_registry: path/to/model_registry.json
+  model_kwargs:
+    custom_llm_provider: hosted_vllm
+    api_base: http://localhost:8000/v1
+    api_key: EMPTY
 
-    We welcome concrete examples of how to use local models per pull request into this guide.
-    Please add your example here.
+```
+Note that the format and variable names in this section are different in litellm's doc, and we should follow what are illustrated in mini-swe-agent's doc.   
+
+Then we need to add vllm hosted model information into [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). When we setup mini-swe-agent, LiteLLM should have been installed. If not, run `pip install litellm`, then go into environment's `site-packages`, find LiteLLM and locate this file, add: 
+```python
+"hosted_vllm/Qwen/Qwen3-Coder-30B-A3B-Instruct": {
+       "max_tokens": 1320000,
+       "max_input_tokens": 1310000,
+       "max_output_tokens": 4096,
+       "input_cost_per_token": 5e-08,
+       "output_cost_per_token": 4e-07,
+       "litellm_provider": "hosted_vllm",
+       "mode": "chat",
+       "supports_tool_choice": true
+   }
+
+```
+We can set up the cost here.   
+After these steps, we can run the commands to run mini-swe agent on the local server.
+    
 
 --8<-- "docs/_footer.md"
