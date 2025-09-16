@@ -1965,6 +1965,35 @@
 
 
 <h1 id="anthropic">Anthropic</h1>
+<div class="admonition note">
+<p class="admonition-title">Anthropic Model class</p>
+<ul>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/anthropic.py">Read on GitHub</a></li>
+</ul>
+<details class="note">
+<summary>Full source code</summary>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.litellm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LitellmModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.cache_control</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_cache_control</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.key_per_thread</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_key_per_thread</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AnthropicModel</span><span class="p">(</span><span class="n">LitellmModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""For the use of anthropic models, we need to add explicit cache control marks</span>
+<span class="sd">    to the messages or we lose out on the benefits of the cache.</span>
+<span class="sd">    Because break points are limited per key, we also need to rotate between different keys</span>
+<span class="sd">    if running with multiple agents in parallel threads.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">api_key</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">rotating_keys</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"ANTHROPIC_API_KEYS"</span><span class="p">):</span>
+            <span class="n">api_key</span> <span class="o">=</span> <span class="n">get_key_per_thread</span><span class="p">(</span><span class="n">rotating_keys</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"::"</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">set_cache_control</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span> <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div>
+</details>
+</div>
 
 
 <div class="doc doc-object doc-module">

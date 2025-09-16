@@ -2211,6 +2211,169 @@
 
 
 <h1 id="interactive">Interactive</h1>
+<div class="admonition note">
+<p class="admonition-title">InteractiveAgent class</p>
+<ul>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/agents/interactive.py">Read on GitHub</a></li>
+</ul>
+<details class="note">
+<summary>Full source code</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""A small generalization of the default agent that puts the user in the loop.</span>
+
+<span class="sd">There are three modes:</span>
+<span class="sd">- human: commands issued by the user are executed immediately</span>
+<span class="sd">- confirm: commands issued by the LM but not whitelisted are confirmed by the user</span>
+<span class="sd">- yolo: commands issued by the LM are executed immediately without confirmation</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.history</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileHistory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptSession</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">global_config_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span><span class="p">,</span> <span class="n">DefaultAgent</span><span class="p">,</span> <span class="n">LimitsExceeded</span><span class="p">,</span> <span class="n">NonTerminatingException</span><span class="p">,</span> <span class="n">Submitted</span>
+
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">prompt_session</span> <span class="o">=</span> <span class="n">PromptSession</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">FileHistory</span><span class="p">(</span><span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">"interactive_history.txt"</span><span class="p">))</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InteractiveAgentConfig</span><span class="p">(</span><span class="n">AgentConfig</span><span class="p">):</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"human"</span><span class="p">,</span> <span class="s2">"confirm"</span><span class="p">,</span> <span class="s2">"yolo"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"confirm"</span>
+<span class="w">    </span><span class="sd">"""Whether to confirm actions."""</span>
+    <span class="n">whitelist_actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Never confirm actions that match these regular expressions."""</span>
+    <span class="n">confirm_exit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="w">    </span><span class="sd">"""If the agent wants to finish, do we ask for confirmation from user?"""</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InteractiveAgent</span><span class="p">(</span><span class="n">DefaultAgent</span><span class="p">):</span>
+    <span class="n">_MODE_COMMANDS_MAPPING</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"/u"</span><span class="p">:</span> <span class="s2">"human"</span><span class="p">,</span> <span class="s2">"/c"</span><span class="p">:</span> <span class="s2">"confirm"</span><span class="p">,</span> <span class="s2">"/y"</span><span class="p">:</span> <span class="s2">"yolo"</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">config_class</span><span class="o">=</span><span class="n">InteractiveAgentConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_last_confirmed</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Extend supermethod to print messages</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="s2">"assistant"</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[red][bold]mini-swe-agent[/bold] (step [bold]</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_calls</span><span class="si">}</span><span class="s2">[/bold], [bold]$</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cost</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">[/bold]):[/red]</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span>
+                <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+                <span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[bold green]</span><span class="si">{</span><span class="n">role</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">[/bold green]:</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">markup</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Extend supermethod to handle human mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"human"</span><span class="p">:</span>
+            <span class="k">match</span> <span class="n">command</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="s2">"[bold yellow]&gt;[/bold yellow] "</span><span class="p">):</span>
+                <span class="k">case</span> <span class="s2">"/y"</span> <span class="o">|</span> <span class="s2">"/c"</span><span class="p">:</span>  <span class="c1"># Just go to the super query, which queries the LM for the next action</span>
+                    <span class="k">pass</span>
+                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">```bash</span><span class="se">\n</span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="se">\n</span><span class="s2">```"</span><span class="p">}</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="s2">"assistant"</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">"content"</span><span class="p">])</span>
+                    <span class="k">return</span> <span class="n">msg</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">console</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="s2">"Waiting for the LM to respond..."</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">LimitsExceeded</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Limits exceeded. Limits: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">step_limit</span><span class="si">}</span><span class="s2"> steps, $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_limit</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"Current spend: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">n_calls</span><span class="si">}</span><span class="s2"> steps, $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cost</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">."</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">step_limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">"New step limit: "</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_limit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">"New cost limit: "</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Override the step method to handle user interruption</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="c1"># We always add a message about the interrupt and then just proceed to the next step</span>
+            <span class="n">interruption_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span>
+                <span class="s2">"</span><span class="se">\n\n</span><span class="s2">[bold yellow]Interrupted.[/bold yellow] "</span>
+                <span class="s2">"[green]Type a comment/command[/green] (/h for available commands)"</span>
+                <span class="s2">"</span><span class="se">\n</span><span class="s2">[bold yellow]&gt;[/bold yellow] "</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">interruption_message</span> <span class="ow">or</span> <span class="n">interruption_message</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">:</span>
+                <span class="n">interruption_message</span> <span class="o">=</span> <span class="s2">"Temporary interruption caught."</span>
+            <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Interrupted by user: </span><span class="si">{</span><span class="n">interruption_message</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Override the execute_action method to handle user confirmation</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_ask_confirmation</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s2">"action"</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ask_confirmation</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">execute_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_ask_confirmation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"confirm"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">whitelist_actions</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ask_confirmation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">"[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "</span>
+            <span class="s2">"or [green]Type a comment/command[/green] (/h for available commands)</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="s2">"[bold yellow]&gt;[/bold yellow] "</span>
+        <span class="p">)</span>
+        <span class="k">match</span> <span class="n">user_input</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">case</span> <span class="s2">""</span> <span class="o">|</span> <span class="s2">"/y"</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># confirmed, do nothing</span>
+            <span class="k">case</span> <span class="s2">"/u"</span><span class="p">:</span>  <span class="c1"># Skip execution action and get back to query</span>
+                <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="s2">"Command not executed. Switching to human mode"</span><span class="p">)</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Command not executed. The user rejected your command with the following message: </span><span class="si">{</span><span class="n">user_input</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prompt_and_handle_special</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
+        <span class="n">user_input</span> <span class="o">=</span> <span class="n">prompt_session</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s2">"/h"</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Current mode: [bold green]</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2">[/bold green]</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"[bold green]/y[/bold green] to switch to [bold yellow]yolo[/bold yellow] mode (execute LM commands without confirmation)</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"[bold green]/c[/bold green] to switch to [bold yellow]confirmation[/bold yellow] mode (ask for confirmation before executing LM commands)</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">"[bold green]/u[/bold green] to switch to [bold yellow]human[/bold yellow] mode (execute commands issued by the user)</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">[</span><span class="n">user_input</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"[bold red]Already in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2"> mode.[/bold red]</span><span class="se">\n</span><span class="si">{</span><span class="n">prompt</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">[</span><span class="n">user_input</span><span class="p">]</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Switched to [bold green]</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2">[/bold green] mode."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">user_input</span>
+        <span class="k">return</span> <span class="n">user_input</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">has_finished</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Submitted</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">confirm_exit</span><span class="p">:</span>
+                <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                    <span class="s2">"[bold green]Agent wants to finish.[/bold green] "</span>
+                    <span class="s2">"[green]Type a comment to give it a new task or press enter to quit.</span><span class="se">\n</span><span class="s2">"</span>
+                    <span class="s2">"[bold yellow]&gt;[/bold yellow] "</span><span class="p">,</span>
+                    <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_task</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_special</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The user added a new task: </span><span class="si">{</span><span class="n">new_task</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">e</span>
+</code></pre></div>
+</details>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">See also</p>
 <ul>

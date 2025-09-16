@@ -2853,6 +2853,465 @@
 
 
 <h1 id="textualagent">TextualAgent</h1>
+<div class="admonition note">
+<p class="admonition-title">TextualAgent class</p>
+<ul>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/agents/interactive_textual.py">Read on GitHub</a></li>
+</ul>
+<details class="note">
+<summary>Full source code</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
+<span class="sd">Extension of the `default.py` agent that uses Textual for an interactive TUI.</span>
+<span class="sd">For a simpler version of an interactive UI that does not require threading and more, see `interactive.py`.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.spinner</span><span class="w"> </span><span class="kn">import</span> <span class="n">Spinner</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">Text</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textual.app</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">ComposeResult</span><span class="p">,</span> <span class="n">SystemCommand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textual.binding</span><span class="w"> </span><span class="kn">import</span> <span class="n">Binding</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textual.containers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Container</span><span class="p">,</span> <span class="n">Vertical</span><span class="p">,</span> <span class="n">VerticalScroll</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textual.css.query</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoMatches</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textual.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">Key</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textual.screen</span><span class="w"> </span><span class="kn">import</span> <span class="n">Screen</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textual.widgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">Footer</span><span class="p">,</span> <span class="n">Header</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Static</span><span class="p">,</span> <span class="n">TextArea</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span><span class="p">,</span> <span class="n">DefaultAgent</span><span class="p">,</span> <span class="n">NonTerminatingException</span><span class="p">,</span> <span class="n">Submitted</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TextualAgentConfig</span><span class="p">(</span><span class="n">AgentConfig</span><span class="p">):</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"confirm"</span><span class="p">,</span> <span class="s2">"yolo"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"confirm"</span>
+<span class="w">    </span><span class="sd">"""Mode for action execution: 'confirm' requires user confirmation, 'yolo' executes immediately."""</span>
+    <span class="n">whitelist_actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Never confirm actions that match these regular expressions."""</span>
+    <span class="n">confirm_exit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="w">    </span><span class="sd">"""If the agent wants to finish, do we ask for confirmation from user?"""</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_TextualAgent</span><span class="p">(</span><span class="n">DefaultAgent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="s2">"TextualAgent"</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Connects the DefaultAgent to the TextualApp."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">app</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">config_class</span><span class="o">=</span><span class="n">TextualAgentConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_action_from_human</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">!=</span> <span class="s2">"UNINITIALIZED"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">on_message_added</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"human"</span><span class="p">:</span>
+            <span class="n">human_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">request_input</span><span class="p">(</span><span class="s2">"Enter your command:"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_action_from_human</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">```bash</span><span class="se">\n</span><span class="si">{</span><span class="n">human_input</span><span class="si">}</span><span class="se">\n</span><span class="s2">```"</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="s2">"assistant"</span><span class="p">,</span> <span class="n">msg</span><span class="p">[</span><span class="s2">"content"</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">msg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_action_from_human</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">action_quit</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="k">return</span> <span class="s2">"ERROR"</span><span class="p">,</span> <span class="n">result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">on_agent_finished</span><span class="p">,</span> <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">action_quit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"human"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_action_from_human</span><span class="p">:</span>  <span class="c1"># threading, grrrrr</span>
+            <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="s2">"Command not executed because user switched to manual mode."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"confirm"</span>
+            <span class="ow">and</span> <span class="n">action</span><span class="p">[</span><span class="s2">"action"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">action</span><span class="p">[</span><span class="s2">"action"</span><span class="p">])</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">whitelist_actions</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">request_input</span><span class="p">(</span><span class="s2">"Press ENTER to confirm or provide rejection reason"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">:</span>  <span class="c1"># Non-empty string means rejection</span>
+                <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Command not executed: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">execute_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">has_finished</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Submitted</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">confirm_exit</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">new_task</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">request_input</span><span class="p">(</span>
+                    <span class="s2">"[bold green]Agent wants to finish.[/bold green] "</span>
+                    <span class="s2">"[green]Type a comment to give it a new task or press enter to quit.</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="n">NonTerminatingException</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The user added a new task: </span><span class="si">{</span><span class="n">new_task</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AddLogEmitCallback</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Custom log handler that forwards messages via callback."""</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_messages_to_steps</span><span class="p">(</span><span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Group messages into "pages" as shown by the UI."""</span>
+    <span class="n">steps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current_step</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">:</span>
+        <span class="n">current_step</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">message</span><span class="p">[</span><span class="s2">"role"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"user"</span><span class="p">:</span>
+            <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_step</span><span class="p">)</span>
+            <span class="n">current_step</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">current_step</span><span class="p">:</span>
+        <span class="n">steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_step</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">steps</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SmartInputContainer</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="s2">"TextualAgent"</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Smart input container supporting single-line and multi-line input modes."""</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">classes</span><span class="o">=</span><span class="s2">"smart-input-container"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app</span> <span class="o">=</span> <span class="n">app</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">can_focus</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pending_prompt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_event</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_result</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_header_display</span> <span class="o">=</span> <span class="n">Static</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"input-header-display"</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="s2">"message-header input-request-header"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hint_text</span> <span class="o">=</span> <span class="n">Static</span><span class="p">(</span><span class="n">classes</span><span class="o">=</span><span class="s2">"hint-text"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_single_input</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s2">"Type your input..."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span> <span class="o">=</span> <span class="n">TextArea</span><span class="p">(</span><span class="n">show_line_numbers</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="s2">"multi-input"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_elements_container</span> <span class="o">=</span> <span class="n">Vertical</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_header_display</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hint_text</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_single_input</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="p">,</span>
+            <span class="n">classes</span><span class="o">=</span><span class="s2">"message-container"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_elements_container</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Initialize the widget state."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_mode_display</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_focus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Called when the container gains focus."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="o">.</span><span class="n">focus</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_single_input</span><span class="o">.</span><span class="n">focus</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">request_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Request input from user. Returns input text (empty string if confirmed without reason)."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="o">=</span> <span class="n">prompt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_header_display</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_mode_display</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">update_content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_result</span> <span class="ow">or</span> <span class="s2">""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_complete_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Internal method to complete the input process."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_result</span> <span class="o">=</span> <span class="n">input_text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_single_input</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_mode_display</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="s2">"RUNNING"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
+        <span class="c1"># Reset scroll position to bottom since input container disappearing changes layout</span>
+        <span class="c1"># somehow scroll_to doesn't work.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_y</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_toggle_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Switch from single-line to multi-line mode (one-way only)."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_mode_display</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_focus</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_mode_display</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update the display based on current mode."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_input</span><span class="o">.</span><span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_single_input</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hint_text</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="s2">"[reverse][bold][$accent] Ctrl+D [/][/][/] to submit, [reverse][bold][$accent] Tab [/][/][/] to switch focus with other controls"</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hint_text</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="s2">"[reverse][bold][$accent] Enter [/][/][/] to submit, [reverse][bold][$accent] Ctrl+T [/][/][/] to switch to multi-line input, [reverse][bold][$accent] Tab [/][/][/] to switch focus with other controls"</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_single_input</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_input_submitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Input</span><span class="o">.</span><span class="n">Submitted</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Handle single-line input submission."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Handle key events."""</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="s2">"ctrl+t"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">prevent_default</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_toggle_mode</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiline_mode</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="s2">"ctrl+d"</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">prevent_default</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_multi_input</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="s2">"escape"</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">prevent_default</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">can_focus</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">set_focus</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">return</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TextualAgent</span><span class="p">(</span><span class="n">App</span><span class="p">):</span>
+    <span class="n">BINDINGS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"right,l"</span><span class="p">,</span> <span class="s2">"next_step"</span><span class="p">,</span> <span class="s2">"Step++"</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">"Show next step of the agent"</span><span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"left,h"</span><span class="p">,</span> <span class="s2">"previous_step"</span><span class="p">,</span> <span class="s2">"Step--"</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">"Show previous step of the agent"</span><span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"0"</span><span class="p">,</span> <span class="s2">"first_step"</span><span class="p">,</span> <span class="s2">"Step=0"</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">"Show first step of the agent"</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"$"</span><span class="p">,</span> <span class="s2">"last_step"</span><span class="p">,</span> <span class="s2">"Step=-1"</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">"Show last step of the agent"</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"j,down"</span><span class="p">,</span> <span class="s2">"scroll_down"</span><span class="p">,</span> <span class="s2">"Scroll down"</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"k,up"</span><span class="p">,</span> <span class="s2">"scroll_up"</span><span class="p">,</span> <span class="s2">"Scroll up"</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"q,ctrl+q"</span><span class="p">,</span> <span class="s2">"quit"</span><span class="p">,</span> <span class="s2">"Quit"</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">"Quit the agent"</span><span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"y,ctrl+y"</span><span class="p">,</span> <span class="s2">"yolo"</span><span class="p">,</span> <span class="s2">"YOLO mode"</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">"Switch to YOLO Mode (LM actions will execute immediately)"</span><span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span>
+            <span class="s2">"c"</span><span class="p">,</span>
+            <span class="s2">"confirm"</span><span class="p">,</span>
+            <span class="s2">"CONFIRM mode"</span><span class="p">,</span>
+            <span class="n">tooltip</span><span class="o">=</span><span class="s2">"Switch to Confirm Mode (LM proposes commands and you confirm/reject them)"</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"u,ctrl+u"</span><span class="p">,</span> <span class="s2">"human"</span><span class="p">,</span> <span class="s2">"HUMAN mode"</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">"Switch to Human Mode (you can now type commands directly)"</span><span class="p">),</span>
+        <span class="n">Binding</span><span class="p">(</span><span class="s2">"f1,question_mark"</span><span class="p">,</span> <span class="s2">"toggle_help_panel"</span><span class="p">,</span> <span class="s2">"Help"</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="s2">"Show help"</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">css_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MSWEA_MINI_STYLE_PATH"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"config"</span> <span class="o">/</span> <span class="s2">"mini.tcss"</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">CSS</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">css_path</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="s2">"UNINITIALIZED"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span> <span class="o">=</span> <span class="n">_TextualAgent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_i_step</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span> <span class="o">=</span> <span class="n">SmartInputContainer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_handler</span> <span class="o">=</span> <span class="n">AddLogEmitCallback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_from_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_log_message_emitted</span><span class="p">,</span> <span class="n">record</span><span class="p">))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_handler</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spinner</span> <span class="o">=</span> <span class="n">Spinner</span><span class="p">(</span><span class="s2">"dots"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exit_status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"ExitStatusUnset"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span> <span class="o">=</span> <span class="n">VerticalScroll</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">exit_status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+
+    <span class="c1"># --- Basics ---</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">i_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Current step index."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_step</span>
+
+    <span class="nd">@i_step</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">i_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set current step index, automatically clamping to valid bounds."""</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_step</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_i_step</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_to</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">animate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">Header</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">Container</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"main"</span><span class="p">):</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">Vertical</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"content"</span><span class="p">):</span>
+                    <span class="k">pass</span>
+                <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span>
+        <span class="k">yield</span> <span class="n">Footer</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="s2">"RUNNING"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_interval</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">8</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_headers</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">messages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">messages</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">model</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">env</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">env</span>
+
+    <span class="c1"># --- Reacting to events ---</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_message_added</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">auto_follow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_y</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">_messages_to_steps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">messages</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">auto_follow</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_last_step</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_log_message_emitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Handle log messages of warning level or higher by showing them as notifications."""</span>
+        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&gt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">levelname</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="s2">"warning"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_unmount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Clean up the log handler when the app shuts down."""</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"log_handler"</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_handler</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_agent_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exit_status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="s2">"STOPPED"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Agent finished with status: </span><span class="si">{</span><span class="n">exit_status</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">=</span> <span class="n">exit_status</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
+
+    <span class="c1"># --- UI update logic ---</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">"#content"</span><span class="p">,</span> <span class="n">Vertical</span><span class="p">)</span>
+        <span class="n">container</span><span class="o">.</span><span class="n">remove_children</span><span class="p">()</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">_messages_to_steps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">items</span><span class="p">:</span>
+            <span class="n">container</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">Static</span><span class="p">(</span><span class="s2">"Waiting for agent to start..."</span><span class="p">))</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">items</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">i_step</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">"content"</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">content_str</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">message</span><span class="p">[</span><span class="s2">"content"</span><span class="p">]])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">content_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">"content"</span><span class="p">])</span>
+            <span class="n">message_container</span> <span class="o">=</span> <span class="n">Vertical</span><span class="p">(</span><span class="n">classes</span><span class="o">=</span><span class="s2">"message-container"</span><span class="p">)</span>
+            <span class="n">container</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">message_container</span><span class="p">)</span>
+            <span class="n">role</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="s2">"role"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"assistant"</span><span class="p">,</span> <span class="s2">"mini-swe-agent"</span><span class="p">)</span>
+            <span class="n">message_container</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">Static</span><span class="p">(</span><span class="n">role</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">classes</span><span class="o">=</span><span class="s2">"message-header"</span><span class="p">))</span>
+            <span class="n">message_container</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">Static</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">content_str</span><span class="p">,</span> <span class="n">no_wrap</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">classes</span><span class="o">=</span><span class="s2">"message-content"</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">=</span> <span class="s2">"AWAITING_INPUT"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">display</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">on_focus</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_headers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update just the title with current state and spinner if needed."""</span>
+        <span class="n">status_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">==</span> <span class="s2">"RUNNING"</span><span class="p">:</span>
+            <span class="n">spinner_frame</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_spinner</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">status_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">spinner_frame</span><span class="si">}</span><span class="s2">"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Step </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">i_step</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">status_text</span><span class="si">}</span><span class="s2"> - Cost: $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cost</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">"Header"</span><span class="p">)</span><span class="o">.</span><span class="n">set_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_state</span> <span class="o">==</span> <span class="s2">"RUNNING"</span><span class="p">,</span> <span class="s2">"running"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NoMatches</span><span class="p">:</span>  <span class="c1"># might be called when shutting down</span>
+            <span class="k">pass</span>
+
+    <span class="c1"># --- Other textual overrides ---</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_system_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">:</span> <span class="n">Screen</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SystemCommand</span><span class="p">]:</span>
+        <span class="c1"># Add to palette</span>
+        <span class="k">yield from</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_system_commands</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">binding</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">BINDINGS</span><span class="p">:</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">binding</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2"> (shortcut </span><span class="si">{</span><span class="s1">' OR '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">))</span><span class="si">}</span><span class="s2">)"</span>  <span class="c1"># type: ignore[attr-defined]</span>
+            <span class="k">yield</span> <span class="n">SystemCommand</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">action</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
+
+    <span class="c1"># --- Textual bindings ---</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_yolo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">"yolo"</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>  <span class="c1"># accept</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="s2">"YOLO mode enabled - LM actions will execute immediately"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_human</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"confirm"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="s2">"User switched to manual mode, this command will be ignored"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">"human"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="s2">"Human mode enabled - you can now type commands directly"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_confirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"human"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>  <span class="c1"># just submit blank action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">"confirm"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="s2">"Confirm mode enabled - LM proposes commands and you confirm/reject them"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_previous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_first_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_last_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_down</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_to</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_target_y</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_to</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_target_y</span> <span class="o">-</span> <span class="mi">15</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">action_toggle_help_panel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"HelpPanel"</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_hide_help_panel</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_show_help_panel</span><span class="p">()</span>
+</code></pre></div>
+</details>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">See also</p>
 <ul>

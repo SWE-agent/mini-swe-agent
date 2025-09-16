@@ -1941,6 +1941,124 @@
 
 
 <h1 id="model-utilities">Model Utilities</h1>
+<div class="admonition note">
+<p class="admonition-title">Model Utilities</p>
+<ul>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/__init__.py">Read on GitHub</a></li>
+</ul>
+<details class="note">
+<summary>Full source code</summary>
+<div class="highlight"><pre><span></span><code><span class="sd">"""This file provides convenience functions for selecting models.</span>
+<span class="sd">You can ignore this file completely if you explicitly set your model in your run script.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GlobalModelStats</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Global model statistics tracker with optional limits."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_limit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_GLOBAL_COST_LIMIT"</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_GLOBAL_CALL_LIMIT"</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_limit</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_limit</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_SILENT_STARTUP"</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Global cost/call limit: $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cost_limit</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">call_limit</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Add a model call with its cost, checking limits."""</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span> <span class="o">+=</span> <span class="n">cost</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_limit</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_limit</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Global cost/call limit exceeded: $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_calls</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cost</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">n_calls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls</span>
+
+
+<span class="n">GLOBAL_MODEL_STATS</span> <span class="o">=</span> <span class="n">GlobalModelStats</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Get an initialized model object from any kind of user input or settings."""</span>
+    <span class="n">resolved_model_name</span> <span class="o">=</span> <span class="n">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">"model_name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolved_model_name</span>
+
+    <span class="n">model_class</span> <span class="o">=</span> <span class="n">get_model_class</span><span class="p">(</span><span class="n">resolved_model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"model_class"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_MODEL_API_KEY"</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">model_class</span><span class="p">))</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"DeterministicModel"</span><span class="p">):</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"model_kwargs"</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">"api_key"</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_env</span>
+
+    <span class="k">return</span> <span class="n">model_class</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Get a model name from any kind of user input or settings."""</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">input_model_name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">input_model_name</span>
+    <span class="k">if</span> <span class="n">from_config</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model_name"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">from_config</span>
+    <span class="k">if</span> <span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_MODEL_NAME"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">from_env</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No default model set. Please run `mini-extra config setup` to set one."</span><span class="p">)</span>
+
+
+<span class="n">_MODEL_CLASS_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"anthropic"</span><span class="p">:</span> <span class="s2">"minisweagent.models.anthropic.AnthropicModel"</span><span class="p">,</span>
+    <span class="s2">"litellm"</span><span class="p">:</span> <span class="s2">"minisweagent.models.litellm_model.LitellmModel"</span><span class="p">,</span>
+    <span class="s2">"openrouter"</span><span class="p">:</span> <span class="s2">"minisweagent.models.openrouter_model.OpenRouterModel"</span><span class="p">,</span>
+    <span class="s2">"deterministic"</span><span class="p">:</span> <span class="s2">"minisweagent.models.test_models.DeterministicModel"</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_model_class</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Select the best model class.</span>
+
+<span class="sd">    If a model_class is provided (as shortcut name, or as full import path,</span>
+<span class="sd">    e.g., "anthropic" or "minisweagent.models.anthropic.AnthropicModel"),</span>
+<span class="sd">    it takes precedence over the `model_name`.</span>
+<span class="sd">    Otherwise, the model_name is used to select the best model class.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">model_class</span><span class="p">:</span>
+        <span class="n">full_path</span> <span class="o">=</span> <span class="n">_MODEL_CLASS_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_class</span><span class="p">,</span> <span class="n">model_class</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module_name</span><span class="p">,</span> <span class="n">class_name</span> <span class="o">=</span> <span class="n">full_path</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Unknown model class: </span><span class="si">{</span><span class="n">model_class</span><span class="si">}</span><span class="s2"> (resolved to </span><span class="si">{</span><span class="n">full_path</span><span class="si">}</span><span class="s2">, available: </span><span class="si">{</span><span class="n">_MODEL_CLASS_MAPPING</span><span class="si">}</span><span class="s2">)"</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">s</span> <span class="ow">in</span> <span class="n">model_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"anthropic"</span><span class="p">,</span> <span class="s2">"sonnet"</span><span class="p">,</span> <span class="s2">"opus"</span><span class="p">,</span> <span class="s2">"claude"</span><span class="p">]):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.anthropic</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnthropicModel</span>
+
+        <span class="k">return</span> <span class="n">AnthropicModel</span>
+
+    <span class="c1"># Default to LitellmModel</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.litellm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LitellmModel</span>
+
+    <span class="k">return</span> <span class="n">LitellmModel</span>
+</code></pre></div>
+</details>
+</div>
 <p>Convenience functions for selecting and configuring models.</p>
 
 
