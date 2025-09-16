@@ -49,7 +49,7 @@ def main(
     instance: dict = instances[instance_spec]  # type: ignore
 
     config_path = get_config_path(config_path)
-    logger.info(f"Loading agent config from [bold green]'{config_path}'[/bold green]")
+    logger.info(f"Loading agent config from '{config_path}'")
     config = yaml.safe_load(config_path.read_text())
     if environment_class is not None:
         config.setdefault("environment", {})["environment_class"] = environment_class
