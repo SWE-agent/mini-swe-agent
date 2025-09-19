@@ -75,6 +75,7 @@ _MODEL_CLASS_MAPPING = {
     "anthropic": "minisweagent.models.anthropic.AnthropicModel",
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
     "openrouter": "minisweagent.models.openrouter_model.OpenRouterModel",
+    "portkey": "minisweagent.models.portkey_model.PortkeyModel",
     "deterministic": "minisweagent.models.test_models.DeterministicModel",
 }
 
