@@ -1,6 +1,8 @@
+import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
+from pathlib import Path
 from typing import Any
 
 import litellm
@@ -26,6 +28,10 @@ except ImportError:
 class PortkeyModelConfig:
     model_name: str
     model_kwargs: dict[str, Any] = field(default_factory=dict)
+    litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
+    """We currently use litellm to calculate costs. Here you can register additional models to litellm's model registry.
+    Note that this might change if we get better support for Portkey.
+    """
 
 
 class PortkeyModel:
@@ -37,6 +43,8 @@ class PortkeyModel:
         self.config = PortkeyModelConfig(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
+        if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
+            litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
         # Get API key from environment or raise error
         self._api_key = os.getenv("PORTKEY_API_KEY")
