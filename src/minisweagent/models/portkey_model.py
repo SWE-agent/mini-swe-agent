@@ -1,11 +1,9 @@
 import logging
 import os
-import time
-import uuid
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-import requests
+import litellm
 from tenacity import (
     before_sleep_log,
     retry,
@@ -59,48 +57,31 @@ class PortkeyModel:
 
         self.client = Portkey(**client_kwargs)
 
-    def _generate_request_id(self) -> str:
-        """Generate a unique request ID for tracking."""
-        return f"mini-swe-{uuid.uuid4().hex[:8]}-{int(time.time())}"
-
     @retry(
         stop=stop_after_attempt(10),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
-        retry=retry_if_not_exception_type((KeyboardInterrupt,)),
+        retry=retry_if_not_exception_type((KeyboardInterrupt, TypeError, ValueError)),
     )
-    def _query(self, messages: list[dict[str, str]], request_id: str, **kwargs):
-        return self.client.with_options(metadata={"request_id": request_id}).chat.completions.create(
+    def _query(self, messages: list[dict[str, str]], **kwargs):
+        # return self.client.with_options(metadata={"request_id": request_id}).chat.completions.create(
+        return self.client.chat.completions.create(
             model=self.config.model_name,
             messages=messages,
             **(self.config.model_kwargs | kwargs),
         )
 
-    def _get_cost_from_analytics(self, request_id: str) -> float:
-        """Retrieve cost information from Portkey analytics API for a specific request_id."""
-        if not self._api_key:
-            return 0.0
-
-        # Query Portkey analytics API for cost data by request_id
-        url = "https://api.portkey.ai/v1/analytics/groups/metadata/request_id"
-        headers = {"x-portkey-api-key": self._api_key, "Content-Type": "application/json"}
-
-        response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
-
-        analytics_data = response.json()
-
-        # Find the specific request_id in the analytics data
-        for group in analytics_data.get("groups", []):
-            if group.get("metadata", {}).get("request_id") == request_id:
-                return group["cost"]
-
-        raise RuntimeError(f"No cost data found for request_id: {request_id}")
-
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
-        request_id = self._generate_request_id()
-        response = self._query(messages, request_id, **kwargs)
-        cost = self._get_cost_from_analytics(request_id)
+        response = self._query(messages, **kwargs)
+        try:
+            cost = litellm.cost_calculator.completion_cost(response)
+        except Exception as e:
+            logger.critical(
+                f"Error calculating cost for model {self.config.model_name}: {e}. "
+                "Please check the 'Updating the model registry' section in the documentation at "
+                "https://klieret.short.gy/litellm-model-registry Still stuck? Please open a github issue for help!"
+            )
+            raise
 
         self.n_calls += 1
         self.cost += cost
@@ -109,8 +90,7 @@ class PortkeyModel:
         return {
             "content": response.choices[0].message.content or "",
             "extra": {
-                "response": response.model_dump() if hasattr(response, "model_dump") else str(response),
-                "request_id": request_id,
+                "response": response.model_dump(),
                 "cost": cost,
             },
         }

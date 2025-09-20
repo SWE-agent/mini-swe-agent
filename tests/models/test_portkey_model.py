@@ -50,7 +50,6 @@ def test_portkey_model_query():
     """Test PortkeyModel.query method with mocked response."""
     mock_portkey_class = MagicMock()
     mock_client = MagicMock()
-    mock_with_options = MagicMock()
     mock_response = MagicMock()
     mock_choice = MagicMock()
     mock_message = MagicMock()
@@ -60,35 +59,29 @@ def test_portkey_model_query():
     mock_response.choices = [mock_choice]
     mock_response.model_dump.return_value = {"test": "response"}
 
-    mock_with_options.chat.completions.create.return_value = mock_response
-    mock_client.with_options.return_value = mock_with_options
+    mock_client.chat.completions.create.return_value = mock_response
     mock_portkey_class.return_value = mock_client
 
     with patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class):
         with patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}):
-            with patch("requests.get") as mock_requests:
-                # Mock the analytics API response
-                mock_requests.return_value.json.return_value = {
-                    "groups": [{"metadata": {"request_id": "test-id"}, "cost": 0.01}]
-                }
-                mock_requests.return_value.raise_for_status.return_value = None
+            with patch("minisweagent.models.portkey_model.litellm.cost_calculator.completion_cost") as mock_cost:
+                mock_cost.return_value = 0.01
 
                 model = PortkeyModel(model_name="gpt-4o")
 
-                # Mock the request ID generation
-                with patch.object(model, "_generate_request_id", return_value="test-id"):
-                    messages = [{"role": "user", "content": "Hello!"}]
-                    result = model.query(messages)
+                messages = [{"role": "user", "content": "Hello!"}]
+                result = model.query(messages)
 
-                    assert result["content"] == "Hello! How can I help you?"
-                    assert result["extra"]["response"] == {"test": "response"}
-                    assert result["extra"]["request_id"] == "test-id"
-                    assert result["extra"]["cost"] == 0.01
-                    assert model.n_calls == 1
-                    assert model.cost == 0.01
+                assert result["content"] == "Hello! How can I help you?"
+                assert result["extra"]["response"] == {"test": "response"}
+                assert result["extra"]["cost"] == 0.01
+                assert model.n_calls == 1
+                assert model.cost == 0.01
 
-                    # Verify the API was called correctly with metadata
-                    mock_client.with_options.assert_called_once_with(metadata={"request_id": "test-id"})
+                # Verify the API was called correctly
+                mock_client.chat.completions.create.assert_called_once_with(model="gpt-4o", messages=messages)
+                # Verify cost calculation was called
+                mock_cost.assert_called_once_with(mock_response)
 
 
 def test_portkey_model_get_template_vars():
