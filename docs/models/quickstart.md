@@ -71,6 +71,8 @@ There are several ways to set your API keys:
     XINFERENCE_API_KEY
     ```
 
+    In addition, Portkey models use the `PORTKEY_API_KEY` environment variable.
+
 ## Selecting a model
 
 !!! note "Model names and providers."
@@ -176,11 +178,28 @@ This will almost always default to `litellm` (with Anthropic models being a spec
 However, there are a few other backends that you can use and specify with the `--model-class` flag or the
 `model.model_class` key in the [agent config file](../advanced/yaml_configuration.md).
 
+For example:
+
+=== "Openrouter model"
+
+    ```bash
+    mini -m "moonshotai/kimi-k2-0905" --model-class openrouter
+    ```
+
+=== "Portkey model"
+
+    ```bash
+    mini -m "claude-sonnet-4-20250514" --model-class portkey
+    ```
+
+
 * **`litellm`** ([`LitellmModel`](../reference/models/litellm.md)) - **Default and recommended**. Supports most models through [litellm](https://github.com/BerriAI/litellm). Works with OpenAI, Anthropic, Google, and many other providers.
 
-* **`anthropic`** ([`AnthropicModel`](../reference/models/anthropic.md)) - Wrapper around `LitellmModel` for Anthropic models that adds cache breakpoint handling.
+* **`anthropic`** ([`AnthropicModel`](../reference/models/anthropic.md)) - Wrapper around `LitellmModel` for Anthropic models that adds cache breakpoint handling. Will be used by default if no `model_class` is specified and the model name contains "anthropic", "claude", etc.
 
 * **`openrouter`** ([`OpenRouterModel`](../reference/models/openrouter.md)) - Direct integration with [OpenRouter](https://openrouter.ai/) API for accessing various models through a single endpoint.
+
+* **`portkey`** ([`PortkeyModel`](../reference/models/portkey.md)) - Integration with [Portkey](https://portkey.ai/) for accessing various models with enhanced observability, caching, and routing features. Note that this still uses `litellm` to calculate costs.
 
 On top, there's a few more exotic model classes that you can use:
 
