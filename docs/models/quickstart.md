@@ -2,8 +2,10 @@
 
 !!! tip "Setup"
 
-    In most cases, you can simply run `mini-extra config setup` to set up your default model and API keys.
-    This should be run the first time you run `mini`.
+    * In most cases, you can simply run `mini-extra config setup` to set up your default model and API keys.
+      This should be run the first time you run `mini`.
+    * By default we support all models using [`litellm`](https://github.com/BerriAI/litellm).
+    * We also offer support for models via [Openrouter](https://openrouter.ai/) and [Portkey](https://portkey.ai/).
 
 ## Setting API keys
 
@@ -110,7 +112,7 @@ There are several ways to set your API keys:
 
 To find the corresponding API key, check the previous section.
 
-## Extra settings
+## Extra model settings
 
 To configure reasoning efforts or similar settings, you need to edit the [agent config file](../advanced/yaml_configuration.md).
 In newer versions, the location of the config file is printed when you run `mini` ("agent config" in the output).
@@ -119,16 +121,20 @@ Here's a few examples:
 
 === "Temperature"
 
+    `litellm` allows to set model-specific settings with the `model_kwargs` key:
+
     ```yaml
     model:
+    model_name: "anthropic/claude-sonnet-4-20250514"
       model_kwargs:
-        model_name: "anthropic/claude-sonnet-4-20250514"
         temperature: 0.0
     ```
 
     Note that temperature isn't supported by all models.
 
 === "GPT-5 reasoning effort"
+
+    `litellm` allows to set model-specific settings with the `model_kwargs` key:
 
     ```yaml
     model:
@@ -139,10 +145,14 @@ Here's a few examples:
         verbosity: "medium"
     ```
 
+    Here, `drop_params` is used to drop any parameters that are not supported by the model.
+
 === "OpenRouter"
 
     This example explicitly sets the model class to `openrouter` (see the next section for more details).
-    It also explicitly sets the providers to disable switching between them.
+    It also explicitly sets the providers to disable switching between them (this is useful if you need
+    very consistent cost behavior, e.g., for benchmarking, but it's not recommended if you're just interested
+    in getting low latency and good prices).
 
     ```yaml
     model:
@@ -156,6 +166,8 @@ Here's a few examples:
     ```
 
 === "Local models"
+
+    Using `litellm` with local models:
 
     ```yaml
     model:
@@ -176,7 +188,7 @@ By default (if you only specify the model name), we pick the best backend for yo
 This will almost always default to `litellm` (with Anthropic models being a special case as they need to have explicit cache breakpoint handling).
 
 However, there are a few other backends that you can use and specify with the `--model-class` flag or the
-`model.model_class` key in the [agent config file](../advanced/yaml_configuration.md).
+`model.model_class` key in the agent config file (see previous section).
 
 For example:
 
