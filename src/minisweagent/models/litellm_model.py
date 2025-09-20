@@ -61,7 +61,6 @@ class LitellmModel:
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
-        print(response)
         try:
             cost = litellm.cost_calculator.completion_cost(response)
         except Exception as e:
