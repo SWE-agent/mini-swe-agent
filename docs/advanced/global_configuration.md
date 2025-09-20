@@ -47,7 +47,7 @@ You can also edit the `.env` file directly and we provide a helper function for 
 mini-extra config edit
 ```
 
-To set environment variables (recommended for temporary experiemntation or API keys):
+To set environment variables (recommended for temporary experimentation or API keys):
 
 ```bash
 export KEY="value"
