@@ -2026,6 +2026,7 @@ WX_API_KEY
 XAI_API_KEY
 XINFERENCE_API_KEY
 </code></pre></div>
+<p>In addition, Portkey models use the <code>PORTKEY_API_KEY</code> environment variable.</p>
 </details>
 <h2 id="selecting-a-model">Selecting a model</h2>
 <div class="admonition note">
@@ -3554,15 +3555,31 @@ By default (if you only specify the model name), we pick the best backend for yo
 This will almost always default to <code>litellm</code> (with Anthropic models being a special case as they need to have explicit cache breakpoint handling).</p>
 <p>However, there are a few other backends that you can use and specify with the <code>--model-class</code> flag or the
 <code>model.model_class</code> key in the <a href="../../advanced/yaml_configuration/">agent config file</a>.</p>
+<p>For example:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">Openrouter model</label><label for="__tabbed_2_2">Portkey model</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"moonshotai/kimi-k2-0905"</span><span class="w"> </span>--model-class<span class="w"> </span>openrouter
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"claude-sonnet-4-20250514"</span><span class="w"> </span>--model-class<span class="w"> </span>portkey
+</code></pre></div>
+</div>
+</div>
+</div>
 <ul>
 <li>
 <p><strong><code>litellm</code></strong> (<a href="../../reference/models/litellm/"><code>LitellmModel</code></a>) - <strong>Default and recommended</strong>. Supports most models through <a href="https://github.com/BerriAI/litellm">litellm</a>. Works with OpenAI, Anthropic, Google, and many other providers.</p>
 </li>
 <li>
-<p><strong><code>anthropic</code></strong> (<a href="../../reference/models/anthropic/"><code>AnthropicModel</code></a>) - Wrapper around <code>LitellmModel</code> for Anthropic models that adds cache breakpoint handling.</p>
+<p><strong><code>anthropic</code></strong> (<a href="../../reference/models/anthropic/"><code>AnthropicModel</code></a>) - Wrapper around <code>LitellmModel</code> for Anthropic models that adds cache breakpoint handling. Will be used by default if no <code>model_class</code> is specified and the model name contains "anthropic", "claude", etc.</p>
 </li>
 <li>
 <p><strong><code>openrouter</code></strong> (<a href="../../reference/models/openrouter/"><code>OpenRouterModel</code></a>) - Direct integration with <a href="https://openrouter.ai/">OpenRouter</a> API for accessing various models through a single endpoint.</p>
+</li>
+<li>
+<p><strong><code>portkey</code></strong> (<a href="../../reference/models/portkey/"><code>PortkeyModel</code></a>) - Integration with <a href="https://portkey.ai/">Portkey</a> for accessing various models with enhanced observability, caching, and routing features. Note that this still uses <code>litellm</code> to calculate costs.</p>
 </li>
 </ul>
 <p>On top, there's a few more exotic model classes that you can use:</p>
