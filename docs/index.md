@@ -216,7 +216,7 @@ agent.run("Write a sudoku game")</code></pre>
     </div>
   </a>
 
-  <a href="advanced/configuration/" class="nav-card-link">
+  <a href="advanced/yaml_configuration/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">settings</span>
