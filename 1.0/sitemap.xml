@@ -2,162 +2,158 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://mini-swe-agent.com/latest/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/SECURITY/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/_footer/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/contributing/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/faq/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/quickstart/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/control_flow/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/cookbook/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/environments/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/global_configuration/</loc>
-         <lastmod>2025-09-23</lastmod>
-    </url>
-    <url>
-         <loc>https://mini-swe-agent.com/latest/advanced/local_models/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/yaml_configuration/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/models/local_models/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/models/quickstart/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/models/troubleshooting/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/agents/default/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/agents/interactive/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/agents/textual/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/bubblewrap/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/docker/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/local/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/singularity/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/swerex_docker/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/anthropic/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/extra/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/litellm/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/openrouter/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/portkey/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/test_models/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/utils/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/github_issue/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/hello_world/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/mini/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/swebench/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/swebench_single/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/inspector/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/mini/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/mini_v/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/usage/swebench/</loc>
-         <lastmod>2025-09-23</lastmod>
+         <lastmod>2025-09-25</lastmod>
     </url>
 </urlset>
