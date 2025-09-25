@@ -832,10 +832,34 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#temperature-not-supported" class="md-nav__link">
     <span class="md-ellipsis">
       Temperature not supported
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#portkey" class="md-nav__link">
+    <span class="md-ellipsis">
+      Portkey
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Portkey">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-during-cost-calculation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error during cost calculation
     </span>
   </a>
   
@@ -1949,10 +1973,34 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#temperature-not-supported" class="md-nav__link">
     <span class="md-ellipsis">
       Temperature not supported
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#portkey" class="md-nav__link">
+    <span class="md-ellipsis">
+      Portkey
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Portkey">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-during-cost-calculation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error during cost calculation
     </span>
   </a>
   
@@ -2035,11 +2083,44 @@ Add it here - https://github.com/BerriAI/litellm/blob/main/model_prices_and_cont
 </code></pre></div>
 <p><code>litellm</code> doesn't know about the cost of your model.
 Take a look at the model registry section of the <a href="../local_models/">local models</a> guide to add it.</p>
-<h3 id="temperature-not-supported">Temperature not supported</h3>
+<p>Another common mistake is to not include any or the correct provider in the model name (e.g., <code>gemini-2.0-flash</code> instead of <code>gemini/gemini-2.0-flash</code>).</p>
+<h2 id="temperature-not-supported">Temperature not supported</h2>
 <p>Some models (like <code>gpt-5</code>, <code>o3</code> etc.) do not support temperature, however our default config specifies <code>temperature: 0.0</code>.
 You need to switch to a config file that does not specify temperature, e.g., <code>mini_no_temp.yaml</code>.</p>
 <p>To do this, add <code>-c mini_no_temp</code> to your <code>mini</code> command.</p>
 <p>We are working on a better solution for this (see <a href="https://github.com/SWE-agent/mini-swe-agent/issues/488">this issue</a>).</p>
+<h2 id="portkey">Portkey</h2>
+<h3 id="error-during-cost-calculation_1">Error during cost calculation</h3>
+<p>We use <code>litellm</code> to calculate costs for Portkey models because Portkey doesn't seem to provide per-request cost information without
+very inconvenient APIs.</p>
+<p>This can lead to errors likethis:</p>
+<div class="highlight"><pre><span></span><code>  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/minisweagent/models/portkey_model.py", line 85, in query
+    cost = litellm.cost_calculator.completion_cost(response)
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/cost_calculator.py", line 973, in completion_cost
+    raise e
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/cost_calculator.py", line 966, in completion_cost
+    raise e
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/cost_calculator.py", line 928, in completion_cost
+    ) = cost_per_token(
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/cost_calculator.py", line 218, in cost_per_token
+    _, custom_llm_provider, _, _ = litellm.get_llm_provider(model=model)
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/litellm_core_utils/get_llm_provider_logic.py", line 395, in get_llm_provider
+    raise e
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/litellm_core_utils/get_llm_provider_logic.py", line 372, in get_llm_provider
+    raise litellm.exceptions.BadRequestError(  # type: ignore
+litellm.exceptions.BadRequestError: litellm.BadRequestError: LLM Provider NOT provided. Pass in the LLM provider you are trying to call. You passed model=grok-code-fast-1
+ Pass model as E.g. For 'Huggingface' inference endpoints pass in `completion(model='huggingface/starcoder',..)` Learn more: https://docs.litellm.ai/docs/providers
+</code></pre></div>
+<p>In this case, the issue is simply that the portkey model name doesn't match the litellm model name (and very specifically here
+doesn't include the provider).</p>
+<p>To fix this, you can manually set the litellm model name to the portkey model name with the <code>litellm_model_name_override</code> key.
+For example:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"grok-code-fast-1"</span><span class="w">  </span><span class="c1"># the portkey model name</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"portkey"</span><span class="w">  </span><span class="c1"># make sure to use the portkey model class</span>
+<span class="w">  </span><span class="nt">litellm_model_name_override</span><span class="p">:</span><span class="w"> </span><span class="s">"xai/grok-code-fast-1"</span><span class="w">  </span><span class="c1"># the litellm model name for cost information</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</code></pre></div>
 <div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
