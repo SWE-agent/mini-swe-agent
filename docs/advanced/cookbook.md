@@ -292,4 +292,9 @@ An agent that validates actions before execution (also an example of how to use 
     )
     ```
 
+### Running mini-swe-agent on Ray
+
+[This blog post](https://www.anyscale.com/blog/massively-parallel-agentic-simulations-with-ray)
+describes how to parallelize mini-swe-agent runs with Ray.
+
 {% include-markdown "_footer.md" %}
