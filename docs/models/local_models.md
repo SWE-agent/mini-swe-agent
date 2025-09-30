@@ -117,9 +117,9 @@ model:
 
 ## Generating SWE-bench trajectories with vLLM
 
-This example shows how to generate SWE-bench trajectories using [vLLM](https://docs.vllm.ai/en/latest/) as the local inference engine.  
+This example shows how to generate SWE-bench trajectories using [vLLM](https://docs.vllm.ai/en/latest/) as the local inference engine.
 
-First, launch a vLLM server with your chosen model. For example:  
+First, launch a vLLM server with your chosen model. For example:
 
 ```bash
 vllm serve ricdomolm/mini-coder-1.7b &
@@ -127,7 +127,7 @@ vllm serve ricdomolm/mini-coder-1.7b &
 
 By default, the server will be available at `http://localhost:8000`.
 
-Second, edit the mini-swe-agent SWE-bench config file located in `src/minisweagent/config/extra/swebench.yaml` to include your local vLLM model:  
+Second, edit the mini-swe-agent SWE-bench config file located in `src/minisweagent/config/extra/swebench.yaml` to include your local vLLM model:
 
 ```yaml
 model:
@@ -136,7 +136,7 @@ model:
     api_base: "http://localhost:8000/v1"  # adjust if using a non-default port/address
 ```
 
-If you need a custom registry, as detailed above, create a `registry.json` file:  
+If you need a custom registry, as detailed above, create a `registry.json` file:
 
 ```bash
 cat > registry.json <<'EOF'
