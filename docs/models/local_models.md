@@ -115,9 +115,49 @@ model:
 
 ## Concrete examples
 
-!!! success "Help us fill this section!"
+## Generating SWE-bench trajectories with vLLM
 
-    We welcome concrete examples of how to use local models per pull request into this guide.
-    Please add your example here.
+This example shows how to generate SWE-bench trajectories using [vLLM](https://docs.vllm.ai/en/latest/) as the local inference engine.  
+
+First, launch a vLLM server with your chosen model. For example:  
+
+```bash
+vllm serve ricdomolm/mini-coder-1.7b &
+```
+
+By default, the server will be available at `http://localhost:8000`.
+
+Second, edit the mini-swe-agent SWE-bench config file located in `src/minisweagent/config/extra/swebench.yaml` to include your local vLLM model:  
+
+```yaml
+model:
+  model_name: "hosted_vllm/ricdomolm/mini-coder-1.7b"  # or hosted_vllm/path/to/local/model
+  model_kwargs:
+    api_base: "http://localhost:8000/v1"  # adjust if using a non-default port/address
+```
+
+If you need a custom registry, as detailed above, create a `registry.json` file:  
+
+```bash
+cat > registry.json <<'EOF'
+{
+  "ricdomolm/mini-coder-1.7b": {
+    "max_tokens": 40960,
+    "input_cost_per_token": 0.0,
+    "output_cost_per_token": 0.0,
+    "litellm_provider": "hosted_vllm",
+    "mode": "chat"
+  }
+}
+EOF
+```
+
+Now you’re ready to generate trajectories! Let's solve the `django__django-11099` instance of SWE-bench Verified:
+
+```bash
+LITELLM_MODEL_REGISTRY_PATH=registry.json mini-extra swebench --output test/ --subset verified --split test --filter '^(django__django-11099)$'
+```
+
+You should now see the generated trajectory in the `test/` directory.
 
 --8<-- "docs/_footer.md"
