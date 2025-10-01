@@ -29,7 +29,7 @@ or to update specific settings:
 ```
 mini-extra config set KEY VALUE
 # e.g.,
-mini-extra config set MSWEA_MODEL_NAME "claude-sonnet-4-20250514"
+mini-extra config set MSWEA_MODEL_NAME "anthropic/claude-sonnet-4-20250514"
 mini-extra config set MSWEA_MODEL_API_KEY "sk-..."
 ```
 
@@ -64,7 +64,7 @@ setx KEY "value"
 ```bash
 # Default model name
 # (default: not set)
-MSWEA_MODEL_NAME="claude-sonnet-4-20250514"
+MSWEA_MODEL_NAME="anthropic/claude-sonnet-4-20250514"
 
 # Default API key
 # (default: not set)

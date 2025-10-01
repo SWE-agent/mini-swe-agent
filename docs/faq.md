@@ -91,7 +91,7 @@
     To permanently change it:
 
     ```bash
-    mini-extra config set MSWEA_MODEL_NAME claude-sonnet-4-20250514
+    mini-extra config set MSWEA_MODEL_NAME anthropic/claude-sonnet-4-20250514
     ```
 
     Alternatively, you can directly edit the `.env` file in the config directory
