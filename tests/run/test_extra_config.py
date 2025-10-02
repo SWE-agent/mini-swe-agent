@@ -16,14 +16,14 @@ class TestConfigSetup:
             patch("minisweagent.run.extra.config.prompt") as mock_prompt,
             patch("minisweagent.run.extra.config.console.print"),
         ):
-            mock_prompt.side_effect = ["anthropic/claude-sonnet-4-20250514", "ANTHROPIC_API_KEY", "sk-test123"]
+            mock_prompt.side_effect = ["anthropic/claude-sonnet-4-5-20250929", "ANTHROPIC_API_KEY", "sk-test123"]
 
             setup()
 
             # Verify the file was created and contains the expected content
             assert config_file.exists()
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-20250514'" in content
+            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
             assert "ANTHROPIC_API_KEY='sk-test123'" in content
             assert "MSWEA_CONFIGURED='true'" in content
 
@@ -115,11 +115,11 @@ class TestConfigSet:
         config_file = tmp_path / ".env"
 
         with patch("minisweagent.run.extra.config.global_config_file", config_file):
-            set("MSWEA_MODEL_NAME", "anthropic/claude-sonnet-4-20250514")
+            set("MSWEA_MODEL_NAME", "anthropic/claude-sonnet-4-5-20250929")
 
             assert config_file.exists()
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-20250514'" in content
+            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
 
     def test_set_with_no_arguments_prompts_for_both(self, tmp_path):
         """Test set command when no arguments provided - should prompt for both key and value."""
@@ -179,11 +179,11 @@ class TestConfigSet:
         config_file = tmp_path / ".env"
 
         with patch("minisweagent.run.extra.config.global_config_file", config_file):
-            set("MSWEA_MODEL_NAME", "anthropic/claude-sonnet-4-20250514")
+            set("MSWEA_MODEL_NAME", "anthropic/claude-sonnet-4-5-20250929")
 
             assert config_file.exists()
             content = config_file.read_text()
-            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-20250514'" in content
+            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
 
     def test_set_api_key(self, tmp_path):
         """Test setting an API key."""
@@ -317,7 +317,7 @@ class TestConfigUnset:
         """Test unsetting one key from a file with multiple keys."""
         config_file = tmp_path / ".env"
         config_file.write_text(
-            "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-20250514'\n"
+            "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'\n"
             "ANTHROPIC_API_KEY='sk-anthropic-key'\n"
             "OPENAI_API_KEY='sk-openai-key'\n"
             "MSWEA_CONFIGURED='true'\n"
@@ -330,7 +330,7 @@ class TestConfigUnset:
             # Target key should be removed
             assert "ANTHROPIC_API_KEY" not in content
             # Other keys should remain
-            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-20250514'" in content
+            assert "MSWEA_MODEL_NAME='anthropic/claude-sonnet-4-5-20250929'" in content
             assert "OPENAI_API_KEY='sk-openai-key'" in content
             assert "MSWEA_CONFIGURED='true'" in content
 
