@@ -971,3 +971,204 @@ def test_confirm_exit_config_field_can_be_set(default_config):
         },
     )
     assert agent_without_confirm.config.confirm_exit is False
+
+
+def test_summarize_on_exit_config_field_defaults():
+    """Test that summarize_on_exit field has correct default value."""
+    agent = InteractiveAgent(
+        model=DeterministicModel(outputs=[]),
+        env=LocalEnvironment(),
+    )
+    # Default should be False
+    assert agent.config.summarize_on_exit is False
+
+
+def test_summarize_on_exit_config_field_can_be_set():
+    """Test that summarize_on_exit field can be explicitly set."""
+    agent_with_summary = InteractiveAgent(
+        model=DeterministicModel(outputs=[]),
+        env=LocalEnvironment(),
+        summarize_on_exit=True,
+    )
+    assert agent_with_summary.config.summarize_on_exit is True
+
+    agent_without_summary = InteractiveAgent(
+        model=DeterministicModel(outputs=[]),
+        env=LocalEnvironment(),
+        summarize_on_exit=False,
+    )
+    assert agent_without_summary.config.summarize_on_exit is False
+
+
+def test_summarize_on_exit_disabled_no_summary():
+    """Test that when summarize_on_exit=False, no summary is generated."""
+    with patch(
+        "minisweagent.agents.interactive.prompt_session.prompt",
+        side_effect=["", ""],  # Confirm action, then no new task
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
+            ),
+            env=LocalEnvironment(),
+            summarize_on_exit=False,
+        )
+
+        exit_status, result = agent.run("Test no summary")
+        assert exit_status == "Submitted"
+        assert result == "completed\n"
+        # Verify no summary request was added to messages
+        summary_messages = [
+            msg for msg in agent.messages if "Please provide a brief summary" in msg.get("content", "")
+        ]
+        assert len(summary_messages) == 0
+
+
+def test_summarize_on_exit_enabled_generates_summary():
+    """Test that when summarize_on_exit=True, summary is generated before exit."""
+    with patch(
+        "minisweagent.agents.interactive.prompt_session.prompt",
+        side_effect=["", ""],  # Confirm action, then no new task
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=[
+                    "Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```",
+                    "I modified file.py to add a new feature and ran tests successfully.",  # Summary response
+                ]
+            ),
+            env=LocalEnvironment(),
+            summarize_on_exit=True,
+            confirm_exit=True,
+        )
+
+        with patch("minisweagent.agents.interactive.console.print") as mock_print:
+            exit_status, result = agent.run("Test with summary")
+            assert exit_status == "Submitted"
+            assert result == "completed\n"
+
+            # Verify summary request was added to messages
+            summary_messages = [
+                msg for msg in agent.messages if "Please provide a brief summary" in msg.get("content", "")
+            ]
+            assert len(summary_messages) == 1
+
+            # Verify model was called twice (once for action, once for summary)
+            assert agent.model.n_calls == 2
+
+            # Verify console.print was called with summary-related messages
+            print_calls_str = str(mock_print.call_args_list)
+            assert "Generating summary" in print_calls_str or "Summary of changes" in print_calls_str
+
+
+def test_summarize_on_exit_with_confirm_exit_disabled():
+    """Test that summary is generated even when confirm_exit=False."""
+    with patch(
+        "minisweagent.agents.interactive.prompt_session.prompt",
+        side_effect=[""],  # Only confirm action, no exit confirmation
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=[
+                    "Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```",
+                    "I completed the task successfully.",  # Summary response
+                ]
+            ),
+            env=LocalEnvironment(),
+            summarize_on_exit=True,
+            confirm_exit=False,  # No exit confirmation
+        )
+
+        with patch("minisweagent.agents.interactive.console.print"):
+            exit_status, result = agent.run("Test summary without exit confirmation")
+            assert exit_status == "Submitted"
+            assert result == "completed\n"
+
+            # Verify summary request was added
+            summary_messages = [
+                msg for msg in agent.messages if "Please provide a brief summary" in msg.get("content", "")
+            ]
+            assert len(summary_messages) == 1
+
+            # Model should be called twice (action + summary)
+            assert agent.model.n_calls == 2
+
+
+def test_summarize_on_exit_with_new_task_continues():
+    """Test that when user provides new task after summary, agent continues."""
+    with patch(
+        "minisweagent.agents.interactive.prompt_session.prompt",
+        side_effect=[
+            "",  # Confirm first action
+            "Do another task",  # Provide new task after summary
+            "",  # Confirm second action
+            "",  # No new task on second exit (after second summary)
+        ],
+    ):
+        agent = InteractiveAgent(
+            model=DeterministicModel(
+                outputs=[
+                    "First\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first done'\n```",
+                    "Summary of first task",  # First summary
+                    "Second\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'second done'\n```",
+                    "Summary of second task",  # Second summary
+                ]
+            ),
+            env=LocalEnvironment(),
+            summarize_on_exit=True,
+            confirm_exit=True,
+        )
+
+        with patch("minisweagent.agents.interactive.console.print"):
+            exit_status, result = agent.run("Initial task")
+            assert exit_status == "Submitted"
+            assert result == "second done\n"
+
+            # Verify both summaries were requested
+            summary_messages = [
+                msg for msg in agent.messages if "Please provide a brief summary" in msg.get("content", "")
+            ]
+            assert len(summary_messages) == 2
+
+            # Verify new task was added
+            new_task_messages = [msg for msg in agent.messages if "Do another task" in msg.get("content", "")]
+            assert len(new_task_messages) == 1
+
+            # Model should be called 4 times (2 actions + 2 summaries)
+            assert agent.model.n_calls == 4
+
+
+def test_summarize_on_exit_error_handling():
+    """Test that errors during summary generation are handled gracefully."""
+
+    class ErrorModel(DeterministicModel):
+        """Model that raises an error on the summary call."""
+
+        def query(self, messages):
+            # First call is the action, second is the summary which should error
+            if self.n_calls == 1:
+                raise Exception("Summary generation failed")
+            return super().query(messages)
+
+    with patch(
+        "minisweagent.agents.interactive.prompt_session.prompt",
+        side_effect=["", ""],  # Confirm action, then no new task
+    ):
+        agent = InteractiveAgent(
+            model=ErrorModel(
+                outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
+            ),
+            env=LocalEnvironment(),
+            summarize_on_exit=True,
+            confirm_exit=True,
+        )
+
+        with patch("minisweagent.agents.interactive.console.print") as mock_print:
+            exit_status, result = agent.run("Test summary error handling")
+            # Agent should still complete successfully despite summary error
+            assert exit_status == "Submitted"
+            assert result == "completed\n"
+
+            # Verify error message was printed
+            print_calls_str = str(mock_print.call_args_list)
+            assert "Error generating summary" in print_calls_str
