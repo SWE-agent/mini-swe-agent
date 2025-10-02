@@ -163,6 +163,7 @@ agent:
   step_limit: 0.
   cost_limit: 3.
   mode: confirm
+  # summarize_on_exit: false  # Set to true to ask the model to summarize changes before exiting
 environment:
   env:
     PAGER: cat
