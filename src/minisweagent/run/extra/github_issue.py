@@ -68,8 +68,12 @@ def main(
     )
 
     repo_url = issue_url.split("/issues/")[0]
+    upstream_repo = repo_url.replace("https://github.com/", "")  # e.g., "SWE-agent/mini-swe-agent"
     if github_token := os.getenv("GITHUB_TOKEN"):
         repo_url = repo_url.replace("https://github.com/", f"https://{github_token}@github.com/") + ".git"
+
+    # Pass upstream repo info to the environment
+    _config.setdefault("environment", {}).setdefault("env", {})["UPSTREAM_REPO"] = upstream_repo
 
     agent.env.execute(f"git clone {repo_url} /testbed", cwd="/")
 

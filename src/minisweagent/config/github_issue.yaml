@@ -22,12 +22,31 @@ agent:
 
     You can execute bash commands and edit files to implement the necessary changes.
 
+    # ## GitHub Integration (Optional - uncomment to enable)
+    # You have access to a GITHUB_TOKEN environment variable for GitHub authentication.
+    # The GitHub CLI (gh) will automatically use this token - no manual authentication needed.
+    #
+    # To create a pull request with your changes:
+    # The UPSTREAM_REPO environment variable contains the upstream repo (e.g., "owner/repo").
+    #
+    # 1. Install GitHub CLI: `curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && apt update && apt install gh -y`
+    # 2. Get your username and repo name: `USERNAME=$(gh api user -q .login) && REPO_NAME=$(echo $UPSTREAM_REPO | cut -d'/' -f2)`
+    # 3. Configure git (required for commits): `git config user.email "$USERNAME@users.noreply.github.com" && git config user.name "$USERNAME"`
+    # 4. Create a new branch: `git checkout -b <type>/brief-description` (type: feat, fix, chore, etc.)
+    # 5. Stage and commit changes: `git add -A && git commit -m "<type>: Brief description of changes"`
+    # 6. Check if you have a fork: `gh repo list $USERNAME --limit 1000 --json nameWithOwner -q '.[].nameWithOwner' | grep -q "$USERNAME/$REPO_NAME" && HAS_FORK=true || HAS_FORK=false`
+    # 7. Push to appropriate remote:
+    #    - If you have a fork (HAS_FORK=true): `git remote set-url origin "https://$GITHUB_TOKEN@github.com/$USERNAME/$REPO_NAME.git" && git push -u origin <branch-name>`
+    #    - If no fork (HAS_FORK=false): `git push -u origin <branch-name>` (push directly to upstream)
+    # 8. Create PR: `gh pr create --repo $UPSTREAM_REPO --head $USERNAME:<branch-name> --title "<type>: Brief description" --body "Description of changes"` (if you pushed to upstream, use: `gh pr create --title "..." --body "..."`)
+
     ## Recommended Workflow
     1. Analyze the codebase by finding and reading relevant files
     2. Create a script to reproduce the issue
     3. Edit the source code to resolve the issue
     4. Verify your fix works by running your script again
     5. Test edge cases to ensure your fix is robust
+    # 6. (Optional) Create a pull request with your changes using the GitHub CLI
 
     ## Important Rules
 
@@ -35,6 +54,7 @@ agent:
     2. The action must be enclosed in triple backticks
     3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
        However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
+    # 4. (Optional) After successfully resolving the issue, you can create a pull request (see GitHub Integration section above)
     4. To finish, issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.
        Do not combine it with any other command.
 
@@ -158,6 +178,7 @@ environment:
     LESS: -R
     PIP_PROGRESS_BAR: 'off'
     TQDM_DISABLE: '1'
+    GITHUB_TOKEN: ${GITHUB_TOKEN}
 model:
   model_kwargs:
     drop_params: true
