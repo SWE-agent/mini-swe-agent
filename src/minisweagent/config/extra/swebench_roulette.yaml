@@ -227,7 +227,7 @@ model:
   model_name: "roulette"
   model_class: "minisweagent.models.extra.roulette.RouletteModel"
   model_kwargs:
-    - model_name: "claude-sonnet-4-20250514"
+    - model_name: "anthropic/claude-sonnet-4-20250514"
       model_kwargs:
         temperature: 0.
     - model_name: "gpt-5"

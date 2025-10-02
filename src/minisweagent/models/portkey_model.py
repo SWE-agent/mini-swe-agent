@@ -30,7 +30,12 @@ class PortkeyModelConfig:
     model_kwargs: dict[str, Any] = field(default_factory=dict)
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     """We currently use litellm to calculate costs. Here you can register additional models to litellm's model registry.
-    Note that this might change if we get better support for Portkey.
+    Note that this might change if we get better support for Portkey and change how we calculate costs.
+    """
+    litellm_model_name_override: str = ""
+    """We currently use litellm to calculate costs. Here you can override the model name to use for litellm in case it
+    doesn't match the Portkey model name.
+    Note that this might change if we get better support for Portkey and change how we calculate costs.
     """
 
 
@@ -81,11 +86,17 @@ class PortkeyModel:
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
+        response_for_cost_calc = response.model_copy()
+        if self.config.litellm_model_name_override:
+            if response_for_cost_calc.model:
+                response_for_cost_calc.model = self.config.litellm_model_name_override
         try:
-            cost = litellm.cost_calculator.completion_cost(response)
+            cost = litellm.cost_calculator.completion_cost(
+                response_for_cost_calc, model=self.config.litellm_model_name_override or None
+            )
         except Exception as e:
             logger.critical(
-                f"Error calculating cost for model {self.config.model_name}: {e}. "
+                f"Error calculating cost for model {self.config.model_name} based on {response_for_cost_calc.model_dump()}: {e}. "
                 "Please check the 'Updating the model registry' section in the documentation at "
                 "https://klieret.short.gy/litellm-model-registry Still stuck? Please open a github issue for help!"
             )

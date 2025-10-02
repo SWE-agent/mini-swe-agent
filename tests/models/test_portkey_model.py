@@ -81,7 +81,7 @@ def test_portkey_model_query():
                 # Verify the API was called correctly
                 mock_client.chat.completions.create.assert_called_once_with(model="gpt-4o", messages=messages)
                 # Verify cost calculation was called
-                mock_cost.assert_called_once_with(mock_response)
+                mock_cost.assert_called_once_with(mock_response.model_copy(), model=None)
 
 
 def test_portkey_model_get_template_vars():

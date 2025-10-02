@@ -103,6 +103,9 @@ nav:
   - Blog: https://www.swebench.com/SWE-bench/blog/category/mini-swe-agent/
   - Leaderboard: https://swebench.com
 plugins:
+  - redirects:
+      redirect_maps:
+        'advanced/local_models.md': 'models/local_models.md'
   - glightbox
   - search
   - include-markdown

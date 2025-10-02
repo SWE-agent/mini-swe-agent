@@ -58,7 +58,8 @@ def setup():
     """Setup the global config file."""
     console.print(_SETUP_HELP.format(global_config_file=global_config_file))
     default_model = prompt(
-        "Enter your default model (e.g., claude-sonnet-4-20250514): ", default=os.getenv("MSWEA_MODEL_NAME", "")
+        "Enter your default model (e.g., anthropic/claude-sonnet-4-20250514): ",
+        default=os.getenv("MSWEA_MODEL_NAME", ""),
     ).strip()
     if default_model:
         set_key(global_config_file, "MSWEA_MODEL_NAME", default_model)

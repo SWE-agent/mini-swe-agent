@@ -63,7 +63,9 @@ Add it here - https://github.com/BerriAI/litellm/blob/main/model_prices_and_cont
 `litellm` doesn't know about the cost of your model.
 Take a look at the model registry section of the [local models](local_models.md) guide to add it.
 
-### Temperature not supported
+Another common mistake is to not include any or the correct provider in the model name (e.g., `gemini-2.0-flash` instead of `gemini/gemini-2.0-flash`).
+
+## Temperature not supported
 
 Some models (like `gpt-5`, `o3` etc.) do not support temperature, however our default config specifies `temperature: 0.0`.
 You need to switch to a config file that does not specify temperature, e.g., `mini_no_temp.yaml`.
@@ -71,5 +73,47 @@ You need to switch to a config file that does not specify temperature, e.g., `mi
 To do this, add `-c mini_no_temp` to your `mini` command.
 
 We are working on a better solution for this (see [this issue](https://github.com/SWE-agent/mini-swe-agent/issues/488)).
+
+## Portkey
+
+### Error during cost calculation
+
+We use `litellm` to calculate costs for Portkey models because Portkey doesn't seem to provide per-request cost information without
+very inconvenient APIs.
+
+This can lead to errors likethis:
+
+```
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/minisweagent/models/portkey_model.py", line 85, in query
+    cost = litellm.cost_calculator.completion_cost(response)
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/cost_calculator.py", line 973, in completion_cost
+    raise e
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/cost_calculator.py", line 966, in completion_cost
+    raise e
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/cost_calculator.py", line 928, in completion_cost
+    ) = cost_per_token(
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/cost_calculator.py", line 218, in cost_per_token
+    _, custom_llm_provider, _, _ = litellm.get_llm_provider(model=model)
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/litellm_core_utils/get_llm_provider_logic.py", line 395, in get_llm_provider
+    raise e
+  File "/opt/miniconda3/envs/clash/lib/python3.10/site-packages/litellm/litellm_core_utils/get_llm_provider_logic.py", line 372, in get_llm_provider
+    raise litellm.exceptions.BadRequestError(  # type: ignore
+litellm.exceptions.BadRequestError: litellm.BadRequestError: LLM Provider NOT provided. Pass in the LLM provider you are trying to call. You passed model=grok-code-fast-1
+ Pass model as E.g. For 'Huggingface' inference endpoints pass in `completion(model='huggingface/starcoder',..)` Learn more: https://docs.litellm.ai/docs/providers
+```
+
+In this case, the issue is simply that the portkey model name doesn't match the litellm model name (and very specifically here
+doesn't include the provider).
+
+To fix this, you can manually set the litellm model name to the portkey model name with the `litellm_model_name_override` key.
+For example:
+
+```yaml
+model:
+  model_name: "grok-code-fast-1"  # the portkey model name
+  model_class: "portkey"  # make sure to use the portkey model class
+  litellm_model_name_override: "xai/grok-code-fast-1"  # the litellm model name for cost information
+  ...
+```
 
 --8<-- "docs/_footer.md"

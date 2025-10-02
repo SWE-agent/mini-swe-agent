@@ -64,6 +64,7 @@ dev = [
     "mike",
     "mkdocs-material",
     "mkdocs-glightbox",
+    "mkdocs-redirects",
 ]
 
 [project.urls]

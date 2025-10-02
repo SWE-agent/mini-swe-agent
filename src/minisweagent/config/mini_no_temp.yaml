@@ -41,7 +41,7 @@ agent:
        However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
 
     <system_information>
-    {{system}} {{release}} {{version}} {{machine}} {{processor}}
+    {{system}} {{release}} {{version}} {{machine}}
     </system_information>
 
     ## Formatting your response
