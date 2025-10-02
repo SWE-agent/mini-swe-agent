@@ -37,7 +37,7 @@
         python src/minisweagent/run/extra/swebench.py --help
         # Example:
         mini-extra swebench \
-            --model anthropic/claude-sonnet-4-20250514 \
+            --model anthropic/claude-sonnet-4-5-20250929 \
             --subset verified \
             --split test \
             --workers 4
@@ -75,13 +75,13 @@
         mini-extra swebench-single \
             --subset verified \
             --split test \
-            --model anthropic/claude-sonnet-4-20250514 \
+            --model anthropic/claude-sonnet-4-5-20250929 \
             -i sympy__sympy-15599
         # or
         mini-extra swebench-single \
             --subset verified \
             --split test \
-            -m anthropic/claude-sonnet-4-20250514 \
+            -m anthropic/claude-sonnet-4-5-20250929 \
             -i 0  # instance index
         ```
 

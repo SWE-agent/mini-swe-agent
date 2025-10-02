@@ -94,7 +94,7 @@ There are several ways to set your API keys:
     Here's a few examples of popular models:
 
     ```
-    anthropic/claude-sonnet-4-20250514
+    anthropic/claude-sonnet-4-5-20250929
     openai/gpt-5
     openai/gpt-5-mini
     gemini/gemini-2.5-pro
@@ -125,7 +125,7 @@ Here's a few examples:
 
     ```yaml
     model:
-    model_name: "anthropic/claude-sonnet-4-20250514"
+    model_name: "anthropic/claude-sonnet-4-5-20250929"
       model_kwargs:
         temperature: 0.0
     ```
@@ -201,7 +201,7 @@ For example:
 === "Portkey model"
 
     ```bash
-    mini -m "claude-sonnet-4-20250514" --model-class portkey
+    mini -m "claude-sonnet-4-5-20250929" --model-class portkey
     ```
 
 
