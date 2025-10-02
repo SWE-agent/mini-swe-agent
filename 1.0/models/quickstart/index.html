@@ -2049,7 +2049,7 @@ Please always include the provider in the model name, e.g., <code>anthropic/clau
 <div class="admonition note">
 <p class="admonition-title">Popular models</p>
 <p>Here's a few examples of popular models:</p>
-<div class="highlight"><pre><span></span><code>anthropic/claude-sonnet-4-20250514
+<div class="highlight"><pre><span></span><code>anthropic/claude-sonnet-4-5-20250929
 openai/gpt-5
 openai/gpt-5-mini
 gemini/gemini-2.5-pro
@@ -2103,6 +2103,7 @@ anthropic.claude-instant-v1
 anthropic.claude-opus-4-1-20250805-v1:0
 anthropic.claude-opus-4-20250514-v1:0
 anthropic.claude-sonnet-4-20250514-v1:0
+anthropic.claude-sonnet-4-5-20250929-v1:0
 anthropic.claude-v1
 anthropic.claude-v2
 anthropic.claude-v2:1
@@ -2126,6 +2127,7 @@ apac.anthropic.claude-3-5-sonnet-20241022-v2:0
 apac.anthropic.claude-3-haiku-20240307-v1:0
 apac.anthropic.claude-3-sonnet-20240229-v1:0
 apac.anthropic.claude-sonnet-4-20250514-v1:0
+apac.anthropic.claude-sonnet-4-5-20250929-v1:0
 assemblyai/best
 assemblyai/nano
 azure/ada
@@ -2419,6 +2421,7 @@ claude-opus-4-1
 claude-opus-4-1-20250805
 claude-opus-4-20250514
 claude-sonnet-4-20250514
+claude-sonnet-4-5-20250929
 cloudflare/@cf/meta/llama-2-7b-chat-fp16
 cloudflare/@cf/meta/llama-2-7b-chat-int8
 cloudflare/@cf/mistral/mistral-7b-instruct-v0.1
@@ -2648,6 +2651,7 @@ eu.anthropic.claude-3-sonnet-20240229-v1:0
 eu.anthropic.claude-opus-4-1-20250805-v1:0
 eu.anthropic.claude-opus-4-20250514-v1:0
 eu.anthropic.claude-sonnet-4-20250514-v1:0
+eu.anthropic.claude-sonnet-4-5-20250929-v1:0
 eu.meta.llama3-2-1b-instruct-v1:0
 eu.meta.llama3-2-3b-instruct-v1:0
 eu.mistral.pixtral-large-2502-v1:0
@@ -3386,6 +3390,7 @@ us.anthropic.claude-3-sonnet-20240229-v1:0
 us.anthropic.claude-opus-4-1-20250805-v1:0
 us.anthropic.claude-opus-4-20250514-v1:0
 us.anthropic.claude-sonnet-4-20250514-v1:0
+us.anthropic.claude-sonnet-4-5-20250929-v1:0
 us.deepseek.r1-v1:0
 us.meta.llama3-1-405b-instruct-v1:0
 us.meta.llama3-1-70b-instruct-v1:0
@@ -3513,7 +3518,7 @@ In newer versions, the location of the config file is printed when you run <code
 <div class="tabbed-block">
 <p><code>litellm</code> allows to set model-specific settings with the <code>model_kwargs</code> key:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"anthropic/claude-sonnet-4-20250514"</span>
+<span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"anthropic/claude-sonnet-4-5-20250929"</span>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </code></pre></div>
@@ -3573,7 +3578,7 @@ This will almost always default to <code>litellm</code> (with Anthropic models b
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"claude-sonnet-4-20250514"</span><span class="w"> </span>--model-class<span class="w"> </span>portkey
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"claude-sonnet-4-5-20250929"</span><span class="w"> </span>--model-class<span class="w"> </span>portkey
 </code></pre></div>
 </div>
 </div>
