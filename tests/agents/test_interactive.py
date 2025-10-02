@@ -1018,9 +1018,7 @@ def test_summarize_on_exit_disabled_no_summary():
         assert exit_status == "Submitted"
         assert result == "completed\n"
         # Verify no summary request was added to messages
-        summary_messages = [
-            msg for msg in agent.messages if "Please provide a brief summary" in msg.get("content", "")
-        ]
+        summary_messages = [msg for msg in agent.messages if "Please provide a brief summary" in msg.get("content", "")]
         assert len(summary_messages) == 0
 
 
