@@ -1,0 +1,100 @@
+import logging
+import os
+from dataclasses import asdict, dataclass, field
+from pathlib import Path
+from typing import Any
+
+import litellm
+from openai import OpenAI
+from tenacity import (
+    before_sleep_log,
+    retry,
+    retry_if_not_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
+
+from minisweagent.models import GLOBAL_MODEL_STATS
+
+logger = logging.getLogger("openai_model")
+
+
+@dataclass
+class DashscopeModelConfig:
+    model_name: str
+    model_kwargs: dict[str, Any] = field(default_factory=dict)
+    litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
+    """We currently use litellm to calculate costs. Here you can register additional models to litellm's model registry.
+    Note that this might change if we get better support for Dashscope and change how we calculate costs.
+    """
+    litellm_model_name_override: str = ""
+    """We currently use litellm to calculate costs. Here you can override the model name to use for litellm in case it
+    doesn't match the Dashscope model name.
+    Note that this might change if we get better support for Dashscope and change how we calculate costs.
+    """
+
+
+class DashscopeModel:
+    def __init__(self, **kwargs):
+        self.config = DashscopeModelConfig(**kwargs)
+        self.cost = 0.0
+        self.n_calls = 0
+        self._api_url: str = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+        self._api_key: str = os.getenv("DASHSCOPE_API_KEY")
+
+        if not self._api_key:
+            raise ValueError(
+                "Dashscope API key is required. Set it via the "
+                "DASHSCOPE_API_KEY environment variable. You can permanently set it with "
+                "`mini-extra config set DASHSCOPE_API_KEY YOUR_KEY`."
+            )
+
+        client_kwargs = {"api_key": self._api_key, "base_url": self._api_url}
+        self.client = OpenAI(**client_kwargs)
+
+    @retry(
+        stop=stop_after_attempt(10),
+        wait=wait_exponential(multiplier=1, min=4, max=60),
+        before_sleep=before_sleep_log(logger, logging.WARNING),
+        retry=retry_if_not_exception_type((KeyboardInterrupt, TypeError, ValueError)),
+    )
+    def _query(self, messages: list[dict[str, str]], **kwargs):
+        # return self.client.with_options(metadata={"request_id": request_id}).chat.completions.create(
+        return self.client.chat.completions.create(
+            model=self.config.model_name,
+            messages=messages,
+            **(self.config.model_kwargs | kwargs),
+        )
+
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+        response = self._query(messages, **kwargs)
+        response_for_cost_calc = response.model_copy()
+        if self.config.litellm_model_name_override:
+            if response_for_cost_calc.model:
+                response_for_cost_calc.model = self.config.litellm_model_name_override
+        try:
+            cost = litellm.cost_calculator.completion_cost(
+                response_for_cost_calc, model=self.config.litellm_model_name_override or None
+            )
+        except Exception as e:
+            logger.critical(
+                f"Error calculating cost for model {self.config.model_name} based on {response_for_cost_calc.model_dump()}: {e}. "
+                "Please check the 'Updating the model registry' section in the documentation at "
+                "https://klieret.short.gy/litellm-model-registry Still stuck? Please open a github issue for help!"
+            )
+            raise
+
+        self.n_calls += 1
+        self.cost += cost
+        GLOBAL_MODEL_STATS.add(cost)
+
+        return {
+            "content": response.choices[0].message.content or "",
+            "extra": {
+                "response": response.model_dump(),
+                "cost": cost,
+            },
+        }
+
+    def get_template_vars(self) -> dict[str, Any]:
+        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
