@@ -3264,7 +3264,8 @@
         <span class="k">yield from</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_system_commands</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">binding</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">BINDINGS</span><span class="p">:</span>
             <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">binding</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2"> (shortcut </span><span class="si">{</span><span class="s1">' OR '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">))</span><span class="si">}</span><span class="s2">)"</span>  <span class="c1"># type: ignore[attr-defined]</span>
-            <span class="k">yield</span> <span class="n">SystemCommand</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">action</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
+            <span class="n">action_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"action_</span><span class="si">{</span><span class="n">binding</span><span class="o">.</span><span class="n">action</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
+            <span class="k">yield</span> <span class="n">SystemCommand</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">action_method</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
 
     <span class="c1"># --- Textual bindings ---</span>
 
@@ -4069,12 +4070,14 @@
 <span class="normal">402</span>
 <span class="normal">403</span>
 <span class="normal">404</span>
-<span class="normal">405</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_system_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">:</span> <span class="n">Screen</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SystemCommand</span><span class="p">]:</span>
+<span class="normal">405</span>
+<span class="normal">406</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_system_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">:</span> <span class="n">Screen</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SystemCommand</span><span class="p">]:</span>
     <span class="c1"># Add to palette</span>
     <span class="k">yield from</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_system_commands</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">binding</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">BINDINGS</span><span class="p">:</span>
         <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">binding</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2"> (shortcut </span><span class="si">{</span><span class="s1">' OR '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">))</span><span class="si">}</span><span class="s2">)"</span>  <span class="c1"># type: ignore[attr-defined]</span>
-        <span class="k">yield</span> <span class="n">SystemCommand</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">action</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
+        <span class="n">action_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"action_</span><span class="si">{</span><span class="n">binding</span><span class="o">.</span><span class="n">action</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
+        <span class="k">yield</span> <span class="n">SystemCommand</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">binding</span><span class="o">.</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">action_method</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
@@ -4097,11 +4100,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">409</span>
-<span class="normal">410</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">410</span>
 <span class="normal">411</span>
 <span class="normal">412</span>
-<span class="normal">413</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_yolo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">413</span>
+<span class="normal">414</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_yolo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">"yolo"</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>  <span class="c1"># accept</span>
@@ -4128,11 +4131,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">415</span>
-<span class="normal">416</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">416</span>
 <span class="normal">417</span>
 <span class="normal">418</span>
-<span class="normal">419</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_human</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">419</span>
+<span class="normal">420</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_human</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"confirm"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="s2">"User switched to manual mode, this command will be ignored"</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">"human"</span>
@@ -4159,11 +4162,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">421</span>
-<span class="normal">422</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">422</span>
 <span class="normal">423</span>
 <span class="normal">424</span>
-<span class="normal">425</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_confirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">425</span>
+<span class="normal">426</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_confirm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"human"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">pending_prompt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_container</span><span class="o">.</span><span class="n">_complete_input</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>  <span class="c1"># just submit blank action</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">"confirm"</span>
@@ -4190,8 +4193,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">427</span>
-<span class="normal">428</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">428</span>
+<span class="normal">429</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">+=</span> <span class="mi">1</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -4215,8 +4218,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">430</span>
-<span class="normal">431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_previous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">431</span>
+<span class="normal">432</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_previous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">-=</span> <span class="mi">1</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -4240,8 +4243,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">433</span>
-<span class="normal">434</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_first_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">434</span>
+<span class="normal">435</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_first_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">=</span> <span class="mi">0</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -4265,8 +4268,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">436</span>
-<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_last_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">437</span>
+<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_last_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -4290,8 +4293,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">439</span>
-<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_down</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">440</span>
+<span class="normal">441</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_down</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_to</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_target_y</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -4315,8 +4318,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">442</span>
-<span class="normal">443</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">443</span>
+<span class="normal">444</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_to</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_vscroll</span><span class="o">.</span><span class="n">scroll_target_y</span> <span class="o">-</span> <span class="mi">15</span><span class="p">)</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -4340,11 +4343,11 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/agents/interactive_textual.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">445</span>
-<span class="normal">446</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">446</span>
 <span class="normal">447</span>
 <span class="normal">448</span>
-<span class="normal">449</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_toggle_help_panel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">449</span>
+<span class="normal">450</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_toggle_help_panel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"HelpPanel"</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_hide_help_panel</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
