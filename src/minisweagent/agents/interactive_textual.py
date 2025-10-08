@@ -24,7 +24,7 @@ from textual.events import Key
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Input, Static, TextArea
 
-from minisweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException, Submitted
+from minisweagent.agents.default import AgentConfig, DefaultAgent, LimitsExceeded, NonTerminatingException, Submitted
 
 
 @dataclass
@@ -57,7 +57,33 @@ class _TextualAgent(DefaultAgent):
             self.add_message("assistant", msg["content"])
             return msg
         self._current_action_from_human = False
-        return super().query()
+        try:
+            return super().query()
+        except LimitsExceeded:
+            # Show current limits and prompt for new ones (matching interactive.py behavior)
+            # Show notification with the limits info
+            self.app.notify(
+                f"Limits exceeded. Limit: ${self.config.cost_limit:.2f}. "
+                f"Current: {self.model.n_calls} steps, ${self.model.cost:.2f}.",
+                severity="warning",
+                timeout=10,
+            )
+
+            # First prompt: new step limit (short message near input)
+            new_step_limit = self.app.input_container.request_input("New step limit:", placeholder="0 for unlimited")
+            try:
+                self.config.step_limit = int(new_step_limit) if new_step_limit.strip() else 0
+            except ValueError:
+                self.config.step_limit = 0
+
+            # Second prompt: new cost limit (short message near input)
+            new_cost_limit = self.app.input_container.request_input("New cost limit:", placeholder="0.0 for unlimited")
+            try:
+                self.config.cost_limit = float(new_cost_limit) if new_cost_limit.strip() else 0.0
+            except ValueError:
+                self.config.cost_limit = 0.0
+
+            return super().query()
 
     def run(self, task: str, **kwargs) -> tuple[str, str]:
         try:
@@ -162,12 +188,14 @@ class SmartInputContainer(Container):
         else:
             self._single_input.focus()
 
-    def request_input(self, prompt: str) -> str:
+    def request_input(self, prompt: str, placeholder: str | None = None) -> str:
         """Request input from user. Returns input text (empty string if confirmed without reason)."""
         self._input_event.clear()
         self._input_result = None
         self.pending_prompt = prompt
         self._header_display.update(prompt)
+        if placeholder:
+            self._single_input.placeholder = placeholder
         self._update_mode_display()
         self._app.call_from_thread(self._app.update_content)
         self._input_event.wait()

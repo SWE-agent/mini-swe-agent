@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import threading
-from unittest.mock import Mock
+from unittest.mock import ANY, Mock
 
 import pytest
 
@@ -331,9 +331,9 @@ async def test_confirmation_rejection_with_message():
 
 
 async def test_agent_with_cost_limit():
-    """Test agent behavior when cost limit is exceeded."""
+    """Test agent behavior when cost limit is exceeded - now prompts for new limits."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Response 1", "Response 2"]),
+        model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
         env=LocalEnvironment(),
         mode="yolo",
         cost_limit=0.01,  # Very low limit
@@ -343,22 +343,33 @@ async def test_agent_with_cost_limit():
 
     async with app.run_test() as pilot:
         threading.Thread(target=lambda: app.agent.run("Cost limit test"), daemon=True).start()
+
         for _ in range(50):
             await pilot.pause(0.1)
-            if app.agent_state == "STOPPED":
+            if app.agent_state == "AWAITING_INPUT" and app.input_container.pending_prompt == "New step limit:":
                 break
         else:
-            raise AssertionError("Agent did not stop within 5 seconds")
+            raise AssertionError("Agent did not request new step limit within 5 seconds")
 
-        # Should eventually stop due to cost limit and notify with the exit status
-        assert app.agent_state == "STOPPED"
-        app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
+        app.notify.assert_any_call(ANY, severity="warning", timeout=10)
+
+        await pilot.press("0")
+        await pilot.press("enter")
+        await pilot.pause(0.2)
+
+        assert app.input_container.pending_prompt == "New cost limit:"
+
+        await pilot.press("1", "0")
+        await pilot.press("enter")
+        await pilot.pause(0.2)
+
+        assert app.agent_state == "RUNNING" or app.agent_state == "AWAITING_INPUT"
 
 
 async def test_agent_with_step_limit():
-    """Test agent behavior when step limit is exceeded."""
+    """Test agent behavior when step limit is exceeded - now prompts for new limits."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
+        model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3", "Response 4"]),
         env=LocalEnvironment(),
         mode="yolo",
         step_limit=2,
@@ -368,14 +379,36 @@ async def test_agent_with_step_limit():
     async with app.run_test() as pilot:
         # Start the agent with the task
         threading.Thread(target=lambda: app.agent.run("Step limit test"), daemon=True).start()
+
+        # Wait for agent to hit step limit and request input for new limits
         for _ in range(50):
             await pilot.pause(0.1)
-            if app.agent_state == "STOPPED":
+            if app.agent_state == "AWAITING_INPUT" and app.input_container.pending_prompt == "New step limit:":
                 break
         else:
-            raise AssertionError("Agent did not stop within 5 seconds")
-        assert app.agent_state == "STOPPED"
-        app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
+            raise AssertionError("Agent did not request new step limit within 5 seconds")
+
+        # Verify notification was shown for limits exceeded
+        app.notify.assert_any_call(
+            ANY,  # The message contains dynamic values
+            severity="warning",
+            timeout=10,
+        )
+
+        # Simulate user entering new limits
+        await pilot.press("1", "0")  # step limit = 10
+        await pilot.press("enter")
+        await pilot.pause(0.2)
+
+        # Now it should ask for cost limit
+        assert app.input_container.pending_prompt == "New cost limit:"
+
+        await pilot.press("1", "0")  # cost limit = 10
+        await pilot.press("enter")
+        await pilot.pause(0.2)
+
+        # Agent should continue running with new limits
+        assert app.agent_state == "RUNNING" or app.agent_state == "AWAITING_INPUT"
 
 
 async def test_whitelist_actions_bypass_confirmation():
