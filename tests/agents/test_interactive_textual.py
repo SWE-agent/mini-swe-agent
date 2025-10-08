@@ -863,10 +863,10 @@ async def test_system_commands_are_callable():
     )
 
     async with app.run_test() as pilot:
-        from textual.screen import Screen
-
         screen = app.screen
         commands = list(app.get_system_commands(screen))
 
         for command in commands:
-            assert callable(command.callback), f"Command '{command.title}' has non-callable callback: {command.callback}"
+            assert callable(command.callback), (
+                f"Command '{command.title}' has non-callable callback: {command.callback}"
+            )
