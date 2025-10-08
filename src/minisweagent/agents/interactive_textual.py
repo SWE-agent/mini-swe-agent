@@ -402,7 +402,6 @@ class TextualAgent(App):
         yield from super().get_system_commands(screen)
         for binding in self.BINDINGS:
             description = f"{binding.description} (shortcut {' OR '.join(binding.key.split(','))})"  # type: ignore[attr-defined]
-            # Convert action string to actual method reference
             action_method = getattr(self, f"action_{binding.action}")  # type: ignore[attr-defined]
             yield SystemCommand(description, binding.tooltip, action_method)  # type: ignore[attr-defined]
 

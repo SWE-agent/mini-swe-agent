@@ -848,3 +848,25 @@ async def test_smart_input_container_on_mount():
         # Check initialization
         assert container._multi_input.display is False
         assert container._update_mode_display.called
+
+
+async def test_system_commands_are_callable():
+    """Test that all system commands returned by get_system_commands are callable.
+
+    This prevents TypeError when commands are selected from the command palette,
+    which requires callable methods instead of action name strings.
+    """
+    app = TextualAgent(
+        model=DeterministicModel(outputs=["Test\n```bash\necho 'test'\n```"]),
+        env=LocalEnvironment(),
+        mode="yolo",
+    )
+
+    async with app.run_test() as pilot:
+        from textual.screen import Screen
+
+        screen = app.screen
+        commands = list(app.get_system_commands(screen))
+
+        for command in commands:
+            assert callable(command.callback), f"Command '{command.title}' has non-callable callback: {command.callback}"
