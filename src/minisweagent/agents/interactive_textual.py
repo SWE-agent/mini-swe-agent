@@ -43,6 +43,8 @@ class _TextualAgent(DefaultAgent):
         self.app = app
         super().__init__(*args, config_class=TextualAgentConfig, **kwargs)
         self._current_action_from_human = False
+        self._agent_thread_id = None
+        self._current_process = None
 
     def add_message(self, role: str, content: str, **kwargs):
         super().add_message(role, content, **kwargs)
@@ -57,9 +59,21 @@ class _TextualAgent(DefaultAgent):
             self.add_message("assistant", msg["content"])
             return msg
         self._current_action_from_human = False
-        return super().query()
+        try:
+            return super().query()
+        except KeyboardInterrupt:
+            # Handle interrupt during LLM query
+            interruption_message = self.app.input_container.request_input(
+                "[bold yellow]Interrupted.[/bold yellow] [green]Type a comment/command[/green]"
+            ).strip()
+            if not interruption_message:
+                interruption_message = "Temporary interruption caught."
+            raise NonTerminatingException(f"Interrupted by user: {interruption_message}")
 
     def run(self, task: str, **kwargs) -> tuple[str, str]:
+        # Store the thread ID so we can inject KeyboardInterrupt into it
+        self._agent_thread_id = threading.get_ident()
+
         try:
             exit_status, result = super().run(task, **kwargs)
         except Exception as e:
@@ -72,6 +86,19 @@ class _TextualAgent(DefaultAgent):
         self.app.call_from_thread(self.app.action_quit)
         return exit_status, result
 
+    def step(self) -> dict:
+        """Override step to handle interrupts like interactive.py"""
+        try:
+            return super().step()
+        except KeyboardInterrupt:
+            # Same behavior as interactive.py
+            interruption_message = self.app.input_container.request_input(
+                "[bold yellow]Interrupted.[/bold yellow] [green]Type a comment/command[/green]"
+            ).strip()
+            if not interruption_message:
+                interruption_message = "Temporary interruption caught."
+            raise NonTerminatingException(f"Interrupted by user: {interruption_message}")
+
     def execute_action(self, action: dict) -> dict:
         if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
             raise NonTerminatingException("Command not executed because user switched to manual mode.")
@@ -83,7 +110,74 @@ class _TextualAgent(DefaultAgent):
             result = self.app.input_container.request_input("Press ENTER to confirm or provide rejection reason")
             if result:  # Non-empty string means rejection
                 raise NonTerminatingException(f"Command not executed: {result}")
-        return super().execute_action(action)
+
+        # Use Popen to allow interrupting long-running commands
+        import subprocess
+        import time
+
+        try:
+            # Start the process
+            self._current_process = subprocess.Popen(
+                action["action"],
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                cwd=self.env.config.cwd
+                if hasattr(self.env, "config") and hasattr(self.env.config, "cwd") and self.env.config.cwd
+                else None,
+                env=dict(self.env.config.env)
+                if hasattr(self.env, "config") and hasattr(self.env.config, "env")
+                else None,
+            )
+
+            # Poll the process with timeout
+            timeout = (
+                self.env.config.timeout if hasattr(self.env, "config") and hasattr(self.env.config, "timeout") else 30
+            )
+            start_time = time.time()
+
+            while self._current_process.poll() is None:
+                if time.time() - start_time > timeout:
+                    self._current_process.terminate()
+                    try:
+                        self._current_process.wait(timeout=1)
+                    except subprocess.TimeoutExpired:
+                        self._current_process.kill()
+                        self._current_process.wait()
+
+                    output = self._current_process.stdout.read() if self._current_process.stdout else ""
+                    raise subprocess.TimeoutExpired(action["action"], timeout, output=output.encode())
+
+                time.sleep(0.05)  # Poll every 50ms
+
+            # Get output
+            output = self._current_process.stdout.read() if self._current_process.stdout else ""
+            returncode = self._current_process.returncode
+
+            result = {"output": output, "returncode": returncode}
+            self.has_finished(result)
+            return result
+
+        except KeyboardInterrupt:
+            # Terminate the process if it's still running
+            if self._current_process and self._current_process.poll() is None:
+                self._current_process.terminate()
+                try:
+                    self._current_process.wait(timeout=1)
+                except subprocess.TimeoutExpired:
+                    self._current_process.kill()
+                    self._current_process.wait()
+
+            # Handle interrupt during command execution
+            interruption_message = self.app.input_container.request_input(
+                "[bold yellow]Interrupted.[/bold yellow] [green]Type a comment/command[/green]"
+            ).strip()
+            if not interruption_message:
+                interruption_message = "Temporary interruption caught."
+            raise NonTerminatingException(f"Interrupted by user: {interruption_message}")
+        finally:
+            self._current_process = None
 
     def has_finished(self, output: dict[str, str]):
         try:
@@ -248,6 +342,7 @@ class TextualAgent(App):
         Binding("j,down", "scroll_down", "Scroll down", show=False),
         Binding("k,up", "scroll_up", "Scroll up", show=False),
         Binding("q,ctrl+q", "quit", "Quit", tooltip="Quit the agent"),
+        Binding("i,ctrl+i", "interrupt", "INTERRUPT", tooltip="Interrupt the agent and provide feedback"),
         Binding("y,ctrl+y", "yolo", "YOLO mode", tooltip="Switch to YOLO Mode (LM actions will execute immediately)"),
         Binding(
             "c",
@@ -277,7 +372,12 @@ class TextualAgent(App):
         self._vscroll = VerticalScroll()
 
     def run(self, task: str, **kwargs) -> tuple[str, str]:
-        threading.Thread(target=lambda: self.agent.run(task, **kwargs), daemon=True).start()
+        def agent_run_wrapper():
+            # Store the thread ID so we can inject KeyboardInterrupt into it
+            self.agent._agent_thread_id = threading.get_ident()
+            return self.agent.run(task, **kwargs)
+
+        threading.Thread(target=agent_run_wrapper, daemon=True).start()
         super().run()
         return self.exit_status, self.result
 
@@ -424,6 +524,30 @@ class TextualAgent(App):
             self.input_container._complete_input("")  # just submit blank action
         self.agent.config.mode = "confirm"
         self.notify("Confirm mode enabled - LM proposes commands and you confirm/reject them")
+
+    def action_interrupt(self):
+        """Interrupt the agent by raising KeyboardInterrupt in its thread."""
+        import ctypes
+
+        if self.agent_state == "RUNNING" and self.agent._agent_thread_id is not None:
+            # First, terminate any running subprocess
+            if self.agent._current_process and self.agent._current_process.poll() is None:
+                self.agent._current_process.terminate()
+
+            # Then inject KeyboardInterrupt into the agent thread
+            ret = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+                ctypes.c_long(self.agent._agent_thread_id), ctypes.py_object(KeyboardInterrupt)
+            )
+            if ret == 0:
+                self.notify("Failed to interrupt - thread not found")
+            elif ret > 1:
+                # If more than one thread affected, undo it
+                ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.agent._agent_thread_id), None)
+                self.notify("Failed to interrupt - multiple threads affected")
+        elif self.agent_state == "AWAITING_INPUT":
+            self.notify("Already awaiting input - use the input field to provide feedback")
+        else:
+            self.notify("Cannot interrupt - agent is not running")
 
     def action_next_step(self) -> None:
         self.i_step += 1

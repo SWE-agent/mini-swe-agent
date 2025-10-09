@@ -870,3 +870,135 @@ async def test_system_commands_are_callable():
             assert callable(command.callback), (
                 f"Command '{command.title}' has non-callable callback: {command.callback}"
             )
+
+
+@pytest.mark.slow
+async def test_interrupt_agent_run():
+    """Test interrupting an agent run and providing feedback using KeyboardInterrupt."""
+    # Use 3 sleep commands to ensure we have time to interrupt
+    app = TextualAgent(
+        model=DeterministicModel(
+            outputs=[
+                "/sleep 0.5",
+                "/sleep 0.5",
+                "/sleep 0.5",
+                "Step 1\n```bash\necho 'step1'\n```",
+                "Step 2\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+            ]
+        ),
+        env=LocalEnvironment(),
+        mode="yolo",
+    )
+
+    async with app.run_test() as pilot:
+        # Start the agent with the task
+        threading.Thread(target=lambda: app.agent.run("Interrupt test"), daemon=True).start()
+
+        # Wait for agent to start running and have a thread ID
+        for _ in range(20):
+            await pilot.pause(0.05)
+            if app.agent._agent_thread_id is not None:
+                break
+
+        # Ensure we have a thread ID
+        assert app.agent._agent_thread_id is not None
+
+        # Wait a bit to ensure the agent is in the middle of sleeping
+        await pilot.pause(0.2)
+
+        # The agent might be RUNNING or might have already moved to next state
+        # Either way, we should be able to interrupt
+        # Request interrupt using the key binding
+        # This will inject KeyboardInterrupt into the agent thread
+        await pilot.press("i")
+
+        # Wait for the interrupt to be processed
+        # The KeyboardInterrupt should be raised and caught in step()
+        for _ in range(50):
+            await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT" and "Interrupted" in get_screen_text(app):
+                break
+        else:
+            raise AssertionError("Agent did not show interrupt prompt within 5 seconds")
+
+        # Should show interrupt prompt
+        assert "Interrupted" in get_screen_text(app)
+        assert "Type a comment/command" in get_screen_text(app)
+
+        # Provide feedback
+        await type_text(pilot, "Please use a different approach")
+        await pilot.press("enter")
+        await pilot.pause(0.3)
+
+        # Navigate through steps to find the interrupt message
+        # The interrupt message should be in one of the earlier steps
+        found_interrupt_message = False
+        for step in range(app.n_steps):
+            app.i_step = step
+            if "Interrupted by user: Please use a different approach" in get_screen_text(app):
+                found_interrupt_message = True
+                break
+
+        assert found_interrupt_message, f"Could not find interrupt message in any of {app.n_steps} steps"
+        assert app.agent_state in ["RUNNING", "STOPPED", "AWAITING_INPUT"]
+
+
+async def test_interrupt_when_not_running():
+    """Test that interrupt shows appropriate message when agent is not running."""
+    app = TextualAgent(
+        model=DeterministicModel(outputs=["Test\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]),
+        env=LocalEnvironment(),
+        mode="yolo",
+        confirm_exit=False,  # Disable exit confirmation so agent stops immediately
+    )
+
+    async with app.run_test() as pilot:
+        # Start the agent
+        threading.Thread(target=lambda: app.agent.run("Test"), daemon=True).start()
+
+        # Wait for agent to finish
+        for _ in range(50):
+            await pilot.pause(0.1)
+            if app.agent_state == "STOPPED":
+                break
+
+        # Verify agent is stopped
+        assert app.agent_state == "STOPPED"
+
+        # Try to interrupt when agent is stopped
+        # The action should just show a notification
+        await pilot.press("i")
+        await pilot.pause(0.1)
+
+        # Agent should still be stopped (no interrupt was injected)
+        assert app.agent_state == "STOPPED"
+
+
+async def test_interrupt_when_awaiting_input():
+    """Test that interrupt shows appropriate message when already awaiting input."""
+    app = TextualAgent(
+        model=DeterministicModel(outputs=["Test\n```bash\necho 'test'\n```"]),
+        env=LocalEnvironment(),
+        mode="confirm",
+    )
+
+    async with app.run_test() as pilot:
+        # Start the agent
+        threading.Thread(target=lambda: app.agent.run("Test"), daemon=True).start()
+
+        # Wait for agent to request input
+        for _ in range(50):
+            await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT":
+                break
+
+        # Verify agent is awaiting input
+        assert app.agent_state == "AWAITING_INPUT"
+
+        # Try to interrupt when already awaiting input
+        await pilot.press("escape")  # Unfocus from input
+        await pilot.press("i")
+        await pilot.pause(0.1)
+
+        # Agent should still be awaiting input (no interrupt was injected)
+        assert app.agent_state == "AWAITING_INPUT"
