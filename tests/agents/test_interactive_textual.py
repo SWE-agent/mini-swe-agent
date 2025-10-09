@@ -366,6 +366,39 @@ async def test_agent_with_cost_limit():
         assert app.agent_state == "RUNNING" or app.agent_state == "AWAITING_INPUT"
 
 
+async def test_agent_with_cost_limit_invalid_input():
+    """Test ValueError handling when invalid input is provided for limits."""
+    app = TextualAgent(
+        model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
+        env=LocalEnvironment(),
+        mode="yolo",
+        cost_limit=0.01,
+    )
+
+    async with app.run_test() as pilot:
+        threading.Thread(target=lambda: app.agent.run("Invalid input test"), daemon=True).start()
+
+        for _ in range(50):
+            await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT" and app.input_container.pending_prompt == "New step limit:":
+                break
+        else:
+            raise AssertionError("Agent did not request new step limit within 5 seconds")
+
+        await type_text(pilot, "invalid_text")
+        await pilot.press("enter")
+        await pilot.pause(0.2)
+
+        assert app.input_container.pending_prompt == "New cost limit:"
+
+        await type_text(pilot, "also_invalid")
+        await pilot.press("enter")
+        await pilot.pause(0.2)
+
+        assert app.agent.config.step_limit == 0
+        assert app.agent.config.cost_limit == 0.0
+
+
 async def test_agent_with_step_limit():
     """Test agent behavior when step limit is exceeded - now prompts for new limits."""
     app = TextualAgent(
