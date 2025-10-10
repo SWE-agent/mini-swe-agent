@@ -339,27 +339,22 @@ async def test_agent_with_cost_limit():
         cost_limit=0.01,  # Very low limit
     )
 
-    app.notify = Mock()
-
     async with app.run_test() as pilot:
         threading.Thread(target=lambda: app.agent.run("Cost limit test"), daemon=True).start()
 
+        # Wait for cost limit prompt (step_limit is 0 by default, so it's skipped)
         for _ in range(50):
             await pilot.pause(0.1)
-            if app.agent_state == "AWAITING_INPUT" and app.input_container.pending_prompt == "New step limit:":
+            if app.agent_state == "AWAITING_INPUT" and "Cost limit exceeded" in (app.input_container.pending_prompt or ""):
                 break
         else:
-            raise AssertionError("Agent did not request new step limit within 5 seconds")
+            raise AssertionError("Agent did not request new cost limit within 5 seconds")
 
-        app.notify.assert_any_call(ANY, severity="warning", timeout=10)
+        # Verify the prompt contains current and limit info
+        assert "Current:" in app.input_container.pending_prompt
+        assert "limit:" in app.input_container.pending_prompt
 
-        await pilot.press("0")
-        await pilot.press("enter")
-        await pilot.pause(0.2)
-
-        assert app.input_container.pending_prompt == "New cost limit:"
-
-        await pilot.press("1", "0")
+        await type_text(pilot, "10")
         await pilot.press("enter")
         await pilot.pause(0.2)
 
@@ -367,7 +362,7 @@ async def test_agent_with_cost_limit():
 
 
 async def test_agent_with_cost_limit_invalid_input():
-    """Test ValueError handling when invalid input is provided for limits."""
+    """Test ValueError handling when invalid input is provided for limits - now retries with while loop."""
     app = TextualAgent(
         model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
         env=LocalEnvironment(),
@@ -375,28 +370,39 @@ async def test_agent_with_cost_limit_invalid_input():
         cost_limit=0.01,
     )
 
+    app.notify = Mock()
+
     async with app.run_test() as pilot:
         threading.Thread(target=lambda: app.agent.run("Invalid input test"), daemon=True).start()
 
+        # Wait for cost limit prompt (step_limit is 0 by default, so it's skipped)
         for _ in range(50):
             await pilot.pause(0.1)
-            if app.agent_state == "AWAITING_INPUT" and app.input_container.pending_prompt == "New step limit:":
+            if app.agent_state == "AWAITING_INPUT" and "Cost limit exceeded" in (app.input_container.pending_prompt or ""):
                 break
         else:
-            raise AssertionError("Agent did not request new step limit within 5 seconds")
+            raise AssertionError("Agent did not request new cost limit within 5 seconds")
 
+        # Enter invalid input
         await type_text(pilot, "invalid_text")
         await pilot.press("enter")
         await pilot.pause(0.2)
 
-        assert app.input_container.pending_prompt == "New cost limit:"
+        # Verify error notification was shown
+        app.notify.assert_any_call("Invalid input. Please enter a number.", severity="error")
 
-        await type_text(pilot, "also_invalid")
+        # Should still be on the same prompt (retrying)
+        assert app.agent_state == "AWAITING_INPUT"
+        assert "Cost limit exceeded" in (app.input_container.pending_prompt or "")
+
+        # Now enter valid input
+        await type_text(pilot, "10")
         await pilot.press("enter")
         await pilot.pause(0.2)
 
-        assert app.agent.config.step_limit == 0
-        assert app.agent.config.cost_limit == 0.0
+        # Should now continue running
+        assert app.agent.config.cost_limit == 10.0
+        assert app.agent_state == "RUNNING" or app.agent_state == "AWAITING_INPUT"
 
 
 async def test_agent_with_step_limit():
@@ -408,35 +414,31 @@ async def test_agent_with_step_limit():
         step_limit=2,
     )
 
-    app.notify = Mock()
     async with app.run_test() as pilot:
         # Start the agent with the task
         threading.Thread(target=lambda: app.agent.run("Step limit test"), daemon=True).start()
 
-        # Wait for agent to hit step limit and request input for new limits
+        # Wait for agent to hit step limit and request input for new step limit
         for _ in range(50):
             await pilot.pause(0.1)
-            if app.agent_state == "AWAITING_INPUT" and app.input_container.pending_prompt == "New step limit:":
+            if app.agent_state == "AWAITING_INPUT" and "Step limit exceeded" in (app.input_container.pending_prompt or ""):
                 break
         else:
             raise AssertionError("Agent did not request new step limit within 5 seconds")
 
-        # Verify notification was shown for limits exceeded
-        app.notify.assert_any_call(
-            ANY,  # The message contains dynamic values
-            severity="warning",
-            timeout=10,
-        )
+        # Verify the prompt contains current and limit info
+        assert "Current:" in app.input_container.pending_prompt
+        assert "limit:" in app.input_container.pending_prompt
 
-        # Simulate user entering new limits
-        await pilot.press("1", "0")  # step limit = 10
+        # Simulate user entering new step limit
+        await type_text(pilot, "10")  # step limit = 10
         await pilot.press("enter")
         await pilot.pause(0.2)
 
         # Now it should ask for cost limit
-        assert app.input_container.pending_prompt == "New cost limit:"
+        assert "Cost limit exceeded" in (app.input_container.pending_prompt or "")
 
-        await pilot.press("1", "0")  # cost limit = 10
+        await type_text(pilot, "10")  # cost limit = 10
         await pilot.press("enter")
         await pilot.pause(0.2)
 
