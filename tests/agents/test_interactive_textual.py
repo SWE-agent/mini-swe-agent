@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import threading
-from unittest.mock import ANY, Mock
+from unittest.mock import Mock
 
 import pytest
 
@@ -345,7 +345,9 @@ async def test_agent_with_cost_limit():
         # Wait for cost limit prompt (step_limit is 0 by default, so it's skipped)
         for _ in range(50):
             await pilot.pause(0.1)
-            if app.agent_state == "AWAITING_INPUT" and "Cost limit exceeded" in (app.input_container.pending_prompt or ""):
+            if app.agent_state == "AWAITING_INPUT" and "Cost limit exceeded" in (
+                app.input_container.pending_prompt or ""
+            ):
                 break
         else:
             raise AssertionError("Agent did not request new cost limit within 5 seconds")
@@ -378,7 +380,9 @@ async def test_agent_with_cost_limit_invalid_input():
         # Wait for cost limit prompt (step_limit is 0 by default, so it's skipped)
         for _ in range(50):
             await pilot.pause(0.1)
-            if app.agent_state == "AWAITING_INPUT" and "Cost limit exceeded" in (app.input_container.pending_prompt or ""):
+            if app.agent_state == "AWAITING_INPUT" and "Cost limit exceeded" in (
+                app.input_container.pending_prompt or ""
+            ):
                 break
         else:
             raise AssertionError("Agent did not request new cost limit within 5 seconds")
@@ -421,7 +425,9 @@ async def test_agent_with_step_limit():
         # Wait for agent to hit step limit and request input for new step limit
         for _ in range(50):
             await pilot.pause(0.1)
-            if app.agent_state == "AWAITING_INPUT" and "Step limit exceeded" in (app.input_container.pending_prompt or ""):
+            if app.agent_state == "AWAITING_INPUT" and "Step limit exceeded" in (
+                app.input_container.pending_prompt or ""
+            ):
                 break
         else:
             raise AssertionError("Agent did not request new step limit within 5 seconds")
