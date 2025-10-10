@@ -67,6 +67,19 @@ def save_traj(
             "model_type": _get_class_name_with_module(agent.model),
             "environment_type": _get_class_name_with_module(agent.env),
         }
+        total_model_query_time = 0
+        total_bash_execution_time = 0
+        for m in agent.messages:
+            if m["role"] == "assistant":
+                if "extra" in m and "response" in m["extra"] and "usage" in m["extra"]["response"] and "model_query_time" in m["extra"]["response"]["usage"]:
+                    total_model_query_time += m["extra"]["response"]["usage"]["model_query_time"]
+            if m["role"] == "user":
+                if "toolkit_bash_execution_time" in m:
+                    total_bash_execution_time += m["toolkit_bash_execution_time"]
+        data["info"]["total_model_query_time"] = total_model_query_time
+        data["info"]["total_bash_execution_time"] = total_bash_execution_time
+        data["info"]["time_taken"] = total_model_query_time + total_bash_execution_time
+
     if extra_info:
         data["info"].update(extra_info)
 

@@ -209,22 +209,31 @@ agent:
 
     If you have completed your assignment, please consult the first message about how to
     submit your solution (you will not be able to continue working on this task after that).
-  step_limit: 250
+  step_limit: 150
   cost_limit: 3.
 
 environment:
   cwd: "/testbed"
   timeout: 60
+  pull_timeout: 1200
   env:
     PAGER: cat
     MANPAGER: cat
     LESS: -R
     PIP_PROGRESS_BAR: 'off'
     TQDM_DISABLE: '1'
-  environment_class: docker
+  environment_class: toolkit
 
 model:
-  model_name: "anthropic/claude-sonnet-4-5-20250929"
+  litellm_model_registry: "/Users/shashank.maiya/git/opensource_evals/mini-swe-agent/src/minisweagent/config/extra/model_registry.json"
+  model_name: "Apriel1p5"
   model_kwargs:
-    drop_params: true
-    temperature: 0.0
+    custom_llm_provider: "openai"
+    api_base: "https://aprile1p5--rc2p4-mm-gaia-evals2-runai-queue-2.inference.ta121237.dgxcloud.ai/v1"
+    api_key: "hJY5x268r45JiCaKUXao4Q:o0nHbSZ5X-fxKrvnxJnbrFsiNIUYCmKpO61LBwz1ZLA"
+    temperature: 0
+ 
+  # model_name: "anthropic/claude-sonnet-4-5-20250929"
+  # model_kwargs:
+  #   drop_params: true
+  #   temperature: 0.0

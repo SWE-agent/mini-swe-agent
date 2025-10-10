@@ -1,0 +1,24 @@
+{
+    "rc2p4-mm-rl-step100": {
+      "max_tokens": 300000,
+      "input_cost_per_token": 0.0,
+      "output_cost_per_token": 0.0,
+      "litellm_provider": "openai",
+      "mode": "chat"
+    },
+    "Apriel-1p5-15B-Thinker": {
+      "max_tokens": 300000,
+      "input_cost_per_token": 0.0,
+      "output_cost_per_token": 0.0,
+      "litellm_provider": "openai",
+      "mode": "chat"
+    },
+    "Apriel1p5": {
+      "max_tokens": 300000,
+      "input_cost_per_token": 0.0,
+      "output_cost_per_token": 0.0,
+      "litellm_provider": "openai",
+      "mode": "chat"
+    }
+  }
+   

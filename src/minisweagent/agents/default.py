@@ -4,6 +4,7 @@ import re
 import subprocess
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
+import time
 
 from jinja2 import StrictUndefined, Template
 
@@ -74,8 +75,10 @@ class DefaultAgent:
         """Run step() until agent is finished. Return exit status & message"""
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
-        self.add_message("system", self.render_template(self.config.system_template))
-        self.add_message("user", self.render_template(self.config.instance_template))
+
+        # Only for Apriel -- move system message to user
+        # self.add_message("system", self.render_template(self.config.system_template))
+        self.add_message("user", self.render_template(f"{self.config.system_template}\n{self.config.instance_template}"))
         while True:
             try:
                 self.step()
@@ -87,27 +90,38 @@ class DefaultAgent:
 
     def step(self) -> dict:
         """Query the LM, execute the action, return the observation."""
+        self.time_stats = {}
         return self.get_observation(self.query())
 
     def query(self) -> dict:
         """Query the model and return the response."""
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
             raise LimitsExceeded()
+        start_time = time.time()
         response = self.model.query(self.messages)
+        model_query_time = time.time() - start_time
+        response["extra"]["response"]["usage"]["model_query_time"] = model_query_time
+        self.time_stats["model_query_time"] = model_query_time
+        # print(f"{self.instance_id}:: model response token info:: {response['extra']['response']['usage']}")
         self.add_message("assistant", **response)
         return response
 
     def get_observation(self, response: dict) -> dict:
         """Execute the action and return the observation."""
+        start_time = time.time()
         output = self.execute_action(self.parse_action(response))
         observation = self.render_template(self.config.action_observation_template, output=output)
-        self.add_message("user", observation)
+        observation_time = time.time() - start_time
+        self.time_stats["toolkit_bash_execution_time"] = observation_time
+        # print(f"{self.instance_id}:: time_stats:: {self.time_stats}")
+        self.add_message("user", observation, toolkit_bash_execution_time=observation_time)
         return output
 
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
         actions = re.findall(r"```bash\s*\n(.*?)\n```", response["content"], re.DOTALL)
         if len(actions) == 1:
+            # print(f"{self.instance_id}:: bash command: {actions[0].strip()}")
             return {"action": actions[0].strip(), **response}
         raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
 
@@ -127,5 +141,7 @@ class DefaultAgent:
     def has_finished(self, output: dict[str, str]):
         """Raises Submitted exception with final output if the agent has finished its task."""
         lines = output.get("output", "").lstrip().splitlines(keepends=True)
-        if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]:
+        first_line = lines[0].strip() if lines else ""
+        # if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]:
+        if "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" in first_line or "MINI_SWE_AGENT_FINAL_OUTPUT" in first_line:
             raise Submitted("".join(lines[1:]))
