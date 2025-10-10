@@ -232,7 +232,7 @@ model:
     api_base: "https://aprile1p5--rc2p4-mm-gaia-evals2-runai-queue-2.inference.ta121237.dgxcloud.ai/v1"
     api_key: "hJY5x268r45JiCaKUXao4Q:o0nHbSZ5X-fxKrvnxJnbrFsiNIUYCmKpO61LBwz1ZLA"
     temperature: 0
- 
+
   # model_name: "anthropic/claude-sonnet-4-5-20250929"
   # model_kwargs:
   #   drop_params: true

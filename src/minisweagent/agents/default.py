@@ -2,9 +2,9 @@
 
 import re
 import subprocess
+import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
-import time
 
 from jinja2 import StrictUndefined, Template
 
@@ -78,7 +78,9 @@ class DefaultAgent:
 
         # Only for Apriel -- move system message to user
         # self.add_message("system", self.render_template(self.config.system_template))
-        self.add_message("user", self.render_template(f"{self.config.system_template}\n{self.config.instance_template}"))
+        self.add_message(
+            "user", self.render_template(f"{self.config.system_template}\n{self.config.instance_template}")
+        )
         while True:
             try:
                 self.step()

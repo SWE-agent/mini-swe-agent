@@ -71,7 +71,12 @@ def save_traj(
         total_bash_execution_time = 0
         for m in agent.messages:
             if m["role"] == "assistant":
-                if "extra" in m and "response" in m["extra"] and "usage" in m["extra"]["response"] and "model_query_time" in m["extra"]["response"]["usage"]:
+                if (
+                    "extra" in m
+                    and "response" in m["extra"]
+                    and "usage" in m["extra"]["response"]
+                    and "model_query_time" in m["extra"]["response"]["usage"]
+                ):
                     total_model_query_time += m["extra"]["response"]["usage"]["model_query_time"]
             if m["role"] == "user":
                 if "toolkit_bash_execution_time" in m:
