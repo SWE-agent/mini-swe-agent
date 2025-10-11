@@ -2044,11 +2044,6 @@ setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">"value"<
 <p>To register extra models to litellm (see <a href="../../models/local_models/">local models</a> for more details), you can either specify the path in the agent file, or set</p>
 <div class="highlight"><pre><span></span><code><span class="nv">LITELLM_MODEL_REGISTRY_PATH</span><span class="o">=</span><span class="s2">"/path/to/your/model/registry.json"</span>
 </code></pre></div>
-<p>For Anthropic models, you can also use <code>ANTHROPIC_API_KEYS</code> for advanced parallel execution:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Multiple Anthropic keys for parallel execution (separated by "::")</span>
-<span class="nv">ANTHROPIC_API_KEYS</span><span class="o">=</span><span class="s2">"key1::key2::key3"</span>
-</code></pre></div>
-<p>This allows different threads to use different API keys to avoid prompt caching conflicts when running multiple agents in parallel.</p>
 <p>Global cost limits:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Global limit on number of model calls (0 = no limit)</span>
 <span class="c1"># (default: 0)</span>
