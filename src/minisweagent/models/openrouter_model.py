@@ -100,6 +100,7 @@ class OpenRouterModel:
         # Extract cost from usage information
         usage = response.get("usage", {})
         cost = usage.get("cost", 0.0)
+        assert cost >= 0.0, f"Cost is negative: {cost}"
 
         # If total_cost is not available, raise an error
         if cost == 0.0:

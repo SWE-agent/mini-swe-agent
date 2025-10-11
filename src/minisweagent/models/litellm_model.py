@@ -76,6 +76,7 @@ class LitellmModel:
             )
             raise
         self.n_calls += 1
+        assert cost >= 0.0, f"Cost is negative: {cost}"
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
         return {
