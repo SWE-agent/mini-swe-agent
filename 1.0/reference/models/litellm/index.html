@@ -2242,6 +2242,7 @@
             <span class="p">)</span>
             <span class="k">raise</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">cost</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Cost is negative: </span><span class="si">{</span><span class="n">cost</span><span class="si">}</span><span class="s2">"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">cost</span>
         <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
@@ -2629,7 +2630,8 @@
 <span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">86</span>
+<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set_cache_control</span><span class="p">:</span>
         <span class="n">messages</span> <span class="o">=</span> <span class="n">set_cache_control</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set_cache_control</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -2643,6 +2645,7 @@
         <span class="p">)</span>
         <span class="k">raise</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">cost</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Cost is negative: </span><span class="si">{</span><span class="n">cost</span><span class="si">}</span><span class="s2">"</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">cost</span>
     <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
@@ -2673,8 +2676,8 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/models/litellm_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">88</span>
-<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">89</span>
+<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>

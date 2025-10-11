@@ -2239,6 +2239,7 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
             <span class="p">)</span>
             <span class="k">raise</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">cost</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Cost is negative: </span><span class="si">{</span><span class="n">cost</span><span class="si">}</span><span class="s2">"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">cost</span>
         <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
