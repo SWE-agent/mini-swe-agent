@@ -25,6 +25,7 @@ class AgentConfig:
     )
     format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
     action_observation_template: str = "Observation: {{output}}"
+    action_regex: str = r"```bash\s*\n(.*?)\n```"
     step_limit: int = 0
     cost_limit: float = 3.0
 
@@ -106,7 +107,7 @@ class DefaultAgent:
 
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
-        actions = re.findall(r"```bash\s*\n(.*?)\n```", response["content"], re.DOTALL)
+        actions = re.findall(self.config.action_regex, response["content"], re.DOTALL)
         if len(actions) == 1:
             return {"action": actions[0].strip(), **response}
         raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
