@@ -30,8 +30,8 @@ class LitellmModelConfig:
 
 
 class LitellmModel:
-    def __init__(self, **kwargs):
-        self.config = LitellmModelConfig(**kwargs)
+    def __init__(self, *, config_class: type = LitellmModelConfig, **kwargs):
+        self.config = config_class(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
