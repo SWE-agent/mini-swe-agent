@@ -3,7 +3,7 @@ import logging
 import os
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import litellm
 from tenacity import (
@@ -15,6 +15,7 @@ from tenacity import (
 )
 
 from minisweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models.utils.cache_control import set_cache_control
 
 logger = logging.getLogger("portkey_model")
 
@@ -37,6 +38,8 @@ class PortkeyModelConfig:
     doesn't match the Portkey model name.
     Note that this might change if we get better support for Portkey and change how we calculate costs.
     """
+    set_cache_control: Literal["default_end"] | None = None
+    """Set explicit cache control markers, for example for Anthropic models"""
 
 
 class PortkeyModel:
@@ -85,6 +88,8 @@ class PortkeyModel:
         )
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+        if self.config.set_cache_control:
+            messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
         response_for_cost_calc = response.model_copy()
         if self.config.litellm_model_name_override:

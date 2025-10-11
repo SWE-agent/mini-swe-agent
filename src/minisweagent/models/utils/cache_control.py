@@ -1,3 +1,8 @@
+import copy
+import warnings
+from typing import Literal
+
+
 def _get_content_text(entry: dict) -> str:
     if isinstance(entry["content"], str):
         return entry["content"]
@@ -29,14 +34,39 @@ def _set_cache_control(entry: dict) -> None:
         entry["cache_control"] = {"type": "ephemeral"}
 
 
-def set_cache_control(messages: list[dict], last_n_messages_offset: int = 0) -> list[dict]:
+def set_cache_control(
+    messages: list[dict], *, mode: Literal["default_end"] | None = "default_end", last_n_messages_offset: int = 0
+) -> list[dict]:
     """This messages processor adds manual cache control marks to the messages."""
-    new_messages = []
-    n_tagged = 0
-    for i_entry, entry in enumerate(reversed(messages)):
+    if mode != "default_end":
+        raise ValueError(f"Invalid mode: {mode}")
+    if last_n_messages_offset:
+        warnings.warn("last_n_messages_offset is deprecated and will be removed in the future")
+    messages = copy.deepcopy(messages)
+
+    # Find all user messages
+    user_message_indices = []
+    for i, msg in enumerate(messages):
+        if msg["role"] == "user":
+            user_message_indices.append(i)
+
+    # Clear cache control from all messages first
+    for entry in messages:
         _clear_cache_control(entry)
-        if n_tagged < 2 and entry["role"] in ["user"] and i_entry >= last_n_messages_offset:
-            _set_cache_control(entry)
-            n_tagged += 1
-        new_messages.append(entry)
-    return list(reversed(new_messages))
+
+    # Add cache control to user messages, respecting offset
+    if user_message_indices:
+        # If offset is specified, exclude the last N messages from getting cache control
+        messages_to_cache = user_message_indices
+        if last_n_messages_offset > 0:
+            messages_to_cache = (
+                user_message_indices[:-last_n_messages_offset]
+                if last_n_messages_offset < len(user_message_indices)
+                else []
+            )
+
+        # Add cache control to the selected user messages
+        for idx in messages_to_cache:
+            _set_cache_control(messages[idx])
+
+    return messages

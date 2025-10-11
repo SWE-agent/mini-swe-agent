@@ -77,15 +77,6 @@ To register extra models to litellm (see [local models](../models/local_models.m
 LITELLM_MODEL_REGISTRY_PATH="/path/to/your/model/registry.json"
 ```
 
-For Anthropic models, you can also use `ANTHROPIC_API_KEYS` for advanced parallel execution:
-
-```bash
-# Multiple Anthropic keys for parallel execution (separated by "::")
-ANTHROPIC_API_KEYS="key1::key2::key3"
-```
-
-This allows different threads to use different API keys to avoid prompt caching conflicts when running multiple agents in parallel.
-
 Global cost limits:
 
 ```bash

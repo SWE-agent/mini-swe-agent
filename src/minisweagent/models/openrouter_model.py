@@ -2,7 +2,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from typing import Any, Literal
 
 import requests
 from tenacity import (
@@ -14,6 +14,7 @@ from tenacity import (
 )
 
 from minisweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models.utils.cache_control import set_cache_control
 
 logger = logging.getLogger("openrouter_model")
 
@@ -22,6 +23,8 @@ logger = logging.getLogger("openrouter_model")
 class OpenRouterModelConfig:
     model_name: str
     model_kwargs: dict[str, Any] = field(default_factory=dict)
+    set_cache_control: Literal["default_end"] | None = None
+    """Set explicit cache control markers, for example for Anthropic models"""
 
 
 class OpenRouterAPIError(Exception):
@@ -90,6 +93,8 @@ class OpenRouterModel:
             raise OpenRouterAPIError(f"Request failed: {e}") from e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+        if self.config.set_cache_control:
+            messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
 
         # Extract cost from usage information
