@@ -42,19 +42,19 @@ def test_sonnet_4_cache_control_integration():
             # Check the messages that were actually sent to litellm.completion
             sent_messages = call_kwargs["messages"]
 
-            # Both user messages should have cache control applied
-            user_messages = [msg for msg in sent_messages if msg["role"] == "user"]
-            assert len(user_messages) == 2
+            # Only the last message should have cache control applied
+            assert len(sent_messages) == 3
 
-            # Verify cache control structure
-            for user_msg in user_messages:
-                assert isinstance(user_msg["content"], list)
-                assert user_msg["content"][0]["cache_control"] == {"type": "ephemeral"}
-                assert user_msg["content"][0]["type"] == "text"
+            # First two messages should not have cache control
+            assert sent_messages[0]["content"] == "Hello, how are you?"
+            assert sent_messages[1]["content"] == "I'm doing well!"
 
-            # Verify original text is preserved
-            assert user_messages[0]["content"][0]["text"] == "Hello, how are you?"
-            assert user_messages[1]["content"][0]["text"] == "Can you help me with coding?"
+            # Last message should have cache control
+            last_message = sent_messages[2]
+            assert isinstance(last_message["content"], list)
+            assert last_message["content"][0]["cache_control"] == {"type": "ephemeral"}
+            assert last_message["content"][0]["type"] == "text"
+            assert last_message["content"][0]["text"] == "Can you help me with coding?"
 
 
 @pytest.mark.parametrize(
@@ -94,25 +94,29 @@ def test_get_model_anthropic_applies_cache_control(model_name):
             # Check that cache control was applied to the messages passed to litellm
             passed_messages = call_args.kwargs["messages"]
 
-            # Find user messages and verify they have cache control
-            user_messages = [msg for msg in passed_messages if msg["role"] == "user"]
-            assert len(user_messages) == 2, f"Expected 2 user messages for {model_name}"
+            # Only the last message should have cache control
+            assert len(passed_messages) == 4, f"Expected 4 messages for {model_name}"
 
-            for i, user_msg in enumerate(user_messages):
-                assert isinstance(user_msg["content"], list), (
-                    f"User message {i} should have list content for {model_name}"
-                )
-                assert len(user_msg["content"]) == 1, (
-                    f"User message {i} should have single content item for {model_name}"
-                )
-                content_item = user_msg["content"][0]
-                assert content_item["type"] == "text", f"Content should be text type for {model_name}"
-                assert content_item["cache_control"] == {"type": "ephemeral"}, f"Cache control missing for {model_name}"
+            # First three messages should not have cache control
+            assert passed_messages[0]["content"] == "You are a helpful assistant.", (
+                f"System message content should be preserved for {model_name}"
+            )
+            assert passed_messages[1]["content"] == "Hello!", (
+                f"First user message content should be preserved for {model_name}"
+            )
+            assert passed_messages[2]["content"] == "Hi there!", (
+                f"Assistant message content should be preserved for {model_name}"
+            )
 
-            # Verify the original text is preserved
-            expected_texts = ["Hello!", "Help me code."]
-            actual_texts = [user_msg["content"][0]["text"] for user_msg in user_messages]
-            assert actual_texts == expected_texts, f"Text content should be preserved for {model_name}"
+            # Last message should have cache control
+            last_message = passed_messages[3]
+            assert isinstance(last_message["content"], list), f"Last message should have list content for {model_name}"
+            assert len(last_message["content"]) == 1, f"Last message should have single content item for {model_name}"
+
+            content_item = last_message["content"][0]
+            assert content_item["type"] == "text", f"Content should be text type for {model_name}"
+            assert content_item["cache_control"] == {"type": "ephemeral"}, f"Cache control missing for {model_name}"
+            assert content_item["text"] == "Help me code.", f"Text content should be preserved for {model_name}"
 
 
 @pytest.mark.parametrize(
