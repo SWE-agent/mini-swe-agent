@@ -32,3 +32,35 @@ def test_anthropic_model_with_empty_api_keys():
             AnthropicModel(model_name="tardis").query(messages=[])
 
             assert mock_query.call_args.kwargs["api_key"] is None
+
+
+def test_anthropic_model_applies_cache_control():
+    """Test that AnthropicModel applies cache control to messages."""
+    messages = [
+        {"role": "user", "content": "Hello!"},
+        {"role": "assistant", "content": "Hi there!"},
+        {"role": "user", "content": "Help me code."},
+    ]
+
+    with patch("minisweagent.models.litellm_model.LitellmModel.query") as mock_query:
+        mock_query.return_value = {"content": "I'll help you code!"}
+
+        model = AnthropicModel(model_name="claude-sonnet")
+        model.query(messages)
+
+        # Verify parent query was called
+        mock_query.assert_called_once()
+        call_args = mock_query.call_args
+
+        # Check that messages were modified with cache control
+        passed_messages = call_args.args[0]  # messages is first positional arg
+
+        # Find user messages in the passed messages
+        user_messages = [msg for msg in passed_messages if msg["role"] == "user"]
+        assert len(user_messages) == 2
+
+        # Both user messages should have cache control applied
+        for user_msg in user_messages:
+            assert isinstance(user_msg["content"], list)
+            assert user_msg["content"][0]["cache_control"] == {"type": "ephemeral"}
+            assert user_msg["content"][0]["type"] == "text"
