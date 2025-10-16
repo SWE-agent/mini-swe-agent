@@ -4,7 +4,7 @@
 
 !!! question "Does mini-SWE-agent work on my system?"
 
-    mini-SWE-agent should work on any system that has a bash shell or uses a container runtime to emulate one.
+    mini-SWE-agent should work on any system that has a bash shell or uses a container runtime (e.g., docker, singularity, apptainer, etc.) to emulate one.
 
 ??? question "Should I use mini-SWE-agent or swe-agent?"
 
@@ -62,6 +62,7 @@
 !!! question "What models do you support?"
 
     Currently, mini-SWE-agent supports all models that are supported by [litellm](https://github.com/BerriAI/litellm)
+    or [OpenRouter](https://openrouter.ai/)
     and we're open to extend the `models/` directory with more models should `litellm` not support them.
 
 !!! question "How do I set the API key for a model?"
@@ -90,7 +91,7 @@
     To permanently change it:
 
     ```bash
-    mini-extra config set MSWEA_MODEL_NAME claude-sonnet-4-20250514
+    mini-extra config set MSWEA_MODEL_NAME anthropic/claude-sonnet-4-5-20250929
     ```
 
     Alternatively, you can directly edit the `.env` file in the config directory

@@ -57,3 +57,5 @@ while True:
 ```
 
 Using exceptions for the control flow is a lot easier than passing around flags and states, especially when extending or subclassing the agent.
+
+{% include-markdown "_footer.md" %}

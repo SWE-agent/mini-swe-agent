@@ -48,16 +48,19 @@ More information about the usage: [bold green]https://mini-swe-agent.com/latest/
 def main(
     visual: bool = typer.Option(False, "-v", "--visual", help="Toggle (pager-style) UI (Textual) depending on the MSWEA_VISUAL_MODE_DEFAULT environment setting",),
     model_name: str | None = typer.Option( None, "-m", "--model", help="Model to use",),
+    model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
     config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
     output: Path | None = typer.Option(DEFAULT_OUTPUT, "-o", "--output", help="Output trajectory file"),
-    exit_immediately: bool = typer.Option( False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting."),
+    exit_immediately: bool = typer.Option( False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting.", rich_help_panel="Advanced"),
 ) -> Any:
     # fmt: on
     configure_if_first_time()
-    config = yaml.safe_load(get_config_path(config_spec).read_text())
+    config_path = get_config_path(config_spec)
+    console.print(f"Loading agent config from [bold green]'{config_path}'[/bold green]")
+    config = yaml.safe_load(config_path.read_text())
 
     if not task:
         console.print("[bold yellow]What do you want to do?")
@@ -72,11 +75,14 @@ def main(
         )
         console.print("[bold green]Got that, thanks![/bold green]")
 
-    config["agent"]["mode"] = "confirm" if not yolo else "yolo"
+    if yolo:
+        config.setdefault("agent", {})["mode"] = "yolo"
     if cost_limit:
-        config["agent"]["cost_limit"] = cost_limit
+        config.setdefault("agent", {})["cost_limit"] = cost_limit
     if exit_immediately:
-        config["agent"]["confirm_exit"] = False
+        config.setdefault("agent", {})["confirm_exit"] = False
+    if model_class is not None:
+        config.setdefault("model", {})["model_class"] = model_class
     model = get_model(model_name, config.get("model", {}))
     env = LocalEnvironment(**config.get("env", {}))
 

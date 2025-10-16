@@ -15,6 +15,7 @@ from pathlib import Path
 import typer
 import yaml
 from datasets import load_dataset
+from jinja2 import StrictUndefined, Template
 from rich.live import Live
 
 from minisweagent import Environment
@@ -72,17 +73,25 @@ def get_swebench_docker_image_name(instance: dict) -> str:
         # Docker doesn't allow double underscore, so we replace them with a magic token
         iid = instance["instance_id"]
         id_docker_compatible = iid.replace("__", "_1776_")
-        image_name = f"swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
+        image_name = f"docker.io/swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
     return image_name
 
 
 def get_sb_environment(config: dict, instance: dict) -> Environment:
-    image_name = get_swebench_docker_image_name(instance)
     env_config = config.setdefault("environment", {})
-    if env_config.get("environment_class") == "singularity":
-        image_name = "docker://" + image_name
-    env_config["image"] = image_name
-    return get_environment(env_config, default_type="docker")
+    env_config["environment_class"] = env_config.get("environment_class", "docker")
+    image_name = get_swebench_docker_image_name(instance)
+    if env_config["environment_class"] == "docker":
+        env_config["image"] = image_name
+    elif env_config["environment_class"] == "singularity":
+        env_config["image"] = "docker://" + image_name
+    env = get_environment(env_config)
+    if startup_command := config.get("run", {}).get("env_startup_command"):
+        startup_command = Template(startup_command, undefined=StrictUndefined).render(**instance)
+        out = env.execute(startup_command)
+        if out["returncode"] != 0:
+            raise RuntimeError(f"Error executing startup command: {out}")
+    return env
 
 
 def update_preds_file(output_path: Path, instance_id: str, model_name: str, result: str):
@@ -212,8 +221,9 @@ def main(
         instances = [instance for instance in instances if instance["instance_id"] not in existing_instances]
     logger.info(f"Running on {len(instances)} instances...")
 
-
-    config = yaml.safe_load(get_config_path(config_spec).read_text())
+    config_path = get_config_path(config_spec)
+    logger.info(f"Loading agent config from '{config_path}'")
+    config = yaml.safe_load(config_path.read_text())
     if environment_class is not None:
         config.setdefault("environment", {})["environment_class"] = environment_class
     if model is not None:

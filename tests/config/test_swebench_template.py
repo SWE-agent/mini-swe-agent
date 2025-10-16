@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
-from jinja2 import Template
+from jinja2 import StrictUndefined, Template
 
 
 @dataclass
@@ -22,7 +22,7 @@ def test_action_observation_template_short_output():
 
     # Extract the template
     template_str = config["agent"]["action_observation_template"]
-    template = Template(template_str)
+    template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with short content
     output = MockOutput(returncode=0, output="Success! Operation completed.\nWarning: minor issue")
@@ -53,7 +53,7 @@ def test_action_observation_template_long_output():
 
     # Extract the template
     template_str = config["agent"]["action_observation_template"]
-    template = Template(template_str)
+    template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with long content
     long_output = "A" * 8000 + "B" * 3000  # 11000 characters total
@@ -98,7 +98,7 @@ def test_action_observation_template_edge_case_exactly_10000_chars():
 
     # Extract the template
     template_str = config["agent"]["action_observation_template"]
-    template = Template(template_str)
+    template = Template(template_str, undefined=StrictUndefined)
 
     # Use a large amount of data that will definitely exceed 10000 chars when rendered
     output = MockOutput(returncode=0, output="X" * 10000)
@@ -124,7 +124,7 @@ def test_action_observation_template_just_under_10000_chars():
 
     # Extract the template
     template_str = config["agent"]["action_observation_template"]
-    template = Template(template_str)
+    template = Template(template_str, undefined=StrictUndefined)
 
     # Use a reasonably sized output that should be well under 10000 chars when rendered
     output = MockOutput(returncode=0, output="Y" * 8000)

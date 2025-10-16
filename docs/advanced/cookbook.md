@@ -38,7 +38,7 @@ You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` envi
     from minisweagent.models import get_model
     from minisweagent.environments.local import LocalEnvironment
 
-    model_name = "claude-sonnet-4-20250514"
+    model_name = "anthropic/claude-sonnet-4-5-20250929"
 
     agent = DefaultAgent(
         get_model(model_name=model_name),
@@ -54,7 +54,7 @@ You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` envi
     from minisweagent.models.anthropic_model import AnthropicModel
     from minisweagent.environments.local import LocalEnvironment
 
-    model_name = "claude-sonnet-4-20250514"
+    model_name = "anthropic/claude-sonnet-4-5-20250929"
 
     agent = DefaultAgent(
         AnthropicModel(model_name=model_name),
@@ -291,5 +291,10 @@ An agent that validates actions before execution (also an example of how to use 
         EnvironmentWithForbiddenPatterns(),
     )
     ```
+
+### Running mini-swe-agent on Ray
+
+[This blog post](https://www.anyscale.com/blog/massively-parallel-agentic-simulations-with-ray)
+describes how to parallelize mini-swe-agent runs with Ray.
 
 {% include-markdown "_footer.md" %}

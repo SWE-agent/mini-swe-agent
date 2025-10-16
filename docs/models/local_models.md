@@ -2,8 +2,8 @@
 
     * This guide shows how to set up local models.
     * You should already be familiar with the [quickstart guide](../quickstart.md).
-    * You should also quickly skim the [configuration guide](configuration.md) to understand
-      the global configuration and configuration files.
+    * You should also quickly skim the [global configuration guide](../advanced/global_configuration.md) to understand
+      the global configuration and [yaml configuration files guide](../advanced/yaml_configuration.md).
 
 
 !!! tip "Examples"
@@ -44,7 +44,7 @@ model:
   model_name: "my-local-model"
   model_kwargs:
     custom_llm_provider: "openai"
-    api_base="https://..."
+    api_base: "https://..."
     ...
   ...
 ```
@@ -53,7 +53,7 @@ model:
 
     You can set the `MSWEA_MINI_CONFIG_PATH` setting to set path to the default `mini` configuration file.
     This will allow you to override the default configuration file with your own.
-    See the [configuration guide](configuration.md) for more details.
+    See the [global configuration guide](../advanced/global_configuration.md) for more details.
 
 If this is not enough, our model class should be simple to modify:
 
@@ -119,3 +119,5 @@ model:
 
     We welcome concrete examples of how to use local models per pull request into this guide.
     Please add your example here.
+
+--8<-- "docs/_footer.md"

@@ -33,7 +33,7 @@ This setup will ask you for your model and an API key.
 
 Here's a few popular models and the required API keys:
 
-[bold green]anthropic/claude-sonnet-4-20250514[/bold green] ([bold green]ANTHROPIC_API_KEY[/bold green])
+[bold green]anthropic/claude-sonnet-4-5-20250929[/bold green] ([bold green]ANTHROPIC_API_KEY[/bold green])
 [bold green]openai/gpt-5[/bold green] or [bold green]openai/gpt-5-mini[/bold green] ([bold green]OPENAI_API_KEY[/bold green])
 [bold green]gemini/gemini-2.5-pro[/bold green] ([bold green]GEMINI_API_KEY[/bold green])
 
@@ -58,7 +58,8 @@ def setup():
     """Setup the global config file."""
     console.print(_SETUP_HELP.format(global_config_file=global_config_file))
     default_model = prompt(
-        "Enter your default model (e.g., claude-sonnet-4-20250514): ", default=os.getenv("MSWEA_MODEL_NAME", "")
+        "Enter your default model (e.g., anthropic/claude-sonnet-4-5-20250929): ",
+        default=os.getenv("MSWEA_MODEL_NAME", ""),
     ).strip()
     if default_model:
         set_key(global_config_file, "MSWEA_MODEL_NAME", default_model)

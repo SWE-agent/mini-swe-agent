@@ -63,11 +63,16 @@ nav:
       - "<code>mini -v</code>": usage/mini_v.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
-    - "Advanced":
-      - "Configuration": advanced/configuration.md
-      - "Local models": advanced/local_models.md
+    - "Models":
+      - "Quick start": models/quickstart.md
+      - "Local models": models/local_models.md
+      - "Troubleshooting": models/troubleshooting.md
+    - "Guides":
+      - "Global configuration": advanced/global_configuration.md
+      - "Yaml config files": advanced/yaml_configuration.md
+      - "Environments": advanced/environments.md
       - "Control flow": advanced/control_flow.md
-      - "Cookbook": advanced/cookbook.md
+      - "Python bindings": advanced/cookbook.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
   - API Reference:
@@ -79,11 +84,14 @@ nav:
     - Models:
       - "LitellmModel": "reference/models/litellm.md"
       - "AnthropicModel": "reference/models/anthropic.md"
+      - "OpenRouterModel": "reference/models/openrouter.md"
       - "DeterministicModel": "reference/models/test_models.md"
+      - "Extra Models": "reference/models/extra.md"
       - "Model Utilities": "reference/models/utils.md"
     - Environments:
       - "LocalEnvironment": "reference/environments/local.md"
       - "DockerEnvironment": "reference/environments/docker.md"
+      - "SingularityEnvironment": "reference/environments/singularity.md"
       - "SwerexDockerEnvironment": "reference/environments/swerex_docker.md"
       - "BubblewrapEnvironment": "reference/environments/bubblewrap.md"
     - Run Scripts:
@@ -95,6 +103,9 @@ nav:
   - Blog: https://www.swebench.com/SWE-bench/blog/category/mini-swe-agent/
   - Leaderboard: https://swebench.com
 plugins:
+  - redirects:
+      redirect_maps:
+        'advanced/local_models.md': 'models/local_models.md'
   - glightbox
   - search
   - include-markdown
