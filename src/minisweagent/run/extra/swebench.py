@@ -230,6 +230,9 @@ def main(
         config.setdefault("model", {})["model_name"] = model
     if model_class is not None:
         config.setdefault("model", {})["model_class"] = model_class
+    # SWE-bench images are built for non-login shells (checked on 2025-10-16)
+    if "use_login_shell" not in config.get("environment", {}):
+        config.setdefault("environment", {})["use_login_shell"] = False
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 

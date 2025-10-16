@@ -31,6 +31,8 @@ class DockerEnvironmentConfig:
     """Max duration to keep container running. Uses the same format as the sleep command."""
     pull_timeout: int = 120
     """Timeout in seconds for pulling images."""
+    use_login_shell: bool = True
+    """Whether to use a login shell when executing commands. Current SWE-bench testset should disable this option."""
 
 
 class DockerEnvironment:
@@ -84,7 +86,15 @@ class DockerEnvironment:
                 cmd.extend(["-e", f"{key}={value}"])
         for key, value in self.config.env.items():
             cmd.extend(["-e", f"{key}={value}"])
-        cmd.extend([self.container_id, "bash", "-c", command])
+        cmd.extend(
+            [
+                self.container_id,
+                "bash",
+            ]
+        )
+        if self.config.use_login_shell:
+            cmd.append("-l")
+        cmd.extend(["-c", command])
 
         result = subprocess.run(
             cmd,
