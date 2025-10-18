@@ -2253,7 +2253,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 
     <span class="k">if</span> <span class="n">yolo</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">"mode"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"yolo"</span>
-    <span class="k">if</span> <span class="n">cost_limit</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">cost_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">"cost_limit"</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost_limit</span>
     <span class="k">if</span> <span class="n">exit_immediately</span><span class="p">:</span>
         <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">"confirm_exit"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
