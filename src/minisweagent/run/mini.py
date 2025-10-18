@@ -77,7 +77,7 @@ def main(
 
     if yolo:
         config.setdefault("agent", {})["mode"] = "yolo"
-    if cost_limit:
+    if cost_limit is not None:
         config.setdefault("agent", {})["cost_limit"] = cost_limit
     if exit_immediately:
         config.setdefault("agent", {})["confirm_exit"] = False
