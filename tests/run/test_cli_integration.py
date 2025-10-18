@@ -48,6 +48,12 @@ def test_configure_if_first_time_called():
             output=None,
             visual=False,
             model_class=None,
+            cost_limit=None,
+            exit_immediately=False,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify configure_if_first_time was called
@@ -88,6 +94,12 @@ def test_mini_command_calls_run_interactive():
             output=None,
             visual=False,
             model_class=None,
+            cost_limit=None,
+            exit_immediately=False,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify InteractiveAgent was instantiated
@@ -133,6 +145,12 @@ def test_mini_v_command_calls_run_textual():
             output=None,
             visual=True,
             model_class=None,
+            cost_limit=None,
+            exit_immediately=False,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify TextualAgent was instantiated
@@ -180,6 +198,12 @@ def test_mini_calls_prompt_when_no_task_provided():
             output=None,
             visual=False,
             model_class=None,
+            cost_limit=None,
+            exit_immediately=False,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify prompt was called
@@ -227,6 +251,12 @@ def test_mini_v_calls_prompt_when_no_task_provided():
             output=None,
             visual=True,
             model_class=None,
+            cost_limit=None,
+            exit_immediately=False,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify prompt was called
@@ -276,6 +306,12 @@ def test_mini_with_explicit_model():
             output=None,
             visual=False,
             model_class=None,
+            cost_limit=None,
+            exit_immediately=False,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify get_model was called with the explicit model
@@ -321,6 +357,12 @@ def test_yolo_mode_sets_correct_agent_config():
             output=None,
             visual=False,
             model_class=None,
+            cost_limit=None,
+            exit_immediately=False,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify InteractiveAgent was called with yolo mode
@@ -366,6 +408,12 @@ def test_confirm_mode_sets_correct_agent_config():
             output=None,
             visual=False,
             model_class=None,
+            cost_limit=None,
+            exit_immediately=False,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify InteractiveAgent was called with no explicit mode (defaults to None)
@@ -566,8 +614,13 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
             yolo=False,
             output=None,
             visual=False,
-            exit_immediately=True,  # This should set confirm_exit=False
             model_class=None,
+            cost_limit=None,
+            exit_immediately=True,  # This should set confirm_exit=False
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify the agent's config has confirm_exit set to False
@@ -609,6 +662,12 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
             output=None,
             visual=False,
             model_class=None,
+            cost_limit=None,
+            exit_immediately=False,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
         )
 
         # Verify the agent's config has confirm_exit set to True
@@ -655,3 +714,211 @@ def test_exit_immediately_flag_with_typer_runner():
         args, kwargs = mock_interactive_agent_class.call_args
         # The agent_config should contain confirm_exit as a keyword argument
         assert kwargs.get("confirm_exit") is False
+
+
+def test_step_limit_flag_sets_correct_agent_config():
+    """Test that --step-limit flag sets the correct step_limit in agent config."""
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+
+        # Setup mock agent instance
+        mock_agent = Mock()
+        mock_agent.run.return_value = ("Success", "Result")
+        mock_interactive_agent_class.return_value = mock_agent
+
+        # Call main function with --step-limit
+        main(
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
+            task="Test task",
+            yolo=False,
+            output=None,
+            visual=False,
+            model_class=None,
+            step_limit=100,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
+            cost_limit=None,
+            exit_immediately=False,
+        )
+
+        # Verify InteractiveAgent was called with step_limit
+        mock_interactive_agent_class.assert_called_once()
+        args, kwargs = mock_interactive_agent_class.call_args
+        assert kwargs.get("step_limit") == 100
+
+
+def test_temperature_flag_sets_correct_model_config():
+    """Test that --temperature flag sets the correct temperature in model config."""
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+
+        # Setup mock agent instance
+        mock_agent = Mock()
+        mock_agent.run.return_value = ("Success", "Result")
+        mock_interactive_agent_class.return_value = mock_agent
+
+        # Call main function with --temperature
+        main(
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
+            task="Test task",
+            yolo=False,
+            output=None,
+            visual=False,
+            model_class=None,
+            step_limit=None,
+            temperature=0.7,
+            timeout=None,
+            max_tokens=None,
+            cost_limit=None,
+            exit_immediately=False,
+        )
+
+        # Verify get_model was called with temperature in model_kwargs
+        mock_get_model.assert_called_once()
+        args, _ = mock_get_model.call_args
+        model_config = args[1]
+        assert model_config.get("model_kwargs", {}).get("temperature") == 0.7
+
+
+def test_timeout_flag_sets_correct_agent_config():
+    """Test that --timeout flag sets the correct timeout in environment config."""
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+
+        # Setup mock agent instance
+        mock_agent = Mock()
+        mock_agent.run.return_value = ("Success", "Result")
+        mock_interactive_agent_class.return_value = mock_agent
+
+        # Call main function with --timeout
+        main(
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
+            task="Test task",
+            yolo=False,
+            output=None,
+            visual=False,
+            model_class=None,
+            step_limit=None,
+            temperature=None,
+            timeout=120,
+            max_tokens=None,
+            cost_limit=None,
+            exit_immediately=False,
+        )
+
+        # Verify LocalEnvironment was called with timeout
+        mock_env.assert_called_once()
+        args, kwargs = mock_env.call_args
+        # timeout should be passed as a kwarg to LocalEnvironment
+        assert kwargs.get("timeout") == 120
+
+
+def test_multiple_flags_combined():
+    """Test that multiple flags can be combined correctly."""
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_local_env,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_get_model.return_value = mock_model
+        mock_environment = Mock()
+        mock_local_env.return_value = mock_environment
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+
+        # Setup mock agent instance
+        mock_agent = Mock()
+        mock_agent.run.return_value = ("Success", "Result")
+        mock_interactive_agent_class.return_value = mock_agent
+
+        # Call main function with multiple flags
+        main(
+            config_spec=DEFAULT_CONFIG,
+            model_name="test-model",
+            task="Test task",
+            yolo=True,
+            output=None,
+            visual=False,
+            model_class=None,
+            step_limit=50,
+            temperature=0.5,
+            timeout=90,
+            max_tokens=4096,
+            cost_limit=10.0,
+            exit_immediately=True,
+        )
+
+        # Verify InteractiveAgent was called with all agent settings
+        mock_interactive_agent_class.assert_called_once()
+        args, kwargs = mock_interactive_agent_class.call_args
+        assert kwargs.get("mode") == "yolo"
+        assert kwargs.get("step_limit") == 50
+        assert kwargs.get("cost_limit") == 10.0
+        assert kwargs.get("confirm_exit") is False
+
+        # Verify model config has temperature and max_tokens
+        model_call_args = mock_get_model.call_args[0]
+        model_config = model_call_args[1]
+        assert model_config.get("model_kwargs", {}).get("temperature") == 0.5
+        assert model_config.get("model_kwargs", {}).get("max_tokens") == 4096
+
+        # Verify LocalEnvironment was called with timeout
+        mock_local_env.assert_called_once()
+        args, kwargs = mock_local_env.call_args
+        assert kwargs.get("timeout") == 90

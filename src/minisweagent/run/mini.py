@@ -55,6 +55,10 @@ def main(
     config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
     output: Path | None = typer.Option(DEFAULT_OUTPUT, "-o", "--output", help="Output trajectory file"),
     exit_immediately: bool = typer.Option( False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting.", rich_help_panel="Advanced"),
+    step_limit: int | None = typer.Option(None, "--step-limit", help="Maximum number of steps the agent can take. Set to 0 for no limit."),
+    temperature: float | None = typer.Option(None, "--temperature", help="Model temperature (0.0-1.0). Lower is more deterministic."),
+    timeout: int | None = typer.Option(None, "--timeout", help="Command execution timeout in seconds."),
+    max_tokens: int | None = typer.Option(None, "--max-tokens", help="Maximum tokens in model response.", rich_help_panel="Advanced"),
 ) -> Any:
     # fmt: on
     configure_if_first_time()
@@ -75,14 +79,26 @@ def main(
         )
         console.print("[bold green]Got that, thanks![/bold green]")
 
+    # Agent overrides
     if yolo:
         config.setdefault("agent", {})["mode"] = "yolo"
     if cost_limit:
         config.setdefault("agent", {})["cost_limit"] = cost_limit
     if exit_immediately:
         config.setdefault("agent", {})["confirm_exit"] = False
+    if step_limit is not None:
+        config.setdefault("agent", {})["step_limit"] = step_limit
+    if timeout is not None:
+        config.setdefault("env", {})["timeout"] = timeout
+
+    # Model overrides
     if model_class is not None:
         config.setdefault("model", {})["model_class"] = model_class
+    if temperature is not None:
+        config.setdefault("model", {}).setdefault("model_kwargs", {})["temperature"] = temperature
+    if max_tokens is not None:
+        config.setdefault("model", {}).setdefault("model_kwargs", {})["max_tokens"] = max_tokens
+
     model = get_model(model_name, config.get("model", {}))
     env = LocalEnvironment(**config.get("env", {}))
 
