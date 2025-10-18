@@ -222,6 +222,7 @@ environment:
     PIP_PROGRESS_BAR: 'off'
     TQDM_DISABLE: '1'
   environment_class: docker
+  use_login_shell: false
 
 model:
   model_name: "anthropic/claude-sonnet-4-5-20250929"
