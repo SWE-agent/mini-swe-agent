@@ -87,6 +87,10 @@ MSWEA_GLOBAL_CALL_LIMIT="100"
 # Global cost limit in dollars (0 = no limit)
 # (default: 0)
 MSWEA_GLOBAL_COST_LIMIT="10.00"
+
+# Number of retry attempts for model API calls
+# (default: 10)
+MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT="10"
 ```
 
 ## Default config files
