@@ -3,7 +3,7 @@ import logging
 import os
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import litellm
 from tenacity import (
@@ -15,6 +15,7 @@ from tenacity import (
 )
 
 from minisweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models.utils.cache_control import set_cache_control
 
 logger = logging.getLogger("portkey_model")
 
@@ -37,6 +38,8 @@ class PortkeyModelConfig:
     doesn't match the Portkey model name.
     Note that this might change if we get better support for Portkey and change how we calculate costs.
     """
+    set_cache_control: Literal["default_end"] | None = None
+    """Set explicit cache control markers, for example for Anthropic models"""
 
 
 class PortkeyModel:
@@ -71,7 +74,7 @@ class PortkeyModel:
         self.client = Portkey(**client_kwargs)
 
     @retry(
-        stop=stop_after_attempt(10),
+        stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
         retry=retry_if_not_exception_type((KeyboardInterrupt, TypeError, ValueError)),
@@ -85,11 +88,24 @@ class PortkeyModel:
         )
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+        if self.config.set_cache_control:
+            messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
         response_for_cost_calc = response.model_copy()
         if self.config.litellm_model_name_override:
             if response_for_cost_calc.model:
                 response_for_cost_calc.model = self.config.litellm_model_name_override
+        prompt_tokens = response_for_cost_calc.usage.prompt_tokens
+        total_tokens = response_for_cost_calc.usage.total_tokens
+        completion_tokens = response_for_cost_calc.usage.completion_tokens
+        if total_tokens - prompt_tokens - completion_tokens != 0:
+            # This is most likely related to how portkey treats cached tokens: It doesn't count them towards the prompt tokens (?)
+            logger.warning(
+                f"WARNING: Total tokens - prompt tokens - completion tokens != 0: {response_for_cost_calc.model_dump()}."
+                " This is probably a portkey bug or incompatibility with litellm cost tracking. "
+                "Setting prompt tokens based on total tokens and completion tokens. You might want to double check your costs."
+            )
+            response_for_cost_calc.usage.prompt_tokens = total_tokens - completion_tokens
         try:
             cost = litellm.cost_calculator.completion_cost(
                 response_for_cost_calc, model=self.config.litellm_model_name_override or None
@@ -101,6 +117,7 @@ class PortkeyModel:
                 "https://klieret.short.gy/litellm-model-registry Still stuck? Please open a github issue for help!"
             )
             raise
+        assert cost >= 0.0, f"Cost is negative: {cost}"
 
         self.n_calls += 1
         self.cost += cost

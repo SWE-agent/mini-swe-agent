@@ -3,7 +3,7 @@ import logging
 import os
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import litellm
 from tenacity import (
@@ -15,6 +15,7 @@ from tenacity import (
 )
 
 from minisweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models.utils.cache_control import set_cache_control
 
 logger = logging.getLogger("litellm_model")
 
@@ -24,18 +25,20 @@ class LitellmModelConfig:
     model_name: str
     model_kwargs: dict[str, Any] = field(default_factory=dict)
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
+    set_cache_control: Literal["default_end"] | None = None
+    """Set explicit cache control markers, for example for Anthropic models"""
 
 
 class LitellmModel:
-    def __init__(self, **kwargs):
-        self.config = LitellmModelConfig(**kwargs)
+    def __init__(self, *, config_class: type = LitellmModelConfig, **kwargs):
+        self.config = config_class(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
     @retry(
-        stop=stop_after_attempt(10),
+        stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
         retry=retry_if_not_exception_type(
@@ -60,6 +63,8 @@ class LitellmModel:
             raise e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+        if self.config.set_cache_control:
+            messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
         try:
             cost = litellm.cost_calculator.completion_cost(response)
@@ -71,6 +76,7 @@ class LitellmModel:
             )
             raise
         self.n_calls += 1
+        assert cost >= 0.0, f"Cost is negative: {cost}"
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
         return {

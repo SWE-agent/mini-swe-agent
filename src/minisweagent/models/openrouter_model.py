@@ -2,7 +2,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from typing import Any, Literal
 
 import requests
 from tenacity import (
@@ -14,6 +14,7 @@ from tenacity import (
 )
 
 from minisweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models.utils.cache_control import set_cache_control
 
 logger = logging.getLogger("openrouter_model")
 
@@ -22,6 +23,8 @@ logger = logging.getLogger("openrouter_model")
 class OpenRouterModelConfig:
     model_name: str
     model_kwargs: dict[str, Any] = field(default_factory=dict)
+    set_cache_control: Literal["default_end"] | None = None
+    """Set explicit cache control markers, for example for Anthropic models"""
 
 
 class OpenRouterAPIError(Exception):
@@ -51,7 +54,7 @@ class OpenRouterModel:
         self._api_key = os.getenv("OPENROUTER_API_KEY", "")
 
     @retry(
-        stop=stop_after_attempt(10),
+        stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
         retry=retry_if_not_exception_type(
@@ -90,11 +93,14 @@ class OpenRouterModel:
             raise OpenRouterAPIError(f"Request failed: {e}") from e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+        if self.config.set_cache_control:
+            messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
 
         # Extract cost from usage information
         usage = response.get("usage", {})
         cost = usage.get("cost", 0.0)
+        assert cost >= 0.0, f"Cost is negative: {cost}"
 
         # If total_cost is not available, raise an error
         if cost == 0.0:

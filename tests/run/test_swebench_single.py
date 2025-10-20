@@ -8,7 +8,7 @@ from minisweagent.run.extra.swebench_single import main
 
 
 @pytest.mark.slow
-def test_swebench_single_end_to_end(github_test_data):
+def test_swebench_single_end_to_end(github_test_data, tmp_path):
     """Test the swebench_single script using the _test subset with deterministic model.
     This mostly tests that no exception occurs.
     """
@@ -28,7 +28,7 @@ def test_swebench_single_end_to_end(github_test_data):
                 config_path=package_dir / "config" / "extra" / "swebench.yaml",
                 environment_class="docker",
                 exit_immediately=False,
-                output=package_dir / "test_output.json",
+                output=tmp_path / "test_output.json",
             )
 
         # Verify model was called with correct parameters
@@ -36,7 +36,7 @@ def test_swebench_single_end_to_end(github_test_data):
 
 
 @pytest.mark.slow
-def test_swebench_single_end_to_end_exit_immediately(github_test_data):
+def test_swebench_single_end_to_end_exit_immediately(github_test_data, tmp_path):
     """Test the swebench_single script using the _test subset with deterministic model.
     This mostly tests that no exception occurs.
     This test uses the --exit-immediately flag to exit immediately when the agent wants to finish instead of prompting.
@@ -56,7 +56,7 @@ def test_swebench_single_end_to_end_exit_immediately(github_test_data):
             config_path=package_dir / "config" / "extra" / "swebench.yaml",
             environment_class="docker",
             exit_immediately=True,
-            output=package_dir / "test_output.json",
+            output=tmp_path / "test_output.json",
         )
 
         # Verify model was called with correct parameters
