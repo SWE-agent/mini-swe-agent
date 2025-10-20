@@ -88,6 +88,8 @@ def main(
         config.setdefault("agent", {})["confirm_exit"] = False
     if step_limit is not None:
         config.setdefault("agent", {})["step_limit"] = step_limit
+
+    # Environment overrides
     if timeout is not None:
         config.setdefault("env", {})["timeout"] = timeout
 
