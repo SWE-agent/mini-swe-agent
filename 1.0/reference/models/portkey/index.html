@@ -2108,7 +2108,7 @@
                 <span class="sa">f</span><span class="s2">"WARNING: Total tokens - prompt tokens - completion tokens != 0: </span><span class="si">{</span><span class="n">response_for_cost_calc</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span><span class="si">}</span><span class="s2">."</span>
                 <span class="s2">" This is probably a portkey bug or incompatibility with litellm cost tracking. "</span>
                 <span class="s2">"Setting prompt tokens based on total tokens and completion tokens. You might want to double check your costs. "</span>
-                <span class="s2">"Full response: {response_for_cost_calc.model_dump()}"</span>
+                <span class="sa">f</span><span class="s2">"Full response: </span><span class="si">{</span><span class="n">response_for_cost_calc</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
             <span class="n">response_for_cost_calc</span><span class="o">.</span><span class="n">usage</span><span class="o">.</span><span class="n">prompt_tokens</span> <span class="o">=</span> <span class="n">total_tokens</span> <span class="o">-</span> <span class="n">completion_tokens</span>
         <span class="k">try</span><span class="p">:</span>
@@ -2667,7 +2667,7 @@ Note that this might change if we get better support for Portkey and change how 
             <span class="sa">f</span><span class="s2">"WARNING: Total tokens - prompt tokens - completion tokens != 0: </span><span class="si">{</span><span class="n">response_for_cost_calc</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span><span class="si">}</span><span class="s2">."</span>
             <span class="s2">" This is probably a portkey bug or incompatibility with litellm cost tracking. "</span>
             <span class="s2">"Setting prompt tokens based on total tokens and completion tokens. You might want to double check your costs. "</span>
-            <span class="s2">"Full response: {response_for_cost_calc.model_dump()}"</span>
+            <span class="sa">f</span><span class="s2">"Full response: </span><span class="si">{</span><span class="n">response_for_cost_calc</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
         <span class="n">response_for_cost_calc</span><span class="o">.</span><span class="n">usage</span><span class="o">.</span><span class="n">prompt_tokens</span> <span class="o">=</span> <span class="n">total_tokens</span> <span class="o">-</span> <span class="n">completion_tokens</span>
     <span class="k">try</span><span class="p">:</span>
