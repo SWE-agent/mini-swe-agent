@@ -96,14 +96,25 @@ class PortkeyModel:
             if response_for_cost_calc.model:
                 response_for_cost_calc.model = self.config.litellm_model_name_override
         prompt_tokens = response_for_cost_calc.usage.prompt_tokens
+        if prompt_tokens is None:
+            logger.warning(
+                f"Prompt tokens are None for model {self.config.model_name}. Setting to 0. Full response: {response_for_cost_calc.model_dump()}"
+            )
+            prompt_tokens = 0
         total_tokens = response_for_cost_calc.usage.total_tokens
         completion_tokens = response_for_cost_calc.usage.completion_tokens
+        if completion_tokens is None:
+            logger.warning(
+                f"Completion tokens are None for model {self.config.model_name}. Setting to 0. Full response: {response_for_cost_calc.model_dump()}"
+            )
+            completion_tokens = 0
         if total_tokens - prompt_tokens - completion_tokens != 0:
             # This is most likely related to how portkey treats cached tokens: It doesn't count them towards the prompt tokens (?)
             logger.warning(
                 f"WARNING: Total tokens - prompt tokens - completion tokens != 0: {response_for_cost_calc.model_dump()}."
                 " This is probably a portkey bug or incompatibility with litellm cost tracking. "
-                "Setting prompt tokens based on total tokens and completion tokens. You might want to double check your costs."
+                "Setting prompt tokens based on total tokens and completion tokens. You might want to double check your costs. "
+                "Full response: {response_for_cost_calc.model_dump()}"
             )
             response_for_cost_calc.usage.prompt_tokens = total_tokens - completion_tokens
         try:
