@@ -24,7 +24,7 @@ from textual.events import Key
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Input, Static, TextArea
 
-from minisweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException, Submitted
+from minisweagent.agents.default import AgentConfig, DefaultAgent, LimitsExceeded, NonTerminatingException, Submitted
 
 
 @dataclass
@@ -57,7 +57,36 @@ class _TextualAgent(DefaultAgent):
             self.add_message("assistant", msg["content"])
             return msg
         self._current_action_from_human = False
-        return super().query()
+        try:
+            return super().query()
+        except LimitsExceeded:
+            # Show current limits and prompt for new ones (matching interactive.py behavior)
+            # First prompt: new step limit (only if there is a step limit configured)
+            if self.config.step_limit > 0:
+                while True:
+                    new_step_limit = self.app.input_container.request_input(
+                        f"Step limit exceeded. Current: {self.model.n_calls} steps, "
+                        f"limit: {self.config.step_limit}. Enter new limit (0 for unlimited):"
+                    )
+                    try:
+                        self.config.step_limit = int(new_step_limit) if new_step_limit.strip() else 0
+                        break
+                    except ValueError:
+                        self.app.notify("Invalid input. Please enter a number.", severity="error")
+
+            # Second prompt: new cost limit
+            while True:
+                new_cost_limit = self.app.input_container.request_input(
+                    f"Cost limit exceeded. Current: ${self.model.cost:.2f}, "
+                    f"limit: ${self.config.cost_limit:.2f}. Enter new limit (0.0 for unlimited):"
+                )
+                try:
+                    self.config.cost_limit = float(new_cost_limit) if new_cost_limit.strip() else 0.0
+                    break
+                except ValueError:
+                    self.app.notify("Invalid input. Please enter a number.", severity="error")
+
+            return super().query()
 
     def run(self, task: str, **kwargs) -> tuple[str, str]:
         try:
