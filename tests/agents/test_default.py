@@ -286,9 +286,7 @@ def test_global_call_limit_enforcement():
         GLOBAL_MODEL_STATS.call_limit = 1
 
         agent = DefaultAgent(
-            model=DeterministicModel(
-                outputs=["```bash\necho 'first'\n```", "```bash\necho 'second'\n```"]
-            ),
+            model=DeterministicModel(outputs=["```bash\necho 'first'\n```", "```bash\necho 'second'\n```"]),
             env=LocalEnvironment(),
             step_limit=10,  # Agent limit higher than global
         )
