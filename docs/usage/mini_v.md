@@ -49,6 +49,7 @@ Useful switches:
 
 - `f1` or `?`: Show keybinding help
 - `q` (or `ctrl+q`): Quit the agent
+- `i` (or `ctrl+i`): Interrupt the agent immediately (works during long-running commands)
 - `c`: Switch to `confirm` mode
 - `y` (or `ctrl+y`): Switch to `yolo` mode
 - `h` or `LEFT`: Go to previous step of the agent
