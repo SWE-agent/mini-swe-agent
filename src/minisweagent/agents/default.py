@@ -91,9 +91,25 @@ class DefaultAgent:
 
     def query(self) -> dict:
         """Query the model and return the response."""
-        if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
+        from minisweagent.models import GLOBAL_MODEL_STATS
+
+        # Check both agent-level and global limits proactively
+        if (
+            0 < self.config.step_limit <= self.model.n_calls
+            or 0 < self.config.cost_limit <= self.model.cost
+            or 0 < GLOBAL_MODEL_STATS.cost_limit <= GLOBAL_MODEL_STATS.cost
+            or 0 < GLOBAL_MODEL_STATS.call_limit <= GLOBAL_MODEL_STATS.n_calls
+        ):
             raise LimitsExceeded()
-        response = self.model.query(self.messages)
+
+        try:
+            response = self.model.query(self.messages)
+        except RuntimeError as e:
+            # Fallback: catch RuntimeError from GlobalModelStats and convert to graceful exit
+            if "cost/call limit exceeded" in str(e).lower():
+                raise LimitsExceeded(str(e))
+            raise
+
         self.add_message("assistant", **response)
         return response
 

@@ -1,3 +1,6 @@
+import os
+from unittest.mock import patch
+
 import pytest
 
 from minisweagent.agents.default import DefaultAgent, NonTerminatingException
@@ -248,3 +251,47 @@ def test_render_template_model_stats():
     result = agent.render_template(template)
 
     assert result == "Calls: 2, Cost: 2.0"
+
+
+def test_global_cost_limit_enforcement():
+    """Test agent gracefully handles global cost limit via LimitsExceeded."""
+    from minisweagent.models import GLOBAL_MODEL_STATS
+
+    # Set global cost limit low
+    with patch.dict(os.environ, {"MSWEA_GLOBAL_COST_LIMIT": "0.5", "MSWEA_SILENT_STARTUP": "1"}):
+        # Reset global stats for clean test
+        GLOBAL_MODEL_STATS._cost = 0.0
+        GLOBAL_MODEL_STATS._n_calls = 0
+        GLOBAL_MODEL_STATS.cost_limit = 0.5
+
+        agent = DefaultAgent(
+            model=DeterministicModel(outputs=["```bash\necho 'test'\n```"]),
+            env=LocalEnvironment(),
+            cost_limit=10.0,  # Agent limit higher than global
+        )
+
+        exit_status, _ = agent.run("Test global cost limit")
+        assert exit_status == "LimitsExceeded"
+
+
+def test_global_call_limit_enforcement():
+    """Test agent gracefully handles global call limit via LimitsExceeded."""
+    from minisweagent.models import GLOBAL_MODEL_STATS
+
+    # Set global call limit low
+    with patch.dict(os.environ, {"MSWEA_GLOBAL_CALL_LIMIT": "1", "MSWEA_SILENT_STARTUP": "1"}):
+        # Reset global stats for clean test
+        GLOBAL_MODEL_STATS._cost = 0.0
+        GLOBAL_MODEL_STATS._n_calls = 0
+        GLOBAL_MODEL_STATS.call_limit = 1
+
+        agent = DefaultAgent(
+            model=DeterministicModel(
+                outputs=["```bash\necho 'first'\n```", "```bash\necho 'second'\n```"]
+            ),
+            env=LocalEnvironment(),
+            step_limit=10,  # Agent limit higher than global
+        )
+
+        exit_status, _ = agent.run("Test global call limit")
+        assert exit_status == "LimitsExceeded"
