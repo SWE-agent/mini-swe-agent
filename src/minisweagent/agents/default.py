@@ -81,7 +81,9 @@ class DefaultAgent:
     def add_message(self, role: str, content: str, **kwargs):
         self.messages.append({"role": role, "content": content, **kwargs})
 
-    def _save_trajectory(self, exit_status: str | None = None, result: str | None = None, extra_info: dict | None = None):
+    def _save_trajectory(
+        self, exit_status: str | None = None, result: str | None = None, extra_info: dict | None = None
+    ):
         """Save the trajectory to the output path if configured."""
         if self.traj_path is None:
             return
