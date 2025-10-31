@@ -4,10 +4,12 @@ import re
 import subprocess
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
+from pathlib import Path
 
 from jinja2 import StrictUndefined, Template
 
 from minisweagent import Environment, Model
+from minisweagent.run.utils.save import save_traj
 
 
 @dataclass
@@ -54,12 +56,21 @@ class LimitsExceeded(TerminatingException):
 
 
 class DefaultAgent:
-    def __init__(self, model: Model, env: Environment, *, config_class: Callable = AgentConfig, **kwargs):
+    def __init__(
+        self,
+        model: Model,
+        env: Environment,
+        *,
+        config_class: Callable = AgentConfig,
+        traj_path: Path | None = None,
+        **kwargs,
+    ):
         self.config = config_class(**kwargs)
         self.messages: list[dict] = []
         self.model = model
         self.env = env
         self.extra_template_vars = {}
+        self.traj_path = traj_path
 
     def render_template(self, template: str, **kwargs) -> str:
         template_vars = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
@@ -70,6 +81,20 @@ class DefaultAgent:
     def add_message(self, role: str, content: str, **kwargs):
         self.messages.append({"role": role, "content": content, **kwargs})
 
+    def _save_trajectory(self, exit_status: str | None = None, result: str | None = None, extra_info: dict | None = None):
+        """Save the trajectory to the output path if configured."""
+        if self.traj_path is None:
+            return
+
+        save_traj(
+            self,
+            self.traj_path,
+            exit_status=exit_status,
+            result=result,
+            extra_info=extra_info,
+            print_path=False,
+        )
+
     def run(self, task: str, **kwargs) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
         self.extra_template_vars |= {"task": task, **kwargs}
@@ -79,11 +104,16 @@ class DefaultAgent:
         while True:
             try:
                 self.step()
+                self._save_trajectory()
             except NonTerminatingException as e:
                 self.add_message("user", str(e))
+                self._save_trajectory()
             except TerminatingException as e:
                 self.add_message("user", str(e))
-                return type(e).__name__, str(e)
+                exit_status = type(e).__name__
+                result = str(e)
+                self._save_trajectory(exit_status=exit_status, result=result)
+                return exit_status, result
 
     def step(self) -> dict:
         """Query the LM, execute the action, return the observation."""
