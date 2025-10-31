@@ -91,7 +91,7 @@ def main(
     if visual == (os.getenv("MSWEA_VISUAL_MODE_DEFAULT", "false") == "false"):
         agent_class = TextualAgent
 
-    agent = agent_class(model, env, **config.get("agent", {}))
+    agent = agent_class(model, env, traj_path=output, **config.get("agent", {}))
     exit_status, result, extra_info = None, None, None
     try:
         exit_status, result = agent.run(task)  # type: ignore[arg-type]
@@ -99,6 +99,7 @@ def main(
         logger.error(f"Error running agent: {e}", exc_info=True)
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
+        agent._save_trajectory(exit_status=exit_status, result=result, extra_info=extra_info)
     finally:
         if output:
             save_traj(agent, output, exit_status=exit_status, result=result, extra_info=extra_info)  # type: ignore[arg-type]
