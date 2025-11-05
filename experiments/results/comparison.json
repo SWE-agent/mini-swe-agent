@@ -1,0 +1,36 @@
+{
+  "baseline_stats": {},
+  "memory_stats": {},
+  "comparison": {
+    "resolve_rate": {
+      "baseline": 0.0,
+      "memory": 0.0,
+      "improvement": 0.0,
+      "improvement_pct": 0.0
+    },
+    "cost": {
+      "baseline": 0.0,
+      "memory": 0.0,
+      "difference": 0.0,
+      "difference_pct": 0.0
+    },
+    "tokens": {
+      "baseline": 0,
+      "memory": 0,
+      "difference": 0,
+      "difference_pct": 0.0
+    },
+    "steps": {
+      "baseline": 0.0,
+      "memory": 0.0,
+      "difference": 0.0,
+      "difference_pct": 0.0
+    },
+    "time": {
+      "baseline": 0.0,
+      "memory": 0.0,
+      "difference": 0.0,
+      "difference_pct": 0.0
+    }
+  }
+}

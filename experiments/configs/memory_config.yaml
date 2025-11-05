@@ -1,0 +1,82 @@
+# Memory Configuration - MemoryAgent with A-mem System
+
+experiment:
+  name: "memory_agent_amem"
+  description: "MemoryAgent with A-mem for intelligent context management"
+  output_dir: "./experiments/results/memory"
+
+agent:
+  type: "memory"  # Uses MemoryAgent
+  class: "minisweagent.agents.memory_agent.MemoryAgent"
+
+  config:
+    step_limit: 50  # Max steps per instance
+    cost_limit: 5.0  # Max cost in USD per instance
+
+  # Memory-specific configuration
+  memory_config:
+    embedding_model: "all-MiniLM-L6-v2"  # Fast, lightweight
+    llm_backend: "openai"
+    llm_model: "gpt-5o"  # Same model for A-mem LLM (latest)
+    persist_directory: "./experiments/memory_db"
+
+  # Summarization settings
+  summarization_threshold: 20  # Trigger summary when messages > 20
+  recent_messages_keep: 5      # Keep last 5 messages raw
+
+  # Memory retrieval settings
+  memory_retrieval_k: 3  # Retrieve top 3 relevant memories
+
+model:
+  backend: "openai"
+  name: "gpt-5o"  # GPT-5o model (latest)
+  temperature: 0.0
+  max_tokens: 8192
+
+environment:
+  type: "swe_bench"
+  timeout: 300  # 5 minutes per command
+
+dataset:
+  name: "swe_bench_lite"
+  split: "test"
+
+  # Small subset for cost-conscious testing
+  # Same 5 instances as baseline for fair comparison
+  subset:
+    enabled: true
+    size: 5
+    selection: "random"  # Use same seed as baseline
+    seed: 42
+
+  # Filter by difficulty/category if needed
+  filter:
+    # difficulty: ["easy", "medium"]
+    # languages: ["python"]
+    pass
+
+evaluation:
+  metrics:
+    - "pass_at_1"
+    - "resolved"
+    - "partial_credit"
+
+  save_trajectories: true
+  save_predictions: true
+
+  # Memory-specific metrics
+  memory_metrics:
+    track_memory_usage: true
+    track_retrieval_effectiveness: true
+    track_compression_ratio: true
+
+logging:
+  level: "INFO"
+  log_file: "./experiments/results/memory/experiment.log"
+  save_messages: true  # Save both original and compressed messages
+
+resource_tracking:
+  track_tokens: true
+  track_cost: true
+  track_time: true
+  track_memory_stats: true  # Track A-mem statistics

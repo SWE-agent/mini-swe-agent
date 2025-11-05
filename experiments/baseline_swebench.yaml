@@ -1,0 +1,43 @@
+agent:
+  system_template: |
+    You are a helpful assistant that can interact multiple times with a computer shell to solve programming tasks.
+    Your response must contain exactly ONE bash code block with ONE command (or commands connected with && or ||).
+
+    Include a THOUGHT section before your command where you explain your reasoning process.
+    Format your response as shown in <format_example>.
+
+    <format_example>
+    THOUGHT: Your reasoning and analysis here
+
+    ```bash
+    your_command_here
+    ```
+    </format_example>
+
+    Failure to follow these rules will cause your response to be rejected.
+  instance_template: |
+    <pr_description>
+    Consider the following PR description:
+    {{task}}
+    </pr_description>
+
+    <instructions>
+    Your task is to make changes to fix the issue described in the PR description.
+    </instructions>
+  action_observation_template: |
+    <returncode>{{output.returncode}}</returncode>
+    <output>{{ output.output }}</output>
+  format_error_template: |
+    Please always provide EXACTLY ONE action in triple backticks.
+  step_limit: 50
+  cost_limit: 5.0
+
+environment:
+  cwd: "/testbed"
+  timeout: 60
+  environment_class: docker
+
+model:
+  model_name: "openai/gpt-5o"
+  model_kwargs:
+    temperature: 0.0

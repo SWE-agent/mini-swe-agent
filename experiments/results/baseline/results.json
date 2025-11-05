@@ -1,0 +1,57 @@
+[
+  {
+    "instance_id": "astropy__astropy-12907",
+    "agent": "baseline",
+    "model": "gpt-5",
+    "success": false,
+    "exit_status": "UnsupportedParamsError",
+    "steps": 0,
+    "cost": 0.0,
+    "time": 0.050791263580322266,
+    "result": "litellm.UnsupportedParamsError: gpt-5 models (including gpt-5-codex) don't support temperature=0.0. Only temperature=1 is supported. To drop unsupported params set `litellm.drop_params = True`"
+  },
+  {
+    "instance_id": "astropy__astropy-14182",
+    "agent": "baseline",
+    "model": "gpt-5",
+    "success": false,
+    "exit_status": "UnsupportedParamsError",
+    "steps": 0,
+    "cost": 0.0,
+    "time": 0.002526998519897461,
+    "result": "litellm.UnsupportedParamsError: gpt-5 models (including gpt-5-codex) don't support temperature=0.0. Only temperature=1 is supported. To drop unsupported params set `litellm.drop_params = True`"
+  },
+  {
+    "instance_id": "astropy__astropy-14365",
+    "agent": "baseline",
+    "model": "gpt-5",
+    "success": false,
+    "exit_status": "UnsupportedParamsError",
+    "steps": 0,
+    "cost": 0.0,
+    "time": 0.00238037109375,
+    "result": "litellm.UnsupportedParamsError: gpt-5 models (including gpt-5-codex) don't support temperature=0.0. Only temperature=1 is supported. To drop unsupported params set `litellm.drop_params = True`"
+  },
+  {
+    "instance_id": "astropy__astropy-14995",
+    "agent": "baseline",
+    "model": "gpt-5",
+    "success": false,
+    "exit_status": "UnsupportedParamsError",
+    "steps": 0,
+    "cost": 0.0,
+    "time": 0.002379894256591797,
+    "result": "litellm.UnsupportedParamsError: gpt-5 models (including gpt-5-codex) don't support temperature=0.0. Only temperature=1 is supported. To drop unsupported params set `litellm.drop_params = True`"
+  },
+  {
+    "instance_id": "astropy__astropy-6938",
+    "agent": "baseline",
+    "model": "gpt-5",
+    "success": false,
+    "exit_status": "UnsupportedParamsError",
+    "steps": 0,
+    "cost": 0.0,
+    "time": 0.002498626708984375,
+    "result": "litellm.UnsupportedParamsError: gpt-5 models (including gpt-5-codex) don't support temperature=0.0. Only temperature=1 is supported. To drop unsupported params set `litellm.drop_params = True`"
+  }
+]
