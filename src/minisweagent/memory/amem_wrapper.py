@@ -1,14 +1,13 @@
 """Wrapper for A-mem system tailored for software engineering tasks."""
 
 import os
-from typing import List, Dict, Optional
+
 from agentic_memory.memory_system import AgenticMemorySystem
+
 from minisweagent.memory.prompts import (
-    CODE_MEMORY_SYSTEM_PROMPT,
-    RETRIEVAL_PROMPTS,
-    STORAGE_DECISION_PROMPT,
+    MEMORY_FORMAT_TEMPLATE,
     MEMORY_INJECTION_TEMPLATE,
-    MEMORY_FORMAT_TEMPLATE
+    RETRIEVAL_PROMPTS,
 )
 from minisweagent.memory.summarizer import ConversationSummarizer
 
@@ -22,7 +21,7 @@ class AMemWrapper:
         llm_backend: str = "openai",
         llm_model: str = "gpt-4o-mini",
         persist_directory: str = "./memory_db",
-        evo_threshold: int = 100
+        evo_threshold: int = 100,
     ):
         """Initialize A-mem wrapper.
 
@@ -39,10 +38,7 @@ class AMemWrapper:
         # Initialize A-mem system
         # Note: A-mem manages its own persistence internally
         self.memory_system = AgenticMemorySystem(
-            model_name=embedding_model,
-            llm_backend=llm_backend,
-            llm_model=llm_model,
-            evo_threshold=evo_threshold
+            model_name=embedding_model, llm_backend=llm_backend, llm_model=llm_model, evo_threshold=evo_threshold
         )
 
         # Set code-specific system prompt for A-mem
@@ -61,13 +57,8 @@ class AMemWrapper:
         pass
 
     def store_interaction(
-        self,
-        command: str,
-        output: str,
-        status: str,
-        context: str = "",
-        auto_decide: bool = True
-    ) -> Optional[str]:
+        self, command: str, output: str, status: str, context: str = "", auto_decide: bool = True
+    ) -> str | None:
         """Store an agent interaction in memory.
 
         Args:
@@ -99,12 +90,7 @@ class AMemWrapper:
 
         try:
             # Store in A-mem
-            memory_id = self.memory_system.add_note(
-                content=content,
-                keywords=keywords,
-                context=context_desc,
-                tags=tags
-            )
+            memory_id = self.memory_system.add_note(content=content, keywords=keywords, context=context_desc, tags=tags)
 
             self.memory_count += 1
             return memory_id
@@ -113,12 +99,7 @@ class AMemWrapper:
             print(f"Warning: Failed to store memory: {e}")
             return None
 
-    def retrieve_relevant(
-        self,
-        query: str,
-        k: int = 3,
-        scenario: str = "general"
-    ) -> List[Dict]:
+    def retrieve_relevant(self, query: str, k: int = 3, scenario: str = "general") -> list[dict]:
         """Retrieve relevant memories.
 
         Args:
@@ -144,7 +125,7 @@ class AMemWrapper:
             print(f"Warning: Memory retrieval failed: {e}")
             return []
 
-    def format_memories_for_injection(self, memories: List[Dict]) -> str:
+    def format_memories_for_injection(self, memories: list[dict]) -> str:
         """Format retrieved memories for injection into agent context.
 
         Args:
@@ -159,29 +140,21 @@ class AMemWrapper:
         formatted_memories = []
         for i, mem in enumerate(memories, 1):
             # Extract fields with defaults
-            content = mem.get('content', 'N/A')
-            context = mem.get('context', 'N/A')
-            keywords = ', '.join(mem.get('keywords', []))
-            tags = ', '.join(mem.get('tags', []))
-            score = mem.get('score', 0.0)
+            content = mem.get("content", "N/A")
+            context = mem.get("context", "N/A")
+            keywords = ", ".join(mem.get("keywords", []))
+            tags = ", ".join(mem.get("tags", []))
+            score = mem.get("score", 0.0)
 
             # Determine outcome from content
             outcome = "Success" if "Status: success" in content else "Error/Attempt"
 
             formatted_mem = MEMORY_FORMAT_TEMPLATE.format(
-                index=i,
-                score=score,
-                context=context,
-                content=content,
-                keywords=keywords,
-                tags=tags,
-                outcome=outcome
+                index=i, score=score, context=context, content=content, keywords=keywords, tags=tags, outcome=outcome
             )
             formatted_memories.append(formatted_mem)
 
-        return MEMORY_INJECTION_TEMPLATE.format(
-            formatted_memories="\n".join(formatted_memories)
-        )
+        return MEMORY_INJECTION_TEMPLATE.format(formatted_memories="\n".join(formatted_memories))
 
     def _should_store(self, command: str, output: str, status: str) -> bool:
         """Decide if interaction is worth storing.
@@ -195,28 +168,28 @@ class AMemWrapper:
             True if should store, False otherwise
         """
         # Always store errors
-        if status in ['error', 'timeout', 'ExecutionTimeoutError', 'FormatError']:
+        if status in ["error", "timeout", "ExecutionTimeoutError", "FormatError"]:
             return True
 
         # Always store if output contains error indicators
-        error_indicators = ['error', 'exception', 'failed', 'traceback', 'warning']
+        error_indicators = ["error", "exception", "failed", "traceback", "warning"]
         if any(indicator in output.lower() for indicator in error_indicators):
             return True
 
         # Store novel/complex commands
-        complex_commands = ['grep', 'find', 'sed', 'awk', 'pytest', 'git']
+        complex_commands = ["grep", "find", "sed", "awk", "pytest", "git"]
         if any(cmd in command.lower() for cmd in complex_commands):
             return True
 
         # Skip simple commands like 'ls', 'pwd', 'cd'
-        simple_commands = ['ls', 'pwd', 'cd', 'echo']
+        simple_commands = ["ls", "pwd", "cd", "echo"]
         if any(command.strip().startswith(cmd) for cmd in simple_commands):
             return False
 
         # Store by default for learning
         return True
 
-    def _extract_keywords(self, command: str, output: str, status: str) -> List[str]:
+    def _extract_keywords(self, command: str, output: str, status: str) -> list[str]:
         """Extract keywords from interaction.
 
         Args:
@@ -234,11 +207,12 @@ class AMemWrapper:
 
         # Extract file paths (simple heuristic)
         import re
-        file_patterns = re.findall(r'[\w\-_/\.]+\.[\w]+', command + " " + output[:500])
+
+        file_patterns = re.findall(r"[\w\-_/\.]+\.[\w]+", command + " " + output[:500])
         keywords.update(file_patterns[:5])  # Limit to 5 files
 
         # Extract error types
-        error_patterns = re.findall(r'(\w+Error|\w+Exception)', output[:500])
+        error_patterns = re.findall(r"(\w+Error|\w+Exception)", output[:500])
         keywords.update(error_patterns[:3])
 
         # Add status
@@ -246,7 +220,7 @@ class AMemWrapper:
 
         return list(keywords)[:7]  # Limit to 7 keywords
 
-    def _extract_tags(self, command: str, output: str, status: str) -> List[str]:
+    def _extract_tags(self, command: str, output: str, status: str) -> list[str]:
         """Extract tags for categorization.
 
         Args:
@@ -266,17 +240,17 @@ class AMemWrapper:
             tags.append("failed_attempt")
 
         # Command-based tags
-        if any(cmd in command.lower() for cmd in ['grep', 'find', 'ls']):
+        if any(cmd in command.lower() for cmd in ["grep", "find", "ls"]):
             tags.append("file_exploration")
-        if any(cmd in command.lower() for cmd in ['pytest', 'test', 'unittest']):
+        if any(cmd in command.lower() for cmd in ["pytest", "test", "unittest"]):
             tags.append("testing")
-        if any(cmd in command.lower() for cmd in ['git']):
+        if any(cmd in command.lower() for cmd in ["git"]):
             tags.append("version_control")
-        if any(cmd in command.lower() for cmd in ['vim', 'nano', 'sed', 'awk']):
+        if any(cmd in command.lower() for cmd in ["vim", "nano", "sed", "awk"]):
             tags.append("code_modification")
 
         # Error-based tags
-        if 'error' in output.lower() or status == 'error':
+        if "error" in output.lower() or status == "error":
             tags.append("error_resolution")
 
         # Default tag
@@ -301,7 +275,8 @@ class AMemWrapper:
         elif status == "error":
             # Try to extract error type
             import re
-            errors = re.findall(r'(\w+Error|\w+Exception)', output[:200])
+
+            errors = re.findall(r"(\w+Error|\w+Exception)", output[:200])
             if errors:
                 return f"Encountered {errors[0]} while executing {command.split()[0]}"
             return f"Error executing {command.split()[0]}"
@@ -310,18 +285,15 @@ class AMemWrapper:
         else:
             return f"Executed {command.split()[0]} with status {status}"
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Get memory system statistics.
 
         Returns:
             Dict with statistics
         """
-        return {
-            "total_memories": self.memory_count,
-            "persist_directory": self.persist_directory
-        }
+        return {"total_memories": self.memory_count, "persist_directory": self.persist_directory}
 
-    def summarize_conversation(self, messages: List[Dict], target_ratio: float = 0.5) -> str:
+    def summarize_conversation(self, messages: list[dict], target_ratio: float = 0.5) -> str:
         """Summarize conversation messages using LLM.
 
         Args:

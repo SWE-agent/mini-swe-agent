@@ -40,33 +40,29 @@ Error message: {error_msg}
 Context: {context}
 
 Return memories that show how similar errors were resolved.""",
-
     "file_search": """Find previous file exploration patterns. Focus on:
 Directory: {directory}
 File pattern: {pattern}
 Purpose: {purpose}
 
 Return memories showing successful file location strategies.""",
-
     "testing": """Find previous testing approaches and results. Focus on:
 Test context: {test_context}
 Test framework: {framework}
 Purpose: {purpose}
 
 Return memories showing testing commands and their outcomes.""",
-
     "code_modification": """Find similar code modification patterns. Focus on:
 File type: {file_type}
 Modification type: {mod_type}
 Context: {context}
 
 Return memories showing successful modification approaches.""",
-
     "general": """Find relevant past experiences for the current task:
 Task: {current_task}
 Recent actions: {recent_actions}
 
-Return memories that could inform the next steps."""
+Return memories that could inform the next steps.""",
 }
 
 # Summarization prompt for conversation history (50% compression)

@@ -1,6 +1,5 @@
 """Conversation summarizer using A-mem's LLM for 50% compression."""
 
-from typing import List, Dict
 from minisweagent.memory.prompts import SUMMARIZATION_PROMPT
 
 
@@ -16,7 +15,7 @@ class ConversationSummarizer:
         self.llm_controller = llm_controller
         self.summaries_cache = {}  # Cache summaries by message range
 
-    def summarize(self, messages: List[Dict], target_ratio: float = 0.5) -> str:
+    def summarize(self, messages: list[dict], target_ratio: float = 0.5) -> str:
         """Summarize a list of messages to achieve target compression ratio.
 
         Args:
@@ -47,22 +46,18 @@ class ConversationSummarizer:
                 "name": "summary_response",
                 "schema": {
                     "type": "object",
-                    "properties": {
-                        "summary": {"type": "string"}
-                    },
+                    "properties": {"summary": {"type": "string"}},
                     "required": ["summary"],
-                    "additionalProperties": False
+                    "additionalProperties": False,
                 },
-                "strict": True
-            }
+                "strict": True,
+            },
         }
 
         try:
             import json
-            result = self.llm_controller.get_completion(
-                prompt,
-                response_format=response_format
-            )
+
+            result = self.llm_controller.get_completion(prompt, response_format=response_format)
 
             # Parse JSON response and extract summary
             parsed = json.loads(result)
@@ -77,7 +72,7 @@ class ConversationSummarizer:
             print(f"Warning: Summarization failed ({e}), using truncation fallback")
             return self._fallback_truncate(history_text, target_ratio)
 
-    def _format_messages(self, messages: List[Dict]) -> str:
+    def _format_messages(self, messages: list[dict]) -> str:
         """Format messages into readable text for summarization.
 
         Args:
@@ -114,7 +109,7 @@ class ConversationSummarizer:
         Returns:
             Truncated text
         """
-        lines = text.split('\n')
+        lines = text.split("\n")
         target_lines = max(1, int(len(lines) * target_ratio))
 
         # Keep beginning and end, skip middle
@@ -125,14 +120,12 @@ class ConversationSummarizer:
         keep_end = target_lines - keep_start
 
         truncated_lines = (
-            lines[:keep_start] +
-            [f"\n... [Truncated {len(lines) - target_lines} lines] ...\n"] +
-            lines[-keep_end:]
+            lines[:keep_start] + [f"\n... [Truncated {len(lines) - target_lines} lines] ...\n"] + lines[-keep_end:]
         )
 
-        return '\n'.join(truncated_lines)
+        return "\n".join(truncated_lines)
 
-    def summarize_with_split(self, messages: List[Dict], chunk_size: int = 10) -> str:
+    def summarize_with_split(self, messages: list[dict], chunk_size: int = 10) -> str:
         """Summarize long conversations by splitting into chunks.
 
         Useful for very long conversations (>30 messages).
@@ -151,9 +144,9 @@ class ConversationSummarizer:
 
         # Process in chunks
         for i in range(0, len(messages), chunk_size):
-            chunk = messages[i:i + chunk_size]
+            chunk = messages[i : i + chunk_size]
             chunk_summary = self.summarize(chunk, target_ratio=0.5)
-            summaries.append(f"**Phase {i//chunk_size + 1}:**\n{chunk_summary}")
+            summaries.append(f"**Phase {i // chunk_size + 1}:**\n{chunk_summary}")
 
         # Combine chunk summaries
         combined = "\n\n".join(summaries)

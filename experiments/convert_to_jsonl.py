@@ -3,7 +3,6 @@
 
 import json
 import sys
-from pathlib import Path
 
 
 def convert(input_file, output_file):
@@ -11,9 +10,9 @@ def convert(input_file, output_file):
     with open(input_file) as f:
         preds = json.load(f)
 
-    with open(output_file, 'w') as f:
+    with open(output_file, "w") as f:
         for pred in preds.values():
-            f.write(json.dumps(pred) + '\n')
+            f.write(json.dumps(pred) + "\n")
 
     print(f"Converted {len(preds)} predictions: {input_file} -> {output_file}")
 

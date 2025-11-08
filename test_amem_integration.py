@@ -3,26 +3,21 @@
 
 import json
 import logging
-import os
 import sys
 import time
 from pathlib import Path
 
 from datasets import load_dataset
+
 from minisweagent.agents.default import DefaultAgent
-from minisweagent.agents.memory_agent import MemoryAgent
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models import get_model
-from minisweagent.run.utils.save import save_traj
 
 # Setup detailed logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler('experiments/test_detailed.log')
-    ]
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout), logging.FileHandler("experiments/test_detailed.log")],
 )
 logger = logging.getLogger(__name__)
 
@@ -49,7 +44,7 @@ class VerboseAgent(DefaultAgent):
         logger.info(f"🤖 Querying LLM (call #{self.model.n_calls + 1})...")
         logger.info(f"📝 Message history length: {len(self.messages)}")
         result = super().query()
-        logger.info(f"📨 LLM response received")
+        logger.info("📨 LLM response received")
         return result
 
 
@@ -60,16 +55,16 @@ def load_test_instances(n=5):
     instances = [dataset[i] for i in range(min(n, len(dataset)))]
     logger.info(f"✅ Loaded {len(instances)} instances")
     for i, inst in enumerate(instances):
-        logger.info(f"  {i+1}. {inst['instance_id']}")
+        logger.info(f"  {i + 1}. {inst['instance_id']}")
     return instances
 
 
 def run_agent_on_instance(agent_class, instance, agent_name, max_steps=10, **agent_kwargs):
     """Run an agent on a single SWE-bench instance with limited steps."""
     instance_id = instance["instance_id"]
-    logger.info(f"\n{'='*70}")
+    logger.info(f"\n{'=' * 70}")
     logger.info(f"  Running {agent_name} on {instance_id}")
-    logger.info(f"{'='*70}")
+    logger.info(f"{'=' * 70}")
 
     # Create model
     model_config = {
@@ -77,13 +72,13 @@ def run_agent_on_instance(agent_class, instance, agent_name, max_steps=10, **age
         "model_kwargs": {
             "temperature": 0.0,
             "max_tokens": 4096,
-        }
+        },
     }
     logger.info(f"🔧 Creating model: {MODEL_NAME}")
     model = get_model(MODEL_NAME, model_config)
 
     # Create environment (local for simplicity)
-    logger.info(f"🏗️  Creating local environment")
+    logger.info("🏗️  Creating local environment")
     env = LocalEnvironment()
 
     # Create agent with limited steps for testing
@@ -101,15 +96,15 @@ def run_agent_on_instance(agent_class, instance, agent_name, max_steps=10, **age
     # Create task description
     task = f"""Solve the following GitHub issue:
 
-Repository: {instance['repo']}
-Issue: {instance.get('problem_statement', 'No description available')[:500]}...
+Repository: {instance["repo"]}
+Issue: {instance.get("problem_statement", "No description available")[:500]}...
 
 Please investigate the issue and propose a fix."""
 
     logger.info(f"📋 Task created (length: {len(task)} chars)")
 
     # Run agent
-    logger.info(f"🚀 Starting agent execution...")
+    logger.info("🚀 Starting agent execution...")
     start_time = time.time()
 
     try:
@@ -117,7 +112,7 @@ Please investigate the issue and propose a fix."""
         success = exit_status == "Finished"
         logger.info(f"✅ Agent finished with status: {exit_status}")
     except KeyboardInterrupt:
-        logger.warning(f"⚠️  Interrupted by user")
+        logger.warning("⚠️  Interrupted by user")
         raise
     except Exception as e:
         logger.error(f"❌ Error: {type(e).__name__}: {e}")
@@ -152,9 +147,9 @@ Please investigate the issue and propose a fix."""
 
 def run_baseline_experiment(instances):
     """Run baseline experiment with DefaultAgent."""
-    logger.info("\n" + "="*70)
+    logger.info("\n" + "=" * 70)
     logger.info("  BASELINE EXPERIMENT (VerboseAgent)")
-    logger.info("="*70)
+    logger.info("=" * 70)
 
     results = []
     for i, instance in enumerate(instances, 1):
@@ -177,7 +172,7 @@ def run_baseline_experiment(instances):
     with open(baseline_dir / "results.json", "w") as f:
         json.dump(results, f, indent=2)
 
-    logger.info(f"\n✅ Baseline experiment complete!")
+    logger.info("\n✅ Baseline experiment complete!")
     logger.info(f"   Results saved to: {baseline_dir / 'results.json'}")
 
     return results
@@ -185,9 +180,9 @@ def run_baseline_experiment(instances):
 
 def run_memory_experiment(instances):
     """Run memory experiment with MemoryAgent."""
-    logger.info("\n" + "="*70)
+    logger.info("\n" + "=" * 70)
     logger.info("  MEMORY EXPERIMENT (MemoryAgent + A-mem)")
-    logger.info("="*70)
+    logger.info("=" * 70)
 
     # Note: MemoryAgent doesn't exist yet in mini-swe-agent
     # For now, just run with VerboseAgent
@@ -214,7 +209,7 @@ def run_memory_experiment(instances):
     with open(memory_dir / "results.json", "w") as f:
         json.dump(results, f, indent=2)
 
-    logger.info(f"\n✅ Memory experiment complete!")
+    logger.info("\n✅ Memory experiment complete!")
     logger.info(f"   Results saved to: {memory_dir / 'results.json'}")
 
     return results
@@ -222,9 +217,9 @@ def run_memory_experiment(instances):
 
 def compare_results(baseline_results, memory_results):
     """Compare baseline vs memory results."""
-    logger.info("\n" + "="*70)
+    logger.info("\n" + "=" * 70)
     logger.info("  COMPARISON: Baseline vs Memory")
-    logger.info("="*70)
+    logger.info("=" * 70)
 
     baseline_success = sum(1 for r in baseline_results if r["success"])
     memory_success = sum(1 for r in memory_results if r["success"])
@@ -240,24 +235,24 @@ def compare_results(baseline_results, memory_results):
 
     n = len(baseline_results)
 
-    logger.info(f"\n📊 Success Rate:")
-    logger.info(f"  Baseline: {baseline_success}/{n} ({baseline_success/n*100:.1f}%)")
-    logger.info(f"  Memory:   {memory_success}/{n} ({memory_success/n*100:.1f}%)")
+    logger.info("\n📊 Success Rate:")
+    logger.info(f"  Baseline: {baseline_success}/{n} ({baseline_success / n * 100:.1f}%)")
+    logger.info(f"  Memory:   {memory_success}/{n} ({memory_success / n * 100:.1f}%)")
 
-    logger.info(f"\n💰 Total Cost:")
+    logger.info("\n💰 Total Cost:")
     logger.info(f"  Baseline: ${baseline_cost:.4f}")
     logger.info(f"  Memory:   ${memory_cost:.4f}")
-    logger.info(f"  Diff:     ${memory_cost-baseline_cost:+.4f}")
+    logger.info(f"  Diff:     ${memory_cost - baseline_cost:+.4f}")
 
-    logger.info(f"\n👣 Average Steps:")
-    logger.info(f"  Baseline: {baseline_steps/n:.1f}")
-    logger.info(f"  Memory:   {memory_steps/n:.1f}")
-    logger.info(f"  Diff:     {(memory_steps-baseline_steps)/n:+.1f}")
+    logger.info("\n👣 Average Steps:")
+    logger.info(f"  Baseline: {baseline_steps / n:.1f}")
+    logger.info(f"  Memory:   {memory_steps / n:.1f}")
+    logger.info(f"  Diff:     {(memory_steps - baseline_steps) / n:+.1f}")
 
-    logger.info(f"\n⏱️  Total Time:")
+    logger.info("\n⏱️  Total Time:")
     logger.info(f"  Baseline: {baseline_time:.1f}s")
     logger.info(f"  Memory:   {memory_time:.1f}s")
-    logger.info(f"  Diff:     {memory_time-baseline_time:+.1f}s")
+    logger.info(f"  Diff:     {memory_time - baseline_time:+.1f}s")
 
     # Save comparison
     comparison = {
@@ -278,7 +273,7 @@ def compare_results(baseline_results, memory_results):
             "cost": memory_cost - baseline_cost,
             "steps": (memory_steps - baseline_steps) / n,
             "time": memory_time - baseline_time,
-        }
+        },
     }
 
     with open(RESULTS_DIR / "comparison.json", "w") as f:
@@ -289,11 +284,11 @@ def compare_results(baseline_results, memory_results):
 
 def main():
     """Main function."""
-    logger.info("="*70)
+    logger.info("=" * 70)
     logger.info("  A-mem Integration Test for Mini-SWE-Agent")
     logger.info(f"  Testing on {NUM_INSTANCES} SWE-bench Lite instances")
     logger.info(f"  Model: {MODEL_NAME}")
-    logger.info("="*70)
+    logger.info("=" * 70)
 
     # Load instances
     instances = load_test_instances(NUM_INSTANCES)
@@ -307,11 +302,11 @@ def main():
     # Compare
     compare_results(baseline_results, memory_results)
 
-    logger.info("\n" + "="*70)
+    logger.info("\n" + "=" * 70)
     logger.info("  🎉 All experiments complete!")
-    logger.info("="*70)
+    logger.info("=" * 70)
     logger.info(f"\nResults saved in: {RESULTS_DIR}")
-    logger.info(f"Detailed log: experiments/test_detailed.log")
+    logger.info("Detailed log: experiments/test_detailed.log")
 
 
 if __name__ == "__main__":

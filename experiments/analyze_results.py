@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 """Analyze and compare baseline vs memory experiment results."""
 
-import json
-import os
-from pathlib import Path
-from typing import Dict, List
 import argparse
+import json
+from pathlib import Path
 
 
-def load_results(results_dir: Path) -> Dict:
+def load_results(results_dir: Path) -> dict:
     """Load results from experiment directory.
 
     Args:
@@ -17,11 +15,7 @@ def load_results(results_dir: Path) -> Dict:
     Returns:
         Dict with results data
     """
-    results = {
-        "trajectories": [],
-        "metrics": {},
-        "metadata": {}
-    }
+    results = {"trajectories": [], "metrics": {}, "metadata": {}}
 
     # Load trajectories
     traj_dir = results_dir / "trajectories"
@@ -45,7 +39,7 @@ def load_results(results_dir: Path) -> Dict:
     return results
 
 
-def compute_statistics(results: Dict) -> Dict:
+def compute_statistics(results: dict) -> dict:
     """Compute statistics from results.
 
     Args:
@@ -105,7 +99,7 @@ def compute_statistics(results: Dict) -> Dict:
     return stats
 
 
-def compare_experiments(baseline_stats: Dict, memory_stats: Dict) -> Dict:
+def compare_experiments(baseline_stats: dict, memory_stats: dict) -> dict:
     """Compare baseline vs memory statistics.
 
     Args:
@@ -125,7 +119,8 @@ def compare_experiments(baseline_stats: Dict, memory_stats: Dict) -> Dict:
         "memory": memory_resolve,
         "improvement": memory_resolve - baseline_resolve,
         "improvement_pct": ((memory_resolve - baseline_resolve) / baseline_resolve * 100)
-                          if baseline_resolve > 0 else 0.0
+        if baseline_resolve > 0
+        else 0.0,
     }
 
     # Cost
@@ -135,8 +130,7 @@ def compare_experiments(baseline_stats: Dict, memory_stats: Dict) -> Dict:
         "baseline": baseline_cost,
         "memory": memory_cost,
         "difference": memory_cost - baseline_cost,
-        "difference_pct": ((memory_cost - baseline_cost) / baseline_cost * 100)
-                         if baseline_cost > 0 else 0.0
+        "difference_pct": ((memory_cost - baseline_cost) / baseline_cost * 100) if baseline_cost > 0 else 0.0,
     }
 
     # Tokens
@@ -146,8 +140,7 @@ def compare_experiments(baseline_stats: Dict, memory_stats: Dict) -> Dict:
         "baseline": baseline_tokens,
         "memory": memory_tokens,
         "difference": memory_tokens - baseline_tokens,
-        "difference_pct": ((memory_tokens - baseline_tokens) / baseline_tokens * 100)
-                         if baseline_tokens > 0 else 0.0
+        "difference_pct": ((memory_tokens - baseline_tokens) / baseline_tokens * 100) if baseline_tokens > 0 else 0.0,
     }
 
     # Steps
@@ -157,8 +150,7 @@ def compare_experiments(baseline_stats: Dict, memory_stats: Dict) -> Dict:
         "baseline": baseline_steps,
         "memory": memory_steps,
         "difference": memory_steps - baseline_steps,
-        "difference_pct": ((memory_steps - baseline_steps) / baseline_steps * 100)
-                         if baseline_steps > 0 else 0.0
+        "difference_pct": ((memory_steps - baseline_steps) / baseline_steps * 100) if baseline_steps > 0 else 0.0,
     }
 
     # Time
@@ -168,97 +160,88 @@ def compare_experiments(baseline_stats: Dict, memory_stats: Dict) -> Dict:
         "baseline": baseline_time,
         "memory": memory_time,
         "difference": memory_time - baseline_time,
-        "difference_pct": ((memory_time - baseline_time) / baseline_time * 100)
-                         if baseline_time > 0 else 0.0
+        "difference_pct": ((memory_time - baseline_time) / baseline_time * 100) if baseline_time > 0 else 0.0,
     }
 
     return comparison
 
 
-def print_comparison(comparison: Dict):
+def print_comparison(comparison: dict):
     """Print comparison in readable format.
 
     Args:
         comparison: Comparison dict
     """
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("EXPERIMENT COMPARISON: Baseline vs Memory")
-    print("="*60)
+    print("=" * 60)
 
     print("\n📊 RESOLUTION RATE:")
     print(f"  Baseline:    {comparison['resolve_rate']['baseline']:.1%}")
     print(f"  Memory:      {comparison['resolve_rate']['memory']:.1%}")
-    print(f"  Improvement: {comparison['resolve_rate']['improvement']:+.1%} "
-          f"({comparison['resolve_rate']['improvement_pct']:+.1f}%)")
+    print(
+        f"  Improvement: {comparison['resolve_rate']['improvement']:+.1%} "
+        f"({comparison['resolve_rate']['improvement_pct']:+.1f}%)"
+    )
 
     print("\n💰 COST (USD):")
     print(f"  Baseline:   ${comparison['cost']['baseline']:.4f}")
     print(f"  Memory:     ${comparison['cost']['memory']:.4f}")
-    print(f"  Difference: ${comparison['cost']['difference']:+.4f} "
-          f"({comparison['cost']['difference_pct']:+.1f}%)")
+    print(f"  Difference: ${comparison['cost']['difference']:+.4f} ({comparison['cost']['difference_pct']:+.1f}%)")
 
     print("\n🔢 TOKENS:")
     print(f"  Baseline:   {comparison['tokens']['baseline']:.0f}")
     print(f"  Memory:     {comparison['tokens']['memory']:.0f}")
-    print(f"  Difference: {comparison['tokens']['difference']:+.0f} "
-          f"({comparison['tokens']['difference_pct']:+.1f}%)")
+    print(f"  Difference: {comparison['tokens']['difference']:+.0f} ({comparison['tokens']['difference_pct']:+.1f}%)")
 
     print("\n👣 STEPS:")
     print(f"  Baseline:   {comparison['steps']['baseline']:.1f}")
     print(f"  Memory:     {comparison['steps']['memory']:.1f}")
-    print(f"  Difference: {comparison['steps']['difference']:+.1f} "
-          f"({comparison['steps']['difference_pct']:+.1f}%)")
+    print(f"  Difference: {comparison['steps']['difference']:+.1f} ({comparison['steps']['difference_pct']:+.1f}%)")
 
     print("\n⏱️  TIME (seconds):")
     print(f"  Baseline:   {comparison['time']['baseline']:.1f}s")
     print(f"  Memory:     {comparison['time']['memory']:.1f}s")
-    print(f"  Difference: {comparison['time']['difference']:+.1f}s "
-          f"({comparison['time']['difference_pct']:+.1f}%)")
+    print(f"  Difference: {comparison['time']['difference']:+.1f}s ({comparison['time']['difference_pct']:+.1f}%)")
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
 
     # Summary
     print("\n📝 SUMMARY:")
-    if comparison['resolve_rate']['improvement'] > 0:
+    if comparison["resolve_rate"]["improvement"] > 0:
         print(f"  ✅ Memory agent resolves {comparison['resolve_rate']['improvement']:.1%} more instances")
-    elif comparison['resolve_rate']['improvement'] < 0:
+    elif comparison["resolve_rate"]["improvement"] < 0:
         print(f"  ❌ Memory agent resolves {abs(comparison['resolve_rate']['improvement']):.1%} fewer instances")
     else:
-        print(f"  ➖ Same resolution rate")
+        print("  ➖ Same resolution rate")
 
-    if comparison['cost']['difference'] < 0:
+    if comparison["cost"]["difference"] < 0:
         print(f"  ✅ Memory agent saves ${abs(comparison['cost']['difference']):.4f} per instance")
-    elif comparison['cost']['difference'] > 0:
+    elif comparison["cost"]["difference"] > 0:
         print(f"  ⚠️  Memory agent costs ${comparison['cost']['difference']:.4f} more per instance")
 
-    if comparison['tokens']['difference'] < 0:
+    if comparison["tokens"]["difference"] < 0:
         print(f"  ✅ Memory agent uses {abs(comparison['tokens']['difference']):.0f} fewer tokens")
-    elif comparison['tokens']['difference'] > 0:
+    elif comparison["tokens"]["difference"] > 0:
         print(f"  ⚠️  Memory agent uses {comparison['tokens']['difference']:.0f} more tokens")
 
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
 
 
 def main():
     """Main function."""
     parser = argparse.ArgumentParser(description="Compare baseline vs memory experiment results")
     parser.add_argument(
-        "--baseline-dir",
-        type=Path,
-        default=Path("experiments/results/baseline"),
-        help="Baseline results directory"
+        "--baseline-dir", type=Path, default=Path("experiments/results/baseline"), help="Baseline results directory"
     )
     parser.add_argument(
-        "--memory-dir",
-        type=Path,
-        default=Path("experiments/results/memory"),
-        help="Memory results directory"
+        "--memory-dir", type=Path, default=Path("experiments/results/memory"), help="Memory results directory"
     )
     parser.add_argument(
         "--output",
         type=Path,
         default=Path("experiments/results/comparison.json"),
-        help="Output file for comparison results"
+        help="Output file for comparison results",
     )
 
     args = parser.parse_args()
@@ -284,14 +267,10 @@ def main():
     print_comparison(comparison)
 
     # Save to file
-    output_data = {
-        "baseline_stats": baseline_stats,
-        "memory_stats": memory_stats,
-        "comparison": comparison
-    }
+    output_data = {"baseline_stats": baseline_stats, "memory_stats": memory_stats, "comparison": comparison}
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    with open(args.output, 'w') as f:
+    with open(args.output, "w") as f:
         json.dump(output_data, f, indent=2)
 
     print(f"Comparison saved to: {args.output}")

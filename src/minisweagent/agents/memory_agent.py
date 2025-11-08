@@ -27,7 +27,7 @@ class MemoryAgent(DefaultAgent):
             embedding_model=memory_config.get("embedding_model", "all-MiniLM-L6-v2"),
             llm_backend=memory_config.get("llm_backend", "openai"),
             llm_model=memory_config.get("llm_model", "gpt-5-nano-2025-08-07"),
-            persist_directory=memory_config.get("persist_directory", "./memory_db")
+            persist_directory=memory_config.get("persist_directory", "./memory_db"),
         )
 
     def query(self) -> dict:
@@ -84,10 +84,7 @@ class MemoryAgent(DefaultAgent):
                 compact.append(system_msg)
 
             # Add summary as a user message
-            compact.append({
-                "role": "user",
-                "content": f"[Previous conversation summary]\n{summary}\n[End summary]"
-            })
+            compact.append({"role": "user", "content": f"[Previous conversation summary]\n{summary}\n[End summary]"})
 
             # Add recent messages
             compact.extend(recent_msgs)
