@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run baseline experiment without memory system
+# Run baseline experiment using official mini-swe-agent CLI
 
 set -e  # Exit on error
 
@@ -23,10 +23,6 @@ cd /common/users/wx139/code/mini-swe-agent
 # Create output directory
 mkdir -p experiments/results/baseline
 
-# Set environment variables
-export PYTHONPATH="${PYTHONPATH}:/common/users/wx139/code/mini-swe-agent/src"
-export OPENAI_API_KEY="${OPENAI_API_KEY}"  # Should be set in environment
-
 # Check if API key is set
 if [ -z "$OPENAI_API_KEY" ]; then
     echo -e "${RED}Error: OPENAI_API_KEY not set${NC}"
@@ -35,20 +31,23 @@ if [ -z "$OPENAI_API_KEY" ]; then
     exit 1
 fi
 
-echo -e "${GREEN}Starting baseline experiment...${NC}"
-echo "Config: experiments/configs/baseline_config.yaml"
+echo -e "${GREEN}Starting baseline experiment with official CLI...${NC}"
+echo "Config: experiments/configs/baseline_swebench.yaml"
 echo "Output: experiments/results/baseline/"
 echo ""
 
-# Run the experiment
-python -m minisweagent.run \
-    --config experiments/configs/baseline_config.yaml \
-    --output-dir experiments/results/baseline \
-    2>&1 | tee experiments/results/baseline/run.log
+# Run the baseline experiment using official swebench.py
+python src/minisweagent/run/extra/swebench.py \
+  --output experiments/results/baseline \
+  --config experiments/configs/baseline_swebench.yaml \
+  --model openai/gpt-5-nano-2025-08-07 \
+  --environment-class swerex_docker \
+  --subset lite \
+  --slice "0:10" \
+  --workers 1
 
 echo ""
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Baseline experiment completed!${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo "Results saved to: experiments/results/baseline/"
-echo "Log file: experiments/results/baseline/run.log"

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run memory-enhanced experiment with A-mem
+# Run memory experiment using test_memagent.py
 
 set -e  # Exit on error
 
@@ -10,7 +10,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}Running Memory-Enhanced Experiment${NC}"
+echo -e "${BLUE}Running Memory Experiment (with A-mem)${NC}"
 echo -e "${BLUE}========================================${NC}"
 
 # Activate environment
@@ -22,11 +22,6 @@ cd /common/users/wx139/code/mini-swe-agent
 
 # Create output directories
 mkdir -p experiments/results/memory
-mkdir -p experiments/memory_db
-
-# Set environment variables
-export PYTHONPATH="${PYTHONPATH}:/common/users/wx139/code/mini-swe-agent/src"
-export OPENAI_API_KEY="${OPENAI_API_KEY}"  # Should be set in environment
 
 # Check if API key is set
 if [ -z "$OPENAI_API_KEY" ]; then
@@ -36,22 +31,23 @@ if [ -z "$OPENAI_API_KEY" ]; then
     exit 1
 fi
 
-echo -e "${GREEN}Starting memory-enhanced experiment...${NC}"
-echo "Config: experiments/configs/memory_config.yaml"
+echo -e "${GREEN}Starting memory experiment with MemoryAgent...${NC}"
+echo "Config: experiments/configs/memory_swebench.yaml"
 echo "Output: experiments/results/memory/"
-echo "Memory DB: experiments/memory_db/"
 echo ""
 
-# Run the experiment
-python -m minisweagent.run \
-    --config experiments/configs/memory_config.yaml \
-    --output-dir experiments/results/memory \
-    2>&1 | tee experiments/results/memory/run.log
+# Run the memory experiment using test_memagent.py
+python src/minisweagent/run/extra/test_memagent.py \
+  --output experiments/results/memory \
+  --config experiments/configs/memory_swebench.yaml \
+  --model openai/gpt-5-nano-2025-08-07 \
+  --environment-class swerex_docker \
+  --subset lite \
+  --slice "0:5" \
+  --workers 1
 
 echo ""
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}Memory experiment completed!${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo "Results saved to: experiments/results/memory/"
-echo "Memory database: experiments/memory_db/"
-echo "Log file: experiments/results/memory/run.log"

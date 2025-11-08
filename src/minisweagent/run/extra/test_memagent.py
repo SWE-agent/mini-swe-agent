@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-"""Run mini-SWE-agent on SWE-bench instances in batch mode."""
-# Read this first: https://mini-swe-agent.com/latest/usage/swebench/  (usage docs)
+"""Run mini-SWE-agent with MemoryAgent on SWE-bench instances in batch mode."""
+# Test script for MemoryAgent - modified version of swebench.py
 
 import concurrent.futures
 import json
@@ -19,7 +19,7 @@ from jinja2 import StrictUndefined, Template
 from rich.live import Live
 
 from minisweagent import Environment
-from minisweagent.agents.default import DefaultAgent
+from minisweagent.agents.memory_agent import MemoryAgent
 from minisweagent.config import builtin_config_dir, get_config_path
 from minisweagent.environments import get_environment
 from minisweagent.models import get_model
@@ -27,10 +27,11 @@ from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from minisweagent.run.utils.save import save_traj
 from minisweagent.utils.log import add_file_handler, logger
 
-_HELP_TEXT = """Run mini-SWE-agent on SWEBench instances.
+_HELP_TEXT = """Run mini-SWE-agent with MemoryAgent on SWEBench instances.
 
 [not dim]
-More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/swebench/[/bold green]
+This is a test script for evaluating MemoryAgent with A-mem integration.
+Based on: [bold green]https://mini-swe-agent.com/latest/usage/swebench/[/bold green]
 [/not dim]
 """
 
@@ -50,8 +51,8 @@ DATASET_MAPPING = {
 _OUTPUT_FILE_LOCK = threading.Lock()
 
 
-class ProgressTrackingAgent(DefaultAgent):
-    """Simple wrapper around DefaultAgent that provides progress updates."""
+class ProgressTrackingMemoryAgent(MemoryAgent):
+    """Wrapper around MemoryAgent that provides progress updates."""
 
     def __init__(self, *args, progress_manager: RunBatchProgressManager, instance_id: str = "", **kwargs):
         super().__init__(*args, **kwargs)
@@ -127,7 +128,7 @@ def process_instance(
     config: dict,
     progress_manager: RunBatchProgressManager,
 ) -> None:
-    """Process a single SWEBench instance."""
+    """Process a single SWEBench instance with MemoryAgent."""
     instance_id = instance["instance_id"]
     instance_dir = output_dir / instance_id
     # avoid inconsistent state if something here fails and there's leftover previous files
@@ -144,12 +145,19 @@ def process_instance(
 
     try:
         env = get_sb_environment(config, instance)
-        agent = ProgressTrackingAgent(
+
+        # Extract memory config from agent config
+        agent_config = config.get("agent", {}).copy()
+        memory_config = agent_config.pop("memory_config", {})
+
+        # Create MemoryAgent with progress tracking
+        agent = ProgressTrackingMemoryAgent(
             model,
             env,
             progress_manager=progress_manager,
             instance_id=instance_id,
-            **config.get("agent", {}),
+            memory_config=memory_config,
+            **agent_config,
         )
         exit_status, result = agent.run(task)
     except Exception as e:
@@ -204,7 +212,7 @@ def main(
     model_class: str | None = typer.Option(None, "-c", "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
     config_spec: Path = typer.Option( builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file", rich_help_panel="Basic"),
-    environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
+    environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker, singularity, or swerex_docker", rich_help_panel="Advanced"),
 ) -> None:
     # fmt: on
     output_path = Path(output)

@@ -10,6 +10,7 @@ from minisweagent.memory.prompts import (
     MEMORY_INJECTION_TEMPLATE,
     MEMORY_FORMAT_TEMPLATE
 )
+from minisweagent.memory.summarizer import ConversationSummarizer
 
 
 class AMemWrapper:
@@ -20,7 +21,8 @@ class AMemWrapper:
         embedding_model: str = "all-MiniLM-L6-v2",
         llm_backend: str = "openai",
         llm_model: str = "gpt-4o-mini",
-        persist_directory: str = "./memory_db"
+        persist_directory: str = "./memory_db",
+        evo_threshold: int = 100
     ):
         """Initialize A-mem wrapper.
 
@@ -28,21 +30,26 @@ class AMemWrapper:
             embedding_model: Sentence transformer model for embeddings
             llm_backend: LLM backend (openai or ollama)
             llm_model: LLM model name
-            persist_directory: Directory for ChromaDB persistence
+            persist_directory: Directory for ChromaDB persistence (kept for compatibility, not used by A-mem)
+            evo_threshold: Number of experiences before memory evolution
         """
         self.persist_directory = persist_directory
         os.makedirs(persist_directory, exist_ok=True)
 
         # Initialize A-mem system
+        # Note: A-mem manages its own persistence internally
         self.memory_system = AgenticMemorySystem(
             model_name=embedding_model,
             llm_backend=llm_backend,
             llm_model=llm_model,
-            persist_directory=persist_directory
+            evo_threshold=evo_threshold
         )
 
         # Set code-specific system prompt for A-mem
         self._configure_for_code()
+
+        # Initialize summarizer
+        self.summarizer = ConversationSummarizer(self.memory_system.llm_controller)
 
         # Track stored memories
         self.memory_count = 0
@@ -313,6 +320,18 @@ class AMemWrapper:
             "total_memories": self.memory_count,
             "persist_directory": self.persist_directory
         }
+
+    def summarize_conversation(self, messages: List[Dict], target_ratio: float = 0.5) -> str:
+        """Summarize conversation messages using LLM.
+
+        Args:
+            messages: List of message dicts with 'role' and 'content'
+            target_ratio: Target compression ratio (0.5 = 50% of original)
+
+        Returns:
+            Summarized text
+        """
+        return self.summarizer.summarize(messages, target_ratio=target_ratio)
 
     def clear_all(self):
         """Clear all memories (use with caution!)."""

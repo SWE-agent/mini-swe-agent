@@ -40,11 +40,33 @@ class ConversationSummarizer:
         # Generate summary using LLM
         prompt = SUMMARIZATION_PROMPT.format(history=history_text)
 
+        # Define response format for structured JSON output
+        response_format = {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "summary_response",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "summary": {"type": "string"}
+                    },
+                    "required": ["summary"],
+                    "additionalProperties": False
+                },
+                "strict": True
+            }
+        }
+
         try:
-            summary = self.llm_controller.generate(
+            import json
+            result = self.llm_controller.get_completion(
                 prompt,
-                system_prompt="You are a precise technical summarization assistant for code agents."
+                response_format=response_format
             )
+
+            # Parse JSON response and extract summary
+            parsed = json.loads(result)
+            summary = parsed.get("summary", "")
 
             # Cache the summary
             self.summaries_cache[cache_key] = summary
