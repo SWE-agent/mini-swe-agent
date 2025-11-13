@@ -254,4 +254,3 @@ class SandboxSensetimeEnvironment:
     def __del__(self):
         """Cleanup sandbox when object is destroyed."""
         self.cleanup()
-
