@@ -11,6 +11,7 @@ _ENVIRONMENT_MAPPING = {
     "local": "minisweagent.environments.local.LocalEnvironment",
     "swerex_docker": "minisweagent.environments.extra.swerex_docker.SwerexDockerEnvironment",
     "bubblewrap": "minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment",
+    "sandbox_sensetime": "minisweagent.environments.extra.sandbox_sensetime.SandboxSensetimeEnvironment",
 }
 
 
