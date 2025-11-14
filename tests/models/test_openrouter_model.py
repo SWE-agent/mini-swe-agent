@@ -7,7 +7,6 @@ import requests
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.openrouter_model import (
-    OpenRouterAPIError,
     OpenRouterAuthenticationError,
     OpenRouterModel,
 )
@@ -112,10 +111,12 @@ def test_openrouter_model_authentication_error():
                 assert "mini-extra config set OPENROUTER_API_KEY" in str(exc_info.value)
 
 
-def test_openrouter_model_no_cost_information(mock_response_no_cost):
-    """Test error when cost information is missing."""
+def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
+    """Test that free models with zero cost work correctly."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
         model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet")
+
+        initial_cost = GLOBAL_MODEL_STATS.cost
 
         with patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
@@ -124,11 +125,17 @@ def test_openrouter_model_no_cost_information(mock_response_no_cost):
 
             messages = [{"role": "user", "content": "test"}]
 
-            with pytest.raises(OpenRouterAPIError) as exc_info:
-                model.query(messages)
+            # Free models should work without raising an error
+            result = model.query(messages)
 
-            assert "No cost information available" in str(exc_info.value)
-            assert "Cost tracking is required" in str(exc_info.value)
+            # Verify response
+            assert result["content"] == "Hello! 2+2 equals 4."
+            assert result["extra"]["response"] == mock_response_no_cost
+
+            # Verify cost tracking with zero cost
+            assert model.cost == 0.0
+            assert model.n_calls == 1
+            assert GLOBAL_MODEL_STATS.cost == initial_cost
 
 
 def test_openrouter_model_config():
