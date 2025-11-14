@@ -102,13 +102,6 @@ class OpenRouterModel:
         cost = usage.get("cost", 0.0)
         assert cost >= 0.0, f"Cost is negative: {cost}"
 
-        # If total_cost is not available, raise an error
-        if cost == 0.0:
-            raise OpenRouterAPIError(
-                f"No cost information available from OpenRouter API for model {self.config.model_name}. "
-                "Cost tracking is required but not provided by the API response."
-            )
-
         self.n_calls += 1
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
