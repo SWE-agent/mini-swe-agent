@@ -2,10 +2,10 @@
 
 !!! abstract "Agent configuration files"
 
-    * This guide shows how to configure agent behavior using YAML configuration files.
+    * You can configure the agent's behavior using YAML configuration files. This guide shows how to do that.
     * You should already be familiar with the [quickstart guide](../quickstart.md).
     * For global environment settings (API keys, default model, etc., basically anything that can be set as environment variables), see [global configuration](global_configuration.md).
-    * Want more? See the [cookbook](cookbook.md) for subclassing & developing your own agent.
+    * Want more? See [python bindings](cookbook.md) for subclassing & developing your own agent.
 
 ## Overall structure
 

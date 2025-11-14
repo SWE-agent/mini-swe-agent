@@ -58,16 +58,16 @@ nav:
   - Getting Started:
     - "Overview": index.md
     - "Quick start": quickstart.md
-    - "Usage":
+    - "Command line usage":
       - "<code>mini</code>": usage/mini.md
       - "<code>mini -v</code>": usage/mini_v.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
-    - "Models":
+    - "Language models":
       - "Quick start": models/quickstart.md
       - "Local models": models/local_models.md
       - "Troubleshooting": models/troubleshooting.md
-    - "Guides":
+    - "Guides & tutorials":
       - "Global configuration": advanced/global_configuration.md
       - "Yaml config files": advanced/yaml_configuration.md
       - "Environments": advanced/environments.md
