@@ -91,6 +91,32 @@ class PortkeyModel:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
+        try:
+            cost = self._calculate_cost(response)
+        except Exception as e:
+            msg = (
+                f"Error calculating cost for model {self.config.model_name}."
+                "You can disable cost tracking with MSWEA_COST_TRACKING='disabled' to ignore this error "
+                "(more information at https://klieret.short.gy/mini-global-config)."
+                "Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
+            )
+            logger.critical(msg)
+            raise RuntimeError(msg) from e
+        self.n_calls += 1
+        self.cost += cost
+        GLOBAL_MODEL_STATS.add(cost)
+        return {
+            "content": response.choices[0].message.content or "",
+            "extra": {
+                "response": response.model_dump(),
+                "cost": cost,
+            },
+        }
+
+    def get_template_vars(self) -> dict[str, Any]:
+        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+
+    def _calculate_cost(self, response) -> float:
         response_for_cost_calc = response.model_copy()
         if self.config.litellm_model_name_override:
             if response_for_cost_calc.model:
@@ -129,18 +155,3 @@ class PortkeyModel:
             )
             raise
         assert cost >= 0.0, f"Cost is negative: {cost}"
-
-        self.n_calls += 1
-        self.cost += cost
-        GLOBAL_MODEL_STATS.add(cost)
-
-        return {
-            "content": response.choices[0].message.content or "",
-            "extra": {
-                "response": response.model_dump(),
-                "cost": cost,
-            },
-        }
-
-    def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
