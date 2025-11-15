@@ -55,7 +55,7 @@ export KEY="value"
 setx KEY "value"
 ```
 
-## Models and keys
+## Models, keys, costs
 
 !!! tip "See also"
 
@@ -69,6 +69,12 @@ MSWEA_MODEL_NAME="anthropic/claude-sonnet-4-5-20250929"
 # Default API key
 # (default: not set)
 MSWEA_MODEL_API_KEY="sk-..."
+```
+
+To disable cost tracking checks (for example for free models), set:
+
+```bash
+MSWEA_COST_TRACKING="disabled"
 ```
 
 To register extra models to litellm (see [local models](../models/local_models.md) for more details), you can either specify the path in the agent file, or set
