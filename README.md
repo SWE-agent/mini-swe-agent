@@ -228,14 +228,15 @@ If you found this work helpful, please consider citing the [SWE-agent paper](htt
 Our other projects:
 
 <div align="center">
-  <a href="https://github.com/SWE-agent/SWE-agent"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/sweagent_logo_text_below.svg" alt="SWE-agent" height="120px"></a>
+  <a href="https://github.com/SWE-agent/SWE-agent"><img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sweagent_logo_text_below.svg" alt="SWE-agent" height="120px"></a>
    &nbsp;&nbsp;
-  <a href="https://github.com/SWE-agent/SWE-ReX"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/swerex_logo_text_below.svg" alt="SWE-ReX" height="120px"></a>
+  <a href="https://github.com/SWE-agent/SWE-ReX"><img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swerex_logo_text_below.svg" alt="SWE-ReX" height="120px"></a>
    &nbsp;&nbsp;
-  <a href="https://github.com/SWE-bench/SWE-bench"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/swebench_logo_text_below.svg" alt="SWE-bench" height="120px"></a>
+  <a href="https://github.com/SWE-bench/SWE-bench"><img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swebench_logo_text_below.svg" alt="SWE-bench" height="120px"></a>
   &nbsp;&nbsp;
-  <a href="https://github.com/SWE-bench/SWE-smith"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/swesmith_logo_text_below.svg" alt="SWE-smith" height="120px"></a>
+  <a href="https://github.com/SWE-bench/SWE-smith"><img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swesmith_logo_text_below.svg" alt="SWE-smith" height="120px"></a>
   &nbsp;&nbsp;
-  <a href="https://github.com/SWE-bench/sb-cli"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/sbcli_logo_text_below.svg" alt="sb-cli" height="120px"></a>
+  <a href="https://github.com/codeclash-ai/codeclash"><img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/codeclash_logo_text_below.svg" alt="CodeClash" height="120px"></a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/SWE-bench/sb-cli"><img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo_text_below.svg" alt="sb-cli" height="120px"></a>
 </div>
-
