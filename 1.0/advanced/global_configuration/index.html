@@ -979,10 +979,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#models-and-keys" class="md-nav__link">
+  <a href="#models-keys-costs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Models and keys
+        Models, keys, costs
       
     </span>
   </a>
@@ -2202,10 +2202,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#models-and-keys" class="md-nav__link">
+  <a href="#models-keys-costs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Models and keys
+        Models, keys, costs
       
     </span>
   </a>
@@ -2317,7 +2317,7 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 <span class="c1"># windows:</span>
 setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">"value"</span>
 </code></pre></div>
-<h2 id="models-and-keys">Models and keys</h2>
+<h2 id="models-keys-costs">Models, keys, costs</h2>
 <div class="admonition tip">
 <p class="admonition-title">See also</p>
 <p>Read the <a href="../../quickstart/">quickstart guide</a> first—it already covers most of this.</p>
@@ -2329,6 +2329,9 @@ setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">"value"<
 <span class="c1"># Default API key</span>
 <span class="c1"># (default: not set)</span>
 <span class="nv">MSWEA_MODEL_API_KEY</span><span class="o">=</span><span class="s2">"sk-..."</span>
+</code></pre></div>
+<p>To disable cost tracking checks (for example for free models), set:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">MSWEA_COST_TRACKING</span><span class="o">=</span><span class="s2">"disabled"</span>
 </code></pre></div>
 <p>To register extra models to litellm (see <a href="../../models/local_models/">local models</a> for more details), you can either specify the path in the agent file, or set</p>
 <div class="highlight"><pre><span></span><code><span class="nv">LITELLM_MODEL_REGISTRY_PATH</span><span class="o">=</span><span class="s2">"/path/to/your/model/registry.json"</span>
