@@ -97,10 +97,18 @@ class OpenRouterModel:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
 
-        # Extract cost from usage information
-        usage = response.get("usage", {})
-        cost = usage.get("cost", 0.0)
-        assert cost >= 0.0, f"Cost is negative: {cost}"
+        if os.getenv("MSWEA_COST_TRACKING") != "disabled":
+            usage = response.get("usage", {})
+            cost = usage.get("cost", 0.0)
+            if cost <= 0.0:
+                raise OpenRouterAPIError(
+                    f"No valid cost information available from OpenRouter API for model {self.config.model_name}: "
+                    f"Usage {usage}, cost {cost}. Cost must be > 0.0. Set MSWEA_COST_TRACKING='disabled' to disable cost tracking "
+                    "(for example for free/local models), see https://klieret.short.gy/mini-global-config or https://klieret.short.gy/mini-local-models "
+                    "for more details."
+                )
+        else:
+            cost = 0.0
 
         self.n_calls += 1
         self.cost += cost
