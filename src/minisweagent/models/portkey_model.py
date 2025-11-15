@@ -91,17 +91,7 @@ class PortkeyModel:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
-        try:
-            cost = self._calculate_cost(response)
-        except Exception as e:
-            msg = (
-                f"Error calculating cost for model {self.config.model_name}."
-                "You can disable cost tracking with MSWEA_COST_TRACKING='disabled' to ignore this error "
-                "(more information at https://klieret.short.gy/mini-global-config)."
-                "Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
-            )
-            logger.critical(msg)
-            raise RuntimeError(msg) from e
+        cost = self._calculate_cost(response)
         self.n_calls += 1
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
@@ -117,6 +107,8 @@ class PortkeyModel:
         return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
     def _calculate_cost(self, response) -> float:
+        if os.getenv("MSWEA_COST_TRACKING") == "disabled":
+            return 0.0
         response_for_cost_calc = response.model_copy()
         if self.config.litellm_model_name_override:
             if response_for_cost_calc.model:
@@ -147,11 +139,16 @@ class PortkeyModel:
             cost = litellm.cost_calculator.completion_cost(
                 response_for_cost_calc, model=self.config.litellm_model_name_override or None
             )
+            assert cost >= 0.0, f"Cost is negative: {cost}"
         except Exception as e:
-            logger.critical(
+            msg = (
                 f"Error calculating cost for model {self.config.model_name} based on {response_for_cost_calc.model_dump()}: {e}. "
-                "Please check the 'Updating the model registry' section in the documentation at "
-                "https://klieret.short.gy/litellm-model-registry Still stuck? Please open a github issue for help!"
+                "You can disable cost tracking with MSWEA_COST_TRACKING='disabled' to ignore this error "
+                "(more information at https://klieret.short.gy/mini-global-config)."
+                "Alternatively check the 'Updating the model registry' section in the documentation at "
+                "https://klieret.short.gy/litellm-model-registry."
+                "Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
             )
-            raise
-        assert cost >= 0.0, f"Cost is negative: {cost}"
+            logger.critical(msg)
+            raise RuntimeError(msg) from e
+        return cost
