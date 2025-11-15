@@ -101,7 +101,7 @@ class OpenRouterModel:
             usage = response.get("usage", {})
             cost = usage.get("cost", 0.0)
             if cost <= 0.0:
-                raise OpenRouterAPIError(
+                raise RuntimeError(
                     f"No valid cost information available from OpenRouter API for model {self.config.model_name}: "
                     f"Usage {usage}, cost {cost}. Cost must be > 0.0. Set MSWEA_COST_TRACKING='disabled' to disable cost tracking "
                     "(for example for free/local models), see https://klieret.short.gy/mini-global-config or https://klieret.short.gy/mini-local-models "

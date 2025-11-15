@@ -7,7 +7,6 @@ import requests
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.openrouter_model import (
-    OpenRouterAPIError,
     OpenRouterAuthenticationError,
     OpenRouterModel,
 )
@@ -124,11 +123,11 @@ def test_openrouter_model_no_cost_information(mock_response_no_cost):
 
             messages = [{"role": "user", "content": "test"}]
 
-            with pytest.raises(OpenRouterAPIError) as exc_info:
+            with pytest.raises(RuntimeError) as exc_info:
                 model.query(messages)
 
-            assert "No cost information available" in str(exc_info.value)
-            assert "Cost tracking is required" in str(exc_info.value)
+            assert "No valid cost information available" in str(exc_info.value)
+            assert "MSWEA_COST_TRACKING='disabled'" in str(exc_info.value)
 
 
 def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
