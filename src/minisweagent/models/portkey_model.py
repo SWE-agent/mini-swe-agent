@@ -144,9 +144,9 @@ class PortkeyModel:
             msg = (
                 f"Error calculating cost for model {self.config.model_name} based on {response_for_cost_calc.model_dump()}: {e}. "
                 "You can disable cost tracking with MSWEA_COST_TRACKING='disabled' to ignore this error "
-                "(more information at https://klieret.short.gy/mini-global-config)."
+                "(more information at https://klieret.short.gy/mini-global-config). "
                 "Alternatively check the 'Updating the model registry' section in the documentation at "
-                "https://klieret.short.gy/litellm-model-registry."
+                "https://klieret.short.gy/litellm-model-registry. "
                 "Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
             )
             logger.critical(msg)
