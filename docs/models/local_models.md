@@ -101,7 +101,7 @@ However, note that this is a global setting, and will affect all models!
 
 However, the best way to handle the cost issue is to add a model registry to litellm to include your local model.
 
-LiteLLM get its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
+LiteLLM gets its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
 
 The model registry JSON file should follow LiteLLM's format:
 
