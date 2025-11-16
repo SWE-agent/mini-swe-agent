@@ -77,7 +77,7 @@ class LitellmModel:
                     "Please check the 'Updating the model registry' section in the documentation at "
                     "https://klieret.short.gy/litellm-model-registry or disable cost tracking with MSWEA_COST_TRACKING='disabled' "
                     "to ignore this error (more information at https://klieret.short.gy/mini-global-config)."
-                    "Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
+                    " Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
                 )
                 logger.critical(msg)
                 raise RuntimeError(msg) from e
