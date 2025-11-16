@@ -13,8 +13,14 @@
 
 ## Using litellm
 
-Currently, all models are supported via [`litellm`](https://www.litellm.ai/)
-(but if you have specific needs, we're open to add more specific model classes in the [`models`](https://github.com/SWE-agent/mini-swe-agent/tree/main/src/minisweagent/models) submodule).
+Currently, models are supported via [`litellm`](https://www.litellm.ai/) by default.
+
+There are typically two steps to using local models:
+
+1. Editing the agent config file to add settings like `custom_llm_provider` and `api_base`.
+2. Either disabling cost tracking or updating the model registry to include your local model.
+
+### Setting API base/provider
 
 If you use local models, you most likely need to add some extra keywords to the `litellm` call.
 This is done with the `model_kwargs` dictionary which is directly passed to `litellm.completion`.
@@ -72,7 +78,17 @@ There are two ways to do this with `litellm`:
 1. You set up a litellm proxy server (which gives you a lot of control over all the LM calls)
 2. You update the model registry (next section)
 
-### Updating the model registry
+### Cost tracking
+
+If you do not need cost tracking, you can disable cost calculation:
+
+```bash
+export MSWEA_COST_TRACKING="disabled"
+```
+
+However, note that this is a global setting, and will affect all models!
+
+Therefore, we recommend to instead update the model registry to include your local model.
 
 LiteLLM get its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
 
