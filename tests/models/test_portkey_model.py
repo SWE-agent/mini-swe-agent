@@ -103,8 +103,8 @@ def test_portkey_model_get_template_vars():
             assert template_vars["model_cost"] == 0.0
 
 
-def test_portkey_model_cost_tracking_disabled():
-    """Test that models work with MSWEA_COST_TRACKING=disabled."""
+def test_portkey_model_cost_tracking_ignore_errors():
+    """Test that models work with cost_tracking='ignore_errors'."""
     mock_portkey_class = MagicMock()
     mock_client = MagicMock()
     mock_response = MagicMock()
@@ -120,19 +120,23 @@ def test_portkey_model_cost_tracking_disabled():
     mock_portkey_class.return_value = mock_client
 
     with patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class):
-        with patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key", "MSWEA_COST_TRACKING": "disabled"}):
-            model = PortkeyModel(model_name="gpt-4o")
+        with patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}):
+            model = PortkeyModel(model_name="gpt-4o", cost_tracking="ignore_errors")
 
             initial_cost = GLOBAL_MODEL_STATS.cost
 
-            messages = [{"role": "user", "content": "test"}]
-            result = model.query(messages)
+            with patch(
+                "minisweagent.models.portkey_model.litellm.cost_calculator.completion_cost",
+                side_effect=ValueError("Model not found"),
+            ):
+                messages = [{"role": "user", "content": "test"}]
+                result = model.query(messages)
 
-            assert result["content"] == "Test response"
-            assert result["extra"]["cost"] == 0.0
-            assert model.cost == 0.0
-            assert model.n_calls == 1
-            assert GLOBAL_MODEL_STATS.cost == initial_cost
+                assert result["content"] == "Test response"
+                assert result["extra"]["cost"] == 0.0
+                assert model.cost == 0.0
+                assert model.n_calls == 1
+                assert GLOBAL_MODEL_STATS.cost == initial_cost
 
 
 def test_portkey_model_cost_validation_error():
@@ -170,4 +174,4 @@ def test_portkey_model_cost_validation_error():
                     model.query(messages)
 
                 assert "Error calculating cost" in str(exc_info.value)
-                assert "MSWEA_COST_TRACKING='disabled'" in str(exc_info.value)
+                assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)

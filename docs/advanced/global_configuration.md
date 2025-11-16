@@ -71,10 +71,11 @@ MSWEA_MODEL_NAME="anthropic/claude-sonnet-4-5-20250929"
 MSWEA_MODEL_API_KEY="sk-..."
 ```
 
-To disable cost tracking checks (for example for free models), set:
+To ignore errors from cost tracking checks (for example for free models), set:
 
 ```bash
-MSWEA_COST_TRACKING="disabled"
+# CAREFUL: This can lead to unmanaged spending!
+MSWEA_COST_TRACKING="ignore_errors"
 ```
 
 To register extra models to litellm (see [local models](../models/local_models.md) for more details), you can either specify the path in the agent file, or set

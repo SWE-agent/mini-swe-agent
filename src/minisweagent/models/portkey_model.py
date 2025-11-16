@@ -40,6 +40,8 @@ class PortkeyModelConfig:
     """
     set_cache_control: Literal["default_end"] | None = None
     """Set explicit cache control markers, for example for Anthropic models"""
+    cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
+    """Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""
 
 
 class PortkeyModel:
@@ -107,8 +109,6 @@ class PortkeyModel:
         return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
     def _calculate_cost(self, response) -> float:
-        if os.getenv("MSWEA_COST_TRACKING") == "disabled":
-            return 0.0
         response_for_cost_calc = response.model_copy()
         if self.config.litellm_model_name_override:
             if response_for_cost_calc.model:
@@ -141,14 +141,16 @@ class PortkeyModel:
             )
             assert cost >= 0.0, f"Cost is negative: {cost}"
         except Exception as e:
-            msg = (
-                f"Error calculating cost for model {self.config.model_name} based on {response_for_cost_calc.model_dump()}: {e}. "
-                "You can disable cost tracking with MSWEA_COST_TRACKING='disabled' to ignore this error "
-                "(more information at https://klieret.short.gy/mini-global-config). "
-                "Alternatively check the 'Updating the model registry' section in the documentation at "
-                "https://klieret.short.gy/litellm-model-registry. "
-                "Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
-            )
-            logger.critical(msg)
-            raise RuntimeError(msg) from e
+            cost = 0.0
+            if self.config.cost_tracking != "ignore_errors":
+                msg = (
+                    f"Error calculating cost for model {self.config.model_name} based on {response_for_cost_calc.model_dump()}: {e}. "
+                    "You can ignore this issue from your config file with cost_tracking: 'ignore_errors' or "
+                    "globally with export MSWEA_COST_TRACKING='ignore_errors' to ignore this error. "
+                    "Alternatively check the 'Updating the model registry' section in the documentation at "
+                    "https://klieret.short.gy/mini-local-models. "
+                    "Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
+                )
+                logger.critical(msg)
+                raise RuntimeError(msg) from e
         return cost

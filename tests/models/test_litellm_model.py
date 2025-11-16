@@ -1,5 +1,4 @@
 import json
-import os
 import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
@@ -80,19 +79,19 @@ def test_model_registry_not_provided():
         mock_register.assert_not_called()
 
 
-def test_litellm_model_cost_tracking_disabled():
-    """Test that models work with MSWEA_COST_TRACKING=disabled."""
-    with patch.dict(os.environ, {"MSWEA_COST_TRACKING": "disabled"}):
-        model = LitellmModel(model_name="gpt-4o")
+def test_litellm_model_cost_tracking_ignore_errors():
+    """Test that models work with cost_tracking='ignore_errors'."""
+    model = LitellmModel(model_name="gpt-4o", cost_tracking="ignore_errors")
 
-        initial_cost = GLOBAL_MODEL_STATS.cost
+    initial_cost = GLOBAL_MODEL_STATS.cost
 
-        with patch("litellm.completion") as mock_completion:
-            mock_response = Mock()
-            mock_response.choices = [Mock(message=Mock(content="Test response"))]
-            mock_response.model_dump.return_value = {"test": "response"}
-            mock_completion.return_value = mock_response
+    with patch("litellm.completion") as mock_completion:
+        mock_response = Mock()
+        mock_response.choices = [Mock(message=Mock(content="Test response"))]
+        mock_response.model_dump.return_value = {"test": "response"}
+        mock_completion.return_value = mock_response
 
+        with patch("litellm.cost_calculator.completion_cost", side_effect=ValueError("Model not found")):
             messages = [{"role": "user", "content": "test"}]
             result = model.query(messages)
 
@@ -119,4 +118,4 @@ def test_litellm_model_cost_validation_zero_cost():
                 model.query(messages)
 
             assert "Cost must be > 0.0, got 0.0" in str(exc_info.value)
-            assert "MSWEA_COST_TRACKING='disabled'" in str(exc_info.value)
+            assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)

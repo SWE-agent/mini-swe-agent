@@ -27,6 +27,8 @@ class LitellmModelConfig:
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     set_cache_control: Literal["default_end"] | None = None
     """Set explicit cache control markers, for example for Anthropic models"""
+    cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
+    """Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""
 
 
 class LitellmModel:
@@ -66,23 +68,23 @@ class LitellmModel:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
-        if os.getenv("MSWEA_COST_TRACKING") != "disabled":
-            try:
-                cost = litellm.cost_calculator.completion_cost(response)
-                if cost <= 0.0:
-                    raise ValueError(f"Cost must be > 0.0, got {cost}")
-            except Exception as e:
+        try:
+            cost = litellm.cost_calculator.completion_cost(response)
+            if cost <= 0.0:
+                raise ValueError(f"Cost must be > 0.0, got {cost}")
+        except Exception as e:
+            cost = 0.0
+            if self.config.cost_tracking != "ignore_errors":
                 msg = (
                     f"Error calculating cost for model {self.config.model_name}: {e}, perhaps it's not registered? "
-                    "Please check the 'Updating the model registry' section in the documentation at "
-                    "https://klieret.short.gy/litellm-model-registry or disable cost tracking with MSWEA_COST_TRACKING='disabled' "
-                    "to ignore this error (more information at https://klieret.short.gy/mini-global-config)."
+                    "You can ignore this issue from your config file with cost_tracking: 'ignore_errors' or "
+                    "globally with export MSWEA_COST_TRACKING='ignore_errors'."
+                    "Alternatively check the 'Updating the model registry' section in the documentation at "
+                    "https://klieret.short.gy/mini-local-models. "
                     " Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
                 )
                 logger.critical(msg)
                 raise RuntimeError(msg) from e
-        else:
-            cost = 0.0
         self.n_calls += 1
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)

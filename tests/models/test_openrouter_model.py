@@ -127,13 +127,13 @@ def test_openrouter_model_no_cost_information(mock_response_no_cost):
                 model.query(messages)
 
             assert "No valid cost information available" in str(exc_info.value)
-            assert "MSWEA_COST_TRACKING='disabled'" in str(exc_info.value)
+            assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)
 
 
 def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
-    """Test that free models with zero cost work correctly."""
-    with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key", "MSWEA_COST_TRACKING": "disabled"}):
-        model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet")
+    """Test that free models with zero cost work correctly when cost_tracking='ignore_errors' is set."""
+    with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
+        model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet", cost_tracking="ignore_errors")
 
         initial_cost = GLOBAL_MODEL_STATS.cost
 
@@ -144,16 +144,17 @@ def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
 
             messages = [{"role": "user", "content": "test"}]
 
-            # Free models should work without raising an error
+            # With cost_tracking='ignore_errors', free models should work without raising an error
             result = model.query(messages)
 
             # Verify response
             assert result["content"] == "Hello! 2+2 equals 4."
             assert result["extra"]["response"] == mock_response_no_cost
 
-            # Verify cost tracking with zero cost
+            # Verify cost tracking with zero cost (not added to global stats when zero)
             assert model.cost == 0.0
             assert model.n_calls == 1
+            # Cost should not be added to global stats since it's zero
             assert GLOBAL_MODEL_STATS.cost == initial_cost
 
 

@@ -18,7 +18,7 @@ Currently, models are supported via [`litellm`](https://www.litellm.ai/) by defa
 There are typically two steps to using local models:
 
 1. Editing the agent config file to add settings like `custom_llm_provider` and `api_base`.
-2. Either disabling cost tracking or updating the model registry to include your local model.
+2. Either ignoring errors from cost tracking or updating the model registry to include your local model.
 
 ### Setting API base/provider
 
@@ -80,15 +80,26 @@ There are two ways to do this with `litellm`:
 
 ### Cost tracking
 
-If you do not need cost tracking, you can disable cost calculation:
+If you run with the above, you will most likely get an error about missing cost information.
+
+If you do not need cost tracking, you can ignore these errors, ideally by editing your agent config file and to add:
+
+```yaml
+model:
+  cost_tracking: "ignore_errors"
+  ...
+...
+```
+
+Alternatively, you can set the global setting:
 
 ```bash
-export MSWEA_COST_TRACKING="disabled"
+export MSWEA_COST_TRACKING="ignore_errors"
 ```
 
 However, note that this is a global setting, and will affect all models!
 
-Therefore, we recommend to instead update the model registry to include your local model.
+However, the best way to handle the cost issue is to add a model registry to litellm to include your local model.
 
 LiteLLM get its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
 
