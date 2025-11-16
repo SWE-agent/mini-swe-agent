@@ -82,7 +82,7 @@ There are two ways to do this with `litellm`:
 
 If you run with the above, you will most likely get an error about missing cost information.
 
-If you do not need cost tracking, you can ignore these errors, ideally by editing your agent config file and to add:
+If you do not need cost tracking, you can ignore these errors, ideally by editing your agent config file to add:
 
 ```yaml
 model:
