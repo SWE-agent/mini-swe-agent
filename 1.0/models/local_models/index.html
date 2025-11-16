@@ -850,10 +850,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#updating-the-model-registry" class="md-nav__link">
+  <a href="#setting-api-baseprovider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Updating the model registry
+        Setting API base/provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost tracking
       
     </span>
   </a>
@@ -2175,10 +2186,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#updating-the-model-registry" class="md-nav__link">
+  <a href="#setting-api-baseprovider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Updating the model registry
+        Setting API base/provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost tracking
       
     </span>
   </a>
@@ -2246,8 +2268,13 @@
 </ul>
 </div>
 <h2 id="using-litellm">Using litellm</h2>
-<p>Currently, all models are supported via <a href="https://www.litellm.ai/"><code>litellm</code></a>
-(but if you have specific needs, we're open to add more specific model classes in the <a href="https://github.com/SWE-agent/mini-swe-agent/tree/main/src/minisweagent/models"><code>models</code></a> submodule).</p>
+<p>Currently, models are supported via <a href="https://www.litellm.ai/"><code>litellm</code></a> by default.</p>
+<p>There are typically two steps to using local models:</p>
+<ol>
+<li>Editing the agent config file to add settings like <code>custom_llm_provider</code> and <code>api_base</code>.</li>
+<li>Either ignoring errors from cost tracking or updating the model registry to include your local model.</li>
+</ol>
+<h3 id="setting-api-baseprovider">Setting API base/provider</h3>
 <p>If you use local models, you most likely need to add some extra keywords to the <code>litellm</code> call.
 This is done with the <code>model_kwargs</code> dictionary which is directly passed to <code>litellm.completion</code>.</p>
 <p>In other words, this is how we invoke litellm:</p>
@@ -2471,6 +2498,8 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
     <span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"LITELLM_MODEL_REGISTRY_PATH"</span><span class="p">)</span>
     <span class="n">set_cache_control</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"default_end"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">"""Set explicit cache control markers, for example for Anthropic models"""</span>
+    <span class="n">cost_tracking</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"default"</span><span class="p">,</span> <span class="s2">"ignore_errors"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_COST_TRACKING"</span><span class="p">,</span> <span class="s2">"default"</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">LitellmModel</span><span class="p">:</span>
@@ -2510,23 +2539,23 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set_cache_control</span><span class="p">:</span>
             <span class="n">messages</span> <span class="o">=</span> <span class="n">set_cache_control</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set_cache_control</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_COST_TRACKING"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"disabled"</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">cost</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cost must be &gt; 0.0, got </span><span class="si">{</span><span class="n">cost</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cost</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cost must be &gt; 0.0, got </span><span class="si">{</span><span class="n">cost</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_tracking</span> <span class="o">!=</span> <span class="s2">"ignore_errors"</span><span class="p">:</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">f</span><span class="s2">"Error calculating cost for model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">, perhaps it's not registered? "</span>
-                    <span class="s2">"Please check the 'Updating the model registry' section in the documentation at "</span>
-                    <span class="s2">"https://klieret.short.gy/litellm-model-registry or disable cost tracking with MSWEA_COST_TRACKING='disabled' "</span>
-                    <span class="s2">"to ignore this error (more information at https://klieret.short.gy/mini-global-config)."</span>
+                    <span class="s2">"You can ignore this issue from your config file with cost_tracking: 'ignore_errors' or "</span>
+                    <span class="s2">"globally with export MSWEA_COST_TRACKING='ignore_errors'. "</span>
+                    <span class="s2">"Alternatively check the 'Cost tracking' section in the documentation at "</span>
+                    <span class="s2">"https://klieret.short.gy/mini-local-models. "</span>
                     <span class="s2">" Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"</span>
                 <span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">cost</span>
         <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
@@ -2547,8 +2576,20 @@ There are two ways to do this with <code>litellm</code>:</p>
 <li>You set up a litellm proxy server (which gives you a lot of control over all the LM calls)</li>
 <li>You update the model registry (next section)</li>
 </ol>
-<h3 id="updating-the-model-registry">Updating the model registry</h3>
-<p>LiteLLM get its cost and model metadata from <a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json">this file</a>. You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.</p>
+<h3 id="cost-tracking">Cost tracking</h3>
+<p>If you run with the above, you will most likely get an error about missing cost information.</p>
+<p>If you do not need cost tracking, you can ignore these errors, ideally by editing your agent config file to add:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cost_tracking</span><span class="p">:</span><span class="w"> </span><span class="s">"ignore_errors"</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="nn">...</span>
+</code></pre></div>
+<p>Alternatively, you can set the global setting:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">MSWEA_COST_TRACKING</span><span class="o">=</span><span class="s2">"ignore_errors"</span>
+</code></pre></div>
+<p>However, note that this is a global setting, and will affect all models!</p>
+<p>However, the best way to handle the cost issue is to add a model registry to litellm to include your local model.</p>
+<p>LiteLLM gets its cost and model metadata from <a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json">this file</a>. You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.</p>
 <p>The model registry JSON file should follow LiteLLM's format:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"my-custom-model"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>

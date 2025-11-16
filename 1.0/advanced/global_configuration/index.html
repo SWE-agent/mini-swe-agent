@@ -2330,8 +2330,9 @@ setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">"value"<
 <span class="c1"># (default: not set)</span>
 <span class="nv">MSWEA_MODEL_API_KEY</span><span class="o">=</span><span class="s2">"sk-..."</span>
 </code></pre></div>
-<p>To disable cost tracking checks (for example for free models), set:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">MSWEA_COST_TRACKING</span><span class="o">=</span><span class="s2">"disabled"</span>
+<p>To ignore errors from cost tracking checks (for example for free models), set:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># CAREFUL: This can lead to unmanaged spending!</span>
+<span class="nv">MSWEA_COST_TRACKING</span><span class="o">=</span><span class="s2">"ignore_errors"</span>
 </code></pre></div>
 <p>To register extra models to litellm (see <a href="../../models/local_models/">local models</a> for more details), you can either specify the path in the agent file, or set</p>
 <div class="highlight"><pre><span></span><code><span class="nv">LITELLM_MODEL_REGISTRY_PATH</span><span class="o">=</span><span class="s2">"/path/to/your/model/registry.json"</span>

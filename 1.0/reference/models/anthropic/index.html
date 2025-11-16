@@ -2400,6 +2400,9 @@
         <span class="s2">"LITELLM_MODEL_REGISTRY_PATH"</span>
     <span class="p">),</span>
     <span class="n">set_cache_control</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">"default_end"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cost_tracking</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span>
+        <span class="s2">"default"</span><span class="p">,</span> <span class="s2">"ignore_errors"</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span><span class="s2">"MSWEA_COST_TRACKING"</span><span class="p">,</span> <span class="s2">"default"</span><span class="p">),</span>
 <span class="p">)</span>
 </code></pre></div>
 
