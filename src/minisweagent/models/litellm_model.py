@@ -66,17 +66,24 @@ class LitellmModel:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
-        try:
-            cost = litellm.cost_calculator.completion_cost(response)
-        except Exception as e:
-            logger.critical(
-                f"Error calculating cost for model {self.config.model_name}: {e}. "
-                "Please check the 'Updating the model registry' section in the documentation at "
-                "https://klieret.short.gy/litellm-model-registry Still stuck? Please open a github issue for help!"
-            )
-            raise
+        if os.getenv("MSWEA_COST_TRACKING") != "disabled":
+            try:
+                cost = litellm.cost_calculator.completion_cost(response)
+                if cost <= 0.0:
+                    raise ValueError(f"Cost must be > 0.0, got {cost}")
+            except Exception as e:
+                msg = (
+                    f"Error calculating cost for model {self.config.model_name}: {e}, perhaps it's not registered? "
+                    "Please check the 'Updating the model registry' section in the documentation at "
+                    "https://klieret.short.gy/litellm-model-registry or disable cost tracking with MSWEA_COST_TRACKING='disabled' "
+                    "to ignore this error (more information at https://klieret.short.gy/mini-global-config)."
+                    " Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
+                )
+                logger.critical(msg)
+                raise RuntimeError(msg) from e
+        else:
+            cost = 0.0
         self.n_calls += 1
-        assert cost >= 0.0, f"Cost is negative: {cost}"
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
         return {

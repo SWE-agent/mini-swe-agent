@@ -105,7 +105,7 @@ class OpenRouterModel:
                     f"No valid cost information available from OpenRouter API for model {self.config.model_name}: "
                     f"Usage {usage}, cost {cost}. Cost must be > 0.0. Set MSWEA_COST_TRACKING='disabled' to disable cost tracking "
                     "(for example for free/local models), see https://klieret.short.gy/mini-global-config or https://klieret.short.gy/mini-local-models "
-                    "for more details."
+                    "for more details. Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
                 )
         else:
             cost = 0.0
