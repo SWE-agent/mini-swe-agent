@@ -13,8 +13,14 @@
 
 ## Using litellm
 
-Currently, all models are supported via [`litellm`](https://www.litellm.ai/)
-(but if you have specific needs, we're open to add more specific model classes in the [`models`](https://github.com/SWE-agent/mini-swe-agent/tree/main/src/minisweagent/models) submodule).
+Currently, models are supported via [`litellm`](https://www.litellm.ai/) by default.
+
+There are typically two steps to using local models:
+
+1. Editing the agent config file to add settings like `custom_llm_provider` and `api_base`.
+2. Either ignoring errors from cost tracking or updating the model registry to include your local model.
+
+### Setting API base/provider
 
 If you use local models, you most likely need to add some extra keywords to the `litellm` call.
 This is done with the `model_kwargs` dictionary which is directly passed to `litellm.completion`.
@@ -72,9 +78,30 @@ There are two ways to do this with `litellm`:
 1. You set up a litellm proxy server (which gives you a lot of control over all the LM calls)
 2. You update the model registry (next section)
 
-### Updating the model registry
+### Cost tracking
 
-LiteLLM get its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
+If you run with the above, you will most likely get an error about missing cost information.
+
+If you do not need cost tracking, you can ignore these errors, ideally by editing your agent config file to add:
+
+```yaml
+model:
+  cost_tracking: "ignore_errors"
+  ...
+...
+```
+
+Alternatively, you can set the global setting:
+
+```bash
+export MSWEA_COST_TRACKING="ignore_errors"
+```
+
+However, note that this is a global setting, and will affect all models!
+
+However, the best way to handle the cost issue is to add a model registry to litellm to include your local model.
+
+LiteLLM gets its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
 
 The model registry JSON file should follow LiteLLM's format:
 
