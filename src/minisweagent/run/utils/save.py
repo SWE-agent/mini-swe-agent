@@ -15,13 +15,20 @@ def _get_class_name_with_module(obj: Any) -> str:
 def _asdict(obj: Any) -> dict:
     """Convert config objects to dicts."""
     if dataclasses.is_dataclass(obj):
-        return dataclasses.asdict(obj)  # type: ignore[arg-type]
+        result = {}
+        for field in dataclasses.fields(obj):
+            value = getattr(obj, field.name)
+            if isinstance(value, Path):
+                result[field.name] = str(value)
+            else:
+                result[field.name] = value
+        return result
     return obj  # let's try our luck
 
 
 def save_traj(
     agent: Agent | None,
-    path: Path | None,
+    path: Path | str | None,
     *,
     print_path: bool = True,
     exit_status: str | None = None,
@@ -44,6 +51,7 @@ def save_traj(
     """
     if path is None:
         return
+    path = Path(path)
     data = {
         "info": {
             "exit_status": exit_status,

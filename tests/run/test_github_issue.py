@@ -1,5 +1,5 @@
 import re
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -54,7 +54,7 @@ def test_configure_if_first_time_called():
         patch("minisweagent.run.github_issue.DockerEnvironment"),
         patch("minisweagent.run.github_issue.yaml.safe_load") as mock_yaml_load,
         patch("minisweagent.run.github_issue.get_config_path") as mock_get_config_path,
-        patch("minisweagent.run.github_issue.save_traj"),
+        patch("minisweagent.agents.default.save_traj"),
     ):
         mock_fetch.return_value = "Test issue"
         mock_yaml_load.return_value = {"agent": {}, "environment": {}, "model": {}}
@@ -66,6 +66,50 @@ def test_configure_if_first_time_called():
         main(issue_url="https://github.com/test/repo/issues/1", config=DEFAULT_CONFIG, model="test-model", yolo=True)
 
         mock_configure.assert_called_once()
+
+
+def test_output_file_is_created(tmp_path):
+    """Test that output trajectory file is created when output is specified."""
+    output_file = tmp_path / "test_github_traj.json"
+
+    with (
+        patch("minisweagent.run.github_issue.configure_if_first_time"),
+        patch("minisweagent.run.github_issue.fetch_github_issue") as mock_fetch,
+        patch("minisweagent.run.github_issue.get_model") as mock_get_model,
+        patch("minisweagent.run.github_issue.DockerEnvironment") as mock_env_class,
+        patch("minisweagent.run.github_issue.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.github_issue.get_config_path") as mock_get_config_path,
+        patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),
+    ):
+        mock_fetch.return_value = "Test issue"
+        mock_yaml_load.return_value = {"agent": {"output_path": str(output_file)}, "environment": {}, "model": {}}
+        mock_get_config_path.return_value.read_text.return_value = "test config"
+
+        # Setup mock model and environment with required attributes
+        mock_model = Mock()
+        mock_model.cost = 0.0
+        mock_model.n_calls = 0
+        mock_model.config = {}
+        mock_model.get_template_vars.return_value = {}
+        mock_model.query.side_effect = [
+            {"content": "```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone\n```"},
+        ]
+        mock_get_model.return_value = mock_model
+
+        mock_env = Mock()
+        mock_env.config = {}
+        mock_env.execute.return_value = {"output": "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone"}
+        mock_env.get_template_vars.return_value = {}
+        mock_env_class.return_value = mock_env
+
+        main(
+            issue_url="https://github.com/test/repo/issues/1",
+            config=DEFAULT_CONFIG,
+            model="test-model",
+            yolo=True,
+        )
+
+        assert output_file.exists(), f"Output file {output_file} was not created"
 
 
 @pytest.mark.slow

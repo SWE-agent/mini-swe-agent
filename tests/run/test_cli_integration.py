@@ -626,7 +626,7 @@ def test_exit_immediately_flag_with_typer_runner():
         patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
         patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
         patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
-        patch("minisweagent.run.mini.save_traj"),
+        patch("minisweagent.agents.default.save_traj"),
     ):
         # Setup mocks
         mock_model = Mock()
@@ -655,3 +655,46 @@ def test_exit_immediately_flag_with_typer_runner():
         args, kwargs = mock_interactive_agent_class.call_args
         # The agent_config should contain confirm_exit as a keyword argument
         assert kwargs.get("confirm_exit") is False
+
+
+def test_output_file_is_created(tmp_path):
+    """Test that output trajectory file is created when --output is specified."""
+    from typer.testing import CliRunner
+
+    output_file = tmp_path / "test_traj.json"
+
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.LocalEnvironment") as mock_env_class,
+        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),
+    ):
+        # Setup mocks
+        mock_model = Mock()
+        mock_model.cost = 0.0
+        mock_model.n_calls = 0
+        mock_model.config = {}
+        mock_model.get_template_vars.return_value = {}
+        mock_model.query.side_effect = [
+            {"content": "```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone\n```"},
+        ]
+        mock_get_model.return_value = mock_model
+
+        mock_environment = Mock()
+        mock_environment.config = {}
+        mock_environment.execute.return_value = {"output": "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone"}
+        mock_environment.get_template_vars.return_value = {}
+        mock_env_class.return_value = mock_environment
+
+        mock_config_path = Mock()
+        mock_config_path.read_text.return_value = ""
+        mock_get_config_path.return_value = mock_config_path
+        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+
+        runner = CliRunner()
+        result = runner.invoke(app, ["--task", "Test task", "--model", "test-model", "--output", str(output_file)])
+
+        assert result.exit_code == 0
+        assert output_file.exists(), f"Output file {output_file} was not created"

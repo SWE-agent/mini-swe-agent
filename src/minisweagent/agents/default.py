@@ -2,6 +2,7 @@
 
 import re
 import subprocess
+import traceback
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -29,6 +30,8 @@ class AgentConfig:
     action_observation_template: str = "Observation: {{output}}"
     step_limit: int = 0
     cost_limit: float = 3.0
+    output_path: Path | None = None
+    """Save the trajectory to this path."""
 
 
 class NonTerminatingException(Exception):
@@ -56,21 +59,12 @@ class LimitsExceeded(TerminatingException):
 
 
 class DefaultAgent:
-    def __init__(
-        self,
-        model: Model,
-        env: Environment,
-        *,
-        config_class: Callable = AgentConfig,
-        traj_path: Path | None = None,
-        **kwargs,
-    ):
+    def __init__(self, model: Model, env: Environment, *, config_class: Callable = AgentConfig, **kwargs):
         self.config = config_class(**kwargs)
         self.messages: list[dict] = []
         self.model = model
         self.env = env
         self.extra_template_vars = {}
-        self.traj_path = traj_path
 
     def render_template(self, template: str, **kwargs) -> str:
         template_vars = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
@@ -81,22 +75,6 @@ class DefaultAgent:
     def add_message(self, role: str, content: str, **kwargs):
         self.messages.append({"role": role, "content": content, **kwargs})
 
-    def _save_trajectory(
-        self, exit_status: str | None = None, result: str | None = None, extra_info: dict | None = None
-    ):
-        """Save the trajectory to the output path if configured."""
-        if self.traj_path is None:
-            return
-
-        save_traj(
-            self,
-            self.traj_path,
-            exit_status=exit_status,
-            result=result,
-            extra_info=extra_info,
-            print_path=False,
-        )
-
     def run(self, task: str, **kwargs) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
         self.extra_template_vars |= {"task": task, **kwargs}
@@ -104,18 +82,20 @@ class DefaultAgent:
         self.add_message("system", self.render_template(self.config.system_template))
         self.add_message("user", self.render_template(self.config.instance_template))
         while True:
+            exit_status, result, extra_info = None, None, {}
             try:
                 self.step()
-                self._save_trajectory()
-            except NonTerminatingException as e:
-                self.add_message("user", str(e))
-                self._save_trajectory()
-            except TerminatingException as e:
-                self.add_message("user", str(e))
-                exit_status = type(e).__name__
-                result = str(e)
-                self._save_trajectory(exit_status=exit_status, result=result)
-                return exit_status, result
+            except Exception as e:
+                self.add_message("user", str(e))  # always add to the agent's messages in case we continue
+                if isinstance(e, NonTerminatingException):
+                    continue  # recoverable issue; let agent figure it out
+                exit_status, result = type(e).__name__, str(e)
+                if isinstance(e, TerminatingException):
+                    return exit_status, result  # task is done; normal exit
+                extra_info = {"traceback": traceback.format_exc()}
+                raise e  # any other exception: bad; raise error
+            finally:  # save the trajectory after every step no matter what
+                save_traj(self, self.config.output_path, exit_status=exit_status, result=result, extra_info=extra_info)
 
     def step(self) -> dict:
         """Query the LM, execute the action, return the observation."""
