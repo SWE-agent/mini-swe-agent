@@ -32,6 +32,57 @@ You can find the full list of options in the [API reference](../reference/agents
 To use a different agent class, you can set the `agent_class` key to the name of the agent class you want to use
 or even to an import path (to use your own custom agent class even if it is not yet part of the mini-SWE-agent package).
 
+### Prompt templates
+
+We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).
+
+TL;DR: You include variables with double (!) curly braces, e.g. `{{task}}` to include the task that was given to the agent.
+
+However, you can also do fairly complicated logic like this directly from your template:
+
+??? note "Example: Dealing with long observations"
+
+    The following snippets shortens long observations and displays a warning if the output is too long.
+
+    ```jinja
+    <returncode>{{output.returncode}}</returncode>
+    {% if output.output | length < 10000 -%}
+        <output>
+            {{ output.output -}}
+        </output>
+    {%- else -%}
+        <warning>
+            The output of your last command was too long.
+            Please try a different command that produces less output.
+            If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.
+            If you're using grep or find and it produced too much output, you can use a more selective search pattern.
+            If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.
+        </warning>
+
+        {%- set elided_chars = output.output | length - 10000 -%}
+
+        <output_head>
+            {{ output.output[:5000] }}
+        </output_head>
+
+        <elided_chars>
+            {{ elided_chars }} characters elided
+        </elided_chars>
+
+        <output_tail>
+            {{ output.output[-5000:] }}
+        </output_tail>
+    {%- endif -%}
+    ```
+
+In all builtin agents, you can use the following variables:
+
+- Environment variables (`LocalEnvironment` only, see discussion [here](https://github.com/SWE-agent/mini-swe-agent/pull/425))
+- Agent config variables (i.e., anything that was set in the `agent` section of the config file, e.g., `step_limit`, `cost_limit`, etc.)
+- Environment config variables (i.e., anything that was set in the `environment` section of the config file, e.g., `cwd`, `timeout`, etc.)
+- Variables passed to the `run` method of the agent (by default that's only `task`, but you can pass other variables if you want to)
+- Output of the last action execution (i.e., `output` from the `execute_action` method)
+
 ### Custom Action Parsing
 
 By default, mini-SWE-agent parses actions from markdown code blocks (` ```bash...``` `).
@@ -170,50 +221,6 @@ You can customize this behavior by setting the `action_regex` field to support d
         ```
     ```
 
-### Prompt templates
-
-We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).
-TL;DR: You include variables with double curly braces, e.g. `{{task}}`, but you can also do fairly complicated logic like this:
-
-??? note "Example: Dealing with long observations"
-
-    ```jinja
-    <returncode>{{output.returncode}}</returncode>
-    {% if output.output | length < 10000 -%}
-        <output>
-            {{ output.output -}}
-        </output>
-    {%- else -%}
-        <warning>
-            The output of your last command was too long.
-            Please try a different command that produces less output.
-            If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.
-            If you're using grep or find and it produced too much output, you can use a more selective search pattern.
-            If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.
-        </warning>
-
-        {%- set elided_chars = output.output | length - 10000 -%}
-
-        <output_head>
-            {{ output.output[:5000] }}
-        </output_head>
-
-        <elided_chars>
-            {{ elided_chars }} characters elided
-        </elided_chars>
-
-        <output_tail>
-            {{ output.output[-5000:] }}
-        </output_tail>
-    {%- endif -%}
-    ```
-
-In all builtin agents, you can use the following variables:
-
-- Environment variables (`LocalEnvironment` only, see discussion [here](https://github.com/SWE-agent/mini-swe-agent/pull/425))
-- Agent config variables
-- Environment config variables
-- Explicitly passed variables (`observation`, `task` etc.) depending on the template
 
 ## Model configuration
 
