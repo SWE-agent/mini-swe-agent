@@ -885,9 +885,10 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="Concrete examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#generating-swe-bench-trajectories-with-vllm" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -895,6 +896,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2232,9 +2238,10 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav" aria-label="Concrete examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#generating-swe-bench-trajectories-with-vllm" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2242,6 +2249,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2645,7 +2657,7 @@ There are two ways to do this with <code>litellm</code>:</p>
 <span class="nn">...</span>
 </code></pre></div>
 <h2 id="concrete-examples">Concrete examples</h2>
-<h2 id="generating-swe-bench-trajectories-with-vllm">Generating SWE-bench trajectories with vLLM</h2>
+<h3 id="generating-swe-bench-trajectories-with-vllm">Generating SWE-bench trajectories with vLLM</h3>
 <p>This example shows how to generate SWE-bench trajectories using <a href="https://docs.vllm.ai/en/latest/">vLLM</a> as the local inference engine.</p>
 <p>First, launch a vLLM server with your chosen model. For example:</p>
 <div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>ricdomolm/mini-coder-1.7b<span class="w"> </span><span class="p">&amp;</span>
@@ -2671,7 +2683,8 @@ There are two ways to do this with <code>litellm</code>:</p>
 <span class="s">EOF</span>
 </code></pre></div>
 <p>Now you’re ready to generate trajectories! Let's solve the <code>django__django-11099</code> instance of SWE-bench Verified:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">LITELLM_MODEL_REGISTRY_PATH</span><span class="o">=</span>registry.json<span class="w"> </span>mini-extra<span class="w"> </span>swebench<span class="w"> </span>--output<span class="w"> </span>test/<span class="w"> </span>--subset<span class="w"> </span>verified<span class="w"> </span>--split<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s1">'^(django__django-11099)$'</span>
+<div class="highlight"><pre><span></span><code><span class="nv">LITELLM_MODEL_REGISTRY_PATH</span><span class="o">=</span>registry.json<span class="w"> </span>mini-extra<span class="w"> </span>swebench<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output<span class="w"> </span>test/<span class="w"> </span>--subset<span class="w"> </span>verified<span class="w"> </span>--split<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s1">'^(django__django-11099)$'</span>
 </code></pre></div>
 <p>You should now see the generated trajectory in the <code>test/</code> directory.</p>
 <div class="grid cards">
