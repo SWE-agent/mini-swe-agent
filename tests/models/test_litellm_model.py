@@ -8,6 +8,7 @@ import pytest
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel
+from minisweagent.models.litellm_response_api_model import LitellmResponseAPIModel
 
 
 def test_authentication_error_enhanced_message():
@@ -119,3 +120,145 @@ def test_litellm_model_cost_validation_zero_cost():
 
             assert "Cost must be > 0.0, got 0.0" in str(exc_info.value)
             assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)
+
+
+def test_response_api_model_basic_query():
+    """Test that Response API model uses litellm.responses and tracks previous_response_id."""
+    model = LitellmResponseAPIModel(model_name="gpt-5-mini")
+
+    with (
+        patch("litellm.responses") as mock_responses,
+        patch("litellm.cost_calculator.completion_cost", return_value=0.01),
+    ):
+        from openai.types.responses.response_output_message import ResponseOutputMessage
+
+        mock_response = Mock()
+        mock_response.id = "resp_123"
+        mock_output_message = Mock(spec=ResponseOutputMessage)
+        mock_content = Mock()
+        mock_content.text = "Test response"
+        mock_output_message.content = [mock_content]
+        mock_response.output = [mock_output_message]
+        mock_response.output_text = None
+        mock_responses.return_value = mock_response
+
+        messages = [{"role": "user", "content": "test"}]
+        result = model.query(messages)
+
+        assert result["content"] == "Test response"
+        assert model._previous_response_id == "resp_123"
+        mock_responses.assert_called_once_with(model="gpt-5-mini", input=messages, previous_response_id=None)
+
+
+def test_response_api_model_with_previous_id():
+    """Test that Response API model passes previous_response_id on subsequent calls."""
+    model = LitellmResponseAPIModel(model_name="gpt-5-mini")
+
+    with (
+        patch("litellm.responses") as mock_responses,
+        patch("litellm.cost_calculator.completion_cost", return_value=0.01),
+    ):
+        from openai.types.responses.response_output_message import ResponseOutputMessage
+
+        # First call
+        mock_response1 = Mock()
+        mock_response1.id = "resp_123"
+        mock_output_message1 = Mock(spec=ResponseOutputMessage)
+        mock_content1 = Mock()
+        mock_content1.text = "First response"
+        mock_output_message1.content = [mock_content1]
+        mock_response1.output = [mock_output_message1]
+        mock_response1.output_text = None
+        mock_responses.return_value = mock_response1
+
+        messages1 = [{"role": "user", "content": "first"}]
+        model.query(messages1)
+
+        # Second call
+        mock_response2 = Mock()
+        mock_response2.id = "resp_456"
+        mock_output_message2 = Mock(spec=ResponseOutputMessage)
+        mock_content2 = Mock()
+        mock_content2.text = "Second response"
+        mock_output_message2.content = [mock_content2]
+        mock_response2.output = [mock_output_message2]
+        mock_response2.output_text = None
+        mock_responses.return_value = mock_response2
+
+        messages2 = [
+            {"role": "user", "content": "first"},
+            {"role": "assistant", "content": "First response"},
+            {"role": "user", "content": "second"},
+        ]
+        result = model.query(messages2)
+
+        assert result["content"] == "Second response"
+        assert model._previous_response_id == "resp_456"
+        # On second call, should only pass the last message
+        assert mock_responses.call_args[1]["input"] == [{"role": "user", "content": "second"}]
+        assert mock_responses.call_args[1]["previous_response_id"] == "resp_123"
+
+
+def test_response_api_model_output_text_field():
+    """Test that Response API model uses output_text field when available."""
+    model = LitellmResponseAPIModel(model_name="gpt-5-mini")
+
+    with (
+        patch("litellm.responses") as mock_responses,
+        patch("litellm.cost_calculator.completion_cost", return_value=0.01),
+    ):
+        mock_response = Mock()
+        mock_response.id = "resp_789"
+        mock_response.output_text = "Direct output text"
+        mock_responses.return_value = mock_response
+
+        messages = [{"role": "user", "content": "test"}]
+        result = model.query(messages)
+
+        assert result["content"] == "Direct output text"
+
+
+def test_response_api_model_multiple_output_messages():
+    """Test that Response API model concatenates multiple output messages."""
+    model = LitellmResponseAPIModel(model_name="gpt-5-mini")
+
+    with (
+        patch("litellm.responses") as mock_responses,
+        patch("litellm.cost_calculator.completion_cost", return_value=0.01),
+    ):
+        mock_response = Mock()
+        mock_response.id = "resp_999"
+        mock_response.output_text = None
+
+        # Create multiple output messages
+        from openai.types.responses.response_output_message import ResponseOutputMessage
+
+        mock_msg1 = Mock(spec=ResponseOutputMessage)
+        mock_msg1.content = [Mock(text="First part")]
+        mock_msg2 = Mock(spec=ResponseOutputMessage)
+        mock_msg2.content = [Mock(text="Second part")]
+
+        mock_response.output = [mock_msg1, mock_msg2]
+        mock_responses.return_value = mock_response
+
+        messages = [{"role": "user", "content": "test"}]
+        result = model.query(messages)
+
+        assert result["content"] == "First part\n\nSecond part"
+
+
+def test_response_api_model_authentication_error():
+    """Test that Response API model enhances AuthenticationError messages."""
+    model = LitellmResponseAPIModel(model_name="gpt-5-mini")
+
+    with patch("litellm.responses") as mock_responses:
+
+        def side_effect(*args, **kwargs):
+            raise litellm.exceptions.AuthenticationError("Invalid API key", llm_provider="openai", model="gpt-5-mini")
+
+        mock_responses.side_effect = side_effect
+
+        with pytest.raises(litellm.exceptions.AuthenticationError) as exc_info:
+            model._query([{"role": "user", "content": "test"}])
+
+        assert "You can permanently set your API key with `mini-extra config set KEY VALUE`." in str(exc_info.value)

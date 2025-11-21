@@ -132,13 +132,13 @@ Here's a few general examples:
 
     Note that temperature isn't supported by all models.
 
-=== "GPT-5 reasoning effort"
+=== "GPT-5 reasoning effort (Chat Completions API)"
 
     `litellm` allows to set model-specific settings with the `model_kwargs` key:
 
     ```yaml
     model:
-      model_name: "gpt-5-mini"
+      model_name: "openai/gpt-5-mini"
       model_kwargs:
         drop_params: true
         reasoning_effort: "high"
@@ -146,6 +146,22 @@ Here's a few general examples:
     ```
 
     Here, `drop_params` is used to drop any parameters that are not supported by the model.
+
+=== "GPT-5 with Responses API"
+
+    For OpenAI models that support the Responses API, you can use the `litellm_response` model class:
+
+    ```yaml
+    model:
+      model_class: "litellm_response"
+      model_name: "openai/gpt-5-mini"
+      model_kwargs:
+        drop_params: true
+        reasoning:
+          effort: "high"
+    ```
+
+    See the [`LitellmResponseAPIModel` documentation](../reference/models/litellm_response.md) for more details.
 
 === "OpenRouter"
 
@@ -244,6 +260,8 @@ For example:
 
 
 * **`litellm`** ([`LitellmModel`](../reference/models/litellm.md)) - **Default and recommended**. Supports most models through [litellm](https://github.com/BerriAI/litellm). Works with OpenAI, Anthropic, Google, and many other providers.
+
+* **`litellm_response`** ([`LitellmResponseAPIModel`](../reference/models/litellm_response.md)) - Specialized version of `LitellmModel` that uses OpenAI's Responses API. Useful for models like GPT-5 and required for models like GPT-5-codex. Maintains conversation state across turns.
 
 * **`anthropic`** ([`AnthropicModel`](../reference/models/anthropic.md)) - Wrapper around `LitellmModel` for Anthropic models that adds cache breakpoint handling. Will be used by default if no `model_class` is specified and the model name contains "anthropic", "claude", etc.
 
