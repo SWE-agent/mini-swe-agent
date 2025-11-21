@@ -117,7 +117,7 @@ To find the corresponding API key, check the previous section.
 To configure reasoning efforts or similar settings, you need to edit the [agent config file](../advanced/yaml_configuration.md).
 In newer versions, the location of the config file is printed when you run `mini` ("agent config" in the output).
 
-Here's a few examples:
+Here's a few general examples:
 
 === "Temperature"
 
@@ -181,6 +181,29 @@ Here's a few examples:
     See [this guide](local_models.md) for more details on local models.
     In particular, you need to configure token costs for local models.
 
+Here are more examples of how to configure specific models:
+
+=== "Gemini 3 Pro with Openrouter"
+
+    ```yaml
+    model:
+        model_name: "google/gemini-3-pro-preview"
+        model_class: openrouter
+        model_kwargs:
+            temperature: 0.0
+    ```
+
+=== "GPT 5.1 medium reasoning with Portkey"
+
+    ```yaml
+    model:
+        model_name: "@openai/gpt-5.1"
+        model_class: portkey
+        model_kwargs:
+            reasoning_effort: "medium"
+            verbosity: "medium"
+    ```
+
 ## Model classes
 
 We support the various models through different backends.
@@ -198,10 +221,25 @@ For example:
     mini -m "moonshotai/kimi-k2-0905" --model-class openrouter
     ```
 
+    **Alternatively:** In the agent config file:
+
+    ```yaml
+    model:
+        model_name: "moonshotai/kimi-k2-0905"
+        model_class: openrouter
+    ```
+
 === "Portkey model"
 
     ```bash
     mini -m "claude-sonnet-4-5-20250929" --model-class portkey
+    ```
+
+    **Alternatively:** In the agent config file:
+    ```yaml
+    model:
+        model_name: "claude-sonnet-4-5-20250929"
+        model_class: portkey
     ```
 
 
