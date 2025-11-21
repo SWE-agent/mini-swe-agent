@@ -887,6 +887,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#generating-swe-bench-trajectories-with-vllm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating SWE-bench trajectories with vLLM
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2223,6 +2234,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#generating-swe-bench-trajectories-with-vllm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating SWE-bench trajectories with vLLM
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2623,11 +2645,35 @@ There are two ways to do this with <code>litellm</code>:</p>
 <span class="nn">...</span>
 </code></pre></div>
 <h2 id="concrete-examples">Concrete examples</h2>
-<div class="admonition success">
-<p class="admonition-title">Help us fill this section!</p>
-<p>We welcome concrete examples of how to use local models per pull request into this guide.
-Please add your example here.</p>
-</div>
+<h2 id="generating-swe-bench-trajectories-with-vllm">Generating SWE-bench trajectories with vLLM</h2>
+<p>This example shows how to generate SWE-bench trajectories using <a href="https://docs.vllm.ai/en/latest/">vLLM</a> as the local inference engine.</p>
+<p>First, launch a vLLM server with your chosen model. For example:</p>
+<div class="highlight"><pre><span></span><code>vllm<span class="w"> </span>serve<span class="w"> </span>ricdomolm/mini-coder-1.7b<span class="w"> </span><span class="p">&amp;</span>
+</code></pre></div>
+<p>By default, the server will be available at <code>http://localhost:8000</code>.</p>
+<p>Second, edit the mini-swe-agent SWE-bench config file located in <code>src/minisweagent/config/extra/swebench.yaml</code> to include your local vLLM model:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"hosted_vllm/ricdomolm/mini-coder-1.7b"</span><span class="w">  </span><span class="c1"># or hosted_vllm/path/to/local/model</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">api_base</span><span class="p">:</span><span class="w"> </span><span class="s">"http://localhost:8000/v1"</span><span class="w">  </span><span class="c1"># adjust if using a non-default port/address</span>
+</code></pre></div>
+<p>If you need a custom registry, as detailed above, create a <code>registry.json</code> file:</p>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>&gt;<span class="w"> </span>registry.json<span class="w"> </span><span class="s">&lt;&lt;'EOF'</span>
+<span class="s">{</span>
+<span class="s">  "ricdomolm/mini-coder-1.7b": {</span>
+<span class="s">    "max_tokens": 40960,</span>
+<span class="s">    "input_cost_per_token": 0.0,</span>
+<span class="s">    "output_cost_per_token": 0.0,</span>
+<span class="s">    "litellm_provider": "hosted_vllm",</span>
+<span class="s">    "mode": "chat"</span>
+<span class="s">  }</span>
+<span class="s">}</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p>Now you’re ready to generate trajectories! Let's solve the <code>django__django-11099</code> instance of SWE-bench Verified:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">LITELLM_MODEL_REGISTRY_PATH</span><span class="o">=</span>registry.json<span class="w"> </span>mini-extra<span class="w"> </span>swebench<span class="w"> </span>--output<span class="w"> </span>test/<span class="w"> </span>--subset<span class="w"> </span>verified<span class="w"> </span>--split<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--filter<span class="w"> </span><span class="s1">'^(django__django-11099)$'</span>
+</code></pre></div>
+<p>You should now see the generated trajectory in the <code>test/</code> directory.</p>
 <div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
