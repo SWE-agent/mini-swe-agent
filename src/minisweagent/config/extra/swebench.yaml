@@ -228,21 +228,3 @@ model:
   model_kwargs:
     drop_params: true
     temperature: 0.0
-
-  # Uncomment to use OpenAI models with Chat Completions API
-  # model_name: "gpt-5-mini"
-  # response_api_mode: "off"
-  # model_kwargs:
-  #   drop_params: true
-  #   reasoning_effort: "medium"
-  #   verbosity: "medium"
-
-  # Uncomment to use OpenAI models with Responses API
-  # model_name: "gpt-5-mini"
-  # response_api_mode: "on"
-  # model_kwargs:
-  #   drop_params: true
-  #   reasoning:
-  #     effort: "medium"
-  #   text:
-  #     verbosity: "medium"

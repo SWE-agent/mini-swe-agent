@@ -1,12 +1,10 @@
-import json
 import logging
-import os
 from collections.abc import Callable
-from dataclasses import asdict, dataclass, field
-from pathlib import Path
+from dataclasses import dataclass
 from typing import Any
 
 import litellm
+from openai.types.responses.response_output_message import ResponseOutputMessage
 from tenacity import (
     before_sleep_log,
     retry,
@@ -15,25 +13,20 @@ from tenacity import (
     wait_exponential,
 )
 
-from minisweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 
-logger = logging.getLogger("litellm_model")
+logger = logging.getLogger("litellm_response_api_model")
 
 
 @dataclass
-class LitellmModelConfig:
-    model_name: str
-    model_kwargs: dict[str, Any] = field(default_factory=dict)
-    litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
+class LitellmResponseAPIModelConfig(LitellmModelConfig):
+    pass
 
 
-class LitellmModel:
-    def __init__(self, *, config_class: Callable = LitellmModelConfig, **kwargs):
-        self.config = config_class(**kwargs)
-        self.cost = 0.0
-        self.n_calls = 0
-        if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
-            litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
+class LitellmResponseAPIModel(LitellmModel):
+    def __init__(self, *, config_class: Callable = LitellmResponseAPIModelConfig, **kwargs):
+        super().__init__(config_class=config_class, **kwargs)
+        self._previous_response_id: str | None = None
 
     @retry(
         stop=stop_after_attempt(10),
@@ -53,15 +46,21 @@ class LitellmModel:
     )
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
-            return litellm.completion(
-                model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
+            resp = litellm.responses(
+                model=self.config.model_name,
+                input=messages if self._previous_response_id is None else messages[-1:],
+                previous_response_id=self._previous_response_id,
+                **(self.config.model_kwargs | kwargs),
             )
+            self._previous_response_id = getattr(resp, "id", None)
+            return resp
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
+        text = self._coerce_responses_text(response)
         try:
             cost = litellm.cost_calculator.completion_cost(response)
         except Exception as e:
@@ -73,10 +72,20 @@ class LitellmModel:
             raise
         self.n_calls += 1
         self.cost += cost
+        from minisweagent.models import GLOBAL_MODEL_STATS
+
         GLOBAL_MODEL_STATS.add(cost)
         return {
-            "content": response.choices[0].message.content or "",  # type: ignore
+            "content": text,
         }
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+    def _coerce_responses_text(self, resp: Any) -> str:
+        """Helper to normalize LiteLLM Responses API result to text."""
+        # openai client directly returns `output_text`, but litellm doesn't support it yet.
+        text = getattr(resp, "output_text", None)
+        if isinstance(text, str) and text:
+            return text
+
+        # Concatenate all (to be consistent with openai client)
+        output = [item.content[0].text for item in resp.output if isinstance(item, ResponseOutputMessage)]
+        return "\n\n".join(output) or ""
