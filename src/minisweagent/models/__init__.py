@@ -81,6 +81,7 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
 _MODEL_CLASS_MAPPING = {
     "anthropic": "minisweagent.models.anthropic.AnthropicModel",
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
+    "litellm_response": "minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel",
     "openrouter": "minisweagent.models.openrouter_model.OpenRouterModel",
     "portkey": "minisweagent.models.portkey_model.PortkeyModel",
     "requesty": "minisweagent.models.requesty_model.RequestyModel",

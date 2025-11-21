@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
@@ -32,7 +33,7 @@ class LitellmModelConfig:
 
 
 class LitellmModel:
-    def __init__(self, *, config_class: type = LitellmModelConfig, **kwargs):
+    def __init__(self, *, config_class: Callable = LitellmModelConfig, **kwargs):
         self.config = config_class(**kwargs)
         self.cost = 0.0
         self.n_calls = 0

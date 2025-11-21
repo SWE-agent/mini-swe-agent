@@ -70,6 +70,12 @@ class TestGetModelClass:
         assert get_model_class("gpt-anthropic-style") == LitellmModel
         assert get_model_class("totally-different") == LitellmModel
 
+    def test_litellm_response_model_selection(self):
+        """Test that litellm_response model class can be selected."""
+        from minisweagent.models.litellm_response_api_model import LitellmResponseAPIModel
+
+        assert get_model_class("any-model", "litellm_response") == LitellmResponseAPIModel
+
 
 class TestGetModel:
     def test_config_deep_copy(self):
