@@ -34,7 +34,13 @@ class DockerEnvironmentConfig:
 
 
 class DockerEnvironment:
-    def __init__(self, *, config_class: type = DockerEnvironmentConfig, logger: logging.Logger | None = None, **kwargs):
+    def __init__(
+        self,
+        *,
+        config_class: type = DockerEnvironmentConfig,
+        logger: logging.Logger | None = None,
+        **kwargs,
+    ):
         """This class executes bash commands in a Docker container using direct docker commands.
         See `DockerEnvironmentConfig` for keyword arguments.
         """

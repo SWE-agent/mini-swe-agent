@@ -1,5 +1,4 @@
 import random
-from collections.abc import Callable
 from dataclasses import asdict, dataclass
 
 from minisweagent import Model
@@ -14,7 +13,7 @@ class RouletteModelConfig:
 
 
 class RouletteModel:
-    def __init__(self, *, config_class: Callable = RouletteModelConfig, **kwargs):
+    def __init__(self, *, config_class: type = RouletteModelConfig, **kwargs):
         """This "meta"-model randomly selects one of the models at every call"""
         self.config = config_class(**kwargs)
         self.models = [get_model(config=config) for config in self.config.model_kwargs]
@@ -50,7 +49,7 @@ class InterleavingModelConfig:
 
 
 class InterleavingModel(RouletteModel):
-    def __init__(self, *, config_class: Callable = InterleavingModelConfig, **kwargs):
+    def __init__(self, *, config_class: type = InterleavingModelConfig, **kwargs):
         """This "meta"-model alternates between the models in the sequence for every call"""
         super().__init__(config_class=config_class, **kwargs)
 
