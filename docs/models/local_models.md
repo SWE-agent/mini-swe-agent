@@ -142,7 +142,7 @@ model:
 
 ## Concrete examples
 
-## Generating SWE-bench trajectories with vLLM
+### Generating SWE-bench trajectories with vLLM
 
 This example shows how to generate SWE-bench trajectories using [vLLM](https://docs.vllm.ai/en/latest/) as the local inference engine.
 
@@ -182,7 +182,8 @@ EOF
 Now you’re ready to generate trajectories! Let's solve the `django__django-11099` instance of SWE-bench Verified:
 
 ```bash
-LITELLM_MODEL_REGISTRY_PATH=registry.json mini-extra swebench --output test/ --subset verified --split test --filter '^(django__django-11099)$'
+LITELLM_MODEL_REGISTRY_PATH=registry.json mini-extra swebench \
+    --output test/ --subset verified --split test --filter '^(django__django-11099)$'
 ```
 
 You should now see the generated trajectory in the `test/` directory.
