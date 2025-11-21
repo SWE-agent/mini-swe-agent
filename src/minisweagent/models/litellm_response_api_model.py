@@ -60,7 +60,8 @@ class LitellmResponseAPIModel(LitellmModel):
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
-        text = self._coerce_responses_text(response)
+        print(response)
+        text = LitellmResponseAPIModel._coerce_responses_text(response)
         try:
             cost = litellm.cost_calculator.completion_cost(response)
         except Exception as e:
@@ -79,13 +80,34 @@ class LitellmResponseAPIModel(LitellmModel):
             "content": text,
         }
 
-    def _coerce_responses_text(self, resp: Any) -> str:
+    @staticmethod
+    def _coerce_responses_text(resp: Any) -> str:
         """Helper to normalize LiteLLM Responses API result to text."""
         # openai client directly returns `output_text`, but litellm doesn't support it yet.
         text = getattr(resp, "output_text", None)
         if isinstance(text, str) and text:
             return text
 
-        # Concatenate all (to be consistent with openai client)
-        output = [item.content[0].text for item in resp.output if isinstance(item, ResponseOutputMessage)]
+        # Concatenate all content from all messages
+        output = []
+        for item in resp.output:
+            # Handle both dict and object formats
+            if isinstance(item, dict):
+                content = item.get("content", [])
+            elif isinstance(item, ResponseOutputMessage):
+                content = item.content
+            else:
+                continue
+
+            for content_item in content:
+                # Handle both dict and object formats
+                if isinstance(content_item, dict):
+                    text_val = content_item.get("text")
+                elif hasattr(content_item, "text"):
+                    text_val = content_item.text
+                else:
+                    continue
+
+                if text_val:
+                    output.append(text_val)
         return "\n\n".join(output) or ""

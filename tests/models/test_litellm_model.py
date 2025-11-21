@@ -262,3 +262,90 @@ def test_response_api_model_authentication_error():
             model._query([{"role": "user", "content": "test"}])
 
         assert "You can permanently set your API key with `mini-extra config set KEY VALUE`." in str(exc_info.value)
+
+
+def test_coerce_responses_text_with_output_text_field():
+    """Test that _coerce_responses_text uses output_text field when available."""
+    mock_resp = Mock()
+    mock_resp.output_text = "Direct output text"
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == "Direct output text"
+
+
+def test_coerce_responses_text_dict_single_content():
+    """Test _coerce_responses_text with dict format and single content item."""
+    mock_resp = Mock()
+    mock_resp.output_text = None
+    mock_resp.output = [{"content": [{"text": "Test response"}]}]
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == "Test response"
+
+
+def test_coerce_responses_text_dict_multiple_content():
+    """Test _coerce_responses_text with dict format and multiple content items in one message."""
+    mock_resp = Mock()
+    mock_resp.output_text = None
+    mock_resp.output = [{"content": [{"text": "First part"}, {"text": "Second part"}]}]
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == "First part\n\nSecond part"
+
+
+def test_coerce_responses_text_dict_multiple_messages():
+    """Test _coerce_responses_text with dict format and multiple messages."""
+    mock_resp = Mock()
+    mock_resp.output_text = None
+    mock_resp.output = [{"content": [{"text": "Message 1"}]}, {"content": [{"text": "Message 2"}]}]
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == "Message 1\n\nMessage 2"
+
+
+def test_coerce_responses_text_object_format():
+    """Test _coerce_responses_text with ResponseOutputMessage objects."""
+    from openai.types.responses.response_output_message import ResponseOutputMessage
+
+    mock_resp = Mock()
+    mock_resp.output_text = None
+    mock_msg = Mock(spec=ResponseOutputMessage)
+    mock_msg.content = [Mock(text="Object format response")]
+    mock_resp.output = [mock_msg]
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == "Object format response"
+
+
+def test_coerce_responses_text_mixed_formats():
+    """Test _coerce_responses_text with both dict and object formats."""
+    from openai.types.responses.response_output_message import ResponseOutputMessage
+
+    mock_resp = Mock()
+    mock_resp.output_text = None
+    mock_msg = Mock(spec=ResponseOutputMessage)
+    mock_msg.content = [Mock(text="Object response")]
+    mock_resp.output = [{"content": [{"text": "Dict response"}]}, mock_msg]
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == "Dict response\n\nObject response"
+
+
+def test_coerce_responses_text_empty_response():
+    """Test _coerce_responses_text with empty output."""
+    mock_resp = Mock()
+    mock_resp.output_text = None
+    mock_resp.output = []
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == ""
+
+
+def test_coerce_responses_text_no_text_fields():
+    """Test _coerce_responses_text when content items have no text."""
+    mock_resp = Mock()
+    mock_resp.output_text = None
+    mock_resp.output = [{"content": [{"type": "image"}]}]
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == ""
+
+
+def test_coerce_responses_text_skip_non_dict_non_message():
+    """Test _coerce_responses_text skips items that are neither dict nor ResponseOutputMessage."""
+    mock_resp = Mock()
+    mock_resp.output_text = None
+    mock_resp.output = ["invalid_item", {"content": [{"text": "Valid text"}]}, None]
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == "Valid text"
+
+
+def test_coerce_responses_text_empty_string_not_included():
+    """Test _coerce_responses_text skips empty text values."""
+    mock_resp = Mock()
+    mock_resp.output_text = None
+    mock_resp.output = [{"content": [{"text": ""}, {"text": "Non-empty"}]}]
+    assert LitellmResponseAPIModel._coerce_responses_text(mock_resp) == "Non-empty"
