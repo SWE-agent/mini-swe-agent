@@ -3797,7 +3797,7 @@ xai/grok-vision-beta
 <h2 id="extra-model-settings">Extra model settings</h2>
 <p>To configure reasoning efforts or similar settings, you need to edit the <a href="../../advanced/yaml_configuration/">agent config file</a>.
 In newer versions, the location of the config file is printed when you run <code>mini</code> ("agent config" in the output).</p>
-<p>Here's a few examples:</p>
+<p>Here's a few general examples:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><input id="__tabbed_1_4" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Temperature</label><label for="__tabbed_1_2">GPT-5 reasoning effort</label><label for="__tabbed_1_3">OpenRouter</label><label for="__tabbed_1_4">Local models</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -3849,6 +3849,28 @@ In particular, you need to configure token costs for local models.</p>
 </div>
 </div>
 </div>
+<p>Here are more examples of how to configure specific models:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">Gemini 3 Pro with Openrouter</label><label for="__tabbed_2_2">GPT 5.1 medium reasoning with Portkey</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"google/gemini-3-pro-preview"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openrouter</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"@openai/gpt-5.1"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">portkey</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">reasoning_effort</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+<span class="w">        </span><span class="nt">verbosity</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+</code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="model-classes">Model classes</h2>
 <p>We support the various models through different backends.
 By default (if you only specify the model name), we pick the best backend for you.
@@ -3856,15 +3878,25 @@ This will almost always default to <code>litellm</code> (with Anthropic models b
 <p>However, there are a few other backends that you can use and specify with the <code>--model-class</code> flag or the
 <code>model.model_class</code> key in the agent config file (see previous section).</p>
 <p>For example:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">Openrouter model</label><label for="__tabbed_2_2">Portkey model</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio"><input id="__tabbed_3_2" name="__tabbed_3" type="radio"><div class="tabbed-labels"><label for="__tabbed_3_1">Openrouter model</label><label for="__tabbed_3_2">Portkey model</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"moonshotai/kimi-k2-0905"</span><span class="w"> </span>--model-class<span class="w"> </span>openrouter
+</code></pre></div>
+<p><strong>Alternatively:</strong> In the agent config file:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"moonshotai/kimi-k2-0905"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openrouter</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"claude-sonnet-4-5-20250929"</span><span class="w"> </span>--model-class<span class="w"> </span>portkey
 </code></pre></div>
+<p><strong>Alternatively:</strong> In the agent config file:
+</p><div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"claude-sonnet-4-5-20250929"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">portkey</span>
+</code></pre></div><p></p>
 </div>
 </div>
 </div>
