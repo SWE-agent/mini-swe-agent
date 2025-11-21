@@ -48,7 +48,9 @@ def main(
         instance_spec = sorted(instances.keys())[int(instance_spec)]
     instance: dict = instances[instance_spec]  # type: ignore
 
-    config = yaml.safe_load(get_config_path(config_path).read_text())
+    config_path = get_config_path(config_path)
+    logger.info(f"Loading agent config from '{config_path}'")
+    config = yaml.safe_load(config_path.read_text())
     if environment_class is not None:
         config.setdefault("environment", {})["environment_class"] = environment_class
     if model_class is not None:

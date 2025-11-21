@@ -1,16 +1,17 @@
-# Configuration
+# Global configuration
 
 !!! abstract "Configuring mini"
 
-    * This guide shows how to configure the `mini` agent.
+    * This guide shows how to configure the `mini` agent's global settings (API keys, default model, etc.).
+      Basically anything that is set as environment variables or similar.
     * You should already be familiar with the [quickstart guide](../quickstart.md).
-    * Want more? See the [cookbook](cookbook.md) for subclassing & developing your own agent.
-
-## Environment variables and global configuration
+    * For more agent specific settings, see the [yaml configuration file guide](yaml_configuration.md).
 
 !!! tip "Setting up models"
 
     Setting up models is also covered in the [quickstart guide](../quickstart.md).
+
+## Setting global configuration
 
 All global configuration can be either set as environment variables, or in the `.env` file (the exact location is printed when you run `mini`).
 Environment variables take precedence over variables set in the `.env` file.
@@ -28,7 +29,7 @@ or to update specific settings:
 ```
 mini-extra config set KEY VALUE
 # e.g.,
-mini-extra config set MSWEA_MODEL_NAME "claude-sonnet-4-20250514"
+mini-extra config set MSWEA_MODEL_NAME "anthropic/claude-sonnet-4-5-20250929"
 mini-extra config set MSWEA_MODEL_API_KEY "sk-..."
 ```
 
@@ -46,7 +47,7 @@ You can also edit the `.env` file directly and we provide a helper function for 
 mini-extra config edit
 ```
 
-To set environment variables (recommended for temporary experiemntation or API keys):
+To set environment variables (recommended for temporary experimentation or API keys):
 
 ```bash
 export KEY="value"
@@ -54,7 +55,7 @@ export KEY="value"
 setx KEY "value"
 ```
 
-### Models and keys
+## Models, keys, costs
 
 !!! tip "See also"
 
@@ -63,27 +64,25 @@ setx KEY "value"
 ```bash
 # Default model name
 # (default: not set)
-MSWEA_MODEL_NAME="claude-sonnet-4-20250514"
+MSWEA_MODEL_NAME="anthropic/claude-sonnet-4-5-20250929"
 
 # Default API key
 # (default: not set)
 MSWEA_MODEL_API_KEY="sk-..."
 ```
 
-To register extra models to litellm (see [local models](local_models.md) for more details), you can either specify the path in the agent file, or set
+To ignore errors from cost tracking checks (for example for free models), set:
+
+```bash
+# CAREFUL: This can lead to unmanaged spending!
+MSWEA_COST_TRACKING="ignore_errors"
+```
+
+To register extra models to litellm (see [local models](../models/local_models.md) for more details), you can either specify the path in the agent file, or set
 
 ```bash
 LITELLM_MODEL_REGISTRY_PATH="/path/to/your/model/registry.json"
 ```
-
-For Anthropic models, you can also use `ANTHROPIC_API_KEYS` for advanced parallel execution:
-
-```bash
-# Multiple Anthropic keys for parallel execution (separated by "::")
-ANTHROPIC_API_KEYS="key1::key2::key3"
-```
-
-This allows different threads to use different API keys to avoid prompt caching conflicts when running multiple agents in parallel.
 
 Global cost limits:
 
@@ -95,9 +94,13 @@ MSWEA_GLOBAL_CALL_LIMIT="100"
 # Global cost limit in dollars (0 = no limit)
 # (default: 0)
 MSWEA_GLOBAL_COST_LIMIT="10.00"
+
+# Number of retry attempts for model API calls
+# (default: 10)
+MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT="10"
 ```
 
-### Default config files
+## Default config files
 
 ```bash
 # Set a custom directory for agent config files in addition to the builtin ones
@@ -137,7 +140,7 @@ MSWEA_DOCKER_EXECUTABLE="docker"
 MSWEA_BUBBLEWRAP_EXECUTABLE="bwrap"
 ```
 
-### Default run files
+## Default run files
 
 ```bash
 # Default run script entry point for the main CLI
@@ -148,58 +151,5 @@ MSWEA_DEFAULT_RUN="minisweagent.run.mini"
 # (default: false)
 MSWEA_VISUAL_MODE_DEFAULT="false"
 ```
-
-## Agent configuration files
-
-Configuration files look like this:
-
-??? note "Configuration file"
-
-    ```yaml
-    --8<-- "src/minisweagent/config/mini.yaml"
-    ```
-
-We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).
-TL;DR: You include variables with double curly braces, e.g. `{{task}}`, but you can also do fairly complicated logic like this:
-
-??? note "Example: Dealing with long observations"
-
-    ```jinja
-    <returncode>{{output.returncode}}</returncode>
-    {% if output.output | length < 10000 -%}
-        <output>
-            {{ output.output -}}
-        </output>
-    {%- else -%}
-        <warning>
-            The output of your last command was too long.
-            Please try a different command that produces less output.
-            If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.
-            If you're using grep or find and it produced too much output, you can use a more selective search pattern.
-            If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.
-        </warning>
-
-        {%- set elided_chars = output.output | length - 10000 -%}
-
-        <output_head>
-            {{ output.output[:5000] }}
-        </output_head>
-
-        <elided_chars>
-            {{ elided_chars }} characters elided
-        </elided_chars>
-
-        <output_tail>
-            {{ output.output[-5000:] }}
-        </output_tail>
-    {%- endif -%}
-    ```
-
-In all builtin agents, you can use the following variables:
-
-- Environment variables (`LocalEnvironment` only, see discussion [here](https://github.com/SWE-agent/mini-swe-agent/pull/425))
-- Agent config variables
-- Environment config variables
-- Explicitly passed variables (`observation`, `task` etc.) depending on the template
 
 {% include-markdown "_footer.md" %}

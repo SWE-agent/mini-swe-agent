@@ -37,7 +37,7 @@
         python src/minisweagent/run/extra/swebench.py --help
         # Example:
         mini-extra swebench \
-            --model claude-sonnet-4-20250514 \
+            --model anthropic/claude-sonnet-4-5-20250929 \
             --subset verified \
             --split test \
             --workers 4
@@ -75,13 +75,13 @@
         mini-extra swebench-single \
             --subset verified \
             --split test \
-            --model claude-sonnet-4-20250514 \
+            --model anthropic/claude-sonnet-4-5-20250929 \
             -i sympy__sympy-15599
         # or
         mini-extra swebench-single \
             --subset verified \
             --split test \
-            -m claude-sonnet-4-20250514 \
+            -m anthropic/claude-sonnet-4-5-20250929 \
             -i 0  # instance index
         ```
 
@@ -139,7 +139,7 @@
 > Can I set global cost limits?
 
 Yes, you can set global cost limits with the `MSWEA_GLOBAL_CALL_LIMIT` and `MSWEA_GLOBAL_COST_LIMIT` environment variables/global config.
-See [configuration](../advanced/configuration.md) for more details.
+See [global configuration](../advanced/global_configuration.md) for more details.
 
 > What happens to uncompleted tasks when I abort with KeyboardInterrupt?
 
@@ -155,14 +155,22 @@ The completed instances are inferred from `preds.json`. Remove the corresponding
 As long as it follows the SWE-bench format, you can use `--subset /path/to/your/dataset` to run on a custom dataset.
 The dataset needs to be loadable as `datasets.load_dataset(path, split=split)`.
 
-> Some progress runners are stuck at 'initializing task' for a very long time
+> Some progress runners are stuck at 'initializing task' for a very long time / time out
 
-They might be pulling docker containers -- the run sshould start immediately the next time.
+They might be pulling docker containers -- the run should start immediately the next time.
+If you see timeouts because of `docker pull` operations, you might want to increase `environment.pull_timeout`
+from the default of `120` (seconds).
 
 > I have some docker issues
 
 Try running the docker command manually to see what's going on (it should be printed out in the console).
 Confirm that it's running with `docker ps`, and that you can use `docker exec -it <container-id> ls` to get some output.
+
+> Docker isn't available on my HPC cluster.
+
+You can use the singularity/apptainer backend by setting `environment.environment_class` to `singularity`
+in your [agent config file](../advanced/yaml_configuration.md)
+or specify `--environment-class singularity` from the command line
 
 > Can I run a startup command in the environment?
 
@@ -183,6 +191,10 @@ run:
 ```
 
 which might be particularly useful when running with environments like [`bubblewrap`](../reference/environments/bubblewrap.md).
+
+> What environment can I use for SWE-bench?
+
+See [this guide](../advanced/environments.md) for more details.
 
 ## Implementation
 

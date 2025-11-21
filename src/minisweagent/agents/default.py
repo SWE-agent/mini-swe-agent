@@ -5,7 +5,7 @@ import subprocess
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 
-from jinja2 import Template
+from jinja2 import StrictUndefined, Template
 
 from minisweagent import Environment, Model
 
@@ -25,6 +25,7 @@ class AgentConfig:
     )
     format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
     action_observation_template: str = "Observation: {{output}}"
+    action_regex: str = r"```bash\s*\n(.*?)\n```"
     step_limit: int = 0
     cost_limit: float = 3.0
 
@@ -63,7 +64,9 @@ class DefaultAgent:
 
     def render_template(self, template: str, **kwargs) -> str:
         template_vars = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
-        return Template(template).render(**kwargs, **template_vars, **self.extra_template_vars)
+        return Template(template, undefined=StrictUndefined).render(
+            **kwargs, **template_vars, **self.extra_template_vars
+        )
 
     def add_message(self, role: str, content: str, **kwargs):
         self.messages.append({"role": role, "content": content, **kwargs})
@@ -104,7 +107,7 @@ class DefaultAgent:
 
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
-        actions = re.findall(r"```bash\n(.*?)\n```", response["content"], re.DOTALL)
+        actions = re.findall(self.config.action_regex, response["content"], re.DOTALL)
         if len(actions) == 1:
             return {"action": actions[0].strip(), **response}
         raise FormatError(self.render_template(self.config.format_error_template, actions=actions))

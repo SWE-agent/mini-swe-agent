@@ -8,7 +8,7 @@ This file provides:
   unless you want the static type checking.
 """
 
-__version__ = "1.10.0"
+__version__ = "1.16.0"
 
 import os
 from pathlib import Path
@@ -29,7 +29,7 @@ global_config_file = Path(global_config_dir) / ".env"
 if not os.getenv("MSWEA_SILENT_STARTUP"):
     Console().print(
         f"👋 This is [bold green]mini-swe-agent[/bold green] version [bold green]{__version__}[/bold green].\n"
-        f"Your config is stored in [bold green]'{global_config_file}'[/bold green]"
+        f"Loading global config from [bold green]'{global_config_file}'[/bold green]"
     )
 dotenv.load_dotenv(dotenv_path=global_config_file)
 

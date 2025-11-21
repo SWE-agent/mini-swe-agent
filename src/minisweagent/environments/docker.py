@@ -73,7 +73,7 @@ class DockerEnvironment:
         self.logger.info(f"Started container {container_name} with ID {result.stdout.strip()}")
         self.container_id = result.stdout.strip()
 
-    def execute(self, command: str, cwd: str = "") -> dict[str, Any]:
+    def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the Docker container and return the result as a dict."""
         cwd = cwd or self.config.cwd
         assert self.container_id, "Container not started"
@@ -89,7 +89,7 @@ class DockerEnvironment:
         result = subprocess.run(
             cmd,
             text=True,
-            timeout=self.config.timeout,
+            timeout=timeout or self.config.timeout,
             encoding="utf-8",
             errors="replace",
             stdout=subprocess.PIPE,

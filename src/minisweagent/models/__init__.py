@@ -55,6 +55,13 @@ def get_model(input_model_name: str | None = None, config: dict | None = None) -
     if (from_env := os.getenv("MSWEA_MODEL_API_KEY")) and not str(type(model_class)).endswith("DeterministicModel"):
         config.setdefault("model_kwargs", {})["api_key"] = from_env
 
+    if (
+        any(s in resolved_model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"])
+        and "set_cache_control" not in config
+    ):
+        # Select cache control for Anthropic models by default
+        config["set_cache_control"] = "default_end"
+
     return model_class(**config)
 
 
@@ -75,6 +82,9 @@ _MODEL_CLASS_MAPPING = {
     "anthropic": "minisweagent.models.anthropic.AnthropicModel",
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
     "litellm_response": "minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel",
+    "openrouter": "minisweagent.models.openrouter_model.OpenRouterModel",
+    "portkey": "minisweagent.models.portkey_model.PortkeyModel",
+    "requesty": "minisweagent.models.requesty_model.RequestyModel",
     "deterministic": "minisweagent.models.test_models.DeterministicModel",
 }
 
@@ -96,11 +106,6 @@ def get_model_class(model_name: str, model_class: str = "") -> type:
         except (ValueError, ImportError, AttributeError):
             msg = f"Unknown model class: {model_class} (resolved to {full_path}, available: {_MODEL_CLASS_MAPPING})"
             raise ValueError(msg)
-
-    if any(s in model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"]):
-        from minisweagent.models.anthropic import AnthropicModel
-
-        return AnthropicModel
 
     # Default to LitellmModel
     from minisweagent.models.litellm_model import LitellmModel

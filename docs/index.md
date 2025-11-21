@@ -14,8 +14,6 @@
 </a>
 
 </div>
-
-
 In 2024, [SWE-bench](https://swebench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the coding agent revolution.
 
 We now ask: **What if the agent was 100x smaller, and still worked nearly as well?**
@@ -30,7 +28,7 @@ Here's some details:
 
 - **Minimal**: Just [100 lines of python](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py) (+100 total for [env](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/environments/local.py),
 [model](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py), [script](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py)) — no fancy dependencies!
-- **Powerful:** Resolves 68% of GitHub issues in the [SWE-bench verified benchmark](https://www.swebench.com/) ([leaderboard](https://swe-bench.com/)).
+- **Powerful:** Resolves >74% of GitHub issues in the [SWE-bench verified benchmark](https://www.swebench.com/) ([leaderboard](https://swe-bench.com/)).
 - **Convenient:** Comes with UIs that turn this into your daily dev swiss army knife!
 - **Deployable:** In addition to local envs, you can use **docker**, **podman**, **singularity**, **apptainer**, and more
 - **Cutting edge:** Built by the Princeton & Stanford team behind [SWE-bench](https://swebench.com) and [SWE-agent](https://swe-agent.com).
@@ -165,8 +163,8 @@ agent.run("Write a sudoku game")</code></pre>
 <li><a href="quickstart">Quick start</a></li>
 <li><a href="usage/mini"><code>mini</code></a></li>
 <li><a href="faq">FAQ</a></li>
-<li><a href="advanced/configuration">Configuration</a></li>
-<li><a href="advanced/cookbook">Power up</a></li>
+<li><a href="advanced/global_configuration">Global configuration</a></li>
+<li><a href="advanced/yaml_configuration">Yaml configuration</a></li>
 </ul>
 </td>
 </tr>
@@ -216,7 +214,7 @@ agent.run("Write a sudoku game")</code></pre>
     </div>
   </a>
 
-  <a href="advanced/configuration/" class="nav-card-link">
+  <a href="advanced/yaml_configuration/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">settings</span>
@@ -237,12 +235,17 @@ agent.run("Write a sudoku game")</code></pre>
   </a>
 </div>
 
+## 📣 News
+
+* Nov 19: [Gemini 3 Pro reaches 74% on SWE-bench verified with mini-swe-agent!](https://x.com/KLieret/status/1991164693839270372)
+* Aug 19: [New blogpost: Randomly switching between GPT-5 and Sonnet 4 boosts performance](https://www.swebench.com/SWE-bench/blog/2025/08/19/mini-roulette/)
+
 ## 📣 New features
 
 Please check the [github release notes](https://github.com/SWE-agent/mini-swe-agent/releases) for the latest updates.
 
 ## 📣 Documentation updates
 
-* Jul 27: More notes on [local models](advanced/local_models.md)
+* Jul 27: More notes on [local models](models/local_models.md)
 
 {% include-markdown "_footer.md" %}

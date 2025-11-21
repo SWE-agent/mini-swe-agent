@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 import litellm
 import pytest
 
+from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel
 
 
@@ -76,3 +77,45 @@ def test_model_registry_not_provided():
 
         # Verify register_model was not called
         mock_register.assert_not_called()
+
+
+def test_litellm_model_cost_tracking_ignore_errors():
+    """Test that models work with cost_tracking='ignore_errors'."""
+    model = LitellmModel(model_name="gpt-4o", cost_tracking="ignore_errors")
+
+    initial_cost = GLOBAL_MODEL_STATS.cost
+
+    with patch("litellm.completion") as mock_completion:
+        mock_response = Mock()
+        mock_response.choices = [Mock(message=Mock(content="Test response"))]
+        mock_response.model_dump.return_value = {"test": "response"}
+        mock_completion.return_value = mock_response
+
+        with patch("litellm.cost_calculator.completion_cost", side_effect=ValueError("Model not found")):
+            messages = [{"role": "user", "content": "test"}]
+            result = model.query(messages)
+
+            assert result["content"] == "Test response"
+            assert model.cost == 0.0
+            assert model.n_calls == 1
+            assert GLOBAL_MODEL_STATS.cost == initial_cost
+
+
+def test_litellm_model_cost_validation_zero_cost():
+    """Test that zero cost raises error when cost tracking is enabled."""
+    model = LitellmModel(model_name="gpt-4o")
+
+    with patch("litellm.completion") as mock_completion:
+        mock_response = Mock()
+        mock_response.choices = [Mock(message=Mock(content="Test response"))]
+        mock_response.model_dump.return_value = {"test": "response"}
+        mock_completion.return_value = mock_response
+
+        with patch("litellm.cost_calculator.completion_cost", return_value=0.0):
+            messages = [{"role": "user", "content": "test"}]
+
+            with pytest.raises(RuntimeError) as exc_info:
+                model.query(messages)
+
+            assert "Cost must be > 0.0, got 0.0" in str(exc_info.value)
+            assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)
