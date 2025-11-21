@@ -5,13 +5,13 @@
       
       
       
-        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/run/github_issue/">
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/models/litellm_response/">
       
       
-        <link rel="prev" href="../mini/">
+        <link rel="prev" href="../litellm/">
       
       
-        <link rel="next" href="../swebench/">
+        <link rel="next" href="../anthropic/">
       
       
         
@@ -22,7 +22,7 @@
     
     
       
-        <title>GitHub Issue - mini-SWE-agent documentation</title>
+        <title>LitellmResponseAPIModel - mini-SWE-agent documentation</title>
       
     
     
@@ -115,7 +115,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#github-issue" class="md-skip">
+        <a href="#litellm-response-api-model" class="md-skip">
           Skip to content
         </a>
       
@@ -154,7 +154,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              GitHub Issue
+              LitellmResponseAPIModel
             
           </span>
         </div>
@@ -1337,8 +1337,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -1363,11 +1365,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3">
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
         
           
           <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
@@ -1388,7 +1390,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1406,7 +1408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/litellm/" class="md-nav__link">
+      <a href="../litellm/" class="md-nav__link">
         
   
   
@@ -1431,10 +1433,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../models/litellm_response/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LitellmResponseAPIModel
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1450,6 +1479,148 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-differences-from-litellmmodel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Differences from LitellmModel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_response_api_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;litellm_response_api_model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&nbsp;litellm_response_api_model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_response_api_model.logger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;logger
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseAPIModelConfig
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseAPIModel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&nbsp;LitellmResponseAPIModel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel.query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;query
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1462,7 +1633,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/anthropic/" class="md-nav__link">
+      <a href="../anthropic/" class="md-nav__link">
         
   
   
@@ -1490,7 +1661,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/openrouter/" class="md-nav__link">
+      <a href="../openrouter/" class="md-nav__link">
         
   
   
@@ -1518,7 +1689,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/test_models/" class="md-nav__link">
+      <a href="../test_models/" class="md-nav__link">
         
   
   
@@ -1546,7 +1717,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/extra/" class="md-nav__link">
+      <a href="../extra/" class="md-nav__link">
         
   
   
@@ -1574,7 +1745,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/utils/" class="md-nav__link">
+      <a href="../utils/" class="md-nav__link">
         
   
   
@@ -1817,10 +1988,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -1841,11 +2010,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5">
         
           
           <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
@@ -1866,7 +2035,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1884,7 +2053,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hello_world/" class="md-nav__link">
+      <a href="../../run/hello_world/" class="md-nav__link">
         
   
   
@@ -1912,7 +2081,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mini/" class="md-nav__link">
+      <a href="../../run/mini/" class="md-nav__link">
         
   
   
@@ -1937,37 +2106,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    GitHub Issue
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../run/github_issue/" class="md-nav__link">
         
   
   
@@ -1983,98 +2125,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;github_issue
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="&nbsp;github_issue">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.DEFAULT_CONFIG" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_CONFIG
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.console" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;console
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.app" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;app
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.fetch_github_issue" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;fetch_github_issue
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.main" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2087,7 +2137,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swebench/" class="md-nav__link">
+      <a href="../../run/swebench/" class="md-nav__link">
         
   
   
@@ -2115,7 +2165,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../swebench_single/" class="md-nav__link">
+      <a href="../../run/swebench_single/" class="md-nav__link">
         
   
   
@@ -2232,22 +2282,77 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue" class="md-nav__link">
+  <a href="#key-differences-from-litellmmodel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;github_issue
+        Key Differences from LitellmModel
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="&nbsp;github_issue">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_response_api_model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;litellm_response_api_model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&nbsp;litellm_response_api_model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.DEFAULT_CONFIG" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_api_model.logger" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_CONFIG
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;logger
       
     </span>
   </a>
@@ -2255,10 +2360,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.console" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;console
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseAPIModelConfig
       
     </span>
   </a>
@@ -2266,35 +2371,30 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.app" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;app
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseAPIModel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&nbsp;LitellmResponseAPIModel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel.query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;query
       
     </span>
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.fetch_github_issue" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;fetch_github_issue
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.run.github_issue.main" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
-      
-    </span>
-  </a>
+      </ul>
+    </nav>
   
 </li>
         
@@ -2321,7 +2421,7 @@
 
 
   
-    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/run/github_issue.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/models/litellm_response.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"></path></svg>
     </a>
@@ -2329,112 +2429,218 @@
   
 
 
-<h1 id="github-issue">GitHub Issue</h1>
+<h1 id="litellm-response-api-model">Litellm Response API Model</h1>
 <div class="admonition note">
-<p class="admonition-title">GitHub Issue run script</p>
+<p class="admonition-title">LiteLLM Response API Model class</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/github_issue.py">Read on GitHub</a></li>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_response_api_model.py">Read on GitHub</a></li>
 </ul>
 <details class="note">
 <summary>Full source code</summary>
-<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">typer</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">litellm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai.types.responses.response_output_message</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResponseOutputMessage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tenacity</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">before_sleep_log</span><span class="p">,</span>
+    <span class="n">retry</span><span class="p">,</span>
+    <span class="n">retry_if_not_exception_type</span><span class="p">,</span>
+    <span class="n">stop_after_attempt</span><span class="p">,</span>
+    <span class="n">wait_exponential</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">InteractiveAgent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">builtin_config_dir</span><span class="p">,</span> <span class="n">get_config_path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.environments.docker</span><span class="w"> </span><span class="kn">import</span> <span class="n">DockerEnvironment</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.extra.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_if_first_time</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.utils.save</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_traj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.litellm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LitellmModel</span><span class="p">,</span> <span class="n">LitellmModelConfig</span>
 
-<span class="n">DEFAULT_CONFIG</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_GITHUB_CONFIG_PATH"</span><span class="p">,</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">"github_issue.yaml"</span><span class="p">))</span>
-<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">(</span><span class="n">rich_markup_mode</span><span class="o">=</span><span class="s2">"rich"</span><span class="p">,</span> <span class="n">add_completion</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">fetch_github_issue</span><span class="p">(</span><span class="n">issue_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Fetch GitHub issue text from the URL."""</span>
-    <span class="c1"># Convert GitHub issue URL to API URL</span>
-    <span class="n">api_url</span> <span class="o">=</span> <span class="n">issue_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"github.com"</span><span class="p">,</span> <span class="s2">"api.github.com/repos"</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"/issues/"</span><span class="p">,</span> <span class="s2">"/issues/"</span><span class="p">)</span>
-
-    <span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="n">github_token</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"GITHUB_TOKEN"</span><span class="p">):</span>
-        <span class="n">headers</span><span class="p">[</span><span class="s2">"Authorization"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"token </span><span class="si">{</span><span class="n">github_token</span><span class="si">}</span><span class="s2">"</span>
-
-    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-    <span class="n">issue_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-
-    <span class="n">title</span> <span class="o">=</span> <span class="n">issue_data</span><span class="p">[</span><span class="s2">"title"</span><span class="p">]</span>
-    <span class="n">body</span> <span class="o">=</span> <span class="n">issue_data</span><span class="p">[</span><span class="s2">"body"</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">""</span>
-
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">"GitHub Issue: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="se">\n\n</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="s2">"</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"litellm_response_api_model"</span><span class="p">)</span>
 
 
-<span class="c1"># fmt: off</span>
-<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
-    <span class="n">issue_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">"Enter GitHub issue URL"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"GitHub issue URL"</span><span class="p">),</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_CONFIG</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--config"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to config file"</span><span class="p">),</span>
-    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--model"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model to use"</span><span class="p">),</span>
-    <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--model-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
-    <span class="n">yolo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"-y"</span><span class="p">,</span> <span class="s2">"--yolo"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Run without confirmation"</span><span class="p">),</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InteractiveAgent</span><span class="p">:</span>
-    <span class="c1"># fmt: on</span>
-<span class="w">    </span><span class="sd">"""Run mini-SWE-agent on a GitHub issue"""</span>
-    <span class="n">configure_if_first_time</span><span class="p">()</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LitellmResponseAPIModelConfig</span><span class="p">(</span><span class="n">LitellmModelConfig</span><span class="p">):</span>
+    <span class="k">pass</span>
 
-    <span class="n">config_path</span> <span class="o">=</span> <span class="n">get_config_path</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loading agent config from [bold green]'</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">'[/bold green]"</span><span class="p">)</span>
-    <span class="n">_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">config_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
-    <span class="n">_agent_config</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{})</span>
-    <span class="k">if</span> <span class="n">yolo</span><span class="p">:</span>
-        <span class="n">_agent_config</span><span class="p">[</span><span class="s2">"mode"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"yolo"</span>
-    <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">"model_class"</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_class</span>
 
-    <span class="n">task</span> <span class="o">=</span> <span class="n">fetch_github_issue</span><span class="p">(</span><span class="n">issue_url</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LitellmResponseAPIModel</span><span class="p">(</span><span class="n">LitellmModel</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">agent</span> <span class="o">=</span> <span class="n">InteractiveAgent</span><span class="p">(</span>
-        <span class="n">get_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{})),</span>
-        <span class="n">DockerEnvironment</span><span class="p">(</span><span class="o">**</span><span class="n">_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment"</span><span class="p">,</span> <span class="p">{})),</span>
-        <span class="o">**</span><span class="n">_agent_config</span><span class="p">,</span>
+    <span class="nd">@retry</span><span class="p">(</span>
+        <span class="n">stop</span><span class="o">=</span><span class="n">stop_after_attempt</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+        <span class="n">wait</span><span class="o">=</span><span class="n">wait_exponential</span><span class="p">(</span><span class="n">multiplier</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+        <span class="n">before_sleep</span><span class="o">=</span><span class="n">before_sleep_log</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">),</span>
+        <span class="n">retry</span><span class="o">=</span><span class="n">retry_if_not_exception_type</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">UnsupportedParamsError</span><span class="p">,</span>
+                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">,</span>
+                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">PermissionDeniedError</span><span class="p">,</span>
+                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ContextWindowExceededError</span><span class="p">,</span>
+                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">APIError</span><span class="p">,</span>
+                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">AuthenticationError</span><span class="p">,</span>
+                <span class="ne">KeyboardInterrupt</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">),</span>
     <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">responses</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+                <span class="nb">input</span><span class="o">=</span><span class="n">messages</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:],</span>
+                <span class="n">previous_response_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span><span class="p">,</span>
+                <span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_kwargs</span> <span class="o">|</span> <span class="n">kwargs</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">resp</span>
+        <span class="k">except</span> <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">AuthenticationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">message</span> <span class="o">+=</span> <span class="s2">" You can permanently set your API key with `mini-extra config set KEY VALUE`."</span>
+            <span class="k">raise</span> <span class="n">e</span>
 
-    <span class="n">repo_url</span> <span class="o">=</span> <span class="n">issue_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/issues/"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">github_token</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"GITHUB_TOKEN"</span><span class="p">):</span>
-        <span class="n">repo_url</span> <span class="o">=</span> <span class="n">repo_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"https://github.com/"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"https://</span><span class="si">{</span><span class="n">github_token</span><span class="si">}</span><span class="s2">@github.com/"</span><span class="p">)</span> <span class="o">+</span> <span class="s2">".git"</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModel</span><span class="o">.</span><span class="n">_coerce_responses_text</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Error calculating cost for model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. "</span>
+                <span class="s2">"Please check the 'Updating the model registry' section in the documentation. "</span>
+                <span class="s2">"http://bit.ly/4p31bi4 Still stuck? Please open a github issue for help!"</span>
+            <span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">cost</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">GLOBAL_MODEL_STATS</span>
 
-    <span class="n">agent</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">"git clone </span><span class="si">{</span><span class="n">repo_url</span><span class="si">}</span><span class="s2"> /testbed"</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="s2">"/"</span><span class="p">)</span>
+        <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">"content"</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+        <span class="p">}</span>
 
-    <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[bold red]KeyboardInterrupt -- goodbye[/bold red]"</span><span class="p">)</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">save_traj</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"traj.json"</span><span class="p">),</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">agent</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_coerce_responses_text</span><span class="p">(</span><span class="n">resp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Helper to normalize LiteLLM Responses API result to text."""</span>
+        <span class="c1"># openai client directly returns `output_text`, but litellm doesn't support it yet.</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="s2">"output_text"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">text</span>
 
+        <span class="c1"># Concatenate all content from all messages</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="c1"># Handle both dict and object formats</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"content"</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ResponseOutputMessage</span><span class="p">):</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">content</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-    <span class="n">app</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">content_item</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                <span class="c1"># Handle both dict and object formats</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content_item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">text_val</span> <span class="o">=</span> <span class="n">content_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">content_item</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">):</span>
+                    <span class="n">text_val</span> <span class="o">=</span> <span class="n">content_item</span><span class="o">.</span><span class="n">text</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">text_val</span><span class="p">:</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text_val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span>
 </code></pre></div>
 </details>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">When to use this model</p>
+<ul>
+<li>Use this model class when you want to use OpenAI's <a href="https://platform.openai.com/docs/api-reference/responses">Responses API</a> (previously called the Chat Completions API with streaming enabled).</li>
+<li>This is particularly useful for models like GPT-5 that benefit from the extended thinking/reasoning capabilities provided by the Responses API.</li>
+<li>For most models, the standard <a href="../litellm/"><code>LitellmModel</code></a> is sufficient and recommended.</li>
+</ul>
+</div>
+<h2 id="key-differences-from-litellmmodel">Key Differences from LitellmModel</h2>
+<p>The <code>LitellmResponseAPIModel</code> extends <code>LitellmModel</code> with the following changes:</p>
+<ol>
+<li><strong>API Endpoint</strong>: Uses <code>litellm.responses()</code> instead of <code>litellm.completion()</code></li>
+<li><strong>State Management</strong>: Maintains conversation state via <code>previous_response_id</code> for multi-turn conversations</li>
+<li><strong>Response Parsing</strong>: Implements special parsing logic to extract text from Response API output format</li>
+</ol>
+<h2 id="usage">Usage</h2>
+<p>To use the Response API model, specify <code>model_class: "litellm_response"</code> in your agent config:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"litellm_response"</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"openai/gpt-5-mini"</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">reasoning</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+<span class="w">    </span><span class="nt">text</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">verbosity</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+</code></pre></div>
+<p>Or via command line:</p>
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"openai/gpt-5-mini"</span><span class="w"> </span>--model-class<span class="w"> </span>litellm_response
+</code></pre></div>
+<h2 id="model-configuration">Model Configuration</h2>
+<p>The Response API supports specific parameters for controlling reasoning and output verbosity:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Basic Configuration</label><label for="__tabbed_1_2">With Reasoning Control</label><label for="__tabbed_1_3">Temperature Control</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"litellm_response"</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"openai/gpt-5-mini"</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"litellm_response"</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"openai/gpt-5-mini"</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">reasoning</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="s">"high"</span><span class="w">  </span><span class="c1"># Options: low, medium, high</span>
+<span class="w">    </span><span class="nt">text</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">verbosity</span><span class="p">:</span><span class="w"> </span><span class="s">"high"</span><span class="w">  </span><span class="c1"># Options: low, medium, high</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"litellm_response"</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"openai/gpt-5"</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="w">    </span><span class="nt">reasoning</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="supported-models">Supported Models</h2>
+<p>The Response API model class works with models that support OpenAI's Responses API format:</p>
+<ul>
+<li><code>openai/gpt-5</code></li>
+<li><code>openai/gpt-5-mini</code></li>
+<li>Other models that implement the Responses API specification</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>The <code>drop_params: true</code> setting is recommended to automatically filter out parameters not supported by your specific model.</li>
+<li>The model maintains conversation state through <code>previous_response_id</code>, allowing for efficient multi-turn conversations.</li>
+<li>Cost tracking works the same way as with the standard <code>LitellmModel</code>.</li>
+</ul>
 
 
 <div class="doc doc-object doc-module">
 
 
 
-<h2 id="minisweagent.run.github_issue" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.run.github_issue</span>
+<h2 id="minisweagent.models.litellm_response_api_model" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.models.litellm_response_api_model</span>
 
 
 </h2>
@@ -2462,8 +2668,8 @@
 
 
 
-<h3 id="minisweagent.run.github_issue.DEFAULT_CONFIG" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">DEFAULT_CONFIG</span>
+<h3 id="minisweagent.models.litellm_response_api_model.logger" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">logger</span>
 
 
   <span class="doc doc-labels">
@@ -2471,192 +2677,157 @@
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">DEFAULT_CONFIG</span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span>
-    <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
-        <span class="s2">"MSWEA_GITHUB_CONFIG_PATH"</span><span class="p">,</span>
-        <span class="n"><span title="minisweagent.config.builtin_config_dir">builtin_config_dir</span></span> <span class="o">/</span> <span class="s2">"github_issue.yaml"</span><span class="p">,</span>
-    <span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="s1">'litellm_response_api_model'</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">LitellmResponseAPIModelConfig</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">LitellmResponseAPIModelConfig</span><span class="p">(</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+    <span class="n">model_kwargs</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dict">dict</span></span><span class="p">(),</span>
+    <span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">|</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
+        <span class="s2">"LITELLM_MODEL_REGISTRY_PATH"</span>
+    <span class="p">),</span>
+    <span class="n">set_cache_control</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">"default_end"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cost_tracking</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span>
+        <span class="s2">"default"</span><span class="p">,</span> <span class="s2">"ignore_errors"</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span><span class="s2">"MSWEA_COST_TRACKING"</span><span class="p">,</span> <span class="s2">"default"</span><span class="p">),</span>
 <span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="minisweagent.run.github_issue.console" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">console</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
-  </span>
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">console</span> <span class="o">=</span> <span class="n"><span title="rich.console.Console">Console</span></span><span class="p">(</span><span class="n"><span title="rich.console.Console(highlight)">highlight</span></span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="minisweagent.run.github_issue.app" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">app</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
-  </span>
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">app</span> <span class="o">=</span> <span class="n"><span title="typer.Typer">Typer</span></span><span class="p">(</span><span class="n"><span title="typer.Typer(rich_markup_mode)">rich_markup_mode</span></span><span class="o">=</span><span class="s1">'rich'</span><span class="p">,</span> <span class="n"><span title="typer.Typer(add_completion)">add_completion</span></span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-    </div>
-
-</div>
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="minisweagent.run.github_issue.fetch_github_issue" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">fetch_github_issue</span>
-
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">fetch_github_issue</span><span class="p">(</span><span class="n">issue_url</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Fetch GitHub issue text from the URL.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/minisweagent/run/github_issue.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fetch_github_issue</span><span class="p">(</span><span class="n">issue_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Fetch GitHub issue text from the URL."""</span>
-    <span class="c1"># Convert GitHub issue URL to API URL</span>
-    <span class="n">api_url</span> <span class="o">=</span> <span class="n">issue_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"github.com"</span><span class="p">,</span> <span class="s2">"api.github.com/repos"</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"/issues/"</span><span class="p">,</span> <span class="s2">"/issues/"</span><span class="p">)</span>
-
-    <span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="n">github_token</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"GITHUB_TOKEN"</span><span class="p">):</span>
-        <span class="n">headers</span><span class="p">[</span><span class="s2">"Authorization"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"token </span><span class="si">{</span><span class="n">github_token</span><span class="si">}</span><span class="s2">"</span>
-
-    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-    <span class="n">issue_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-
-    <span class="n">title</span> <span class="o">=</span> <span class="n">issue_data</span><span class="p">[</span><span class="s2">"title"</span><span class="p">]</span>
-    <span class="n">body</span> <span class="o">=</span> <span class="n">issue_data</span><span class="p">[</span><span class="s2">"body"</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">""</span>
-
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">"GitHub Issue: </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="se">\n\n</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="s2">"</span>
-</code></pre></div></td></tr></tbody></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="minisweagent.run.github_issue.main" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">main</span>
-
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">main</span><span class="p">(</span>
-    <span class="n">issue_url</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
-        <span class="n"><span title="typer.Option(prompt)">prompt</span></span><span class="o">=</span><span class="s2">"Enter GitHub issue URL"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"GitHub issue URL"</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
-        <span class="n"><a class="autorefs autorefs-internal" title="            DEFAULT_CONFIG
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="            LitellmModelConfig
 
 
   
-      module-attribute
-   (minisweagent.run.github_issue.DEFAULT_CONFIG)" href="#minisweagent.run.github_issue.DEFAULT_CONFIG">DEFAULT_CONFIG</a></span><span class="p">,</span>
-        <span class="s2">"-c"</span><span class="p">,</span>
-        <span class="s2">"--config"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Path to config file"</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">model</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
-        <span class="kc">None</span><span class="p">,</span> <span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--model"</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Model to use"</span>
-    <span class="p">),</span>
-    <span class="n">model_class</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
-        <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">"--model-class"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="n">yolo</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
-        <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">"-y"</span><span class="p">,</span>
-        <span class="s2">"--yolo"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Run without confirmation"</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            InteractiveAgent (minisweagent.agents.interactive.InteractiveAgent)" href="../../agents/interactive/#minisweagent.agents.interactive.InteractiveAgent">InteractiveAgent</a></span>
+      dataclass
+   (minisweagent.models.litellm_model.LitellmModelConfig)" href="../litellm/#minisweagent.models.litellm_model.LitellmModelConfig">LitellmModelConfig</a></code></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">LitellmResponseAPIModel</span>
+
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">LitellmResponseAPIModel</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            LitellmResponseAPIModelConfig
+
+
+  
+      dataclass
+   (minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig)" href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig">LitellmResponseAPIModelConfig</a></span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="            LitellmModel (minisweagent.models.litellm_model.LitellmModel)" href="../litellm/#minisweagent.models.litellm_model.LitellmModel">LitellmModel</a></code></p>
+
+
+
+
+
+
+
+
+
+
+                  <details class="mkdocstrings-source">
+                    <summary>Source code in <code>src/minisweagent/models/litellm_response_api_model.py</code></summary>
+                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div></td></tr></tbody></table></div>
+                  </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel.query" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">query</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">query</span><span class="p">(</span><span class="n">messages</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="dict">dict</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Run mini-SWE-agent on a GitHub issue</p>
-
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/minisweagent/run/github_issue.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
+              <summary>Source code in <code>src/minisweagent/models/litellm_response_api_model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
@@ -2676,56 +2847,41 @@
 <span class="normal">78</span>
 <span class="normal">79</span>
 <span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
-    <span class="n">issue_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">"Enter GitHub issue URL"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"GitHub issue URL"</span><span class="p">),</span>
-    <span class="n">config</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_CONFIG</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--config"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to config file"</span><span class="p">),</span>
-    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--model"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model to use"</span><span class="p">),</span>
-    <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--model-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
-    <span class="n">yolo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"-y"</span><span class="p">,</span> <span class="s2">"--yolo"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Run without confirmation"</span><span class="p">),</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InteractiveAgent</span><span class="p">:</span>
-    <span class="c1"># fmt: on</span>
-<span class="w">    </span><span class="sd">"""Run mini-SWE-agent on a GitHub issue"""</span>
-    <span class="n">configure_if_first_time</span><span class="p">()</span>
-
-    <span class="n">config_path</span> <span class="o">=</span> <span class="n">get_config_path</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loading agent config from [bold green]'</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">'[/bold green]"</span><span class="p">)</span>
-    <span class="n">_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">config_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
-    <span class="n">_agent_config</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{})</span>
-    <span class="k">if</span> <span class="n">yolo</span><span class="p">:</span>
-        <span class="n">_agent_config</span><span class="p">[</span><span class="s2">"mode"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"yolo"</span>
-    <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">_config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">"model_class"</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_class</span>
-
-    <span class="n">task</span> <span class="o">=</span> <span class="n">fetch_github_issue</span><span class="p">(</span><span class="n">issue_url</span><span class="p">)</span>
-
-    <span class="n">agent</span> <span class="o">=</span> <span class="n">InteractiveAgent</span><span class="p">(</span>
-        <span class="n">get_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{})),</span>
-        <span class="n">DockerEnvironment</span><span class="p">(</span><span class="o">**</span><span class="n">_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment"</span><span class="p">,</span> <span class="p">{})),</span>
-        <span class="o">**</span><span class="n">_agent_config</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">repo_url</span> <span class="o">=</span> <span class="n">issue_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/issues/"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">github_token</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"GITHUB_TOKEN"</span><span class="p">):</span>
-        <span class="n">repo_url</span> <span class="o">=</span> <span class="n">repo_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"https://github.com/"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"https://</span><span class="si">{</span><span class="n">github_token</span><span class="si">}</span><span class="s2">@github.com/"</span><span class="p">)</span> <span class="o">+</span> <span class="s2">".git"</span>
-
-    <span class="n">agent</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">"git clone </span><span class="si">{</span><span class="n">repo_url</span><span class="si">}</span><span class="s2"> /testbed"</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="s2">"/"</span><span class="p">)</span>
-
-    <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModel</span><span class="o">.</span><span class="n">_coerce_responses_text</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">[bold red]KeyboardInterrupt -- goodbye[/bold red]"</span><span class="p">)</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">save_traj</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"traj.json"</span><span class="p">),</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">agent</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Error calculating cost for model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. "</span>
+            <span class="s2">"Please check the 'Updating the model registry' section in the documentation. "</span>
+            <span class="s2">"http://bit.ly/4p31bi4 Still stuck? Please open a github issue for help!"</span>
+        <span class="p">)</span>
+        <span class="k">raise</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">cost</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">GLOBAL_MODEL_STATS</span>
+
+    <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"content"</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+    <span class="p">}</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
 
 </div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
 
 
 
@@ -2821,7 +2977,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer">
         
           
-          <a href="../mini/" class="md-footer__link md-footer__link--prev" aria-label="Previous: mini">
+          <a href="../litellm/" class="md-footer__link md-footer__link--prev" aria-label="Previous: LitellmModel">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -2831,20 +2987,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                mini
+                LitellmModel
               </div>
             </div>
           </a>
         
         
           
-          <a href="../swebench/" class="md-footer__link md-footer__link--next" aria-label="Next: SWE-bench (batch)">
+          <a href="../anthropic/" class="md-footer__link md-footer__link--next" aria-label="Next: AnthropicModel">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                SWE-bench (batch)
+                AnthropicModel
               </div>
             </div>
             <div class="md-footer__button md-icon">
