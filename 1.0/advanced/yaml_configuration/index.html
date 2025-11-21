@@ -1019,10 +1019,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#custom-action-parsing" class="md-nav__link">
+  <a href="#prompt-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Action Parsing
+        Prompt templates
       
     </span>
   </a>
@@ -1030,10 +1030,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#prompt-templates" class="md-nav__link">
+  <a href="#custom-action-parsing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prompt templates
+        Custom Action Parsing
       
     </span>
   </a>
@@ -2266,10 +2266,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#custom-action-parsing" class="md-nav__link">
+  <a href="#prompt-templates" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Action Parsing
+        Prompt templates
       
     </span>
   </a>
@@ -2277,10 +2277,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#prompt-templates" class="md-nav__link">
+  <a href="#custom-action-parsing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prompt templates
+        Custom Action Parsing
       
     </span>
   </a>
@@ -2537,6 +2537,51 @@
 You can find the full list of options in the <a href="../../reference/agents/default/">API reference</a>.</p>
 <p>To use a different agent class, you can set the <code>agent_class</code> key to the name of the agent class you want to use
 or even to an import path (to use your own custom agent class even if it is not yet part of the mini-SWE-agent package).</p>
+<h3 id="prompt-templates">Prompt templates</h3>
+<p>We use <a href="https://jinja.palletsprojects.com/">Jinja2</a> to render templates (e.g., the instance template).</p>
+<p>TL;DR: You include variables with double (!) curly braces, e.g. <code>{{task}}</code> to include the task that was given to the agent.</p>
+<p>However, you can also do fairly complicated logic like this directly from your template:</p>
+<details class="note">
+<summary>Example: Dealing with long observations</summary>
+<p>The following snippets shortens long observations and displays a warning if the output is too long.</p>
+<div class="highlight"><pre><span></span><code><span class="x">&lt;returncode&gt;</span><span class="cp">{{</span><span class="nv">output.returncode</span><span class="cp">}}</span><span class="x">&lt;/returncode&gt;</span>
+<span class="cp">{%</span> <span class="k">if</span> <span class="nv">output.output</span> <span class="o">|</span> <span class="nf">length</span> <span class="o">&lt;</span> <span class="m">10000</span> -<span class="cp">%}</span>
+<span class="x">    &lt;output&gt;</span>
+<span class="x">        </span><span class="cp">{{</span> <span class="nv">output.output</span> -<span class="cp">}}</span>
+<span class="x">    &lt;/output&gt;</span>
+<span class="cp">{%</span>- <span class="k">else</span> -<span class="cp">%}</span>
+<span class="x">    &lt;warning&gt;</span>
+<span class="x">        The output of your last command was too long.</span>
+<span class="x">        Please try a different command that produces less output.</span>
+<span class="x">        If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.</span>
+<span class="x">        If you're using grep or find and it produced too much output, you can use a more selective search pattern.</span>
+<span class="x">        If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.</span>
+<span class="x">    &lt;/warning&gt;</span>
+
+<span class="x">    </span><span class="cp">{%</span>- <span class="k">set</span> <span class="nv">elided_chars</span> <span class="o">=</span> <span class="nv">output.output</span> <span class="o">|</span> <span class="nf">length</span> <span class="o">-</span> <span class="m">10000</span> -<span class="cp">%}</span>
+
+<span class="x">    &lt;output_head&gt;</span>
+<span class="x">        </span><span class="cp">{{</span> <span class="nv">output.output</span><span class="o">[:</span><span class="m">5000</span><span class="o">]</span> <span class="cp">}}</span>
+<span class="x">    &lt;/output_head&gt;</span>
+
+<span class="x">    &lt;elided_chars&gt;</span>
+<span class="x">        </span><span class="cp">{{</span> <span class="nv">elided_chars</span> <span class="cp">}}</span><span class="x"> characters elided</span>
+<span class="x">    &lt;/elided_chars&gt;</span>
+
+<span class="x">    &lt;output_tail&gt;</span>
+<span class="x">        </span><span class="cp">{{</span> <span class="nv">output.output</span><span class="o">[-</span><span class="m">5000</span><span class="o">:]</span> <span class="cp">}}</span>
+<span class="x">    &lt;/output_tail&gt;</span>
+<span class="cp">{%</span>- <span class="k">endif</span> -<span class="cp">%}</span>
+</code></pre></div>
+</details>
+<p>In all builtin agents, you can use the following variables:</p>
+<ul>
+<li>Environment variables (<code>LocalEnvironment</code> only, see discussion <a href="https://github.com/SWE-agent/mini-swe-agent/pull/425">here</a>)</li>
+<li>Agent config variables (i.e., anything that was set in the <code>agent</code> section of the config file, e.g., <code>step_limit</code>, <code>cost_limit</code>, etc.)</li>
+<li>Environment config variables (i.e., anything that was set in the <code>environment</code> section of the config file, e.g., <code>cwd</code>, <code>timeout</code>, etc.)</li>
+<li>Variables passed to the <code>run</code> method of the agent (by default that's only <code>task</code>, but you can pass other variables if you want to)</li>
+<li>Output of the last action execution (i.e., <code>output</code> from the <code>execute_action</code> method)</li>
+</ul>
 <h3 id="custom-action-parsing">Custom Action Parsing</h3>
 <p>By default, mini-SWE-agent parses actions from markdown code blocks (<code>```bash...```</code>).
 You can customize this behavior by setting the <code>action_regex</code> field to support different formats like XML.</p>
@@ -2668,48 +2713,6 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">```</span>
 </code></pre></div>
 </details>
-<h3 id="prompt-templates">Prompt templates</h3>
-<p>We use <a href="https://jinja.palletsprojects.com/">Jinja2</a> to render templates (e.g., the instance template).
-TL;DR: You include variables with double curly braces, e.g. <code>{{task}}</code>, but you can also do fairly complicated logic like this:</p>
-<details class="note">
-<summary>Example: Dealing with long observations</summary>
-<div class="highlight"><pre><span></span><code><span class="x">&lt;returncode&gt;</span><span class="cp">{{</span><span class="nv">output.returncode</span><span class="cp">}}</span><span class="x">&lt;/returncode&gt;</span>
-<span class="cp">{%</span> <span class="k">if</span> <span class="nv">output.output</span> <span class="o">|</span> <span class="nf">length</span> <span class="o">&lt;</span> <span class="m">10000</span> -<span class="cp">%}</span>
-<span class="x">    &lt;output&gt;</span>
-<span class="x">        </span><span class="cp">{{</span> <span class="nv">output.output</span> -<span class="cp">}}</span>
-<span class="x">    &lt;/output&gt;</span>
-<span class="cp">{%</span>- <span class="k">else</span> -<span class="cp">%}</span>
-<span class="x">    &lt;warning&gt;</span>
-<span class="x">        The output of your last command was too long.</span>
-<span class="x">        Please try a different command that produces less output.</span>
-<span class="x">        If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.</span>
-<span class="x">        If you're using grep or find and it produced too much output, you can use a more selective search pattern.</span>
-<span class="x">        If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.</span>
-<span class="x">    &lt;/warning&gt;</span>
-
-<span class="x">    </span><span class="cp">{%</span>- <span class="k">set</span> <span class="nv">elided_chars</span> <span class="o">=</span> <span class="nv">output.output</span> <span class="o">|</span> <span class="nf">length</span> <span class="o">-</span> <span class="m">10000</span> -<span class="cp">%}</span>
-
-<span class="x">    &lt;output_head&gt;</span>
-<span class="x">        </span><span class="cp">{{</span> <span class="nv">output.output</span><span class="o">[:</span><span class="m">5000</span><span class="o">]</span> <span class="cp">}}</span>
-<span class="x">    &lt;/output_head&gt;</span>
-
-<span class="x">    &lt;elided_chars&gt;</span>
-<span class="x">        </span><span class="cp">{{</span> <span class="nv">elided_chars</span> <span class="cp">}}</span><span class="x"> characters elided</span>
-<span class="x">    &lt;/elided_chars&gt;</span>
-
-<span class="x">    &lt;output_tail&gt;</span>
-<span class="x">        </span><span class="cp">{{</span> <span class="nv">output.output</span><span class="o">[-</span><span class="m">5000</span><span class="o">:]</span> <span class="cp">}}</span>
-<span class="x">    &lt;/output_tail&gt;</span>
-<span class="cp">{%</span>- <span class="k">endif</span> -<span class="cp">%}</span>
-</code></pre></div>
-</details>
-<p>In all builtin agents, you can use the following variables:</p>
-<ul>
-<li>Environment variables (<code>LocalEnvironment</code> only, see discussion <a href="https://github.com/SWE-agent/mini-swe-agent/pull/425">here</a>)</li>
-<li>Agent config variables</li>
-<li>Environment config variables</li>
-<li>Explicitly passed variables (<code>observation</code>, <code>task</code> etc.) depending on the template</li>
-</ul>
 <h2 id="model-configuration">Model configuration</h2>
 <p>See <a href="../../models/quickstart/">this guide</a> for more details on model configuration.</p>
 <h2 id="environment-configuration">Environment configuration</h2>
