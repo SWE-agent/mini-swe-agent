@@ -45,7 +45,7 @@ class PortkeyModelConfig:
 
 
 class PortkeyModel:
-    def __init__(self, **kwargs):
+    def __init__(self, *, config_class: type = PortkeyModelConfig, **kwargs):
         if Portkey is None:
             raise ImportError(
                 "The portkey-ai package is required to use PortkeyModel. Please install it with: pip install portkey-ai"
