@@ -51,8 +51,17 @@ class PortkeyResponseAPIModel(PortkeyModel):
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
         text = coerce_responses_text(response)
-        cost = litellm.cost_calculator.completion_cost(response)
-        assert cost > 0.0, f"Cost is not positive: {cost}"
+        try:
+            cost = litellm.cost_calculator.completion_cost(response)
+            assert cost > 0.0, f"Cost is not positive: {cost}"
+        except Exception as e:
+            if self.config.cost_tracking != "ignore_errors":
+                raise RuntimeError(
+                    f"Error calculating cost for model {self.config.model_name}: {e}. "
+                    "You can ignore this issue from your config file with cost_tracking: 'ignore_errors' or "
+                    "globally with export MSWEA_COST_TRACKING='ignore_errors' to ignore this error. "
+                ) from e
+            cost = 0.0
         self.n_calls += 1
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)

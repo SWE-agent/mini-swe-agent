@@ -22,7 +22,9 @@ logger = logging.getLogger("portkey_model")
 try:
     from portkey_ai import Portkey
 except ImportError:
-    Portkey = None
+    raise ImportError(
+        "The portkey-ai package is required to use PortkeyModel. Please install it with: pip install portkey-ai"
+    )
 
 
 @dataclass
@@ -46,11 +48,7 @@ class PortkeyModelConfig:
 
 class PortkeyModel:
     def __init__(self, *, config_class: type = PortkeyModelConfig, **kwargs):
-        if Portkey is None:
-            raise ImportError(
-                "The portkey-ai package is required to use PortkeyModel. Please install it with: pip install portkey-ai"
-            )
-        self.config = PortkeyModelConfig(**kwargs)
+        self.config = config_class(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
