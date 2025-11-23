@@ -195,7 +195,7 @@ def test_response_api_model_cost_tracking():
 
 
 def test_response_api_model_zero_cost_assertion():
-    """Test that Response API model raises assertion error for zero cost."""
+    """Test that Response API model raises RuntimeError for zero cost."""
     mock_portkey_class = MagicMock()
     mock_client = MagicMock()
     mock_portkey_class.return_value = mock_client
@@ -216,7 +216,7 @@ def test_response_api_model_zero_cost_assertion():
         model = PortkeyResponseAPIModel(model_name="gpt-5-mini")
         messages = [{"role": "user", "content": "test"}]
 
-        with pytest.raises(AssertionError, match="Cost is not positive"):
+        with pytest.raises(RuntimeError, match="Error calculating cost"):
             model.query(messages)
 
 
