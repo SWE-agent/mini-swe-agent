@@ -248,3 +248,43 @@ def test_render_template_model_stats():
     result = agent.render_template(template)
 
     assert result == "Calls: 2, Cost: 2.0"
+
+
+def test_messages_include_timestamps():
+    """Test that all messages include timestamps."""
+    agent = DefaultAgent(
+        model=DeterministicModel(
+            outputs=[
+                "Response 1\n```bash\necho 'test1'\n```",
+                "Response 2\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'\n```",
+            ]
+        ),
+        env=LocalEnvironment(),
+    )
+
+    agent.run("Test timestamps")
+
+    # All messages should have timestamps
+    assert all("timestamp" in msg for msg in agent.messages)
+    # Timestamps should be numeric (floats from time.time())
+    assert all(isinstance(msg["timestamp"], float) for msg in agent.messages)
+    # Timestamps should be monotonically increasing
+    timestamps = [msg["timestamp"] for msg in agent.messages]
+    assert timestamps == sorted(timestamps)
+
+
+def test_step_output_includes_action():
+    """Test that step output includes the action that was executed."""
+    agent = DefaultAgent(
+        model=DeterministicModel(outputs=["Test command\n```bash\necho 'hello'\n```"]),
+        env=LocalEnvironment(),
+    )
+
+    agent.add_message("system", "system message")
+    agent.add_message("user", "user message")
+
+    output = agent.step()
+
+    assert "action" in output
+    assert output["action"] == "echo 'hello'"
+    assert "output" in output
