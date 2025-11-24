@@ -7,13 +7,6 @@ from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
 
 
-def test_portkey_model_missing_package():
-    """Test that PortkeyModel raises ImportError when portkey-ai is not installed."""
-    with patch("minisweagent.models.portkey_model.Portkey", None):
-        with pytest.raises(ImportError, match="portkey-ai package is required"):
-            PortkeyModel(model_name="gpt-4o")
-
-
 def test_portkey_model_missing_api_key():
     """Test that PortkeyModel raises ValueError when no API key is provided."""
     with patch("minisweagent.models.portkey_model.Portkey"):

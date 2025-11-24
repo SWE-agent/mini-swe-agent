@@ -65,6 +65,7 @@ dev = [
     "mkdocs-material",
     "mkdocs-glightbox",
     "mkdocs-redirects",
+    "portkey-ai",
 ]
 
 [project.urls]

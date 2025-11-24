@@ -84,6 +84,7 @@ _MODEL_CLASS_MAPPING = {
     "litellm_response": "minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel",
     "openrouter": "minisweagent.models.openrouter_model.OpenRouterModel",
     "portkey": "minisweagent.models.portkey_model.PortkeyModel",
+    "portkey_response": "minisweagent.models.portkey_response_api_model.PortkeyResponseAPIModel",
     "requesty": "minisweagent.models.requesty_model.RequestyModel",
     "deterministic": "minisweagent.models.test_models.DeterministicModel",
 }

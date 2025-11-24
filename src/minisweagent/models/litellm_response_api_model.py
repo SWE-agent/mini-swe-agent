@@ -1,10 +1,8 @@
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
 
 import litellm
-from openai.types.responses.response_output_message import ResponseOutputMessage
 from tenacity import (
     before_sleep_log,
     retry,
@@ -14,6 +12,7 @@ from tenacity import (
 )
 
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
+from minisweagent.models.utils.openai_utils import coerce_responses_text
 
 logger = logging.getLogger("litellm_response_api_model")
 
@@ -61,7 +60,7 @@ class LitellmResponseAPIModel(LitellmModel):
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
         print(response)
-        text = LitellmResponseAPIModel._coerce_responses_text(response)
+        text = coerce_responses_text(response)
         try:
             cost = litellm.cost_calculator.completion_cost(response)
         except Exception as e:
@@ -79,35 +78,3 @@ class LitellmResponseAPIModel(LitellmModel):
         return {
             "content": text,
         }
-
-    @staticmethod
-    def _coerce_responses_text(resp: Any) -> str:
-        """Helper to normalize LiteLLM Responses API result to text."""
-        # openai client directly returns `output_text`, but litellm doesn't support it yet.
-        text = getattr(resp, "output_text", None)
-        if isinstance(text, str) and text:
-            return text
-
-        # Concatenate all content from all messages
-        output = []
-        for item in resp.output:
-            # Handle both dict and object formats
-            if isinstance(item, dict):
-                content = item.get("content", [])
-            elif isinstance(item, ResponseOutputMessage):
-                content = item.content
-            else:
-                continue
-
-            for content_item in content:
-                # Handle both dict and object formats
-                if isinstance(content_item, dict):
-                    text_val = content_item.get("text")
-                elif hasattr(content_item, "text"):
-                    text_val = content_item.text
-                else:
-                    continue
-
-                if text_val:
-                    output.append(text_val)
-        return "\n\n".join(output) or ""
