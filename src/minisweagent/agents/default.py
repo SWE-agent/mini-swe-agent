@@ -2,6 +2,7 @@
 
 import re
 import subprocess
+import time
 from dataclasses import asdict, dataclass
 
 from jinja2 import StrictUndefined, Template
@@ -68,7 +69,7 @@ class DefaultAgent:
         )
 
     def add_message(self, role: str, content: str, **kwargs):
-        self.messages.append({"role": role, "content": content, **kwargs})
+        self.messages.append({"role": role, "content": content, "timestamp": time.time(), **kwargs})
 
     def run(self, task: str, **kwargs) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
@@ -120,7 +121,7 @@ class DefaultAgent:
                 self.render_template(self.config.timeout_template, action=action, output=output)
             )
         self.has_finished(output)
-        return output
+        return output | {"action": action["action"]}
 
     def has_finished(self, output: dict[str, str]):
         """Raises Submitted exception with final output if the agent has finished its task."""
