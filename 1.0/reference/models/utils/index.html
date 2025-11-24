@@ -2345,6 +2345,7 @@
     <span class="s2">"litellm_response"</span><span class="p">:</span> <span class="s2">"minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel"</span><span class="p">,</span>
     <span class="s2">"openrouter"</span><span class="p">:</span> <span class="s2">"minisweagent.models.openrouter_model.OpenRouterModel"</span><span class="p">,</span>
     <span class="s2">"portkey"</span><span class="p">:</span> <span class="s2">"minisweagent.models.portkey_model.PortkeyModel"</span><span class="p">,</span>
+    <span class="s2">"portkey_response"</span><span class="p">:</span> <span class="s2">"minisweagent.models.portkey_response_api_model.PortkeyResponseAPIModel"</span><span class="p">,</span>
     <span class="s2">"requesty"</span><span class="p">:</span> <span class="s2">"minisweagent.models.requesty_model.RequestyModel"</span><span class="p">,</span>
     <span class="s2">"deterministic"</span><span class="p">:</span> <span class="s2">"minisweagent.models.test_models.DeterministicModel"</span><span class="p">,</span>
 <span class="p">}</span>
@@ -2518,8 +2519,7 @@ Otherwise, the model_name is used to select the best model class.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 92</span>
-<span class="normal"> 93</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
 <span class="normal"> 94</span>
 <span class="normal"> 95</span>
 <span class="normal"> 96</span>
@@ -2539,7 +2539,8 @@ Otherwise, the model_name is used to select the best model class.</p>
 <span class="normal">110</span>
 <span class="normal">111</span>
 <span class="normal">112</span>
-<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_class</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<span class="normal">113</span>
+<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_class</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Select the best model class.</span>
 
 <span class="sd">    If a model_class is provided (as shortcut name, or as full import path,</span>

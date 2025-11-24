@@ -2352,10 +2352,8 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">litellm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">openai.types.responses.response_output_message</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResponseOutputMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tenacity</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">before_sleep_log</span><span class="p">,</span>
     <span class="n">retry</span><span class="p">,</span>
@@ -2365,6 +2363,7 @@
 <span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.litellm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LitellmModel</span><span class="p">,</span> <span class="n">LitellmModelConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.openai_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">coerce_responses_text</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"litellm_response_api_model"</span><span class="p">)</span>
 
@@ -2412,7 +2411,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModel</span><span class="o">.</span><span class="n">_coerce_responses_text</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">coerce_responses_text</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -2430,38 +2429,6 @@
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">"content"</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
         <span class="p">}</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_coerce_responses_text</span><span class="p">(</span><span class="n">resp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Helper to normalize LiteLLM Responses API result to text."""</span>
-        <span class="c1"># openai client directly returns `output_text`, but litellm doesn't support it yet.</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="s2">"output_text"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">text</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">text</span>
-
-        <span class="c1"># Concatenate all content from all messages</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-            <span class="c1"># Handle both dict and object formats</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="n">content</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"content"</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ResponseOutputMessage</span><span class="p">):</span>
-                <span class="n">content</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">content</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">continue</span>
-
-            <span class="k">for</span> <span class="n">content_item</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-                <span class="c1"># Handle both dict and object formats</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content_item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                    <span class="n">text_val</span> <span class="o">=</span> <span class="n">content_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">content_item</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">):</span>
-                    <span class="n">text_val</span> <span class="o">=</span> <span class="n">content_item</span><span class="o">.</span><span class="n">text</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">continue</span>
-
-                <span class="k">if</span> <span class="n">text_val</span><span class="p">:</span>
-                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text_val</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span>
 </code></pre></div>
 </details>
 </div>
@@ -2644,9 +2611,9 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/minisweagent/models/litellm_response_api_model.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 </code></pre></div></td></tr></tbody></table></div>
@@ -2681,7 +2648,8 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/litellm_response_api_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">61</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
+<span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
@@ -2700,11 +2668,10 @@
 <span class="normal">77</span>
 <span class="normal">78</span>
 <span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModel</span><span class="o">.</span><span class="n">_coerce_responses_text</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">coerce_responses_text</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
