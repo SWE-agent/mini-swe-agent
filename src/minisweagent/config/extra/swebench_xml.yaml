@@ -118,9 +118,9 @@ agent:
     EOF</bash_code>
 
     ### Edit files with sed:
-    
+
     Replace all occurrences
-   
+
     <bash_code>sed -i 's/old_string/new_string/g' filename.py</bash_code>
 
     Replace only first occurrence
