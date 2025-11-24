@@ -2585,7 +2585,7 @@ or even to an import path (to use your own custom agent class even if it is not 
 <h3 id="custom-action-parsing">Custom Action Parsing</h3>
 <p>By default, mini-SWE-agent parses actions from markdown code blocks (<code>```bash...```</code>).
 You can customize this behavior by setting the <code>action_regex</code> field to support different formats like XML.</p>
-<div class="admonition note">
+<div class="admonition warning">
 <p class="admonition-title">Important</p>
 <p>If you set a custom action_regex (e.g. <code>&lt;action&gt;(.*?)&lt;/action&gt;</code>), you must use the same output format across all prompt templates (system_template, instance_template, format_error_template, etc.), ensuring the LLM wraps commands accordingly. See the example below for a complete configuration.</p>
 </div>
@@ -2593,86 +2593,162 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <summary>Using XML format instead of markdown</summary>
 <p>This example uses the same structure as the default mini.yaml config, but with <code>&lt;action&gt;</code> tags instead of markdown code blocks:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="s">"&lt;action&gt;(.*?)&lt;/action&gt;"</span>
 <span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">You are a helpful assistant that can interact with a computer.</span>
+<span class="w">    </span><span class="no">You are a helpful assistant that can interact multiple times with a computer shell to solve programming tasks.</span>
+<span class="w">    </span><span class="no">Your response must contain exactly ONE bash code block with ONE command (or commands connected with &amp;&amp; or ||).</span>
 
-<span class="w">    </span><span class="no">Your response must contain exactly ONE command in &lt;action&gt; tags (instead of markdown).</span>
 <span class="w">    </span><span class="no">Include a THOUGHT section before your command where you explain your reasoning process.</span>
 <span class="w">    </span><span class="no">Format your response as shown in &lt;format_example&gt;.</span>
 
 <span class="w">    </span><span class="no">&lt;format_example&gt;</span>
-<span class="w">    </span><span class="no">Your reasoning and analysis here. Explain why you want to perform the action.</span>
+<span class="w">    </span><span class="no">THOUGHT: Your reasoning and analysis here</span>
 
-<span class="w">    </span><span class="no">&lt;action&gt;your_command_here&lt;/action&gt;</span>
+<span class="w">    </span><span class="no">&lt;bash_code&gt;your_command_here&lt;/bash_code&gt;</span>
 <span class="w">    </span><span class="no">&lt;/format_example&gt;</span>
 
 <span class="w">    </span><span class="no">Failure to follow these rules will cause your response to be rejected.</span>
-
 <span class="w">  </span><span class="nt">instance_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">Please solve this issue: {{task}}</span>
+<span class="w">    </span><span class="no">&lt;pr_description&gt;</span>
+<span class="w">    </span><span class="no">Consider the following PR description:</span>
+<span class="w">    </span><span class="no">{{task}}</span>
+<span class="w">    </span><span class="no">&lt;/pr_description&gt;</span>
 
-<span class="w">    </span><span class="no">You can execute bash commands and edit files to implement the necessary changes.</span>
+<span class="w">    </span><span class="no">&lt;instructions&gt;</span>
+<span class="w">    </span><span class="no"># Task Instructions</span>
+
+<span class="w">    </span><span class="no">## Overview</span>
+<span class="w">    </span><span class="no">You're a software engineer interacting continuously with a computer by submitting commands.</span>
+<span class="w">    </span><span class="no">You'll be helping implement necessary changes to meet requirements in the PR description.</span>
+<span class="w">    </span><span class="no">Your task is specifically to make changes to non-test files in the current directory in order to fix the issue described in the PR description in a way that is general and consistent with the codebase.</span>
+
+<span class="w">    </span><span class="no">IMPORTANT: This is an interactive process where you will think and issue ONE command, see its result, then think and issue your next command.</span>
+
+<span class="w">    </span><span class="no">For each response:</span>
+<span class="w">    </span><span class="no">1. Include a THOUGHT section explaining your reasoning and what you're trying to accomplish</span>
+<span class="w">    </span><span class="no">2. Provide exactly ONE bash command to execute</span>
+
+<span class="w">    </span><span class="no">## Important Boundaries</span>
+<span class="w">    </span><span class="no">- MODIFY: Regular source code files in /testbed (this is the working directory for all your subsequent commands)</span>
+<span class="w">    </span><span class="no">- DO NOT MODIFY: Tests, configuration files (pyproject.toml, setup.cfg, etc.)</span>
 
 <span class="w">    </span><span class="no">## Recommended Workflow</span>
-
-<span class="w">    </span><span class="no">This workflow should be done step-by-step so that you can iterate on your changes and any possible problems.</span>
-
 <span class="w">    </span><span class="no">1. Analyze the codebase by finding and reading relevant files</span>
 <span class="w">    </span><span class="no">2. Create a script to reproduce the issue</span>
 <span class="w">    </span><span class="no">3. Edit the source code to resolve the issue</span>
 <span class="w">    </span><span class="no">4. Verify your fix works by running your script again</span>
 <span class="w">    </span><span class="no">5. Test edge cases to ensure your fix is robust</span>
-<span class="w">    </span><span class="no">6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.</span>
-<span class="w">       </span><span class="no">Do not combine it with any other command. &lt;important&gt;After this command, you cannot continue working on this task.&lt;/important&gt;</span>
 
-<span class="w">    </span><span class="no">## Important Rules</span>
+<span class="w">    </span><span class="no">## Command Execution Rules</span>
+<span class="w">    </span><span class="no">You are operating in an environment where</span>
+<span class="w">    </span><span class="no">1. You write a single command</span>
+<span class="w">    </span><span class="no">2. The system executes that command in a subshell</span>
+<span class="w">    </span><span class="no">3. You see the result</span>
+<span class="w">    </span><span class="no">4. You write your next command</span>
 
-<span class="w">    </span><span class="no">1. Every response must contain exactly one action</span>
-<span class="w">    </span><span class="no">2. The action must be enclosed in &lt;action&gt; tags</span>
-<span class="w">    </span><span class="no">3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.</span>
-<span class="w">       </span><span class="no">However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir &amp;&amp; ...` or write/load environment variables from files</span>
+<span class="w">    </span><span class="no">Each response should include:</span>
+<span class="w">    </span><span class="no">1. A **THOUGHT** section where you explain your reasoning and plan</span>
+<span class="w">    </span><span class="no">2. A single bash code block with your command</span>
 
-<span class="w">    </span><span class="no">&lt;system_information&gt;</span>
-<span class="w">    </span><span class="no">{{system}} {{release}} {{version}} {{machine}}</span>
-<span class="w">    </span><span class="no">&lt;/system_information&gt;</span>
+<span class="w">    </span><span class="no">Format your responses like included within the &lt;format_example&gt; block:</span>
 
-<span class="w">    </span><span class="no">## Formatting your response</span>
+<span class="w">    </span><span class="no">&lt;format_example&gt;</span>
+<span class="w">    </span><span class="no">THOUGHT: Here I explain my reasoning process, analysis of the current situation,</span>
+<span class="w">    </span><span class="no">and what I'm trying to accomplish with the command below.</span>
 
-<span class="w">    </span><span class="no">Here is an example of a correct response:</span>
+<span class="w">    </span><span class="no">&lt;bash_code&gt;your_command_here &lt;/bash_code&gt;&lt;/format_example&gt;</span>
+
+<span class="w">    </span><span class="no">**CRITICAL REQUIREMENTS:**</span>
+<span class="w">    </span><span class="no">- Your response SHOULD include a THOUGHT section explaining your reasoning</span>
+<span class="w">    </span><span class="no">- Your response MUST include EXACTLY ONE bash code block</span>
+<span class="w">    </span><span class="no">- This bash block MUST contain EXACTLY ONE command (or a set of commands connected with &amp;&amp; or ||)</span>
+<span class="w">    </span><span class="no">- If you include zero or multiple bash blocks, or no command at all, YOUR RESPONSE WILL FAIL</span>
+<span class="w">    </span><span class="no">- Do NOT try to run multiple independent commands in separate blocks in one response</span>
+<span class="w">    </span><span class="no">- Directory or environment variable changes are not persistent. Every action is executed in a new subshell.</span>
+<span class="w">    </span><span class="no">- However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir &amp;&amp; ...` or write/load environment variables from files</span>
+
+<span class="w">    </span><span class="no">Example of a CORRECT response:</span>
 
 <span class="w">    </span><span class="no">&lt;example_response&gt;</span>
 <span class="w">    </span><span class="no">THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.</span>
 
-<span class="w">    </span><span class="no">&lt;action&gt;ls -la&lt;/action&gt;</span>
+<span class="w">    </span><span class="no">&lt;bash_code&gt;ls -la&lt;/bash_code&gt;</span>
 <span class="w">    </span><span class="no">&lt;/example_response&gt;</span>
 
-<span class="w">    </span><span class="no">## Useful command examples</span>
+<span class="w">    </span><span class="no">Example of an INCORRECT response:</span>
+
+<span class="w">    </span><span class="no">&lt;example_response&gt;</span>
+<span class="w">    </span><span class="no">THOUGHT: I need to examine the codebase and then look at a specific file. I'll run multiple commands to do this.</span>
+
+<span class="w">    </span><span class="no">&lt;bash_code&gt;ls -la&lt;/bash_code&gt;</span>
+
+<span class="w">    </span><span class="no">Now I'll read the file:</span>
+
+<span class="w">    </span><span class="no">&lt;bash_code&gt;cat file.txt&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">&lt;/example_response&gt;</span>
+
+<span class="w">    </span><span class="no">If you need to run multiple commands, either:</span>
+
+<span class="w">    </span><span class="no">1. Combine them in one block using &amp;&amp; or ||</span>
+
+<span class="w">    </span><span class="no">&lt;bash_code&gt;command1 &amp;&amp; command2 || echo "Error occurred"&lt;/bash_code&gt;</span>
+
+<span class="w">    </span><span class="no">2. Wait for the first command to complete, see its output, then issue the next command in your following response.</span>
+
+<span class="w">    </span><span class="no">## Environment Details</span>
+
+<span class="w">    </span><span class="no">- You have a full Linux shell environment</span>
+<span class="w">    </span><span class="no">- Always use non-interactive flags (-y, -f) for commands</span>
+<span class="w">    </span><span class="no">- Avoid interactive tools like vi, nano, or any that require user input</span>
+<span class="w">    </span><span class="no">- If a command isn't available, you can install it</span>
+
+<span class="w">    </span><span class="no">## Useful Command Examples</span>
 
 <span class="w">    </span><span class="no">### Create a new file:</span>
 
-<span class="w">    </span><span class="no">&lt;action&gt;cat &lt;&lt;'EOF' &gt; newfile.py</span>
+<span class="w">    </span><span class="no">&lt;bash_code&gt;cat &lt;&lt;'EOF' &gt; newfile.py</span>
 <span class="w">    </span><span class="no">import numpy as np</span>
 <span class="w">    </span><span class="no">hello = "world"</span>
 <span class="w">    </span><span class="no">print(hello)</span>
-<span class="w">    </span><span class="no">EOF&lt;/action&gt;</span>
+<span class="w">    </span><span class="no">EOF&lt;/bash_code&gt;</span>
+
+<span class="w">    </span><span class="no">### Edit files with sed:</span>
+
+<span class="w">    </span><span class="no">Replace all occurrences</span>
+
+<span class="w">    </span><span class="no">&lt;bash_code&gt;sed -i 's/old_string/new_string/g' filename.py&lt;/bash_code&gt;</span>
+
+<span class="w">    </span><span class="no">Replace only first occurrence</span>
+
+<span class="w">    </span><span class="no">&lt;bash_code&gt;sed -i 's/old_string/new_string/' filename.py&lt;/bash_code&gt;</span>
+
+<span class="w">    </span><span class="no">Replace first occurrence on line 1</span>
+
+<span class="w">    </span><span class="no">&lt;bash_code&gt;sed -i '1s/old_string/new_string/' filename.py&lt;/bash_code&gt;</span>
+
+<span class="w">    </span><span class="no">Replace all occurrences in lines 1-10</span>
+
+<span class="w">    </span><span class="no">&lt;bash_code&gt;sed -i '1,10s/old_string/new_string/g' filename.py&lt;/bash_code&gt;</span>
 
 <span class="w">    </span><span class="no">### View file content:</span>
 
-<span class="w">    </span><span class="no">&lt;action&gt;nl -ba filename.py | sed -n '10,20p'&lt;/action&gt;</span>
+<span class="w">    </span><span class="no">View specific lines with numbers</span>
 
-<span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">Please always provide EXACTLY ONE action in &lt;action&gt; tags, found {{actions|length}} actions.</span>
-<span class="w">    </span><span class="no">If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`</span>
-<span class="w">    </span><span class="no">without any other command.</span>
-<span class="w">    </span><span class="no">Else, please format your response exactly as follows:</span>
+<span class="w">    </span><span class="no">&lt;bash_code&gt; nl -ba filename.py | sed -n '10,20p'&lt;/bash_code&gt;</span>
 
-<span class="w">    </span><span class="no">&lt;response_example&gt;</span>
-<span class="w">    </span><span class="no">Here are some thoughts about why you want to perform the action.</span>
+<span class="w">    </span><span class="no">Any other command you want to run</span>
 
-<span class="w">    </span><span class="no">&lt;action&gt;your_command&lt;/action&gt;</span>
-<span class="w">    </span><span class="no">&lt;/response_example&gt;</span>
+<span class="w">    </span><span class="no">&lt;bash_code&gt;anything&lt;/bash_code&gt;</span>
 
+<span class="w">    </span><span class="no">## Submission</span>
+
+<span class="w">    </span><span class="no">When you've completed your work (reading, editing, testing), and cannot make further progress</span>
+<span class="w">    </span><span class="no">issue exactly the following command:</span>
+
+<span class="w">    </span><span class="no">&lt;bash_code&gt;echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT &amp;&amp; git add -A &amp;&amp; git diff --cached&lt;/bash_code&gt;</span>
+
+<span class="w">    </span><span class="no">This command will submit your work.</span>
+<span class="w">    </span><span class="no">You cannot continue working (reading, editing, testing) in any way on this task after submitting.</span>
+<span class="w">    </span><span class="no">&lt;/instructions&gt;</span>
 <span class="w">  </span><span class="nt">action_observation_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">&lt;returncode&gt;{{output.returncode}}&lt;/returncode&gt;</span>
 <span class="w">    </span><span class="no">{% if output.output | length &lt; 10000 -%}</span>
@@ -2683,6 +2759,9 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">&lt;warning&gt;</span>
 <span class="w">    </span><span class="no">The output of your last command was too long.</span>
 <span class="w">    </span><span class="no">Please try a different command that produces less output.</span>
+<span class="w">    </span><span class="no">If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.</span>
+<span class="w">    </span><span class="no">If you're using grep or find and it produced too much output, you can use a more selective search pattern.</span>
+<span class="w">    </span><span class="no">If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.</span>
 <span class="w">    </span><span class="no">&lt;/warning&gt;</span>
 <span class="w">    </span><span class="no">{%- set elided_chars = output.output | length - 10000 -%}</span>
 <span class="w">    </span><span class="no">&lt;output_head&gt;</span>
@@ -2695,16 +2774,47 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">{{ output.output[-5000:] }}</span>
 <span class="w">    </span><span class="no">&lt;/output_tail&gt;</span>
 <span class="w">    </span><span class="no">{%- endif -%}</span>
+<span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Please always provide EXACTLY ONE action in the `&lt;bash_code&gt;` block, found {{actions|length}} actions.</span>
 
-<span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span>
+<span class="w">    </span><span class="no">Please format your action in a `&lt;bash_code&gt;` block as shown in &lt;response_example&gt;.</span>
+
+<span class="w">    </span><span class="no">&lt;response_example&gt;</span>
+<span class="w">    </span><span class="no">Here are some thoughts about why you want to perform the action.</span>
+
+<span class="w">    </span><span class="no">&lt;bash_code&gt;ls -la&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">&lt;/response_example&gt;</span>
+
+<span class="w">    </span><span class="no">If you have completed your assignment, please consult the first message about how to</span>
+<span class="w">    </span><span class="no">submit your solution (you will not be able to continue working on this task after that).</span>
+<span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span>
+<span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
+<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;bash_code&gt;(.*?)&lt;/bash_code&gt;</span>
+
+<span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cwd</span><span class="p">:</span><span class="w"> </span><span class="s">"/testbed"</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">  </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">PAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
+<span class="w">    </span><span class="nt">MANPAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
+<span class="w">    </span><span class="nt">LESS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-R</span>
+<span class="w">    </span><span class="nt">PIP_PROGRESS_BAR</span><span class="p">:</span><span class="w"> </span><span class="s">'off'</span>
+<span class="w">    </span><span class="nt">TQDM_DISABLE</span><span class="p">:</span><span class="w"> </span><span class="s">'1'</span>
+<span class="w">  </span><span class="nt">environment_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker</span>
+
+<span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"minimax/minimax-m2"</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openrouter</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </code></pre></div>
+<p>You can also directly load this config by specifying <code>--config swebench_xml</code>.</p>
 </details>
 <details class="example">
 <summary>Default markdown format</summary>
-<p>This is the default configuration (already built-in, you don't need to specify this):</p>
+<p>This is the default configuration (already the default, you don't need to specify this):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="s">"```bash\\s*\\n(.*?)\\n```"</span>
+<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash\s*\n(.*?)\n```</span>
 <span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">Your response must contain exactly ONE bash code block.</span>
 
@@ -2713,6 +2823,12 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">```</span>
 </code></pre></div>
 </details>
+<div class="admonition warning">
+<p class="admonition-title">Linebreaks &amp; escaping</p>
+<p>When specifying <code>action_regex</code> from the <code>yaml</code> config file, make sure you understand how escaping in yaml files works.
+For example, when you use the <code>|</code> primitive, your regex might have a linbreak at the end which is probably not what you want.
+The best way is to keep your regex on a single line and NOT use any quotation marks around it. You do NOT need to escape any characters in the regex. Example: <code>action_regex: &lt;bash_code&gt;(.*?)&lt;/bash_code&gt;</code></p>
+</div>
 <h2 id="model-configuration">Model configuration</h2>
 <p>See <a href="../../models/quickstart/">this guide</a> for more details on model configuration.</p>
 <h2 id="environment-configuration">Environment configuration</h2>
