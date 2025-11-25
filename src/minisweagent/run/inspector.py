@@ -2,9 +2,7 @@
 """
 Simple trajectory inspector for browsing agent conversation trajectories.
 
-[not dim]
-More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/inspector/[/bold green]
-[/not dim]
+More information about the usage: [bold green] https://mini-swe-agent.com/latest/usage/inspector/ [/bold green].
 """
 
 import json
