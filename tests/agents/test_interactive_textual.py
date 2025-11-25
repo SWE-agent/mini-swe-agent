@@ -401,7 +401,7 @@ async def test_whitelist_actions_bypass_confirmation():
         await pilot.pause(0.2)  # Wait for UI to be ready
         threading.Thread(target=lambda: app.agent.run("Whitelist test"), daemon=True).start()
 
-        for _ in range(50):
+        for _ in range(10):
             await pilot.pause(0.1)
             if "echo 'safe'" in get_screen_text(app):
                 break
