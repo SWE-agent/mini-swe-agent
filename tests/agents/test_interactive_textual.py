@@ -398,9 +398,13 @@ async def test_whitelist_actions_bypass_confirmation():
     )
 
     async with app.run_test() as pilot:
-        # Start the agent with the task
+        await pilot.pause(0.2)  # Wait for UI to be ready
         threading.Thread(target=lambda: app.agent.run("Whitelist test"), daemon=True).start()
-        await pilot.pause(0.2)
+
+        for _ in range(10):
+            await pilot.pause(0.1)
+            if "echo 'safe'" in get_screen_text(app):
+                break
 
         # Should execute without confirmation because echo is whitelisted
         assert app.agent_state != "AWAITING_INPUT"
