@@ -86,6 +86,7 @@ nav:
       - "LitellmResponseAPIModel": "reference/models/litellm_response.md"
       - "AnthropicModel": "reference/models/anthropic.md"
       - "OpenRouterModel": "reference/models/openrouter.md"
+      - "RequestyModel": "reference/models/requesty.md"
       - "DeterministicModel": "reference/models/test_models.md"
       - "Extra Models": "reference/models/extra.md"
       - "Model Utilities": "reference/models/utils.md"
@@ -98,6 +99,9 @@ nav:
     - Run Scripts:
       - "Hello World": "reference/run/hello_world.md"
       - "mini": "reference/run/mini.md"
+      - "mini-extra": "reference/run/mini_extra.md"
+      - "Config": "reference/run/config.md"
+      - "Inspector": "reference/run/inspector.md"
       - "GitHub Issue": "reference/run/github_issue.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"
