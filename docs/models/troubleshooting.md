@@ -67,7 +67,7 @@ Another common mistake is to not include any or the correct provider in the mode
 
 ## Temperature not supported
 
-Some models (like `o1`, `o3` etc.) do not support temperature. The default config no longer specifies a temperature value, so this should work out of the box now.
+Some models (like `o1`, `o3`, `GPT-5` etc.) do not support temperature. The default config no longer specifies a temperature value, so this should work out of the box now.
 
 ## Portkey
 
