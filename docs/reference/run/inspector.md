@@ -10,6 +10,8 @@
         --8<-- "src/minisweagent/run/inspector.py"
         ```
 
-::: minisweagent.run.inspector
+::: minisweagent.run.inspector.TrajectoryInspector
+
+::: minisweagent.run.inspector.main
 
 {% include-markdown "../../_footer.md" %}
