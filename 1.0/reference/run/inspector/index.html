@@ -2869,9 +2869,7 @@
 <span class="sd">"""</span>
 <span class="sd">Simple trajectory inspector for browsing agent conversation trajectories.</span>
 
-<span class="sd">[not dim]</span>
-<span class="sd">More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/inspector/[/bold green]</span>
-<span class="sd">[/not dim]</span>
+<span class="sd">More information about the usage: [bold green] https://mini-swe-agent.com/latest/usage/inspector/ [/bold green].</span>
 <span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -3095,8 +3093,7 @@
     <div class="doc doc-contents first">
 
         <p>Simple trajectory inspector for browsing agent conversation trajectories.</p>
-<p>[not dim]
-More information about the usage: [bold green]<a href="https://mini-swe-agent.com/latest/usage/inspector/">https://mini-swe-agent.com/latest/usage/inspector/</a>[/bold green][/not dim]</p>
+<p>More information about the usage: [bold green] <a href="https://mini-swe-agent.com/latest/usage/inspector/">https://mini-swe-agent.com/latest/usage/inspector/</a> [/bold green].</p>
 
 
 
@@ -3166,7 +3163,9 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
+                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
@@ -3178,9 +3177,7 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 <span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]):</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trajectory_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]):</span>
     <span class="n">css_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
         <span class="s2">"MSWEA_INSPECTOR_STYLE_PATH"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"config"</span> <span class="o">/</span> <span class="s2">"mini.tcss"</span><span class="p">)</span>
     <span class="p">)</span>
@@ -3450,12 +3447,12 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComposeResult</span><span class="p">:</span>
     <span class="k">yield</span> <span class="n">Header</span><span class="p">()</span>
     <span class="k">with</span> <span class="n">Container</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">"main"</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">VerticalScroll</span><span class="p">():</span>
@@ -3483,8 +3480,8 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
-<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">131</span>
+<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">on_mount</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -3510,7 +3507,9 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
@@ -3533,9 +3532,7 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 <span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update_content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Update the displayed content."""</span>
     <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="s2">"#content"</span><span class="p">,</span> <span class="n">Vertical</span><span class="p">)</span>
     <span class="n">container</span><span class="o">.</span><span class="n">remove_children</span><span class="p">()</span>
@@ -3583,8 +3580,8 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">165</span>
-<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">163</span>
+<span class="normal">164</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">+=</span> <span class="mi">1</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -3608,8 +3605,8 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
-<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_previous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_previous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">-=</span> <span class="mi">1</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -3633,8 +3630,8 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
-<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_first_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
+<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_first_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">=</span> <span class="mi">0</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -3658,8 +3655,8 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">174</span>
-<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_last_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">172</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_last_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -3683,8 +3680,8 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">177</span>
-<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_next_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
+<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_next_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_trajectory</span> <span class="o">+=</span> <span class="mi">1</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -3708,8 +3705,8 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
-<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_previous_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">178</span>
+<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_previous_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">i_trajectory</span> <span class="o">-=</span> <span class="mi">1</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -3733,9 +3730,9 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_down</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_down</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">vs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="n">VerticalScroll</span><span class="p">)</span>
     <span class="n">vs</span><span class="o">.</span><span class="n">scroll_to</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">vs</span><span class="o">.</span><span class="n">scroll_target_y</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)</span>
 </code></pre></div></td></tr></tbody></table></div>
@@ -3760,9 +3757,9 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">action_scroll_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">vs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_one</span><span class="p">(</span><span class="n">VerticalScroll</span><span class="p">)</span>
     <span class="n">vs</span><span class="o">.</span><span class="n">scroll_to</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">vs</span><span class="o">.</span><span class="n">scroll_target_y</span> <span class="o">-</span> <span class="mi">15</span><span class="p">)</span>
 </code></pre></div></td></tr></tbody></table></div>
@@ -3801,7 +3798,9 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/inspector.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">192</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
 <span class="normal">193</span>
 <span class="normal">194</span>
 <span class="normal">195</span>
@@ -3815,9 +3814,7 @@ More information about the usage: [bold green]<a href="https://mini-swe-agent.co
 <span class="normal">203</span>
 <span class="normal">204</span>
 <span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
+<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Directory to search for trajectory files or specific trajectory file"</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
