@@ -2532,10 +2532,7 @@ Add it here - https://github.com/BerriAI/litellm/blob/main/model_prices_and_cont
 Take a look at the model registry section of the <a href="../local_models/">local models</a> guide to add it.</p>
 <p>Another common mistake is to not include any or the correct provider in the model name (e.g., <code>gemini-2.0-flash</code> instead of <code>gemini/gemini-2.0-flash</code>).</p>
 <h2 id="temperature-not-supported">Temperature not supported</h2>
-<p>Some models (like <code>gpt-5</code>, <code>o3</code> etc.) do not support temperature, however our default config specifies <code>temperature: 0.0</code>.
-You need to switch to a config file that does not specify temperature, e.g., <code>mini_no_temp.yaml</code>.</p>
-<p>To do this, add <code>-c mini_no_temp</code> to your <code>mini</code> command.</p>
-<p>We are working on a better solution for this (see <a href="https://github.com/SWE-agent/mini-swe-agent/issues/488">this issue</a>).</p>
+<p>Some models (like <code>o1</code>, <code>o3</code>, <code>GPT-5</code> etc.) do not support temperature. The default config no longer specifies a temperature value, so this should work out of the box now.</p>
 <h2 id="portkey">Portkey</h2>
 <h3 id="error-during-cost-calculation_1">Error during cost calculation</h3>
 <p>We use <code>litellm</code> to calculate costs for Portkey models because Portkey doesn't seem to provide per-request cost information without
