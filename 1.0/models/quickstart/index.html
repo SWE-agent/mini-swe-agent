@@ -4012,7 +4012,7 @@ In particular, you need to configure token costs for local models.</p>
 </div>
 </div>
 <p>Here are more examples of how to configure specific models:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">Gemini 3 Pro with Openrouter</label><label for="__tabbed_2_2">GPT 5.1 medium reasoning with Portkey</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><input id="__tabbed_2_3" name="__tabbed_2" type="radio"><input id="__tabbed_2_4" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">Gemini 3 (Openrouter)</label><label for="__tabbed_2_2">GPT 5.1 medium (Portkey)</label><label for="__tabbed_2_3">Claude Haiku 4.5</label><label for="__tabbed_2_4">GPT 5 mini (Portkey)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
@@ -4029,6 +4029,19 @@ In particular, you need to configure token costs for local models.</p>
 <span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">reasoning_effort</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
 <span class="w">        </span><span class="nt">verbosity</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"anthropic/claude-haiku-4-5-20251001"</span>
+<span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"@openai/gpt-5-mini"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">portkey</span>
 </code></pre></div>
 </div>
 </div>
