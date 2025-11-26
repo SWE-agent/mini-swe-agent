@@ -89,7 +89,9 @@ class DockerEnvironment:
             if (value := os.getenv(key)) is not None:
                 cmd.extend(["-e", f"{key}={value}"])
         for key, value in self.config.env.items():
-            cmd.extend(["-e", f"{key}={value}"])
+            # Expand environment variables in the value
+            expanded_value = os.path.expandvars(value)
+            cmd.extend(["-e", f"{key}={expanded_value}"])
         cmd.extend([self.container_id, "bash", "-lc", command])
 
         result = subprocess.run(
