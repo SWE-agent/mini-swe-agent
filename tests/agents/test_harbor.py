@@ -48,7 +48,7 @@ def test_trajectory_saved_even_on_error():
         agent = HarborMiniAgent(
             model=DeterministicModel(
                 outputs=[
-                    "No code block here",  # This will cause a format error
+                    "No code block here",
                     "Fix it\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered'\n```",
                 ]
             ),
