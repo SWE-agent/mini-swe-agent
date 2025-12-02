@@ -224,9 +224,9 @@ Here are more examples of how to configure specific models:
 
     ```yaml
     model:
-    model_name: "anthropic/claude-haiku-4-5-20251001"
-    model_kwargs:
-        temperature: 0.0
+        model_name: "anthropic/claude-haiku-4-5-20251001"
+        model_kwargs:
+            temperature: 0.0
     ```
 
 === "GPT 5 mini (Portkey)"
@@ -235,6 +235,25 @@ Here are more examples of how to configure specific models:
     model:
         model_name: "@openai/gpt-5-mini"
         model_class: portkey
+    ```
+
+=== "Deepseek"
+
+    ```yaml
+    model:
+        model_name: "deepseek/deepseek-reasoner"
+        model_kwargs:
+            temperature: 0.0
+    ```
+
+=== "Minimax (Openrouter)"
+
+    ```yaml
+    model:
+        model_name: "minimax/minimax-m2"
+        model_class: openrouter
+        model_kwargs:
+            temperature: 0.0
     ```
 
 ## Model classes
