@@ -13,6 +13,10 @@ class HarborMiniAgent(DefaultAgent):
     """
 
     def __init__(self, *args, traj_path: Path | None = None, **kwargs):
+        # Filter out InteractiveAgent-specific kwargs that DefaultAgent doesn't recognize
+        kwargs.pop("mode", None)
+        kwargs.pop("confirm_exit", None)
+        kwargs.pop("whitelist_actions", None)
         super().__init__(*args, **kwargs)
         self.traj_path = traj_path
 
