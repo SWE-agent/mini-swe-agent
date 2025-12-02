@@ -70,7 +70,7 @@ class LitellmModel:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
         try:
-            cost = litellm.cost_calculator.completion_cost(response)
+            cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
             if cost <= 0.0:
                 raise ValueError(f"Cost must be > 0.0, got {cost}")
         except Exception as e:
