@@ -52,7 +52,7 @@ class PortkeyResponseAPIModel(PortkeyModel):
         response = self._query(messages, **kwargs)
         text = coerce_responses_text(response)
         try:
-            cost = litellm.cost_calculator.completion_cost(response)
+            cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
             assert cost > 0.0, f"Cost is not positive: {cost}"
         except Exception as e:
             if self.config.cost_tracking != "ignore_errors":

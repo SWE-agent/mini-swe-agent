@@ -62,7 +62,7 @@ class LitellmResponseAPIModel(LitellmModel):
         print(response)
         text = coerce_responses_text(response)
         try:
-            cost = litellm.cost_calculator.completion_cost(response)
+            cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
         except Exception as e:
             logger.critical(
                 f"Error calculating cost for model {self.config.model_name}: {e}. "
