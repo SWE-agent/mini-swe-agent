@@ -68,6 +68,10 @@ dev = [
     "portkey-ai",
 ]
 
+contree = [
+    "contree-sdk",
+]
+
 [project.urls]
 Documentation = "https://mini-swe-agent.com/latest/"
 Repository = "https://github.com/SWE-agent/mini-SWE-agent"
