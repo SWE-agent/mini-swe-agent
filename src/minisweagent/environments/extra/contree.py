@@ -1,4 +1,4 @@
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from typing import Any, TypedDict
 
 from contree_sdk import ContreeSync
@@ -7,7 +7,7 @@ from contree_sdk.config import ContreeConfig
 
 @dataclass
 class ContreeEnvironmentConfig:
-    contree_config: ContreeConfig
+    contree_config: ContreeConfig | dict[str, Any]
 
     image: str
     cwd: str = "/"
@@ -34,6 +34,10 @@ class ContreeEnvironment:
     def __init__(self, *, config_class: type[ContreeEnvironmentConfig] = ContreeEnvironmentConfig, **kwargs):
         """This class executes bash commands in a Contree container using contree-sdk"""
         self.config: ContreeEnvironmentConfig = config_class(**kwargs)
+
+        if isinstance(self.config.contree_config, dict):
+            self.config = replace(self.config, contree_config=ContreeConfig(**self.config.contree_config))
+
         self.client = ContreeSync(config=self.config.contree_config)
         self.session = self.client.images.pull(self.config.image).session()
         if self.config.cwd_auto_create:
