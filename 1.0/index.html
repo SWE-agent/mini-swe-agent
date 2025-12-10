@@ -2314,25 +2314,26 @@
 </div>
 <p>In 2024, <a href="https://swebench.com">SWE-bench</a> &amp; <a href="https://swe-agent.com">SWE-agent</a> helped kickstart the coding agent revolution.</p>
 <p>We now ask: <strong>What if the agent was 100x smaller, and still worked nearly as well?</strong></p>
-<p><code>mini</code> is for</p>
+<p>The <code>mini</code> agent is for</p>
 <ul>
 <li><strong>Researchers</strong> who want to <strong><a href="https://swe-bench.com">benchmark</a>, <a href="https://swesmith.com/">fine-tune</a> or RL</strong> without assumptions, bloat, or surprises</li>
-<li><strong>Developers</strong> who like their tools like their scripts: <strong>short, sharp, and readable</strong></li>
+<li><strong>Developers</strong> who like to <strong>own, understand, and modify</strong> their tools</li>
 <li><strong>Engineers</strong> who want something <strong>trivial to sandbox &amp; to deploy anywhere</strong></li>
 </ul>
 <p>Here's some details:</p>
 <ul>
 <li><strong>Minimal</strong>: Just <a href="https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py">100 lines of python</a> (+100 total for <a href="https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/environments/local.py">env</a>,
 <a href="https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py">model</a>, <a href="https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py">script</a>) — no fancy dependencies!</li>
-<li><strong>Powerful:</strong> Resolves &gt;74% of GitHub issues in the <a href="https://www.swebench.com/">SWE-bench verified benchmark</a> (<a href="https://swe-bench.com/">leaderboard</a>).</li>
-<li><strong>Convenient:</strong> Comes with UIs that turn this into your daily dev swiss army knife!</li>
+<li><strong>Performant:</strong> Scores &gt;74% on the <a href="https://www.swebench.com/">SWE-bench verified benchmark</a> benchmark; starts faster than Claude Code</li>
 <li><strong>Deployable:</strong> In addition to local envs, you can use <strong>docker</strong>, <strong>podman</strong>, <strong>singularity</strong>, <strong>apptainer</strong>, and more</li>
 <li><strong>Cutting edge:</strong> Built by the Princeton &amp; Stanford team behind <a href="https://swebench.com">SWE-bench</a> and <a href="https://swe-agent.com">SWE-agent</a>.</li>
+<li><strong>Widely adopted:</strong> In use by Meta, NVIDIA, Essential AI, Anyscale, and others</li>
+<li><strong>Tested:</strong> <a href="https://codecov.io/gh/SWE-agent/mini-swe-agent"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/swe-agent/mini-swe-agent?style=flat-square"></a></li>
 </ul>
 <details class="note">
 <summary>Why use mini-SWE-agent for research?</summary>
 <p><a href="https://swe-agent.com/latest/">SWE-agent</a> jump-started the development of AI agents in 2024. Back then, we placed a lot of emphasis on tools and special interfaces for the agent. However, one year later, a lot of this is not needed at all to build a useful agent!</p>
-<p>In fact, mini-SWE-agent:</p>
+<p>In fact, the <code>mini</code> agent:</p>
 <ul>
 <li><strong>Does not have any tools other than bash</strong> — it doesn't even use the tool-calling interface of the LMs.
   This means that you can run it with literally any model.
@@ -2349,7 +2350,7 @@ You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bas
 <details class="note">
 <summary>Why use mini-SWE-agent as a tool?</summary>
 <p>Some agents are overfitted research artifacts. Others are UI-heavy frontend monsters.</p>
-<p><code>mini</code> wants to be a hackable tool, not a black box.</p>
+<p>The <code>mini</code> agent wants to be a hackable tool, not a black box.</p>
 <ul>
 <li><strong>Simple</strong> enough to understand at a glance</li>
 <li><strong>Convenient</strong> enough to use in daily workflows</li>
