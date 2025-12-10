@@ -91,7 +91,7 @@ class RequestyModel:
             raise RequestyAPIError(f"Request failed: {e}") from e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
-        response = self._query(messages, **kwargs)
+        response = self._query([{"role": msg["role"], "content": msg["content"]} for msg in messages], **kwargs)
 
         # Extract cost from usage information
         usage = response.get("usage", {})
