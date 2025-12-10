@@ -18,26 +18,27 @@ In 2024, [SWE-bench](https://swebench.com) & [SWE-agent](https://swe-agent.com) 
 
 We now ask: **What if the agent was 100x smaller, and still worked nearly as well?**
 
-`mini` is for
+The `mini` agent is for
 
 - **Researchers** who want to **[benchmark](https://swe-bench.com), [fine-tune](https://swesmith.com/) or RL** without assumptions, bloat, or surprises
-- **Developers** who like their tools like their scripts: **short, sharp, and readable**
+- **Developers** who like to **own, understand, and modify** their tools
 - **Engineers** who want something **trivial to sandbox & to deploy anywhere**
 
 Here's some details:
 
 - **Minimal**: Just [100 lines of python](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py) (+100 total for [env](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/environments/local.py),
 [model](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py), [script](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py)) — no fancy dependencies!
-- **Powerful:** Resolves >74% of GitHub issues in the [SWE-bench verified benchmark](https://www.swebench.com/) ([leaderboard](https://swe-bench.com/)).
-- **Convenient:** Comes with UIs that turn this into your daily dev swiss army knife!
+- **Performant:** Scores >74% on the [SWE-bench verified benchmark](https://www.swebench.com/) benchmark; starts faster than Claude Code
 - **Deployable:** In addition to local envs, you can use **docker**, **podman**, **singularity**, **apptainer**, and more
 - **Cutting edge:** Built by the Princeton & Stanford team behind [SWE-bench](https://swebench.com) and [SWE-agent](https://swe-agent.com).
+- **Widely adopted:** In use by Meta, NVIDIA, Essential AI, Anyscale, and others
+- **Tested:** [![Codecov](https://img.shields.io/codecov/c/github/swe-agent/mini-swe-agent?style=flat-square)](https://codecov.io/gh/SWE-agent/mini-swe-agent)
 
 ??? note "Why use mini-SWE-agent for research?"
 
     [SWE-agent](https://swe-agent.com/latest/) jump-started the development of AI agents in 2024. Back then, we placed a lot of emphasis on tools and special interfaces for the agent. However, one year later, a lot of this is not needed at all to build a useful agent!
 
-    In fact, mini-SWE-agent:
+    In fact, the `mini` agent:
 
     - **Does not have any tools other than bash** — it doesn't even use the tool-calling interface of the LMs.
       This means that you can run it with literally any model.
@@ -55,7 +56,7 @@ Here's some details:
 
     Some agents are overfitted research artifacts. Others are UI-heavy frontend monsters.
 
-    `mini` wants to be a hackable tool, not a black box.
+    The `mini` agent wants to be a hackable tool, not a black box.
 
     - **Simple** enough to understand at a glance
     - **Convenient** enough to use in daily workflows
