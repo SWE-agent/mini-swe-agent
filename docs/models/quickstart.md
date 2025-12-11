@@ -14,7 +14,7 @@ There are several ways to set your API keys:
 * **Recommended**: Run our setup script: `mini-extra config setup`. This should also run automatically the first time you run `mini`.
 * Use `mini-extra config set ANTHROPIC_API_KEY <your-api-key>` to put the key in the `mini` [config file](../advanced/global_configuration.md).
 * Export your key as an environment variable: `export ANTHROPIC_API_KEY=<your-api-key>` (this is not persistent if you restart your shell, unless you add it to your shell config, like `~/.bashrc` or `~/.zshrc`).
-* If you only use a single model, you can also set `MSWEA_MODEL_API_KEY` (as environment variable or in the config file). This takes precedence over all other keys.
+* You can also set `MSWEA_MODEL_API_KEY` as a universal API key that works with any model configuration (single model, roulette, or alternating).
 * If you run several agents in parallel, see our note about rotating anthropic keys [here](../advanced/global_configuration.md).
 
 ??? note "All the API key names"
