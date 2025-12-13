@@ -160,10 +160,18 @@ agent:
 
     ## Submission
     When you've completed your work (reading, editing, testing), and cannot make further progress
-    issue exactly the following command:
+    you need to submit your changes.
 
+    IMPORTANT: Only add the specific source files you modified to fix the issue. Do NOT use `git add -A` or `git add .` as this will include unrelated files like compiled code, cache files, or other artifacts.
+
+    Submit using this format:
     ```bash
-    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached
+    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add <file1> <file2> ... && git diff --cached
+    ```
+
+    For example, if you modified `src/module.py` and `src/utils.py`:
+    ```bash
+    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add src/module.py src/utils.py && git diff --cached
     ```
 
     This command will submit your work.
