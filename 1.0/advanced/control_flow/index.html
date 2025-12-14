@@ -2302,7 +2302,15 @@
     <span class="p">)</span>
     <span class="n">timeout_template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">"The last command &lt;command&gt;{{action['action']}}&lt;/command&gt; timed out and has been killed.</span><span class="se">\n</span><span class="s2">"</span>
-        <span class="s2">"The output of the command was:</span><span class="se">\n</span><span class="s2"> &lt;output&gt;</span><span class="se">\n</span><span class="s2">{{output}}</span><span class="se">\n</span><span class="s2">&lt;/output&gt;</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"The output of the command was:</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"{</span><span class="si">% i</span><span class="s2">f output | length &lt; 10000 -%}</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"&lt;output&gt;</span><span class="se">\n</span><span class="s2">{{output}}</span><span class="se">\n</span><span class="s2">&lt;/output&gt;</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"{</span><span class="si">%- e</span><span class="s2">lse -%}</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"&lt;warning&gt;Output was too long and has been truncated.&lt;/warning&gt;</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"&lt;output_head&gt;</span><span class="se">\n</span><span class="s2">{{ output[:5000] }}</span><span class="se">\n</span><span class="s2">&lt;/output_head&gt;</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"&lt;elided_chars&gt;{{ output | length - 10000 }} characters elided&lt;/elided_chars&gt;</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"&lt;output_tail&gt;</span><span class="se">\n</span><span class="s2">{{ output[-5000:] }}</span><span class="se">\n</span><span class="s2">&lt;/output_tail&gt;</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="s2">"{</span><span class="si">%- e</span><span class="s2">ndif %}</span><span class="se">\n</span><span class="s2">"</span>
         <span class="s2">"Please try another command and make sure to avoid those requiring interactive input."</span>
     <span class="p">)</span>
     <span class="n">format_error_template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Please always provide EXACTLY ONE action in triple backticks."</span>
