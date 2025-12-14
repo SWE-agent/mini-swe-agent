@@ -28,6 +28,7 @@ class LitellmResponseAPIModel(LitellmModel):
         self._previous_response_id: str | None = None
 
     @retry(
+        reraise=True,
         stop=stop_after_attempt(10),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
