@@ -20,7 +20,15 @@ class AgentConfig:
     )
     timeout_template: str = (
         "The last command <command>{{action['action']}}</command> timed out and has been killed.\n"
-        "The output of the command was:\n <output>\n{{output}}\n</output>\n"
+        "The output of the command was:\n"
+        "{% if output | length < 10000 -%}\n"
+        "<output>\n{{output}}\n</output>\n"
+        "{%- else -%}\n"
+        "<warning>Output was too long and has been truncated.</warning>\n"
+        "<output_head>\n{{ output[:5000] }}\n</output_head>\n"
+        "<elided_chars>{{ output | length - 10000 }} characters elided</elided_chars>\n"
+        "<output_tail>\n{{ output[-5000:] }}\n</output_tail>\n"
+        "{%- endif %}\n"
         "Please try another command and make sure to avoid those requiring interactive input."
     )
     format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
