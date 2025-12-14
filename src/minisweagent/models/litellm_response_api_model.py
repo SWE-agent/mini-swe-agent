@@ -46,9 +46,11 @@ class LitellmResponseAPIModel(LitellmModel):
     )
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
+            # Remove 'timestamp' field added by agent - not supported by OpenAI responses API
+            clean_messages = [{"role": msg["role"], "content": msg["content"]} for msg in messages]
             resp = litellm.responses(
                 model=self.config.model_name,
-                input=messages if self._previous_response_id is None else messages[-1:],
+                input=clean_messages if self._previous_response_id is None else clean_messages[-1:],
                 previous_response_id=self._previous_response_id,
                 **(self.config.model_kwargs | kwargs),
             )
@@ -60,7 +62,6 @@ class LitellmResponseAPIModel(LitellmModel):
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
-        print(response)
         text = coerce_responses_text(response)
         try:
             cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
