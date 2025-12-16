@@ -6,18 +6,18 @@ import shutil
 import subprocess
 import tempfile
 import uuid
-from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from pydantic import BaseModel
 
-@dataclass
-class SingularityEnvironmentConfig:
+
+class SingularityEnvironmentConfig(BaseModel):
     image: str
     cwd: str = "/"
-    env: dict[str, str] = field(default_factory=dict)
+    env: dict[str, str] = {}
     """Environment variables to set in the container."""
-    forward_env: list[str] = field(default_factory=list)
+    forward_env: list[str] = []
     """Environment variables to forward to the container."""
     timeout: int = 30
     """Timeout for executing commands in the container."""
@@ -58,7 +58,7 @@ class SingularityEnvironment:
         return sandbox_dir
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config)
+        return self.config.model_dump()
 
     def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in a Singularity container and return the result as a dict."""

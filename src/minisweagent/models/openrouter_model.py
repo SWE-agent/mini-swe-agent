@@ -1,10 +1,10 @@
 import json
 import logging
 import os
-from dataclasses import asdict, dataclass, field
 from typing import Any, Literal
 
 import requests
+from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
     retry,
@@ -19,10 +19,9 @@ from minisweagent.models.utils.cache_control import set_cache_control
 logger = logging.getLogger("openrouter_model")
 
 
-@dataclass
-class OpenRouterModelConfig:
+class OpenRouterModelConfig(BaseModel):
     model_name: str
-    model_kwargs: dict[str, Any] = field(default_factory=dict)
+    model_kwargs: dict[str, Any] = {}
     set_cache_control: Literal["default_end"] | None = None
     """Set explicit cache control markers, for example for Anthropic models"""
     cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
@@ -123,4 +122,4 @@ class OpenRouterModel:
         }
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}

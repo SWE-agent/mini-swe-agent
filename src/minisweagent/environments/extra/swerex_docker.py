@@ -1,19 +1,18 @@
 import asyncio
-from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from pydantic import BaseModel
 from swerex.deployment.docker import DockerDeployment
 from swerex.runtime.abstract import Command as RexCommand
 
 
-@dataclass
-class SwerexDockerEnvironmentConfig:
+class SwerexDockerEnvironmentConfig(BaseModel):
     image: str
     cwd: str = "/"
     """Working directory in which to execute commands."""
     timeout: int = 30
     """Timeout for executing commands in the container."""
-    deployment_extra_kwargs: dict[str, Any] = field(default_factory=dict)
+    deployment_extra_kwargs: dict[str, Any] = {}
     """Extra kwargs to pass to DockerDeployment."""
 
 
@@ -44,4 +43,4 @@ class SwerexDockerEnvironment:
         }
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config)
+        return self.config.model_dump()

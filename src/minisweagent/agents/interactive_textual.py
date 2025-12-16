@@ -10,7 +10,6 @@ import threading
 import time
 import traceback
 from collections.abc import Iterable
-from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
@@ -27,11 +26,10 @@ from textual.widgets import Footer, Header, Input, Static, TextArea
 from minisweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException, Submitted
 
 
-@dataclass
 class TextualAgentConfig(AgentConfig):
     mode: Literal["confirm", "yolo"] = "confirm"
     """Mode for action execution: 'confirm' requires user confirmation, 'yolo' executes immediately."""
-    whitelist_actions: list[str] = field(default_factory=list)
+    whitelist_actions: list[str] = []
     """Never confirm actions that match these regular expressions."""
     confirm_exit: bool = True
     """If the agent wants to finish, do we ask for confirmation from user?"""

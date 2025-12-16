@@ -2,11 +2,11 @@ import json
 import logging
 import os
 from collections.abc import Callable
-from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
 import litellm
+from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
     retry,
@@ -21,10 +21,9 @@ from minisweagent.models.utils.cache_control import set_cache_control
 logger = logging.getLogger("litellm_model")
 
 
-@dataclass
-class LitellmModelConfig:
+class LitellmModelConfig(BaseModel):
     model_name: str
-    model_kwargs: dict[str, Any] = field(default_factory=dict)
+    model_kwargs: dict[str, Any] = {}
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     set_cache_control: Literal["default_end"] | None = None
     """Set explicit cache control markers, for example for Anthropic models"""
@@ -98,4 +97,4 @@ class LitellmModel:
         }
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}

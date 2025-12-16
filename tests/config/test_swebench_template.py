@@ -145,9 +145,10 @@ def test_action_observation_template_just_under_10000_chars():
 def test_agent_config_requires_templates():
     """Test that AgentConfig now requires all template fields (no defaults in code)"""
     import pytest
+    from pydantic import ValidationError
 
-    # AgentConfig should require all template fields now
-    with pytest.raises(TypeError, match="missing.*required positional arguments"):
+    # AgentConfig should require all template fields now (Pydantic raises ValidationError)
+    with pytest.raises(ValidationError, match="validation error"):
         AgentConfig()
 
 
