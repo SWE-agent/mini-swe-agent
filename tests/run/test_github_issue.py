@@ -2,9 +2,9 @@ import re
 from unittest.mock import patch
 
 import pytest
+from minisweagent.run.github_issue import DEFAULT_CONFIG, main
 
 from minisweagent.models.test_models import DeterministicModel
-from minisweagent.run.github_issue import DEFAULT_CONFIG, main
 
 
 def normalize_outputs(s: str) -> str:

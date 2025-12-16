@@ -5,7 +5,6 @@ from unittest.mock import patch
 
 import pytest
 import typer
-
 from minisweagent.run.inspector import TrajectoryInspector, main
 
 
