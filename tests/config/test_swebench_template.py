@@ -144,7 +144,7 @@ def test_action_observation_template_just_under_10000_chars():
 
 def test_timeout_template_long_output():
     """Test that long timeout output (> 10000 chars) is truncated with head/tail format"""
-    template_str = AgentConfig.timeout_template
+    template_str = AgentConfig().timeout_template
     template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock action and long output (like recursive grep warnings)

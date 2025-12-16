@@ -1,9 +1,9 @@
 import json
-from dataclasses import asdict, dataclass
 from typing import Any
 from unittest.mock import patch
 
 import pytest
+from pydantic import BaseModel
 
 from minisweagent import package_dir
 from minisweagent.models.test_models import DeterministicModel
@@ -370,8 +370,7 @@ def test_redo_existing_true_overwrites_existing(github_test_data, tmp_path):
     assert result["swe-agent__test-repo-1"]["model_name_or_path"] == "deterministic"
 
 
-@dataclass
-class ExceptionModelConfig:
+class ExceptionModelConfig(BaseModel):
     model_name: str = "exception_model"
 
 
@@ -390,7 +389,7 @@ class ExceptionModel:
         raise self.exception_type(self.exception_message)
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
 
 @pytest.mark.slow
