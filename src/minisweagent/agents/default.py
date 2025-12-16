@@ -11,27 +11,12 @@ from minisweagent import Environment, Model
 
 
 class AgentConfig(BaseModel):
-    # The default settings are the bare minimum to run the agent. Take a look at the config files for improved settings.
-    system_template: str = "You are a helpful assistant that can do anything."
-    instance_template: str = (
-        "Your task: {{task}}. Please reply with a single shell command in triple backticks. "
-        "To finish, the first line of the output of the shell command must be 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'."
-    )
-    timeout_template: str = (
-        "The last command <command>{{action['action']}}</command> timed out and has been killed.\n"
-        "The output of the command was:\n"
-        "{% if output | length < 10000 -%}\n"
-        "<output>\n{{output}}\n</output>\n"
-        "{%- else -%}\n"
-        "<warning>Output was too long and has been truncated.</warning>\n"
-        "<output_head>\n{{ output[:5000] }}\n</output_head>\n"
-        "<elided_chars>{{ output | length - 10000 }} characters elided</elided_chars>\n"
-        "<output_tail>\n{{ output[-5000:] }}\n</output_tail>\n"
-        "{%- endif %}\n"
-        "Please try another command and make sure to avoid those requiring interactive input."
-    )
-    format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
-    action_observation_template: str = "Observation: {{output}}"
+    # Check the config files in minisweagent/config for example settings
+    system_template: str
+    instance_template: str
+    timeout_template: str
+    format_error_template: str
+    action_observation_template: str
     action_regex: str = r"```bash\s*\n(.*?)\n```"
     step_limit: int = 0
     cost_limit: float = 3.0
