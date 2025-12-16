@@ -142,6 +142,24 @@ agent:
 
     Note: In rare cases, if you need to reference a similar format in your command, you might have
     to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```bash.
+  timeout_template: |
+    The last command <command>{{action['action']}}</command> timed out and has been killed.
+    The output of the command was:
+    {% if output | length < 10000 -%}
+    <output>
+    {{output}}
+    </output>
+    {%- else -%}
+    <warning>Output was too long and has been truncated.</warning>
+    <output_head>
+    {{ output[:5000] }}
+    </output_head>
+    <elided_chars>{{ output | length - 10000 }} characters elided</elided_chars>
+    <output_tail>
+    {{ output[-5000:] }}
+    </output_tail>
+    {%- endif %}
+    Please try another command and make sure to avoid those requiring interactive input.
   step_limit: 0.
   cost_limit: 0.
 environment:
