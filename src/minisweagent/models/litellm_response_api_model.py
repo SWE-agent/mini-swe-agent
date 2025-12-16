@@ -11,6 +11,7 @@ from tenacity import (
     wait_exponential,
 )
 
+from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.openai_utils import coerce_responses_text
 
@@ -74,8 +75,6 @@ class LitellmResponseAPIModel(LitellmModel):
             raise
         self.n_calls += 1
         self.cost += cost
-        from minisweagent.models import GLOBAL_MODEL_STATS
-
         GLOBAL_MODEL_STATS.add(cost)
         return {
             "content": text,
