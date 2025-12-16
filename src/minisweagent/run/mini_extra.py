@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""This is the central entry point to the mini-extra script. Use subcommands
+to invoke other command line utilities like running on benchmarks, editing config,
+inspecting trajectories, etc.
+"""
+
 import sys
 from importlib import import_module
 
