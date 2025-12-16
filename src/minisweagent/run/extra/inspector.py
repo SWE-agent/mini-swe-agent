@@ -36,7 +36,7 @@ class TrajectoryInspector(App):
 
     def __init__(self, trajectory_files: list[Path]):
         css_path = os.environ.get(
-            "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent / "config" / "mini.tcss")
+            "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent.parent / "config" / "mini.tcss")
         )
         self.__class__.CSS = Path(css_path).read_text()
 
