@@ -2770,6 +2770,24 @@ For example, you could use</p>
 
 <span class="w">    </span><span class="no">If you have completed your assignment, please consult the first message about how to</span>
 <span class="w">    </span><span class="no">submit your solution (you will not be able to continue working on this task after that).</span>
+<span class="w">  </span><span class="nt">timeout_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">The last command &lt;command&gt;{{action['action']}}&lt;/command&gt; timed out and has been killed.</span>
+<span class="w">    </span><span class="no">The output of the command was:</span>
+<span class="w">    </span><span class="no">{% if output | length &lt; 10000 -%}</span>
+<span class="w">    </span><span class="no">&lt;output&gt;</span>
+<span class="w">    </span><span class="no">{{output}}</span>
+<span class="w">    </span><span class="no">&lt;/output&gt;</span>
+<span class="w">    </span><span class="no">{%- else -%}</span>
+<span class="w">    </span><span class="no">&lt;warning&gt;Output was too long and has been truncated.&lt;/warning&gt;</span>
+<span class="w">    </span><span class="no">&lt;output_head&gt;</span>
+<span class="w">    </span><span class="no">{{ output[:5000] }}</span>
+<span class="w">    </span><span class="no">&lt;/output_head&gt;</span>
+<span class="w">    </span><span class="no">&lt;elided_chars&gt;{{ output | length - 10000 }} characters elided&lt;/elided_chars&gt;</span>
+<span class="w">    </span><span class="no">&lt;output_tail&gt;</span>
+<span class="w">    </span><span class="no">{{ output[-5000:] }}</span>
+<span class="w">    </span><span class="no">&lt;/output_tail&gt;</span>
+<span class="w">    </span><span class="no">{%- endif %}</span>
+<span class="w">    </span><span class="no">Please try another command and make sure to avoid those requiring interactive input.</span>
 <span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span>
 <span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
 
