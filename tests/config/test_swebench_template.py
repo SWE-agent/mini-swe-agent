@@ -4,6 +4,8 @@ from pathlib import Path
 import yaml
 from jinja2 import StrictUndefined, Template
 
+from minisweagent.agents.default import AgentConfig
+
 
 @dataclass
 class MockOutput:
@@ -142,8 +144,6 @@ def test_action_observation_template_just_under_10000_chars():
 
 def test_timeout_template_long_output():
     """Test that long timeout output (> 10000 chars) is truncated with head/tail format"""
-    from minisweagent.agents.default import AgentConfig
-
     template_str = AgentConfig.timeout_template
     template = Template(template_str, undefined=StrictUndefined)
 
