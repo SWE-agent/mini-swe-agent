@@ -34,6 +34,7 @@ dependencies = [
     "pyyaml",
     "requests",
     "jinja2",
+    "pydantic >= 2.0",  # v2 required for safe mutable default arguments
     "litellm >= 1.75.5",  # want to have gpt-5 support
     "tenacity",
     "rich",
