@@ -2550,14 +2550,14 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">LocalEnvironmentConfig</span><span class="p">:</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">LocalEnvironmentConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
-    <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>
 
 
@@ -2584,7 +2584,7 @@
         <span class="k">return</span> <span class="p">{</span><span class="s2">"output"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s2">"returncode"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="o">|</span> <span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>
 </code></pre></div>
 </details>
 </div>
@@ -2629,19 +2629,12 @@
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">LocalEnvironmentConfig</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">LocalEnvironmentConfig</span><span class="p">(</span>
-    <span class="n">cwd</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
-    <span class="n">env</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dict">dict</span></span><span class="p">(),</span>
-    <span class="n">timeout</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
+
 
     <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
@@ -2700,7 +2693,7 @@
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">env</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dataclasses.field">field</span></span><span class="p">(</span><span class="n"><span title="dataclasses.field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><span title="dict">dict</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">env</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2753,12 +2746,7 @@
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">LocalEnvironment</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="type">type</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            LocalEnvironmentConfig
-
-
-  
-      dataclass
-   (minisweagent.environments.local.LocalEnvironmentConfig)" href="#minisweagent.environments.local.LocalEnvironmentConfig">LocalEnvironmentConfig</a></span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="type">type</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            LocalEnvironmentConfig (minisweagent.environments.local.LocalEnvironmentConfig)" href="#minisweagent.environments.local.LocalEnvironmentConfig">LocalEnvironmentConfig</a></span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -2898,7 +2886,7 @@
               <summary>Source code in <code>src/minisweagent/environments/local.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
 <span class="normal">38</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="o">|</span> <span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>

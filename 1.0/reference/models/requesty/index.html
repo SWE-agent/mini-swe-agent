@@ -2660,10 +2660,10 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tenacity</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">before_sleep_log</span><span class="p">,</span>
     <span class="n">retry</span><span class="p">,</span>
@@ -2677,10 +2677,9 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"requesty_model"</span><span class="p">)</span>
 
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">RequestyModelConfig</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RequestyModelConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RequestyAPIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -2776,7 +2775,7 @@
         <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -2843,17 +2842,12 @@
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">RequestyModelConfig</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">RequestyModelConfig</span><span class="p">(</span>
-    <span class="n">model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">model_kwargs</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dict">dict</span></span><span class="p">()</span>
-<span class="p">)</span>
-</code></pre></div>
+
 
     <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
@@ -2911,7 +2905,7 @@
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">model_kwargs</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dataclasses.field">field</span></span><span class="p">(</span><span class="n"><span title="dataclasses.field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><span title="dict">dict</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">model_kwargs</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3049,12 +3043,12 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/minisweagent/models/requesty_model.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">46</span>
+                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
+<span class="normal">46</span>
 <span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">RequestyModelConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">=</span> <span class="mi">0</span>
@@ -3086,12 +3080,7 @@
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">config</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            RequestyModelConfig
-
-
-  
-      dataclass
-   (minisweagent.models.requesty_model.RequestyModelConfig)" href="#minisweagent.models.requesty_model.RequestyModelConfig">RequestyModelConfig</a></span><span class="p">(</span><span class="o">**</span><span class="n"><span title="minisweagent.models.requesty_model.RequestyModel(kwargs)">kwargs</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">config</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            RequestyModelConfig (minisweagent.models.requesty_model.RequestyModelConfig)" href="#minisweagent.models.requesty_model.RequestyModelConfig">RequestyModelConfig</a></span><span class="p">(</span><span class="o">**</span><span class="n"><span title="minisweagent.models.requesty_model.RequestyModel(kwargs)">kwargs</span></span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3163,7 +3152,8 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/requesty_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
+<span class="normal"> 94</span>
 <span class="normal"> 95</span>
 <span class="normal"> 96</span>
 <span class="normal"> 97</span>
@@ -3185,8 +3175,7 @@
 <span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">([{</span><span class="s2">"role"</span><span class="p">:</span> <span class="n">msg</span><span class="p">[</span><span class="s2">"role"</span><span class="p">],</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">msg</span><span class="p">[</span><span class="s2">"content"</span><span class="p">]}</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="c1"># Extract cost from usage information</span>
@@ -3232,9 +3221,9 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/requesty_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>

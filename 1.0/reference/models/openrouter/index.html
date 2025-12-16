@@ -2704,10 +2704,10 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tenacity</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">before_sleep_log</span><span class="p">,</span>
     <span class="n">retry</span><span class="p">,</span>
@@ -2722,10 +2722,9 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"openrouter_model"</span><span class="p">)</span>
 
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OpenRouterModelConfig</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OpenRouterModelConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">set_cache_control</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"default_end"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">"""Set explicit cache control markers, for example for Anthropic models"""</span>
     <span class="n">cost_tracking</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"default"</span><span class="p">,</span> <span class="s2">"ignore_errors"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_COST_TRACKING"</span><span class="p">,</span> <span class="s2">"default"</span><span class="p">)</span>
@@ -2826,7 +2825,7 @@
         <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -2897,22 +2896,12 @@
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">OpenRouterModelConfig</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">OpenRouterModelConfig</span><span class="p">(</span>
-    <span class="n">model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-    <span class="n">model_kwargs</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dict">dict</span></span><span class="p">(),</span>
-    <span class="n">set_cache_control</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">"default_end"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">cost_tracking</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span>
-        <span class="s2">"default"</span><span class="p">,</span> <span class="s2">"ignore_errors"</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span><span class="s2">"MSWEA_COST_TRACKING"</span><span class="p">,</span> <span class="s2">"default"</span><span class="p">),</span>
-<span class="p">)</span>
-</code></pre></div>
+
 
     <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
@@ -2970,7 +2959,7 @@
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">model_kwargs</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dataclasses.field">field</span></span><span class="p">(</span><span class="n"><span title="dataclasses.field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><span title="dict">dict</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">model_kwargs</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3160,12 +3149,12 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/minisweagent/models/openrouter_model.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
+                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
+<span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">OpenRouterModelConfig</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">=</span> <span class="mi">0</span>
@@ -3197,12 +3186,7 @@
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">config</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            OpenRouterModelConfig
-
-
-  
-      dataclass
-   (minisweagent.models.openrouter_model.OpenRouterModelConfig)" href="#minisweagent.models.openrouter_model.OpenRouterModelConfig">OpenRouterModelConfig</a></span><span class="p">(</span><span class="o">**</span><span class="n"><span title="minisweagent.models.openrouter_model.OpenRouterModel(kwargs)">kwargs</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">config</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            OpenRouterModelConfig (minisweagent.models.openrouter_model.OpenRouterModelConfig)" href="#minisweagent.models.openrouter_model.OpenRouterModelConfig">OpenRouterModelConfig</a></span><span class="p">(</span><span class="o">**</span><span class="n"><span title="minisweagent.models.openrouter_model.OpenRouterModel(kwargs)">kwargs</span></span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3274,7 +3258,8 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/openrouter_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
+<span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
@@ -3298,8 +3283,7 @@
 <span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set_cache_control</span><span class="p">:</span>
         <span class="n">messages</span> <span class="o">=</span> <span class="n">set_cache_control</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set_cache_control</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">([{</span><span class="s2">"role"</span><span class="p">:</span> <span class="n">msg</span><span class="p">[</span><span class="s2">"role"</span><span class="p">],</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">msg</span><span class="p">[</span><span class="s2">"content"</span><span class="p">]}</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -3347,9 +3331,9 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/openrouter_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
-<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>

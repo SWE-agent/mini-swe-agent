@@ -2810,17 +2810,12 @@
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">RouletteModelConfig</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">RouletteModelConfig</span><span class="p">(</span>
-    <span class="n">model_kwargs</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="dict">dict</span></span><span class="p">],</span> <span class="n">model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">"roulette"</span>
-<span class="p">)</span>
-</code></pre></div>
+
 
     <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
@@ -2910,12 +2905,7 @@
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">RouletteModel</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="type">type</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            RouletteModelConfig
-
-
-  
-      dataclass
-   (minisweagent.models.extra.roulette.RouletteModelConfig)" href="#minisweagent.models.extra.roulette.RouletteModelConfig">RouletteModelConfig</a></span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="type">type</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            RouletteModelConfig (minisweagent.models.extra.roulette.RouletteModelConfig)" href="#minisweagent.models.extra.roulette.RouletteModelConfig">RouletteModelConfig</a></span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -3065,7 +3055,7 @@
               <summary>Source code in <code>src/minisweagent/models/extra/roulette.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
 <span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="o">|</span> <span class="p">{</span><span class="s2">"n_model_calls"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="p">,</span> <span class="s2">"model_cost"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">}</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
@@ -3144,19 +3134,12 @@
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">InterleavingModelConfig</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">InterleavingModelConfig</span><span class="p">(</span>
-    <span class="n">model_kwargs</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="dict">dict</span></span><span class="p">],</span>
-    <span class="n">sequence</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="int">int</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">model_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">"interleaving"</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
+
 
     <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
@@ -3271,12 +3254,7 @@ then the first model again, etc.</p>
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">InterleavingModel</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="type">type</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            InterleavingModelConfig
-
-
-  
-      dataclass
-   (minisweagent.models.extra.roulette.InterleavingModelConfig)" href="#minisweagent.models.extra.roulette.InterleavingModelConfig">InterleavingModelConfig</a></span><span class="p">,</span>
+    <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="type">type</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            InterleavingModelConfig (minisweagent.models.extra.roulette.InterleavingModelConfig)" href="#minisweagent.models.extra.roulette.InterleavingModelConfig">InterleavingModelConfig</a></span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -3298,9 +3276,9 @@ then the first model again, etc.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/minisweagent/models/extra/roulette.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">InterleavingModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">InterleavingModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""This "meta"-model alternates between the models in the sequence for every call"""</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div></td></tr></tbody></table></div>
@@ -3335,12 +3313,12 @@ then the first model again, etc.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/extra/roulette.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
+<span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">select_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">select_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sequence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">i_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>

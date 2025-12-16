@@ -2285,15 +2285,14 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">jinja2</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrictUndefined</span><span class="p">,</span> <span class="n">Template</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">Model</span>
 
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">AgentConfig</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="c1"># The default settings are the bare minimum to run the agent. Take a look at the config files for improved settings.</span>
     <span class="n">system_template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"You are a helpful assistant that can do anything."</span>
     <span class="n">instance_template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
@@ -2353,7 +2352,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">extra_template_vars</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">render_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">template_vars</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_template_vars</span><span class="p">()</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_template_vars</span><span class="p">()</span>
+        <span class="n">template_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_template_vars</span><span class="p">()</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_template_vars</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">Template</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">undefined</span><span class="o">=</span><span class="n">StrictUndefined</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">template_vars</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">extra_template_vars</span>
         <span class="p">)</span>

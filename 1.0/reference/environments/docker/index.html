@@ -2750,18 +2750,18 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">shlex</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">DockerEnvironmentConfig</span><span class="p">:</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DockerEnvironmentConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">image</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"/"</span>
 <span class="w">    </span><span class="sd">"""Working directory in which to execute commands."""</span>
-    <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="w">    </span><span class="sd">"""Environment variables to set in the container."""</span>
-    <span class="n">forward_env</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">forward_env</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="w">    </span><span class="sd">"""Environment variables to forward to the container.</span>
 <span class="sd">    Variables are only forwarded if they are set in the host environment.</span>
 <span class="sd">    In case of conflict with `env`, the `env` variables take precedence.</span>
@@ -2770,7 +2770,7 @@
 <span class="w">    </span><span class="sd">"""Timeout for executing commands in the container."""</span>
     <span class="n">executable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_DOCKER_EXECUTABLE"</span><span class="p">,</span> <span class="s2">"docker"</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">"""Path to the docker/container executable."""</span>
-    <span class="n">run_args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">"--rm"</span><span class="p">])</span>
+    <span class="n">run_args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"--rm"</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">"""Additional arguments to pass to the docker/container executable.</span>
 <span class="sd">    Default is ["--rm"], which removes the container after it exits.</span>
 <span class="sd">    """</span>
@@ -2797,7 +2797,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_container</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_start_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Start the Docker container and return the container ID."""</span>
@@ -2903,27 +2903,12 @@
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">DockerEnvironmentConfig</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">DockerEnvironmentConfig</span><span class="p">(</span>
-    <span class="n">image</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-    <span class="n">cwd</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">"/"</span><span class="p">,</span>
-    <span class="n">env</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dict">dict</span></span><span class="p">(),</span>
-    <span class="n">forward_env</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="list">list</span></span><span class="p">(),</span>
-    <span class="n">timeout</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-    <span class="n">executable</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
-        <span class="s2">"MSWEA_DOCKER_EXECUTABLE"</span><span class="p">,</span> <span class="s2">"docker"</span>
-    <span class="p">),</span>
-    <span class="n">run_args</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">"--rm"</span><span class="p">])(),</span>
-    <span class="n">container_timeout</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">"2h"</span><span class="p">,</span>
-    <span class="n">pull_timeout</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
+
 
     <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
@@ -3006,7 +2991,7 @@
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">env</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dataclasses.field">field</span></span><span class="p">(</span><span class="n"><span title="dataclasses.field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><span title="dict">dict</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">env</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3031,7 +3016,7 @@
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">forward_env</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dataclasses.field">field</span></span><span class="p">(</span><span class="n"><span title="dataclasses.field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n"><span title="list">list</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">forward_env</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3110,9 +3095,7 @@ In case of conflict with <code>env</code>, the <code>env</code> variables take p
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">run_args</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dataclasses.field">field</span></span><span class="p">(</span>
-    <span class="n"><span title="dataclasses.field(default_factory)">default_factory</span></span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">"--rm"</span><span class="p">]</span>
-<span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">run_args</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'--rm'</span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3196,12 +3179,7 @@ Default is ["--rm"], which removes the container after it exits.</p>
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">DockerEnvironment</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="type">type</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            DockerEnvironmentConfig
-
-
-  
-      dataclass
-   (minisweagent.environments.docker.DockerEnvironmentConfig)" href="#minisweagent.environments.docker.DockerEnvironmentConfig">DockerEnvironmentConfig</a></span><span class="p">,</span>
+    <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="type">type</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            DockerEnvironmentConfig (minisweagent.environments.docker.DockerEnvironmentConfig)" href="#minisweagent.environments.docker.DockerEnvironmentConfig">DockerEnvironmentConfig</a></span><span class="p">,</span>
     <span class="n">logger</span><span class="p">:</span> <span class="n"><span title="logging.Logger">Logger</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span>
@@ -3350,7 +3328,7 @@ See <code>DockerEnvironmentConfig</code> for keyword arguments.</p>
               <summary>Source code in <code>src/minisweagent/environments/docker.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
 <span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
