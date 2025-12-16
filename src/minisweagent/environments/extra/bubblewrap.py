@@ -17,51 +17,49 @@ import shutil
 import subprocess
 import tempfile
 import uuid
-from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from pydantic import BaseModel
 
-@dataclass
-class BubblewrapEnvironmentConfig:
+
+class BubblewrapEnvironmentConfig(BaseModel):
     cwd: str = ""
     """Working directory for the sandbox."""
-    env: dict[str, str] = field(default_factory=dict)
+    env: dict[str, str] = {}
     """Dictionary of environment variables to set in the sandbox."""
     timeout: int = 30
     """Timeout for the command in seconds."""
     executable: str = os.getenv("MSWEA_BUBBLEWRAP_EXECUTABLE", "bwrap")
     """Path to the bubblewrap executable."""
-    wrapper_args: list[str] = field(
-        default_factory=lambda: [
-            "--unshare-user-try",
-            "--ro-bind",
-            "/usr",
-            "/usr",
-            "--ro-bind",
-            "/bin",
-            "/bin",
-            "--ro-bind",
-            "/lib",
-            "/lib",
-            "--ro-bind",
-            "/lib64",
-            "/lib64",
-            "--ro-bind",
-            "/etc",
-            "/etc",
-            "--tmpfs",
-            "/tmp",
-            "--proc",
-            "/proc",
-            "--dev",
-            "/dev",
-            "--new-session",
-            "--setenv",
-            "PATH",
-            "/usr/local/bin:/usr/sbin:/usr/bin:/bin",
-        ]
-    )
+    wrapper_args: list[str] = [
+        "--unshare-user-try",
+        "--ro-bind",
+        "/usr",
+        "/usr",
+        "--ro-bind",
+        "/bin",
+        "/bin",
+        "--ro-bind",
+        "/lib",
+        "/lib",
+        "--ro-bind",
+        "/lib64",
+        "/lib64",
+        "--ro-bind",
+        "/etc",
+        "/etc",
+        "--tmpfs",
+        "/tmp",
+        "--proc",
+        "/proc",
+        "--dev",
+        "/dev",
+        "--new-session",
+        "--setenv",
+        "PATH",
+        "/usr/local/bin:/usr/sbin:/usr/bin:/bin",
+    ]
     """Arguments to pass to the bubblewrap executable."""
 
 
@@ -109,4 +107,4 @@ class BubblewrapEnvironment:
         self.cleanup()
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | platform.uname()._asdict()
+        return self.config.model_dump() | platform.uname()._asdict()

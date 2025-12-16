@@ -244,10 +244,10 @@ def test_response_api_model_cache_control():
         messages_cached = [{"role": "user", "content": "test", "cache_control": {"type": "ephemeral"}}]
         mock_cache.return_value = messages_cached
 
-        model = PortkeyResponseAPIModel(model_name="gpt-5-mini", set_cache_control="last_message")
+        model = PortkeyResponseAPIModel(model_name="gpt-5-mini", set_cache_control="default_end")
         model.query(messages_original)
 
-        mock_cache.assert_called_once_with(messages_original, mode="last_message")
+        mock_cache.assert_called_once_with(messages_original, mode="default_end")
 
 
 def test_response_api_model_with_model_kwargs():

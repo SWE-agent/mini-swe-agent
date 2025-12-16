@@ -3,18 +3,18 @@ import os
 import shlex
 import subprocess
 import uuid
-from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from pydantic import BaseModel
 
-@dataclass
-class DockerEnvironmentConfig:
+
+class DockerEnvironmentConfig(BaseModel):
     image: str
     cwd: str = "/"
     """Working directory in which to execute commands."""
-    env: dict[str, str] = field(default_factory=dict)
+    env: dict[str, str] = {}
     """Environment variables to set in the container."""
-    forward_env: list[str] = field(default_factory=list)
+    forward_env: list[str] = []
     """Environment variables to forward to the container.
     Variables are only forwarded if they are set in the host environment.
     In case of conflict with `env`, the `env` variables take precedence.
@@ -23,7 +23,7 @@ class DockerEnvironmentConfig:
     """Timeout for executing commands in the container."""
     executable: str = os.getenv("MSWEA_DOCKER_EXECUTABLE", "docker")
     """Path to the docker/container executable."""
-    run_args: list[str] = field(default_factory=lambda: ["--rm"])
+    run_args: list[str] = ["--rm"]
     """Additional arguments to pass to the docker/container executable.
     Default is ["--rm"], which removes the container after it exits.
     """
@@ -50,7 +50,7 @@ class DockerEnvironment:
         self._start_container()
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config)
+        return self.config.model_dump()
 
     def _start_container(self):
         """Start the Docker container and return the container ID."""

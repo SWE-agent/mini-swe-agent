@@ -1,14 +1,14 @@
 import os
 import platform
 import subprocess
-from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from pydantic import BaseModel
 
-@dataclass
-class LocalEnvironmentConfig:
+
+class LocalEnvironmentConfig(BaseModel):
     cwd: str = ""
-    env: dict[str, str] = field(default_factory=dict)
+    env: dict[str, str] = {}
     timeout: int = 30
 
 
@@ -35,4 +35,4 @@ class LocalEnvironment:
         return {"output": result.stdout, "returncode": result.returncode}
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | platform.uname()._asdict() | os.environ
+        return self.config.model_dump() | platform.uname()._asdict() | os.environ

@@ -1,6 +1,5 @@
 import logging
 from collections.abc import Callable
-from dataclasses import dataclass
 
 import litellm
 from tenacity import (
@@ -18,7 +17,6 @@ from minisweagent.models.utils.openai_utils import coerce_responses_text
 logger = logging.getLogger("litellm_response_api_model")
 
 
-@dataclass
 class LitellmResponseAPIModelConfig(LitellmModelConfig):
     pass
 

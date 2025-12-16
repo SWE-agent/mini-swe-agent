@@ -3,15 +3,14 @@
 import re
 import subprocess
 import time
-from dataclasses import asdict, dataclass
 
 from jinja2 import StrictUndefined, Template
+from pydantic import BaseModel
 
 from minisweagent import Environment, Model
 
 
-@dataclass
-class AgentConfig:
+class AgentConfig(BaseModel):
     # The default settings are the bare minimum to run the agent. Take a look at the config files for improved settings.
     system_template: str = "You are a helpful assistant that can do anything."
     instance_template: str = (
@@ -71,7 +70,7 @@ class DefaultAgent:
         self.extra_template_vars = {}
 
     def render_template(self, template: str, **kwargs) -> str:
-        template_vars = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
+        template_vars = self.config.model_dump() | self.env.get_template_vars() | self.model.get_template_vars()
         return Template(template, undefined=StrictUndefined).render(
             **kwargs, **template_vars, **self.extra_template_vars
         )

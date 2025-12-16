@@ -1,10 +1,10 @@
 import json
 import logging
 import os
-from dataclasses import asdict, dataclass, field
 from typing import Any
 
 import requests
+from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
     retry,
@@ -18,10 +18,9 @@ from minisweagent.models import GLOBAL_MODEL_STATS
 logger = logging.getLogger("requesty_model")
 
 
-@dataclass
-class RequestyModelConfig:
+class RequestyModelConfig(BaseModel):
     model_name: str
-    model_kwargs: dict[str, Any] = field(default_factory=dict)
+    model_kwargs: dict[str, Any] = {}
 
 
 class RequestyAPIError(Exception):
@@ -117,4 +116,4 @@ class RequestyModel:
         }
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}

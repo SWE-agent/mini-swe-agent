@@ -1,13 +1,13 @@
 import logging
 import time
-from dataclasses import asdict, dataclass
 from typing import Any
+
+from pydantic import BaseModel
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 
 
-@dataclass
-class DeterministicModelConfig:
+class DeterministicModelConfig(BaseModel):
     outputs: list[str]
     model_name: str = "deterministic"
     cost_per_call: float = 1.0
@@ -39,4 +39,4 @@ class DeterministicModel:
         return {"content": output}
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
