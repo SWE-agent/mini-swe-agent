@@ -1,6 +1,5 @@
 import logging
 import os
-from dataclasses import dataclass
 
 import litellm
 from tenacity import (
@@ -19,7 +18,6 @@ from minisweagent.models.utils.openai_utils import coerce_responses_text
 logger = logging.getLogger("portkey_response_api_model")
 
 
-@dataclass
 class PortkeyResponseAPIModelConfig(PortkeyModelConfig):
     pass
 
