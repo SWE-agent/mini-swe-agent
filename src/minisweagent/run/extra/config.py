@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Utility to manage the global config file.
 
 You can also directly edit the `.env` file in the config directory.
