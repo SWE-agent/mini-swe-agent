@@ -90,14 +90,16 @@ class DefaultAgent:
             try:
                 self.step()
             except Exception as e:
-                self.add_message("user", str(e))  # always add to the agent's messages in case we continue
+                self.add_message("user", str(e))
                 if isinstance(e, NonTerminatingException):
-                    continue  # recoverable issue; let agent figure it out
+                    # recoverable issue; let agent figure it out based on message we just added
+                    continue
                 info = {"exit_status": type(e).__name__, "submission": str(e)}
                 if isinstance(e, TerminatingException):
                     return info  # task is done; normal exit
+                # any other exception: bad; raise error
                 info["traceback"] = traceback.format_exc()
-                raise e  # any other exception: bad; raise error
+                raise e
             finally:  # save the trajectory after every step no matter what
                 self.save(self.config.output_path, {"info": info})
 
