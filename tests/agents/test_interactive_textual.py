@@ -248,9 +248,9 @@ def test_messages_to_steps_edge_cases():
 
 
 async def test_empty_agent_content(default_config):
-    """Test app behavior with no messages."""
+    """Test app behavior with minimal agent interaction."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=[]),
+        model=DeterministicModel(outputs=["Starting\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]),
         env=LocalEnvironment(),
         **{
             **default_config,
@@ -260,13 +260,14 @@ async def test_empty_agent_content(default_config):
     async with app.run_test() as pilot:
         # Start the agent with the task
         threading.Thread(target=lambda: app.agent.run("Empty test"), daemon=True).start()
-        # Initially should show waiting message
+        # Initially should show waiting message or system prompt
         await pilot.pause(0.1)
         content = get_screen_text(app)
         assert (
             "Waiting for agent to start" in content
             or "You are a helpful assistant that can interact with a computer" in content
-        )
+            or "Starting" in content
+        ), f"Unexpected content: {content}"
 
 
 async def test_log_message_filtering(default_config):
@@ -341,7 +342,12 @@ async def test_list_content_rendering(default_config):
 async def test_confirmation_rejection_with_message(default_config):
     """Test rejecting an action with a custom message."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Test thought\n```bash\necho 'test'\n```"]),
+        model=DeterministicModel(
+            outputs=[
+                "Test thought\n```bash\necho 'test'\n```",
+                "After rejection\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+            ]
+        ),
         env=LocalEnvironment(),
         **{
             **default_config,
@@ -361,7 +367,11 @@ async def test_confirmation_rejection_with_message(default_config):
         # Type rejection message and submit
         await type_text(pilot, "Not safe to run")
         await pilot.press("enter")
-        await pilot.pause(0.1)
+        await pilot.pause(0.2)
+
+        # Navigate to the previous step to see the rejection message
+        await pilot.press("escape")  # unfocus from input if needed
+        await pilot.press("h")  # go back one step
 
         # Verify the command was rejected with the message
         assert "Command not executed: Not safe to run" in get_screen_text(app)
@@ -425,13 +435,17 @@ async def test_whitelist_actions_bypass_confirmation(default_config):
     """Test that whitelisted actions bypass confirmation."""
     app = TextualAgent(
         model=DeterministicModel(
-            outputs=["Whitelisted action\n```bash\necho 'safe' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+            outputs=[
+                "Whitelisted action\n```bash\necho 'safe'\n```",
+                "Done\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+            ]
         ),
         env=LocalEnvironment(),
         **{
             **default_config,
             "mode": "confirm",
             "whitelist_actions": [r"echo.*"],
+            "confirm_exit": False,
         },
     )
 
@@ -439,14 +453,13 @@ async def test_whitelist_actions_bypass_confirmation(default_config):
         await pilot.pause(0.2)  # Wait for UI to be ready
         threading.Thread(target=lambda: app.agent.run("Whitelist test"), daemon=True).start()
 
+        # Wait for agent to finish
         for _ in range(10):
             await pilot.pause(0.1)
-            if "echo 'safe'" in get_screen_text(app):
+            if app.agent_state == "STOPPED":
                 break
 
-        # Should execute without confirmation because echo is whitelisted
-        assert app.agent_state != "AWAITING_INPUT"
-        assert "echo 'safe'" in get_screen_text(app)
+        assert app.agent_state == "STOPPED"
 
 
 async def test_input_container_multiple_actions(default_config):

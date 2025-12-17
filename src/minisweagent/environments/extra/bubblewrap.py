@@ -108,3 +108,13 @@ class BubblewrapEnvironment:
 
     def get_template_vars(self) -> dict[str, Any]:
         return self.config.model_dump() | platform.uname()._asdict()
+
+    def serialize(self) -> dict:
+        return {
+            "info": {
+                "config": {
+                    "environment": self.config.model_dump(mode="json"),
+                    "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                }
+            }
+        }

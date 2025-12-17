@@ -1,7 +1,9 @@
 import re
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
+import yaml
 
 from minisweagent.models.test_models import DeterministicModel
 from minisweagent.run.extra.github_issue import DEFAULT_CONFIG, main
@@ -54,13 +56,12 @@ def test_configure_if_first_time_called():
         patch("minisweagent.run.extra.github_issue.DockerEnvironment"),
         patch("minisweagent.run.extra.github_issue.yaml.safe_load") as mock_yaml_load,
         patch("minisweagent.run.extra.github_issue.get_config_path") as mock_get_config_path,
-        patch("minisweagent.run.extra.github_issue.save_traj"),
     ):
         mock_fetch.return_value = "Test issue"
         mock_yaml_load.return_value = {"agent": {}, "environment": {}, "model": {}}
         mock_get_config_path.return_value.read_text.return_value = "test config"
         mock_agent_instance = mock_agent.return_value
-        mock_agent_instance.run.return_value = (0, "success")
+        mock_agent_instance.run.return_value = {"exit_status": "Submitted", "submission": "success"}
         mock_agent_instance.env.execute.return_value = None
 
         main(issue_url="https://github.com/test/repo/issues/1", config=DEFAULT_CONFIG, model="test-model", yolo=True)
@@ -72,39 +73,58 @@ def test_output_file_is_created(tmp_path):
     """Test that output trajectory file is created when output is specified."""
     output_file = tmp_path / "test_github_traj.json"
 
+    # Create a temporary config file with output_path set
+    config_file = tmp_path / "test_config.yaml"
+    default_config_path = Path("src/minisweagent/config/github_issue.yaml")
+    config = yaml.safe_load(default_config_path.read_text())
+    config["agent"]["output_path"] = str(output_file)
+    config_file.write_text(yaml.dump(config))
+
     with (
         patch("minisweagent.run.extra.github_issue.configure_if_first_time"),
         patch("minisweagent.run.extra.github_issue.fetch_github_issue") as mock_fetch,
         patch("minisweagent.run.extra.github_issue.get_model") as mock_get_model,
         patch("minisweagent.run.extra.github_issue.DockerEnvironment") as mock_env_class,
-        patch("minisweagent.run.extra.github_issue.yaml.safe_load") as mock_yaml_load,
-        patch("minisweagent.run.extra.github_issue.get_config_path") as mock_get_config_path,
         patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),
     ):
         mock_fetch.return_value = "Test issue"
-        mock_yaml_load.return_value = {"agent": {"output_path": str(output_file)}, "environment": {}, "model": {}}
-        mock_get_config_path.return_value.read_text.return_value = "test config"
 
         # Setup mock model and environment with required attributes
         mock_model = Mock()
         mock_model.cost = 0.0
         mock_model.n_calls = 0
-        mock_model.config = {}
+        mock_model.config = Mock()
+        mock_model.config.model_dump.return_value = {}
         mock_model.get_template_vars.return_value = {}
+        mock_model.serialize.return_value = {
+            "info": {
+                "model_stats": {"instance_cost": 0.0, "api_calls": 0},
+                "config": {"model": {}, "model_type": "MockModel"},
+            }
+        }
         mock_model.query.side_effect = [
             {"content": "```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone\n```"},
         ]
         mock_get_model.return_value = mock_model
 
         mock_env = Mock()
-        mock_env.config = {}
+        mock_env.config = Mock()
+        mock_env.config.model_dump.return_value = {}
         mock_env.execute.return_value = {"output": "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone"}
-        mock_env.get_template_vars.return_value = {}
+        mock_env.get_template_vars.return_value = {
+            "system": "TestOS",
+            "release": "1.0",
+            "version": "1.0.0",
+            "machine": "x86_64",
+        }
+        mock_env.serialize.return_value = {
+            "info": {"config": {"environment": {}, "environment_type": "MockEnvironment"}}
+        }
         mock_env_class.return_value = mock_env
 
         main(
             issue_url="https://github.com/test/repo/issues/1",
-            config=DEFAULT_CONFIG,
+            config=config_file,
             model="test-model",
             yolo=True,
         )

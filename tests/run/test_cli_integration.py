@@ -1,6 +1,7 @@
 import re
 import subprocess
 import sys
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
@@ -36,7 +37,7 @@ def test_configure_if_first_time_called():
 
         # Setup mock agent instance
         mock_agent = Mock()
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_interactive_agent_class.return_value = mock_agent
 
         # Call main function
@@ -76,7 +77,7 @@ def test_mini_command_calls_run_interactive():
 
         # Setup mock agent instance
         mock_agent = Mock()
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_interactive_agent_class.return_value = mock_agent
 
         # Call main function with task provided (so prompt is not called)
@@ -121,7 +122,7 @@ def test_mini_v_command_calls_run_textual():
 
         # Setup mock agent instance
         mock_agent = Mock()
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_textual_agent_class.return_value = mock_agent
 
         # Call main function with visual=True and task provided
@@ -168,7 +169,7 @@ def test_mini_calls_prompt_when_no_task_provided():
 
         # Setup mock agent instance
         mock_agent = Mock()
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_interactive_agent_class.return_value = mock_agent
 
         # Call main function without task
@@ -215,7 +216,7 @@ def test_mini_v_calls_prompt_when_no_task_provided():
 
         # Setup mock agent instance
         mock_agent = Mock()
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_textual_agent_class.return_value = mock_agent
 
         # Call main function with visual=True but no task
@@ -264,7 +265,7 @@ def test_mini_with_explicit_model():
 
         # Setup mock agent instance
         mock_agent = Mock()
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_interactive_agent_class.return_value = mock_agent
 
         # Call main function with explicit model
@@ -309,7 +310,7 @@ def test_yolo_mode_sets_correct_agent_config():
 
         # Setup mock agent instance
         mock_agent = Mock()
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_interactive_agent_class.return_value = mock_agent
 
         # Call main function with yolo=True
@@ -354,7 +355,7 @@ def test_confirm_mode_sets_correct_agent_config():
 
         # Setup mock agent instance
         mock_agent = Mock()
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_interactive_agent_class.return_value = mock_agent
 
         # Call main function with yolo=False (default)
@@ -555,7 +556,7 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
         # Create mock agent with config
         mock_agent = Mock()
         mock_agent.config.confirm_exit = False
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_interactive_agent_class.return_value = mock_agent
 
         # Call main function with --exit-immediately flag
@@ -597,7 +598,7 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
         # Create mock agent with config
         mock_agent = Mock()
         mock_agent.config.confirm_exit = True
-        mock_agent.run.return_value = ("Success", "Result")
+        mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
         mock_interactive_agent_class.return_value = mock_agent
 
         # Call main function without --exit-immediately flag (defaults to False)
@@ -626,7 +627,6 @@ def test_exit_immediately_flag_with_typer_runner():
         patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
         patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
         patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
-        patch("minisweagent.agents.default.save_traj"),
     ):
         # Setup mocks
         mock_model = Mock()
@@ -640,8 +640,8 @@ def test_exit_immediately_flag_with_typer_runner():
 
         # Setup mock agent instance
         mock_agent = Mock()
-        mock_agent.run.return_value = ("Success", "Result")
-        # Mock the attributes needed for save_traj
+        mock_agent.run.return_value = {"exit_status": "Success", "result": "Result"}
+        # Mock the attributes needed for save
         mock_agent.model.cost = 0.0
         mock_agent.model.n_calls = 0
         mock_agent.messages = []
@@ -663,38 +663,66 @@ def test_output_file_is_created(tmp_path):
 
     output_file = tmp_path / "test_traj.json"
 
+    # Create a temporary config file
+    config_file = tmp_path / "test_config.yaml"
+    default_config_path = Path("src/minisweagent/config/default.yaml")
+    config_file.write_text(default_config_path.read_text())
+
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
         patch("minisweagent.run.mini.get_model") as mock_get_model,
         patch("minisweagent.run.mini.LocalEnvironment") as mock_env_class,
-        patch("minisweagent.run.mini.get_config_path") as mock_get_config_path,
-        patch("minisweagent.run.mini.yaml.safe_load") as mock_yaml_load,
         patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),
     ):
         # Setup mocks
         mock_model = Mock()
         mock_model.cost = 0.0
         mock_model.n_calls = 0
-        mock_model.config = {}
+        mock_model.config = Mock()
+        mock_model.config.model_dump.return_value = {}
         mock_model.get_template_vars.return_value = {}
+        mock_model.serialize.return_value = {
+            "info": {
+                "model_stats": {"instance_cost": 0.0, "api_calls": 0},
+                "config": {"model": {}, "model_type": "MockModel"},
+            }
+        }
         mock_model.query.side_effect = [
             {"content": "```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone\n```"},
         ]
         mock_get_model.return_value = mock_model
 
         mock_environment = Mock()
-        mock_environment.config = {}
+        mock_environment.config = Mock()
+        mock_environment.config.model_dump.return_value = {}
         mock_environment.execute.return_value = {"output": "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone"}
-        mock_environment.get_template_vars.return_value = {}
+        mock_environment.get_template_vars.return_value = {
+            "system": "TestOS",
+            "release": "1.0",
+            "version": "1.0.0",
+            "machine": "x86_64",
+        }
+        mock_environment.serialize.return_value = {
+            "info": {"config": {"environment": {}, "environment_type": "MockEnvironment"}}
+        }
         mock_env_class.return_value = mock_environment
 
-        mock_config_path = Mock()
-        mock_config_path.read_text.return_value = ""
-        mock_get_config_path.return_value = mock_config_path
-        mock_yaml_load.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
-
         runner = CliRunner()
-        result = runner.invoke(app, ["--task", "Test task", "--model", "test-model", "--output", str(output_file)])
+        result = runner.invoke(
+            app,
+            [
+                "--task",
+                "Test task",
+                "--model",
+                "test-model",
+                "--output",
+                str(output_file),
+                "--config",
+                str(config_file),
+            ],
+        )
 
+        if result.exit_code != 0:
+            print(f"Error output: {result.output}")
         assert result.exit_code == 0
         assert output_file.exists(), f"Output file {output_file} was not created"

@@ -91,6 +91,8 @@ def main(
 
     agent = agent_class(model, env, **config.get("agent", {}))
     agent.run(task)  # type: ignore[arg-type]
+    if output:
+        console.print(f"Saved trajectory to [bold green]'{output}'[/bold green]")
     return agent
 
 

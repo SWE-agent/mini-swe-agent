@@ -24,7 +24,6 @@ from minisweagent.config import builtin_config_dir, get_config_path
 from minisweagent.environments import get_environment
 from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
-from minisweagent.run.utils.save import save_traj
 from minisweagent.utils.log import add_file_handler, logger
 
 _HELP_TEXT = """Run mini-SWE-agent on SWEBench instances.
@@ -138,6 +137,8 @@ def process_instance(
     progress_manager.update_instance_status(instance_id, "Pulling/starting docker")
 
     agent = None
+    exit_status = None
+    result = None
     extra_info = None
 
     try:
@@ -149,21 +150,28 @@ def process_instance(
             instance_id=instance_id,
             **config.get("agent", {}),
         )
-        exit_status, result = agent.run(task)
+        info = agent.run(task)
+        exit_status = info.get("exit_status")
+        result = info.get("submission")
     except Exception as e:
         logger.error(f"Error processing instance {instance_id}: {e}", exc_info=True)
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
     finally:
-        save_traj(
-            agent,
-            instance_dir / f"{instance_id}.traj.json",
-            exit_status=exit_status,
-            result=result,
-            extra_info=extra_info,
-            instance_id=instance_id,
-            print_fct=logger.info,
-        )
+        if agent is not None:
+            traj_path = instance_dir / f"{instance_id}.traj.json"
+            agent.save(
+                traj_path,
+                {
+                    "info": {
+                        "exit_status": exit_status,
+                        "submission": result,
+                        **(extra_info or {}),
+                    },
+                    "instance_id": instance_id,
+                },
+            )
+            logger.info(f"Saved trajectory to '{traj_path}'")
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
         progress_manager.on_instance_end(instance_id, exit_status)
 
