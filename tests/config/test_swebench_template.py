@@ -4,6 +4,8 @@ from pathlib import Path
 import yaml
 from jinja2 import StrictUndefined, Template
 
+from minisweagent.agents.default import AgentConfig
+
 
 @dataclass
 class MockOutput:
@@ -138,3 +140,66 @@ def test_action_observation_template_just_under_10000_chars():
     assert "<output_tail>" not in result
     assert "<warning>" not in result
     assert "Y" * 8000 in result
+
+
+def test_agent_config_requires_templates():
+    """Test that AgentConfig now requires all template fields (no defaults in code)"""
+    import pytest
+    from pydantic import ValidationError
+
+    # AgentConfig should require all template fields now (Pydantic raises ValidationError)
+    with pytest.raises(ValidationError, match="validation error"):
+        AgentConfig()
+
+
+def test_timeout_template_config_with_truncation():
+    """Test that config files have timeout templates with truncation"""
+    from pathlib import Path
+
+    import yaml
+
+    config_files = [
+        Path("src/minisweagent/config/default.yaml"),
+        Path("src/minisweagent/config/mini.yaml"),
+        Path("src/minisweagent/config/github_issue.yaml"),
+        Path("src/minisweagent/config/extra/swebench.yaml"),
+        Path("src/minisweagent/config/extra/swebench_xml.yaml"),
+        Path("src/minisweagent/config/extra/swebench_roulette.yaml"),
+    ]
+
+    for config_file in config_files:
+        with open(config_file) as f:
+            config = yaml.safe_load(f)
+
+        timeout_template = config.get("agent", {}).get("timeout_template")
+        assert timeout_template is not None, f"{config_file} missing timeout_template"
+
+        # Verify it has truncation logic
+        template = Template(timeout_template, undefined=StrictUndefined)
+        action = {"action": "grep -R pattern ."}
+        long_output = "START_" + "A" * 8000 + "B" * 3000 + "_END"
+
+        result = template.render(action=action, output=long_output)
+
+        # Should contain truncation elements for long output
+        assert "<warning>" in result, f"{config_file} missing truncation"
+        assert "has been truncated" in result
+        assert "<output_head>" in result
+        assert "<elided_chars>" in result
+        assert "characters elided" in result
+        assert "<output_tail>" in result
+
+        # Verify the head contains first part of output
+        assert "START_" in result
+        assert "AAAA" in result
+
+        # Verify the tail contains last part of output
+        assert "_END" in result
+        assert "BBBB" in result
+
+        # Should still contain basic timeout message
+        assert "<command>grep -R pattern .</command>" in result
+        assert "timed out" in result
+
+        # Result should be bounded (not grow with input size)
+        assert len(result) < 15000

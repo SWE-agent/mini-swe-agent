@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Utility to manage the global config file.
 
 You can also directly edit the `.env` file in the config directory.
@@ -35,9 +37,9 @@ Here's a few popular models and the required API keys:
 
 [bold green]anthropic/claude-sonnet-4-5-20250929[/bold green] ([bold green]ANTHROPIC_API_KEY[/bold green])
 [bold green]openai/gpt-5[/bold green] or [bold green]openai/gpt-5-mini[/bold green] ([bold green]OPENAI_API_KEY[/bold green])
-[bold green]gemini/gemini-2.5-pro[/bold green] ([bold green]GEMINI_API_KEY[/bold green])
+[bold green]gemini/gemini-3-pro-preview[/bold green] ([bold green]GEMINI_API_KEY[/bold green])
 
-[bold]Note: Please always include the provider in the model name.[/bold]
+[bold]Note: Please always include the provider (e.g., "openai/") in the model name.[/bold]
 
 [bold yellow]You can leave any setting blank to skip it.[/bold yellow]
 

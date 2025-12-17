@@ -1,4 +1,3 @@
-import dataclasses
 import json
 from collections.abc import Callable
 from pathlib import Path
@@ -10,20 +9,6 @@ from minisweagent import Agent, __version__
 def _get_class_name_with_module(obj: Any) -> str:
     """Get the full class name with module path."""
     return f"{obj.__class__.__module__}.{obj.__class__.__name__}"
-
-
-def _asdict(obj: Any) -> dict:
-    """Convert config objects to dicts."""
-    if dataclasses.is_dataclass(obj):
-        result = {}
-        for field in dataclasses.fields(obj):
-            value = getattr(obj, field.name)
-            if isinstance(value, Path):
-                result[field.name] = str(value)
-            else:
-                result[field.name] = value
-        return result
-    return obj  # let's try our luck
 
 
 def save_traj(
@@ -70,9 +55,9 @@ def save_traj(
         data["info"]["model_stats"]["api_calls"] = agent.model.n_calls
         data["messages"] = agent.messages
         data["info"]["config"] = {
-            "agent": _asdict(agent.config),
-            "model": _asdict(agent.model.config),
-            "environment": _asdict(agent.env.config),
+            "agent": agent.config.model_dump(),
+            "model": agent.model.config.model_dump(),
+            "environment": agent.env.config.model_dump(),
             "agent_type": _get_class_name_with_module(agent),
             "model_type": _get_class_name_with_module(agent.model),
             "environment_type": _get_class_name_with_module(agent.env),

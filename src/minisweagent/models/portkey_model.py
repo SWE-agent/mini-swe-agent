@@ -1,11 +1,11 @@
 import json
 import logging
 import os
-from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
 import litellm
+from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
     retry,
@@ -22,13 +22,14 @@ logger = logging.getLogger("portkey_model")
 try:
     from portkey_ai import Portkey
 except ImportError:
-    Portkey = None
+    raise ImportError(
+        "The portkey-ai package is required to use PortkeyModel. Please install it with: pip install portkey-ai"
+    )
 
 
-@dataclass
-class PortkeyModelConfig:
+class PortkeyModelConfig(BaseModel):
     model_name: str
-    model_kwargs: dict[str, Any] = field(default_factory=dict)
+    model_kwargs: dict[str, Any] = {}
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     """We currently use litellm to calculate costs. Here you can register additional models to litellm's model registry.
     Note that this might change if we get better support for Portkey and change how we calculate costs.
@@ -45,12 +46,8 @@ class PortkeyModelConfig:
 
 
 class PortkeyModel:
-    def __init__(self, **kwargs):
-        if Portkey is None:
-            raise ImportError(
-                "The portkey-ai package is required to use PortkeyModel. Please install it with: pip install portkey-ai"
-            )
-        self.config = PortkeyModelConfig(**kwargs)
+    def __init__(self, *, config_class: type = PortkeyModelConfig, **kwargs):
+        self.config = config_class(**kwargs)
         self.cost = 0.0
         self.n_calls = 0
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
@@ -76,6 +73,7 @@ class PortkeyModel:
         self.client = Portkey(**client_kwargs)
 
     @retry(
+        reraise=True,
         stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
@@ -92,7 +90,7 @@ class PortkeyModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
-        response = self._query(messages, **kwargs)
+        response = self._query([{"role": msg["role"], "content": msg["content"]} for msg in messages], **kwargs)
         cost = self._calculate_cost(response)
         self.n_calls += 1
         self.cost += cost
@@ -106,7 +104,7 @@ class PortkeyModel:
         }
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
     def _calculate_cost(self, response) -> float:
         response_for_cost_calc = response.model_copy()

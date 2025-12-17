@@ -1,20 +1,19 @@
 import random
-from collections.abc import Callable
-from dataclasses import asdict, dataclass
+
+from pydantic import BaseModel
 
 from minisweagent import Model
 from minisweagent.models import get_model
 
 
-@dataclass
-class RouletteModelConfig:
+class RouletteModelConfig(BaseModel):
     model_kwargs: list[dict]
     """The models to choose from"""
     model_name: str = "roulette"
 
 
 class RouletteModel:
-    def __init__(self, *, config_class: Callable = RouletteModelConfig, **kwargs):
+    def __init__(self, *, config_class: type = RouletteModelConfig, **kwargs):
         """This "meta"-model randomly selects one of the models at every call"""
         self.config = config_class(**kwargs)
         self.models = [get_model(config=config) for config in self.config.model_kwargs]
@@ -28,7 +27,7 @@ class RouletteModel:
         return sum(model.n_calls for model in self.models)
 
     def get_template_vars(self) -> dict:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
     def select_model(self) -> Model:
         return random.choice(self.models)
@@ -40,8 +39,7 @@ class RouletteModel:
         return response
 
 
-@dataclass
-class InterleavingModelConfig:
+class InterleavingModelConfig(BaseModel):
     model_kwargs: list[dict]
     sequence: list[int] | None = None
     """If set to 0, 0, 1, we will return the first model 2 times, then the second model 1 time,
@@ -50,7 +48,7 @@ class InterleavingModelConfig:
 
 
 class InterleavingModel(RouletteModel):
-    def __init__(self, *, config_class: Callable = InterleavingModelConfig, **kwargs):
+    def __init__(self, *, config_class: type = InterleavingModelConfig, **kwargs):
         """This "meta"-model alternates between the models in the sequence for every call"""
         super().__init__(config_class=config_class, **kwargs)
 
