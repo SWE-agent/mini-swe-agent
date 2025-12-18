@@ -38,6 +38,20 @@ class RouletteModel:
         response["model_name"] = model.config.model_name
         return response
 
+    def serialize(self) -> dict:
+        return {
+            "info": {
+                "model_stats": {
+                    "instance_cost": self.cost,
+                    "api_calls": self.n_calls,
+                },
+                "config": {
+                    "model": self.config.model_dump(mode="json"),
+                    "model_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                },
+            }
+        }
+
 
 class InterleavingModelConfig(BaseModel):
     model_kwargs: list[dict]

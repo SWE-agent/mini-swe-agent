@@ -49,6 +49,8 @@ class Model(Protocol):
 
     def get_template_vars(self) -> dict[str, Any]: ...
 
+    def serialize(self) -> dict: ...
+
 
 class Environment(Protocol):
     """Protocol for execution environments."""
@@ -58,6 +60,8 @@ class Environment(Protocol):
     def execute(self, command: str, cwd: str = "") -> dict[str, str]: ...
 
     def get_template_vars(self) -> dict[str, Any]: ...
+
+    def serialize(self) -> dict: ...
 
 
 class Agent(Protocol):

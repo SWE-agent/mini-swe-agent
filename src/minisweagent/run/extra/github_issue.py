@@ -12,7 +12,6 @@ from minisweagent.config import builtin_config_dir, get_config_path
 from minisweagent.environments.docker import DockerEnvironment
 from minisweagent.models import get_model
 from minisweagent.run.extra.config import configure_if_first_time
-from minisweagent.run.utils.save import save_traj
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", builtin_config_dir / "github_issue.yaml"))
 console = Console(highlight=False)
@@ -73,13 +72,7 @@ def main(
 
     agent.env.execute(f"git clone {repo_url} /testbed", cwd="/")
 
-    exit_status, result = None, None
-    try:
-        exit_status, result = agent.run(task)
-    except KeyboardInterrupt:
-        console.print("\n[bold red]KeyboardInterrupt -- goodbye[/bold red]")
-    finally:
-        save_traj(agent, Path("traj.json"), exit_status=exit_status, result=result)
+    agent.run(task)
     return agent
 
 

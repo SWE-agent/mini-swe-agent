@@ -57,18 +57,20 @@ class _TextualAgent(DefaultAgent):
         self._current_action_from_human = False
         return super().query()
 
-    def run(self, task: str, **kwargs) -> tuple[str, str]:
+    def run(self, task: str, **kwargs) -> dict:
         try:
-            exit_status, result = super().run(task, **kwargs)
+            info = super().run(task, **kwargs)
         except Exception as e:
-            result = str(e)
+            info = {"submission": str(e), "exit_status": "ERROR"}
             self.app.call_from_thread(self.app.action_quit)
             print(traceback.format_exc())
-            return "ERROR", result
+            return info
         else:
-            self.app.call_from_thread(self.app.on_agent_finished, exit_status, result)
+            self.app.call_from_thread(
+                self.app.on_agent_finished, info.get("exit_status", "Unknown"), info.get("submission", "")
+            )
         self.app.call_from_thread(self.app.action_quit)
-        return exit_status, result
+        return info
 
     def execute_action(self, action: dict) -> dict:
         if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
@@ -274,10 +276,10 @@ class TextualAgent(App):
 
         self._vscroll = VerticalScroll()
 
-    def run(self, task: str, **kwargs) -> tuple[str, str]:
+    def run(self, task: str, **kwargs) -> dict:
         threading.Thread(target=lambda: self.agent.run(task, **kwargs), daemon=True).start()
         super().run()
-        return self.exit_status, self.result
+        return {"exit_status": self.exit_status, "submission": self.result}
 
     # --- Basics ---
 
