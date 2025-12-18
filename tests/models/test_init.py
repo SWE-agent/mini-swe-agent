@@ -105,15 +105,6 @@ class TestGetModel:
             assert model.config.outputs == ["hello"]
             assert model.config.model_name == "test-model"
 
-    def test_env_var_overrides_config_api_key(self):
-        """Test that MSWEA_MODEL_API_KEY overrides config api_key."""
-        with patch.dict(os.environ, {"MSWEA_MODEL_API_KEY": "env-key"}):
-            config = {"model_kwargs": {"api_key": "config-key"}, "model_class": "litellm"}
-            model = get_model("test-model", config)
-
-            # LitellmModel stores the api_key in model_kwargs
-            assert model.config.model_kwargs["api_key"] == "env-key"
-
     def test_config_api_key_used_when_no_env_var(self):
         """Test that config api_key is used when env var is not set."""
         with patch.dict(os.environ, {}, clear=True):
@@ -122,15 +113,6 @@ class TestGetModel:
 
             # LitellmModel stores the api_key in model_kwargs
             assert model.config.model_kwargs["api_key"] == "config-key"
-
-    def test_env_var_sets_api_key_when_no_config_key(self):
-        """Test that MSWEA_MODEL_API_KEY is used when config has no api_key."""
-        with patch.dict(os.environ, {"MSWEA_MODEL_API_KEY": "env-key"}):
-            config = {"model_class": "litellm"}
-            model = get_model("test-model", config)
-
-            # LitellmModel stores the api_key in model_kwargs
-            assert model.config.model_kwargs["api_key"] == "env-key"
 
     def test_no_api_key_when_none_provided(self):
         """Test that no api_key is set when neither env var nor config provide one."""

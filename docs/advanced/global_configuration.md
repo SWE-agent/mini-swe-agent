@@ -30,7 +30,7 @@ or to update specific settings:
 mini-extra config set KEY VALUE
 # e.g.,
 mini-extra config set MSWEA_MODEL_NAME "anthropic/claude-sonnet-4-5-20250929"
-mini-extra config set MSWEA_MODEL_API_KEY "sk-..."
+mini-extra config set ANTHROPIC_API_KEY "sk-..."
 ```
 
 or to unset a key:
@@ -38,7 +38,7 @@ or to unset a key:
 ```bash
 mini-extra config unset KEY
 # e.g.,
-mini-extra config unset MSWEA_MODEL_API_KEY
+mini-extra config unset ANTHROPIC_API_KEY
 ```
 
 You can also edit the `.env` file directly and we provide a helper function for that:
@@ -65,10 +65,6 @@ setx KEY "value"
 # Default model name
 # (default: not set)
 MSWEA_MODEL_NAME="anthropic/claude-sonnet-4-5-20250929"
-
-# Default API key
-# (default: not set)
-MSWEA_MODEL_API_KEY="sk-..."
 ```
 
 To ignore errors from cost tracking checks (for example for free models), set:
