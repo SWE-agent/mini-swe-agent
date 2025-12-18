@@ -60,6 +60,16 @@ class SingularityEnvironment:
     def get_template_vars(self) -> dict[str, Any]:
         return self.config.model_dump()
 
+    def serialize(self) -> dict:
+        return {
+            "info": {
+                "config": {
+                    "environment": self.config.model_dump(mode="json"),
+                    "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                }
+            }
+        }
+
     def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in a Singularity container and return the result as a dict."""
         cmd = [self.config.executable, "exec"]
