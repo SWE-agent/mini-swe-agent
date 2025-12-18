@@ -52,6 +52,16 @@ class DockerEnvironment:
     def get_template_vars(self) -> dict[str, Any]:
         return self.config.model_dump()
 
+    def serialize(self) -> dict:
+        return {
+            "info": {
+                "config": {
+                    "environment": self.config.model_dump(mode="json"),
+                    "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                }
+            }
+        }
+
     def _start_container(self):
         """Start the Docker container and return the container ID."""
         container_name = f"minisweagent-{uuid.uuid4().hex[:8]}"

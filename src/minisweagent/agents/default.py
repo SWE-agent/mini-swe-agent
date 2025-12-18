@@ -1,25 +1,40 @@
 """Basic agent class. See https://mini-swe-agent.com/latest/advanced/control_flow/ for visual explanation."""
 
+import json
 import re
 import subprocess
 import time
+import traceback
+from pathlib import Path
 
 from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
-from minisweagent import Environment, Model
+from minisweagent import Environment, Model, __version__
+from minisweagent.utils.serialize import recursive_merge
 
 
 class AgentConfig(BaseModel):
-    # Check the config files in minisweagent/config for example settings
+    """Check the config files in minisweagent/config for example settings."""
+
     system_template: str
+    """Template for the system message (the first message)."""
     instance_template: str
+    """Template for the first user message specifying the task (the second message overall)."""
     timeout_template: str
+    """Template used when a command timed out."""
     format_error_template: str
+    """Template used when the LM's output is not in the expected format."""
     action_observation_template: str
+    """Template used to render the observation after executing an action."""
     action_regex: str = r"```bash\s*\n(.*?)\n```"
+    """Regex to extract the action from the LM's output."""
     step_limit: int = 0
+    """Maximum number of steps the agent can take."""
     cost_limit: float = 3.0
+    """Stop agent after exceeding (!) this cost."""
+    output_path: Path | None = None
+    """Save the trajectory to this path."""
 
 
 class NonTerminatingException(Exception):
@@ -48,6 +63,7 @@ class LimitsExceeded(TerminatingException):
 
 class DefaultAgent:
     def __init__(self, model: Model, env: Environment, *, config_class: type = AgentConfig, **kwargs):
+        """See the `AgentConfig` class for permitted keyword arguments."""
         self.config = config_class(**kwargs)
         self.messages: list[dict] = []
         self.model = model
@@ -63,20 +79,29 @@ class DefaultAgent:
     def add_message(self, role: str, content: str, **kwargs):
         self.messages.append({"role": role, "content": content, "timestamp": time.time(), **kwargs})
 
-    def run(self, task: str, **kwargs) -> tuple[str, str]:
-        """Run step() until agent is finished. Return exit status & message"""
+    def run(self, task: str, **kwargs) -> dict:
+        """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
         self.add_message("system", self.render_template(self.config.system_template))
         self.add_message("user", self.render_template(self.config.instance_template))
         while True:
+            info = {}
             try:
                 self.step()
-            except NonTerminatingException as e:
+            except Exception as e:
                 self.add_message("user", str(e))
-            except TerminatingException as e:
-                self.add_message("user", str(e))
-                return type(e).__name__, str(e)
+                if isinstance(e, NonTerminatingException):
+                    # recoverable issue; let agent figure it out based on message we just added
+                    continue
+                info = {"exit_status": type(e).__name__, "submission": str(e)}
+                if isinstance(e, TerminatingException):
+                    return info  # task is done; normal exit
+                # any other exception: bad; raise error
+                info["traceback"] = traceback.format_exc()
+                raise e
+            finally:  # save the trajectory after every step no matter what
+                self.save(self.config.output_path, {"info": info})
 
     def step(self) -> dict:
         """Query the LM, execute the action, return the observation."""
@@ -120,3 +145,27 @@ class DefaultAgent:
         lines = output.get("output", "").lstrip().splitlines(keepends=True)
         if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]:
             raise Submitted("".join(lines[1:]))
+
+    def serialize(self) -> dict:
+        """Serialize agent state to a json-compatible nested dictionary for saving."""
+        return {
+            "info": {
+                "config": {
+                    "agent": self.config.model_dump(mode="json"),
+                    "agent_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                },
+            },
+            "messages": self.messages,
+        }
+
+    def save(self, path: Path | None, *extra_dicts) -> dict:
+        """Save the trajectory of the agent to a file if path is given. Returns full serialized data.
+        You can pass additional dictionaries with extra data to be (recursively) merged into the output data.
+        """
+        data = recursive_merge(self.serialize(), self.model.serialize(), self.env.serialize(), *extra_dicts)
+        data["trajectory_format"] = "mini-swe-agent-1"
+        data["info"]["mini_version"] = __version__
+        if path:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(data, indent=2))
+        return data

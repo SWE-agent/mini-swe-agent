@@ -30,9 +30,9 @@ def test_successful_completion(default_config):
         **default_config,
     )
 
-    exit_status, result = agent.run("Echo hello world then finish")
-    assert exit_status == "Submitted"
-    assert result == "Task completed successfully\n"
+    info = agent.run("Echo hello world then finish")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "Task completed successfully\n"
     assert agent.model.n_calls == 2
     assert len(agent.messages) == 6  # system, user, assistant, user, assistant, user
 
@@ -47,8 +47,8 @@ def test_step_limit_enforcement(default_config):
         **{**default_config, "step_limit": 1},
     )
 
-    exit_status, _ = agent.run("Run multiple commands")
-    assert exit_status == "LimitsExceeded"
+    info = agent.run("Run multiple commands")
+    assert info["exit_status"] == "LimitsExceeded"
     assert agent.model.n_calls == 1
 
 
@@ -62,8 +62,8 @@ def test_cost_limit_enforcement(default_config):
         **{**default_config, "cost_limit": 0.5},
     )
 
-    exit_status, _ = agent.run("Test cost limit")
-    assert exit_status == "LimitsExceeded"
+    info = agent.run("Test cost limit")
+    assert info["exit_status"] == "LimitsExceeded"
 
 
 def test_format_error_handling(default_config):
@@ -80,9 +80,9 @@ def test_format_error_handling(default_config):
         **default_config,
     )
 
-    exit_status, result = agent.run("Test format errors")
-    assert exit_status == "Submitted"
-    assert result == "done\n"
+    info = agent.run("Test format errors")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "done\n"
     assert agent.model.n_calls == 3
     # Should have error messages in conversation
     assert (
@@ -104,9 +104,9 @@ def test_timeout_handling(default_config):
         **default_config,
     )
 
-    exit_status, result = agent.run("Test timeout handling")
-    assert exit_status == "Submitted"
-    assert result == "recovered\n"
+    info = agent.run("Test timeout handling")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "recovered\n"
     # Should have timeout error message
     assert len([msg for msg in agent.messages if "timed out" in msg.get("content", "")]) == 1
 
@@ -126,9 +126,9 @@ def test_timeout_captures_partial_output(default_config):
         env=LocalEnvironment(timeout=1),
         **default_config,
     )
-    exit_status, result = agent.run("Test timeout with partial output")
-    assert exit_status == "Submitted"
-    assert result == "recovered\n"  # final output should be `recovered` from the last command
+    info = agent.run("Test timeout with partial output")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "recovered\n"  # final output should be `recovered` from the last command
     timed_out_messages = [msg for msg in agent.messages if "timed out" in msg.get("content", "")]
     assert len(timed_out_messages) == 1
     assert expected_output in timed_out_messages[0]["content"]  # ensure timed out output is still captured
@@ -190,9 +190,9 @@ def test_message_history_tracking(default_config):
         **default_config,
     )
 
-    exit_status, result = agent.run("Track messages")
-    assert exit_status == "Submitted"
-    assert result == "done\n"
+    info = agent.run("Track messages")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "done\n"
 
     # After completion should have full conversation
     assert len(agent.messages) == 6
@@ -214,9 +214,9 @@ def test_multiple_steps_before_completion(default_config):
         **{**default_config, "cost_limit": 5.0},  # Increase cost limit to allow all 4 calls (4.0 total cost)
     )
 
-    exit_status, result = agent.run("Multi-step task")
-    assert exit_status == "Submitted"
-    assert result == "completed all steps\n"
+    info = agent.run("Multi-step task")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "completed all steps\n"
     assert agent.model.n_calls == 4
 
     # Check that all intermediate outputs are captured (final step doesn't get observation due to termination)
@@ -247,9 +247,9 @@ def test_custom_config(default_config):
         },
     )
 
-    exit_status, result = agent.run("Test custom config")
-    assert exit_status == "Submitted"
-    assert result == "custom config works\n"
+    info = agent.run("Test custom config")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "custom config works\n"
     assert agent.messages[0]["content"] == "You are a test assistant."
     assert "Test custom config" in agent.messages[1]["content"]
 
