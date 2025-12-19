@@ -313,3 +313,23 @@ def test_step_output_includes_action(default_config):
     assert "action" in output
     assert output["action"] == "echo 'hello'"
     assert "output" in output
+
+
+def test_does_not_finish_on_failed_command():
+    """Test agent continues when command with sentinel fails (non-zero exit code)."""
+    agent = DefaultAgent(
+        model=DeterministicModel(
+            outputs=[
+                # Command with sentinel but fails (ls on non-existent dir)
+                "Try finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && ls /nonexistent_dir_12345\n```",
+                # Agent should continue and succeed on second try
+                "Now correct\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered'\n```",
+            ]
+        ),
+        env=LocalEnvironment(),
+    )
+
+    exit_status, result = agent.run("Test failed command with sentinel")
+    assert exit_status == "Submitted"
+    assert result == "recovered\n"
+    assert agent.model.n_calls == 2  # Had to retry
