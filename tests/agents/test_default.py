@@ -315,7 +315,7 @@ def test_step_output_includes_action(default_config):
     assert "output" in output
 
 
-def test_does_not_finish_on_failed_command():
+def test_does_not_finish_on_failed_command(default_config):
     """Test agent continues when command with sentinel fails (non-zero exit code)."""
     agent = DefaultAgent(
         model=DeterministicModel(
@@ -327,6 +327,7 @@ def test_does_not_finish_on_failed_command():
             ]
         ),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     exit_status, result = agent.run("Test failed command with sentinel")
