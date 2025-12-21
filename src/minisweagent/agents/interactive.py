@@ -15,7 +15,8 @@ from rich.console import Console
 from rich.rule import Rule
 
 from minisweagent import global_config_dir
-from minisweagent.agents.default import AgentConfig, DefaultAgent, LimitsExceeded, NonTerminatingException, Submitted
+from minisweagent.agents.default import AgentConfig, DefaultAgent
+from minisweagent.exceptions import LimitsExceeded, NonTerminatingException, Submitted
 
 console = Console(highlight=False)
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "interactive_history.txt"))
@@ -37,29 +38,29 @@ class InteractiveAgent(DefaultAgent):
         super().__init__(*args, config_class=config_class, **kwargs)
         self.cost_last_confirmed = 0.0
 
-    def add_message(self, role: str, content: str, **kwargs):
+    def add_messages(self, messages: list[dict]):
         # Extend supermethod to print messages
-        super().add_message(role, content, **kwargs)
-        if role == "assistant":
-            console.print(
-                f"\n[red][bold]mini-swe-agent[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):[/red]\n",
-                end="",
-                highlight=False,
-            )
-        else:
-            console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
-        console.print(content, highlight=False, markup=False)
+        for msg in messages:
+            role, content = msg.get("role", "unknown"), msg.get("content", "")
+            if role == "assistant":
+                console.print(
+                    f"\n[red][bold]mini-swe-agent[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):[/red]\n",
+                    end="",
+                    highlight=False,
+                )
+            else:
+                console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
+            console.print(content, highlight=False, markup=False)
+        super().add_messages(messages)
 
-    def query(self) -> dict:
+    def query(self) -> list[dict]:
         # Extend supermethod to handle human mode
         if self.config.mode == "human":
             match command := self._prompt_and_handle_special("[bold yellow]>[/bold yellow] "):
-                case "/y" | "/c":  # Just go to the super query, which queries the LM for the next action
+                case "/y" | "/c":
                     pass
                 case _:
-                    msg = {"content": f"\n```bash\n{command}\n```"}
-                    self.add_message("assistant", msg["content"])
-                    return msg
+                    return [{"role": "assistant", "content": f"\n```bash\n{command}\n```", "action": command}]
         try:
             with console.status("Waiting for the LM to respond..."):
                 return super().query()
@@ -72,13 +73,12 @@ class InteractiveAgent(DefaultAgent):
             self.config.cost_limit = float(input("New cost limit: "))
             return super().query()
 
-    def step(self) -> dict:
+    def step(self):
         # Override the step method to handle user interruption
         try:
             console.print(Rule())
             return super().step()
         except KeyboardInterrupt:
-            # We always add a message about the interrupt and then just proceed to the next step
             interruption_message = self._prompt_and_handle_special(
                 "\n\n[bold yellow]Interrupted.[/bold yellow] "
                 "[green]Type a comment/command[/green] (/h for available commands)"
@@ -88,11 +88,24 @@ class InteractiveAgent(DefaultAgent):
                 interruption_message = "Temporary interruption caught."
             raise NonTerminatingException(f"Interrupted by user: {interruption_message}")
 
-    def execute_action(self, action: dict) -> dict:
-        # Override the execute_action method to handle user confirmation
-        if self.should_ask_confirmation(action["action"]):
-            self.ask_confirmation()
-        return super().execute_action(action)
+    def execute_actions(self, messages: list[dict]) -> list[dict]:
+        # Override to handle user confirmation and confirm_exit
+        for msg in messages:
+            if "action" in msg and self.should_ask_confirmation(msg["action"]):
+                self.ask_confirmation()
+        try:
+            return super().execute_actions(messages)
+        except Submitted as e:
+            if self.config.confirm_exit:
+                console.print(
+                    "[bold green]Agent wants to finish.[/bold green] "
+                    "[green]Type a comment to give it a new task or press enter to quit.\n"
+                    "[bold yellow]>[/bold yellow] ",
+                    end="",
+                )
+                if new_task := self._prompt_and_handle_special("").strip():
+                    raise NonTerminatingException(f"The user added a new task: {new_task}")
+            raise e
 
     def should_ask_confirmation(self, action: str) -> bool:
         return self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions)
@@ -134,18 +147,3 @@ class InteractiveAgent(DefaultAgent):
             console.print(f"Switched to [bold green]{self.config.mode}[/bold green] mode.")
             return user_input
         return user_input
-
-    def has_finished(self, output: dict[str, str]):
-        try:
-            return super().has_finished(output)
-        except Submitted as e:
-            if self.config.confirm_exit:
-                console.print(
-                    "[bold green]Agent wants to finish.[/bold green] "
-                    "[green]Type a comment to give it a new task or press enter to quit.\n"
-                    "[bold yellow]>[/bold yellow] ",
-                    end="",
-                )
-                if new_task := self._prompt_and_handle_special("").strip():
-                    raise NonTerminatingException(f"The user added a new task: {new_task}")
-            raise e

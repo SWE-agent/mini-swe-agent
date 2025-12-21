@@ -1,9 +1,11 @@
 import logging
+import re
 import time
-from typing import Any
 
+from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
+from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 
 
@@ -11,6 +13,12 @@ class DeterministicModelConfig(BaseModel):
     outputs: list[str]
     model_name: str = "deterministic"
     cost_per_call: float = 1.0
+    action_regex: str = r"```bash\s*\n(.*?)\n```"
+    """Regex to extract the action from the LM's output."""
+    format_error_template: str = (
+        "Please provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."
+    )
+    """Template used when the LM's output is not in the expected format."""
 
 
 class DeterministicModel:
@@ -23,7 +31,7 @@ class DeterministicModel:
         self.cost = 0.0
         self.n_calls = 0
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
         self.current_index += 1
         output = self.config.outputs[self.current_index]
         if "/sleep" in output:
@@ -36,10 +44,22 @@ class DeterministicModel:
         self.n_calls += 1
         self.cost += self.config.cost_per_call
         GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
-        return {"content": output}
+        return [
+            {
+                "role": "assistant",
+                "content": output,
+                "action": self.parse_action(output),
+            }
+        ]
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+    def parse_action(self, content: str) -> str:
+        """Parse the action from the model output. Raises FormatError if not exactly one action."""
+        actions = re.findall(self.config.action_regex, content, re.DOTALL)
+        if len(actions) != 1:
+            raise FormatError(
+                Template(self.config.format_error_template, undefined=StrictUndefined).render(actions=actions)
+            )
+        return actions[0].strip()
 
     def serialize(self) -> dict:
         return {

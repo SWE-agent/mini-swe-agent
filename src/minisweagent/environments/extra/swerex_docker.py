@@ -1,9 +1,12 @@
 import asyncio
 from typing import Any
 
+from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 from swerex.deployment.docker import DockerDeployment
 from swerex.runtime.abstract import Command as RexCommand
+
+from minisweagent.exceptions import ExecutionTimeoutError, Submitted
 
 
 class SwerexDockerEnvironmentConfig(BaseModel):
@@ -14,6 +17,12 @@ class SwerexDockerEnvironmentConfig(BaseModel):
     """Timeout for executing commands in the container."""
     deployment_extra_kwargs: dict[str, Any] = {}
     """Extra kwargs to pass to DockerDeployment."""
+    action_observation_template: str = (
+        "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
+    )
+    """Template used to render the observation after executing an action."""
+    timeout_template: str = "Command timed out. Output:\n{{output}}"
+    """Template used when a command timed out."""
 
 
 class SwerexDockerEnvironment:
@@ -41,6 +50,36 @@ class SwerexDockerEnvironment:
             "output": output.stdout,
             "returncode": output.exit_code,
         }
+
+    def execute_messages(self, messages: list[dict]) -> list[dict]:
+        """Execute all actions in messages and return observation messages."""
+        results = []
+        for msg in messages:
+            if "action" not in msg:
+                continue
+            try:
+                output = self.execute(msg["action"])
+            except (TimeoutError, asyncio.TimeoutError) as e:
+                output_text = str(e) if e else ""
+                raise ExecutionTimeoutError(
+                    Template(self.config.timeout_template, undefined=StrictUndefined).render(
+                        action=msg, output=output_text
+                    )
+                )
+            self.check_finished(output)
+            results.extend(self.format_observation(output))
+        return results
+
+    def format_observation(self, output: dict) -> list[dict]:
+        """Format output as observation message(s)."""
+        content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(output=output)
+        return [{"role": "user", "content": content, "extra": output}]
+
+    def check_finished(self, output: dict):
+        """Raises Submitted exception if the output indicates task completion."""
+        lines = output.get("output", "").lstrip().splitlines(keepends=True)
+        if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
+            raise Submitted("".join(lines[1:]))
 
     def get_template_vars(self) -> dict[str, Any]:
         return self.config.model_dump()

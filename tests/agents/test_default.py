@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from minisweagent.agents.default import DefaultAgent, NonTerminatingException
+from minisweagent.agents.default import DefaultAgent
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models.test_models import DeterministicModel
 
@@ -84,11 +84,8 @@ def test_format_error_handling(default_config):
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "done\n"
     assert agent.model.n_calls == 3
-    # Should have error messages in conversation
-    assert (
-        len([msg for msg in agent.messages if "Please always provide EXACTLY ONE action" in msg.get("content", "")])
-        == 2
-    )
+    # Should have error messages in conversation (DeterministicModel uses its own format_error_template)
+    assert len([msg for msg in agent.messages if "Please provide EXACTLY ONE action" in msg.get("content", "")]) == 2
 
 
 def test_timeout_handling(default_config):
@@ -134,47 +131,33 @@ def test_timeout_captures_partial_output(default_config):
     assert expected_output in timed_out_messages[0]["content"]  # ensure timed out output is still captured
 
 
-def test_parse_action_success(default_config):
-    """Test action parsing works correctly for valid formats."""
-    agent = DefaultAgent(
-        model=DeterministicModel(outputs=[]),
-        env=LocalEnvironment(),
-        **default_config,
-    )
+def test_model_parse_action_success(default_config):
+    """Test action parsing works correctly for valid formats (now on model)."""
+    model = DeterministicModel(outputs=[])
 
     # Test different valid formats
-    result = agent.parse_action({"content": "```bash\necho 'test'\n```"})
-    assert result["action"] == "echo 'test'"
-    assert result["content"] == "```bash\necho 'test'\n```"
-
-    result = agent.parse_action({"content": "```bash\nls -la\n```"})
-    assert result["action"] == "ls -la"
-    assert result["content"] == "```bash\nls -la\n```"
-
-    result = agent.parse_action({"content": "Some text\n```bash\necho 'hello'\n```\nMore text"})
-    assert result["action"] == "echo 'hello'"
-    assert result["content"] == "Some text\n```bash\necho 'hello'\n```\nMore text"
+    assert model.parse_action("```bash\necho 'test'\n```") == "echo 'test'"
+    assert model.parse_action("```bash\nls -la\n```") == "ls -la"
+    assert model.parse_action("Some text\n```bash\necho 'hello'\n```\nMore text") == "echo 'hello'"
 
 
-def test_parse_action_failures(default_config):
-    """Test action parsing raises appropriate exceptions for invalid formats."""
-    agent = DefaultAgent(
-        model=DeterministicModel(outputs=[]),
-        env=LocalEnvironment(),
-        **default_config,
-    )
+def test_model_parse_action_failures(default_config):
+    """Test action parsing raises appropriate exceptions for invalid formats (now on model)."""
+    from minisweagent.exceptions import FormatError
+
+    model = DeterministicModel(outputs=[])
 
     # No code blocks
-    with pytest.raises(NonTerminatingException):
-        agent.parse_action({"content": "No code blocks here"})
+    with pytest.raises(FormatError):
+        model.parse_action("No code blocks here")
 
     # Multiple code blocks
-    with pytest.raises(NonTerminatingException):
-        agent.parse_action({"content": "```bash\necho 'first'\n```\n```bash\necho 'second'\n```"})
+    with pytest.raises(FormatError):
+        model.parse_action("```bash\necho 'first'\n```\n```bash\necho 'second'\n```")
 
     # Code block without bash language specifier
-    with pytest.raises(NonTerminatingException):
-        agent.parse_action({"content": "```\nls -la\n```"})
+    with pytest.raises(FormatError):
+        model.parse_action("```\nls -la\n```")
 
 
 def test_message_history_tracking(default_config):
@@ -254,27 +237,26 @@ def test_custom_config(default_config):
     assert "Test custom config" in agent.messages[1]["content"]
 
 
-def test_render_template_model_stats(default_config):
-    """Test that render_template has access to n_model_calls and model_cost from model."""
+def test_render_template_with_extra_vars(default_config):
+    """Test that render_template has access to extra_template_vars."""
     agent = DefaultAgent(
-        model=DeterministicModel(outputs=["output1", "output2"]),
+        model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
         **default_config,
     )
 
-    # Make some model calls to generate stats
-    agent.model.query([])
-    agent.model.query([])
+    # Add extra template vars (this is how task is set in run())
+    agent.extra_template_vars = {"custom_var": "custom_value", "count": 42}
 
-    # Test template rendering with model stats
-    template = "Calls: {{n_model_calls}}, Cost: {{model_cost}}"
+    # Test template rendering with extra vars
+    template = "Var: {{custom_var}}, Count: {{count}}"
     result = agent.render_template(template)
 
-    assert result == "Calls: 2, Cost: 2.0"
+    assert result == "Var: custom_value, Count: 42"
 
 
-def test_messages_include_timestamps(default_config):
-    """Test that all messages include timestamps."""
+def test_messages_structure(default_config):
+    """Test that messages have correct structure after a run."""
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
@@ -286,30 +268,35 @@ def test_messages_include_timestamps(default_config):
         **default_config,
     )
 
-    agent.run("Test timestamps")
+    agent.run("Test message structure")
 
-    # All messages should have timestamps
-    assert all("timestamp" in msg for msg in agent.messages)
-    # Timestamps should be numeric (floats from time.time())
-    assert all(isinstance(msg["timestamp"], float) for msg in agent.messages)
-    # Timestamps should be monotonically increasing
-    timestamps = [msg["timestamp"] for msg in agent.messages]
-    assert timestamps == sorted(timestamps)
+    # All messages should have role and content
+    assert all("role" in msg and "content" in msg for msg in agent.messages)
+    # Assistant messages should have action field
+    assistant_msgs = [msg for msg in agent.messages if msg["role"] == "assistant"]
+    assert all("action" in msg for msg in assistant_msgs)
+    # Observation messages should have extra field
+    obs_msgs = [msg for msg in agent.messages if msg["role"] == "user" and "<returncode>" in msg.get("content", "")]
+    assert all("extra" in msg for msg in obs_msgs)
 
 
-def test_step_output_includes_action(default_config):
-    """Test that step output includes the action that was executed."""
+def test_step_adds_messages(default_config):
+    """Test that step adds assistant and observation messages."""
     agent = DefaultAgent(
         model=DeterministicModel(outputs=["Test command\n```bash\necho 'hello'\n```"]),
         env=LocalEnvironment(),
         **default_config,
     )
 
-    agent.add_message("system", "system message")
-    agent.add_message("user", "user message")
+    agent.add_messages([{"role": "system", "content": "system message"}])
+    agent.add_messages([{"role": "user", "content": "user message"}])
 
-    output = agent.step()
+    initial_count = len(agent.messages)
+    agent.step()
 
-    assert "action" in output
-    assert output["action"] == "echo 'hello'"
-    assert "output" in output
+    # step() should add assistant message + observation message
+    assert len(agent.messages) == initial_count + 2
+    assert agent.messages[-2]["role"] == "assistant"
+    assert agent.messages[-2]["action"] == "echo 'hello'"
+    assert agent.messages[-1]["role"] == "user"
+    assert "<returncode>" in agent.messages[-1]["content"]

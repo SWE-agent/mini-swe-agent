@@ -20,7 +20,10 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
+
+from minisweagent.exceptions import ExecutionTimeoutError, Submitted
 
 
 class BubblewrapEnvironmentConfig(BaseModel):
@@ -61,6 +64,12 @@ class BubblewrapEnvironmentConfig(BaseModel):
         "/usr/local/bin:/usr/sbin:/usr/bin:/bin",
     ]
     """Arguments to pass to the bubblewrap executable."""
+    action_observation_template: str = (
+        "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
+    )
+    """Template used to render the observation after executing an action."""
+    timeout_template: str = "Command timed out. Output:\n{{output}}"
+    """Template used when a command timed out."""
 
 
 class BubblewrapEnvironment:
@@ -97,6 +106,36 @@ class BubblewrapEnvironment:
             stderr=subprocess.STDOUT,
         )
         return {"output": result.stdout, "returncode": result.returncode}
+
+    def execute_messages(self, messages: list[dict]) -> list[dict]:
+        """Execute all actions in messages and return observation messages."""
+        results = []
+        for msg in messages:
+            if "action" not in msg:
+                continue
+            try:
+                output = self.execute(msg["action"])
+            except (TimeoutError, subprocess.TimeoutExpired) as e:
+                output_text = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
+                raise ExecutionTimeoutError(
+                    Template(self.config.timeout_template, undefined=StrictUndefined).render(
+                        action=msg, output=output_text
+                    )
+                )
+            self.check_finished(output)
+            results.extend(self.format_observation(output))
+        return results
+
+    def format_observation(self, output: dict) -> list[dict]:
+        """Format output as observation message(s)."""
+        content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(output=output)
+        return [{"role": "user", "content": content, "extra": output}]
+
+    def check_finished(self, output: dict):
+        """Raises Submitted exception if the output indicates task completion."""
+        lines = output.get("output", "").lstrip().splitlines(keepends=True)
+        if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
+            raise Submitted("".join(lines[1:]))
 
     def cleanup(self):
         if self.working_dir.exists():

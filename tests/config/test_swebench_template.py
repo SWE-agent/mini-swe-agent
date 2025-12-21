@@ -22,8 +22,8 @@ def test_action_observation_template_short_output():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template
-    template_str = config["agent"]["action_observation_template"]
+    # Extract the template (now in environment section)
+    template_str = config["environment"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with short content
@@ -53,8 +53,8 @@ def test_action_observation_template_long_output():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template
-    template_str = config["agent"]["action_observation_template"]
+    # Extract the template (now in environment section)
+    template_str = config["environment"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with long content
@@ -98,8 +98,8 @@ def test_action_observation_template_edge_case_exactly_10000_chars():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template
-    template_str = config["agent"]["action_observation_template"]
+    # Extract the template (now in environment section)
+    template_str = config["environment"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Use a large amount of data that will definitely exceed 10000 chars when rendered
@@ -124,8 +124,8 @@ def test_action_observation_template_just_under_10000_chars():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template
-    template_str = config["agent"]["action_observation_template"]
+    # Extract the template (now in environment section)
+    template_str = config["environment"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Use a reasonably sized output that should be well under 10000 chars when rendered
@@ -171,7 +171,7 @@ def test_timeout_template_config_with_truncation():
         with open(config_file) as f:
             config = yaml.safe_load(f)
 
-        timeout_template = config.get("agent", {}).get("timeout_template")
+        timeout_template = config.get("environment", {}).get("timeout_template")
         assert timeout_template is not None, f"{config_file} missing timeout_template"
 
         # Verify it has truncation logic

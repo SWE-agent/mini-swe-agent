@@ -1,10 +1,12 @@
 import json
 import logging
 import os
+import re
 from pathlib import Path
 from typing import Any, Literal
 
 import litellm
+from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
@@ -14,6 +16,7 @@ from tenacity import (
     wait_exponential,
 )
 
+from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.cache_control import set_cache_control
 
@@ -43,6 +46,12 @@ class PortkeyModelConfig(BaseModel):
     """Set explicit cache control markers, for example for Anthropic models"""
     cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
     """Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""
+    action_regex: str = r"```bash\s*\n(.*?)\n```"
+    """Regex to extract the action from the LM's output."""
+    format_error_template: str = (
+        "Please provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."
+    )
+    """Template used when the LM's output is not in the expected format."""
 
 
 class PortkeyModel:
@@ -87,7 +96,7 @@ class PortkeyModel:
             **(self.config.model_kwargs | kwargs),
         )
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query([{"role": msg["role"], "content": msg["content"]} for msg in messages], **kwargs)
@@ -95,16 +104,24 @@ class PortkeyModel:
         self.n_calls += 1
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
-        return {
-            "content": response.choices[0].message.content or "",
-            "extra": {
-                "response": response.model_dump(),
-                "cost": cost,
-            },
-        }
+        content = response.choices[0].message.content or ""
+        return [
+            {
+                "role": "assistant",
+                "content": content,
+                "action": self.parse_action(content),
+                "extra": {"response": response.model_dump(), "cost": cost},
+            }
+        ]
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+    def parse_action(self, content: str) -> str:
+        """Parse the action from the model output. Raises FormatError if not exactly one action."""
+        actions = re.findall(self.config.action_regex, content, re.DOTALL)
+        if len(actions) != 1:
+            raise FormatError(
+                Template(self.config.format_error_template, undefined=StrictUndefined).render(actions=actions)
+            )
+        return actions[0].strip()
 
     def serialize(self) -> dict:
         return {
