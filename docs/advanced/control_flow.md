@@ -2,7 +2,7 @@
 
 !!! note "Understanding mini"
 
-    We also recently created a long tutorial on understanding the basics of building an AI agent: [View it here](minimal-agent.com).
+    We also recently created a long tutorial on understanding the basics of building an AI agent: [View it here](https://minimal-agent.com).
 
 !!! abstract "Understanding the default agent"
 
