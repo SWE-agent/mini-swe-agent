@@ -1,6 +1,6 @@
 # Agent control flow
 
-!!! note "Understanding mini"
+!!! note "Understanding AI agent basics"
 
     We also recently created a long tutorial on understanding the basics of building an AI agent: [View it here](https://minimal-agent.com).
 
