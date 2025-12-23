@@ -81,6 +81,7 @@ nav:
       - "DefaultAgent": "reference/agents/default.md"
       - "InteractiveAgent": "reference/agents/interactive.md"
       - "TextualAgent": "reference/agents/textual.md"
+      - "HarborMiniAgent": "reference/agents/harbor.md"
     - Models:
       - "LitellmModel": "reference/models/litellm.md"
       - "LitellmResponseAPIModel": "reference/models/litellm_response.md"
