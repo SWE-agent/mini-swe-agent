@@ -134,6 +134,104 @@
             --run_id <run_id>
         ```
 
+## CLI‑Native Agents (Codex, Claude Code, Gemini)
+
+Use the provided config `src/minisweagent/config/extra/swebench_codex_cli.yaml` to run SWE-bench with a CLI-native async agent. This reuses the mini‑SWE‑agent runners and environments while delegating the code‑editing loop to an external CLI (Codex here) in their yolo mode. The same pattern generalizes to other CLI tools (Claude Code, Gemini) with small tweaks.
+
+Note: CLI‑native agents include their own internal scaffolds/orchestration. This integration does not modify those systems; it standardizes only the surrounding harness (dataset loading, containerized environment, and submission outputs) so open-source and academic community can evaluate different CLIs under the same conditions as mini‑swe‑agent.
+
+### What this config does
+- Ensures the CLI binary is available via either host mounts (fast path) or per‑instance install at startup.
+- Two-step deterministic process: (1) run the CLI-native agent to solve the task; (2) submit the patch.
+- Prepares a prompt for the CLI inside the container (`/tmp/prompt.md`).
+- Produces `preds.json` for evaluation with `sb-cli` or the SWE-bench harness.
+
+### Requirements
+- API key set via `mini-extra config set` or exported in the following way:
+  - Codex: `export OPENAI_API_KEY=...`
+  - Claude Code: `export ANTHROPIC_API_KEY=...`
+  - Gemini CLI: `export GEMINI_API_KEY=...`
+- Optional host mounts for faster startup (already encoded in the config): host `node` and `@openai/codex` modules. If not present, the startup script installs them inside the container.
+
+### Example to Run Codex CLI on SWE-bench
+
+Batch mode:
+
+```bash
+mini-extra swebench \
+  --config src/minisweagent/config/extra/swebench_codex_cli.yaml \
+  --subset verified \
+  --split test \
+  --workers 4 \
+  -o outputs/codex_verified_test
+```
+
+Single instance:
+
+```bash
+mini-extra swebench-single \
+  --config src/minisweagent/config/extra/swebench_codex_cli.yaml \
+  --subset verified \
+  --split test \
+  -i sympy__sympy-15599 \
+  -o outputs/codex_single.traj.json
+```
+
+Notes:
+- The `model` is `deterministic` and encodes two fixed actions: run Codex, then submit the patch.
+- Inside the container, the agent runs roughly:
+  - `codex exec --model gpt-5 --config model_reasoning_effort=medium -C /testbed --yolo < /tmp/prompt.md`
+  - Then: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached`
+- Adjust the Codex CLI flags/model for your setup.
+
+### Generalizing to Claude Code or Gemini CLI
+Replicate the pattern by editing a copy of the config in three places:
+
+1) `environment.forward_env` — forward the appropriate API key into the container.
+   - Claude Code: add `ANTHROPIC_API_KEY`
+   - Gemini: add `GOOGLE_API_KEY` (or whatever your CLI expects)
+
+2) `run.env_startup_command` — ensure the CLI exists in the container.
+   - Option A: mount a host‑installed CLI via `environment.run_args`.
+   - Option B: install the CLI at startup (curl/apt/pip/npm) and write a small wrapper in `/usr/local/bin/...`.
+   - Keep the prompt creation to `/tmp/prompt.md`, tailored to your CLI’s input format.
+
+3) `model.outputs` — replace the Codex call with your CLI’s non‑interactive invocation against `/testbed`, keep the same submit line.
+
+Example skeleton (pseudocode; adapt to your CLI):
+
+```yaml
+environment:
+  forward_env:
+    - ANTHROPIC_API_KEY   # or GOOGLE_API_KEY
+  # run_args:            # optional: mount a host CLI binary
+  #   - "-v"; "/path/to/cli:/opt/cli:ro"
+
+run:
+  env_startup_command: |
+    # Install or expose your CLI here
+    cat <<'PROMPT_EOF' > /tmp/prompt.md
+    ... your prompt/body ...
+    PROMPT_EOF
+
+model:
+  model_name: deterministic
+  model_class: deterministic
+  outputs:
+    - |
+      THOUGHT: Run my CLI against /testbed.
+      ```bash
+      my-cli run --non-interactive -C /testbed < /tmp/prompt.md
+      ```
+    - |
+      THOUGHT: Submit final patch.
+      ```bash
+      echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached
+      ```
+```
+
+This gives you a simple way to compare CLI‑native agents (Codex, Gemini, Claude Code, etc.) under the same harness conditions (dataset, container, submission) and evaluation flow used by mini‑swe‑agent.
+
 ## FAQ
 
 > Can I set global cost limits?
