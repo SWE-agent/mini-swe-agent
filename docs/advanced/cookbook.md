@@ -198,7 +198,8 @@ An agent that exits when the `submit` command is issued:
 === "Subclassing the agent"
 
     ```python
-    from minisweagent.agents.default import DefaultAgent, Submitted
+    from minisweagent.agents.default import DefaultAgent
+    from minisweagent.exceptions import Submitted
 
     class AgentQuitsOnSubmit(DefaultAgent):
         def execute_action(self, action: dict) -> dict:
@@ -212,8 +213,9 @@ An agent that exits when the `submit` command is issued:
 === "Subclassing the environment"
 
     ```python
-    from minisweagent.agents.default import DefaultAgent, Submitted
+    from minisweagent.agents.default import DefaultAgent
     from minisweagent.environments.local import LocalEnvironment
+    from minisweagent.exceptions import Submitted
 
     class EnvironmentQuitsOnSubmit(LocalEnvironment):
         def execute(self, command: str, cwd: str = "") -> dict:

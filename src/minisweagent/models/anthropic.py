@@ -21,7 +21,7 @@ class AnthropicModel(LitellmModel):
     def __init__(self, *, config_class: type = AnthropicModelConfig, **kwargs):
         super().__init__(config_class=config_class, **kwargs)
 
-    def query(self, messages: list[dict], **kwargs) -> dict:
+    def query(self, messages: list[dict], **kwargs) -> list[dict]:
         api_key = None
         # Legacy only
         if rotating_keys := os.getenv("ANTHROPIC_API_KEYS"):

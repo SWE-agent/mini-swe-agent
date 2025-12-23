@@ -19,8 +19,8 @@ def test_agent_save_includes_class_names():
     env = LocalEnvironment()
     agent = DefaultAgent(model, env, **default_config)
 
-    agent.add_message("system", "test system message")
-    agent.add_message("user", "test user message")
+    agent.add_messages([{"role": "system", "content": "test system message"}])
+    agent.add_messages([{"role": "user", "content": "test user message"}])
 
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir) / "test_trajectory.json"
@@ -60,8 +60,8 @@ def test_agent_serialize():
     env = LocalEnvironment()
     agent = DefaultAgent(model, env, **default_config)
 
-    agent.add_message("system", "test system message")
-    agent.add_message("user", "test user message")
+    agent.add_messages([{"role": "system", "content": "test system message"}])
+    agent.add_messages([{"role": "user", "content": "test user message"}])
 
     data = agent.serialize()
 

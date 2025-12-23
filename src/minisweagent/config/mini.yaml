@@ -101,6 +101,16 @@ agent:
     ```bash
     anything
     ```
+  step_limit: 0.
+  cost_limit: 3.
+  mode: confirm
+environment:
+  env:
+    PAGER: cat
+    MANPAGER: cat
+    LESS: -R
+    PIP_PROGRESS_BAR: 'off'
+    TQDM_DISABLE: '1'
   action_observation_template: |
     <returncode>{{output.returncode}}</returncode>
     {% if output.output | length < 10000 -%}
@@ -126,22 +136,6 @@ agent:
     {{ output.output[-5000:] }}
     </output_tail>
     {%- endif -%}
-  format_error_template: |
-    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
-    If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
-    without any other command.
-    Else, please format your response exactly as follows:
-
-    <response_example>
-    Here are some thoughts about why you want to perform the action.
-
-    ```bash
-    <action>
-    ```
-    </response_example>
-
-    Note: In rare cases, if you need to reference a similar format in your command, you might have
-    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```bash.
   timeout_template: |
     The last command <command>{{action['action']}}</command> timed out and has been killed.
     The output of the command was:
@@ -160,16 +154,22 @@ agent:
     </output_tail>
     {%- endif %}
     Please try another command and make sure to avoid those requiring interactive input.
-  step_limit: 0.
-  cost_limit: 3.
-  mode: confirm
-environment:
-  env:
-    PAGER: cat
-    MANPAGER: cat
-    LESS: -R
-    PIP_PROGRESS_BAR: 'off'
-    TQDM_DISABLE: '1'
 model:
   model_kwargs:
     drop_params: true
+  format_error_template: |
+    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
+    If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
+    without any other command.
+    Else, please format your response exactly as follows:
+
+    <response_example>
+    Here are some thoughts about why you want to perform the action.
+
+    ```bash
+    <action>
+    ```
+    </response_example>
+
+    Note: In rare cases, if you need to reference a similar format in your command, you might have
+    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```bash.

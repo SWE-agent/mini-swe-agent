@@ -680,22 +680,35 @@ def test_output_file_is_created(tmp_path):
         mock_model.n_calls = 0
         mock_model.config = Mock()
         mock_model.config.model_dump.return_value = {}
-        mock_model.get_template_vars.return_value = {}
         mock_model.serialize.return_value = {
             "info": {
                 "model_stats": {"instance_cost": 0.0, "api_calls": 0},
                 "config": {"model": {}, "model_type": "MockModel"},
             }
         }
+        # query now returns list[dict] with action key
         mock_model.query.side_effect = [
-            {"content": "```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone\n```"},
+            [
+                {
+                    "role": "assistant",
+                    "content": "```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone\n```",
+                    "action": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone",
+                }
+            ],
         ]
         mock_get_model.return_value = mock_model
 
         mock_environment = Mock()
         mock_environment.config = Mock()
         mock_environment.config.model_dump.return_value = {}
-        mock_environment.execute.return_value = {"output": "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone"}
+        mock_environment.execute.return_value = {
+            "output": "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone",
+            "returncode": 0,
+        }
+        # execute_messages returns list of observation messages and raises Submitted for completion
+        from minisweagent.exceptions import Submitted
+
+        mock_environment.execute_messages.side_effect = Submitted("done")
         mock_environment.get_template_vars.return_value = {
             "system": "TestOS",
             "release": "1.0",
