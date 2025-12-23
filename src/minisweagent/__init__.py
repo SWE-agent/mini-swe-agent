@@ -22,6 +22,7 @@ from minisweagent.utils.log import logger
 
 package_dir = Path(__file__).resolve().parent
 
+
 global_config_dir = Path(os.getenv("MSWEA_GLOBAL_CONFIG_DIR") or user_config_dir("mini-swe-agent"))
 global_config_dir.mkdir(parents=True, exist_ok=True)
 global_config_file = Path(global_config_dir) / ".env"
@@ -45,9 +46,7 @@ class Model(Protocol):
     cost: float
     n_calls: int
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> dict: ...
-
-    def get_template_vars(self) -> dict[str, Any]: ...
+    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]: ...
 
     def serialize(self) -> dict: ...
 
@@ -58,6 +57,8 @@ class Environment(Protocol):
     config: Any
 
     def execute(self, command: str, cwd: str = "") -> dict[str, str]: ...
+
+    def execute_messages(self, messages: list[dict]) -> list[dict]: ...
 
     def get_template_vars(self) -> dict[str, Any]: ...
 

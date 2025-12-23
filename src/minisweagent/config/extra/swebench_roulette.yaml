@@ -169,6 +169,19 @@ agent:
     This command will submit your work.
     You cannot continue working (reading, editing, testing) in any way on this task after submitting.
     </instructions>
+  step_limit: 250
+  cost_limit: 3.
+
+environment:
+  cwd: "/testbed"
+  timeout: 60
+  env:
+    PAGER: cat
+    MANPAGER: cat
+    LESS: -R
+    PIP_PROGRESS_BAR: 'off'
+    TQDM_DISABLE: '1'
+  environment_class: docker
   action_observation_template: |
     <returncode>{{output.returncode}}</returncode>
     {% if output.output | length < 10000 -%}
@@ -194,21 +207,6 @@ agent:
     {{ output.output[-5000:] }}
     </output_tail>
     {%- endif -%}
-  format_error_template: |
-    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
-
-    Please format your action in triple backticks as shown in <response_example>.
-
-    <response_example>
-    Here are some thoughts about why you want to perform the action.
-
-    ```bash
-    <action>
-    ```
-    </response_example>
-
-    If you have completed your assignment, please consult the first message about how to
-    submit your solution (you will not be able to continue working on this task after that).
   timeout_template: |
     The last command <command>{{action['action']}}</command> timed out and has been killed.
     The output of the command was:
@@ -227,19 +225,6 @@ agent:
     </output_tail>
     {%- endif %}
     Please try another command and make sure to avoid those requiring interactive input.
-  step_limit: 250
-  cost_limit: 3.
-
-environment:
-  cwd: "/testbed"
-  timeout: 60
-  env:
-    PAGER: cat
-    MANPAGER: cat
-    LESS: -R
-    PIP_PROGRESS_BAR: 'off'
-    TQDM_DISABLE: '1'
-  environment_class: docker
 
 model:
   model_name: "roulette"
@@ -249,3 +234,18 @@ model:
       model_kwargs:
         temperature: 0.
     - model_name: "gpt-5"
+  format_error_template: |
+    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
+
+    Please format your action in triple backticks as shown in <response_example>.
+
+    <response_example>
+    Here are some thoughts about why you want to perform the action.
+
+    ```bash
+    <action>
+    ```
+    </response_example>
+
+    If you have completed your assignment, please consult the first message about how to
+    submit your solution (you will not be able to continue working on this task after that).

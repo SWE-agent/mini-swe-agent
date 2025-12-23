@@ -48,7 +48,8 @@ def test_portkey_model_query():
     mock_choice = MagicMock()
     mock_message = MagicMock()
 
-    mock_message.content = "Hello! How can I help you?"
+    # Response must include bash block to avoid FormatError from parse_action
+    mock_message.content = "```bash\necho 'Hello!'\n```"
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
     mock_response.model_dump.return_value = {"test": "response"}
@@ -66,9 +67,11 @@ def test_portkey_model_query():
                 messages = [{"role": "user", "content": "Hello!"}]
                 result = model.query(messages)
 
-                assert result["content"] == "Hello! How can I help you?"
-                assert result["extra"]["response"] == {"test": "response"}
-                assert result["extra"]["cost"] == 0.01
+                # query now returns list[dict]
+                assert result[0]["content"] == "```bash\necho 'Hello!'\n```"
+                assert result[0]["action"] == "echo 'Hello!'"
+                assert result[0]["extra"]["response"] == {"test": "response"}
+                assert result[0]["extra"]["cost"] == 0.01
                 assert model.n_calls == 1
                 assert model.cost == 0.01
 
@@ -76,24 +79,6 @@ def test_portkey_model_query():
                 mock_client.chat.completions.create.assert_called_once_with(model="gpt-4o", messages=messages)
                 # Verify cost calculation was called
                 mock_cost.assert_called_once_with(mock_response.model_copy(), model=None)
-
-
-def test_portkey_model_get_template_vars():
-    """Test PortkeyModel.get_template_vars method."""
-    mock_portkey_class = MagicMock()
-    mock_client = MagicMock()
-    mock_portkey_class.return_value = mock_client
-
-    with patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class):
-        with patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}):
-            model = PortkeyModel(model_name="gpt-4o", model_kwargs={"temperature": 0.7})
-
-            template_vars = model.get_template_vars()
-
-            assert template_vars["model_name"] == "gpt-4o"
-            assert template_vars["model_kwargs"] == {"temperature": 0.7}
-            assert template_vars["n_model_calls"] == 0
-            assert template_vars["model_cost"] == 0.0
 
 
 def test_portkey_model_cost_tracking_ignore_errors():
@@ -104,7 +89,8 @@ def test_portkey_model_cost_tracking_ignore_errors():
     mock_choice = MagicMock()
     mock_message = MagicMock()
 
-    mock_message.content = "Test response"
+    # Response must include bash block to avoid FormatError from parse_action
+    mock_message.content = "```bash\necho test\n```"
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
     mock_response.model_dump.return_value = {"test": "response"}
@@ -125,8 +111,10 @@ def test_portkey_model_cost_tracking_ignore_errors():
                 messages = [{"role": "user", "content": "test"}]
                 result = model.query(messages)
 
-                assert result["content"] == "Test response"
-                assert result["extra"]["cost"] == 0.0
+                # query now returns list[dict]
+                assert result[0]["content"] == "```bash\necho test\n```"
+                assert result[0]["action"] == "echo test"
+                assert result[0]["extra"]["cost"] == 0.0
                 assert model.cost == 0.0
                 assert model.n_calls == 1
                 assert GLOBAL_MODEL_STATS.cost == initial_cost

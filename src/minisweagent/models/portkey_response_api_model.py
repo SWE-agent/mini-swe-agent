@@ -45,11 +45,11 @@ class PortkeyResponseAPIModel(PortkeyModel):
         self._previous_response_id = getattr(resp, "id", None)
         return resp
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
-        text = coerce_responses_text(response)
+        content = coerce_responses_text(response)
         try:
             cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
             assert cost > 0.0, f"Cost is not positive: {cost}"
@@ -64,10 +64,11 @@ class PortkeyResponseAPIModel(PortkeyModel):
         self.n_calls += 1
         self.cost += cost
         GLOBAL_MODEL_STATS.add(cost)
-        return {
-            "content": text,
-            "extra": {
-                "response": response.model_dump() if hasattr(response, "model_dump") else {},
-                "cost": cost,
-            },
-        }
+        return [
+            {
+                "role": "assistant",
+                "content": content,
+                "action": self.parse_action(content),
+                "extra": {"response": response.model_dump() if hasattr(response, "model_dump") else {}, "cost": cost},
+            }
+        ]
