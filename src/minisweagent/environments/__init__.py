@@ -5,6 +5,11 @@ import importlib
 
 from minisweagent import Environment
 
+__all__ = [
+    "get_environment_class",
+    "get_environment",
+]
+
 _ENVIRONMENT_MAPPING = {
     "docker": "minisweagent.environments.docker.DockerEnvironment",
     "singularity": "minisweagent.environments.singularity.SingularityEnvironment",

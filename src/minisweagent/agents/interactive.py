@@ -17,6 +17,11 @@ from rich.rule import Rule
 from minisweagent import global_config_dir
 from minisweagent.agents.default import AgentConfig, DefaultAgent, LimitsExceeded, NonTerminatingException, Submitted
 
+__all__ = [
+    "InteractiveAgentConfig",
+    "InteractiveAgent",
+]
+
 console = Console(highlight=False)
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "interactive_history.txt"))
 

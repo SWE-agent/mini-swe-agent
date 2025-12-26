@@ -6,6 +6,10 @@ import threading
 import warnings
 from typing import Any
 
+__all__ = [
+    "get_key_per_thread",
+]
+
 _THREADS_THAT_USED_API_KEYS: list[Any] = []
 
 

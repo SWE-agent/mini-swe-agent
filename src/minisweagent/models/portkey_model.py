@@ -26,6 +26,11 @@ except ImportError:
         "The portkey-ai package is required to use PortkeyModel. Please install it with: pip install portkey-ai"
     )
 
+__all__ = [
+    "PortkeyModelConfig",
+    "PortkeyModel",
+]
+
 
 class PortkeyModelConfig(BaseModel):
     model_name: str

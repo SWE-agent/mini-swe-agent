@@ -7,6 +7,11 @@ from typing import Any
 
 from pydantic import BaseModel
 
+__all__ = [
+    "DockerEnvironmentConfig",
+    "DockerEnvironment",
+]
+
 
 class DockerEnvironmentConfig(BaseModel):
     image: str

@@ -5,6 +5,13 @@ from pydantic import BaseModel
 from minisweagent import Model
 from minisweagent.models import get_model
 
+__all__ = [
+    "RouletteModelConfig",
+    "RouletteModel",
+    "InterleavingModelConfig",
+    "InterleavingModel",
+]
+
 
 class RouletteModelConfig(BaseModel):
     model_kwargs: list[dict]

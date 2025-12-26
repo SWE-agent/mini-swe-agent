@@ -24,6 +24,10 @@ from rich.table import Table
 
 import minisweagent.models
 
+__all__ = [
+    "RunBatchProgressManager",
+]
+
 
 def _shorten_str(s: str, max_len: int, shorten_left=False) -> str:
     if not shorten_left:

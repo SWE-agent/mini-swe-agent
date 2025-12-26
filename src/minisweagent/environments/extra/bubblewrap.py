@@ -22,6 +22,11 @@ from typing import Any
 
 from pydantic import BaseModel
 
+__all__ = [
+    "BubblewrapEnvironmentConfig",
+    "BubblewrapEnvironment",
+]
+
 
 class BubblewrapEnvironmentConfig(BaseModel):
     cwd: str = ""

@@ -5,6 +5,10 @@ from typing import Any
 
 from minisweagent import Agent, __version__
 
+__all__ = [
+    "save_traj",
+]
+
 
 def _get_class_name_with_module(obj: Any) -> str:
     """Get the full class name with module path."""
