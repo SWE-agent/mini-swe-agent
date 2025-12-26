@@ -119,4 +119,6 @@ class DefaultAgent:
         """Raises Submitted exception with final output if the agent has finished its task."""
         lines = output.get("output", "").lstrip().splitlines(keepends=True)
         if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]:
+            if output.get("returncode", 0) != 0:
+                return  # Command failed - let agent see error and retry
             raise Submitted("".join(lines[1:]))
