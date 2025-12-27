@@ -129,7 +129,7 @@
         ```bash
         python -m swebench.harness.run_evaluation \
             --dataset_name princeton-nlp/SWE-bench_Verified \
-            --predictions_path all_preds.jsonl \
+            --predictions_path preds.jsonl \
             --max_workers <num_workers> \
             --run_id <run_id>
         ```
