@@ -2,6 +2,10 @@ import copy
 import warnings
 from typing import Literal
 
+__all__ = [
+    "set_cache_control",
+]
+
 
 def _get_content_text(entry: dict) -> str:
     if isinstance(entry["content"], str):

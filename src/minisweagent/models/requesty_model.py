@@ -15,6 +15,14 @@ from tenacity import (
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 
+__all__ = [
+    "RequestyModelConfig",
+    "RequestyModel",
+    "RequestyAPIError",
+    "RequestyAuthenticationError",
+    "RequestyRateLimitError",
+]
+
 logger = logging.getLogger("requesty_model")
 
 

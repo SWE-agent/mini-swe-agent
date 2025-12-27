@@ -15,6 +15,11 @@ from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_utils import coerce_responses_text
 
+__all__ = [
+    "PortkeyResponseAPIModelConfig",
+    "PortkeyResponseAPIModel",
+]
+
 logger = logging.getLogger("portkey_response_api_model")
 
 
