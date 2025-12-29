@@ -36,21 +36,32 @@ class DefaultAgent:
         self.env = env
         self.extra_template_vars = {}
 
-    def render_template(self, template: str, **kwargs) -> str:
-        template_vars = self.config.model_dump() | self.env.get_template_vars()
-        return Template(template, undefined=StrictUndefined).render(
-            **kwargs, **template_vars, **self.extra_template_vars
+    def get_template_vars(self, *extra_dicts: dict | None) -> dict:
+        return recursive_merge(
+            self.config.model_dump(),
+            self.env.get_template_vars(),
+            self.model.get_template_vars(),
+            self.extra_template_vars,
+            *extra_dicts,
         )
 
-    def add_messages(self, messages: list[dict]):
-        self.messages.extend(messages)
+    def _render_template(self, template: str) -> str:
+        return Template(template, undefined=StrictUndefined).render(**self.get_template_vars())
 
-    def run(self, task: str, **kwargs) -> dict:
+    def add_messages(self, messages: list[dict]) -> list[dict]:
+        self.messages.extend(messages)
+        return messages
+
+    def run(self, task: str = "", **kwargs) -> dict:
         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
-        self.add_messages([{"role": "system", "content": self.render_template(self.config.system_template)}])
-        self.add_messages([{"role": "user", "content": self.render_template(self.config.instance_template)}])
+        self.add_messages(
+            [
+                {"role": "system", "content": self._render_template(self.config.system_template)},
+                {"role": "user", "content": self._render_template(self.config.instance_template)},
+            ]
+        )
         while True:
             info = {}
             try:
@@ -67,43 +78,40 @@ class DefaultAgent:
             finally:
                 self.save(self.config.output_path, {"info": info})
 
-    def step(self):
+    def step(self) -> list[dict]:
         """Query the LM, execute actions."""
-        self.execute_actions(self.query())
+        return self.execute_actions(self.query())
 
     def query(self) -> list[dict]:
         """Query the model and return model messages. Override to add hooks."""
         if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
             raise LimitsExceeded()
-        messages = self.model.query(self.messages)
-        self.add_messages(messages)
-        return messages
+        return self.add_messages(self.model.query(self.messages))
 
     def execute_actions(self, messages: list[dict]) -> list[dict]:
         """Execute actions in messages, add all messages, return observation messages. Override to add hooks."""
-        observation_messages = self.env.execute_messages(messages)
-        self.add_messages(observation_messages)
-        return observation_messages
+        return self.add_messages(self.env.execute_messages(messages, self.get_template_vars()))
 
-    def serialize(self) -> dict:
+    def serialize(self, *extra_dicts) -> dict:
         """Serialize agent state to a json-compatible nested dictionary for saving."""
-        return {
+        agent_data = {
             "info": {
                 "config": {
                     "agent": self.config.model_dump(mode="json"),
                     "agent_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
                 },
+                "mini_version": __version__,
             },
             "messages": self.messages,
+            "trajectory_format": "mini-swe-agent-1",
         }
+        return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)
 
     def save(self, path: Path | None, *extra_dicts) -> dict:
         """Save the trajectory of the agent to a file if path is given. Returns full serialized data.
         You can pass additional dictionaries with extra data to be (recursively) merged into the output data.
         """
-        data = recursive_merge(self.serialize(), self.model.serialize(), self.env.serialize(), *extra_dicts)
-        data["trajectory_format"] = "mini-swe-agent-1"
-        data["info"]["mini_version"] = __version__
+        data = self.serialize(*extra_dicts)
         if path:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(data, indent=2))

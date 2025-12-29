@@ -38,7 +38,7 @@ class InteractiveAgent(DefaultAgent):
         super().__init__(*args, config_class=config_class, **kwargs)
         self.cost_last_confirmed = 0.0
 
-    def add_messages(self, messages: list[dict]):
+    def add_messages(self, messages: list[dict]) -> list[dict]:
         # Extend supermethod to print messages
         for msg in messages:
             role, content = msg.get("role", "unknown"), msg.get("content", "")
@@ -51,7 +51,7 @@ class InteractiveAgent(DefaultAgent):
             else:
                 console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
             console.print(content, highlight=False, markup=False)
-        super().add_messages(messages)
+        return super().add_messages(messages)
 
     def query(self) -> list[dict]:
         # Extend supermethod to handle human mode
@@ -73,7 +73,7 @@ class InteractiveAgent(DefaultAgent):
             self.config.cost_limit = float(input("New cost limit: "))
             return super().query()
 
-    def step(self):
+    def step(self) -> list[dict]:
         # Override the step method to handle user interruption
         try:
             console.print(Rule())

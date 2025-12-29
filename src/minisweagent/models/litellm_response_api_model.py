@@ -1,4 +1,5 @@
 import logging
+import time
 from collections.abc import Callable
 
 import litellm
@@ -79,6 +80,7 @@ class LitellmResponseAPIModel(LitellmModel):
                 "role": "assistant",
                 "content": content,
                 "action": self.parse_action(content),
+                "timestamp": time.time(),
                 "extra": {"response": response.model_dump() if hasattr(response, "model_dump") else {}},
             }
         ]

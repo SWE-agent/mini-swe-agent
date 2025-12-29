@@ -84,8 +84,11 @@ def test_format_error_handling(default_config):
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "done\n"
     assert agent.model.n_calls == 3
-    # Should have error messages in conversation (DeterministicModel uses its own format_error_template)
-    assert len([msg for msg in agent.messages if "Please provide EXACTLY ONE action" in msg.get("content", "")]) == 2
+    # Should have error messages in conversation
+    assert (
+        len([msg for msg in agent.messages if "Please always provide EXACTLY ONE action" in msg.get("content", "")])
+        == 2
+    )
 
 
 def test_timeout_handling(default_config):
@@ -237,26 +240,27 @@ def test_custom_config(default_config):
     assert "Test custom config" in agent.messages[1]["content"]
 
 
-def test_render_template_with_extra_vars(default_config):
-    """Test that render_template has access to extra_template_vars."""
+def test_render_template_model_stats(default_config):
+    """Test that render_template has access to n_model_calls and model_cost from model."""
     agent = DefaultAgent(
-        model=DeterministicModel(outputs=[]),
+        model=DeterministicModel(outputs=["```bash\necho 'test1'\n```", "```bash\necho 'test2'\n```"]),
         env=LocalEnvironment(),
         **default_config,
     )
 
-    # Add extra template vars (this is how task is set in run())
-    agent.extra_template_vars = {"custom_var": "custom_value", "count": 42}
+    # Make some model calls to generate stats
+    agent.model.query([])
+    agent.model.query([])
 
-    # Test template rendering with extra vars
-    template = "Var: {{custom_var}}, Count: {{count}}"
-    result = agent.render_template(template)
+    # Test template rendering with model stats
+    template = "Calls: {{n_model_calls}}, Cost: {{model_cost}}"
+    result = agent._render_template(template)
 
-    assert result == "Var: custom_value, Count: 42"
+    assert result == "Calls: 2, Cost: 2.0"
 
 
-def test_messages_structure(default_config):
-    """Test that messages have correct structure after a run."""
+def test_messages_include_timestamps(default_config):
+    """Test that assistant and observation messages include timestamps."""
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
@@ -268,16 +272,19 @@ def test_messages_structure(default_config):
         **default_config,
     )
 
-    agent.run("Test message structure")
+    agent.run("Test timestamps")
 
-    # All messages should have role and content
-    assert all("role" in msg and "content" in msg for msg in agent.messages)
-    # Assistant messages should have action field
+    # Assistant and observation messages should have timestamps (system/user from agent don't have them)
     assistant_msgs = [msg for msg in agent.messages if msg["role"] == "assistant"]
-    assert all("action" in msg for msg in assistant_msgs)
-    # Observation messages should have extra field
     obs_msgs = [msg for msg in agent.messages if msg["role"] == "user" and "<returncode>" in msg.get("content", "")]
-    assert all("extra" in msg for msg in obs_msgs)
+    assert all("timestamp" in msg for msg in assistant_msgs)
+    assert all("timestamp" in msg for msg in obs_msgs)
+    # Timestamps should be numeric (floats from time.time())
+    all_timestamped = [msg for msg in agent.messages if "timestamp" in msg]
+    assert all(isinstance(msg["timestamp"], float) for msg in all_timestamped)
+    # Timestamps should be monotonically increasing (in the order they appear in messages)
+    timestamps = [msg["timestamp"] for msg in all_timestamped]
+    assert timestamps == sorted(timestamps)
 
 
 def test_step_adds_messages(default_config):

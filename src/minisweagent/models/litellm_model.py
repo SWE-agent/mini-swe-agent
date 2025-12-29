@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+import time
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Literal
@@ -35,7 +36,7 @@ class LitellmModelConfig(BaseModel):
     action_regex: str = r"```bash\s*\n(.*?)\n```"
     """Regex to extract the action from the LM's output."""
     format_error_template: str = (
-        "Please provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."
+        "Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."
     )
     """Template used when the LM's output is not in the expected format."""
 
@@ -104,6 +105,7 @@ class LitellmModel:
                 "role": "assistant",
                 "content": content,
                 "action": self.parse_action(content),
+                "timestamp": time.time(),
                 "extra": {"response": response.model_dump()},
             }
         ]
@@ -116,6 +118,9 @@ class LitellmModel:
                 Template(self.config.format_error_template, undefined=StrictUndefined).render(actions=actions)
             )
         return actions[0].strip()
+
+    def get_template_vars(self) -> dict[str, Any]:
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
     def serialize(self) -> dict:
         return {

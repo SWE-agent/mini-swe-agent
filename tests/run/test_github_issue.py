@@ -101,6 +101,7 @@ def test_output_file_is_created(tmp_path):
                 "config": {"model": {}, "model_type": "MockModel"},
             }
         }
+        mock_model.get_template_vars.return_value = {}
         # query now returns list[dict] with action key
         mock_model.query.side_effect = [
             [

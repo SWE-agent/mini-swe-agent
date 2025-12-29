@@ -2,6 +2,7 @@ import logging
 import os
 import shlex
 import subprocess
+import time
 import uuid
 from typing import Any
 
@@ -9,6 +10,7 @@ from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
 from minisweagent.exceptions import ExecutionTimeoutError, Submitted
+from minisweagent.utils.serialize import recursive_merge
 
 
 class DockerEnvironmentConfig(BaseModel):
@@ -58,8 +60,8 @@ class DockerEnvironment:
         self.config = config_class(**kwargs)
         self._start_container()
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return self.config.model_dump()
+    def get_template_vars(self, *extra_dicts: dict[str, Any] | None) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), *extra_dicts)
 
     def serialize(self) -> dict:
         return {
@@ -122,7 +124,7 @@ class DockerEnvironment:
         )
         return {"output": result.stdout, "returncode": result.returncode}
 
-    def execute_messages(self, messages: list[dict]) -> list[dict]:
+    def execute_messages(self, messages: list[dict], extra_template_vars: dict[str, Any] | None = None) -> list[dict]:
         """Execute all actions in messages and return observation messages."""
         results = []
         for msg in messages:
@@ -134,17 +136,19 @@ class DockerEnvironment:
                 output_text = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
                 raise ExecutionTimeoutError(
                     Template(self.config.timeout_template, undefined=StrictUndefined).render(
-                        action=msg, output=output_text
+                        **self.get_template_vars({"action": msg["action"], "output": output_text}, extra_template_vars)
                     )
                 )
             self.check_finished(output)
-            results.extend(self.format_observation(output))
+            results.extend(self.format_observation(msg, output))
         return results
 
-    def format_observation(self, output: dict) -> list[dict]:
+    def format_observation(self, msg: dict, output: dict) -> list[dict]:
         """Format output as observation message(s)."""
-        content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(output=output)
-        return [{"role": "user", "content": content, "extra": output}]
+        content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
+            **self.get_template_vars({"action": msg["action"], "output": output})
+        )
+        return [{"role": "user", "content": content, "timestamp": time.time(), "extra": output}]
 
     def check_finished(self, output: dict):
         """Raises Submitted exception if the output indicates task completion."""
