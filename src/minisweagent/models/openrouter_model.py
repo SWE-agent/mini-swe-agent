@@ -107,7 +107,7 @@ class OpenRouterModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
-        response = self._query([{"role": msg["role"], "content": msg["content"]} for msg in messages], **kwargs)
+        response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
 
         usage = response.get("usage", {})
         cost = usage.get("cost", 0.0)
@@ -128,9 +128,7 @@ class OpenRouterModel:
             {
                 "role": "assistant",
                 "content": content,
-                "action": self.parse_action(content),
-                "timestamp": time.time(),
-                "extra": {"response": response},
+                "extra": {"action": self.parse_action(content), "response": response, "timestamp": time.time()},
             }
         ]
 

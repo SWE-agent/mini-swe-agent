@@ -103,7 +103,7 @@ class DefaultAgent:
                 "mini_version": __version__,
             },
             "messages": self.messages,
-            "trajectory_format": "mini-swe-agent-1",
+            "trajectory_format": "mini-swe-agent-1.1",
         }
         return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)
 

@@ -51,31 +51,36 @@ class LocalEnvironment:
         """Execute all actions in messages and return observation messages."""
         results = []
         for msg in messages:
-            if "action" not in msg:
+            if "action" not in msg.get("extra", {}):
                 continue
+            action = msg["extra"]["action"]
             try:
-                output = self.execute(msg["action"])
+                output = self.execute(action)
             except (TimeoutError, subprocess.TimeoutExpired) as e:
                 output_text = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
                 raise ExecutionTimeoutError(
                     Template(self.config.timeout_template, undefined=StrictUndefined).render(
-                        **self.get_template_vars(
-                            action=msg["action"], output=output_text, **(extra_template_vars or {})
-                        )
+                        **self.get_template_vars(action=action, output=output_text, **(extra_template_vars or {}))
                     )
                 )
-            self.check_finished(output)
-            results.extend(self.format_observation(msg, output))
+            self._check_finished(output)
+            results.extend(self._get_observation_message(msg, output))
         return results
 
-    def format_observation(self, msg: dict, output: dict) -> list[dict]:
-        """Format output as observation message(s)."""
+    def _get_observation_message(self, msg: dict, output: dict) -> list[dict]:
+        """Get observation message for the output of an action."""
         content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
-            **self.get_template_vars(action=msg["action"], output=output)
+            **self.get_template_vars(action=msg["extra"]["action"], output=output)
         )
-        return [{"role": "user", "content": content, "timestamp": time.time(), "extra": output}]
+        return [
+            {
+                "role": "user",
+                "content": content,
+                "extra": {"raw_output": output["output"], "returncode": output["returncode"], "timestamp": time.time()},
+            }
+        ]
 
-    def check_finished(self, output: dict):
+    def _check_finished(self, output: dict):
         """Raises Submitted exception if the output indicates task completion."""
         lines = output.get("output", "").lstrip().splitlines(keepends=True)
         if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":

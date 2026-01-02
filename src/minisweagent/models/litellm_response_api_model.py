@@ -46,8 +46,8 @@ class LitellmResponseAPIModel(LitellmModel):
     )
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
-            # Remove 'timestamp' field added by agent - not supported by OpenAI responses API
-            clean_messages = [{"role": msg["role"], "content": msg["content"]} for msg in messages]
+            # Remove 'extra' field - not supported by OpenAI responses API
+            clean_messages = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
             resp = litellm.responses(
                 model=self.config.model_name,
                 input=clean_messages if self._previous_response_id is None else clean_messages[-1:],
@@ -79,8 +79,10 @@ class LitellmResponseAPIModel(LitellmModel):
             {
                 "role": "assistant",
                 "content": content,
-                "action": self.parse_action(content),
-                "timestamp": time.time(),
-                "extra": {"response": response.model_dump() if hasattr(response, "model_dump") else {}},
+                "extra": {
+                    "action": self.parse_action(content),
+                    "response": response.model_dump() if hasattr(response, "model_dump") else {},
+                    "timestamp": time.time(),
+                },
             }
         ]

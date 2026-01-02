@@ -53,7 +53,9 @@ class _TextualAgent(DefaultAgent):
         if self.config.mode == "human":
             human_input = self.app.input_container.request_input("Enter your command:")
             self._current_action_from_human = True
-            return [{"role": "assistant", "content": f"\n```bash\n{human_input}\n```", "action": human_input}]
+            return [
+                {"role": "assistant", "content": f"\n```bash\n{human_input}\n```", "extra": {"action": human_input}}
+            ]
         self._current_action_from_human = False
         return super().query()
 
@@ -79,10 +81,11 @@ class _TextualAgent(DefaultAgent):
                 continue
             if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
                 raise NonTerminatingException("Command not executed because user switched to manual mode.")
+            action = msg.get("extra", {}).get("action", "")
             if (
                 self.config.mode == "confirm"
-                and msg["action"].strip()
-                and not any(re.match(r, msg["action"]) for r in self.config.whitelist_actions)
+                and action.strip()
+                and not any(re.match(r, action) for r in self.config.whitelist_actions)
             ):
                 result = self.app.input_container.request_input("Press ENTER to confirm or provide rejection reason")
                 if result:
