@@ -81,6 +81,24 @@ def test_portkey_model_query():
                 mock_cost.assert_called_once_with(mock_response.model_copy(), model=None)
 
 
+def test_portkey_model_get_template_vars():
+    """Test PortkeyModel.get_template_vars method."""
+    mock_portkey_class = MagicMock()
+    mock_client = MagicMock()
+    mock_portkey_class.return_value = mock_client
+
+    with patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class):
+        with patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}):
+            model = PortkeyModel(model_name="gpt-4o", model_kwargs={"temperature": 0.7})
+
+            template_vars = model.get_template_vars()
+
+            assert template_vars["model_name"] == "gpt-4o"
+            assert template_vars["model_kwargs"] == {"temperature": 0.7}
+            assert template_vars["n_model_calls"] == 0
+            assert template_vars["model_cost"] == 0.0
+
+
 def test_portkey_model_cost_tracking_ignore_errors():
     """Test that models work with cost_tracking='ignore_errors'."""
     mock_portkey_class = MagicMock()
