@@ -36,13 +36,13 @@ class DefaultAgent:
         self.env = env
         self.extra_template_vars = {}
 
-    def get_template_vars(self, *extra_dicts: dict | None) -> dict:
+    def get_template_vars(self, **kwargs) -> dict:
         return recursive_merge(
             self.config.model_dump(),
             self.env.get_template_vars(),
             self.model.get_template_vars(),
             self.extra_template_vars,
-            *extra_dicts,
+            kwargs,
         )
 
     def _render_template(self, template: str) -> str:
@@ -90,7 +90,7 @@ class DefaultAgent:
 
     def execute_actions(self, messages: list[dict]) -> list[dict]:
         """Execute actions in messages, add all messages, return observation messages. Override to add hooks."""
-        return self.add_messages(self.env.execute_messages(messages, self.get_template_vars()))
+        return self.add_messages(self.env.execute_messages(messages, extra_template_vars=self.get_template_vars()))
 
     def serialize(self, *extra_dicts) -> dict:
         """Serialize agent state to a json-compatible nested dictionary for saving."""

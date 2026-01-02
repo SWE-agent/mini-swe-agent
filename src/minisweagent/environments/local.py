@@ -45,7 +45,9 @@ class LocalEnvironment:
         )
         return {"output": result.stdout, "returncode": result.returncode}
 
-    def execute_messages(self, messages: list[dict], extra_template_vars: dict[str, Any] | None = None) -> list[dict]:
+    def execute_messages(
+        self, messages: list[dict], *, extra_template_vars: dict[str, Any] | None = None
+    ) -> list[dict]:
         """Execute all actions in messages and return observation messages."""
         results = []
         for msg in messages:
@@ -57,7 +59,9 @@ class LocalEnvironment:
                 output_text = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
                 raise ExecutionTimeoutError(
                     Template(self.config.timeout_template, undefined=StrictUndefined).render(
-                        **self.get_template_vars({"action": msg["action"], "output": output_text}, extra_template_vars)
+                        **self.get_template_vars(
+                            action=msg["action"], output=output_text, **(extra_template_vars or {})
+                        )
                     )
                 )
             self.check_finished(output)
@@ -67,7 +71,7 @@ class LocalEnvironment:
     def format_observation(self, msg: dict, output: dict) -> list[dict]:
         """Format output as observation message(s)."""
         content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
-            **self.get_template_vars({"action": msg["action"], "output": output})
+            **self.get_template_vars(action=msg["action"], output=output)
         )
         return [{"role": "user", "content": content, "timestamp": time.time(), "extra": output}]
 
@@ -77,8 +81,8 @@ class LocalEnvironment:
         if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
             raise Submitted("".join(lines[1:]))
 
-    def get_template_vars(self, *extra_dicts: dict[str, Any] | None) -> dict[str, Any]:
-        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), os.environ, *extra_dicts)
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), os.environ, kwargs)
 
     def serialize(self) -> dict:
         return {

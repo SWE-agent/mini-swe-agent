@@ -125,7 +125,7 @@ class PortkeyModel:
             )
         return actions[0].strip()
 
-    def get_template_vars(self) -> dict[str, Any]:
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
         return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
     def serialize(self) -> dict:

@@ -387,7 +387,7 @@ class ExceptionModel:
         self.n_calls += 1
         raise self.exception_type(self.exception_message)
 
-    def get_template_vars(self) -> dict:
+    def get_template_vars(self, **kwargs) -> dict:
         return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
     def serialize(self) -> dict:

@@ -121,7 +121,9 @@ class BubblewrapEnvironment:
                 output_text = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
                 raise ExecutionTimeoutError(
                     Template(self.config.timeout_template, undefined=StrictUndefined).render(
-                        **self.get_template_vars({"action": msg["action"], "output": output_text}, extra_template_vars)
+                        **self.get_template_vars(
+                            action=msg["action"], output=output_text, **(extra_template_vars or {})
+                        )
                     )
                 )
             self.check_finished(output)
@@ -131,7 +133,7 @@ class BubblewrapEnvironment:
     def format_observation(self, msg: dict, output: dict) -> list[dict]:
         """Format output as observation message(s)."""
         content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
-            **self.get_template_vars({"action": msg["action"], "output": output})
+            **self.get_template_vars(action=msg["action"], output=output)
         )
         return [{"role": "user", "content": content, "timestamp": time.time(), "extra": output}]
 
@@ -149,8 +151,8 @@ class BubblewrapEnvironment:
         """Cleanup working_dir when object is destroyed."""
         self.cleanup()
 
-    def get_template_vars(self, *extra_dicts: dict[str, Any] | None) -> dict[str, Any]:
-        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), *extra_dicts)
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), kwargs)
 
     def serialize(self) -> dict:
         return {

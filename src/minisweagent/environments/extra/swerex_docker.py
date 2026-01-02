@@ -65,7 +65,9 @@ class SwerexDockerEnvironment:
                 output_text = str(e) if e else ""
                 raise ExecutionTimeoutError(
                     Template(self.config.timeout_template, undefined=StrictUndefined).render(
-                        **self.get_template_vars({"action": msg["action"], "output": output_text}, extra_template_vars)
+                        **self.get_template_vars(
+                            action=msg["action"], output=output_text, **(extra_template_vars or {})
+                        )
                     )
                 )
             self.check_finished(output)
@@ -75,7 +77,7 @@ class SwerexDockerEnvironment:
     def format_observation(self, msg: dict, output: dict) -> list[dict]:
         """Format output as observation message(s)."""
         content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
-            **self.get_template_vars({"action": msg["action"], "output": output})
+            **self.get_template_vars(action=msg["action"], output=output)
         )
         return [{"role": "user", "content": content, "timestamp": time.time(), "extra": output}]
 
@@ -85,8 +87,8 @@ class SwerexDockerEnvironment:
         if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
             raise Submitted("".join(lines[1:]))
 
-    def get_template_vars(self, *extra_dicts: dict[str, Any] | None) -> dict[str, Any]:
-        return recursive_merge(self.config.model_dump(), *extra_dicts)
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), kwargs)
 
     def serialize(self) -> dict:
         return {
