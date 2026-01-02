@@ -65,7 +65,7 @@
 
     === "Single instance (for debugging)"
 
-        Single instance mode runs on a single task instance with interactivity (useful for debugging).
+        Single instance mode runs on a single task instance with interactivity. This is meant for debugging, and so unlike the batch mode command above, this will not produce a preds.json file.
 
         ```bash
         mini-extra swebench-single --help
