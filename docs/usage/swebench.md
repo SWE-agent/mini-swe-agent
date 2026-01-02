@@ -30,6 +30,7 @@
     === "Batch mode"
 
         Batch mode runs on all task instances in parallel.
+        All agent submissions are written to `preds.json` and agent trajectories will be saved as `<instance id>/<instance id>.traj.json`.
 
         ```bash
         mini-extra swebench --help
@@ -66,6 +67,7 @@
     === "Single instance (for debugging)"
 
         Single instance mode runs on a single task instance with interactivity (useful for debugging).
+        No output files are created.
 
         ```bash
         mini-extra swebench-single --help
