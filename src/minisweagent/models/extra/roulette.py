@@ -26,7 +26,7 @@ class RouletteModel:
     def n_calls(self) -> int:
         return sum(model.n_calls for model in self.models)
 
-    def get_template_vars(self) -> dict:
+    def get_template_vars(self, **kwargs) -> dict:
         return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
     def select_model(self) -> Model:

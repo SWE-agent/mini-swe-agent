@@ -1,7 +1,7 @@
 from typing import Any
 
 
-def recursive_merge(*dictionaries: dict) -> dict:
+def recursive_merge(*dictionaries: dict | None) -> dict:
     """Merge multiple dictionaries recursively.
 
     Later dictionaries take precedence over earlier ones.
@@ -11,6 +11,8 @@ def recursive_merge(*dictionaries: dict) -> dict:
         return {}
     result: dict[str, Any] = {}
     for d in dictionaries:
+        if d is None:
+            continue
         for key, value in d.items():
             if key in result and isinstance(result[key], dict) and isinstance(value, dict):
                 result[key] = recursive_merge(result[key], value)

@@ -60,17 +60,19 @@ def main(
 
     task = fetch_github_issue(issue_url)
 
-    agent = InteractiveAgent(
-        get_model(model, _config.get("model", {})),
-        DockerEnvironment(**_config.get("environment", {})),
-        **_agent_config,
-    )
+    env = DockerEnvironment(**_config.get("environment", {}))
 
     repo_url = issue_url.split("/issues/")[0]
     if github_token := os.getenv("GITHUB_TOKEN"):
         repo_url = repo_url.replace("https://github.com/", f"https://{github_token}@github.com/") + ".git"
 
-    agent.env.execute(f"git clone {repo_url} /testbed", cwd="/")
+    env.execute(f"git clone {repo_url} /testbed", cwd="/")
+
+    agent = InteractiveAgent(
+        get_model(model, _config.get("model", {})),
+        env,
+        **_agent_config,
+    )
 
     agent.run(task)
     return agent
