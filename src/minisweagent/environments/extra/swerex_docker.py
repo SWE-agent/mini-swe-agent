@@ -1,4 +1,5 @@
 import asyncio
+import time
 from typing import Any
 
 from jinja2 import StrictUndefined, Template
@@ -7,6 +8,7 @@ from swerex.deployment.docker import DockerDeployment
 from swerex.runtime.abstract import Command as RexCommand
 
 from minisweagent.exceptions import ExecutionTimeoutError, Submitted
+from minisweagent.utils.serialize import recursive_merge
 
 
 class SwerexDockerEnvironmentConfig(BaseModel):
@@ -51,7 +53,7 @@ class SwerexDockerEnvironment:
             "returncode": output.exit_code,
         }
 
-    def execute_messages(self, messages: list[dict]) -> list[dict]:
+    def execute_messages(self, messages: list[dict], extra_template_vars: dict[str, Any] | None = None) -> list[dict]:
         """Execute all actions in messages and return observation messages."""
         results = []
         for msg in messages:
@@ -63,17 +65,21 @@ class SwerexDockerEnvironment:
                 output_text = str(e) if e else ""
                 raise ExecutionTimeoutError(
                     Template(self.config.timeout_template, undefined=StrictUndefined).render(
-                        action=msg, output=output_text
+                        **self.get_template_vars(
+                            action=msg["action"], output=output_text, **(extra_template_vars or {})
+                        )
                     )
                 )
             self.check_finished(output)
-            results.extend(self.format_observation(output))
+            results.extend(self.format_observation(msg, output))
         return results
 
-    def format_observation(self, output: dict) -> list[dict]:
+    def format_observation(self, msg: dict, output: dict) -> list[dict]:
         """Format output as observation message(s)."""
-        content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(output=output)
-        return [{"role": "user", "content": content, "extra": output}]
+        content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
+            **self.get_template_vars(action=msg["action"], output=output)
+        )
+        return [{"role": "user", "content": content, "timestamp": time.time(), "extra": output}]
 
     def check_finished(self, output: dict):
         """Raises Submitted exception if the output indicates task completion."""
@@ -81,8 +87,8 @@ class SwerexDockerEnvironment:
         if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
             raise Submitted("".join(lines[1:]))
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return self.config.model_dump()
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), kwargs)
 
     def serialize(self) -> dict:
         return {

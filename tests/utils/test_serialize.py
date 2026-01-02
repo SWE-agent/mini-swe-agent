@@ -119,3 +119,10 @@ def test_original_dicts_unchanged():
     recursive_merge(dict1, dict2)
     assert dict1 == dict1_copy
     assert dict2 == dict2_copy
+
+
+def test_none_dictionaries_skipped():
+    """Test that None dictionaries are skipped during merge."""
+    assert recursive_merge(None) == {}
+    assert recursive_merge({"a": 1}, None, {"b": 2}) == {"a": 1, "b": 2}
+    assert recursive_merge(None, {"a": 1}, None, {"b": 2}, None) == {"a": 1, "b": 2}

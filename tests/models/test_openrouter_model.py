@@ -176,6 +176,23 @@ def test_openrouter_model_config():
         assert model.n_calls == 0
 
 
+def test_openrouter_model_get_template_vars():
+    """Test get_template_vars method."""
+    with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
+        model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet", model_kwargs={"temperature": 0.7})
+
+        # Simulate some usage
+        model.cost = 0.001234
+        model.n_calls = 5
+
+        template_vars = model.get_template_vars()
+
+        assert template_vars["model_name"] == "anthropic/claude-3.5-sonnet"
+        assert template_vars["model_kwargs"] == {"temperature": 0.7}
+        assert template_vars["n_model_calls"] == 5
+        assert template_vars["model_cost"] == 0.001234
+
+
 def test_openrouter_model_no_api_key():
     """Test behavior when no API key is provided."""
     with patch.dict(os.environ, {}, clear=True):
