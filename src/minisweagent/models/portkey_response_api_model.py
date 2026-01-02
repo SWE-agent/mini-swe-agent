@@ -69,8 +69,11 @@ class PortkeyResponseAPIModel(PortkeyModel):
             {
                 "role": "assistant",
                 "content": content,
-                "action": self.parse_action(content),
-                "timestamp": time.time(),
-                "extra": {"response": response.model_dump() if hasattr(response, "model_dump") else {}, "cost": cost},
+                "extra": {
+                    "action": self.parse_action(content),
+                    "response": response.model_dump() if hasattr(response, "model_dump") else {},
+                    "cost": cost,
+                    "timestamp": time.time(),
+                },
             }
         ]

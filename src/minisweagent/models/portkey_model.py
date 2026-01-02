@@ -100,7 +100,7 @@ class PortkeyModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
-        response = self._query([{"role": msg["role"], "content": msg["content"]} for msg in messages], **kwargs)
+        response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
         cost = self._calculate_cost(response)
         self.n_calls += 1
         self.cost += cost
@@ -110,9 +110,12 @@ class PortkeyModel:
             {
                 "role": "assistant",
                 "content": content,
-                "action": self.parse_action(content),
-                "timestamp": time.time(),
-                "extra": {"response": response.model_dump(), "cost": cost},
+                "extra": {
+                    "action": self.parse_action(content),
+                    "response": response.model_dump(),
+                    "cost": cost,
+                    "timestamp": time.time(),
+                },
             }
         ]
 
