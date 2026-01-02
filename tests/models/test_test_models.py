@@ -13,7 +13,7 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     # Test first call with defaults (query now returns list[dict])
     result = model.query([{"role": "user", "content": "test"}])
     assert result[0]["content"] == "```bash\necho hello\n```"
-    assert result[0]["action"] == "echo hello"
+    assert result[0]["extra"]["action"] == "echo hello"
     assert model.n_calls == 1
     assert model.cost == 1.0
     assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 1
@@ -22,7 +22,7 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     # Test second call and sequential outputs
     result = model.query([{"role": "user", "content": "test"}])
     assert result[0]["content"] == "```bash\necho world\n```"
-    assert result[0]["action"] == "echo world"
+    assert result[0]["extra"]["action"] == "echo world"
     assert model.n_calls == 2
     assert model.cost == 2.0
     assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 2

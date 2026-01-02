@@ -69,7 +69,7 @@ def test_portkey_model_query():
 
                 # query now returns list[dict]
                 assert result[0]["content"] == "```bash\necho 'Hello!'\n```"
-                assert result[0]["action"] == "echo 'Hello!'"
+                assert result[0]["extra"]["action"] == "echo 'Hello!'"
                 assert result[0]["extra"]["response"] == {"test": "response"}
                 assert result[0]["extra"]["cost"] == 0.01
                 assert model.n_calls == 1
@@ -131,7 +131,7 @@ def test_portkey_model_cost_tracking_ignore_errors():
 
                 # query now returns list[dict]
                 assert result[0]["content"] == "```bash\necho test\n```"
-                assert result[0]["action"] == "echo test"
+                assert result[0]["extra"]["action"] == "echo test"
                 assert result[0]["extra"]["cost"] == 0.0
                 assert model.cost == 0.0
                 assert model.n_calls == 1

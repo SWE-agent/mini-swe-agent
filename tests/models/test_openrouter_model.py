@@ -81,7 +81,7 @@ def test_openrouter_model_successful_query(mock_response):
 
             # Verify response (query now returns list[dict])
             assert result[0]["content"] == "```bash\necho '2+2 equals 4'\n```"
-            assert result[0]["action"] == "echo '2+2 equals 4'"
+            assert result[0]["extra"]["action"] == "echo '2+2 equals 4'"
             assert result[0]["extra"]["response"] == mock_response
 
             # Verify cost tracking
@@ -152,7 +152,7 @@ def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
 
             # Verify response (query now returns list[dict])
             assert result[0]["content"] == "```bash\necho '2+2 equals 4'\n```"
-            assert result[0]["action"] == "echo '2+2 equals 4'"
+            assert result[0]["extra"]["action"] == "echo '2+2 equals 4'"
             assert result[0]["extra"]["response"] == mock_response_no_cost
 
             # Verify cost tracking with zero cost (not added to global stats when zero)

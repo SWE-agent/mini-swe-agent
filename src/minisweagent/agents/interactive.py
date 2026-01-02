@@ -60,7 +60,9 @@ class InteractiveAgent(DefaultAgent):
                 case "/y" | "/c":
                     pass
                 case _:
-                    return [{"role": "assistant", "content": f"\n```bash\n{command}\n```", "action": command}]
+                    return [
+                        {"role": "assistant", "content": f"\n```bash\n{command}\n```", "extra": {"action": command}}
+                    ]
         try:
             with console.status("Waiting for the LM to respond..."):
                 return super().query()
@@ -91,7 +93,8 @@ class InteractiveAgent(DefaultAgent):
     def execute_actions(self, messages: list[dict]) -> list[dict]:
         # Override to handle user confirmation and confirm_exit
         for msg in messages:
-            if "action" in msg and self.should_ask_confirmation(msg["action"]):
+            action = msg.get("extra", {}).get("action")
+            if action and self.should_ask_confirmation(action):
                 self.ask_confirmation()
         try:
             return super().execute_actions(messages)

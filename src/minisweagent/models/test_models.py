@@ -49,8 +49,7 @@ class DeterministicModel:
             {
                 "role": "assistant",
                 "content": output,
-                "action": self.parse_action(output),
-                "timestamp": time.time(),
+                "extra": {"action": self.parse_action(output), "timestamp": time.time()},
             }
         ]
 

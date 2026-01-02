@@ -277,13 +277,13 @@ def test_messages_include_timestamps(default_config):
     # Assistant and observation messages should have timestamps (system/user from agent don't have them)
     assistant_msgs = [msg for msg in agent.messages if msg["role"] == "assistant"]
     obs_msgs = [msg for msg in agent.messages if msg["role"] == "user" and "<returncode>" in msg.get("content", "")]
-    assert all("timestamp" in msg for msg in assistant_msgs)
-    assert all("timestamp" in msg for msg in obs_msgs)
+    assert all("timestamp" in msg.get("extra", {}) for msg in assistant_msgs)
+    assert all("timestamp" in msg.get("extra", {}) for msg in obs_msgs)
     # Timestamps should be numeric (floats from time.time())
-    all_timestamped = [msg for msg in agent.messages if "timestamp" in msg]
-    assert all(isinstance(msg["timestamp"], float) for msg in all_timestamped)
+    all_timestamped = [msg for msg in agent.messages if "timestamp" in msg.get("extra", {})]
+    assert all(isinstance(msg["extra"]["timestamp"], float) for msg in all_timestamped)
     # Timestamps should be monotonically increasing (in the order they appear in messages)
-    timestamps = [msg["timestamp"] for msg in all_timestamped]
+    timestamps = [msg["extra"]["timestamp"] for msg in all_timestamped]
     assert timestamps == sorted(timestamps)
 
 
@@ -304,6 +304,6 @@ def test_step_adds_messages(default_config):
     # step() should add assistant message + observation message
     assert len(agent.messages) == initial_count + 2
     assert agent.messages[-2]["role"] == "assistant"
-    assert agent.messages[-2]["action"] == "echo 'hello'"
+    assert agent.messages[-2]["extra"]["action"] == "echo 'hello'"
     assert agent.messages[-1]["role"] == "user"
     assert "<returncode>" in agent.messages[-1]["content"]
