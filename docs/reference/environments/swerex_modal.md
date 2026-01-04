@@ -12,7 +12,6 @@ This environment executes commands in [Modal](https://modal.com) sandboxes using
 1. Install the full dependencies:
    ```bash
    pip install "mini-swe-agent[full]"
-   pip install modal
    ```
 
 2. Set up Modal authentication:
@@ -22,30 +21,14 @@ This environment executes commands in [Modal](https://modal.com) sandboxes using
 
 ## Usage
 
-You can use this environment class with the `--environment-class` flag:
-
-```bash
-mini --environment-class swerex_modal --environment.image python:3.11-slim
+Evaluate GPT-5 mini on SWE-bench using Modal:
 ```
-
-Or in your agent config file:
-
-```yaml
-environment:
-  environment_class: swerex_modal
-  image: python:3.11-slim
-  timeout: 60
-  runtime_timeout: 3600
+mini-extra swebench \
+    --config src/minisweagent/config/extra/swebench_modal.yaml \
+    --subset verified \
+    --split test \
+    --workers 100 \
+    -o ./results/gpt5-mini-modal
 ```
-
-## Use Cases
-
-The Modal environment is particularly useful for:
-
-- **Training coding agents**: Run agents at scale with isolated cloud environments
-- **Parallel evaluation**: Run many agent instances in parallel on SWE-bench
-- **CI/CD integration**: Execute tests and evaluations in clean, reproducible environments
-
-::: minisweagent.environments.extra.swerex_modal
 
 {% include-markdown "../../_footer.md" %}
