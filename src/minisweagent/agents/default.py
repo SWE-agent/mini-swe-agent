@@ -1,6 +1,7 @@
 """Basic agent class. See https://mini-swe-agent.com/latest/advanced/control_flow/ for visual explanation."""
 
 import json
+import logging
 import traceback
 from pathlib import Path
 
@@ -35,6 +36,7 @@ class DefaultAgent:
         self.model = model
         self.env = env
         self.extra_template_vars = {}
+        self.logger = logging.getLogger("agent")
 
     def get_template_vars(self, **kwargs) -> dict:
         return recursive_merge(
@@ -49,6 +51,7 @@ class DefaultAgent:
         return Template(template, undefined=StrictUndefined).render(**self.get_template_vars())
 
     def add_messages(self, messages: list[dict]) -> list[dict]:
+        self.logger.debug(messages)  # set log level to debug to see
         self.messages.extend(messages)
         return messages
 
