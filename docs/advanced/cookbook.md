@@ -27,6 +27,31 @@ things that you might want to do.
 
 You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` environment variable to the import path of your run script.
 
+## Hello world
+
+```python
+from minisweagent.agents.default import DefaultAgent
+from minisweagent.models import get_model
+from minisweagent.environments.local import LocalEnvironment
+
+task = "Write a hello world program"
+model_name = "anthropic/claude-sonnet-4-5-20250929"
+
+agent = DefaultAgent(
+    get_model(input_model_name=model_name),
+    LocalEnvironment(),
+)
+
+# If you want to see the debug messages
+agent.logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
+agent.logger.addHandler(handler)
+
+# Run the agent
+agent.run(task)
+```
+
 ## Mix & match
 
 ### Models
