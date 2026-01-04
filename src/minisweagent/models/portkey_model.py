@@ -30,6 +30,11 @@ except ImportError:
 class PortkeyModelConfig(BaseModel):
     model_name: str
     model_kwargs: dict[str, Any] = {}
+    provider: str = ""
+    """The LLM provider to use (e.g., 'openai', 'anthropic', 'google'). 
+    If not specified, will be auto-detected from model_name.
+    Required by Portkey when not using a virtual key.
+    """
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     """We currently use litellm to calculate costs. Here you can register additional models to litellm's model registry.
     Note that this might change if we get better support for Portkey and change how we calculate costs.
@@ -69,6 +74,9 @@ class PortkeyModel:
         client_kwargs = {"api_key": self._api_key}
         if virtual_key:
             client_kwargs["virtual_key"] = virtual_key
+        elif self.config.provider:
+            # If no virtual key but provider is specified, pass it
+            client_kwargs["provider"] = self.config.provider
 
         self.client = Portkey(**client_kwargs)
 
