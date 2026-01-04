@@ -355,8 +355,12 @@ async def test_confirmation_rejection_with_message(default_config):
         await pilot.pause(0.1)
 
         # Wait for input prompt
-        while app.agent_state != "AWAITING_INPUT":
+        for _ in range(50):
             await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT":
+                break
+        else:
+            raise AssertionError("Agent did not reach AWAITING_INPUT state within 5 seconds")
 
         # Type rejection message and submit
         await type_text(pilot, "Not safe to run")
@@ -471,15 +475,23 @@ async def test_input_container_multiple_actions(default_config):
         await pilot.pause(0.1)
 
         # Confirm first action
-        while app.agent_state != "AWAITING_INPUT":
+        for _ in range(50):
             await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT":
+                break
+        else:
+            raise AssertionError("Agent did not reach AWAITING_INPUT state within 5 seconds")
         assert "echo '1'" in get_screen_text(app)
         await pilot.press("enter")
 
         # Wait for and confirm second action
         await pilot.pause(0.1)
-        while app.agent_state != "AWAITING_INPUT":
+        for _ in range(50):
             await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT":
+                break
+        else:
+            raise AssertionError("Agent did not reach AWAITING_INPUT state within 5 seconds")
         assert "echo '2'" in get_screen_text(app)
         await pilot.press("enter")
 
@@ -556,8 +568,12 @@ async def test_yolo_mode_confirms_pending_action(default_config):
         await pilot.pause(0.1)
 
         # Wait for input prompt
-        while app.agent_state != "AWAITING_INPUT":
+        for _ in range(50):
             await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT":
+                break
+        else:
+            raise AssertionError("Agent did not reach AWAITING_INPUT state within 5 seconds")
 
         # Verify we're in confirm mode and awaiting input
         assert app.agent.config.mode == "confirm"
