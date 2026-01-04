@@ -16,6 +16,14 @@ from tenacity import (
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.cache_control import set_cache_control
 
+__all__ = [
+    "OpenRouterModelConfig",
+    "OpenRouterModel",
+    "OpenRouterAPIError",
+    "OpenRouterAuthenticationError",
+    "OpenRouterRateLimitError",
+]
+
 logger = logging.getLogger("openrouter_model")
 
 

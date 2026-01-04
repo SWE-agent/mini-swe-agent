@@ -14,6 +14,11 @@ from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.openai_utils import coerce_responses_text
 
+__all__ = [
+    "LitellmResponseAPIModelConfig",
+    "LitellmResponseAPIModel",
+]
+
 logger = logging.getLogger("litellm_response_api_model")
 
 

@@ -25,6 +25,11 @@ from textual.widgets import Footer, Header, Input, Static, TextArea
 
 from minisweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException, Submitted
 
+__all__ = [
+    "TextualAgentConfig",
+    "TextualAgent",
+]
+
 
 class TextualAgentConfig(AgentConfig):
     mode: Literal["confirm", "yolo"] = "confirm"

@@ -5,6 +5,11 @@ from pydantic import BaseModel
 from swerex.deployment.docker import DockerDeployment
 from swerex.runtime.abstract import Command as RexCommand
 
+__all__ = [
+    "SwerexDockerEnvironmentConfig",
+    "SwerexDockerEnvironment",
+]
+
 
 class SwerexDockerEnvironmentConfig(BaseModel):
     image: str

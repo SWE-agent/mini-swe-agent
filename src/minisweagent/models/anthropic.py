@@ -6,6 +6,11 @@ from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.key_per_thread import get_key_per_thread
 
+__all__ = [
+    "AnthropicModelConfig",
+    "AnthropicModel",
+]
+
 
 class AnthropicModelConfig(LitellmModelConfig):
     set_cache_control: Literal["default_end"] | None = "default_end"
