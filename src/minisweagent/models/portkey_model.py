@@ -31,7 +31,7 @@ class PortkeyModelConfig(BaseModel):
     model_name: str
     model_kwargs: dict[str, Any] = {}
     provider: str = ""
-    """The LLM provider to use (e.g., 'openai', 'anthropic', 'google'). 
+    """The LLM provider to use (e.g., 'openai', 'anthropic', 'google').
     If not specified, will be auto-detected from model_name.
     Required by Portkey when not using a virtual key.
     """

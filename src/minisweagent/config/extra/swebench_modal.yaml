@@ -1,6 +1,6 @@
 # SWE-bench configuration for GPT-5 mini with Modal backend and Portkey
 # Based on the default swebench.yaml configuration
-# 
+#
 # Usage:
 #   mini-extra swebench \
 #       --config src/minisweagent/config/extra/swebench_gpt5_modal.yaml \
