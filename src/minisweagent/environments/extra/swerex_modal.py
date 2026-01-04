@@ -81,4 +81,10 @@ class SwerexModalEnvironment:
         return self.config.model_dump()
 
     def stop(self):
-        asyncio.run(self.deployment.stop())
+        async def _stop():
+            await asyncio.wait_for(self.deployment.stop(), timeout=10)
+
+        try:
+            asyncio.run(_stop())
+        except Exception:
+            pass
