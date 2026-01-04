@@ -21,6 +21,8 @@ This section provides detailed documentation for all classes and modules in mini
 - **[LocalEnvironment](environments/local.md)** - Execute commands in the local environment
 - **[DockerEnvironment](environments/docker.md)** - Execute commands in Docker containers
 - **[SwerexDockerEnvironment](environments/swerex_docker.md)** - Extended Docker environment with SWE-Rex integration
+- **[SwerexModalEnvironment](environments/swerex_modal.md)** - Modal cloud environment with SWE-Rex integration
+
 
 ## Run Scripts
 
