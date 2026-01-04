@@ -41,8 +41,14 @@ agent = DefaultAgent(
     get_model(input_model_name=model_name),
     LocalEnvironment(),
 )
+
+# If you want to see the debug messages
 agent.logger.setLevel(logging.DEBUG)
-agent.logger.addHandler(logging.StreamHandler(level=logging.DEBUG))
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
+agent.logger.addHandler(handler)
+
+# Run the agent
 agent.run(task)
 ```
 
