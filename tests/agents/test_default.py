@@ -23,7 +23,7 @@ def test_successful_completion(default_config):
         model=DeterministicModel(
             outputs=[
                 "I'll echo a message\n```bash\necho 'hello world'\n```",
-                "Now finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'Task completed successfully'\n```",
+                "Now finishing\n```bash\necho 'Task completed successfully'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -73,7 +73,7 @@ def test_format_error_handling(default_config):
             outputs=[
                 "No code blocks here",
                 "Multiple blocks\n```bash\necho 'first'\n```\n```bash\necho 'second'\n```",
-                "Now correct\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'\n```",
+                "Now correct\n```bash\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -97,7 +97,7 @@ def test_timeout_handling(default_config):
         model=DeterministicModel(
             outputs=[
                 "Long sleep\n```bash\nsleep 5\n```",  # This will timeout
-                "Quick finish\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered'\n```",
+                "Quick finish\n```bash\necho 'recovered'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(timeout=1),  # Very short timeout
@@ -120,7 +120,7 @@ def test_timeout_captures_partial_output(default_config):
         model=DeterministicModel(
             outputs=[
                 f"Output then sleep\n```bash\n{calculation_command}\n```",
-                "Quick finish\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered'\n```",
+                "Quick finish\n```bash\necho 'recovered'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(timeout=1),
@@ -169,7 +169,7 @@ def test_message_history_tracking(default_config):
         model=DeterministicModel(
             outputs=[
                 "Response 1\n```bash\necho 'test1'\n```",
-                "Response 2\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'\n```",
+                "Response 2\n```bash\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -193,7 +193,7 @@ def test_multiple_steps_before_completion(default_config):
                 "Step 1\n```bash\necho 'first'\n```",
                 "Step 2\n```bash\necho 'second'\n```",
                 "Step 3\n```bash\necho 'third'\n```",
-                "Final step\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed all steps'\n```",
+                "Final step\n```bash\necho 'completed all steps'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -220,7 +220,7 @@ def test_custom_config(default_config):
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
-                "Test response\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'custom config works'\n```"
+                "Test response\n```bash\necho 'custom config works'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
             ]
         ),
         env=LocalEnvironment(),
@@ -265,7 +265,7 @@ def test_messages_include_timestamps(default_config):
         model=DeterministicModel(
             outputs=[
                 "Response 1\n```bash\necho 'test1'\n```",
-                "Response 2\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'\n```",
+                "Response 2\n```bash\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),

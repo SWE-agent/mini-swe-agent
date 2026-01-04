@@ -82,9 +82,9 @@ class LocalEnvironment:
 
     def _check_finished(self, output: dict):
         """Raises Submitted exception if the output indicates task completion."""
-        lines = output.get("output", "").lstrip().splitlines(keepends=True)
-        if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
-            raise Submitted("".join(lines[1:]))
+        lines = output.get("output", "").rstrip().splitlines(keepends=True)
+        if lines and lines[-1].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
+            raise Submitted("".join(lines[:-1]))
 
     def get_template_vars(self, **kwargs) -> dict[str, Any]:
         return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), os.environ, kwargs)

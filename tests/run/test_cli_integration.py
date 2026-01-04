@@ -692,8 +692,8 @@ def test_output_file_is_created(tmp_path):
             [
                 {
                     "role": "assistant",
-                    "content": "```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone\n```",
-                    "action": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone",
+                    "content": "```bash\necho done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+                    "action": "echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT",
                 }
             ],
         ]
@@ -703,7 +703,7 @@ def test_output_file_is_created(tmp_path):
         mock_environment.config = Mock()
         mock_environment.config.model_dump.return_value = {}
         mock_environment.execute.return_value = {
-            "output": "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndone",
+            "output": "done\nCOMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n",
             "returncode": 0,
         }
         # execute_messages returns list of observation messages and raises Submitted for completion
