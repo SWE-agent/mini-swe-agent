@@ -50,6 +50,10 @@ dependencies = [
 full = [
     "mini-swe-agent[dev]",
     "swe-rex>=1.4.0",
+    "mini-swe-agent[modal]",
+]
+
+modal = [
     "modal",
     "boto3",
 ]
