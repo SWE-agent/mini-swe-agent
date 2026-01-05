@@ -42,20 +42,24 @@ class DeterministicModel:
         if "/warning" in output:
             logging.warning(output.split("/warning")[1])
             return self.query(messages, **kwargs)
+        cost_output = self._calculate_cost()
         self.n_calls += 1
-        self.cost += self.config.cost_per_call
-        GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
+        self.cost += cost_output["cost"]
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
         return [
             {
                 "role": "assistant",
                 "content": output,
                 "extra": {
                     "action": self.parse_action(output),
-                    "cost": self.config.cost_per_call,
+                    **cost_output,
                     "timestamp": time.time(),
                 },
             }
         ]
+
+    def _calculate_cost(self) -> dict[str, float]:
+        return {"cost": self.config.cost_per_call}
 
     def parse_action(self, content: str) -> str:
         """Parse the action from the model output. Raises FormatError if not exactly one action."""
