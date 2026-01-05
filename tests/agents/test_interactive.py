@@ -25,7 +25,7 @@ def test_successful_completion_with_confirmation(default_config):
     ):  # Confirm action with Enter, then no new task
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
+                outputs=["Finishing\n```bash\necho 'completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
             ),
             env=LocalEnvironment(),
             **default_config,
@@ -51,7 +51,7 @@ def test_action_rejection_and_recovery(default_config):
             model=DeterministicModel(
                 outputs=[
                     "First try\n```bash\necho 'first attempt'\n```",
-                    "Second try\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered'\n```",
+                    "Second try\n```bash\necho 'recovered'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -79,7 +79,7 @@ def test_yolo_mode_activation(default_config):
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["Test command\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'yolo works'\n```"]
+                outputs=["Test command\n```bash\necho 'yolo works'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
             ),
             env=LocalEnvironment(),
             **default_config,
@@ -104,7 +104,7 @@ def test_help_command(default_config):
         with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
                 model=DeterministicModel(
-                    outputs=["Test help\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'help shown'\n```"]
+                    outputs=["Test help\n```bash\necho 'help shown'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
                 ),
                 env=LocalEnvironment(),
                 **default_config,
@@ -127,7 +127,7 @@ def test_whitelisted_actions_skip_confirmation(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "Whitelisted\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'no confirmation needed'\n```"
+                    "Whitelisted\n```bash\necho 'no confirmation needed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
                 ]
             ),
             env=LocalEnvironment(),
@@ -150,7 +150,7 @@ def _test_interruption_helper(
         model=DeterministicModel(
             outputs=[
                 "Initial step\n```bash\necho 'will be interrupted'\n```",
-                "Recovery\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered from interrupt'\n```",
+                "Recovery\n```bash\necho 'recovered from interrupt'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -220,7 +220,7 @@ def test_multiple_confirmations_and_commands(default_config):
             model=DeterministicModel(
                 outputs=[
                     "First action\n```bash\necho 'first'\n```",
-                    "Second action\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'complex flow completed'\n```",
+                    "Second action\n```bash\necho 'complex flow completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -243,7 +243,7 @@ def test_non_whitelisted_action_requires_confirmation(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "Non-whitelisted\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'confirmed'\n```"
+                    "Non-whitelisted\n```bash\necho 'confirmed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
                 ]
             ),
             env=LocalEnvironment(),
@@ -267,7 +267,7 @@ def test_human_mode_basic_functionality(default_config):
         "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "echo 'user command'",  # User enters shell command
-            "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'human mode works'",  # User enters final command
+            "echo 'human mode works'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'",  # User enters final command
             "",  # No new task when agent wants to finish
         ],
     ):
@@ -300,7 +300,7 @@ def test_human_mode_switch_to_yolo(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "LM action\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'switched to yolo'\n```"
+                    "LM action\n```bash\necho 'switched to yolo'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
                 ]
             ),
             env=LocalEnvironment(),
@@ -330,7 +330,7 @@ def test_human_mode_switch_to_confirm(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "LM action\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'switched to confirm'\n```"
+                    "LM action\n```bash\necho 'switched to confirm'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
                 ]
             ),
             env=LocalEnvironment(),
@@ -353,7 +353,7 @@ def test_confirmation_mode_switch_to_human_with_rejection(default_config):
         "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/u",  # Switch to human mode and reject action
-            "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'human command after rejection'",  # Human command
+            "echo 'human command after rejection'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'",  # Human command
             "",  # No new task when agent wants to finish
         ],
     ):
@@ -392,7 +392,7 @@ def test_confirmation_mode_switch_to_yolo_and_continue(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "LM action\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'switched and continued'\n```"
+                    "LM action\n```bash\necho 'switched and continued'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
                 ]
             ),
             env=LocalEnvironment(),
@@ -414,7 +414,7 @@ def test_mode_switch_during_keyboard_interrupt(default_config):
         model=DeterministicModel(
             outputs=[
                 "Initial step\n```bash\necho 'will be interrupted'\n```",
-                "Recovery\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered after mode switch'\n```",
+                "Recovery\n```bash\necho 'recovered after mode switch'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -466,7 +466,7 @@ def test_already_in_mode_behavior(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "Test action\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'already in mode'\n```"
+                    "Test action\n```bash\necho 'already in mode'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
                 ]
             ),
             env=LocalEnvironment(),
@@ -496,7 +496,7 @@ def test_all_mode_transitions_yolo_to_others(default_config):
             model=DeterministicModel(
                 outputs=[
                     "First action\n```bash\necho 'yolo action'\n```",
-                    "Second action\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'confirm action'\n```",
+                    "Second action\n```bash\necho 'confirm action'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -532,7 +532,7 @@ def test_all_mode_transitions_confirm_to_human(default_config):
         "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/u",  # Switch from confirm to human (rejecting action)
-            "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'human command'",  # User enters command in human mode
+            "echo 'human command'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'",  # User enters command in human mode
             "",  # No new task when agent wants to finish
         ],
     ):
@@ -566,7 +566,7 @@ def test_help_command_from_different_contexts(default_config):
             agent = InteractiveAgent(
                 model=DeterministicModel(
                     outputs=[
-                        "Test action\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'help works'\n```"
+                        "Test action\n```bash\necho 'help works'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
                     ]
                 ),
                 env=LocalEnvironment(),
@@ -590,7 +590,7 @@ def test_help_command_from_human_mode(default_config):
         "minisweagent.agents.interactive.prompt_session.prompt",
         side_effect=[
             "/h",  # Show help in human mode
-            "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'help in human mode'",  # User command after help
+            "echo 'help in human mode'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'",  # User command after help
             "",  # No new task when agent wants to finish
         ],
     ):
@@ -619,7 +619,7 @@ def test_complex_mode_switching_sequence(default_config):
             outputs=[
                 "Action 1\n```bash\necho 'action1'\n```",
                 "Action 2\n```bash\necho 'action2'\n```",
-                "Action 3\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'final action'\n```",
+                "Action 3\n```bash\necho 'final action'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -668,7 +668,7 @@ def test_limits_exceeded_with_user_continuation(default_config):
             outputs=[
                 "Step 1\n```bash\necho 'first step'\n```",
                 "Step 2\n```bash\necho 'second step'\n```",
-                "Final step\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed after limit increase'\n```",
+                "Final step\n```bash\necho 'completed after limit increase'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ],
             cost_per_call=0.6,  # Will exceed cost_limit=0.5 on first call
         ),
@@ -703,7 +703,7 @@ def test_limits_exceeded_multiple_times_with_continuation(default_config):
                 "Step 2\n```bash\necho 'step2'\n```",
                 "Step 3\n```bash\necho 'step3'\n```",
                 "Step 4\n```bash\necho 'step4'\n```",
-                "Final\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed after multiple increases'\n```",
+                "Final\n```bash\necho 'completed after multiple increases'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ],
             cost_per_call=1.0,  # Standard cost per call
         ),
@@ -743,8 +743,8 @@ def test_continue_after_completion_with_new_task(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "First task\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first task completed'\n```",
-                    "Second task\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'new task completed'\n```",
+                    "First task\n```bash\necho 'first task completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                    "Second task\n```bash\necho 'new task completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -774,7 +774,7 @@ def test_continue_after_completion_without_new_task(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "Task completion\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'original task completed'\n```"
+                    "Task completion\n```bash\necho 'original task completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
                 ]
             ),
             env=LocalEnvironment(),
@@ -806,9 +806,9 @@ def test_continue_after_completion_multiple_cycles(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "First\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first completed'\n```",
-                    "Second\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'second completed'\n```",
-                    "Third\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'third completed'\n```",
+                    "First\n```bash\necho 'first completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                    "Second\n```bash\necho 'second completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                    "Third\n```bash\necho 'third completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -838,8 +838,8 @@ def test_continue_after_completion_in_yolo_mode(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "First\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first completed'\n```",
-                    "Second\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'second task completed'\n```",
+                    "First\n```bash\necho 'first completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                    "Second\n```bash\necho 'second task completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
                 ]
             ),
             env=LocalEnvironment(),
@@ -867,7 +867,7 @@ def test_confirm_exit_enabled_asks_for_confirmation(default_config):
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
+                outputs=["Finishing\n```bash\necho 'completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
             ),
             env=LocalEnvironment(),
             **{
@@ -890,7 +890,7 @@ def test_confirm_exit_disabled_exits_immediately(default_config):
     ):
         agent = InteractiveAgent(
             model=DeterministicModel(
-                outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
+                outputs=["Finishing\n```bash\necho 'completed'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
             ),
             env=LocalEnvironment(),
             **{
@@ -919,8 +919,8 @@ def test_confirm_exit_with_new_task_continues_execution(default_config):
         agent = InteractiveAgent(
             model=DeterministicModel(
                 outputs=[
-                    "First task\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first done'\n```",
-                    "Additional task\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'additional done'\n```",
+                    "First task\n```bash\necho 'first done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                    "Additional task\n```bash\necho 'additional done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
                 ]
             ),
             env=LocalEnvironment(),

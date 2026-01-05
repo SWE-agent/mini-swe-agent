@@ -150,7 +150,7 @@ agent:
     When you've completed your work (reading, editing, testing), and cannot make further progress
     issue exactly the following command:
 
-    <bash_code>echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached</bash_code>
+    <bash_code>git add -A && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</bash_code>
 
     This command will submit your work.
     You cannot continue working (reading, editing, testing) in any way on this task after submitting.

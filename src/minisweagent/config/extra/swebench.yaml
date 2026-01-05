@@ -163,7 +163,7 @@ agent:
     issue exactly the following command:
 
     ```bash
-    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached
+    git add -A && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT
     ```
 
     This command will submit your work.
