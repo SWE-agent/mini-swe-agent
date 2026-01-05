@@ -1,4 +1,6 @@
-"""Basic agent class. See https://mini-swe-agent.com/latest/advanced/control_flow/ for visual explanation."""
+"""Basic agent class. See https://mini-swe-agent.com/latest/advanced/control_flow/ for visual explanation
+or https://minimal-agent.com for a tutorial on the basic building principles.
+"""
 
 import json
 import logging
@@ -37,12 +39,15 @@ class DefaultAgent:
         self.env = env
         self.extra_template_vars = {}
         self.logger = logging.getLogger("agent")
+        self.cost = 0.0
+        self.n_calls = 0
 
     def get_template_vars(self, **kwargs) -> dict:
         return recursive_merge(
             self.config.model_dump(),
             self.env.get_template_vars(),
             self.model.get_template_vars(),
+            {"n_model_calls": self.n_calls, "model_cost": self.cost},
             self.extra_template_vars,
             kwargs,
         )
@@ -87,9 +92,12 @@ class DefaultAgent:
 
     def query(self) -> list[dict]:
         """Query the model and return model messages. Override to add hooks."""
-        if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
+        if 0 < self.config.step_limit <= self.n_calls or 0 < self.config.cost_limit <= self.cost:
             raise LimitsExceeded()
-        return self.add_messages(self.model.query(self.messages))
+        messages = self.model.query(self.messages)
+        self.n_calls += 1
+        self.cost += sum(msg.get("extra", {}).get("cost", 0.0) for msg in messages)
+        return self.add_messages(messages)
 
     def execute_actions(self, messages: list[dict]) -> list[dict]:
         """Execute actions in messages, add all messages, return observation messages. Override to add hooks."""
@@ -99,6 +107,10 @@ class DefaultAgent:
         """Serialize agent state to a json-compatible nested dictionary for saving."""
         agent_data = {
             "info": {
+                "model_stats": {
+                    "instance_cost": self.cost,
+                    "api_calls": self.n_calls,
+                },
                 "config": {
                     "agent": self.config.model_dump(mode="json"),
                     "agent_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
