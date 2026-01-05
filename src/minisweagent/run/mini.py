@@ -110,7 +110,7 @@ def main(
     if not task:
         task = prompt_for_task()
 
-    model = get_model(config=config["model"])
+    model = get_model(config=config.get("model", {}))
     env = LocalEnvironment(**config.get("env", {}))
 
     # Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it's essentially a XOR
