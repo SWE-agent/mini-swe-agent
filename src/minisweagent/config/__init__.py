@@ -39,7 +39,7 @@ def _key_value_spec_to_nested_dict(config_spec: str) -> dict:
     try:
         value = json.loads(value)
     except json.JSONDecodeError:
-        pass
+        value = value  # keep original string if not valid JSON
     keys = key.split(".")
     result = {}
     current = result
