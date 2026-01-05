@@ -107,6 +107,7 @@ class LitellmModel:
                 "extra": {
                     "action": self.parse_action(content),
                     "response": response.model_dump(),
+                    "cost": cost,
                     "timestamp": time.time(),
                 },
             }
