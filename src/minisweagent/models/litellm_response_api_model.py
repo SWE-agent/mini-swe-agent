@@ -63,6 +63,24 @@ class LitellmResponseAPIModel(LitellmModel):
     def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
         response = self._query(messages, **kwargs)
         content = coerce_responses_text(response)
+        cost_output = self._calculate_cost(response)
+        self.n_calls += 1
+        self.cost += cost_output["cost"]
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        return [
+            {
+                "role": "assistant",
+                "content": content,
+                "extra": {
+                    "action": self.parse_action(content),
+                    "response": response.model_dump() if hasattr(response, "model_dump") else {},
+                    **cost_output,
+                    "timestamp": time.time(),
+                },
+            }
+        ]
+
+    def _calculate_cost(self, response) -> dict[str, float]:
         try:
             cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
         except Exception as e:
@@ -72,18 +90,4 @@ class LitellmResponseAPIModel(LitellmModel):
                 "http://bit.ly/4p31bi4 Still stuck? Please open a github issue for help!"
             )
             raise
-        self.n_calls += 1
-        self.cost += cost
-        GLOBAL_MODEL_STATS.add(cost)
-        return [
-            {
-                "role": "assistant",
-                "content": content,
-                "extra": {
-                    "action": self.parse_action(content),
-                    "response": response.model_dump() if hasattr(response, "model_dump") else {},
-                    "cost": cost,
-                    "timestamp": time.time(),
-                },
-            }
-        ]
+        return {"cost": cost}

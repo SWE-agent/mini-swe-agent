@@ -79,6 +79,25 @@ class LitellmModel:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
+        cost_output = self._calculate_cost(response)
+        self.n_calls += 1
+        self.cost += cost_output["cost"]
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        content = response.choices[0].message.content or ""  # type: ignore
+        return [
+            {
+                "role": "assistant",
+                "content": content,
+                "extra": {
+                    "action": self.parse_action(content),
+                    "response": response.model_dump(),
+                    **cost_output,
+                    "timestamp": time.time(),
+                },
+            }
+        ]
+
+    def _calculate_cost(self, response) -> dict[str, float]:
         try:
             cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
             if cost <= 0.0:
@@ -96,22 +115,7 @@ class LitellmModel:
                 )
                 logger.critical(msg)
                 raise RuntimeError(msg) from e
-        self.n_calls += 1
-        self.cost += cost
-        GLOBAL_MODEL_STATS.add(cost)
-        content = response.choices[0].message.content or ""  # type: ignore
-        return [
-            {
-                "role": "assistant",
-                "content": content,
-                "extra": {
-                    "action": self.parse_action(content),
-                    "response": response.model_dump(),
-                    "cost": cost,
-                    "timestamp": time.time(),
-                },
-            }
-        ]
+        return {"cost": cost}
 
     def parse_action(self, content: str) -> str:
         """Parse the action from the model output. Raises FormatError if not exactly one action."""

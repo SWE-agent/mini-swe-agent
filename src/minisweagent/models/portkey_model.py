@@ -101,10 +101,10 @@ class PortkeyModel:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
-        cost = self._calculate_cost(response)
+        cost_output = self._calculate_cost(response)
         self.n_calls += 1
-        self.cost += cost
-        GLOBAL_MODEL_STATS.add(cost)
+        self.cost += cost_output["cost"]
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
         content = response.choices[0].message.content or ""
         return [
             {
@@ -113,7 +113,7 @@ class PortkeyModel:
                 "extra": {
                     "action": self.parse_action(content),
                     "response": response.model_dump(),
-                    "cost": cost,
+                    **cost_output,
                     "timestamp": time.time(),
                 },
             }
@@ -145,7 +145,7 @@ class PortkeyModel:
             }
         }
 
-    def _calculate_cost(self, response) -> float:
+    def _calculate_cost(self, response) -> dict[str, float]:
         response_for_cost_calc = response.model_copy()
         if self.config.litellm_model_name_override:
             if response_for_cost_calc.model:
@@ -190,4 +190,4 @@ class PortkeyModel:
                 )
                 logger.critical(msg)
                 raise RuntimeError(msg) from e
-        return cost
+        return {"cost": cost}

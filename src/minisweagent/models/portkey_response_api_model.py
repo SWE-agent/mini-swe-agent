@@ -51,6 +51,24 @@ class PortkeyResponseAPIModel(PortkeyModel):
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
         content = coerce_responses_text(response)
+        cost_output = self._calculate_cost(response)
+        self.n_calls += 1
+        self.cost += cost_output["cost"]
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        return [
+            {
+                "role": "assistant",
+                "content": content,
+                "extra": {
+                    "action": self.parse_action(content),
+                    "response": response.model_dump() if hasattr(response, "model_dump") else {},
+                    **cost_output,
+                    "timestamp": time.time(),
+                },
+            }
+        ]
+
+    def _calculate_cost(self, response) -> dict[str, float]:
         try:
             cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
             assert cost > 0.0, f"Cost is not positive: {cost}"
@@ -62,18 +80,4 @@ class PortkeyResponseAPIModel(PortkeyModel):
                     "globally with export MSWEA_COST_TRACKING='ignore_errors' to ignore this error. "
                 ) from e
             cost = 0.0
-        self.n_calls += 1
-        self.cost += cost
-        GLOBAL_MODEL_STATS.add(cost)
-        return [
-            {
-                "role": "assistant",
-                "content": content,
-                "extra": {
-                    "action": self.parse_action(content),
-                    "response": response.model_dump() if hasattr(response, "model_dump") else {},
-                    "cost": cost,
-                    "timestamp": time.time(),
-                },
-            }
-        ]
+        return {"cost": cost}

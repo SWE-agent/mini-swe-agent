@@ -102,21 +102,10 @@ class RequestyModel:
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
         response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
-
-        # Extract cost from usage information
-        usage = response.get("usage", {})
-        cost = usage.get("cost", 0.0)
-
-        # If cost is not available, raise an error
-        if cost == 0.0:
-            raise RequestyAPIError(
-                f"No cost information available from Requesty API for model {self.config.model_name}. "
-                "Cost tracking is required but not provided by the API response."
-            )
-
+        cost_output = self._calculate_cost(response)
         self.n_calls += 1
-        self.cost += cost
-        GLOBAL_MODEL_STATS.add(cost)
+        self.cost += cost_output["cost"]
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
         content = response["choices"][0]["message"]["content"] or ""
         return [
             {
@@ -125,11 +114,21 @@ class RequestyModel:
                 "extra": {
                     "action": self.parse_action(content),
                     "response": response,
-                    "cost": cost,
+                    **cost_output,
                     "timestamp": time.time(),
                 },
             }
         ]
+
+    def _calculate_cost(self, response) -> dict[str, float]:
+        usage = response.get("usage", {})
+        cost = usage.get("cost", 0.0)
+        if cost == 0.0:
+            raise RequestyAPIError(
+                f"No cost information available from Requesty API for model {self.config.model_name}. "
+                "Cost tracking is required but not provided by the API response."
+            )
+        return {"cost": cost}
 
     def parse_action(self, content: str) -> str:
         """Parse the action from the model output. Raises FormatError if not exactly one action."""
