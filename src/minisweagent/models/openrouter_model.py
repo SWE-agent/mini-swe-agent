@@ -128,7 +128,12 @@ class OpenRouterModel:
             {
                 "role": "assistant",
                 "content": content,
-                "extra": {"action": self.parse_action(content), "response": response, "timestamp": time.time()},
+                "extra": {
+                    "action": self.parse_action(content),
+                    "response": response,
+                    "cost": cost,
+                    "timestamp": time.time(),
+                },
             }
         ]
 
