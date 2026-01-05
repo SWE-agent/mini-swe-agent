@@ -6,7 +6,7 @@ import pytest
 import yaml
 
 from minisweagent.models.test_models import DeterministicModel
-from minisweagent.run.extra.github_issue import DEFAULT_CONFIG, main
+from minisweagent.run.extra.github_issue import DEFAULT_CONFIG_FILE, main
 
 
 def normalize_outputs(s: str) -> str:
@@ -64,7 +64,7 @@ def test_configure_if_first_time_called():
 
         main(
             issue_url="https://github.com/test/repo/issues/1",
-            config_spec=[str(DEFAULT_CONFIG)],
+            config_spec=[str(DEFAULT_CONFIG_FILE)],
             model="test-model",
             yolo=True,
         )
@@ -160,7 +160,7 @@ def test_github_issue_end_to_end(github_test_data):
     ):
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
         github_url = "https://github.com/SWE-agent/test-repo/issues/1"
-        agent = main(issue_url=github_url, model="tardis", config_spec=[str(DEFAULT_CONFIG)], yolo=True)  # type: ignore
+        agent = main(issue_url=github_url, model="tardis", config_spec=[str(DEFAULT_CONFIG_FILE)], yolo=True)  # type: ignore
 
     assert agent is not None
     messages = agent.messages

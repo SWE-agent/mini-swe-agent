@@ -13,7 +13,7 @@ from minisweagent.models import get_model
 from minisweagent.run.extra.config import configure_if_first_time
 from minisweagent.utils.serialize import recursive_merge
 
-DEFAULT_CONFIG = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", builtin_config_dir / "github_issue.yaml"))
+DEFAULT_CONFIG_FILE = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", builtin_config_dir / "github_issue.yaml"))
 console = Console(highlight=False)
 app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
@@ -56,7 +56,7 @@ def fetch_github_issue(issue_url: str) -> str:
 @app.command()
 def main(
     issue_url: str = typer.Option(prompt="Enter GitHub issue URL", help="GitHub issue URL"),
-    config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT),
+    config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT),
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use"),
     model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
