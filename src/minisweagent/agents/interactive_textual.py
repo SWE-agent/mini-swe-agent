@@ -77,7 +77,7 @@ class _TextualAgent(DefaultAgent):
     def execute_actions(self, messages: list[dict]) -> list[dict]:
         # Override to handle user confirmation and confirm_exit
         for msg in messages:
-            if "action" not in msg:
+            if "action" not in msg.get("extra", {}):
                 continue
             if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
                 raise NonTerminatingException("Command not executed because user switched to manual mode.")
