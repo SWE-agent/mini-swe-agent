@@ -54,17 +54,20 @@ def test_configure_if_first_time_called():
         patch("minisweagent.run.extra.github_issue.InteractiveAgent") as mock_agent,
         patch("minisweagent.run.extra.github_issue.get_model"),
         patch("minisweagent.run.extra.github_issue.DockerEnvironment"),
-        patch("minisweagent.run.extra.github_issue.yaml.safe_load") as mock_yaml_load,
-        patch("minisweagent.run.extra.github_issue.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.extra.github_issue.get_config_from_spec") as mock_get_config,
     ):
         mock_fetch.return_value = "Test issue"
-        mock_yaml_load.return_value = {"agent": {}, "environment": {}, "model": {}}
-        mock_get_config_path.return_value.read_text.return_value = "test config"
+        mock_get_config.return_value = {"agent": {}, "environment": {}, "model": {}}
         mock_agent_instance = mock_agent.return_value
         mock_agent_instance.run.return_value = {"exit_status": "Submitted", "submission": "success"}
         mock_agent_instance.env.execute.return_value = None
 
-        main(issue_url="https://github.com/test/repo/issues/1", config=DEFAULT_CONFIG, model="test-model", yolo=True)
+        main(
+            issue_url="https://github.com/test/repo/issues/1",
+            config_spec=[str(DEFAULT_CONFIG)],
+            model="test-model",
+            yolo=True,
+        )
 
         mock_configure.assert_called_once()
 
@@ -148,7 +151,7 @@ def test_output_file_is_created(tmp_path):
 
         main(
             issue_url="https://github.com/test/repo/issues/1",
-            config=config_file,
+            config_spec=[str(config_file)],
             model="test-model",
             yolo=True,
         )
@@ -170,7 +173,7 @@ def test_github_issue_end_to_end(github_test_data):
     ):
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
         github_url = "https://github.com/SWE-agent/test-repo/issues/1"
-        agent = main(issue_url=github_url, model="tardis", config=DEFAULT_CONFIG, yolo=True)  # type: ignore
+        agent = main(issue_url=github_url, model="tardis", config_spec=[str(DEFAULT_CONFIG)], yolo=True)  # type: ignore
 
     assert agent is not None
     messages = agent.messages

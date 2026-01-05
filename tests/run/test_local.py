@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from minisweagent.models.test_models import DeterministicModel
-from minisweagent.run.mini import DEFAULT_CONFIG, main
+from minisweagent.run.mini import DEFAULT_CONFIG_FILE, main
 from tests.run.test_github_issue import assert_observations_match
 
 
@@ -19,7 +19,7 @@ def test_local_end_to_end(local_test_data):
         mock_model_class.return_value = DeterministicModel(outputs=model_responses)
         agent = main(
             model_name="tardis",
-            config_spec=DEFAULT_CONFIG,
+            config_spec=[str(DEFAULT_CONFIG_FILE)],
             yolo=True,
             task="Blah blah blah",
             output=None,
