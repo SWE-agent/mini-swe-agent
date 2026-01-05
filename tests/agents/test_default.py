@@ -241,22 +241,21 @@ def test_custom_config(default_config):
 
 
 def test_render_template_model_stats(default_config):
-    """Test that render_template has access to n_model_calls and model_cost from model."""
+    """Test that render_template has access to n_model_calls and model_cost from agent."""
     agent = DefaultAgent(
         model=DeterministicModel(outputs=["```bash\necho 'test1'\n```", "```bash\necho 'test2'\n```"]),
         env=LocalEnvironment(),
         **default_config,
     )
 
-    # Make some model calls to generate stats
-    agent.model.query([])
-    agent.model.query([])
+    # Make some calls through the agent to generate stats
+    agent.add_messages([{"role": "system", "content": "test"}, {"role": "user", "content": "test"}])
+    agent.query()
+    agent.query()
 
-    # Test template rendering with model stats
+    # Test template rendering with agent stats
     template = "Calls: {{n_model_calls}}, Cost: {{model_cost}}"
-    result = agent._render_template(template)
-
-    assert result == "Calls: 2, Cost: 2.0"
+    assert agent._render_template(template) == "Calls: 2, Cost: 2.0"
 
 
 def test_messages_include_timestamps(default_config):

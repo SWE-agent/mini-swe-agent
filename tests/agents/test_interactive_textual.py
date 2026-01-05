@@ -384,7 +384,7 @@ async def test_confirmation_rejection_with_message(default_config):
 async def test_agent_with_cost_limit(default_config):
     """Test agent behavior when cost limit is exceeded."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Response 1", "Response 2"]),
+        model=DeterministicModel(outputs=["```bash\necho 'test'\n```", "```bash\necho 'test'\n```"]),
         env=LocalEnvironment(),
         **{
             **default_config,
@@ -412,7 +412,9 @@ async def test_agent_with_cost_limit(default_config):
 async def test_agent_with_step_limit(default_config):
     """Test agent behavior when step limit is exceeded."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
+        model=DeterministicModel(
+            outputs=["```bash\necho 'test'\n```", "```bash\necho 'test'\n```", "```bash\necho 'test'\n```"]
+        ),
         env=LocalEnvironment(),
         **{
             **default_config,
