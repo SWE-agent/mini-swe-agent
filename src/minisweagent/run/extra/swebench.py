@@ -13,18 +13,18 @@ import traceback
 from pathlib import Path
 
 import typer
-import yaml
 from datasets import load_dataset
 from jinja2 import StrictUndefined, Template
 from rich.live import Live
 
 from minisweagent import Environment
 from minisweagent.agents.default import DefaultAgent
-from minisweagent.config import builtin_config_dir, get_config_path
+from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments import get_environment
 from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from minisweagent.utils.log import add_file_handler, logger
+from minisweagent.utils.serialize import recursive_merge
 
 _HELP_TEXT = """Run mini-SWE-agent on SWEBench instances.
 
@@ -33,7 +33,23 @@ More information about the usage: [bold green]https://mini-swe-agent.com/latest/
 [/not dim]
 """
 
-app = typer.Typer(rich_markup_mode="rich", add_completion=False)
+_CONFIG_SPEC_HELP_TEXT = """Path to config files, filenames, or key-value pairs.
+
+[bold red]IMPORTANT:[/bold red] [red]If you set this option, the default config file will not be used.[/red]
+So you need to explicitly set it e.g., with [bold green]-c swebench.yaml <other options>[/bold green]
+
+Multiple configs will be recursively merged.
+
+Examples:
+
+[bold red]-c model.model_kwargs.temperature=0[/bold red] [red]You forgot to add the default config file! See above.[/red]
+
+[bold green]-c swebench.yaml -c model.model_kwargs.temperature=0.5[/bold green]
+
+[bold green]-c swebench.yaml -c agent.max_iterations=50[/bold green]
+"""
+
+DEFAULT_CONFIG_FILE = builtin_config_dir / "extra" / "swebench.yaml"
 
 DATASET_MAPPING = {
     "full": "princeton-nlp/SWE-Bench",
@@ -45,7 +61,7 @@ DATASET_MAPPING = {
     "_test": "klieret/swe-bench-dummy-test-dataset",
 }
 
-
+app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 _OUTPUT_FILE_LOCK = threading.Lock()
 
 
@@ -207,9 +223,9 @@ def main(
     output: str = typer.Option("", "-o", "--output", help="Output directory", rich_help_panel="Basic"),
     workers: int = typer.Option(1, "-w", "--workers", help="Number of worker threads for parallel processing", rich_help_panel="Basic"),
     model: str | None = typer.Option(None, "-m", "--model", help="Model to use", rich_help_panel="Basic"),
-    model_class: str | None = typer.Option(None, "-c", "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
+    model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
-    config_spec: Path = typer.Option( builtin_config_dir / "extra" / "swebench.yaml", "-c", "--config", help="Path to a config file", rich_help_panel="Basic"),
+    config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT, rich_help_panel="Basic"),
     environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
 ) -> None:
     # fmt: on
@@ -229,15 +245,15 @@ def main(
         instances = [instance for instance in instances if instance["instance_id"] not in existing_instances]
     logger.info(f"Running on {len(instances)} instances...")
 
-    config_path = get_config_path(config_spec)
-    logger.info(f"Loading agent config from '{config_path}'")
-    config = yaml.safe_load(config_path.read_text())
+    logger.info(f"Building agent config from specs: {config_spec}")
+    configs = [get_config_from_spec(spec) for spec in config_spec]
     if environment_class is not None:
-        config.setdefault("environment", {})["environment_class"] = environment_class
+        configs.append({"environment": {"environment_class": environment_class}})
     if model is not None:
-        config.setdefault("model", {})["model_name"] = model
+        configs.append({"model": {"model_name": model}})
     if model_class is not None:
-        config.setdefault("model", {})["model_class"] = model_class
+        configs.append({"model": {"model_class": model_class}})
+    config = recursive_merge(*configs)
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 

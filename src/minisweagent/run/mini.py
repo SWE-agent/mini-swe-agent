@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any
 
 import typer
-import yaml
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.shortcuts import PromptSession
@@ -17,16 +16,16 @@ from rich.console import Console
 from minisweagent import global_config_dir
 from minisweagent.agents.interactive import InteractiveAgent
 from minisweagent.agents.interactive_textual import TextualAgent
-from minisweagent.config import builtin_config_dir, get_config_path
+from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models import get_model
 from minisweagent.run.extra.config import configure_if_first_time
+from minisweagent.utils.serialize import recursive_merge
 
-DEFAULT_CONFIG = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
-DEFAULT_OUTPUT = global_config_dir / "last_mini_run.traj.json"
-console = Console(highlight=False)
-app = typer.Typer(rich_markup_mode="rich")
-prompt_session = PromptSession(history=FileHistory(global_config_dir / "mini_task_history.txt"))
+DEFAULT_CONFIG_FILE = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
+DEFAULT_OUTPUT_FILE = global_config_dir / "last_mini_run.traj.json"
+
+
 _HELP_TEXT = """Run mini-SWE-agent in your local environment.
 
 [not dim]
@@ -39,6 +38,41 @@ More information about the usage: [bold green]https://mini-swe-agent.com/latest/
 [/not dim]
 """
 
+_CONFIG_SPEC_HELP_TEXT = """Path to config files, filenames, or key-value pairs.
+
+[bold red]IMPORTANT:[/bold red] [red]If you set this option, the default config file will not be used.[/red]
+So you need to explicitly set it e.g., with [bold green]-c mini.yaml <other options>[/bold green]
+
+Multiple configs will be recursively merged.
+
+Examples:
+
+[bold red]-c model.model_kwargs.temperature=0[/bold red] [red]You forgot to add the default config file! See above.[/red]
+
+[bold green]-c mini.yaml -c model.model_kwargs.temperature=0.5[/bold green]
+
+[bold green]-c swebench.yaml agent.mode=yolo[/bold green]
+"""
+
+console = Console(highlight=False)
+app = typer.Typer(rich_markup_mode="rich")
+prompt_session = PromptSession(history=FileHistory(global_config_dir / "mini_task_history.txt"))
+
+
+def prompt_for_task() -> str:
+    console.print("[bold yellow]What do you want to do?")
+    task = prompt_session.prompt(
+        "",
+        multiline=True,
+        bottom_toolbar=HTML(
+            "Submit task: <b fg='yellow' bg='black'>Esc+Enter</b> | "
+            "Navigate history: <b fg='yellow' bg='black'>Arrow Up/Down</b> | "
+            "Search history: <b fg='yellow' bg='black'>Ctrl+R</b>"
+        ),
+    )
+    console.print("[bold green]Got that, thanks![/bold green]")
+    return task
+
 
 # fmt: off
 @app.command(help=_HELP_TEXT)
@@ -49,39 +83,34 @@ def main(
     task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
-    config_spec: Path = typer.Option(DEFAULT_CONFIG, "-c", "--config", help="Path to config file"),
-    output: Path | None = typer.Option(DEFAULT_OUTPUT, "-o", "--output", help="Output trajectory file"),
+    config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT),
+    output: Path | None = typer.Option(DEFAULT_OUTPUT_FILE, "-o", "--output", help="Output trajectory file"),
     exit_immediately: bool = typer.Option( False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting.", rich_help_panel="Advanced"),
 ) -> Any:
     # fmt: on
     configure_if_first_time()
-    config_path = get_config_path(config_spec)
-    console.print(f"Loading agent config from [bold green]'{config_path}'[/bold green]")
-    config = yaml.safe_load(config_path.read_text())
+
+    # Build the config from the command line arguments
+    console.print(f"Building agent config from specs: [bold green]{config_spec}[/bold green]")
+    configs = [get_config_from_spec(spec) for spec in config_spec]
+    if yolo:
+        configs.append({"agent": {"mode": "yolo"}})
+    if cost_limit is not None:
+        configs.append({"agent": {"cost_limit": cost_limit}})
+    if exit_immediately:
+        configs.append({"agent": {"confirm_exit": False}})
+    if model_class is not None:
+        configs.append({"model": {"model_class": model_class}})
+    if output is not None:
+        configs.append({"agent": {"output_path": output}})
+    if model_name is not None:
+        configs.append({"model": {"model_name": model_name}})
+    config = recursive_merge(*configs)
 
     if not task:
-        console.print("[bold yellow]What do you want to do?")
-        task = prompt_session.prompt(
-            "",
-            multiline=True,
-            bottom_toolbar=HTML(
-                "Submit task: <b fg='yellow' bg='black'>Esc+Enter</b> | "
-                "Navigate history: <b fg='yellow' bg='black'>Arrow Up/Down</b> | "
-                "Search history: <b fg='yellow' bg='black'>Ctrl+R</b>"
-            ),
-        )
-        console.print("[bold green]Got that, thanks![/bold green]")
+        task = prompt_for_task()
 
-    if yolo:
-        config.setdefault("agent", {})["mode"] = "yolo"
-    if cost_limit is not None:
-        config.setdefault("agent", {})["cost_limit"] = cost_limit
-    if exit_immediately:
-        config.setdefault("agent", {})["confirm_exit"] = False
-    if model_class is not None:
-        config.setdefault("model", {})["model_class"] = model_class
-    config.setdefault("agent", {})["output_path"] = output
-    model = get_model(model_name, config.get("model", {}))
+    model = get_model(config=config["model"])
     env = LocalEnvironment(**config.get("env", {}))
 
     # Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it's essentially a XOR

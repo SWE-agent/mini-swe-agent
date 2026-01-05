@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from minisweagent.run.mini import DEFAULT_CONFIG, app, main
+from minisweagent.run.mini import DEFAULT_CONFIG_FILE, app, main
 
 
 def strip_ansi_codes(text: str) -> str:
@@ -42,7 +42,7 @@ def test_configure_if_first_time_called():
 
         # Call main function
         main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="test-model",
             task="Test task",
             yolo=False,
@@ -82,7 +82,7 @@ def test_mini_command_calls_run_interactive():
 
         # Call main function with task provided (so prompt is not called)
         main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="test-model",
             task="Test task",
             yolo=False,
@@ -127,7 +127,7 @@ def test_mini_v_command_calls_run_textual():
 
         # Call main function with visual=True and task provided
         main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="test-model",
             task="Test task",
             yolo=False,
@@ -174,7 +174,7 @@ def test_mini_calls_prompt_when_no_task_provided():
 
         # Call main function without task
         main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="test-model",
             task=None,  # No task provided
             yolo=False,
@@ -221,7 +221,7 @@ def test_mini_v_calls_prompt_when_no_task_provided():
 
         # Call main function with visual=True but no task
         main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="test-model",
             task=None,  # No task provided
             yolo=False,
@@ -270,7 +270,7 @@ def test_mini_with_explicit_model():
 
         # Call main function with explicit model
         main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="gpt-4",
             task="Test task with explicit model",
             yolo=True,
@@ -315,7 +315,7 @@ def test_yolo_mode_sets_correct_agent_config():
 
         # Call main function with yolo=True
         main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="test-model",
             task="Test yolo task",
             yolo=True,
@@ -360,7 +360,7 @@ def test_confirm_mode_sets_correct_agent_config():
 
         # Call main function with yolo=False (default)
         main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="test-model",
             task="Test confirm task",
             yolo=False,
@@ -561,7 +561,7 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
 
         # Call main function with --exit-immediately flag
         agent = main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="test-model",
             task="Test task",
             yolo=False,
@@ -603,7 +603,7 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
 
         # Call main function without --exit-immediately flag (defaults to False)
         agent = main(
-            config_spec=DEFAULT_CONFIG,
+            config_spec=DEFAULT_CONFIG_FILE,
             model_name="test-model",
             task="Test task",
             yolo=False,
