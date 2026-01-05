@@ -19,7 +19,7 @@ def test_local_end_to_end(local_test_data):
         mock_model_class.return_value = DeterministicModel(outputs=model_responses)
         agent = main(
             model_name="tardis",
-            config_spec=DEFAULT_CONFIG_FILE,
+            config_spec=[str(DEFAULT_CONFIG_FILE)],
             yolo=True,
             task="Blah blah blah",
             output=None,
