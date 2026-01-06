@@ -16,7 +16,7 @@ from rich.rule import Rule
 
 from minisweagent import global_config_dir
 from minisweagent.agents.default import AgentConfig, DefaultAgent
-from minisweagent.exceptions import LimitsExceeded, NonTerminatingException, Submitted
+from minisweagent.exceptions import LimitsExceeded, Submitted, UserInterruption
 
 console = Console(highlight=False)
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "interactive_history.txt"))
@@ -38,7 +38,7 @@ class InteractiveAgent(DefaultAgent):
         super().__init__(*args, config_class=config_class, **kwargs)
         self.cost_last_confirmed = 0.0
 
-    def add_messages(self, messages: list[dict]) -> list[dict]:
+    def add_messages(self, *messages: dict) -> list[dict]:
         # Extend supermethod to print messages
         for msg in messages:
             role, content = msg.get("role", "unknown"), msg.get("content", "")
@@ -51,7 +51,7 @@ class InteractiveAgent(DefaultAgent):
             else:
                 console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
             console.print(content, highlight=False, markup=False)
-        return super().add_messages(messages)
+        return super().add_messages(*messages)
 
     def query(self) -> list[dict]:
         # Extend supermethod to handle human mode
@@ -60,9 +60,9 @@ class InteractiveAgent(DefaultAgent):
                 case "/y" | "/c":
                     pass
                 case _:
-                    return [
+                    return self.add_messages(
                         {"role": "assistant", "content": f"\n```bash\n{command}\n```", "extra": {"action": command}}
-                    ]
+                    )
         try:
             with console.status("Waiting for the LM to respond..."):
                 return super().query()
@@ -88,7 +88,13 @@ class InteractiveAgent(DefaultAgent):
             ).strip()
             if not interruption_message or interruption_message in self._MODE_COMMANDS_MAPPING:
                 interruption_message = "Temporary interruption caught."
-            raise NonTerminatingException(f"Interrupted by user: {interruption_message}")
+            raise UserInterruption(
+                {
+                    "role": "user",
+                    "content": f"Interrupted by user: {interruption_message}",
+                    "extra": {"interrupt_type": "UserInterruption"},
+                }
+            )
 
     def execute_actions(self, messages: list[dict]) -> list[dict]:
         # Override to handle user confirmation and confirm_exit
@@ -98,7 +104,7 @@ class InteractiveAgent(DefaultAgent):
                 self.ask_confirmation()
         try:
             return super().execute_actions(messages)
-        except Submitted as e:
+        except Submitted:
             if self.config.confirm_exit:
                 console.print(
                     "[bold green]Agent wants to finish.[/bold green] "
@@ -107,8 +113,14 @@ class InteractiveAgent(DefaultAgent):
                     end="",
                 )
                 if new_task := self._prompt_and_handle_special("").strip():
-                    raise NonTerminatingException(f"The user added a new task: {new_task}")
-            raise e
+                    raise UserInterruption(
+                        {
+                            "role": "user",
+                            "content": f"The user added a new task: {new_task}",
+                            "extra": {"interrupt_type": "UserNewTask"},
+                        }
+                    )
+            raise
 
     def should_ask_confirmation(self, action: str) -> bool:
         return self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions)
@@ -123,10 +135,20 @@ class InteractiveAgent(DefaultAgent):
             case "" | "/y":
                 pass  # confirmed, do nothing
             case "/u":  # Skip execution action and get back to query
-                raise NonTerminatingException("Command not executed. Switching to human mode")
+                raise UserInterruption(
+                    {
+                        "role": "user",
+                        "content": "Command not executed. Switching to human mode",
+                        "extra": {"interrupt_type": "UserRejection"},
+                    }
+                )
             case _:
-                raise NonTerminatingException(
-                    f"Command not executed. The user rejected your command with the following message: {user_input}"
+                raise UserInterruption(
+                    {
+                        "role": "user",
+                        "content": f"Command not executed. The user rejected your command with the following message: {user_input}",
+                        "extra": {"interrupt_type": "UserRejection"},
+                    }
                 )
 
     def _prompt_and_handle_special(self, prompt: str) -> str:

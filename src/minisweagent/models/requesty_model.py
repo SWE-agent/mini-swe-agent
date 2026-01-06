@@ -131,11 +131,21 @@ class RequestyModel:
         return {"cost": cost}
 
     def parse_action(self, content: str) -> str:
-        """Parse the action from the model output. Raises FormatError if not exactly one action."""
+        """Parse the action from the model output. Raises InterruptAgentFlow if not exactly one action."""
         actions = re.findall(self.config.action_regex, content, re.DOTALL)
         if len(actions) != 1:
             raise FormatError(
-                Template(self.config.format_error_template, undefined=StrictUndefined).render(actions=actions)
+                {
+                    "role": "user",
+                    "content": Template(self.config.format_error_template, undefined=StrictUndefined).render(
+                        actions=actions
+                    ),
+                    "extra": {
+                        "interrupt_type": "FormatError",
+                        "n_actions": len(actions),
+                        "model_response": content,
+                    },
+                }
             )
         return actions[0].strip()
 

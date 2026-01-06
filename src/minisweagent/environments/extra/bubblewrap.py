@@ -24,7 +24,7 @@ from typing import Any
 from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
-from minisweagent.exceptions import ExecutionTimeoutError, Submitted
+from minisweagent.exceptions import Submitted
 from minisweagent.utils.serialize import recursive_merge
 
 
@@ -120,11 +120,16 @@ class BubblewrapEnvironment:
                 output = self.execute(action)
             except (TimeoutError, subprocess.TimeoutExpired) as e:
                 output_text = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
-                raise ExecutionTimeoutError(
-                    Template(self.config.timeout_template, undefined=StrictUndefined).render(
-                        **self.get_template_vars(action=action, output=output_text, **(extra_template_vars or {}))
-                    )
+                results.append(
+                    {
+                        "role": "user",
+                        "content": Template(self.config.timeout_template, undefined=StrictUndefined).render(
+                            **self.get_template_vars(action=action, output=output_text, **(extra_template_vars or {}))
+                        ),
+                        "extra": {"interrupt_type": "ExecutionTimeoutError", "timestamp": time.time()},
+                    }
                 )
+                continue
             self._check_finished(output)
             results.extend(self._get_observation_message(msg, output))
         return results
@@ -143,10 +148,17 @@ class BubblewrapEnvironment:
         ]
 
     def _check_finished(self, output: dict):
-        """Raises Submitted exception if the output indicates task completion."""
+        """Raises Submitted if the output indicates task completion."""
         lines = output.get("output", "").lstrip().splitlines(keepends=True)
         if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
-            raise Submitted("".join(lines[1:]))
+            submission = "".join(lines[1:])
+            raise Submitted(
+                {
+                    "role": "exit",
+                    "content": submission,
+                    "extra": {"exit_status": "Submitted", "submission": submission},
+                }
+            )
 
     def cleanup(self):
         if self.working_dir.exists():

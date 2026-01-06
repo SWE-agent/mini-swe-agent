@@ -709,7 +709,13 @@ def test_output_file_is_created(tmp_path):
         # execute_messages returns list of observation messages and raises Submitted for completion
         from minisweagent.exceptions import Submitted
 
-        mock_environment.execute_messages.side_effect = Submitted("done")
+        mock_environment.execute_messages.side_effect = Submitted(
+            {
+                "role": "exit",
+                "content": "done",
+                "extra": {"exit_status": "Submitted", "submission": "done"},
+            }
+        )
         mock_environment.get_template_vars.return_value = {
             "system": "TestOS",
             "release": "1.0",

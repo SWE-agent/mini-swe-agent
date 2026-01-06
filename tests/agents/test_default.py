@@ -146,20 +146,20 @@ def test_model_parse_action_success(default_config):
 
 def test_model_parse_action_failures(default_config):
     """Test action parsing raises appropriate exceptions for invalid formats (now on model)."""
-    from minisweagent.exceptions import FormatError
+    from minisweagent.exceptions import InterruptAgentFlow
 
     model = DeterministicModel(outputs=[])
 
     # No code blocks
-    with pytest.raises(FormatError):
+    with pytest.raises(InterruptAgentFlow):
         model.parse_action("No code blocks here")
 
     # Multiple code blocks
-    with pytest.raises(FormatError):
+    with pytest.raises(InterruptAgentFlow):
         model.parse_action("```bash\necho 'first'\n```\n```bash\necho 'second'\n```")
 
     # Code block without bash language specifier
-    with pytest.raises(FormatError):
+    with pytest.raises(InterruptAgentFlow):
         model.parse_action("```\nls -la\n```")
 
 
@@ -180,9 +180,9 @@ def test_message_history_tracking(default_config):
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "done\n"
 
-    # After completion should have full conversation
+    # After completion should have full conversation (exit instead of user at end)
     assert len(agent.messages) == 6
-    assert [msg["role"] for msg in agent.messages] == ["system", "user", "assistant", "user", "assistant", "user"]
+    assert [msg["role"] for msg in agent.messages] == ["system", "user", "assistant", "user", "assistant", "exit"]
 
 
 def test_multiple_steps_before_completion(default_config):
@@ -249,7 +249,7 @@ def test_render_template_model_stats(default_config):
     )
 
     # Make some calls through the agent to generate stats
-    agent.add_messages([{"role": "system", "content": "test"}, {"role": "user", "content": "test"}])
+    agent.add_messages({"role": "system", "content": "test"}, {"role": "user", "content": "test"})
     agent.query()
     agent.query()
 
@@ -294,8 +294,8 @@ def test_step_adds_messages(default_config):
         **default_config,
     )
 
-    agent.add_messages([{"role": "system", "content": "system message"}])
-    agent.add_messages([{"role": "user", "content": "user message"}])
+    agent.add_messages({"role": "system", "content": "system message"})
+    agent.add_messages({"role": "user", "content": "user message"})
 
     initial_count = len(agent.messages)
     agent.step()

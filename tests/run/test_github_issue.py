@@ -26,11 +26,11 @@ def assert_observations_match(expected_observations: list[str], messages: list[d
         messages: Agent conversation messages (list of message dicts with 'role' and 'content')
     """
     # Extract actual observations from agent messages
-    # User messages (observations) are at indices 3, 5, 7, etc.
+    # User/exit messages (observations) are at indices 3, 5, 7, etc.
     actual_observations = []
     for i in range(len(expected_observations)):
         user_message_index = 3 + (i * 2)
-        assert messages[user_message_index]["role"] == "user"
+        assert messages[user_message_index]["role"] in ("user", "exit")
         actual_observations.append(messages[user_message_index]["content"])
 
     assert len(actual_observations) == len(expected_observations), (
@@ -121,7 +121,13 @@ def test_output_file_is_created(tmp_path):
         # execute_messages returns list of observation messages and raises Submitted for completion
         from minisweagent.exceptions import Submitted
 
-        mock_env.execute_messages.side_effect = Submitted("done")
+        mock_env.execute_messages.side_effect = Submitted(
+            {
+                "role": "exit",
+                "content": "done",
+                "extra": {"exit_status": "Submitted", "submission": "done"},
+            }
+        )
         mock_env.get_template_vars.return_value = {
             "system": "TestOS",
             "release": "1.0",
