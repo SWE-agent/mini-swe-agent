@@ -38,7 +38,7 @@ class InteractiveAgent(DefaultAgent):
         super().__init__(*args, config_class=config_class, **kwargs)
         self.cost_last_confirmed = 0.0
 
-    def add_messages(self, *messages: dict) -> tuple[dict, ...]:
+    def add_messages(self, *messages: dict) -> list[dict]:
         # Extend supermethod to print messages
         for msg in messages:
             role, content = msg.get("role", "unknown"), msg.get("content", "")
@@ -53,7 +53,7 @@ class InteractiveAgent(DefaultAgent):
             console.print(content, highlight=False, markup=False)
         return super().add_messages(*messages)
 
-    def query(self) -> tuple[dict, ...]:
+    def query(self) -> list[dict]:
         # Extend supermethod to handle human mode
         if self.config.mode == "human":
             match command := self._prompt_and_handle_special("[bold yellow]>[/bold yellow] "):
@@ -75,7 +75,7 @@ class InteractiveAgent(DefaultAgent):
             self.config.cost_limit = float(input("New cost limit: "))
             return super().query()
 
-    def step(self) -> tuple[dict, ...]:
+    def step(self) -> list[dict]:
         # Override the step method to handle user interruption
         try:
             console.print(Rule())
@@ -96,7 +96,7 @@ class InteractiveAgent(DefaultAgent):
                 }
             )
 
-    def execute_actions(self, messages: list[dict] | tuple[dict, ...]) -> tuple[dict, ...]:
+    def execute_actions(self, messages: list[dict]) -> list[dict]:
         # Override to handle user confirmation and confirm_exit
         for msg in messages:
             action = msg.get("extra", {}).get("action")

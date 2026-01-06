@@ -43,13 +43,13 @@ class _TextualAgent(DefaultAgent):
         super().__init__(*args, config_class=TextualAgentConfig, **kwargs)
         self._current_action_from_human = False
 
-    def add_messages(self, *messages: dict) -> tuple[dict, ...]:
+    def add_messages(self, *messages: dict) -> list[dict]:
         result = super().add_messages(*messages)
         if self.app.agent_state != "UNINITIALIZED":
             self.app.call_from_thread(self.app.on_message_added)
         return result
 
-    def query(self) -> tuple[dict, ...]:
+    def query(self) -> list[dict]:
         if self.config.mode == "human":
             human_input = self.app.input_container.request_input("Enter your command:")
             self._current_action_from_human = True
@@ -74,7 +74,7 @@ class _TextualAgent(DefaultAgent):
         self.app.call_from_thread(self.app.action_quit)
         return info
 
-    def execute_actions(self, messages: list[dict] | tuple[dict, ...]) -> tuple[dict, ...]:
+    def execute_actions(self, messages: list[dict]) -> list[dict]:
         # Override to handle user confirmation and confirm_exit
         for msg in messages:
             if "action" not in msg.get("extra", {}):

@@ -55,12 +55,12 @@ class DefaultAgent:
     def _render_template(self, template: str) -> str:
         return Template(template, undefined=StrictUndefined).render(**self.get_template_vars())
 
-    def add_messages(self, *messages: dict) -> tuple[dict, ...]:
+    def add_messages(self, *messages: dict) -> list[dict]:
         self.logger.debug(messages)  # set log level to debug to see
         self.messages.extend(messages)
-        return messages
+        return list(messages)
 
-    def handle_exception(self, e: Exception) -> tuple[dict, ...]:
+    def handle_exception(self, e: Exception) -> list[dict]:
         """Handle an exception by adding appropriate messages."""
         if isinstance(e, InterruptAgentFlow):
             return self.add_messages(*e.messages)
@@ -116,7 +116,7 @@ class DefaultAgent:
         self.cost += sum(msg.get("extra", {}).get("cost", 0.0) for msg in messages)
         return self.add_messages(*messages)
 
-    def execute_actions(self, messages: list[dict] | tuple[dict, ...]) -> tuple[dict, ...]:
+    def execute_actions(self, messages: list[dict]) -> list[dict]:
         """Execute actions in messages, add all messages, return observation messages. Override to add hooks."""
         return self.add_messages(*self.env.execute_messages(messages, extra_template_vars=self.get_template_vars()))
 
