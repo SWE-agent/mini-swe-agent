@@ -1,8 +1,11 @@
+import logging
 from dataclasses import asdict, dataclass, field, replace
 from typing import Any, TypedDict
 
 from contree_sdk import ContreeSync
 from contree_sdk.config import ContreeConfig
+from contree_sdk.sdk.exceptions import NotFoundError
+from contree_sdk.sdk.objects.image import ContreeImageSync
 
 
 @dataclass
@@ -10,6 +13,8 @@ class ContreeEnvironmentConfig:
     contree_config: ContreeConfig | dict[str, Any]
 
     image: str
+    image_tag: str = None
+    """If set, used to pull image by tag. If fails, then it imports by `image` and sets `image_tag` value to image tag"""
     cwd: str = "/"
     """Working directory in which to execute commands."""
     cwd_auto_create: bool = True
@@ -35,16 +40,34 @@ class ContreeEnvironment:
         """This class executes bash commands in a Contree container using contree-sdk"""
         self.config: ContreeEnvironmentConfig = config_class(**kwargs)
 
+        self.logger = logging.getLogger("minisweagent.environment")
+
         if isinstance(self.config.contree_config, dict):
             self.config = replace(self.config, contree_config=ContreeConfig(**self.config.contree_config))
 
         self.client = ContreeSync(config=self.config.contree_config)
-        self.session = self.client.images.pull(self.config.image).session()
+        self.session = self._pull_image().session()
         if self.config.cwd_auto_create:
             self.execute(
                 command=f"mkdir -p {self.config.cwd}",
                 cwd="/",
             )
+
+    def _pull_image(self) -> ContreeImageSync:
+        image_tag = self.config.image_tag or None
+        if image_tag:
+            try:
+                self.logger.info(f"Pulling image by tag: {image_tag}")
+                image = self.client.images.pull(image_tag)
+                self.logger.info(f"Pulled image by tag: {image_tag}")
+                return image
+            except NotFoundError:
+                self.logger.warning(
+                    f"Failed to pull image by tag: {image_tag}, starting to import from: {self.config.image}"
+                )
+
+        self.logger.info(f"Pulling image: {self.config.image}")
+        return self.client.images.pull(self.config.image, new_tag=image_tag)
 
     def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the environment and return the raw output."""
