@@ -1,22 +1,22 @@
-class NonTerminatingException(Exception):
-    """Raised for conditions that can be handled by the agent."""
+class InterruptAgentFlow(Exception):
+    """Raised to interrupt the agent flow and add messages."""
+
+    def __init__(self, *messages: dict):
+        self.messages = messages
+        super().__init__()
 
 
-class FormatError(NonTerminatingException):
+class Submitted(InterruptAgentFlow):
+    """Raised when the agent has completed its task."""
+
+
+class LimitsExceeded(InterruptAgentFlow):
+    """Raised when the agent has exceeded its cost or step limit."""
+
+
+class UserInterruption(InterruptAgentFlow):
+    """Raised when the user interrupts the agent."""
+
+
+class FormatError(InterruptAgentFlow):
     """Raised when the LM's output is not in the expected format."""
-
-
-class ExecutionTimeoutError(NonTerminatingException):
-    """Raised when the action execution timed out."""
-
-
-class TerminatingException(Exception):
-    """Raised for conditions that terminate the agent."""
-
-
-class Submitted(TerminatingException):
-    """Raised when the LM declares that the agent has finished its task."""
-
-
-class LimitsExceeded(TerminatingException):
-    """Raised when the agent has reached its cost or step limit."""

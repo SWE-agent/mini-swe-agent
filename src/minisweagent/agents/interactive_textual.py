@@ -24,7 +24,7 @@ from textual.screen import Screen
 from textual.widgets import Footer, Header, Input, Static, TextArea
 
 from minisweagent.agents.default import AgentConfig, DefaultAgent
-from minisweagent.exceptions import NonTerminatingException, Submitted
+from minisweagent.exceptions import Submitted, UserInterruption
 
 
 class TextualAgentConfig(AgentConfig):
@@ -43,19 +43,19 @@ class _TextualAgent(DefaultAgent):
         super().__init__(*args, config_class=TextualAgentConfig, **kwargs)
         self._current_action_from_human = False
 
-    def add_messages(self, messages: list[dict]) -> list[dict]:
-        result = super().add_messages(messages)
+    def add_messages(self, *messages: dict) -> tuple[dict, ...]:
+        result = super().add_messages(*messages)
         if self.app.agent_state != "UNINITIALIZED":
             self.app.call_from_thread(self.app.on_message_added)
         return result
 
-    def query(self) -> list[dict]:
+    def query(self) -> tuple[dict, ...]:
         if self.config.mode == "human":
             human_input = self.app.input_container.request_input("Enter your command:")
             self._current_action_from_human = True
-            return [
+            return self.add_messages(
                 {"role": "assistant", "content": f"\n```bash\n{human_input}\n```", "extra": {"action": human_input}}
-            ]
+            )
         self._current_action_from_human = False
         return super().query()
 
@@ -74,13 +74,19 @@ class _TextualAgent(DefaultAgent):
         self.app.call_from_thread(self.app.action_quit)
         return info
 
-    def execute_actions(self, messages: list[dict]) -> list[dict]:
+    def execute_actions(self, messages: list[dict] | tuple[dict, ...]) -> tuple[dict, ...]:
         # Override to handle user confirmation and confirm_exit
         for msg in messages:
             if "action" not in msg.get("extra", {}):
                 continue
             if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
-                raise NonTerminatingException("Command not executed because user switched to manual mode.")
+                raise UserInterruption(
+                    {
+                        "role": "user",
+                        "content": "Command not executed because user switched to manual mode.",
+                        "extra": {"interrupt_type": "UserInterruption"},
+                    }
+                )
             action = msg.get("extra", {}).get("action", "")
             if (
                 self.config.mode == "confirm"
@@ -89,17 +95,29 @@ class _TextualAgent(DefaultAgent):
             ):
                 result = self.app.input_container.request_input("Press ENTER to confirm or provide rejection reason")
                 if result:
-                    raise NonTerminatingException(f"Command not executed: {result}")
+                    raise UserInterruption(
+                        {
+                            "role": "user",
+                            "content": f"Command not executed: {result}",
+                            "extra": {"interrupt_type": "UserRejection"},
+                        }
+                    )
         try:
             return super().execute_actions(messages)
-        except Submitted as e:
+        except Submitted:
             if self.config.confirm_exit:
                 if new_task := self.app.input_container.request_input(
                     "[bold green]Agent wants to finish.[/bold green] "
                     "[green]Type a comment to give it a new task or press enter to quit.\n"
                 ).strip():
-                    raise NonTerminatingException(f"The user added a new task: {new_task}")
-            raise e
+                    raise UserInterruption(
+                        {
+                            "role": "user",
+                            "content": f"The user added a new task: {new_task}",
+                            "extra": {"interrupt_type": "UserNewTask"},
+                        }
+                    )
+            raise
 
 
 class AddLogEmitCallback(logging.Handler):
