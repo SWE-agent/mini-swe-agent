@@ -11,7 +11,7 @@ from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
 from minisweagent import Environment, Model, __version__
-from minisweagent.exceptions import LimitsExceeded, NonTerminatingException, TerminatingException
+from minisweagent.exceptions import InterruptAgentFlow, LimitsExceeded
 from minisweagent.utils.serialize import recursive_merge
 
 
@@ -55,36 +55,47 @@ class DefaultAgent:
     def _render_template(self, template: str) -> str:
         return Template(template, undefined=StrictUndefined).render(**self.get_template_vars())
 
-    def add_messages(self, messages: list[dict]) -> list[dict]:
+    def add_messages(self, *messages: dict) -> list[dict]:
         self.logger.debug(messages)  # set log level to debug to see
         self.messages.extend(messages)
-        return messages
+        return list(messages)
+
+    def handle_exception(self, e: Exception) -> list[dict]:
+        """Handle an exception by adding appropriate messages."""
+        if isinstance(e, InterruptAgentFlow):
+            return self.add_messages(*e.messages)
+        # Unregistered exceptions always stop the agent
+        return self.add_messages(
+            {
+                "role": "exit",
+                "content": str(e),
+                "extra": {
+                    "exit_status": type(e).__name__,
+                    "submission": str(e),
+                    "exception_str": str(e),
+                    "traceback": traceback.format_exc(),
+                },
+            }
+        )
 
     def run(self, task: str = "", **kwargs) -> dict:
         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
         self.add_messages(
-            [
-                {"role": "system", "content": self._render_template(self.config.system_template)},
-                {"role": "user", "content": self._render_template(self.config.instance_template)},
-            ]
+            {"role": "system", "content": self._render_template(self.config.system_template)},
+            {"role": "user", "content": self._render_template(self.config.instance_template)},
         )
         while True:
-            info = {}
             try:
                 self.step()
             except Exception as e:
-                self.add_messages([{"role": "user", "content": str(e)}])
-                if isinstance(e, NonTerminatingException):
-                    continue
-                info = {"exit_status": type(e).__name__, "submission": str(e)}
-                if isinstance(e, TerminatingException):
-                    return info
-                info["traceback"] = traceback.format_exc()
-                raise e
+                self.handle_exception(e)
             finally:
-                self.save(self.config.output_path, {"info": info})
+                self.save(self.config.output_path)
+            if self.messages[-1].get("role") == "exit":
+                break
+        return self.messages[-1].get("extra", {})
 
     def step(self) -> list[dict]:
         """Query the LM, execute actions."""
@@ -93,18 +104,26 @@ class DefaultAgent:
     def query(self) -> list[dict]:
         """Query the model and return model messages. Override to add hooks."""
         if 0 < self.config.step_limit <= self.n_calls or 0 < self.config.cost_limit <= self.cost:
-            raise LimitsExceeded()
+            raise LimitsExceeded(
+                {
+                    "role": "exit",
+                    "content": "LimitsExceeded",
+                    "extra": {"exit_status": "LimitsExceeded", "submission": ""},
+                }
+            )
         messages = self.model.query(self.messages)
         self.n_calls += 1
         self.cost += sum(msg.get("extra", {}).get("cost", 0.0) for msg in messages)
-        return self.add_messages(messages)
+        return self.add_messages(*messages)
 
     def execute_actions(self, messages: list[dict]) -> list[dict]:
         """Execute actions in messages, add all messages, return observation messages. Override to add hooks."""
-        return self.add_messages(self.env.execute_messages(messages, extra_template_vars=self.get_template_vars()))
+        return self.add_messages(*self.env.execute_messages(messages, extra_template_vars=self.get_template_vars()))
 
     def serialize(self, *extra_dicts) -> dict:
         """Serialize agent state to a json-compatible nested dictionary for saving."""
+        last_message = self.messages[-1] if self.messages else {}
+        last_extra = last_message.get("extra", {})
         agent_data = {
             "info": {
                 "model_stats": {
@@ -116,6 +135,8 @@ class DefaultAgent:
                     "agent_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
                 },
                 "mini_version": __version__,
+                "exit_status": last_extra.get("exit_status", ""),
+                "submission": last_extra.get("submission", ""),
             },
             "messages": self.messages,
             "trajectory_format": "mini-swe-agent-1.1",
