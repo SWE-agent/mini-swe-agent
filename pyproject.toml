@@ -67,6 +67,7 @@ dev = [
     "mkdocs-glightbox",
     "mkdocs-redirects",
     "portkey-ai",
+    "swe-rex",
 ]
 
 [project.urls]
