@@ -19,7 +19,7 @@ class MultimodalAgentConfig(AgentConfig):
 
 
 def _expand_content_string(*, content: str, pattern: str) -> list[dict]:
-    matches = list(re.finditer(pattern, content, re.DOTALL))
+    matches = list(re.finditer(pattern, content))
     if not matches:
         return [{"type": "text", "content": content}]
     result = []
