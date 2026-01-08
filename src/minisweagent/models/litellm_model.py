@@ -33,7 +33,7 @@ class LitellmModelConfig(BaseModel):
     """Set explicit cache control markers, for example for Anthropic models"""
     cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
     """Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""
-    action_regex: str = r"```bash\s*\n(.*?)\n```"
+    action_regex: str = r"```mswea_bash_command\s*\n(.*?)\n```"
     """Regex to extract the action from the LM's output."""
     format_error_template: str = (
         "Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."

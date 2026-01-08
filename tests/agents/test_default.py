@@ -22,8 +22,8 @@ def test_successful_completion(default_config):
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
-                "I'll echo a message\n```bash\necho 'hello world'\n```",
-                "Now finishing\n```bash\necho 'Task completed successfully'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "I'll echo a message\n```mswea_bash_command\necho 'hello world'\n```",
+                "Now finishing\n```mswea_bash_command\necho 'Task completed successfully'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -41,7 +41,10 @@ def test_step_limit_enforcement(default_config):
     """Test agent stops when step limit is reached."""
     agent = DefaultAgent(
         model=DeterministicModel(
-            outputs=["First command\n```bash\necho 'step1'\n```", "Second command\n```bash\necho 'step2'\n```"]
+            outputs=[
+                "First command\n```mswea_bash_command\necho 'step1'\n```",
+                "Second command\n```mswea_bash_command\necho 'step2'\n```",
+            ]
         ),
         env=LocalEnvironment(),
         **{**default_config, "step_limit": 1},
@@ -54,7 +57,7 @@ def test_step_limit_enforcement(default_config):
 
 def test_cost_limit_enforcement(default_config):
     """Test agent stops when cost limit is reached."""
-    model = DeterministicModel(outputs=["```bash\necho 'test'\n```"])
+    model = DeterministicModel(outputs=["```mswea_bash_command\necho 'test'\n```"])
 
     agent = DefaultAgent(
         model=model,
@@ -72,8 +75,8 @@ def test_format_error_handling(default_config):
         model=DeterministicModel(
             outputs=[
                 "No code blocks here",
-                "Multiple blocks\n```bash\necho 'first'\n```\n```bash\necho 'second'\n```",
-                "Now correct\n```bash\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Multiple blocks\n```mswea_bash_command\necho 'first'\n```\n```mswea_bash_command\necho 'second'\n```",
+                "Now correct\n```mswea_bash_command\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -96,8 +99,8 @@ def test_timeout_handling(default_config):
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
-                "Long sleep\n```bash\nsleep 5\n```",  # This will timeout
-                "Quick finish\n```bash\necho 'recovered'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Long sleep\n```mswea_bash_command\nsleep 5\n```",  # This will timeout
+                "Quick finish\n```mswea_bash_command\necho 'recovered'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(timeout=1),  # Very short timeout
@@ -119,8 +122,8 @@ def test_timeout_captures_partial_output(default_config):
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
-                f"Output then sleep\n```bash\n{calculation_command}\n```",
-                "Quick finish\n```bash\necho 'recovered'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                f"Output then sleep\n```mswea_bash_command\n{calculation_command}\n```",
+                "Quick finish\n```mswea_bash_command\necho 'recovered'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(timeout=1),
@@ -139,9 +142,9 @@ def test_model_parse_action_success(default_config):
     model = DeterministicModel(outputs=[])
 
     # Test different valid formats
-    assert model.parse_action("```bash\necho 'test'\n```") == "echo 'test'"
-    assert model.parse_action("```bash\nls -la\n```") == "ls -la"
-    assert model.parse_action("Some text\n```bash\necho 'hello'\n```\nMore text") == "echo 'hello'"
+    assert model.parse_action("```mswea_bash_command\necho 'test'\n```") == "echo 'test'"
+    assert model.parse_action("```mswea_bash_command\nls -la\n```") == "ls -la"
+    assert model.parse_action("Some text\n```mswea_bash_command\necho 'hello'\n```\nMore text") == "echo 'hello'"
 
 
 def test_model_parse_action_failures(default_config):
@@ -156,7 +159,7 @@ def test_model_parse_action_failures(default_config):
 
     # Multiple code blocks
     with pytest.raises(InterruptAgentFlow):
-        model.parse_action("```bash\necho 'first'\n```\n```bash\necho 'second'\n```")
+        model.parse_action("```mswea_bash_command\necho 'first'\n```\n```mswea_bash_command\necho 'second'\n```")
 
     # Code block without bash language specifier
     with pytest.raises(InterruptAgentFlow):
@@ -168,8 +171,8 @@ def test_message_history_tracking(default_config):
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
-                "Response 1\n```bash\necho 'test1'\n```",
-                "Response 2\n```bash\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Response 1\n```mswea_bash_command\necho 'test1'\n```",
+                "Response 2\n```mswea_bash_command\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -190,10 +193,10 @@ def test_multiple_steps_before_completion(default_config):
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
-                "Step 1\n```bash\necho 'first'\n```",
-                "Step 2\n```bash\necho 'second'\n```",
-                "Step 3\n```bash\necho 'third'\n```",
-                "Final step\n```bash\necho 'completed all steps'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Step 1\n```mswea_bash_command\necho 'first'\n```",
+                "Step 2\n```mswea_bash_command\necho 'second'\n```",
+                "Step 3\n```mswea_bash_command\necho 'third'\n```",
+                "Final step\n```mswea_bash_command\necho 'completed all steps'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -220,7 +223,7 @@ def test_custom_config(default_config):
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
-                "Test response\n```bash\necho 'custom config works'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
+                "Test response\n```mswea_bash_command\necho 'custom config works'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
             ]
         ),
         env=LocalEnvironment(),
@@ -243,7 +246,9 @@ def test_custom_config(default_config):
 def test_render_template_model_stats(default_config):
     """Test that render_template has access to n_model_calls and model_cost from agent."""
     agent = DefaultAgent(
-        model=DeterministicModel(outputs=["```bash\necho 'test1'\n```", "```bash\necho 'test2'\n```"]),
+        model=DeterministicModel(
+            outputs=["```mswea_bash_command\necho 'test1'\n```", "```mswea_bash_command\necho 'test2'\n```"]
+        ),
         env=LocalEnvironment(),
         **default_config,
     )
@@ -263,8 +268,8 @@ def test_messages_include_timestamps(default_config):
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
-                "Response 1\n```bash\necho 'test1'\n```",
-                "Response 2\n```bash\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Response 1\n```mswea_bash_command\necho 'test1'\n```",
+                "Response 2\n```mswea_bash_command\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -289,7 +294,7 @@ def test_messages_include_timestamps(default_config):
 def test_step_adds_messages(default_config):
     """Test that step adds assistant and observation messages."""
     agent = DefaultAgent(
-        model=DeterministicModel(outputs=["Test command\n```bash\necho 'hello'\n```"]),
+        model=DeterministicModel(outputs=["Test command\n```mswea_bash_command\necho 'hello'\n```"]),
         env=LocalEnvironment(),
         **default_config,
     )

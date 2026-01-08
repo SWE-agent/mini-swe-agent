@@ -54,7 +54,11 @@ class _TextualAgent(DefaultAgent):
             human_input = self.app.input_container.request_input("Enter your command:")
             self._current_action_from_human = True
             return self.add_messages(
-                {"role": "assistant", "content": f"\n```bash\n{human_input}\n```", "extra": {"action": human_input}}
+                {
+                    "role": "assistant",
+                    "content": f"\n```mswea_bash_command\n{human_input}\n```",
+                    "extra": {"action": human_input},
+                }
             )
         self._current_action_from_human = False
         return super().query()

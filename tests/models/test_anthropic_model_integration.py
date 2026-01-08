@@ -8,7 +8,7 @@ import pytest
 from minisweagent.models import get_model
 
 
-def _mock_litellm_completion(response_content="```bash\necho test\n```"):
+def _mock_litellm_completion(response_content="```mswea_bash_command\necho test\n```"):
     """Helper to create consistent litellm mocks. Response must include bash block for parse_action."""
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
@@ -26,7 +26,7 @@ def test_sonnet_4_cache_control_integration():
     ]
 
     with patch("minisweagent.models.litellm_model.litellm.completion") as mock_completion:
-        mock_completion.return_value = _mock_litellm_completion("```bash\necho 'I can help!'\n```")
+        mock_completion.return_value = _mock_litellm_completion("```mswea_bash_command\necho 'I can help!'\n```")
 
         with patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost") as mock_cost:
             mock_cost.return_value = 0.001
@@ -76,7 +76,7 @@ def test_get_model_anthropic_applies_cache_control(model_name):
     ]
 
     with patch("minisweagent.models.litellm_model.litellm.completion") as mock_completion:
-        mock_completion.return_value = _mock_litellm_completion("```bash\necho 'help code'\n```")
+        mock_completion.return_value = _mock_litellm_completion("```mswea_bash_command\necho 'help code'\n```")
 
         with patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost") as mock_cost:
             mock_cost.return_value = 0.001
@@ -134,7 +134,7 @@ def test_get_model_non_anthropic_no_cache_control(model_name):
     ]
 
     with patch("minisweagent.models.litellm_model.litellm.completion") as mock_completion:
-        mock_completion.return_value = _mock_litellm_completion("```bash\necho hello\n```")
+        mock_completion.return_value = _mock_litellm_completion("```mswea_bash_command\necho hello\n```")
 
         with patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost") as mock_cost:
             mock_cost.return_value = 0.001

@@ -9,7 +9,7 @@ agent:
     <format_example>
     Your reasoning and analysis here. Explain why you want to perform the action.
 
-    ```bash
+    ```mswea_bash_command
     your_command_here
     ```
     </format_example>
@@ -50,7 +50,7 @@ agent:
     <example_response>
     THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
 
-    ```bash
+    ```mswea_bash_command
     ls -la
     ```
     </example_response>
@@ -59,7 +59,7 @@ agent:
 
     ### Create a new file:
 
-    ```bash
+    ```mswea_bash_command
     cat <<'EOF' > newfile.py
     import numpy as np
     hello = "world"
@@ -75,7 +75,7 @@ agent:
     </important>
     {%- endif -%}
 
-    ```bash
+    ```mswea_bash_command
     # Replace all occurrences
     sed -i 's/old_string/new_string/g' filename.py
 
@@ -91,14 +91,14 @@ agent:
 
     ### View file content:
 
-    ```bash
+    ```mswea_bash_command
     # View specific lines with numbers
     nl -ba filename.py | sed -n '10,20p'
     ```
 
     ### Any other command you want to run
 
-    ```bash
+    ```mswea_bash_command
     anything
     ```
   step_limit: 0.
@@ -165,10 +165,10 @@ model:
     <response_example>
     Here are some thoughts about why you want to perform the action.
 
-    ```bash
+    ```mswea_bash_command
     <action>
     ```
     </response_example>
 
     Note: In rare cases, if you need to reference a similar format in your command, you might have
-    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```bash.
+    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```mswea_bash_command.

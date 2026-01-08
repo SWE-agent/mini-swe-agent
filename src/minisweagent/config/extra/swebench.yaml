@@ -9,7 +9,7 @@ agent:
     <format_example>
     THOUGHT: Your reasoning and analysis here
 
-    ```bash
+    ```mswea_bash_command
     your_command_here
     ```
     </format_example>
@@ -63,14 +63,14 @@ agent:
     THOUGHT: Here I explain my reasoning process, analysis of the current situation,
     and what I'm trying to accomplish with the command below.
 
-    ```bash
+    ```mswea_bash_command
     your_command_here
     ```
     </format_example>
 
     Commands must be specified in a single bash code block:
 
-    ```bash
+    ```mswea_bash_command
     your_command_here
     ```
 
@@ -87,7 +87,7 @@ agent:
     <example_response>
     THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
 
-    ```bash
+    ```mswea_bash_command
     ls -la
     ```
     </example_response>
@@ -96,20 +96,20 @@ agent:
     <example_response>
     THOUGHT: I need to examine the codebase and then look at a specific file. I'll run multiple commands to do this.
 
-    ```bash
+    ```mswea_bash_command
     ls -la
     ```
 
     Now I'll read the file:
 
-    ```bash
+    ```mswea_bash_command
     cat file.txt
     ```
     </example_response>
 
     If you need to run multiple commands, either:
     1. Combine them in one block using && or ||
-    ```bash
+    ```mswea_bash_command
     command1 && command2 || echo "Error occurred"
     ```
 
@@ -124,7 +124,7 @@ agent:
     ## Useful Command Examples
 
     ### Create a new file:
-    ```bash
+    ```mswea_bash_command
     cat <<'EOF' > newfile.py
     import numpy as np
     hello = "world"
@@ -133,7 +133,7 @@ agent:
     ```
 
     ### Edit files with sed:
-    ```bash
+    ```mswea_bash_command
     # Replace all occurrences
     sed -i 's/old_string/new_string/g' filename.py
 
@@ -148,13 +148,13 @@ agent:
     ```
 
     ### View file content:
-    ```bash
+    ```mswea_bash_command
     # View specific lines with numbers
     nl -ba filename.py | sed -n '10,20p'
     ```
 
     ### Any other command you want to run
-    ```bash
+    ```mswea_bash_command
     anything
     ```
 
@@ -162,7 +162,7 @@ agent:
     When you've completed your work (reading, editing, testing), and cannot make further progress
     issue exactly the following command:
 
-    ```bash
+    ```mswea_bash_command
     git add -A && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT
     ```
 
@@ -239,7 +239,7 @@ model:
     <response_example>
     Here are some thoughts about why you want to perform the action.
 
-    ```bash
+    ```mswea_bash_command
     <action>
     ```
     </response_example>

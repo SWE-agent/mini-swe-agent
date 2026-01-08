@@ -25,7 +25,7 @@ logger = logging.getLogger("requesty_model")
 class RequestyModelConfig(BaseModel):
     model_name: str
     model_kwargs: dict[str, Any] = {}
-    action_regex: str = r"```bash\s*\n(.*?)\n```"
+    action_regex: str = r"```mswea_bash_command\s*\n(.*?)\n```"
     """Regex to extract the action from the LM's output."""
     format_error_template: str = (
         "Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."

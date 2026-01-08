@@ -34,11 +34,11 @@ def sample_simple_trajectory():
     return [
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Hello, solve this problem."},
-        {"role": "assistant", "content": "I'll help you solve this.\n\n```bash\nls -la\n```"},
+        {"role": "assistant", "content": "I'll help you solve this.\n\n```mswea_bash_command\nls -la\n```"},
         {"role": "user", "content": "Command output here."},
         {
             "role": "assistant",
-            "content": "Now I'll finish.\n\n```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+            "content": "Now I'll finish.\n\n```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
         },
     ]
 
@@ -56,9 +56,12 @@ def sample_swebench_trajectory():
         "messages": [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": [{"type": "text", "text": "Please solve this issue."}]},
-            {"role": "assistant", "content": "I'll analyze the issue.\n\n```bash\ncat file.py\n```"},
+            {"role": "assistant", "content": "I'll analyze the issue.\n\n```mswea_bash_command\ncat file.py\n```"},
             {"role": "user", "content": [{"type": "text", "text": "File contents here."}]},
-            {"role": "assistant", "content": "Fixed!\n\n```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```"},
+            {
+                "role": "assistant",
+                "content": "Fixed!\n\n```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+            },
         ],
     }
 
