@@ -42,6 +42,11 @@ class DockerEnvironmentConfig(BaseModel):
     """Template used to render the observation after executing an action."""
     timeout_template: str = "Command timed out. Output:\n{{output}}"
     """Template used when a command timed out."""
+    interpreter: list[str] = ["bash", "-lc"]
+    """Interpreter to use to execute commands. Default is ["bash", "-lc"].
+    The actual command will be appended as argument to this. Override this to e.g., modify shell flags
+    (e.g., to remove the `-l` flag to disable login shell) or to use python instead of bash to interpret commands.
+    """
 
 
 class DockerEnvironment:
@@ -111,7 +116,7 @@ class DockerEnvironment:
                 cmd.extend(["-e", f"{key}={value}"])
         for key, value in self.config.env.items():
             cmd.extend(["-e", f"{key}={value}"])
-        cmd.extend([self.container_id, "bash", "-lc", command])
+        cmd.extend([self.container_id, *self.config.interpreter, command])
 
         result = subprocess.run(
             cmd,
