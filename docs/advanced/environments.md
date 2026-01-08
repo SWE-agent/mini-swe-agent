@@ -24,4 +24,7 @@ On top, there are a few more specialized environment classes that you can use:
 
 * **`swerex_docker`** ([`SwerexDockerEnvironment`](../reference/environments/swerex_docker.md)) - Docker execution through [SWE-ReX](https://github.com/swe-agent/swe-rex)
 
+* **`swerex_modal`** ([`SwerexModalEnvironment`](../reference/environments/swerex_modal.md)) - [Modal](https://modal.com) cloud execution through [SWE-ReX](https://github.com/swe-agent/swe-rex). Useful for training coding agents at scale with remote execution.
+
 * **`bubblewrap`** ([`BubblewrapEnvironment`](../reference/environments/bubblewrap.md)) - **Linux only**. Uses [bubblewrap](https://github.com/containers/bubblewrap) for lightweight, unprivileged sandboxing. Experimental.
+
