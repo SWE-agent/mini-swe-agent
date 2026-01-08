@@ -3,6 +3,14 @@
 
 <h1 style="margin-bottom: 1ex;">The 100 line AI agent that's actually useful</h1>
 
+</div>
+
+!!! warning "⚠️ v2.0 ahead! Beware of breaking changes."
+
+    See the [migration guide](advanced/v2_migration.md) for details.
+
+<div align="center">
+
 <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ">
     <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white" alt="Slack">
 </a>
