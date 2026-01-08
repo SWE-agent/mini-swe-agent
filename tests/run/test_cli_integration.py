@@ -692,7 +692,7 @@ def test_output_file_is_created(tmp_path):
             [
                 {
                     "role": "assistant",
-                    "content": "```bash\necho done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+                    "content": "```mswea_bash_command\necho done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
                     "action": "echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT",
                 }
             ],

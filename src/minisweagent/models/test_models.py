@@ -14,7 +14,7 @@ class DeterministicModelConfig(BaseModel):
     outputs: list[str]
     model_name: str = "deterministic"
     cost_per_call: float = 1.0
-    action_regex: str = r"```bash\s*\n(.*?)\n```"
+    action_regex: str = r"```mswea_bash_command\s*\n(.*?)\n```"
     """Regex to extract the action from the LM's output."""
     format_error_template: str = (
         "Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."

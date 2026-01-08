@@ -61,7 +61,11 @@ class InteractiveAgent(DefaultAgent):
                     pass
                 case _:
                     return self.add_messages(
-                        {"role": "assistant", "content": f"\n```bash\n{command}\n```", "extra": {"action": command}}
+                        {
+                            "role": "assistant",
+                            "content": f"\n```mswea_bash_command\n{command}\n```",
+                            "extra": {"action": command},
+                        }
                     )
         try:
             with console.status("Waiting for the LM to respond..."):

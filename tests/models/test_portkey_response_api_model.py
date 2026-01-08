@@ -27,7 +27,7 @@ def test_response_api_model_basic_query():
         mock_output_message = Mock(spec=ResponseOutputMessage)
         mock_content = Mock()
         # Response must include bash block to avoid FormatError from parse_action
-        mock_content.text = "```bash\necho test\n```"
+        mock_content.text = "```mswea_bash_command\necho test\n```"
         mock_output_message.content = [mock_content]
         mock_response.output = [mock_output_message]
         mock_response.output_text = None
@@ -39,7 +39,7 @@ def test_response_api_model_basic_query():
         result = model.query(messages)
 
         # query now returns list[dict]
-        assert result[0]["content"] == "```bash\necho test\n```"
+        assert result[0]["content"] == "```mswea_bash_command\necho test\n```"
         assert result[0]["extra"]["action"] == "echo test"
         assert model._previous_response_id == "resp_123"
         mock_client.responses.create.assert_called_once_with(
@@ -67,7 +67,7 @@ def test_response_api_model_with_previous_id():
         mock_response1.id = "resp_123"
         mock_output_message1 = Mock(spec=ResponseOutputMessage)
         mock_content1 = Mock()
-        mock_content1.text = "```bash\necho first\n```"
+        mock_content1.text = "```mswea_bash_command\necho first\n```"
         mock_output_message1.content = [mock_content1]
         mock_response1.output = [mock_output_message1]
         mock_response1.output_text = None
@@ -83,7 +83,7 @@ def test_response_api_model_with_previous_id():
         mock_response2.id = "resp_456"
         mock_output_message2 = Mock(spec=ResponseOutputMessage)
         mock_content2 = Mock()
-        mock_content2.text = "```bash\necho second\n```"
+        mock_content2.text = "```mswea_bash_command\necho second\n```"
         mock_output_message2.content = [mock_content2]
         mock_response2.output = [mock_output_message2]
         mock_response2.output_text = None
@@ -92,13 +92,13 @@ def test_response_api_model_with_previous_id():
 
         messages2 = [
             {"role": "user", "content": "first"},
-            {"role": "assistant", "content": "```bash\necho first\n```"},
+            {"role": "assistant", "content": "```mswea_bash_command\necho first\n```"},
             {"role": "user", "content": "second"},
         ]
         result = model.query(messages2)
 
         # query now returns list[dict]
-        assert result[0]["content"] == "```bash\necho second\n```"
+        assert result[0]["content"] == "```mswea_bash_command\necho second\n```"
         assert model._previous_response_id == "resp_456"
         # On second call, should only pass the last message
         assert mock_client.responses.create.call_args[1]["input"] == [{"role": "user", "content": "second"}]
@@ -121,7 +121,7 @@ def test_response_api_model_output_text_field():
         mock_response = Mock()
         mock_response.id = "resp_789"
         # Response must include bash block to avoid FormatError from parse_action
-        mock_response.output_text = "```bash\necho direct\n```"
+        mock_response.output_text = "```mswea_bash_command\necho direct\n```"
         mock_response.model_dump.return_value = {"id": "resp_789"}
         mock_client.responses.create.return_value = mock_response
 
@@ -130,7 +130,7 @@ def test_response_api_model_output_text_field():
         result = model.query(messages)
 
         # query now returns list[dict]
-        assert result[0]["content"] == "```bash\necho direct\n```"
+        assert result[0]["content"] == "```mswea_bash_command\necho direct\n```"
         assert result[0]["extra"]["action"] == "echo direct"
 
 
@@ -156,7 +156,7 @@ def test_response_api_model_multiple_output_messages():
 
         # Create multiple output messages - together they form a valid bash block
         mock_msg1 = Mock(spec=ResponseOutputMessage)
-        mock_msg1.content = [Mock(text="First part\n```bash")]
+        mock_msg1.content = [Mock(text="First part\n```mswea_bash_command")]
         mock_msg2 = Mock(spec=ResponseOutputMessage)
         mock_msg2.content = [Mock(text="echo test\n```")]
 
@@ -168,7 +168,7 @@ def test_response_api_model_multiple_output_messages():
         result = model.query(messages)
 
         # query now returns list[dict]
-        assert result[0]["content"] == "First part\n```bash\n\necho test\n```"
+        assert result[0]["content"] == "First part\n```mswea_bash_command\n\necho test\n```"
         assert result[0]["extra"]["action"] == "echo test"
 
 
@@ -188,7 +188,7 @@ def test_response_api_model_cost_tracking():
         mock_response = Mock()
         mock_response.id = "resp_cost"
         # Response must include bash block to avoid FormatError from parse_action
-        mock_response.output_text = "```bash\necho cost\n```"
+        mock_response.output_text = "```mswea_bash_command\necho cost\n```"
         mock_response.model_dump.return_value = {"id": "resp_cost"}
         mock_client.responses.create.return_value = mock_response
 
@@ -248,7 +248,7 @@ def test_response_api_model_cache_control():
         mock_response = Mock()
         mock_response.id = "resp_cache"
         # Response must include bash block to avoid FormatError from parse_action
-        mock_response.output_text = "```bash\necho cache\n```"
+        mock_response.output_text = "```mswea_bash_command\necho cache\n```"
         mock_response.model_dump.return_value = {"id": "resp_cache"}
         mock_client.responses.create.return_value = mock_response
 
@@ -278,7 +278,7 @@ def test_response_api_model_with_model_kwargs():
         mock_response = Mock()
         mock_response.id = "resp_kwargs"
         # Response must include bash block to avoid FormatError from parse_action
-        mock_response.output_text = "```bash\necho kwargs\n```"
+        mock_response.output_text = "```mswea_bash_command\necho kwargs\n```"
         mock_response.model_dump.return_value = {"id": "resp_kwargs"}
         mock_client.responses.create.return_value = mock_response
 
@@ -318,7 +318,7 @@ def test_response_api_model_retry_on_rate_limit():
             mock_output_message = Mock(spec=ResponseOutputMessage)
             mock_content = Mock()
             # Response must include bash block to avoid FormatError from parse_action
-            mock_content.text = "```bash\necho 'Success after retry'\n```"
+            mock_content.text = "```mswea_bash_command\necho 'Success after retry'\n```"
             mock_output_message.content = [mock_content]
             mock_response.output = [mock_output_message]
             mock_response.output_text = None
@@ -332,7 +332,7 @@ def test_response_api_model_retry_on_rate_limit():
         result = model.query(messages)
 
         # query now returns list[dict]
-        assert result[0]["content"] == "```bash\necho 'Success after retry'\n```"
+        assert result[0]["content"] == "```mswea_bash_command\necho 'Success after retry'\n```"
         assert call_count == 2
 
 
