@@ -3002,7 +3002,7 @@
     <span class="n">env_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"environment"</span><span class="p">,</span> <span class="p">{})</span>
     <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">=</span> <span class="n">env_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment_class"</span><span class="p">,</span> <span class="s2">"docker"</span><span class="p">)</span>
     <span class="n">image_name</span> <span class="o">=</span> <span class="n">get_swebench_docker_image_name</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"docker"</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"docker"</span><span class="p">,</span> <span class="s2">"swerex_modal"</span><span class="p">]:</span>
         <span class="n">env_config</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span> <span class="o">=</span> <span class="n">image_name</span>
     <span class="k">elif</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"singularity"</span><span class="p">:</span>
         <span class="n">env_config</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"docker://"</span> <span class="o">+</span> <span class="n">image_name</span>
@@ -3181,7 +3181,10 @@
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span>
-<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_instance</span><span class="p">(</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_instance</span><span class="p">(</span>
     <span class="n">instance</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
@@ -3201,6 +3204,7 @@
 
     <span class="n">agent</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">extra_info</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">env</span> <span class="o">=</span> <span class="n">get_sb_environment</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
@@ -3217,6 +3221,8 @@
         <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="n">extra_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"traceback"</span><span class="p">:</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()}</span>
     <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">env</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">"stop"</span><span class="p">):</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
         <span class="n">save_traj</span><span class="p">(</span>
             <span class="n">agent</span><span class="p">,</span>
             <span class="n">instance_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">instance_id</span><span class="si">}</span><span class="s2">.traj.json"</span><span class="p">,</span>
@@ -3258,10 +3264,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/extra/swebench.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">174</span>
 <span class="normal">175</span>
 <span class="normal">176</span>
 <span class="normal">177</span>
@@ -3275,7 +3278,10 @@
 <span class="normal">185</span>
 <span class="normal">186</span>
 <span class="normal">187</span>
-<span class="normal">188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">filter_instances</span><span class="p">(</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">filter_instances</span><span class="p">(</span>
     <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">filter_spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">slice_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Filter and slice a list of SWEBench instances."""</span>
@@ -3393,10 +3399,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/extra/swebench.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">195</span>
 <span class="normal">196</span>
 <span class="normal">197</span>
 <span class="normal">198</span>
@@ -3463,7 +3466,10 @@
 <span class="normal">259</span>
 <span class="normal">260</span>
 <span class="normal">261</span>
-<span class="normal">262</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"lite"</span><span class="p">,</span> <span class="s2">"--subset"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"SWEBench subset to use or path to a dataset"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">split</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"dev"</span><span class="p">,</span> <span class="s2">"--split"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Dataset split"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
