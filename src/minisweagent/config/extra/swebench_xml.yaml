@@ -161,6 +161,8 @@ agent:
 environment:
   cwd: "/testbed"
   timeout: 60
+  # no login shell flag (-l)
+  interpreter: ["bash", "-c"]
   env:
     PAGER: cat
     MANPAGER: cat
