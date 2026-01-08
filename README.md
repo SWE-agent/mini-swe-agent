@@ -2,6 +2,9 @@
 <a href="https://mini-swe-agent.com/latest/"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/mini-swe-agent-banner.svg" alt="mini-swe-agent banner" style="height: 7em"/></a>
 </div>
 
+> [!WARNING]
+> **⚠️ v2.0 ahead!** Beware of breaking changes. See the [migration guide](https://mini-swe-agent.com/latest/advanced/v2_migration/).
+
 # The 100 line AI agent that solves GitHub issues & more
 
 📣 [New tutorial on building minimal AI agents](https://minimal-agent.com/)<br/>
