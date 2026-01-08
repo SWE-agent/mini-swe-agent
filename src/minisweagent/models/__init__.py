@@ -9,6 +9,13 @@ import threading
 
 from minisweagent import Model
 
+__all__ = [
+    "GlobalModelStats",
+    "get_model",
+    "get_model_name",
+    "get_model_class",
+]
+
 
 class GlobalModelStats:
     """Global model statistics tracker with optional limits."""

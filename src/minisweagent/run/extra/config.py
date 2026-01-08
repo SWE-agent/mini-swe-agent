@@ -18,6 +18,14 @@ from typer import Argument, Typer
 
 from minisweagent import global_config_file
 
+__all__ = [
+    "configure_if_first_time",
+    "setup",
+    "set",
+    "unset",
+    "edit",
+]
+
 app = Typer(
     help=__doc__.format(global_config_file=global_config_file),  # type: ignore
     no_args_is_help=True,

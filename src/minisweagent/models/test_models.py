@@ -6,6 +6,11 @@ from pydantic import BaseModel
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 
+__all__ = [
+    "DeterministicModelConfig",
+    "DeterministicModel",
+]
+
 
 class DeterministicModelConfig(BaseModel):
     outputs: list[str]

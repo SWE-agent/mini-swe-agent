@@ -3,6 +3,10 @@ from typing import Any
 
 from openai.types.responses.response_output_message import ResponseOutputMessage
 
+__all__ = [
+    "coerce_responses_text",
+]
+
 logger = logging.getLogger("openai_utils")
 
 
