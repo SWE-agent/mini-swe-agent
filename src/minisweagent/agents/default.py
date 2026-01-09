@@ -60,11 +60,7 @@ class DefaultAgent:
         self.messages.extend(messages)
         return list(messages)
 
-    def handle_exception(self, e: Exception) -> list[dict]:
-        """Handle an exception by adding appropriate messages."""
-        if isinstance(e, InterruptAgentFlow):
-            return self.add_messages(*e.messages)
-        # Unregistered exceptions always stop the agent
+    def handle_uncaught_exception(self, e: Exception) -> list[dict]:
         return self.add_messages(
             {
                 "role": "exit",
@@ -89,8 +85,11 @@ class DefaultAgent:
         while True:
             try:
                 self.step()
+            except InterruptAgentFlow as e:
+                self.add_messages(*e.messages)
             except Exception as e:
-                self.handle_exception(e)
+                self.handle_uncaught_exception(e)
+                raise
             finally:
                 self.save(self.config.output_path)
             if self.messages[-1].get("role") == "exit":

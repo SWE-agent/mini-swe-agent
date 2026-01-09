@@ -71,12 +71,17 @@ class LitellmResponseAPIModel(LitellmModel):
             "role": "assistant",
             "content": content,
             "extra": {
-                "actions": self.parse_actions(content),
+                "actions": self.parse_actions(response),
                 "response": response.model_dump() if hasattr(response, "model_dump") else {},
                 **cost_output,
                 "timestamp": time.time(),
             },
         }
+
+    def parse_actions(self, response) -> list[str]:
+        """Parse actions from the response API response. Uses coerce_responses_text for content extraction."""
+        content = coerce_responses_text(response)
+        return self._parse_actions_from_content(content)
 
     def _calculate_cost(self, response) -> dict[str, float]:
         try:

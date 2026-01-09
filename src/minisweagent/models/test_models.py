@@ -1,6 +1,7 @@
 import logging
 import re
 import time
+from dataclasses import dataclass
 from typing import Any
 
 from jinja2 import StrictUndefined, Template
@@ -8,6 +9,23 @@ from pydantic import BaseModel
 
 from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
+
+
+@dataclass
+class _MockMessage:
+    content: str
+
+
+@dataclass
+class _MockChoice:
+    message: _MockMessage
+
+
+@dataclass
+class _MockResponse:
+    """Minimal response object for DeterministicModel."""
+
+    choices: list[_MockChoice]
 
 
 class DeterministicModelConfig(BaseModel):
@@ -46,11 +64,12 @@ class DeterministicModel:
         self.n_calls += 1
         self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        response = _MockResponse(choices=[_MockChoice(message=_MockMessage(content=output))])
         return {
             "role": "assistant",
             "content": output,
             "extra": {
-                "actions": self.parse_actions(output),
+                "actions": self.parse_actions(response),
                 **cost_output,
                 "timestamp": time.time(),
             },
@@ -59,8 +78,9 @@ class DeterministicModel:
     def _calculate_cost(self) -> dict[str, float]:
         return {"cost": self.config.cost_per_call}
 
-    def parse_actions(self, content: str) -> list[str]:
-        """Parse actions from the model output. Raises FormatError if not exactly one action."""
+    def parse_actions(self, response) -> list[str]:
+        """Parse actions from the model response. Raises FormatError if not exactly one action."""
+        content = response.choices[0].message.content or ""
         actions = [a.strip() for a in re.findall(self.config.action_regex, content, re.DOTALL)]
         if len(actions) != 1:
             raise FormatError(

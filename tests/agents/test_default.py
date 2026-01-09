@@ -139,31 +139,44 @@ def test_timeout_captures_partial_output(default_config):
 
 def test_model_parse_actions_success(default_config):
     """Test action parsing works correctly for valid formats (now on model)."""
+    from minisweagent.models.test_models import _MockChoice, _MockMessage, _MockResponse
+
     model = DeterministicModel(outputs=[])
 
+    def make_response(content: str) -> _MockResponse:
+        return _MockResponse(choices=[_MockChoice(message=_MockMessage(content=content))])
+
     # Test different valid formats - parse_actions returns list[str]
-    assert model.parse_actions("```mswea_bash_command\necho 'test'\n```") == ["echo 'test'"]
-    assert model.parse_actions("```mswea_bash_command\nls -la\n```") == ["ls -la"]
-    assert model.parse_actions("Some text\n```mswea_bash_command\necho 'hello'\n```\nMore text") == ["echo 'hello'"]
+    assert model.parse_actions(make_response("```mswea_bash_command\necho 'test'\n```")) == ["echo 'test'"]
+    assert model.parse_actions(make_response("```mswea_bash_command\nls -la\n```")) == ["ls -la"]
+    assert model.parse_actions(make_response("Some text\n```mswea_bash_command\necho 'hello'\n```\nMore text")) == [
+        "echo 'hello'"
+    ]
 
 
 def test_model_parse_actions_failures(default_config):
     """Test action parsing raises appropriate exceptions for invalid formats (now on model)."""
     from minisweagent.exceptions import InterruptAgentFlow
+    from minisweagent.models.test_models import _MockChoice, _MockMessage, _MockResponse
 
     model = DeterministicModel(outputs=[])
 
+    def make_response(content: str) -> _MockResponse:
+        return _MockResponse(choices=[_MockChoice(message=_MockMessage(content=content))])
+
     # No code blocks
     with pytest.raises(InterruptAgentFlow):
-        model.parse_actions("No code blocks here")
+        model.parse_actions(make_response("No code blocks here"))
 
     # Multiple code blocks
     with pytest.raises(InterruptAgentFlow):
-        model.parse_actions("```mswea_bash_command\necho 'first'\n```\n```mswea_bash_command\necho 'second'\n```")
+        model.parse_actions(
+            make_response("```mswea_bash_command\necho 'first'\n```\n```mswea_bash_command\necho 'second'\n```")
+        )
 
     # Code block without bash language specifier
     with pytest.raises(InterruptAgentFlow):
-        model.parse_actions("```\nls -la\n```")
+        model.parse_actions(make_response("```\nls -la\n```"))
 
 
 def test_message_history_tracking(default_config):

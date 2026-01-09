@@ -110,15 +110,20 @@ class PortkeyModel:
             "role": "assistant",
             "content": content,
             "extra": {
-                "actions": self.parse_actions(content),
+                "actions": self.parse_actions(response),
                 "response": response.model_dump(),
                 **cost_output,
                 "timestamp": time.time(),
             },
         }
 
-    def parse_actions(self, content: str) -> list[str]:
-        """Parse actions from the model output. Raises FormatError if not exactly one action."""
+    def parse_actions(self, response) -> list[str]:
+        """Parse actions from the model response. Raises FormatError if not exactly one action."""
+        content = response.choices[0].message.content or ""
+        return self._parse_actions_from_content(content)
+
+    def _parse_actions_from_content(self, content: str) -> list[str]:
+        """Parse actions from content string. Raises FormatError if not exactly one action."""
         actions = [a.strip() for a in re.findall(self.config.action_regex, content, re.DOTALL)]
         if len(actions) != 1:
             raise FormatError(
