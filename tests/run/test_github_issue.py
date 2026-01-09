@@ -102,15 +102,13 @@ def test_output_file_is_created(tmp_path):
             }
         }
         mock_model.get_template_vars.return_value = {}
-        # query now returns list[dict] with action key
+        # query now returns dict with extra["actions"]
         mock_model.query.side_effect = [
-            [
-                {
-                    "role": "assistant",
-                    "content": "```mswea_bash_command\necho done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
-                    "action": "echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT",
-                }
-            ],
+            {
+                "role": "assistant",
+                "content": "```mswea_bash_command\necho done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+                "extra": {"actions": ["echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]},
+            },
         ]
         mock_get_model.return_value = mock_model
 

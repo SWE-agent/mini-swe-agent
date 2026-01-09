@@ -63,7 +63,7 @@ class InteractiveAgent(DefaultAgent):
                     msg = {
                         "role": "assistant",
                         "content": f"\n```mswea_bash_command\n{command}\n```",
-                        "extra": {"action": command},
+                        "extra": {"actions": [command]},
                     }
                     self.add_messages(msg)
                     return msg
@@ -103,9 +103,9 @@ class InteractiveAgent(DefaultAgent):
     def execute_actions(self, messages: list[dict]) -> list[dict]:
         # Override to handle user confirmation and confirm_exit
         for msg in messages:
-            action = msg.get("extra", {}).get("action")
-            if action and self.should_ask_confirmation(action):
-                self.ask_confirmation()
+            for action in msg.get("extra", {}).get("actions", []):
+                if self.should_ask_confirmation(action):
+                    self.ask_confirmation()
         try:
             return super().execute_actions(messages)
         except Submitted:

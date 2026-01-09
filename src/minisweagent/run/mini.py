@@ -82,6 +82,7 @@ def main(
         config.setdefault("model", {})["model_class"] = model_class
     config.setdefault("agent", {})["output_path"] = output
     model = get_model(model_name, config.get("model", {}))
+    print(model)
     env = LocalEnvironment(**config.get("env", {}))
 
     # Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it's essentially a XOR

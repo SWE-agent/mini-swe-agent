@@ -88,7 +88,7 @@ class LitellmModel:
             "role": "assistant",
             "content": content,
             "extra": {
-                "action": self.parse_action(content),
+                "actions": self.parse_actions(content),
                 "response": response.model_dump(),
                 **cost_output,
                 "timestamp": time.time(),
@@ -115,9 +115,9 @@ class LitellmModel:
                 raise RuntimeError(msg) from e
         return {"cost": cost}
 
-    def parse_action(self, content: str) -> str:
-        """Parse the action from the model output. Raises InterruptAgentFlow if not exactly one action."""
-        actions = re.findall(self.config.action_regex, content, re.DOTALL)
+    def parse_actions(self, content: str) -> list[str]:
+        """Parse actions from the model output. Raises FormatError if not exactly one action."""
+        actions = [a.strip() for a in re.findall(self.config.action_regex, content, re.DOTALL)]
         if len(actions) != 1:
             raise FormatError(
                 {
@@ -132,7 +132,7 @@ class LitellmModel:
                     },
                 }
             )
-        return actions[0].strip()
+        return actions
 
     def get_template_vars(self, **kwargs) -> dict[str, Any]:
         return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}

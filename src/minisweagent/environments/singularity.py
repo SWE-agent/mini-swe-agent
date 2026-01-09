@@ -114,31 +114,33 @@ class SingularityEnvironment:
         """Execute all actions in messages and return observation messages."""
         results = []
         for msg in messages:
-            if "action" not in msg.get("extra", {}):
+            if "actions" not in msg.get("extra", {}):
                 continue
-            action = msg["extra"]["action"]
-            try:
-                output = self.execute(action)
-            except (TimeoutError, subprocess.TimeoutExpired) as e:
-                output_text = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
-                results.append(
-                    {
-                        "role": "user",
-                        "content": Template(self.config.timeout_template, undefined=StrictUndefined).render(
-                            **self.get_template_vars(action=action, output=output_text, **(extra_template_vars or {}))
-                        ),
-                        "extra": {"interrupt_type": "ExecutionTimeoutError", "timestamp": time.time()},
-                    }
-                )
-                continue
-            self._check_finished(output)
-            results.extend(self._get_observation_message(msg, output))
+            for action in msg["extra"]["actions"]:
+                try:
+                    output = self.execute(action)
+                except (TimeoutError, subprocess.TimeoutExpired) as e:
+                    output_text = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
+                    results.append(
+                        {
+                            "role": "user",
+                            "content": Template(self.config.timeout_template, undefined=StrictUndefined).render(
+                                **self.get_template_vars(
+                                    action=action, output=output_text, **(extra_template_vars or {})
+                                )
+                            ),
+                            "extra": {"interrupt_type": "ExecutionTimeoutError", "timestamp": time.time()},
+                        }
+                    )
+                    continue
+                self._check_finished(output)
+                results.extend(self._get_observation_message(action, output))
         return results
 
-    def _get_observation_message(self, msg: dict, output: dict) -> list[dict]:
+    def _get_observation_message(self, action: str, output: dict) -> list[dict]:
         """Get observation message for the output of an action."""
         content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
-            **self.get_template_vars(action=msg["extra"]["action"], output=output)
+            **self.get_template_vars(action=action, output=output)
         )
         return [
             {

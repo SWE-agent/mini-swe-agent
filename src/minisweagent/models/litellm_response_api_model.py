@@ -71,7 +71,7 @@ class LitellmResponseAPIModel(LitellmModel):
             "role": "assistant",
             "content": content,
             "extra": {
-                "action": self.parse_action(content),
+                "actions": self.parse_actions(content),
                 "response": response.model_dump() if hasattr(response, "model_dump") else {},
                 **cost_output,
                 "timestamp": time.time(),
