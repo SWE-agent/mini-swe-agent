@@ -60,25 +60,23 @@ class LitellmResponseAPIModel(LitellmModel):
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query(messages, **kwargs)
         content = coerce_responses_text(response)
         cost_output = self._calculate_cost(response)
         self.n_calls += 1
         self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
-        return [
-            {
-                "role": "assistant",
-                "content": content,
-                "extra": {
-                    "action": self.parse_action(content),
-                    "response": response.model_dump() if hasattr(response, "model_dump") else {},
-                    **cost_output,
-                    "timestamp": time.time(),
-                },
-            }
-        ]
+        return {
+            "role": "assistant",
+            "content": content,
+            "extra": {
+                "action": self.parse_action(content),
+                "response": response.model_dump() if hasattr(response, "model_dump") else {},
+                **cost_output,
+                "timestamp": time.time(),
+            },
+        }
 
     def _calculate_cost(self, response) -> dict[str, float]:
         try:

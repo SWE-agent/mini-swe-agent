@@ -38,9 +38,8 @@ def test_response_api_model_basic_query():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        # query now returns list[dict]
-        assert result[0]["content"] == "```mswea_bash_command\necho test\n```"
-        assert result[0]["extra"]["action"] == "echo test"
+        assert result["content"] == "```mswea_bash_command\necho test\n```"
+        assert result["extra"]["action"] == "echo test"
         assert model._previous_response_id == "resp_123"
         mock_client.responses.create.assert_called_once_with(
             model="gpt-5-mini", input=messages, previous_response_id=None
@@ -97,8 +96,7 @@ def test_response_api_model_with_previous_id():
         ]
         result = model.query(messages2)
 
-        # query now returns list[dict]
-        assert result[0]["content"] == "```mswea_bash_command\necho second\n```"
+        assert result["content"] == "```mswea_bash_command\necho second\n```"
         assert model._previous_response_id == "resp_456"
         # On second call, should only pass the last message
         assert mock_client.responses.create.call_args[1]["input"] == [{"role": "user", "content": "second"}]
@@ -129,9 +127,8 @@ def test_response_api_model_output_text_field():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        # query now returns list[dict]
-        assert result[0]["content"] == "```mswea_bash_command\necho direct\n```"
-        assert result[0]["extra"]["action"] == "echo direct"
+        assert result["content"] == "```mswea_bash_command\necho direct\n```"
+        assert result["extra"]["action"] == "echo direct"
 
 
 def test_response_api_model_multiple_output_messages():
@@ -167,9 +164,8 @@ def test_response_api_model_multiple_output_messages():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        # query now returns list[dict]
-        assert result[0]["content"] == "First part\n```mswea_bash_command\n\necho test\n```"
-        assert result[0]["extra"]["action"] == "echo test"
+        assert result["content"] == "First part\n```mswea_bash_command\n\necho test\n```"
+        assert result["extra"]["action"] == "echo test"
 
 
 def test_response_api_model_cost_tracking():
@@ -198,8 +194,7 @@ def test_response_api_model_cost_tracking():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        # query now returns list[dict]
-        assert result[0]["extra"]["cost"] == 0.05
+        assert result["extra"]["cost"] == 0.05
         assert model.cost == 0.05
         assert model.n_calls == 1
         assert GLOBAL_MODEL_STATS.cost == initial_global_cost + 0.05
@@ -331,8 +326,7 @@ def test_response_api_model_retry_on_rate_limit():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        # query now returns list[dict]
-        assert result[0]["content"] == "```mswea_bash_command\necho 'Success after retry'\n```"
+        assert result["content"] == "```mswea_bash_command\necho 'Success after retry'\n```"
         assert call_count == 2
 
 

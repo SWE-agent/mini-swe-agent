@@ -32,7 +32,7 @@ class DeterministicModel:
         self.cost = 0.0
         self.n_calls = 0
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         self.current_index += 1
         output = self.config.outputs[self.current_index]
         if "/sleep" in output:
@@ -46,17 +46,15 @@ class DeterministicModel:
         self.n_calls += 1
         self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
-        return [
-            {
-                "role": "assistant",
-                "content": output,
-                "extra": {
-                    "action": self.parse_action(output),
-                    **cost_output,
-                    "timestamp": time.time(),
-                },
-            }
-        ]
+        return {
+            "role": "assistant",
+            "content": output,
+            "extra": {
+                "action": self.parse_action(output),
+                **cost_output,
+                "timestamp": time.time(),
+            },
+        }
 
     def _calculate_cost(self) -> dict[str, float]:
         return {"cost": self.config.cost_per_call}

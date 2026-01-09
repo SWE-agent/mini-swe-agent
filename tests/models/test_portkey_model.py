@@ -67,11 +67,10 @@ def test_portkey_model_query():
                 messages = [{"role": "user", "content": "Hello!"}]
                 result = model.query(messages)
 
-                # query now returns list[dict]
-                assert result[0]["content"] == "```mswea_bash_command\necho 'Hello!'\n```"
-                assert result[0]["extra"]["action"] == "echo 'Hello!'"
-                assert result[0]["extra"]["response"] == {"test": "response"}
-                assert result[0]["extra"]["cost"] == 0.01
+                assert result["content"] == "```mswea_bash_command\necho 'Hello!'\n```"
+                assert result["extra"]["action"] == "echo 'Hello!'"
+                assert result["extra"]["response"] == {"test": "response"}
+                assert result["extra"]["cost"] == 0.01
                 assert model.n_calls == 1
                 assert model.cost == 0.01
 
@@ -129,10 +128,9 @@ def test_portkey_model_cost_tracking_ignore_errors():
                 messages = [{"role": "user", "content": "test"}]
                 result = model.query(messages)
 
-                # query now returns list[dict]
-                assert result[0]["content"] == "```mswea_bash_command\necho test\n```"
-                assert result[0]["extra"]["action"] == "echo test"
-                assert result[0]["extra"]["cost"] == 0.0
+                assert result["content"] == "```mswea_bash_command\necho test\n```"
+                assert result["extra"]["action"] == "echo test"
+                assert result["extra"]["cost"] == 0.0
                 assert model.cost == 0.0
                 assert model.n_calls == 1
                 assert GLOBAL_MODEL_STATS.cost == initial_cost

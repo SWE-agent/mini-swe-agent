@@ -79,10 +79,10 @@ def test_openrouter_model_successful_query(mock_response):
             assert payload["usage"]["include"] is True
             assert payload["temperature"] == 0.7
 
-            # Verify response (query now returns list[dict])
-            assert result[0]["content"] == "```mswea_bash_command\necho '2+2 equals 4'\n```"
-            assert result[0]["extra"]["action"] == "echo '2+2 equals 4'"
-            assert result[0]["extra"]["response"] == mock_response
+            # Verify response
+            assert result["content"] == "```mswea_bash_command\necho '2+2 equals 4'\n```"
+            assert result["extra"]["action"] == "echo '2+2 equals 4'"
+            assert result["extra"]["response"] == mock_response
 
             # Verify cost tracking
             assert model.cost == 0.000243
@@ -150,10 +150,10 @@ def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
             # With cost_tracking='ignore_errors', free models should work without raising an error
             result = model.query(messages)
 
-            # Verify response (query now returns list[dict])
-            assert result[0]["content"] == "```mswea_bash_command\necho '2+2 equals 4'\n```"
-            assert result[0]["extra"]["action"] == "echo '2+2 equals 4'"
-            assert result[0]["extra"]["response"] == mock_response_no_cost
+            # Verify response
+            assert result["content"] == "```mswea_bash_command\necho '2+2 equals 4'\n```"
+            assert result["extra"]["action"] == "echo '2+2 equals 4'"
+            assert result["extra"]["response"] == mock_response_no_cost
 
             # Verify cost tracking with zero cost (not added to global stats when zero)
             assert model.cost == 0.0

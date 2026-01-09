@@ -46,7 +46,7 @@ class PortkeyResponseAPIModel(PortkeyModel):
         self._previous_response_id = getattr(resp, "id", None)
         return resp
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
@@ -55,18 +55,16 @@ class PortkeyResponseAPIModel(PortkeyModel):
         self.n_calls += 1
         self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
-        return [
-            {
-                "role": "assistant",
-                "content": content,
-                "extra": {
-                    "action": self.parse_action(content),
-                    "response": response.model_dump() if hasattr(response, "model_dump") else {},
-                    **cost_output,
-                    "timestamp": time.time(),
-                },
-            }
-        ]
+        return {
+            "role": "assistant",
+            "content": content,
+            "extra": {
+                "action": self.parse_action(content),
+                "response": response.model_dump() if hasattr(response, "model_dump") else {},
+                **cost_output,
+                "timestamp": time.time(),
+            },
+        }
 
     def _calculate_cost(self, response) -> dict[str, float]:
         try:

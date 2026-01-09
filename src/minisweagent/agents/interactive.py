@@ -53,20 +53,20 @@ class InteractiveAgent(DefaultAgent):
             console.print(content, highlight=False, markup=False)
         return super().add_messages(*messages)
 
-    def query(self) -> list[dict]:
+    def query(self) -> dict:
         # Extend supermethod to handle human mode
         if self.config.mode == "human":
             match command := self._prompt_and_handle_special("[bold yellow]>[/bold yellow] "):
                 case "/y" | "/c":
                     pass
                 case _:
-                    return self.add_messages(
-                        {
-                            "role": "assistant",
-                            "content": f"\n```mswea_bash_command\n{command}\n```",
-                            "extra": {"action": command},
-                        }
-                    )
+                    msg = {
+                        "role": "assistant",
+                        "content": f"\n```mswea_bash_command\n{command}\n```",
+                        "extra": {"action": command},
+                    }
+                    self.add_messages(msg)
+                    return msg
         try:
             with console.status("Waiting for the LM to respond..."):
                 return super().query()

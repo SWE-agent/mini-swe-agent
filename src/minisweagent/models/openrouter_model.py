@@ -104,7 +104,7 @@ class OpenRouterModel:
         except requests.exceptions.RequestException as e:
             raise OpenRouterAPIError(f"Request failed: {e}") from e
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
@@ -113,18 +113,16 @@ class OpenRouterModel:
         self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         content = response["choices"][0]["message"]["content"] or ""
-        return [
-            {
-                "role": "assistant",
-                "content": content,
-                "extra": {
-                    "action": self.parse_action(content),
-                    "response": response,
-                    **cost_output,
-                    "timestamp": time.time(),
-                },
-            }
-        ]
+        return {
+            "role": "assistant",
+            "content": content,
+            "extra": {
+                "action": self.parse_action(content),
+                "response": response,
+                **cost_output,
+                "timestamp": time.time(),
+            },
+        }
 
     def _calculate_cost(self, response) -> dict[str, float]:
         usage = response.get("usage", {})

@@ -99,9 +99,9 @@ class DefaultAgent:
 
     def step(self) -> list[dict]:
         """Query the LM, execute actions."""
-        return self.execute_actions(self.query())
+        return self.execute_actions([self.query()])
 
-    def query(self) -> list[dict]:
+    def query(self) -> dict:
         """Query the model and return model messages. Override to add hooks."""
         if 0 < self.config.step_limit <= self.n_calls or 0 < self.config.cost_limit <= self.cost:
             raise LimitsExceeded(
@@ -111,10 +111,11 @@ class DefaultAgent:
                     "extra": {"exit_status": "LimitsExceeded", "submission": ""},
                 }
             )
-        messages = self.model.query(self.messages)
+        message = self.model.query(self.messages)
         self.n_calls += 1
-        self.cost += sum(msg.get("extra", {}).get("cost", 0.0) for msg in messages)
-        return self.add_messages(*messages)
+        self.cost += message.get("extra", {}).get("cost", 0.0)
+        self.add_messages(message)
+        return message
 
     def execute_actions(self, messages: list[dict]) -> list[dict]:
         """Execute actions in messages, add all messages, return observation messages. Override to add hooks."""

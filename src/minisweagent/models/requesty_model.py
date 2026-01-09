@@ -100,25 +100,23 @@ class RequestyModel:
         except requests.exceptions.RequestException as e:
             raise RequestyAPIError(f"Request failed: {e}") from e
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
         cost_output = self._calculate_cost(response)
         self.n_calls += 1
         self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         content = response["choices"][0]["message"]["content"] or ""
-        return [
-            {
-                "role": "assistant",
-                "content": content,
-                "extra": {
-                    "action": self.parse_action(content),
-                    "response": response,
-                    **cost_output,
-                    "timestamp": time.time(),
-                },
-            }
-        ]
+        return {
+            "role": "assistant",
+            "content": content,
+            "extra": {
+                "action": self.parse_action(content),
+                "response": response,
+                **cost_output,
+                "timestamp": time.time(),
+            },
+        }
 
     def _calculate_cost(self, response) -> dict[str, float]:
         usage = response.get("usage", {})

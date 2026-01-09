@@ -75,7 +75,7 @@ class LitellmModel:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> list[dict]:
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
@@ -84,18 +84,16 @@ class LitellmModel:
         self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         content = response.choices[0].message.content or ""  # type: ignore
-        return [
-            {
-                "role": "assistant",
-                "content": content,
-                "extra": {
-                    "action": self.parse_action(content),
-                    "response": response.model_dump(),
-                    **cost_output,
-                    "timestamp": time.time(),
-                },
-            }
-        ]
+        return {
+            "role": "assistant",
+            "content": content,
+            "extra": {
+                "action": self.parse_action(content),
+                "response": response.model_dump(),
+                **cost_output,
+                "timestamp": time.time(),
+            },
+        }
 
     def _calculate_cost(self, response) -> dict[str, float]:
         try:
