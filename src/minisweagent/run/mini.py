@@ -49,6 +49,7 @@ def main(
     visual: bool = typer.Option(False, "-v", "--visual", help="Toggle (pager-style) UI (Textual) depending on the MSWEA_VISUAL_MODE_DEFAULT environment setting",),
     model_name: str | None = typer.Option( None, "-m", "--model", help="Model to use",),
     model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
+    agent_class_name: str | None = typer.Option(None, "--agent-class", help="Agent class to use (e.g., 'harbor' for incremental trajectory saving)", rich_help_panel="Advanced"),
     task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
@@ -91,7 +92,12 @@ def main(
     if visual == (os.getenv("MSWEA_VISUAL_MODE_DEFAULT", "false") == "false"):
         agent_class = TextualAgent
 
-    agent = agent_class(model, env, **config.get("agent", {}))
+    # Use HarborMiniAgent for incremental trajectory saving (useful for benchmarks)
+    if agent_class_name == "harbor":
+        from minisweagent.agents.harbor import HarborMiniAgent
+        agent = HarborMiniAgent(model, env, traj_path=output, **config.get("agent", {}))
+    else:
+        agent = agent_class(model, env, **config.get("agent", {}))
     exit_status, result, extra_info = None, None, None
     try:
         exit_status, result = agent.run(task)  # type: ignore[arg-type]
@@ -100,7 +106,9 @@ def main(
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
     finally:
-        save_traj(agent, output, exit_status=exit_status, result=result, extra_info=extra_info)  # type: ignore[arg-type]
+        # Skip if HarborMiniAgent (already saves incrementally)
+        if not getattr(agent, "traj_path", None):
+            save_traj(agent, output, exit_status=exit_status, result=result, extra_info=extra_info)  # type: ignore[arg-type]
     return agent
 
 
