@@ -68,11 +68,11 @@ class LitellmToolcallModel(LitellmModel):
                 output=output, **(template_vars or {})
             )
             results.append(
-                {
-                    "role": "tool",
-                    "tool_call_id": action["tool_call_id"],
-                    "content": content,
-                    "extra": {
+                self.format_message(
+                    role="tool",
+                    tool_call_id=action["tool_call_id"],
+                    content=content,
+                    extra={
                         "raw_output": output.get("output", ""),
                         "returncode": output.get("returncode"),
                         "timestamp": time.time(),
@@ -82,6 +82,6 @@ class LitellmToolcallModel(LitellmModel):
                             else {}
                         ),
                     },
-                }
+                )
             )
         return results

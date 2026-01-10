@@ -20,6 +20,7 @@ from tenacity import (
 from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.cache_control import set_cache_control
+from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 
 logger = logging.getLogger("portkey_model")
 
@@ -58,6 +59,8 @@ class PortkeyModelConfig(BaseModel):
         "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
     )
     """Template used to render the observation after executing an action."""
+    multimodal_regex: str = ""
+    """Regex to extract multimodal content. Empty string disables multimodal processing."""
 
 
 class PortkeyModel:
@@ -136,7 +139,10 @@ class PortkeyModel:
         return [{"command": action} for action in actions]
 
     def format_message(self, **kwargs) -> dict:
-        return dict(**kwargs)
+        msg = dict(**kwargs)
+        if self.config.multimodal_regex:
+            msg = expand_multimodal_content(msg, self.config.multimodal_regex)
+        return msg
 
     def format_observation_messages(
         self, message: dict, outputs: list[dict], template_vars: dict | None = None
@@ -148,10 +154,10 @@ class PortkeyModel:
                 output=output, **(template_vars or {})
             )
             results.append(
-                {
-                    "role": "user",
-                    "content": content,
-                    "extra": {
+                self.format_message(
+                    role="user",
+                    content=content,
+                    extra={
                         "raw_output": output.get("output", ""),
                         "returncode": output.get("returncode"),
                         "timestamp": time.time(),
@@ -161,7 +167,7 @@ class PortkeyModel:
                             else {}
                         ),
                     },
-                }
+                )
             )
         return results
 

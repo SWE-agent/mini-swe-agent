@@ -387,6 +387,14 @@ class ExceptionModel:
         self.n_calls += 1
         raise self.exception_type(self.exception_message)
 
+    def format_message(self, **kwargs) -> dict:
+        return dict(**kwargs)
+
+    def format_observation_messages(
+        self, message: dict, outputs: list[dict], template_vars: dict | None = None
+    ) -> list[dict]:
+        return [self.format_message(role="user", content=str(o)) for o in outputs]
+
     def get_template_vars(self, **kwargs) -> dict:
         return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
