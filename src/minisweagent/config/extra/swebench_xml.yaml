@@ -9,7 +9,7 @@ agent:
     <format_example>
     THOUGHT: Your reasoning and analysis here
 
-    <bash_code>your_command_here</bash_code>
+    <mswea_bash_command>your_command_here</mswea_bash_command>
     </format_example>
 
     Failure to follow these rules will cause your response to be rejected.
@@ -61,7 +61,7 @@ agent:
     THOUGHT: Here I explain my reasoning process, analysis of the current situation,
     and what I'm trying to accomplish with the command below.
 
-    <bash_code>your_command_here </bash_code></format_example>
+    <mswea_bash_command>your_command_here </mswea_bash_command></format_example>
 
     **CRITICAL REQUIREMENTS:**
     - Your response SHOULD include a THOUGHT section explaining your reasoning
@@ -77,7 +77,7 @@ agent:
     <example_response>
     THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
 
-    <bash_code>ls -la</bash_code>
+    <mswea_bash_command>ls -la</mswea_bash_command>
     </example_response>
 
     Example of an INCORRECT response:
@@ -85,18 +85,18 @@ agent:
     <example_response>
     THOUGHT: I need to examine the codebase and then look at a specific file. I'll run multiple commands to do this.
 
-    <bash_code>ls -la</bash_code>
+    <mswea_bash_command>ls -la</mswea_bash_command>
 
     Now I'll read the file:
 
-    <bash_code>cat file.txt</bash_code>
+    <mswea_bash_command>cat file.txt</mswea_bash_command>
     </example_response>
 
     If you need to run multiple commands, either:
 
     1. Combine them in one block using && or ||
 
-    <bash_code>command1 && command2 || echo "Error occurred"</bash_code>
+    <mswea_bash_command>command1 && command2 || echo "Error occurred"</mswea_bash_command>
 
     2. Wait for the first command to complete, see its output, then issue the next command in your following response.
 
@@ -111,46 +111,66 @@ agent:
 
     ### Create a new file:
 
-    <bash_code>cat <<'EOF' > newfile.py
+    <mswea_bash_command>cat <<'EOF' > newfile.py
     import numpy as np
     hello = "world"
     print(hello)
-    EOF</bash_code>
+    EOF</mswea_bash_command>
 
     ### Edit files with sed:
 
     Replace all occurrences
 
-    <bash_code>sed -i 's/old_string/new_string/g' filename.py</bash_code>
+    <mswea_bash_command>sed -i 's/old_string/new_string/g' filename.py</mswea_bash_command>
 
     Replace only first occurrence
 
-    <bash_code>sed -i 's/old_string/new_string/' filename.py</bash_code>
+    <mswea_bash_command>sed -i 's/old_string/new_string/' filename.py</mswea_bash_command>
 
     Replace first occurrence on line 1
 
-    <bash_code>sed -i '1s/old_string/new_string/' filename.py</bash_code>
+    <mswea_bash_command>sed -i '1s/old_string/new_string/' filename.py</mswea_bash_command>
 
     Replace all occurrences in lines 1-10
 
-    <bash_code>sed -i '1,10s/old_string/new_string/g' filename.py</bash_code>
+    <mswea_bash_command>sed -i '1,10s/old_string/new_string/g' filename.py</mswea_bash_command>
 
     ### View file content:
 
     View specific lines with numbers
 
-    <bash_code> nl -ba filename.py | sed -n '10,20p'</bash_code>
+    <mswea_bash_command> nl -ba filename.py | sed -n '10,20p'</mswea_bash_command>
 
     Any other command you want to run
 
-    <bash_code>anything</bash_code>
+    <mswea_bash_command>anything</mswea_bash_command>
 
     ## Submission
 
     When you've completed your work (reading, editing, testing), and cannot make further progress
-    issue exactly the following command:
+    you must submit your changes, that is you must submit a git patch that others can apply.
 
-    <bash_code>git add -A && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</bash_code>
+    To submit output you run a command that prints your desired output followed by an echo sequence that indicates that you are done.
+
+    Example:
+
+    <mswea_bash_command>git add <file1> <file2> ... && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</mswea_bash_command>
+
+    <important>
+    You must only add the specific source files you modified to fix the issue.
+    Do not submit changes to any of the following files:
+
+    - test files
+    - helper scripts or tools that you created
+    - installation, build, packaging, configuration, or setup scripts unless they are directly part of the issue you were fixing (assume that the environment is already set up)
+    - binary or compiled files
+
+    Do NOT use `git add -A` or `git add .` as this will include unrelated files like compiled code, cache files, or other artifacts.
+    </important>
+
+    For example, if you modified `src/module.py` and `src/utils.py`:
+
+    <mswea_bash_command>git add src/module.py src/utils.py && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</mswea_bash_command>
 
     This command will submit your work.
     You cannot continue working (reading, editing, testing) in any way on this task after submitting.
@@ -202,16 +222,16 @@ model:
   model_class: openrouter
   model_kwargs:
     temperature: 0.0
-  action_regex: <bash_code>(.*?)</bash_code>
+  action_regex: <mswea_bash_command>(.*?)</mswea_bash_command>
   format_error_template: |
-    Please always provide EXACTLY ONE action in the `<bash_code>` block, found {{actions|length}} actions.
+    Please always provide EXACTLY ONE action in the `<mswea_bash_command>` block, found {{actions|length}} actions.
 
-    Please format your action in a `<bash_code>` block as shown in <response_example>.
+    Please format your action in a `<mswea_bash_command>` block as shown in <response_example>.
 
     <response_example>
     Here are some thoughts about why you want to perform the action.
 
-    <bash_code>ls -la</bash_code>
+    <mswea_bash_command>ls -la</mswea_bash_command>
     </response_example>
 
     If you have completed your assignment, please consult the first message about how to
