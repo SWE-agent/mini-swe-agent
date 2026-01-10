@@ -36,6 +36,11 @@ class OpenRouterModelConfig(BaseModel):
         "Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."
     )
     """Template used when the LM's output is not in the expected format."""
+    action_observation_template: str = (
+        "{% if output.exception_info %}<exception>{{output.exception_info}}</exception>\n{% endif %}"
+        "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
+    )
+    """Template used to render the observation after executing an action."""
 
 
 class OpenRouterAPIError(Exception):
@@ -112,17 +117,14 @@ class OpenRouterModel:
         self.n_calls += 1
         self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
-        content = response["choices"][0]["message"]["content"] or ""
-        return {
-            "role": "assistant",
-            "content": content,
-            "extra": {
-                "actions": self.parse_actions(response),
-                "response": response,
-                **cost_output,
-                "timestamp": time.time(),
-            },
+        message = dict(response["choices"][0]["message"])
+        message["extra"] = {
+            "actions": self.parse_actions(response),
+            "response": response,
+            **cost_output,
+            "timestamp": time.time(),
         }
+        return message
 
     def _calculate_cost(self, response) -> dict[str, float]:
         usage = response.get("usage", {})
@@ -137,7 +139,7 @@ class OpenRouterModel:
             )
         return {"cost": cost}
 
-    def parse_actions(self, response: dict) -> list[str]:
+    def parse_actions(self, response: dict) -> list[dict]:
         """Parse actions from the model response. Raises FormatError if not exactly one action."""
         content = response["choices"][0]["message"]["content"] or ""
         actions = [a.strip() for a in re.findall(self.config.action_regex, content, re.DOTALL)]
@@ -155,7 +157,30 @@ class OpenRouterModel:
                     },
                 }
             )
-        return actions
+        return [{"command": action} for action in actions]
+
+    def format_actions_output(self, message: dict, outputs: list[dict]) -> list[dict]:
+        """Format execution outputs into observation messages."""
+        results = []
+        for output in outputs:
+            content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(output=output)
+            results.append(
+                {
+                    "role": "user",
+                    "content": content,
+                    "extra": {
+                        "raw_output": output.get("output", ""),
+                        "returncode": output.get("returncode"),
+                        "timestamp": time.time(),
+                        **(
+                            {"exception_info": output["exception_info"]} | output.get("extra", {})
+                            if output.get("exception_info")
+                            else {}
+                        ),
+                    },
+                }
+            )
+        return results
 
     def get_template_vars(self, **kwargs) -> dict[str, Any]:
         return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}

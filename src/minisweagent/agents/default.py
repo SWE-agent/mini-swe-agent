@@ -98,7 +98,7 @@ class DefaultAgent:
 
     def step(self) -> list[dict]:
         """Query the LM, execute actions."""
-        return self.execute_actions([self.query()])
+        return self.execute_actions(self.query())
 
     def query(self) -> dict:
         """Query the model and return model messages. Override to add hooks."""
@@ -116,9 +116,10 @@ class DefaultAgent:
         self.add_messages(message)
         return message
 
-    def execute_actions(self, messages: list[dict]) -> list[dict]:
-        """Execute actions in messages, add all messages, return observation messages. Override to add hooks."""
-        return self.add_messages(*self.env.execute_messages(messages, extra_template_vars=self.get_template_vars()))
+    def execute_actions(self, message: dict) -> list[dict]:
+        """Execute actions in message, add observation messages, return them. Override to add hooks."""
+        outputs = [self.env.execute(action) for action in message.get("extra", {}).get("actions", [])]
+        return self.add_messages(*self.model.format_actions_output(message, outputs))
 
     def serialize(self, *extra_dicts) -> dict:
         """Serialize agent state to a json-compatible nested dictionary for saving."""

@@ -56,7 +56,7 @@ class _TextualAgent(DefaultAgent):
             msg = {
                 "role": "assistant",
                 "content": f"\n```mswea_bash_command\n{human_input}\n```",
-                "extra": {"actions": [human_input]},
+                "extra": {"actions": [{"command": human_input}]},
             }
             self.add_messages(msg)
             return msg
@@ -78,38 +78,34 @@ class _TextualAgent(DefaultAgent):
         self.app.call_from_thread(self.app.action_quit)
         return info
 
-    def execute_actions(self, messages: list[dict]) -> list[dict]:
+    def execute_actions(self, message: dict) -> list[dict]:
         # Override to handle user confirmation and confirm_exit
-        for msg in messages:
-            if "actions" not in msg.get("extra", {}):
-                continue
-            if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
-                raise UserInterruption(
-                    {
-                        "role": "user",
-                        "content": "Command not executed because user switched to manual mode.",
-                        "extra": {"interrupt_type": "UserInterruption"},
-                    }
-                )
-            for action in msg.get("extra", {}).get("actions", []):
-                if (
-                    self.config.mode == "confirm"
-                    and action.strip()
-                    and not any(re.match(r, action) for r in self.config.whitelist_actions)
-                ):
-                    result = self.app.input_container.request_input(
-                        "Press ENTER to confirm or provide rejection reason"
+        if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
+            raise UserInterruption(
+                {
+                    "role": "user",
+                    "content": "Command not executed because user switched to manual mode.",
+                    "extra": {"interrupt_type": "UserInterruption"},
+                }
+            )
+        for action in message.get("extra", {}).get("actions", []):
+            command = action["command"]
+            if (
+                self.config.mode == "confirm"
+                and command.strip()
+                and not any(re.match(r, command) for r in self.config.whitelist_actions)
+            ):
+                result = self.app.input_container.request_input("Press ENTER to confirm or provide rejection reason")
+                if result:
+                    raise UserInterruption(
+                        {
+                            "role": "user",
+                            "content": f"Command not executed: {result}",
+                            "extra": {"interrupt_type": "UserRejection"},
+                        }
                     )
-                    if result:
-                        raise UserInterruption(
-                            {
-                                "role": "user",
-                                "content": f"Command not executed: {result}",
-                                "extra": {"interrupt_type": "UserRejection"},
-                            }
-                        )
         try:
-            return super().execute_actions(messages)
+            return super().execute_actions(message)
         except Submitted:
             if self.config.confirm_exit:
                 if new_task := self.app.input_container.request_input(

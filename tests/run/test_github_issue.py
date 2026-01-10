@@ -107,25 +107,36 @@ def test_output_file_is_created(tmp_path):
             {
                 "role": "assistant",
                 "content": "```mswea_bash_command\necho done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
-                "extra": {"actions": ["echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]},
+                "extra": {"actions": [{"command": "echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}]},
             },
         ]
+        mock_model.format_actions_output.return_value = []
         mock_get_model.return_value = mock_model
+
+        # Environment execute raises Submitted when COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT is seen
+        from minisweagent.exceptions import Submitted
+
+        execute_call_count = 0
+
+        def execute_side_effect(action, **kwargs):
+            nonlocal execute_call_count
+            execute_call_count += 1
+            # First call is git clone, just return success
+            if execute_call_count == 1:
+                return {"output": "", "returncode": 0, "exception_info": ""}
+            # Second call is the agent action, raise Submitted
+            raise Submitted(
+                {
+                    "role": "exit",
+                    "content": "done",
+                    "extra": {"exit_status": "Submitted", "submission": "done"},
+                }
+            )
 
         mock_env = Mock()
         mock_env.config = Mock()
         mock_env.config.model_dump.return_value = {}
-        mock_env.execute.return_value = {"output": "done\nCOMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n", "returncode": 0}
-        # execute_messages returns list of observation messages and raises Submitted for completion
-        from minisweagent.exceptions import Submitted
-
-        mock_env.execute_messages.side_effect = Submitted(
-            {
-                "role": "exit",
-                "content": "done",
-                "extra": {"exit_status": "Submitted", "submission": "done"},
-            }
-        )
+        mock_env.execute.side_effect = execute_side_effect
         mock_env.get_template_vars.return_value = {
             "system": "TestOS",
             "release": "1.0",

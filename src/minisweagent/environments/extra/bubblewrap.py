@@ -16,12 +16,10 @@ import platform
 import shutil
 import subprocess
 import tempfile
-import time
 import uuid
 from pathlib import Path
 from typing import Any
 
-from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
 from minisweagent.exceptions import Submitted
@@ -66,12 +64,6 @@ class BubblewrapEnvironmentConfig(BaseModel):
         "/usr/local/bin:/usr/sbin:/usr/bin:/bin",
     ]
     """Arguments to pass to the bubblewrap executable."""
-    action_observation_template: str = (
-        "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
-    )
-    """Template used to render the observation after executing an action."""
-    timeout_template: str = "Command timed out. Output:\n{{output}}"
-    """Template used when a command timed out."""
 
 
 class BubblewrapEnvironment:
@@ -86,8 +78,9 @@ class BubblewrapEnvironment:
         self.working_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
         self.working_dir.mkdir(parents=True)
 
-    def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
+    def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the bubblewrap environment and return the result as a dict."""
+        command = action.get("command", "")
         cwd = cwd or self.config.cwd or str(self.working_dir)
 
         cmd = [self.config.executable] + self.config.wrapper_args + ["--bind", cwd, cwd, "--chdir", cwd]
@@ -98,56 +91,27 @@ class BubblewrapEnvironment:
 
         cmd.extend(["bash", "-c", command])
 
-        result = subprocess.run(
-            cmd,
-            text=True,
-            timeout=timeout or self.config.timeout,
-            encoding="utf-8",
-            errors="replace",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
-        return {"output": result.stdout, "returncode": result.returncode}
-
-    def execute_messages(self, messages: list[dict], extra_template_vars: dict[str, Any] | None = None) -> list[dict]:
-        """Execute all actions in messages and return observation messages."""
-        results = []
-        for msg in messages:
-            if "actions" not in msg.get("extra", {}):
-                continue
-            for action in msg["extra"]["actions"]:
-                try:
-                    output = self.execute(action)
-                except (TimeoutError, subprocess.TimeoutExpired) as e:
-                    output_text = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
-                    results.append(
-                        {
-                            "role": "user",
-                            "content": Template(self.config.timeout_template, undefined=StrictUndefined).render(
-                                **self.get_template_vars(
-                                    action=action, output=output_text, **(extra_template_vars or {})
-                                )
-                            ),
-                            "extra": {"interrupt_type": "ExecutionTimeoutError", "timestamp": time.time()},
-                        }
-                    )
-                    continue
-                self._check_finished(output)
-                results.extend(self._get_observation_message(action, output))
-        return results
-
-    def _get_observation_message(self, action: str, output: dict) -> list[dict]:
-        """Get observation message for the output of an action."""
-        content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
-            **self.get_template_vars(action=action, output=output)
-        )
-        return [
-            {
-                "role": "user",
-                "content": content,
-                "extra": {"raw_output": output["output"], "returncode": output["returncode"], "timestamp": time.time()},
+        try:
+            result = subprocess.run(
+                cmd,
+                text=True,
+                timeout=timeout or self.config.timeout,
+                encoding="utf-8",
+                errors="replace",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+            output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
+        except subprocess.TimeoutExpired as e:
+            timeout_val = timeout or self.config.timeout
+            output = {
+                "output": e.output.decode("utf-8", errors="replace") if e.output else "",
+                "returncode": -1,
+                "exception_info": f"Command timed out after {timeout_val}s",
+                "extra": {"exception_type": "timeout", "timeout": timeout_val},
             }
-        ]
+        self._check_finished(output)
+        return output
 
     def _check_finished(self, output: dict):
         """Raises Submitted exception if the output indicates task completion."""

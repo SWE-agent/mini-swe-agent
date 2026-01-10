@@ -63,7 +63,7 @@ class InteractiveAgent(DefaultAgent):
                     msg = {
                         "role": "assistant",
                         "content": f"\n```mswea_bash_command\n{command}\n```",
-                        "extra": {"actions": [command]},
+                        "extra": {"actions": [{"command": command}]},
                     }
                     self.add_messages(msg)
                     return msg
@@ -100,14 +100,13 @@ class InteractiveAgent(DefaultAgent):
                 }
             )
 
-    def execute_actions(self, messages: list[dict]) -> list[dict]:
+    def execute_actions(self, message: dict) -> list[dict]:
         # Override to handle user confirmation and confirm_exit
-        for msg in messages:
-            for action in msg.get("extra", {}).get("actions", []):
-                if self.should_ask_confirmation(action):
-                    self.ask_confirmation()
+        for action in message.get("extra", {}).get("actions", []):
+            if self.should_ask_confirmation(action["command"]):
+                self.ask_confirmation(action["command"])
         try:
-            return super().execute_actions(messages)
+            return super().execute_actions(message)
         except Submitted:
             if self.config.confirm_exit:
                 console.print(
@@ -129,8 +128,9 @@ class InteractiveAgent(DefaultAgent):
     def should_ask_confirmation(self, action: str) -> bool:
         return self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions)
 
-    def ask_confirmation(self) -> None:
+    def ask_confirmation(self, action: str) -> None:
         prompt = (
+            f"[bold yellow]Action: [/bold yellow][blue]{action}[/blue]\n"
             "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
             "or [green]Type a comment/command[/green] (/h for available commands)\n"
             "[bold yellow]>[/bold yellow] "

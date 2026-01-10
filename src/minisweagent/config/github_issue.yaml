@@ -102,7 +102,11 @@ environment:
     LESS: -R
     PIP_PROGRESS_BAR: 'off'
     TQDM_DISABLE: '1'
+model:
   action_observation_template: |
+    {% if output.exception_info -%}
+    <exception>{{output.exception_info}}</exception>
+    {% endif -%}
     <returncode>{{output.returncode}}</returncode>
     {% if output.output | length < 10000 -%}
     <output>
@@ -127,25 +131,6 @@ environment:
     {{ output.output[-5000:] }}
     </output_tail>
     {%- endif -%}
-  timeout_template: |
-    The last command <command>{{action['action']}}</command> timed out and has been killed.
-    The output of the command was:
-    {% if output | length < 10000 -%}
-    <output>
-    {{output}}
-    </output>
-    {%- else -%}
-    <warning>Output was too long and has been truncated.</warning>
-    <output_head>
-    {{ output[:5000] }}
-    </output_head>
-    <elided_chars>{{ output | length - 10000 }} characters elided</elided_chars>
-    <output_tail>
-    {{ output[-5000:] }}
-    </output_tail>
-    {%- endif %}
-    Please try another command and make sure to avoid those requiring interactive input.
-model:
   model_kwargs:
     drop_params: true
   format_error_template: |

@@ -1,8 +1,10 @@
 import logging
 import os
+import re
 import time
 
 import litellm
+from jinja2 import StrictUndefined, Template
 from tenacity import (
     before_sleep_log,
     retry,
@@ -11,6 +13,7 @@ from tenacity import (
     wait_exponential,
 )
 
+from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
 from minisweagent.models.utils.cache_control import set_cache_control
@@ -66,10 +69,25 @@ class PortkeyResponseAPIModel(PortkeyModel):
             },
         }
 
-    def parse_actions(self, response) -> list[str]:
+    def parse_actions(self, response) -> list[dict]:
         """Parse actions from the response API response. Uses coerce_responses_text for content extraction."""
         content = coerce_responses_text(response)
-        return self._parse_actions_from_content(content)
+        actions = [a.strip() for a in re.findall(self.config.action_regex, content, re.DOTALL)]
+        if len(actions) != 1:
+            raise FormatError(
+                {
+                    "role": "user",
+                    "content": Template(self.config.format_error_template, undefined=StrictUndefined).render(
+                        actions=actions
+                    ),
+                    "extra": {
+                        "interrupt_type": "FormatError",
+                        "n_actions": len(actions),
+                        "model_response": content,
+                    },
+                }
+            )
+        return [{"command": action} for action in actions]
 
     def _calculate_cost(self, response) -> dict[str, float]:
         try:

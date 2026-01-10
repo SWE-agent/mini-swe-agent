@@ -89,8 +89,13 @@ def test_litellm_model_cost_tracking_ignore_errors():
 
     with patch("litellm.completion") as mock_completion:
         mock_response = Mock()
-        # Response must include bash block to avoid FormatError from parse_action
-        mock_response.choices = [Mock(message=Mock(content="```mswea_bash_command\necho test\n```"))]
+        mock_message = Mock()
+        mock_message.content = "```mswea_bash_command\necho test\n```"
+        mock_message.model_dump.return_value = {
+            "role": "assistant",
+            "content": "```mswea_bash_command\necho test\n```",
+        }
+        mock_response.choices = [Mock(message=mock_message)]
         mock_response.model_dump.return_value = {"test": "response"}
         mock_completion.return_value = mock_response
 
@@ -99,7 +104,7 @@ def test_litellm_model_cost_tracking_ignore_errors():
             result = model.query(messages)
 
             assert result["content"] == "```mswea_bash_command\necho test\n```"
-            assert result["extra"]["actions"] == ["echo test"]
+            assert result["extra"]["actions"] == [{"command": "echo test"}]
             assert model.cost == 0.0
             assert model.n_calls == 1
             assert GLOBAL_MODEL_STATS.cost == initial_cost
@@ -150,7 +155,7 @@ def test_response_api_model_basic_query():
         result = model.query(messages)
 
         assert result["content"] == "```mswea_bash_command\necho test\n```"
-        assert result["extra"]["actions"] == ["echo test"]
+        assert result["extra"]["actions"] == [{"command": "echo test"}]
         assert model._previous_response_id == "resp_123"
         mock_responses.assert_called_once_with(model="gpt-5-mini", input=messages, previous_response_id=None)
 
@@ -222,7 +227,7 @@ def test_response_api_model_output_text_field():
         result = model.query(messages)
 
         assert result["content"] == "```mswea_bash_command\necho direct\n```"
-        assert result["extra"]["actions"] == ["echo direct"]
+        assert result["extra"]["actions"] == [{"command": "echo direct"}]
 
 
 def test_response_api_model_multiple_output_messages():
@@ -252,7 +257,7 @@ def test_response_api_model_multiple_output_messages():
         result = model.query(messages)
 
         assert result["content"] == "First part\n```mswea_bash_command\n\necho test\n```"
-        assert result["extra"]["actions"] == ["echo test"]
+        assert result["extra"]["actions"] == [{"command": "echo test"}]
 
 
 def test_response_api_model_authentication_error():

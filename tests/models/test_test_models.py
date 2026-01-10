@@ -15,7 +15,7 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     # Test first call with defaults
     result = model.query([{"role": "user", "content": "test"}])
     assert result["content"] == "```mswea_bash_command\necho hello\n```"
-    assert result["extra"]["actions"] == ["echo hello"]
+    assert result["extra"]["actions"] == [{"command": "echo hello"}]
     assert model.n_calls == 1
     assert model.cost == 1.0
     assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 1
@@ -24,7 +24,7 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     # Test second call and sequential outputs
     result = model.query([{"role": "user", "content": "test"}])
     assert result["content"] == "```mswea_bash_command\necho world\n```"
-    assert result["extra"]["actions"] == ["echo world"]
+    assert result["extra"]["actions"] == [{"command": "echo world"}]
     assert model.n_calls == 2
     assert model.cost == 2.0
     assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 2

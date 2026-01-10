@@ -50,6 +50,10 @@ def test_portkey_model_query():
 
     # Response must include bash block to avoid FormatError from parse_action
     mock_message.content = "```mswea_bash_command\necho 'Hello!'\n```"
+    mock_message.model_dump.return_value = {
+        "role": "assistant",
+        "content": "```mswea_bash_command\necho 'Hello!'\n```",
+    }
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
     mock_response.model_dump.return_value = {"test": "response"}
@@ -68,7 +72,7 @@ def test_portkey_model_query():
                 result = model.query(messages)
 
                 assert result["content"] == "```mswea_bash_command\necho 'Hello!'\n```"
-                assert result["extra"]["actions"] == ["echo 'Hello!'"]
+                assert result["extra"]["actions"] == [{"command": "echo 'Hello!'"}]
                 assert result["extra"]["response"] == {"test": "response"}
                 assert result["extra"]["cost"] == 0.01
                 assert model.n_calls == 1
@@ -108,6 +112,10 @@ def test_portkey_model_cost_tracking_ignore_errors():
 
     # Response must include bash block to avoid FormatError from parse_action
     mock_message.content = "```mswea_bash_command\necho test\n```"
+    mock_message.model_dump.return_value = {
+        "role": "assistant",
+        "content": "```mswea_bash_command\necho test\n```",
+    }
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
     mock_response.model_dump.return_value = {"test": "response"}
@@ -129,7 +137,7 @@ def test_portkey_model_cost_tracking_ignore_errors():
                 result = model.query(messages)
 
                 assert result["content"] == "```mswea_bash_command\necho test\n```"
-                assert result["extra"]["actions"] == ["echo test"]
+                assert result["extra"]["actions"] == [{"command": "echo test"}]
                 assert result["extra"]["cost"] == 0.0
                 assert model.cost == 0.0
                 assert model.n_calls == 1

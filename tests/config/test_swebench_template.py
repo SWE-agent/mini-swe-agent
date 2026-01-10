@@ -13,6 +13,7 @@ class MockOutput:
 
     returncode: int
     output: str
+    exception_info: str = ""
 
 
 def test_action_observation_template_short_output():
@@ -22,8 +23,8 @@ def test_action_observation_template_short_output():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template (now in environment section)
-    template_str = config["environment"]["action_observation_template"]
+    # Extract the template (now in model section)
+    template_str = config["model"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with short content
@@ -53,8 +54,8 @@ def test_action_observation_template_long_output():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template (now in environment section)
-    template_str = config["environment"]["action_observation_template"]
+    # Extract the template (now in model section)
+    template_str = config["model"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with long content
@@ -98,8 +99,8 @@ def test_action_observation_template_edge_case_exactly_10000_chars():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template (now in environment section)
-    template_str = config["environment"]["action_observation_template"]
+    # Extract the template (now in model section)
+    template_str = config["model"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Use a large amount of data that will definitely exceed 10000 chars when rendered
@@ -124,8 +125,8 @@ def test_action_observation_template_just_under_10000_chars():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template (now in environment section)
-    template_str = config["environment"]["action_observation_template"]
+    # Extract the template (now in model section)
+    template_str = config["model"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Use a reasonably sized output that should be well under 10000 chars when rendered
@@ -152,8 +153,8 @@ def test_agent_config_requires_templates():
         AgentConfig()
 
 
-def test_timeout_template_config_with_truncation():
-    """Test that config files have timeout templates with truncation"""
+def test_exception_info_template():
+    """Test that config files have action_observation_template with exception handling"""
     from pathlib import Path
 
     import yaml
@@ -171,35 +172,20 @@ def test_timeout_template_config_with_truncation():
         with open(config_file) as f:
             config = yaml.safe_load(f)
 
-        timeout_template = config.get("environment", {}).get("timeout_template")
-        assert timeout_template is not None, f"{config_file} missing timeout_template"
+        action_template = config.get("model", {}).get("action_observation_template")
+        assert action_template is not None, f"{config_file} missing action_observation_template in model section"
 
-        # Verify it has truncation logic
-        template = Template(timeout_template, undefined=StrictUndefined)
-        action = {"action": "grep -R pattern ."}
-        long_output = "START_" + "A" * 8000 + "B" * 3000 + "_END"
+        # Verify it handles exception_info
+        template = Template(action_template, undefined=StrictUndefined)
 
-        result = template.render(action=action, output=long_output)
+        # Test with exception
+        output_with_exception = MockOutput(
+            returncode=-1, output="partial output", exception_info="Command timed out after 30s"
+        )
+        result = template.render(output=output_with_exception)
+        assert "Command timed out after 30s" in result, f"{config_file} doesn't render exception_info"
 
-        # Should contain truncation elements for long output
-        assert "<warning>" in result, f"{config_file} missing truncation"
-        assert "has been truncated" in result
-        assert "<output_head>" in result
-        assert "<elided_chars>" in result
-        assert "characters elided" in result
-        assert "<output_tail>" in result
-
-        # Verify the head contains first part of output
-        assert "START_" in result
-        assert "AAAA" in result
-
-        # Verify the tail contains last part of output
-        assert "_END" in result
-        assert "BBBB" in result
-
-        # Should still contain basic timeout message
-        assert "<command>grep -R pattern .</command>" in result
-        assert "timed out" in result
-
-        # Result should be bounded (not grow with input size)
-        assert len(result) < 15000
+        # Test without exception (should not error)
+        output_normal = MockOutput(returncode=0, output="success", exception_info="")
+        result = template.render(output=output_normal)
+        assert "success" in result

@@ -692,28 +692,29 @@ def test_output_file_is_created(tmp_path):
             {
                 "role": "assistant",
                 "content": "```mswea_bash_command\necho done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
-                "extra": {"actions": ["echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]},
+                "extra": {"actions": [{"command": "echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}]},
             },
         ]
+        # format_actions_output returns observation messages
+        mock_model.format_actions_output.return_value = []
         mock_get_model.return_value = mock_model
+
+        # Environment execute raises Submitted when COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT is seen
+        from minisweagent.exceptions import Submitted
+
+        def execute_side_effect(action):
+            raise Submitted(
+                {
+                    "role": "exit",
+                    "content": "done",
+                    "extra": {"exit_status": "Submitted", "submission": "done"},
+                }
+            )
 
         mock_environment = Mock()
         mock_environment.config = Mock()
         mock_environment.config.model_dump.return_value = {}
-        mock_environment.execute.return_value = {
-            "output": "done\nCOMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n",
-            "returncode": 0,
-        }
-        # execute_messages returns list of observation messages and raises Submitted for completion
-        from minisweagent.exceptions import Submitted
-
-        mock_environment.execute_messages.side_effect = Submitted(
-            {
-                "role": "exit",
-                "content": "done",
-                "extra": {"exit_status": "Submitted", "submission": "done"},
-            }
-        )
+        mock_environment.execute.side_effect = execute_side_effect
         mock_environment.get_template_vars.return_value = {
             "system": "TestOS",
             "release": "1.0",

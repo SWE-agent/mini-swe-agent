@@ -66,7 +66,7 @@ def main(
     if github_token := os.getenv("GITHUB_TOKEN"):
         repo_url = repo_url.replace("https://github.com/", f"https://{github_token}@github.com/") + ".git"
 
-    env.execute(f"git clone {repo_url} /testbed", cwd="/")
+    env.execute({"command": f"git clone {repo_url} /testbed"}, cwd="/")
 
     agent = InteractiveAgent(
         get_model(model, _config.get("model", {})),

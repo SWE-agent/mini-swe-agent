@@ -146,11 +146,11 @@ def test_model_parse_actions_success(default_config):
     def make_response(content: str) -> _MockResponse:
         return _MockResponse(choices=[_MockChoice(message=_MockMessage(content=content))])
 
-    # Test different valid formats - parse_actions returns list[str]
-    assert model.parse_actions(make_response("```mswea_bash_command\necho 'test'\n```")) == ["echo 'test'"]
-    assert model.parse_actions(make_response("```mswea_bash_command\nls -la\n```")) == ["ls -la"]
+    # Test different valid formats - parse_actions returns list[dict]
+    assert model.parse_actions(make_response("```mswea_bash_command\necho 'test'\n```")) == [{"command": "echo 'test'"}]
+    assert model.parse_actions(make_response("```mswea_bash_command\nls -la\n```")) == [{"command": "ls -la"}]
     assert model.parse_actions(make_response("Some text\n```mswea_bash_command\necho 'hello'\n```\nMore text")) == [
-        "echo 'hello'"
+        {"command": "echo 'hello'"}
     ]
 
 
@@ -321,6 +321,6 @@ def test_step_adds_messages(default_config):
     # step() should add assistant message + observation message
     assert len(agent.messages) == initial_count + 2
     assert agent.messages[-2]["role"] == "assistant"
-    assert agent.messages[-2]["extra"]["actions"] == ["echo 'hello'"]
+    assert agent.messages[-2]["extra"]["actions"] == [{"command": "echo 'hello'"}]
     assert agent.messages[-1]["role"] == "user"
     assert "<returncode>" in agent.messages[-1]["content"]
