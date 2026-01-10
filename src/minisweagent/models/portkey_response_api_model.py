@@ -1,8 +1,10 @@
 import logging
 import os
-from dataclasses import dataclass
+import re
+import time
 
 import litellm
+from jinja2 import StrictUndefined, Template
 from tenacity import (
     before_sleep_log,
     retry,
@@ -11,15 +13,15 @@ from tenacity import (
     wait_exponential,
 )
 
+from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
 from minisweagent.models.utils.cache_control import set_cache_control
-from minisweagent.models.utils.openai_utils import coerce_responses_text
+from minisweagent.models.utils.openai_response_api import coerce_responses_text
 
 logger = logging.getLogger("portkey_response_api_model")
 
 
-@dataclass
 class PortkeyResponseAPIModelConfig(PortkeyModelConfig):
     pass
 
@@ -30,6 +32,7 @@ class PortkeyResponseAPIModel(PortkeyModel):
         self._previous_response_id: str | None = None
 
     @retry(
+        reraise=True,
         stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
@@ -50,7 +53,41 @@ class PortkeyResponseAPIModel(PortkeyModel):
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query(messages, **kwargs)
-        text = coerce_responses_text(response)
+        content = coerce_responses_text(response)
+        cost_output = self._calculate_cost(response)
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        return {
+            "role": "assistant",
+            "content": content,
+            "extra": {
+                "actions": self.parse_actions(response),
+                "response": response.model_dump() if hasattr(response, "model_dump") else {},
+                **cost_output,
+                "timestamp": time.time(),
+            },
+        }
+
+    def parse_actions(self, response) -> list[dict]:
+        """Parse actions from the response API response. Uses coerce_responses_text for content extraction."""
+        content = coerce_responses_text(response)
+        actions = [a.strip() for a in re.findall(self.config.action_regex, content, re.DOTALL)]
+        if len(actions) != 1:
+            raise FormatError(
+                {
+                    "role": "user",
+                    "content": Template(self.config.format_error_template, undefined=StrictUndefined).render(
+                        actions=actions
+                    ),
+                    "extra": {
+                        "interrupt_type": "FormatError",
+                        "n_actions": len(actions),
+                        "model_response": content,
+                    },
+                }
+            )
+        return [{"command": action} for action in actions]
+
+    def _calculate_cost(self, response) -> dict[str, float]:
         try:
             cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
             assert cost > 0.0, f"Cost is not positive: {cost}"
@@ -62,13 +99,4 @@ class PortkeyResponseAPIModel(PortkeyModel):
                     "globally with export MSWEA_COST_TRACKING='ignore_errors' to ignore this error. "
                 ) from e
             cost = 0.0
-        self.n_calls += 1
-        self.cost += cost
-        GLOBAL_MODEL_STATS.add(cost)
-        return {
-            "content": text,
-            "extra": {
-                "response": response.model_dump() if hasattr(response, "model_dump") else {},
-                "cost": cost,
-            },
-        }
+        return {"cost": cost}

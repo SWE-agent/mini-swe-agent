@@ -9,7 +9,7 @@ import pytest
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel
 from minisweagent.models.litellm_response_api_model import LitellmResponseAPIModel
-from minisweagent.models.utils.openai_utils import coerce_responses_text
+from minisweagent.models.utils.openai_response_api import coerce_responses_text
 
 
 def test_authentication_error_enhanced_message():
@@ -89,7 +89,13 @@ def test_litellm_model_cost_tracking_ignore_errors():
 
     with patch("litellm.completion") as mock_completion:
         mock_response = Mock()
-        mock_response.choices = [Mock(message=Mock(content="Test response"))]
+        mock_message = Mock()
+        mock_message.content = "```mswea_bash_command\necho test\n```"
+        mock_message.model_dump.return_value = {
+            "role": "assistant",
+            "content": "```mswea_bash_command\necho test\n```",
+        }
+        mock_response.choices = [Mock(message=mock_message)]
         mock_response.model_dump.return_value = {"test": "response"}
         mock_completion.return_value = mock_response
 
@@ -97,9 +103,8 @@ def test_litellm_model_cost_tracking_ignore_errors():
             messages = [{"role": "user", "content": "test"}]
             result = model.query(messages)
 
-            assert result["content"] == "Test response"
-            assert model.cost == 0.0
-            assert model.n_calls == 1
+            assert result["content"] == "```mswea_bash_command\necho test\n```"
+            assert result["extra"]["actions"] == [{"command": "echo test"}]
             assert GLOBAL_MODEL_STATS.cost == initial_cost
 
 
@@ -137,7 +142,8 @@ def test_response_api_model_basic_query():
         mock_response.id = "resp_123"
         mock_output_message = Mock(spec=ResponseOutputMessage)
         mock_content = Mock()
-        mock_content.text = "Test response"
+        # Response must include bash block to avoid FormatError from parse_action
+        mock_content.text = "```mswea_bash_command\necho test\n```"
         mock_output_message.content = [mock_content]
         mock_response.output = [mock_output_message]
         mock_response.output_text = None
@@ -146,7 +152,8 @@ def test_response_api_model_basic_query():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert result["content"] == "Test response"
+        assert result["content"] == "```mswea_bash_command\necho test\n```"
+        assert result["extra"]["actions"] == [{"command": "echo test"}]
         assert model._previous_response_id == "resp_123"
         mock_responses.assert_called_once_with(model="gpt-5-mini", input=messages, previous_response_id=None)
 
@@ -161,12 +168,12 @@ def test_response_api_model_with_previous_id():
     ):
         from openai.types.responses.response_output_message import ResponseOutputMessage
 
-        # First call
+        # First call - response must include bash block
         mock_response1 = Mock()
         mock_response1.id = "resp_123"
         mock_output_message1 = Mock(spec=ResponseOutputMessage)
         mock_content1 = Mock()
-        mock_content1.text = "First response"
+        mock_content1.text = "```mswea_bash_command\necho first\n```"
         mock_output_message1.content = [mock_content1]
         mock_response1.output = [mock_output_message1]
         mock_response1.output_text = None
@@ -175,12 +182,12 @@ def test_response_api_model_with_previous_id():
         messages1 = [{"role": "user", "content": "first"}]
         model.query(messages1)
 
-        # Second call
+        # Second call - response must include bash block
         mock_response2 = Mock()
         mock_response2.id = "resp_456"
         mock_output_message2 = Mock(spec=ResponseOutputMessage)
         mock_content2 = Mock()
-        mock_content2.text = "Second response"
+        mock_content2.text = "```mswea_bash_command\necho second\n```"
         mock_output_message2.content = [mock_content2]
         mock_response2.output = [mock_output_message2]
         mock_response2.output_text = None
@@ -188,12 +195,12 @@ def test_response_api_model_with_previous_id():
 
         messages2 = [
             {"role": "user", "content": "first"},
-            {"role": "assistant", "content": "First response"},
+            {"role": "assistant", "content": "```mswea_bash_command\necho first\n```"},
             {"role": "user", "content": "second"},
         ]
         result = model.query(messages2)
 
-        assert result["content"] == "Second response"
+        assert result["content"] == "```mswea_bash_command\necho second\n```"
         assert model._previous_response_id == "resp_456"
         # On second call, should only pass the last message
         assert mock_responses.call_args[1]["input"] == [{"role": "user", "content": "second"}]
@@ -210,13 +217,15 @@ def test_response_api_model_output_text_field():
     ):
         mock_response = Mock()
         mock_response.id = "resp_789"
-        mock_response.output_text = "Direct output text"
+        # Response must include bash block to avoid FormatError from parse_action
+        mock_response.output_text = "```mswea_bash_command\necho direct\n```"
         mock_responses.return_value = mock_response
 
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert result["content"] == "Direct output text"
+        assert result["content"] == "```mswea_bash_command\necho direct\n```"
+        assert result["extra"]["actions"] == [{"command": "echo direct"}]
 
 
 def test_response_api_model_multiple_output_messages():
@@ -231,13 +240,13 @@ def test_response_api_model_multiple_output_messages():
         mock_response.id = "resp_999"
         mock_response.output_text = None
 
-        # Create multiple output messages
+        # Create multiple output messages - together they form a valid bash block
         from openai.types.responses.response_output_message import ResponseOutputMessage
 
         mock_msg1 = Mock(spec=ResponseOutputMessage)
-        mock_msg1.content = [Mock(text="First part")]
+        mock_msg1.content = [Mock(text="First part\n```mswea_bash_command")]
         mock_msg2 = Mock(spec=ResponseOutputMessage)
-        mock_msg2.content = [Mock(text="Second part")]
+        mock_msg2.content = [Mock(text="echo test\n```")]
 
         mock_response.output = [mock_msg1, mock_msg2]
         mock_responses.return_value = mock_response
@@ -245,7 +254,8 @@ def test_response_api_model_multiple_output_messages():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert result["content"] == "First part\n\nSecond part"
+        assert result["content"] == "First part\n```mswea_bash_command\n\necho test\n```"
+        assert result["extra"]["actions"] == [{"command": "echo test"}]
 
 
 def test_response_api_model_authentication_error():

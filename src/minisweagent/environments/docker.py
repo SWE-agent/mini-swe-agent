@@ -3,18 +3,21 @@ import os
 import shlex
 import subprocess
 import uuid
-from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from pydantic import BaseModel
 
-@dataclass
-class DockerEnvironmentConfig:
+from minisweagent.exceptions import Submitted
+from minisweagent.utils.serialize import recursive_merge
+
+
+class DockerEnvironmentConfig(BaseModel):
     image: str
     cwd: str = "/"
     """Working directory in which to execute commands."""
-    env: dict[str, str] = field(default_factory=dict)
+    env: dict[str, str] = {}
     """Environment variables to set in the container."""
-    forward_env: list[str] = field(default_factory=list)
+    forward_env: list[str] = []
     """Environment variables to forward to the container.
     Variables are only forwarded if they are set in the host environment.
     In case of conflict with `env`, the `env` variables take precedence.
@@ -23,7 +26,7 @@ class DockerEnvironmentConfig:
     """Timeout for executing commands in the container."""
     executable: str = os.getenv("MSWEA_DOCKER_EXECUTABLE", "docker")
     """Path to the docker/container executable."""
-    run_args: list[str] = field(default_factory=lambda: ["--rm"])
+    run_args: list[str] = ["--rm"]
     """Additional arguments to pass to the docker/container executable.
     Default is ["--rm"], which removes the container after it exits.
     """
@@ -31,6 +34,11 @@ class DockerEnvironmentConfig:
     """Max duration to keep container running. Uses the same format as the sleep command."""
     pull_timeout: int = 120
     """Timeout in seconds for pulling images."""
+    interpreter: list[str] = ["bash", "-lc"]
+    """Interpreter to use to execute commands. Default is ["bash", "-lc"].
+    The actual command will be appended as argument to this. Override this to e.g., modify shell flags
+    (e.g., to remove the `-l` flag to disable login shell) or to use python instead of bash to interpret commands.
+    """
 
 
 class DockerEnvironment:
@@ -49,8 +57,18 @@ class DockerEnvironment:
         self.config = config_class(**kwargs)
         self._start_container()
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config)
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), kwargs)
+
+    def serialize(self) -> dict:
+        return {
+            "info": {
+                "config": {
+                    "environment": self.config.model_dump(mode="json"),
+                    "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                }
+            }
+        }
 
     def _start_container(self):
         """Start the Docker container and return the container ID."""
@@ -79,8 +97,9 @@ class DockerEnvironment:
         self.logger.info(f"Started container {container_name} with ID {result.stdout.strip()}")
         self.container_id = result.stdout.strip()
 
-    def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
+    def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the Docker container and return the result as a dict."""
+        command = action.get("command", "")
         cwd = cwd or self.config.cwd
         assert self.container_id, "Container not started"
 
@@ -90,18 +109,42 @@ class DockerEnvironment:
                 cmd.extend(["-e", f"{key}={value}"])
         for key, value in self.config.env.items():
             cmd.extend(["-e", f"{key}={value}"])
-        cmd.extend([self.container_id, "bash", "-lc", command])
+        cmd.extend([self.container_id, *self.config.interpreter, command])
 
-        result = subprocess.run(
-            cmd,
-            text=True,
-            timeout=timeout or self.config.timeout,
-            encoding="utf-8",
-            errors="replace",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
-        return {"output": result.stdout, "returncode": result.returncode}
+        try:
+            result = subprocess.run(
+                cmd,
+                text=True,
+                timeout=timeout or self.config.timeout,
+                encoding="utf-8",
+                errors="replace",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+            output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
+        except subprocess.TimeoutExpired as e:
+            timeout_val = timeout or self.config.timeout
+            output = {
+                "output": e.output.decode("utf-8", errors="replace") if e.output else "",
+                "returncode": -1,
+                "exception_info": f"Command timed out after {timeout_val}s",
+                "extra": {"exception_type": "timeout", "timeout": timeout_val},
+            }
+        self._check_finished(output)
+        return output
+
+    def _check_finished(self, output: dict):
+        """Raises Submitted exception if the output indicates task completion."""
+        lines = output.get("output", "").rstrip().splitlines(keepends=True)
+        if lines and lines[-1].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
+            submission = "".join(lines[:-1])
+            raise Submitted(
+                {
+                    "role": "exit",
+                    "content": submission,
+                    "extra": {"exit_status": "Submitted", "submission": submission},
+                }
+            )
 
     def cleanup(self):
         """Stop and remove the Docker container."""

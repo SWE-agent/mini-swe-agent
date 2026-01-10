@@ -10,7 +10,6 @@ import threading
 import time
 import traceback
 from collections.abc import Iterable
-from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
@@ -24,14 +23,14 @@ from textual.events import Key
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Input, Static, TextArea
 
-from minisweagent.agents.default import AgentConfig, DefaultAgent, NonTerminatingException, Submitted
+from minisweagent.agents.default import AgentConfig, DefaultAgent
+from minisweagent.exceptions import Submitted, UserInterruption
 
 
-@dataclass
 class TextualAgentConfig(AgentConfig):
     mode: Literal["confirm", "yolo"] = "confirm"
     """Mode for action execution: 'confirm' requires user confirmation, 'yolo' executes immediately."""
-    whitelist_actions: list[str] = field(default_factory=list)
+    whitelist_actions: list[str] = []
     """Never confirm actions that match these regular expressions."""
     confirm_exit: bool = True
     """If the agent wants to finish, do we ask for confirmation from user?"""
@@ -44,58 +43,83 @@ class _TextualAgent(DefaultAgent):
         super().__init__(*args, config_class=TextualAgentConfig, **kwargs)
         self._current_action_from_human = False
 
-    def add_message(self, role: str, content: str, **kwargs):
-        super().add_message(role, content, **kwargs)
+    def add_messages(self, *messages: dict) -> list[dict]:
+        result = super().add_messages(*messages)
         if self.app.agent_state != "UNINITIALIZED":
             self.app.call_from_thread(self.app.on_message_added)
+        return result
 
     def query(self) -> dict:
         if self.config.mode == "human":
             human_input = self.app.input_container.request_input("Enter your command:")
             self._current_action_from_human = True
-            msg = {"content": f"\n```bash\n{human_input}\n```"}
-            self.add_message("assistant", msg["content"])
+            msg = {
+                "role": "assistant",
+                "content": f"\n```mswea_bash_command\n{human_input}\n```",
+                "extra": {"actions": [{"command": human_input}]},
+            }
+            self.add_messages(msg)
             return msg
         self._current_action_from_human = False
         return super().query()
 
-    def run(self, task: str, **kwargs) -> tuple[str, str]:
+    def run(self, task: str, **kwargs) -> dict:
         try:
-            exit_status, result = super().run(task, **kwargs)
+            info = super().run(task, **kwargs)
         except Exception as e:
-            result = str(e)
+            info = {"submission": str(e), "exit_status": "ERROR"}
             self.app.call_from_thread(self.app.action_quit)
             print(traceback.format_exc())
-            return "ERROR", result
+            return info
         else:
-            self.app.call_from_thread(self.app.on_agent_finished, exit_status, result)
+            self.app.call_from_thread(
+                self.app.on_agent_finished, info.get("exit_status", "Unknown"), info.get("submission", "")
+            )
         self.app.call_from_thread(self.app.action_quit)
-        return exit_status, result
+        return info
 
-    def execute_action(self, action: dict) -> dict:
+    def execute_actions(self, message: dict) -> list[dict]:
+        # Override to handle user confirmation and confirm_exit
         if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
-            raise NonTerminatingException("Command not executed because user switched to manual mode.")
-        if (
-            self.config.mode == "confirm"
-            and action["action"].strip()
-            and not any(re.match(r, action["action"]) for r in self.config.whitelist_actions)
-        ):
-            result = self.app.input_container.request_input("Press ENTER to confirm or provide rejection reason")
-            if result:  # Non-empty string means rejection
-                raise NonTerminatingException(f"Command not executed: {result}")
-        return super().execute_action(action)
-
-    def has_finished(self, output: dict[str, str]):
+            raise UserInterruption(
+                {
+                    "role": "user",
+                    "content": "Command not executed because user switched to manual mode.",
+                    "extra": {"interrupt_type": "UserInterruption"},
+                }
+            )
+        for action in message.get("extra", {}).get("actions", []):
+            command = action["command"]
+            if (
+                self.config.mode == "confirm"
+                and command.strip()
+                and not any(re.match(r, command) for r in self.config.whitelist_actions)
+            ):
+                result = self.app.input_container.request_input("Press ENTER to confirm or provide rejection reason")
+                if result:
+                    raise UserInterruption(
+                        {
+                            "role": "user",
+                            "content": f"Command not executed: {result}",
+                            "extra": {"interrupt_type": "UserRejection"},
+                        }
+                    )
         try:
-            return super().has_finished(output)
-        except Submitted as e:
+            return super().execute_actions(message)
+        except Submitted:
             if self.config.confirm_exit:
                 if new_task := self.app.input_container.request_input(
                     "[bold green]Agent wants to finish.[/bold green] "
                     "[green]Type a comment to give it a new task or press enter to quit.\n"
                 ).strip():
-                    raise NonTerminatingException(f"The user added a new task: {new_task}")
-            raise e
+                    raise UserInterruption(
+                        {
+                            "role": "user",
+                            "content": f"The user added a new task: {new_task}",
+                            "extra": {"interrupt_type": "UserNewTask"},
+                        }
+                    )
+            raise
 
 
 class AddLogEmitCallback(logging.Handler):
@@ -276,10 +300,10 @@ class TextualAgent(App):
 
         self._vscroll = VerticalScroll()
 
-    def run(self, task: str, **kwargs) -> tuple[str, str]:
+    def run(self, task: str, **kwargs) -> dict:
         threading.Thread(target=lambda: self.agent.run(task, **kwargs), daemon=True).start()
         super().run()
-        return self.exit_status, self.result
+        return {"exit_status": self.exit_status, "submission": self.result}
 
     # --- Basics ---
 
@@ -389,7 +413,7 @@ class TextualAgent(App):
         if self.agent_state == "RUNNING":
             spinner_frame = str(self._spinner.render(time.time())).strip()
             status_text = f"{self.agent_state} {spinner_frame}"
-        self.title = f"Step {self.i_step + 1}/{self.n_steps} - {status_text} - Cost: ${self.agent.model.cost:.2f}"
+        self.title = f"Step {self.i_step + 1}/{self.n_steps} - {status_text} - Cost: ${self.agent.cost:.2f}"
         try:
             self.query_one("Header").set_class(self.agent_state == "RUNNING", "running")
         except NoMatches:  # might be called when shutting down

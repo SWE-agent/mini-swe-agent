@@ -1,14 +1,17 @@
 import os
 import platform
 import subprocess
-from dataclasses import asdict, dataclass, field
 from typing import Any
 
+from pydantic import BaseModel
 
-@dataclass
-class LocalEnvironmentConfig:
+from minisweagent.exceptions import Submitted
+from minisweagent.utils.serialize import recursive_merge
+
+
+class LocalEnvironmentConfig(BaseModel):
     cwd: str = ""
-    env: dict[str, str] = field(default_factory=dict)
+    env: dict[str, str] = {}
     timeout: int = 30
 
 
@@ -17,22 +20,57 @@ class LocalEnvironment:
         """This class executes bash commands directly on the local machine."""
         self.config = config_class(**kwargs)
 
-    def execute(self, command: str, cwd: str = "", *, timeout: int | None = None):
+    def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the local environment and return the result as a dict."""
+        command = action.get("command", "")
         cwd = cwd or self.config.cwd or os.getcwd()
-        result = subprocess.run(
-            command,
-            shell=True,
-            text=True,
-            cwd=cwd,
-            env=os.environ | self.config.env,
-            timeout=timeout or self.config.timeout,
-            encoding="utf-8",
-            errors="replace",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
-        return {"output": result.stdout, "returncode": result.returncode}
+        try:
+            result = subprocess.run(
+                command,
+                shell=True,
+                text=True,
+                cwd=cwd,
+                env=os.environ | self.config.env,
+                timeout=timeout or self.config.timeout,
+                encoding="utf-8",
+                errors="replace",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+            output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
+        except subprocess.TimeoutExpired as e:
+            timeout_val = timeout or self.config.timeout
+            output = {
+                "output": e.output.decode("utf-8", errors="replace") if e.output else "",
+                "returncode": -1,
+                "exception_info": f"Command timed out after {timeout_val}s",
+                "extra": {"exception_type": "timeout", "timeout": timeout_val},
+            }
+        self._check_finished(output)
+        return output
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | platform.uname()._asdict() | os.environ
+    def _check_finished(self, output: dict):
+        """Raises Submitted exception if the output indicates task completion."""
+        lines = output.get("output", "").rstrip().splitlines(keepends=True)
+        if lines and lines[-1].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
+            submission = "".join(lines[:-1])
+            raise Submitted(
+                {
+                    "role": "exit",
+                    "content": submission,
+                    "extra": {"exit_status": "Submitted", "submission": submission},
+                }
+            )
+
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), os.environ, kwargs)
+
+    def serialize(self) -> dict:
+        return {
+            "info": {
+                "config": {
+                    "environment": self.config.model_dump(mode="json"),
+                    "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                }
+            }
+        }

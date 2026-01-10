@@ -17,51 +17,52 @@ import shutil
 import subprocess
 import tempfile
 import uuid
-from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from pydantic import BaseModel
 
-@dataclass
-class BubblewrapEnvironmentConfig:
+from minisweagent.exceptions import Submitted
+from minisweagent.utils.serialize import recursive_merge
+
+
+class BubblewrapEnvironmentConfig(BaseModel):
     cwd: str = ""
     """Working directory for the sandbox."""
-    env: dict[str, str] = field(default_factory=dict)
+    env: dict[str, str] = {}
     """Dictionary of environment variables to set in the sandbox."""
     timeout: int = 30
     """Timeout for the command in seconds."""
     executable: str = os.getenv("MSWEA_BUBBLEWRAP_EXECUTABLE", "bwrap")
     """Path to the bubblewrap executable."""
-    wrapper_args: list[str] = field(
-        default_factory=lambda: [
-            "--unshare-user-try",
-            "--ro-bind",
-            "/usr",
-            "/usr",
-            "--ro-bind",
-            "/bin",
-            "/bin",
-            "--ro-bind",
-            "/lib",
-            "/lib",
-            "--ro-bind",
-            "/lib64",
-            "/lib64",
-            "--ro-bind",
-            "/etc",
-            "/etc",
-            "--tmpfs",
-            "/tmp",
-            "--proc",
-            "/proc",
-            "--dev",
-            "/dev",
-            "--new-session",
-            "--setenv",
-            "PATH",
-            "/usr/local/bin:/usr/sbin:/usr/bin:/bin",
-        ]
-    )
+    wrapper_args: list[str] = [
+        "--unshare-user-try",
+        "--ro-bind",
+        "/usr",
+        "/usr",
+        "--ro-bind",
+        "/bin",
+        "/bin",
+        "--ro-bind",
+        "/lib",
+        "/lib",
+        "--ro-bind",
+        "/lib64",
+        "/lib64",
+        "--ro-bind",
+        "/etc",
+        "/etc",
+        "--tmpfs",
+        "/tmp",
+        "--proc",
+        "/proc",
+        "--dev",
+        "/dev",
+        "--new-session",
+        "--setenv",
+        "PATH",
+        "/usr/local/bin:/usr/sbin:/usr/bin:/bin",
+    ]
     """Arguments to pass to the bubblewrap executable."""
 
 
@@ -77,8 +78,9 @@ class BubblewrapEnvironment:
         self.working_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
         self.working_dir.mkdir(parents=True)
 
-    def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
+    def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the bubblewrap environment and return the result as a dict."""
+        command = action.get("command", "")
         cwd = cwd or self.config.cwd or str(self.working_dir)
 
         cmd = [self.config.executable] + self.config.wrapper_args + ["--bind", cwd, cwd, "--chdir", cwd]
@@ -89,16 +91,40 @@ class BubblewrapEnvironment:
 
         cmd.extend(["bash", "-c", command])
 
-        result = subprocess.run(
-            cmd,
-            text=True,
-            timeout=timeout or self.config.timeout,
-            encoding="utf-8",
-            errors="replace",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
-        return {"output": result.stdout, "returncode": result.returncode}
+        try:
+            result = subprocess.run(
+                cmd,
+                text=True,
+                timeout=timeout or self.config.timeout,
+                encoding="utf-8",
+                errors="replace",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+            output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
+        except subprocess.TimeoutExpired as e:
+            timeout_val = timeout or self.config.timeout
+            output = {
+                "output": e.output.decode("utf-8", errors="replace") if e.output else "",
+                "returncode": -1,
+                "exception_info": f"Command timed out after {timeout_val}s",
+                "extra": {"exception_type": "timeout", "timeout": timeout_val},
+            }
+        self._check_finished(output)
+        return output
+
+    def _check_finished(self, output: dict):
+        """Raises Submitted exception if the output indicates task completion."""
+        lines = output.get("output", "").rstrip().splitlines(keepends=True)
+        if lines and lines[-1].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
+            submission = "".join(lines[:-1])
+            raise Submitted(
+                {
+                    "role": "exit",
+                    "content": submission,
+                    "extra": {"exit_status": "Submitted", "submission": submission},
+                }
+            )
 
     def cleanup(self):
         if self.working_dir.exists():
@@ -108,5 +134,15 @@ class BubblewrapEnvironment:
         """Cleanup working_dir when object is destroyed."""
         self.cleanup()
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | platform.uname()._asdict()
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), kwargs)
+
+    def serialize(self) -> dict:
+        return {
+            "info": {
+                "config": {
+                    "environment": self.config.model_dump(mode="json"),
+                    "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                }
+            }
+        }

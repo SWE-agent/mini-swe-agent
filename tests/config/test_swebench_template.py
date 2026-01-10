@@ -4,6 +4,8 @@ from pathlib import Path
 import yaml
 from jinja2 import StrictUndefined, Template
 
+from minisweagent.agents.default import AgentConfig
+
 
 @dataclass
 class MockOutput:
@@ -11,6 +13,7 @@ class MockOutput:
 
     returncode: int
     output: str
+    exception_info: str = ""
 
 
 def test_action_observation_template_short_output():
@@ -20,8 +23,8 @@ def test_action_observation_template_short_output():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template
-    template_str = config["agent"]["action_observation_template"]
+    # Extract the template (now in model section)
+    template_str = config["model"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with short content
@@ -51,8 +54,8 @@ def test_action_observation_template_long_output():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template
-    template_str = config["agent"]["action_observation_template"]
+    # Extract the template (now in model section)
+    template_str = config["model"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with long content
@@ -96,8 +99,8 @@ def test_action_observation_template_edge_case_exactly_10000_chars():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template
-    template_str = config["agent"]["action_observation_template"]
+    # Extract the template (now in model section)
+    template_str = config["model"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Use a large amount of data that will definitely exceed 10000 chars when rendered
@@ -122,8 +125,8 @@ def test_action_observation_template_just_under_10000_chars():
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Extract the template
-    template_str = config["agent"]["action_observation_template"]
+    # Extract the template (now in model section)
+    template_str = config["model"]["action_observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Use a reasonably sized output that should be well under 10000 chars when rendered
@@ -138,3 +141,51 @@ def test_action_observation_template_just_under_10000_chars():
     assert "<output_tail>" not in result
     assert "<warning>" not in result
     assert "Y" * 8000 in result
+
+
+def test_agent_config_requires_templates():
+    """Test that AgentConfig now requires all template fields (no defaults in code)"""
+    import pytest
+    from pydantic import ValidationError
+
+    # AgentConfig should require all template fields now (Pydantic raises ValidationError)
+    with pytest.raises(ValidationError, match="validation error"):
+        AgentConfig()
+
+
+def test_exception_info_template():
+    """Test that config files have action_observation_template with exception handling"""
+    from pathlib import Path
+
+    import yaml
+
+    config_files = [
+        Path("src/minisweagent/config/default.yaml"),
+        Path("src/minisweagent/config/mini.yaml"),
+        Path("src/minisweagent/config/github_issue.yaml"),
+        Path("src/minisweagent/config/extra/swebench.yaml"),
+        Path("src/minisweagent/config/extra/swebench_xml.yaml"),
+        Path("src/minisweagent/config/extra/swebench_roulette.yaml"),
+    ]
+
+    for config_file in config_files:
+        with open(config_file) as f:
+            config = yaml.safe_load(f)
+
+        action_template = config.get("model", {}).get("action_observation_template")
+        assert action_template is not None, f"{config_file} missing action_observation_template in model section"
+
+        # Verify it handles exception_info
+        template = Template(action_template, undefined=StrictUndefined)
+
+        # Test with exception
+        output_with_exception = MockOutput(
+            returncode=-1, output="partial output", exception_info="Command timed out after 30s"
+        )
+        result = template.render(output=output_with_exception)
+        assert "Command timed out after 30s" in result, f"{config_file} doesn't render exception_info"
+
+        # Test without exception (should not error)
+        output_normal = MockOutput(returncode=0, output="success", exception_info="")
+        result = template.render(output=output_normal)
+        assert "success" in result

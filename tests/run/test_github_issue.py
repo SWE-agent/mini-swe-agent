@@ -1,10 +1,12 @@
 import re
-from unittest.mock import patch
+from pathlib import Path
+from unittest.mock import Mock, patch
 
 import pytest
+import yaml
 
 from minisweagent.models.test_models import DeterministicModel
-from minisweagent.run.github_issue import DEFAULT_CONFIG, main
+from minisweagent.run.extra.github_issue import DEFAULT_CONFIG, main
 
 
 def normalize_outputs(s: str) -> str:
@@ -24,11 +26,11 @@ def assert_observations_match(expected_observations: list[str], messages: list[d
         messages: Agent conversation messages (list of message dicts with 'role' and 'content')
     """
     # Extract actual observations from agent messages
-    # User messages (observations) are at indices 3, 5, 7, etc.
+    # User/exit messages (observations) are at indices 3, 5, 7, etc.
     actual_observations = []
     for i in range(len(expected_observations)):
         user_message_index = 3 + (i * 2)
-        assert messages[user_message_index]["role"] == "user"
+        assert messages[user_message_index]["role"] in ("user", "exit")
         actual_observations.append(messages[user_message_index]["content"])
 
     assert len(actual_observations) == len(expected_observations), (
@@ -47,25 +49,111 @@ def assert_observations_match(expected_observations: list[str], messages: list[d
 def test_configure_if_first_time_called():
     """Test that configure_if_first_time is called when running github_issue main."""
     with (
-        patch("minisweagent.run.github_issue.configure_if_first_time") as mock_configure,
-        patch("minisweagent.run.github_issue.fetch_github_issue") as mock_fetch,
-        patch("minisweagent.run.github_issue.InteractiveAgent") as mock_agent,
-        patch("minisweagent.run.github_issue.get_model"),
-        patch("minisweagent.run.github_issue.DockerEnvironment"),
-        patch("minisweagent.run.github_issue.yaml.safe_load") as mock_yaml_load,
-        patch("minisweagent.run.github_issue.get_config_path") as mock_get_config_path,
-        patch("minisweagent.run.github_issue.save_traj"),
+        patch("minisweagent.run.extra.github_issue.configure_if_first_time") as mock_configure,
+        patch("minisweagent.run.extra.github_issue.fetch_github_issue") as mock_fetch,
+        patch("minisweagent.run.extra.github_issue.InteractiveAgent") as mock_agent,
+        patch("minisweagent.run.extra.github_issue.get_model"),
+        patch("minisweagent.run.extra.github_issue.DockerEnvironment"),
+        patch("minisweagent.run.extra.github_issue.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.extra.github_issue.get_config_path") as mock_get_config_path,
     ):
         mock_fetch.return_value = "Test issue"
         mock_yaml_load.return_value = {"agent": {}, "environment": {}, "model": {}}
         mock_get_config_path.return_value.read_text.return_value = "test config"
         mock_agent_instance = mock_agent.return_value
-        mock_agent_instance.run.return_value = (0, "success")
+        mock_agent_instance.run.return_value = {"exit_status": "Submitted", "submission": "success"}
         mock_agent_instance.env.execute.return_value = None
 
         main(issue_url="https://github.com/test/repo/issues/1", config=DEFAULT_CONFIG, model="test-model", yolo=True)
 
         mock_configure.assert_called_once()
+
+
+def test_output_file_is_created(tmp_path):
+    """Test that output trajectory file is created when output is specified."""
+    output_file = tmp_path / "test_github_traj.json"
+
+    # Create a temporary config file with output_path set
+    config_file = tmp_path / "test_config.yaml"
+    default_config_path = Path("src/minisweagent/config/github_issue.yaml")
+    config = yaml.safe_load(default_config_path.read_text())
+    config["agent"]["output_path"] = str(output_file)
+    config_file.write_text(yaml.dump(config))
+
+    with (
+        patch("minisweagent.run.extra.github_issue.configure_if_first_time"),
+        patch("minisweagent.run.extra.github_issue.fetch_github_issue") as mock_fetch,
+        patch("minisweagent.run.extra.github_issue.get_model") as mock_get_model,
+        patch("minisweagent.run.extra.github_issue.DockerEnvironment") as mock_env_class,
+        patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),
+    ):
+        mock_fetch.return_value = "Test issue"
+
+        # Setup mock model and environment with required attributes
+        mock_model = Mock()
+        mock_model.config = Mock()
+        mock_model.config.model_dump.return_value = {}
+        mock_model.serialize.return_value = {
+            "info": {
+                "config": {"model": {}, "model_type": "MockModel"},
+            }
+        }
+        mock_model.get_template_vars.return_value = {}
+        mock_model.format_message.side_effect = lambda **kwargs: dict(**kwargs)
+        # query now returns dict with extra["actions"]
+        mock_model.query.side_effect = [
+            {
+                "role": "assistant",
+                "content": "```mswea_bash_command\necho done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+                "extra": {"actions": [{"command": "echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}]},
+            },
+        ]
+        mock_model.format_observation_messages.return_value = []
+        mock_get_model.return_value = mock_model
+
+        # Environment execute raises Submitted when COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT is seen
+        from minisweagent.exceptions import Submitted
+
+        execute_call_count = 0
+
+        def execute_side_effect(action, **kwargs):
+            nonlocal execute_call_count
+            execute_call_count += 1
+            # First call is git clone, just return success
+            if execute_call_count == 1:
+                return {"output": "", "returncode": 0, "exception_info": ""}
+            # Second call is the agent action, raise Submitted
+            raise Submitted(
+                {
+                    "role": "exit",
+                    "content": "done",
+                    "extra": {"exit_status": "Submitted", "submission": "done"},
+                }
+            )
+
+        mock_env = Mock()
+        mock_env.config = Mock()
+        mock_env.config.model_dump.return_value = {}
+        mock_env.execute.side_effect = execute_side_effect
+        mock_env.get_template_vars.return_value = {
+            "system": "TestOS",
+            "release": "1.0",
+            "version": "1.0.0",
+            "machine": "x86_64",
+        }
+        mock_env.serialize.return_value = {
+            "info": {"config": {"environment": {}, "environment_type": "MockEnvironment"}}
+        }
+        mock_env_class.return_value = mock_env
+
+        main(
+            issue_url="https://github.com/test/repo/issues/1",
+            config=config_file,
+            model="test-model",
+            yolo=True,
+        )
+
+        assert output_file.exists(), f"Output file {output_file} was not created"
 
 
 @pytest.mark.slow
@@ -76,8 +164,8 @@ def test_github_issue_end_to_end(github_test_data):
     expected_observations = github_test_data["expected_observations"]
 
     with (
-        patch("minisweagent.run.github_issue.configure_if_first_time"),
-        patch("minisweagent.run.github_issue.get_model") as mock_get_model,
+        patch("minisweagent.run.extra.github_issue.configure_if_first_time"),
+        patch("minisweagent.run.extra.github_issue.get_model") as mock_get_model,
         patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),  # No new task
     ):
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
@@ -94,6 +182,4 @@ def test_github_issue_end_to_end(github_test_data):
 
     assert_observations_match(expected_observations, messages)
 
-    assert agent.model.n_calls == len(model_responses), (
-        f"Expected {len(model_responses)} steps, got {agent.model.n_calls}"
-    )
+    assert agent.n_calls == len(model_responses), f"Expected {len(model_responses)} steps, got {agent.n_calls}"

@@ -27,6 +27,28 @@ things that you might want to do.
 
 You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` environment variable to the import path of your run script.
 
+## Hello world
+
+```python
+import logging
+
+from minisweagent.agents.default import DefaultAgent
+from minisweagent.models import get_model
+from minisweagent.environments.local import LocalEnvironment
+
+logging.basicConfig(level=logging.DEBUG)
+task = "Write a hello world program"
+model_name = "anthropic/claude-sonnet-4-5-20250929"
+
+agent = DefaultAgent(
+    get_model(input_model_name=model_name),
+    LocalEnvironment(),
+)
+
+# Run the agent
+agent.run(task)
+```
+
 ## Mix & match
 
 ### Models
@@ -198,7 +220,8 @@ An agent that exits when the `submit` command is issued:
 === "Subclassing the agent"
 
     ```python
-    from minisweagent.agents.default import DefaultAgent, Submitted
+    from minisweagent.agents.default import DefaultAgent
+    from minisweagent.exceptions import Submitted
 
     class AgentQuitsOnSubmit(DefaultAgent):
         def execute_action(self, action: dict) -> dict:
@@ -212,8 +235,9 @@ An agent that exits when the `submit` command is issued:
 === "Subclassing the environment"
 
     ```python
-    from minisweagent.agents.default import DefaultAgent, Submitted
+    from minisweagent.agents.default import DefaultAgent
     from minisweagent.environments.local import LocalEnvironment
+    from minisweagent.exceptions import Submitted
 
     class EnvironmentQuitsOnSubmit(LocalEnvironment):
         def execute(self, command: str, cwd: str = "") -> dict:

@@ -1,130 +1,155 @@
-"""Basic agent class. See https://mini-swe-agent.com/latest/advanced/control_flow/ for visual explanation."""
+"""Basic agent class. See https://mini-swe-agent.com/latest/advanced/control_flow/ for visual explanation
+or https://minimal-agent.com for a tutorial on the basic building principles.
+"""
 
-import re
-import subprocess
-import time
-from dataclasses import asdict, dataclass
+import json
+import logging
+import traceback
+from pathlib import Path
 
 from jinja2 import StrictUndefined, Template
+from pydantic import BaseModel
 
-from minisweagent import Environment, Model
+from minisweagent import Environment, Model, __version__
+from minisweagent.exceptions import InterruptAgentFlow, LimitsExceeded
+from minisweagent.utils.serialize import recursive_merge
 
 
-@dataclass
-class AgentConfig:
-    # The default settings are the bare minimum to run the agent. Take a look at the config files for improved settings.
-    system_template: str = "You are a helpful assistant that can do anything."
-    instance_template: str = (
-        "Your task: {{task}}. Please reply with a single shell command in triple backticks. "
-        "To finish, the first line of the output of the shell command must be 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'."
-    )
-    timeout_template: str = (
-        "The last command <command>{{action['action']}}</command> timed out and has been killed.\n"
-        "The output of the command was:\n <output>\n{{output}}\n</output>\n"
-        "Please try another command and make sure to avoid those requiring interactive input."
-    )
-    format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
-    action_observation_template: str = "Observation: {{output}}"
-    action_regex: str = r"```bash\s*\n(.*?)\n```"
+class AgentConfig(BaseModel):
+    """Check the config files in minisweagent/config for example settings."""
+
+    system_template: str
+    """Template for the system message (the first message)."""
+    instance_template: str
+    """Template for the first user message specifying the task (the second message overall)."""
     step_limit: int = 0
+    """Maximum number of steps the agent can take."""
     cost_limit: float = 3.0
-
-
-class NonTerminatingException(Exception):
-    """Raised for conditions that can be handled by the agent."""
-
-
-class FormatError(NonTerminatingException):
-    """Raised when the LM's output is not in the expected format."""
-
-
-class ExecutionTimeoutError(NonTerminatingException):
-    """Raised when the action execution timed out."""
-
-
-class TerminatingException(Exception):
-    """Raised for conditions that terminate the agent."""
-
-
-class Submitted(TerminatingException):
-    """Raised when the LM declares that the agent has finished its task."""
-
-
-class LimitsExceeded(TerminatingException):
-    """Raised when the agent has reached its cost or step limit."""
+    """Stop agent after exceeding (!) this cost."""
+    output_path: Path | None = None
+    """Save the trajectory to this path."""
 
 
 class DefaultAgent:
     def __init__(self, model: Model, env: Environment, *, config_class: type = AgentConfig, **kwargs):
+        """See the `AgentConfig` class for permitted keyword arguments."""
         self.config = config_class(**kwargs)
         self.messages: list[dict] = []
         self.model = model
         self.env = env
         self.extra_template_vars = {}
+        self.logger = logging.getLogger("agent")
+        self.cost = 0.0
+        self.n_calls = 0
 
-    def render_template(self, template: str, **kwargs) -> str:
-        template_vars = asdict(self.config) | self.env.get_template_vars() | self.model.get_template_vars()
-        return Template(template, undefined=StrictUndefined).render(
-            **kwargs, **template_vars, **self.extra_template_vars
+    def get_template_vars(self, **kwargs) -> dict:
+        return recursive_merge(
+            self.config.model_dump(),
+            self.env.get_template_vars(),
+            self.model.get_template_vars(),
+            {"n_model_calls": self.n_calls, "model_cost": self.cost},
+            self.extra_template_vars,
+            kwargs,
         )
 
-    def add_message(self, role: str, content: str, **kwargs):
-        self.messages.append({"role": role, "content": content, "timestamp": time.time(), **kwargs})
+    def _render_template(self, template: str) -> str:
+        return Template(template, undefined=StrictUndefined).render(**self.get_template_vars())
 
-    def run(self, task: str, **kwargs) -> tuple[str, str]:
-        """Run step() until agent is finished. Return exit status & message"""
+    def add_messages(self, *messages: dict) -> list[dict]:
+        self.logger.debug(messages)  # set log level to debug to see
+        self.messages.extend(messages)
+        return list(messages)
+
+    def handle_uncaught_exception(self, e: Exception) -> list[dict]:
+        return self.add_messages(
+            self.model.format_message(
+                role="exit",
+                content=str(e),
+                extra={
+                    "exit_status": type(e).__name__,
+                    "submission": str(e),
+                    "exception_str": str(e),
+                    "traceback": traceback.format_exc(),
+                },
+            )
+        )
+
+    def run(self, task: str = "", **kwargs) -> dict:
+        """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
-        self.add_message("system", self.render_template(self.config.system_template))
-        self.add_message("user", self.render_template(self.config.instance_template))
+        self.add_messages(
+            self.model.format_message(role="system", content=self._render_template(self.config.system_template)),
+            self.model.format_message(role="user", content=self._render_template(self.config.instance_template)),
+        )
         while True:
             try:
                 self.step()
-            except NonTerminatingException as e:
-                self.add_message("user", str(e))
-            except TerminatingException as e:
-                self.add_message("user", str(e))
-                return type(e).__name__, str(e)
+            except InterruptAgentFlow as e:
+                self.add_messages(*e.messages)
+            except Exception as e:
+                self.handle_uncaught_exception(e)
+                raise
+            finally:
+                self.save(self.config.output_path)
+            if self.messages[-1].get("role") == "exit":
+                break
+        return self.messages[-1].get("extra", {})
 
-    def step(self) -> dict:
-        """Query the LM, execute the action, return the observation."""
-        return self.get_observation(self.query())
+    def step(self) -> list[dict]:
+        """Query the LM, execute actions."""
+        return self.execute_actions(self.query())
 
     def query(self) -> dict:
-        """Query the model and return the response."""
-        if 0 < self.config.step_limit <= self.model.n_calls or 0 < self.config.cost_limit <= self.model.cost:
-            raise LimitsExceeded()
-        response = self.model.query(self.messages)
-        self.add_message("assistant", **response)
-        return response
-
-    def get_observation(self, response: dict) -> dict:
-        """Execute the action and return the observation."""
-        output = self.execute_action(self.parse_action(response))
-        observation = self.render_template(self.config.action_observation_template, output=output)
-        self.add_message("user", observation)
-        return output
-
-    def parse_action(self, response: dict) -> dict:
-        """Parse the action from the message. Returns the action."""
-        actions = re.findall(self.config.action_regex, response["content"], re.DOTALL)
-        if len(actions) == 1:
-            return {"action": actions[0].strip(), **response}
-        raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
-
-    def execute_action(self, action: dict) -> dict:
-        try:
-            output = self.env.execute(action["action"])
-        except (TimeoutError, subprocess.TimeoutExpired) as e:
-            output = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
-            raise ExecutionTimeoutError(
-                self.render_template(self.config.timeout_template, action=action, output=output)
+        """Query the model and return model messages. Override to add hooks."""
+        if 0 < self.config.step_limit <= self.n_calls or 0 < self.config.cost_limit <= self.cost:
+            raise LimitsExceeded(
+                {
+                    "role": "exit",
+                    "content": "LimitsExceeded",
+                    "extra": {"exit_status": "LimitsExceeded", "submission": ""},
+                }
             )
-        self.has_finished(output)
-        return output | {"action": action["action"]}
+        self.n_calls += 1
+        message = self.model.query(self.messages)
+        self.cost += message.get("extra", {}).get("cost", 0.0)
+        self.add_messages(message)
+        return message
 
-    def has_finished(self, output: dict[str, str]):
-        """Raises Submitted exception with final output if the agent has finished its task."""
-        lines = output.get("output", "").lstrip().splitlines(keepends=True)
-        if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]:
-            raise Submitted("".join(lines[1:]))
+    def execute_actions(self, message: dict) -> list[dict]:
+        """Execute actions in message, add observation messages, return them."""
+        outputs = [self.env.execute(action) for action in message.get("extra", {}).get("actions", [])]
+        return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))
+
+    def serialize(self, *extra_dicts) -> dict:
+        """Serialize agent state to a json-compatible nested dictionary for saving."""
+        last_message = self.messages[-1] if self.messages else {}
+        last_extra = last_message.get("extra", {})
+        agent_data = {
+            "info": {
+                "model_stats": {
+                    "instance_cost": self.cost,
+                    "api_calls": self.n_calls,
+                },
+                "config": {
+                    "agent": self.config.model_dump(mode="json"),
+                    "agent_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                },
+                "mini_version": __version__,
+                "exit_status": last_extra.get("exit_status", ""),
+                "earubmission": last_extra.get("submission", ""),
+            },
+            "messages": self.messages,
+            "trajectory_format": "mini-swe-agent-1.1",
+        }
+        return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)
+
+    def save(self, path: Path | None, *extra_dicts) -> dict:
+        """Save the trajectory of the agent to a file if path is given. Returns full serialized data.
+        You can pass additional dictionaries with extra data to be (recursively) merged into the output data.
+        """
+        data = self.serialize(*extra_dicts)
+        if path:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(data, indent=2))
+        return data

@@ -150,12 +150,30 @@ agent:
     When you've completed your work (reading, editing, testing), and cannot make further progress
     issue exactly the following command:
 
-    <bash_code>echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached</bash_code>
+    <bash_code>git add -A && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</bash_code>
 
     This command will submit your work.
     You cannot continue working (reading, editing, testing) in any way on this task after submitting.
     </instructions>
+  step_limit: 250
+  cost_limit: 3.
+
+environment:
+  cwd: "/testbed"
+  timeout: 60
+  env:
+    PAGER: cat
+    MANPAGER: cat
+    LESS: -R
+    PIP_PROGRESS_BAR: 'off'
+    TQDM_DISABLE: '1'
+  environment_class: docker
+
+model:
   action_observation_template: |
+    {% if output.exception_info -%}
+    <exception>{{output.exception_info}}</exception>
+    {% endif -%}
     <returncode>{{output.returncode}}</returncode>
     {% if output.output | length < 10000 -%}
     <output>
@@ -180,6 +198,11 @@ agent:
     {{ output.output[-5000:] }}
     </output_tail>
     {%- endif -%}
+  model_name: "minimax/minimax-m2"
+  model_class: openrouter
+  model_kwargs:
+    temperature: 0.0
+  action_regex: <bash_code>(.*?)</bash_code>
   format_error_template: |
     Please always provide EXACTLY ONE action in the `<bash_code>` block, found {{actions|length}} actions.
 
@@ -193,23 +216,3 @@ agent:
 
     If you have completed your assignment, please consult the first message about how to
     submit your solution (you will not be able to continue working on this task after that).
-  step_limit: 250
-  cost_limit: 3.
-  action_regex: <bash_code>(.*?)</bash_code>
-
-environment:
-  cwd: "/testbed"
-  timeout: 60
-  env:
-    PAGER: cat
-    MANPAGER: cat
-    LESS: -R
-    PIP_PROGRESS_BAR: 'off'
-    TQDM_DISABLE: '1'
-  environment_class: docker
-
-model:
-  model_name: "minimax/minimax-m2"
-  model_class: openrouter
-  model_kwargs:
-    temperature: 0.0

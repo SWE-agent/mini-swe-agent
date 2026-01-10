@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""This is the central entry point to the mini-extra script. Use subcommands
+to invoke other command line utilities like running on benchmarks, editing config,
+inspecting trajectories, etc.
+"""
+
 import sys
 from importlib import import_module
 
@@ -7,8 +12,8 @@ from rich.console import Console
 
 subcommands = [
     ("minisweagent.run.extra.config", ["config"], "Manage the global config file"),
-    ("minisweagent.run.inspector", ["inspect", "i", "inspector"], "Run inspector (browse trajectories)"),
-    ("minisweagent.run.github_issue", ["github-issue", "gh"], "Run on a GitHub issue"),
+    ("minisweagent.run.extra.inspector", ["inspect", "i", "inspector"], "Run inspector (browse trajectories)"),
+    ("minisweagent.run.extra.github_issue", ["github-issue", "gh"], "Run on a GitHub issue"),
     ("minisweagent.run.extra.swebench", ["swebench"], "Evaluate on SWE-bench (batch mode)"),
     ("minisweagent.run.extra.swebench_single", ["swebench-single"], "Evaluate on SWE-bench (single instance)"),
 ]

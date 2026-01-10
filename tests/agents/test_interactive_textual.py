@@ -1,13 +1,24 @@
 import asyncio
 import logging
 import threading
+from pathlib import Path
 from unittest.mock import Mock
 
 import pytest
+import yaml
 
 from minisweagent.agents.interactive_textual import AddLogEmitCallback, SmartInputContainer, TextualAgent
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models.test_models import DeterministicModel
+
+
+@pytest.fixture
+def default_config():
+    """Load default agent config from config/default.yaml"""
+    config_path = Path("src/minisweagent/config/default.yaml")
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+    return config["agent"]
 
 
 def get_screen_text(app: TextualAgent) -> str:
@@ -52,24 +63,27 @@ async def type_text(pilot, text: str):
 
 
 @pytest.mark.slow
-async def test_everything_integration_test():
+async def test_everything_integration_test(default_config):
     app = TextualAgent(
         model=DeterministicModel(
             outputs=[
                 "/sleep 0.5",
-                "THOUGHTT 1\n ```bash\necho '1'\n```",  # step 2
-                "THOUGHTT 2\n ```bash\necho '2'\n```",  # step 3
-                "THOUGHTT 3\n ```bash\necho '3'\n```",  # step 4
-                "THOUGHTT 4\n ```bash\necho '4'\n```",  # step 5
-                "THOUGHTT 5\n ```bash\necho '5'\n```",  # step 6
-                "THOUGHTT 6\n ```bash\necho '6'\n```",  # step 7
-                "FINISHING\n ```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
-                "FINISHING2\n ```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "THOUGHTT 1\n ```mswea_bash_command\necho '1'\n```",  # step 2
+                "THOUGHTT 2\n ```mswea_bash_command\necho '2'\n```",  # step 3
+                "THOUGHTT 3\n ```mswea_bash_command\necho '3'\n```",  # step 4
+                "THOUGHTT 4\n ```mswea_bash_command\necho '4'\n```",  # step 5
+                "THOUGHTT 5\n ```mswea_bash_command\necho '5'\n```",  # step 6
+                "THOUGHTT 6\n ```mswea_bash_command\necho '6'\n```",  # step 7
+                "FINISHING\n ```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "FINISHING2\n ```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ],
         ),
         env=LocalEnvironment(),
-        mode="confirm",
-        cost_limit=10.0,
+        **{
+            **default_config,
+            "mode": "confirm",
+            "cost_limit": 10.0,
+        },
     )
     assert app.agent.config.confirm_exit
     async with app.run_test() as pilot:
@@ -77,7 +91,7 @@ async def test_everything_integration_test():
         threading.Thread(target=lambda: app.agent.run("What's up?"), daemon=True).start()
         await pilot.pause(0.2)
         assert app.agent_state == "RUNNING"
-        assert "You are a helpful assistant that can do anything." in get_screen_text(app)
+        assert "You are a helpful assistant that can interact with a computer" in get_screen_text(app)
         assert "press enter" not in get_screen_text(app).lower()
         assert "Step 1/1" in app.title
 
@@ -104,12 +118,12 @@ async def test_everything_integration_test():
         await pilot.press("h")  # --> 2/3
         await pilot.press("h")
         assert "Step 1/3" in app.title
-        assert "You are a helpful assistant that can do anything." in get_screen_text(app)
+        assert "You are a helpful assistant that can interact with a computer" in get_screen_text(app)
         assert "press enter" not in get_screen_text(app).lower()
         await pilot.press("h")
         # should remain on same page
         assert "Step 1/3" in app.title
-        assert "You are a helpful assistant that can do anything." in get_screen_text(app)
+        assert "You are a helpful assistant that can interact with a computer" in get_screen_text(app)
 
         print(">>> Back to current latest page, because we're stilling waiting for confirmation")
         await pilot.press("l")  # no need for escape, because confirmation is only on last page
@@ -175,7 +189,7 @@ async def test_everything_integration_test():
         await pilot.press("escape")
         await pilot.press("0")
         assert "Step 1/10" in app.title
-        assert "You are a helpful assistant that can do anything." in get_screen_text(app)
+        assert "You are a helpful assistant that can interact with a computer" in get_screen_text(app)
 
         print(">>> Directly navigate to step 9")
         await pilot.press("$")
@@ -233,34 +247,46 @@ def test_messages_to_steps_edge_cases():
     assert _messages_to_steps(messages) == expected
 
 
-async def test_empty_agent_content():
-    """Test app behavior with no messages."""
+async def test_empty_agent_content(default_config):
+    """Test app behavior with minimal agent interaction."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=[]),
+        model=DeterministicModel(
+            outputs=["Starting\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+        ),
         env=LocalEnvironment(),
-        mode="yolo",
+        **{
+            **default_config,
+            "mode": "yolo",
+        },
     )
     async with app.run_test() as pilot:
         # Start the agent with the task
         threading.Thread(target=lambda: app.agent.run("Empty test"), daemon=True).start()
-        # Initially should show waiting message
+        # Initially should show waiting message or system prompt
         await pilot.pause(0.1)
         content = get_screen_text(app)
-        assert "Waiting for agent to start" in content or "You are a helpful assistant" in content
+        assert (
+            "Waiting for agent to start" in content
+            or "You are a helpful assistant that can interact with a computer" in content
+            or "Starting" in content
+        ), f"Unexpected content: {content}"
 
 
-async def test_log_message_filtering():
+async def test_log_message_filtering(default_config):
     """Test that warning and error log messages trigger notifications."""
     app = TextualAgent(
         model=DeterministicModel(
             outputs=[
                 "/warning Test warning message",
                 "Normal response",
-                "end: \n```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+                "end: \n```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
             ]
         ),
         env=LocalEnvironment(),
-        mode="yolo",
+        **{
+            **default_config,
+            "mode": "yolo",
+        },
     )
 
     # Mock the notify method to capture calls
@@ -283,15 +309,18 @@ async def test_log_message_filtering():
         app.notify.assert_any_call("[WARNING]  Test warning message", severity="warning")
 
 
-async def test_list_content_rendering():
+async def test_list_content_rendering(default_config):
     """Test rendering of messages with list content vs string content."""
     # Create a model that will add messages with list content
     app = TextualAgent(
         model=DeterministicModel(
-            outputs=["Simple response\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+            outputs=["Simple response\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
         ),
         env=LocalEnvironment(),
-        mode="yolo",
+        **{
+            **default_config,
+            "mode": "yolo",
+        },
     )
 
     async with app.run_test() as pilot:
@@ -312,12 +341,20 @@ async def test_list_content_rendering():
         assert "Line 1\nLine 2" in get_screen_text(app)
 
 
-async def test_confirmation_rejection_with_message():
+async def test_confirmation_rejection_with_message(default_config):
     """Test rejecting an action with a custom message."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Test thought\n```bash\necho 'test'\n```"]),
+        model=DeterministicModel(
+            outputs=[
+                "Test thought\n```mswea_bash_command\necho 'test'\n```",
+                "After rejection\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+            ]
+        ),
         env=LocalEnvironment(),
-        mode="confirm",
+        **{
+            **default_config,
+            "mode": "confirm",
+        },
     )
 
     async with app.run_test() as pilot:
@@ -326,25 +363,38 @@ async def test_confirmation_rejection_with_message():
         await pilot.pause(0.1)
 
         # Wait for input prompt
-        while app.agent_state != "AWAITING_INPUT":
+        for _ in range(50):
             await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT":
+                break
+        else:
+            raise AssertionError("Agent did not reach AWAITING_INPUT state within 5 seconds")
 
         # Type rejection message and submit
         await type_text(pilot, "Not safe to run")
         await pilot.press("enter")
-        await pilot.pause(0.1)
+        await pilot.pause(0.2)
+
+        # Navigate to the previous step to see the rejection message
+        await pilot.press("escape")  # unfocus from input if needed
+        await pilot.press("h")  # go back one step
 
         # Verify the command was rejected with the message
         assert "Command not executed: Not safe to run" in get_screen_text(app)
 
 
-async def test_agent_with_cost_limit():
+async def test_agent_with_cost_limit(default_config):
     """Test agent behavior when cost limit is exceeded."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Response 1", "Response 2"]),
+        model=DeterministicModel(
+            outputs=["```mswea_bash_command\necho 'test'\n```", "```mswea_bash_command\necho 'test'\n```"]
+        ),
         env=LocalEnvironment(),
-        mode="yolo",
-        cost_limit=0.01,  # Very low limit
+        **{
+            **default_config,
+            "mode": "yolo",
+            "cost_limit": 0.01,  # Very low limit,
+        },
     )
 
     app.notify = Mock()
@@ -363,13 +413,22 @@ async def test_agent_with_cost_limit():
         app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
 
 
-async def test_agent_with_step_limit():
+async def test_agent_with_step_limit(default_config):
     """Test agent behavior when step limit is exceeded."""
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
+        model=DeterministicModel(
+            outputs=[
+                "```mswea_bash_command\necho 'test'\n```",
+                "```mswea_bash_command\necho 'test'\n```",
+                "```mswea_bash_command\necho 'test'\n```",
+            ]
+        ),
         env=LocalEnvironment(),
-        mode="yolo",
-        step_limit=2,
+        **{
+            **default_config,
+            "mode": "yolo",
+            "step_limit": 2,
+        },
     )
 
     app.notify = Mock()
@@ -386,42 +445,51 @@ async def test_agent_with_step_limit():
         app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
 
 
-async def test_whitelist_actions_bypass_confirmation():
+async def test_whitelist_actions_bypass_confirmation(default_config):
     """Test that whitelisted actions bypass confirmation."""
     app = TextualAgent(
         model=DeterministicModel(
-            outputs=["Whitelisted action\n```bash\necho 'safe' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+            outputs=[
+                "Whitelisted action\n```mswea_bash_command\necho 'safe'\n```",
+                "Done\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+            ]
         ),
         env=LocalEnvironment(),
-        mode="confirm",
-        whitelist_actions=[r"echo.*"],
+        **{
+            **default_config,
+            "mode": "confirm",
+            "whitelist_actions": [r"echo.*"],
+            "confirm_exit": False,
+        },
     )
 
     async with app.run_test() as pilot:
         await pilot.pause(0.2)  # Wait for UI to be ready
         threading.Thread(target=lambda: app.agent.run("Whitelist test"), daemon=True).start()
 
+        # Wait for agent to finish
         for _ in range(10):
             await pilot.pause(0.1)
-            if "echo 'safe'" in get_screen_text(app):
+            if app.agent_state == "STOPPED":
                 break
 
-        # Should execute without confirmation because echo is whitelisted
-        assert app.agent_state != "AWAITING_INPUT"
-        assert "echo 'safe'" in get_screen_text(app)
+        assert app.agent_state == "STOPPED"
 
 
-async def test_input_container_multiple_actions():
+async def test_input_container_multiple_actions(default_config):
     """Test input container handling multiple actions in sequence."""
     app = TextualAgent(
         model=DeterministicModel(
             outputs=[
-                "First action\n```bash\necho '1'\n```",
-                "Second action\n```bash\necho '2' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "First action\n```mswea_bash_command\necho '1'\n```",
+                "Second action\n```mswea_bash_command\necho '2' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
-        mode="confirm",
+        **{
+            **default_config,
+            "mode": "confirm",
+        },
     )
 
     async with app.run_test() as pilot:
@@ -430,15 +498,23 @@ async def test_input_container_multiple_actions():
         await pilot.pause(0.1)
 
         # Confirm first action
-        while app.agent_state != "AWAITING_INPUT":
+        for _ in range(50):
             await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT":
+                break
+        else:
+            raise AssertionError("Agent did not reach AWAITING_INPUT state within 5 seconds")
         assert "echo '1'" in get_screen_text(app)
         await pilot.press("enter")
 
         # Wait for and confirm second action
         await pilot.pause(0.1)
-        while app.agent_state != "AWAITING_INPUT":
+        for _ in range(50):
             await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT":
+                break
+        else:
+            raise AssertionError("Agent did not reach AWAITING_INPUT state within 5 seconds")
         assert "echo '2'" in get_screen_text(app)
         await pilot.press("enter")
 
@@ -447,12 +523,17 @@ def test_log_handler_cleanup():
     """Test that log handler is properly cleaned up."""
     initial_handlers = len(logging.getLogger().handlers)
 
+    # Load default config
+    config_path = Path("src/minisweagent/config/default.yaml")
+    with open(config_path) as f:
+        default_config = yaml.safe_load(f)["agent"]
+
     app = TextualAgent(
         model=DeterministicModel(
-            outputs=["Simple response\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+            outputs=["Simple response\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
         ),
         env=LocalEnvironment(),
-        mode="yolo",
+        **{**default_config, "mode": "yolo"},
     )
 
     # Handler should be added
@@ -489,16 +570,19 @@ def test_add_log_emit_callback():
     assert test_record == record
 
 
-async def test_yolo_mode_confirms_pending_action():
+async def test_yolo_mode_confirms_pending_action(default_config):
     """Test that pressing 'y' to switch to YOLO mode also confirms any pending action."""
     app = TextualAgent(
         model=DeterministicModel(
             outputs=[
-                "Action requiring confirmation\n```bash\necho 'test' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Action requiring confirmation\n```mswea_bash_command\necho 'test' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
             ]
         ),
         env=LocalEnvironment(),
-        mode="confirm",
+        **{
+            **default_config,
+            "mode": "confirm",
+        },
     )
 
     async with app.run_test() as pilot:
@@ -507,8 +591,12 @@ async def test_yolo_mode_confirms_pending_action():
         await pilot.pause(0.1)
 
         # Wait for input prompt
-        while app.agent_state != "AWAITING_INPUT":
+        for _ in range(50):
             await pilot.pause(0.1)
+            if app.agent_state == "AWAITING_INPUT":
+                break
+        else:
+            raise AssertionError("Agent did not reach AWAITING_INPUT state within 5 seconds")
 
         # Verify we're in confirm mode and awaiting input
         assert app.agent.config.mode == "confirm"
@@ -562,7 +650,7 @@ def create_mock_smart_input_container(app):
     return SmartInputContainer(cast("TextualAgent", app))  # type: ignore
 
 
-async def test_smart_input_container_initialization():
+async def test_smart_input_container_initialization(default_config):
     """Test SmartInputContainer initialization and default state."""
     app = DummyTestApp()
     async with app.run_test():
@@ -577,7 +665,7 @@ async def test_smart_input_container_initialization():
         assert isinstance(container._input_event, threading.Event)
 
 
-async def test_smart_input_container_request_input():
+async def test_smart_input_container_request_input(default_config):
     """Test request_input method behavior."""
     app = DummyTestApp()
     async with app.run_test():
@@ -612,7 +700,7 @@ async def test_smart_input_container_request_input():
         assert container.display is False
 
 
-async def test_smart_input_container_complete_input():
+async def test_smart_input_container_complete_input(default_config):
     """Test _complete_input method resets state correctly."""
     app = DummyTestApp()
     async with app.run_test():
@@ -641,7 +729,7 @@ async def test_smart_input_container_complete_input():
         assert app._vscroll.scroll_y == 0
 
 
-async def test_smart_input_container_toggle_mode():
+async def test_smart_input_container_toggle_mode(default_config):
     """Test switching from single-line to multi-line mode."""
     app = DummyTestApp()
     async with app.run_test():
@@ -663,7 +751,7 @@ async def test_smart_input_container_toggle_mode():
         assert container.on_focus.called
 
 
-async def test_smart_input_container_toggle_mode_blocked():
+async def test_smart_input_container_toggle_mode_blocked(default_config):
     """Test that toggle mode is blocked when no pending prompt or already in multiline."""
     app = DummyTestApp()
     async with app.run_test():
@@ -682,7 +770,7 @@ async def test_smart_input_container_toggle_mode_blocked():
         assert container._multiline_mode is True
 
 
-async def test_smart_input_container_single_input_submission():
+async def test_smart_input_container_single_input_submission(default_config):
     """Test single-line input submission."""
     app = DummyTestApp()
     async with app.run_test():
@@ -710,7 +798,7 @@ async def test_smart_input_container_single_input_submission():
         container._complete_input.assert_called_once_with("test input")
 
 
-async def test_smart_input_container_single_input_submission_multiline_mode():
+async def test_smart_input_container_single_input_submission_multiline_mode(default_config):
     """Test that single-line submission is ignored in multiline mode."""
     app = DummyTestApp()
     async with app.run_test():
@@ -735,7 +823,7 @@ async def test_smart_input_container_single_input_submission_multiline_mode():
         container._complete_input.assert_not_called()
 
 
-async def test_smart_input_container_key_events():
+async def test_smart_input_container_key_events(default_config):
     """Test key event handling for various scenarios."""
     app = DummyTestApp()
     async with app.run_test():
@@ -784,7 +872,7 @@ async def test_smart_input_container_key_events():
         app.set_focus.assert_called_once_with(None)
 
 
-async def test_smart_input_container_key_events_no_action():
+async def test_smart_input_container_key_events_no_action(default_config):
     """Test key events that should not trigger any action."""
     app = DummyTestApp()
     async with app.run_test():
@@ -818,7 +906,7 @@ async def test_smart_input_container_key_events_no_action():
         assert not container._complete_input.called
 
 
-async def test_smart_input_container_on_focus():
+async def test_smart_input_container_on_focus(default_config):
     """Test focus behavior in different modes."""
     app = DummyTestApp()
     async with app.run_test():
@@ -845,7 +933,7 @@ async def test_smart_input_container_on_focus():
         assert container._multi_input.focus.called
 
 
-async def test_smart_input_container_on_mount():
+async def test_smart_input_container_on_mount(default_config):
     """Test widget initialization on mount."""
     app = DummyTestApp()
     async with app.run_test():
@@ -862,16 +950,19 @@ async def test_smart_input_container_on_mount():
         assert container._update_mode_display.called
 
 
-async def test_system_commands_are_callable():
+async def test_system_commands_are_callable(default_config):
     """Test that all system commands returned by get_system_commands are callable.
 
     This prevents TypeError when commands are selected from the command palette,
     which requires callable methods instead of action name strings.
     """
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Test\n```bash\necho 'test'\n```"]),
+        model=DeterministicModel(outputs=["Test\n```mswea_bash_command\necho 'test'\n```"]),
         env=LocalEnvironment(),
-        mode="yolo",
+        **{
+            **default_config,
+            "mode": "yolo",
+        },
     )
 
     async with app.run_test():

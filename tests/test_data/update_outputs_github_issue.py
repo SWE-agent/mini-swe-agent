@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from minisweagent.models.test_models import DeterministicModel
-from minisweagent.run.github_issue import DEFAULT_CONFIG, main
+from minisweagent.run.extra.github_issue import DEFAULT_CONFIG, main
 
 
 def update_trajectory():
@@ -15,7 +15,7 @@ def update_trajectory():
 
     model_responses = [msg["content"] for msg in trajectory[2:] if msg["role"] == "assistant"]
 
-    with patch("minisweagent.run.github_issue.get_model") as mock_get_model:
+    with patch("minisweagent.run.extra.github_issue.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
         github_url = "https://github.com/SWE-agent/test-repo/issues/1"
         agent = main(issue_url=github_url, model="tardis", config=DEFAULT_CONFIG)

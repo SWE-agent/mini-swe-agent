@@ -52,9 +52,6 @@ def get_model(input_model_name: str | None = None, config: dict | None = None) -
 
     model_class = get_model_class(resolved_model_name, config.pop("model_class", ""))
 
-    if (from_env := os.getenv("MSWEA_MODEL_API_KEY")) and not str(type(model_class)).endswith("DeterministicModel"):
-        config.setdefault("model_kwargs", {})["api_key"] = from_env
-
     if (
         any(s in resolved_model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"])
         and "set_cache_control" not in config
@@ -81,6 +78,7 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
 _MODEL_CLASS_MAPPING = {
     "anthropic": "minisweagent.models.anthropic.AnthropicModel",
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
+    "litellm_toolcall": "minisweagent.models.litellm_toolcall_model.LitellmToolcallModel",
     "litellm_response": "minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel",
     "openrouter": "minisweagent.models.openrouter_model.OpenRouterModel",
     "portkey": "minisweagent.models.portkey_model.PortkeyModel",

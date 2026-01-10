@@ -3,7 +3,7 @@ from typing import Any
 
 from openai.types.responses.response_output_message import ResponseOutputMessage
 
-logger = logging.getLogger("openai_utils")
+logger = logging.getLogger("openai_response_api")
 
 
 def coerce_responses_text(resp: Any) -> str:
