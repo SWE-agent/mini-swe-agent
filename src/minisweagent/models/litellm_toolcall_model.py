@@ -57,12 +57,16 @@ class LitellmToolcallModel(LitellmModel):
             actions.append({"command": args["command"], "tool_call_id": tool_call.id})
         return actions
 
-    def format_actions_output(self, message: dict, outputs: list[dict]) -> list[dict]:
+    def format_actions_output(
+        self, message: dict, outputs: list[dict], template_vars: dict | None = None
+    ) -> list[dict]:
         """Format execution outputs into tool result messages."""
         results = []
         actions = message.get("extra", {}).get("actions", [])
         for action, output in zip(actions, outputs):
-            content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(output=output)
+            content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
+                output=output, **(template_vars or {})
+            )
             results.append(
                 {
                     "role": "tool",

@@ -133,11 +133,15 @@ class LitellmModel:
             )
         return [{"command": action} for action in actions]
 
-    def format_actions_output(self, message: dict, outputs: list[dict]) -> list[dict]:
+    def format_actions_output(
+        self, message: dict, outputs: list[dict], template_vars: dict | None = None
+    ) -> list[dict]:
         """Format execution outputs into observation messages."""
         results = []
         for output in outputs:
-            content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(output=output)
+            content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
+                output=output, **(template_vars or {})
+            )
             results.append(
                 {
                     "role": "user",
