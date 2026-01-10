@@ -99,6 +99,9 @@ class DeterministicModel:
             )
         return [{"command": action} for action in actions]
 
+    def format_message(self, **kwargs) -> dict:
+        return dict(**kwargs)
+
     def format_observation_messages(
         self, message: dict, outputs: list[dict], template_vars: dict | None = None
     ) -> list[dict]:

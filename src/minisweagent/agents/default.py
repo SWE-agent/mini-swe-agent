@@ -62,16 +62,16 @@ class DefaultAgent:
 
     def handle_uncaught_exception(self, e: Exception) -> list[dict]:
         return self.add_messages(
-            {
-                "role": "exit",
-                "content": str(e),
-                "extra": {
+            self.model.format_message(
+                role="exit",
+                content=str(e),
+                extra={
                     "exit_status": type(e).__name__,
                     "submission": str(e),
                     "exception_str": str(e),
                     "traceback": traceback.format_exc(),
                 },
-            }
+            )
         )
 
     def run(self, task: str = "", **kwargs) -> dict:
@@ -79,8 +79,8 @@ class DefaultAgent:
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
         self.add_messages(
-            {"role": "system", "content": self._render_template(self.config.system_template)},
-            {"role": "user", "content": self._render_template(self.config.instance_template)},
+            self.model.format_message(role="system", content=self._render_template(self.config.system_template)),
+            self.model.format_message(role="user", content=self._render_template(self.config.instance_template)),
         )
         while True:
             try:
@@ -117,7 +117,7 @@ class DefaultAgent:
         return message
 
     def execute_actions(self, message: dict) -> list[dict]:
-        """Execute actions in message, add observation messages, return them. Override to add hooks."""
+        """Execute actions in message, add observation messages, return them."""
         outputs = [self.env.execute(action) for action in message.get("extra", {}).get("actions", [])]
         return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))
 

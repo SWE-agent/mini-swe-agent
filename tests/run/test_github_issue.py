@@ -99,6 +99,7 @@ def test_output_file_is_created(tmp_path):
             }
         }
         mock_model.get_template_vars.return_value = {}
+        mock_model.format_message.side_effect = lambda **kwargs: dict(**kwargs)
         # query now returns dict with extra["actions"]
         mock_model.query.side_effect = [
             {
