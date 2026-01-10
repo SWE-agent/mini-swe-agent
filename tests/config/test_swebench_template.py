@@ -16,7 +16,7 @@ class MockOutput:
     exception_info: str = ""
 
 
-def test_action_observation_template_short_output():
+def test_observation_template_short_output():
     """Test that short output (< 10000 chars) is displayed in full"""
     # Load the swebench config
     config_path = Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "extra" / "swebench.yaml"
@@ -24,7 +24,7 @@ def test_action_observation_template_short_output():
         config = yaml.safe_load(f)
 
     # Extract the template (now in model section)
-    template_str = config["model"]["action_observation_template"]
+    template_str = config["model"]["observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with short content
@@ -47,7 +47,7 @@ def test_action_observation_template_short_output():
     assert "<warning>" not in result
 
 
-def test_action_observation_template_long_output():
+def test_observation_template_long_output():
     """Test that long output (> 10000 chars) is truncated with head/tail format"""
     # Load the swebench config
     config_path = Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "extra" / "swebench.yaml"
@@ -55,7 +55,7 @@ def test_action_observation_template_long_output():
         config = yaml.safe_load(f)
 
     # Extract the template (now in model section)
-    template_str = config["model"]["action_observation_template"]
+    template_str = config["model"]["observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Create mock output with long content
@@ -92,7 +92,7 @@ def test_action_observation_template_long_output():
     assert "BBBB" in tail_content  # Should contain end of output
 
 
-def test_action_observation_template_edge_case_exactly_10000_chars():
+def test_observation_template_edge_case_exactly_10000_chars():
     """Test the boundary case where output is around 10000 characters"""
     # Load the swebench config
     config_path = Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "extra" / "swebench.yaml"
@@ -100,7 +100,7 @@ def test_action_observation_template_edge_case_exactly_10000_chars():
         config = yaml.safe_load(f)
 
     # Extract the template (now in model section)
-    template_str = config["model"]["action_observation_template"]
+    template_str = config["model"]["observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Use a large amount of data that will definitely exceed 10000 chars when rendered
@@ -118,7 +118,7 @@ def test_action_observation_template_edge_case_exactly_10000_chars():
     assert "XXXX" in result
 
 
-def test_action_observation_template_just_under_10000_chars():
+def test_observation_template_just_under_10000_chars():
     """Test that smaller output shows full output without truncation"""
     # Load the swebench config
     config_path = Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "extra" / "swebench.yaml"
@@ -126,7 +126,7 @@ def test_action_observation_template_just_under_10000_chars():
         config = yaml.safe_load(f)
 
     # Extract the template (now in model section)
-    template_str = config["model"]["action_observation_template"]
+    template_str = config["model"]["observation_template"]
     template = Template(template_str, undefined=StrictUndefined)
 
     # Use a reasonably sized output that should be well under 10000 chars when rendered
@@ -154,7 +154,7 @@ def test_agent_config_requires_templates():
 
 
 def test_exception_info_template():
-    """Test that config files have action_observation_template with exception handling"""
+    """Test that config files have observation_template with exception handling"""
     from pathlib import Path
 
     import yaml
@@ -172,8 +172,8 @@ def test_exception_info_template():
         with open(config_file) as f:
             config = yaml.safe_load(f)
 
-        action_template = config.get("model", {}).get("action_observation_template")
-        assert action_template is not None, f"{config_file} missing action_observation_template in model section"
+        action_template = config.get("model", {}).get("observation_template")
+        assert action_template is not None, f"{config_file} missing observation_template in model section"
 
         # Verify it handles exception_info
         template = Template(action_template, undefined=StrictUndefined)

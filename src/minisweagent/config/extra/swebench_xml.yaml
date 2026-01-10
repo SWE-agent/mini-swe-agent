@@ -162,7 +162,7 @@ environment:
   environment_class: docker
 
 model:
-  action_observation_template: |
+  observation_template: |
     {% if output.exception_info -%}
     <exception>{{output.exception_info}}</exception>
     {% endif -%}
@@ -190,10 +190,6 @@ model:
     {{ output.output[-5000:] }}
     </output_tail>
     {%- endif -%}
-  model_name: "minimax/minimax-m2"
-  model_class: openrouter
-  model_kwargs:
-    temperature: 0.0
   action_regex: <mswea_bash_command>(.*?)</mswea_bash_command>
   format_error_template: |
     Please always provide EXACTLY ONE action in the `<mswea_bash_command>` block, found {{actions|length}} actions.
@@ -208,3 +204,7 @@ model:
 
     If you have completed your assignment, please consult the first message about how to
     submit your solution (you will not be able to continue working on this task after that).
+  model_name: "minimax/minimax-m2"
+  model_class: openrouter
+  model_kwargs:
+    temperature: 0.0

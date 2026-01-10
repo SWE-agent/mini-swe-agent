@@ -64,7 +64,7 @@ class LitellmToolcallModel(LitellmModel):
         results = []
         actions = message.get("extra", {}).get("actions", [])
         for action, output in zip(actions, outputs):
-            content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
+            content = Template(self.config.observation_template, undefined=StrictUndefined).render(
                 output=output, **(template_vars or {})
             )
             results.append(

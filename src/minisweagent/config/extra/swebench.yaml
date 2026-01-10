@@ -183,7 +183,7 @@ environment:
   environment_class: docker
 
 model:
-  action_observation_template: |
+  observation_template: |
     {% if output.exception_info -%}
     <exception>{{output.exception_info}}</exception>
     {% endif -%}
@@ -211,10 +211,6 @@ model:
     {{ output.output[-5000:] }}
     </output_tail>
     {%- endif -%}
-  model_name: "anthropic/claude-sonnet-4-5-20250929"
-  model_kwargs:
-    drop_params: true
-    temperature: 0.0
   format_error_template: |
     Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
 
@@ -230,3 +226,7 @@ model:
 
     If you have completed your assignment, please consult the first message about how to
     submit your solution (you will not be able to continue working on this task after that).
+  model_name: "anthropic/claude-sonnet-4-5-20250929"
+  model_kwargs:
+    drop_params: true
+    temperature: 0.0

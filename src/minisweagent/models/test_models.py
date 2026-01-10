@@ -39,7 +39,7 @@ class DeterministicModelConfig(BaseModel):
         "Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."
     )
     """Template used when the LM's output is not in the expected format."""
-    action_observation_template: str = (
+    observation_template: str = (
         "{% if output.exception_info %}<exception>{{output.exception_info}}</exception>\n{% endif %}"
         "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
     )
@@ -114,7 +114,7 @@ class DeterministicModel:
         """Format execution outputs into observation messages."""
         results = []
         for output in outputs:
-            content = Template(self.config.action_observation_template, undefined=StrictUndefined).render(
+            content = Template(self.config.observation_template, undefined=StrictUndefined).render(
                 output=output, **(template_vars or {})
             )
             results.append(

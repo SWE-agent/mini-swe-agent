@@ -86,7 +86,7 @@ environment:
     PIP_PROGRESS_BAR: 'off'
     TQDM_DISABLE: '1'
 model:
-  action_observation_template: |
+  observation_template: |
     {%- if output.output | length < 10000 -%}
     {
       "returncode": {{ output.returncode }},
@@ -103,8 +103,6 @@ model:
       {%- if output.exception_info %}, "exception_info": {{ output.exception_info | tojson }}{% endif %}
     }
     {%- endif -%}
-  model_kwargs:
-    drop_params: true
   format_error_template: |
     Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
     If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
@@ -121,3 +119,5 @@ model:
 
     Note: In rare cases, if you need to reference a similar format in your command, you might have
     to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```mswea_bash_command.
+  model_kwargs:
+    drop_params: true
