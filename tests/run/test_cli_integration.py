@@ -641,9 +641,6 @@ def test_exit_immediately_flag_with_typer_runner():
         # Setup mock agent instance
         mock_agent = Mock()
         mock_agent.run.return_value = {"exit_status": "Success", "result": "Result"}
-        # Mock the attributes needed for save
-        mock_agent.model.cost = 0.0
-        mock_agent.model.n_calls = 0
         mock_agent.messages = []
         mock_interactive_agent_class.return_value = mock_agent
 
@@ -676,13 +673,10 @@ def test_output_file_is_created(tmp_path):
     ):
         # Setup mocks
         mock_model = Mock()
-        mock_model.cost = 0.0
-        mock_model.n_calls = 0
         mock_model.config = Mock()
         mock_model.config.model_dump.return_value = {}
         mock_model.serialize.return_value = {
             "info": {
-                "model_stats": {"instance_cost": 0.0, "api_calls": 0},
                 "config": {"model": {}, "model_type": "MockModel"},
             }
         }

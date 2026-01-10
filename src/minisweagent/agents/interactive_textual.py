@@ -413,7 +413,7 @@ class TextualAgent(App):
         if self.agent_state == "RUNNING":
             spinner_frame = str(self._spinner.render(time.time())).strip()
             status_text = f"{self.agent_state} {spinner_frame}"
-        self.title = f"Step {self.i_step + 1}/{self.n_steps} - {status_text} - Cost: ${self.agent.model.cost:.2f}"
+        self.title = f"Step {self.i_step + 1}/{self.n_steps} - {status_text} - Cost: ${self.agent.cost:.2f}"
         try:
             self.query_one("Header").set_class(self.agent_state == "RUNNING", "running")
         except NoMatches:  # might be called when shutting down

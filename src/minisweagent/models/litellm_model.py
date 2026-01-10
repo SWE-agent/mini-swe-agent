@@ -49,8 +49,6 @@ class LitellmModelConfig(BaseModel):
 class LitellmModel:
     def __init__(self, *, config_class: Callable = LitellmModelConfig, **kwargs):
         self.config = config_class(**kwargs)
-        self.cost = 0.0
-        self.n_calls = 0
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
@@ -85,8 +83,6 @@ class LitellmModel:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
         cost_output = self._calculate_cost(response)
-        self.n_calls += 1
-        self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = response.choices[0].message.model_dump()
         message["extra"] = {
@@ -161,15 +157,11 @@ class LitellmModel:
         return results
 
     def get_template_vars(self, **kwargs) -> dict[str, Any]:
-        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump()
 
     def serialize(self) -> dict:
         return {
             "info": {
-                "model_stats": {
-                    "instance_cost": self.cost,
-                    "api_calls": self.n_calls,
-                },
                 "config": {
                     "model": self.config.model_dump(mode="json"),
                     "model_type": f"{self.__class__.__module__}.{self.__class__.__name__}",

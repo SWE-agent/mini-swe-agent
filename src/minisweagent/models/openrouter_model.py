@@ -64,8 +64,6 @@ class OpenRouterRateLimitError(Exception):
 class OpenRouterModel:
     def __init__(self, **kwargs):
         self.config = OpenRouterModelConfig(**kwargs)
-        self.cost = 0.0
-        self.n_calls = 0
         self._api_url = "https://openrouter.ai/api/v1/chat/completions"
         self._api_key = os.getenv("OPENROUTER_API_KEY", "")
 
@@ -114,8 +112,6 @@ class OpenRouterModel:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
         cost_output = self._calculate_cost(response)
-        self.n_calls += 1
-        self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = dict(response["choices"][0]["message"])
         message["extra"] = {
@@ -183,15 +179,11 @@ class OpenRouterModel:
         return results
 
     def get_template_vars(self, **kwargs) -> dict[str, Any]:
-        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump()
 
     def serialize(self) -> dict:
         return {
             "info": {
-                "model_stats": {
-                    "instance_cost": self.cost,
-                    "api_calls": self.n_calls,
-                },
                 "config": {
                     "model": self.config.model_dump(mode="json"),
                     "model_type": f"{self.__class__.__module__}.{self.__class__.__name__}",

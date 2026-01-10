@@ -33,7 +33,7 @@ def test_successful_completion(default_config):
     info = agent.run("Echo hello world then finish")
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "Task completed successfully\n"
-    assert agent.model.n_calls == 2
+    assert agent.n_calls == 2
     assert len(agent.messages) == 6  # system, user, assistant, user, assistant, user
 
 
@@ -52,7 +52,7 @@ def test_step_limit_enforcement(default_config):
 
     info = agent.run("Run multiple commands")
     assert info["exit_status"] == "LimitsExceeded"
-    assert agent.model.n_calls == 1
+    assert agent.n_calls == 1
 
 
 def test_cost_limit_enforcement(default_config):
@@ -86,7 +86,7 @@ def test_format_error_handling(default_config):
     info = agent.run("Test format errors")
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "done\n"
-    assert agent.model.n_calls == 3
+    assert agent.n_calls == 3
     # Should have error messages in conversation
     assert (
         len([msg for msg in agent.messages if "Please always provide EXACTLY ONE action" in msg.get("content", "")])
@@ -219,7 +219,7 @@ def test_multiple_steps_before_completion(default_config):
     info = agent.run("Multi-step task")
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "completed all steps\n"
-    assert agent.model.n_calls == 4
+    assert agent.n_calls == 4
 
     # Check that all intermediate outputs are captured (final step doesn't get observation due to termination)
     observations = [

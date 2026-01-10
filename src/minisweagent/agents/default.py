@@ -110,8 +110,8 @@ class DefaultAgent:
                     "extra": {"exit_status": "LimitsExceeded", "submission": ""},
                 }
             )
-        message = self.model.query(self.messages)
         self.n_calls += 1
+        message = self.model.query(self.messages)
         self.cost += message.get("extra", {}).get("cost", 0.0)
         self.add_messages(message)
         return message

@@ -195,8 +195,6 @@ def test_response_api_model_cost_tracking():
         result = model.query(messages)
 
         assert result["extra"]["cost"] == 0.05
-        assert model.cost == 0.05
-        assert model.n_calls == 1
         assert GLOBAL_MODEL_STATS.cost == initial_global_cost + 0.05
 
 

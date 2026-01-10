@@ -16,8 +16,6 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     result = model.query([{"role": "user", "content": "test"}])
     assert result["content"] == "```mswea_bash_command\necho hello\n```"
     assert result["extra"]["actions"] == [{"command": "echo hello"}]
-    assert model.n_calls == 1
-    assert model.cost == 1.0
     assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 1
     assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 1.0
 
@@ -25,8 +23,6 @@ def test_basic_functionality_and_cost_tracking(reset_global_stats):
     result = model.query([{"role": "user", "content": "test"}])
     assert result["content"] == "```mswea_bash_command\necho world\n```"
     assert result["extra"]["actions"] == [{"command": "echo world"}]
-    assert model.n_calls == 2
-    assert model.cost == 2.0
     assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
     assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 2.0
 
@@ -39,12 +35,10 @@ def test_custom_cost_and_multiple_models(reset_global_stats):
 
     result1 = model1.query([{"role": "user", "content": "test"}])
     assert result1["content"] == "```mswea_bash_command\necho r1\n```"
-    assert model1.cost == 2.5
     assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 2.5
 
     result2 = model2.query([{"role": "user", "content": "test"}])
     assert result2["content"] == "```mswea_bash_command\necho r2\n```"
-    assert model2.cost == 3.0
     assert minisweagent.models.GLOBAL_MODEL_STATS.cost == 5.5
     assert minisweagent.models.GLOBAL_MODEL_STATS.n_calls == 2
 
@@ -69,12 +63,10 @@ def test_sleep_and_warning_commands(caplog):
     result = model.query([{"role": "user", "content": "test"}])
     assert result["content"] == "```mswea_bash_command\necho after_sleep\n```"
     assert time.time() - start_time >= 0.1
-    assert model.n_calls == 1  # Sleep no longer counts as separate call
 
     # Test warning command - processes warning then returns actual output (counts as 1 call)
     model2 = DeterministicModel(outputs=["/warningTest message", "```mswea_bash_command\necho after_warning\n```"])
     with caplog.at_level(logging.WARNING):
         result2 = model2.query([{"role": "user", "content": "test"}])
         assert result2["content"] == "```mswea_bash_command\necho after_warning\n```"
-    assert model2.n_calls == 1  # Warning no longer counts as separate call
     assert "Test message" in caplog.text

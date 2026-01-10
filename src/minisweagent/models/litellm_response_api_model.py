@@ -67,8 +67,6 @@ class LitellmResponseAPIModel(LitellmModel):
         response = self._query(messages, **kwargs)
         content = coerce_responses_text(response)
         cost_output = self._calculate_cost(response)
-        self.n_calls += 1
-        self.cost += cost_output["cost"]
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         return {
             "role": "assistant",

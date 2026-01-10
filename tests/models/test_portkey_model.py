@@ -33,8 +33,6 @@ def test_portkey_model_initialization():
             model = PortkeyModel(model_name="gpt-4o")
 
             assert model.config.model_name == "gpt-4o"
-            assert model.cost == 0.0
-            assert model.n_calls == 0
 
             # Verify Portkey was called with correct parameters
             mock_portkey_class.assert_called_once_with(api_key="test-key", virtual_key="test-virtual")
@@ -75,8 +73,6 @@ def test_portkey_model_query():
                 assert result["extra"]["actions"] == [{"command": "echo 'Hello!'"}]
                 assert result["extra"]["response"] == {"test": "response"}
                 assert result["extra"]["cost"] == 0.01
-                assert model.n_calls == 1
-                assert model.cost == 0.01
 
                 # Verify the API was called correctly
                 mock_client.chat.completions.create.assert_called_once_with(model="gpt-4o", messages=messages)
@@ -98,8 +94,6 @@ def test_portkey_model_get_template_vars():
 
             assert template_vars["model_name"] == "gpt-4o"
             assert template_vars["model_kwargs"] == {"temperature": 0.7}
-            assert template_vars["n_model_calls"] == 0
-            assert template_vars["model_cost"] == 0.0
 
 
 def test_portkey_model_cost_tracking_ignore_errors():
@@ -139,8 +133,6 @@ def test_portkey_model_cost_tracking_ignore_errors():
                 assert result["content"] == "```mswea_bash_command\necho test\n```"
                 assert result["extra"]["actions"] == [{"command": "echo test"}]
                 assert result["extra"]["cost"] == 0.0
-                assert model.cost == 0.0
-                assert model.n_calls == 1
                 assert GLOBAL_MODEL_STATS.cost == initial_cost
 
 

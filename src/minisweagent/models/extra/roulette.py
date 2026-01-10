@@ -17,23 +17,17 @@ class RouletteModel:
         """This "meta"-model randomly selects one of the models at every call"""
         self.config = config_class(**kwargs)
         self.models = [get_model(config=config) for config in self.config.model_kwargs]
-
-    @property
-    def cost(self) -> float:
-        return sum(model.cost for model in self.models)
-
-    @property
-    def n_calls(self) -> int:
-        return sum(model.n_calls for model in self.models)
+        self._n_calls = 0
 
     def get_template_vars(self, **kwargs) -> dict:
-        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump()
 
     def select_model(self) -> Model:
         return random.choice(self.models)
 
     def query(self, *args, **kwargs) -> dict:
         model = self.select_model()
+        self._n_calls += 1
         response = model.query(*args, **kwargs)
         response["model_name"] = model.config.model_name
         return response
@@ -41,10 +35,6 @@ class RouletteModel:
     def serialize(self) -> dict:
         return {
             "info": {
-                "model_stats": {
-                    "instance_cost": self.cost,
-                    "api_calls": self.n_calls,
-                },
                 "config": {
                     "model": self.config.model_dump(mode="json"),
                     "model_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
@@ -68,7 +58,7 @@ class InterleavingModel(RouletteModel):
 
     def select_model(self) -> Model:
         if self.config.sequence is None:
-            i_model = self.n_calls % len(self.models)
+            i_model = self._n_calls % len(self.models)
         else:
-            i_model = self.config.sequence[self.n_calls % len(self.config.sequence)]
+            i_model = self.config.sequence[self._n_calls % len(self.config.sequence)]
         return self.models[i_model]

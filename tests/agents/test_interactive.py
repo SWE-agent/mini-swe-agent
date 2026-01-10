@@ -36,7 +36,7 @@ def test_successful_completion_with_confirmation(default_config):
         info = agent.run("Test completion with confirmation")
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "completed\n"
-        assert agent.model.n_calls == 1
+        assert agent.n_calls == 1
 
 
 def test_action_rejection_and_recovery(default_config):
@@ -63,7 +63,7 @@ def test_action_rejection_and_recovery(default_config):
         info = agent.run("Test action rejection")
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "recovered\n"
-        assert agent.model.n_calls == 2
+        assert agent.n_calls == 2
         # Should have rejection message in conversation
         rejection_messages = [msg for msg in agent.messages if "User rejected this action" in msg.get("content", "")]
         assert len(rejection_messages) == 1
@@ -237,7 +237,7 @@ def test_multiple_confirmations_and_commands(default_config):
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "complex flow completed\n"
         assert agent.config.mode == "yolo"  # Should be in yolo mode
-        assert agent.model.n_calls == 2
+        assert agent.n_calls == 2
 
 
 def test_non_whitelisted_action_requires_confirmation(default_config):
@@ -290,7 +290,7 @@ def test_human_mode_basic_functionality(default_config):
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "human mode works\n"
         assert agent.config.mode == "human"
-        assert agent.model.n_calls == 0  # LM should not be called
+        assert agent.n_calls == 0  # LM should not be called
 
 
 def test_human_mode_switch_to_yolo(default_config):
@@ -320,7 +320,7 @@ def test_human_mode_switch_to_yolo(default_config):
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "switched to yolo\n"
         assert agent.config.mode == "yolo"
-        assert agent.model.n_calls == 1
+        assert agent.n_calls == 1
 
 
 def test_human_mode_switch_to_confirm(default_config):
@@ -350,7 +350,7 @@ def test_human_mode_switch_to_confirm(default_config):
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "switched to confirm\n"
         assert agent.config.mode == "confirm"
-        assert agent.model.n_calls == 1
+        assert agent.n_calls == 1
 
 
 def test_confirmation_mode_switch_to_human_with_rejection(default_config):
@@ -695,7 +695,7 @@ def test_limits_exceeded_with_user_continuation(default_config):
 
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "completed after limit increase\n"
-    assert agent.model.n_calls == 3  # Should complete all 3 steps
+    assert agent.n_calls == 3  # Should complete all 3 steps
     assert agent.config.step_limit == 10  # Should have updated step limit
     assert agent.config.cost_limit == 5.0  # Should have updated cost limit
 
@@ -731,7 +731,7 @@ def test_limits_exceeded_multiple_times_with_continuation(default_config):
 
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "completed after multiple increases\n"
-    assert agent.model.n_calls == 5  # Should complete all 5 steps
+    assert agent.n_calls == 5  # Should complete all 5 steps
     assert agent.config.step_limit == 10  # Should have final updated step limit
 
 
@@ -760,7 +760,7 @@ def test_continue_after_completion_with_new_task(default_config):
         info = agent.run("Complete the initial task")
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "new task completed\n"
-        assert agent.model.n_calls == 2
+        assert agent.n_calls == 2
         # Should have the new task message in conversation
         new_task_messages = [
             msg for msg in agent.messages if "The user added a new task: Create a new file" in msg.get("content", "")
@@ -790,7 +790,7 @@ def test_continue_after_completion_without_new_task(default_config):
         info = agent.run("Complete the task")
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "original task completed\n"
-        assert agent.model.n_calls == 1
+        assert agent.n_calls == 1
         # Should not have any new task messages
         new_task_messages = [msg for msg in agent.messages if "The user added a new task" in msg.get("content", "")]
         assert len(new_task_messages) == 0
@@ -824,7 +824,7 @@ def test_continue_after_completion_multiple_cycles(default_config):
         info = agent.run("Initial task")
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "third completed\n"
-        assert agent.model.n_calls == 3
+        assert agent.n_calls == 3
         # Should have both new task messages
         new_task_messages = [msg for msg in agent.messages if "The user added a new task" in msg.get("content", "")]
         assert len(new_task_messages) == 2
@@ -859,7 +859,7 @@ def test_continue_after_completion_in_yolo_mode(default_config):
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "second task completed\n"
         assert agent.config.mode == "yolo"
-        assert agent.model.n_calls == 2
+        assert agent.n_calls == 2
         # Should have the new task message
         new_task_messages = [msg for msg in agent.messages if "Create a second task" in msg.get("content", "")]
         assert len(new_task_messages) == 1
@@ -887,7 +887,7 @@ def test_confirm_exit_enabled_asks_for_confirmation(default_config):
         info = agent.run("Test confirm exit enabled")
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "completed\n"
-        assert agent.model.n_calls == 1
+        assert agent.n_calls == 1
 
 
 def test_confirm_exit_disabled_exits_immediately(default_config):
@@ -912,7 +912,7 @@ def test_confirm_exit_disabled_exits_immediately(default_config):
         info = agent.run("Test confirm exit disabled")
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "completed\n"
-        assert agent.model.n_calls == 1
+        assert agent.n_calls == 1
 
 
 def test_confirm_exit_with_new_task_continues_execution(default_config):
@@ -943,7 +943,7 @@ def test_confirm_exit_with_new_task_continues_execution(default_config):
         info = agent.run("Test exit with new task")
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "additional done\n"
-        assert agent.model.n_calls == 2
+        assert agent.n_calls == 2
         # Check that the new task was added to the conversation
         new_task_messages = [msg for msg in agent.messages if "Please do one more thing" in msg.get("content", "")]
         assert len(new_task_messages) == 1

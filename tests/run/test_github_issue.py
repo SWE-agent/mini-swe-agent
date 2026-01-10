@@ -91,13 +91,10 @@ def test_output_file_is_created(tmp_path):
 
         # Setup mock model and environment with required attributes
         mock_model = Mock()
-        mock_model.cost = 0.0
-        mock_model.n_calls = 0
         mock_model.config = Mock()
         mock_model.config.model_dump.return_value = {}
         mock_model.serialize.return_value = {
             "info": {
-                "model_stats": {"instance_cost": 0.0, "api_calls": 0},
                 "config": {"model": {}, "model_type": "MockModel"},
             }
         }
@@ -184,6 +181,4 @@ def test_github_issue_end_to_end(github_test_data):
 
     assert_observations_match(expected_observations, messages)
 
-    assert agent.model.n_calls == len(model_responses), (
-        f"Expected {len(model_responses)} steps, got {agent.model.n_calls}"
-    )
+    assert agent.n_calls == len(model_responses), f"Expected {len(model_responses)} steps, got {agent.n_calls}"

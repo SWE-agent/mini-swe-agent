@@ -105,8 +105,6 @@ def test_litellm_model_cost_tracking_ignore_errors():
 
             assert result["content"] == "```mswea_bash_command\necho test\n```"
             assert result["extra"]["actions"] == [{"command": "echo test"}]
-            assert model.cost == 0.0
-            assert model.n_calls == 1
             assert GLOBAL_MODEL_STATS.cost == initial_cost
 
 

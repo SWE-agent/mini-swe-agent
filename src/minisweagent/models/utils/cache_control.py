@@ -1,3 +1,7 @@
+"""Cache control utilities are mostly for Anthropic models.
+They are used to explicitly set cache control points.
+"""
+
 import copy
 import warnings
 from typing import Literal

@@ -85,8 +85,6 @@ def test_openrouter_model_successful_query(mock_response):
             assert result["extra"]["response"] == mock_response
 
             # Verify cost tracking
-            assert model.cost == 0.000243
-            assert model.n_calls == 1
             assert GLOBAL_MODEL_STATS.cost == initial_cost + 0.000243
 
 
@@ -156,8 +154,6 @@ def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
             assert result["extra"]["response"] == mock_response_no_cost
 
             # Verify cost tracking with zero cost (not added to global stats when zero)
-            assert model.cost == 0.0
-            assert model.n_calls == 1
             # Cost should not be added to global stats since it's zero
             assert GLOBAL_MODEL_STATS.cost == initial_cost
 
@@ -172,8 +168,6 @@ def test_openrouter_model_config():
         assert model.config.model_name == "anthropic/claude-3.5-sonnet"
         assert model.config.model_kwargs == {"temperature": 0.5, "max_tokens": 1000}
         assert model._api_key == "test-key"
-        assert model.cost == 0.0
-        assert model.n_calls == 0
 
 
 def test_openrouter_model_get_template_vars():
@@ -181,16 +175,10 @@ def test_openrouter_model_get_template_vars():
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
         model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet", model_kwargs={"temperature": 0.7})
 
-        # Simulate some usage
-        model.cost = 0.001234
-        model.n_calls = 5
-
         template_vars = model.get_template_vars()
 
         assert template_vars["model_name"] == "anthropic/claude-3.5-sonnet"
         assert template_vars["model_kwargs"] == {"temperature": 0.7}
-        assert template_vars["n_model_calls"] == 5
-        assert template_vars["model_cost"] == 0.001234
 
 
 def test_openrouter_model_no_api_key():

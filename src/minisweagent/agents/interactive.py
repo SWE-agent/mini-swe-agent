@@ -44,7 +44,7 @@ class InteractiveAgent(DefaultAgent):
             role, content = msg.get("role", "unknown"), msg.get("content", "")
             if role == "assistant":
                 console.print(
-                    f"\n[red][bold]mini-swe-agent[/bold] (step [bold]{self.model.n_calls}[/bold], [bold]${self.model.cost:.2f}[/bold]):[/red]\n",
+                    f"\n[red][bold]mini-swe-agent[/bold] (step [bold]{self.n_calls}[/bold], [bold]${self.cost:.2f}[/bold]):[/red]\n",
                     end="",
                     highlight=False,
                 )
@@ -73,7 +73,7 @@ class InteractiveAgent(DefaultAgent):
         except LimitsExceeded:
             console.print(
                 f"Limits exceeded. Limits: {self.config.step_limit} steps, ${self.config.cost_limit}.\n"
-                f"Current spend: {self.model.n_calls} steps, ${self.model.cost:.2f}."
+                f"Current spend: {self.n_calls} steps, ${self.cost:.2f}."
             )
             self.config.step_limit = int(input("New step limit: "))
             self.config.cost_limit = float(input("New cost limit: "))
