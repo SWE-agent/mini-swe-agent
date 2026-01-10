@@ -16,7 +16,7 @@ from tenacity import (
 from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
-from minisweagent.models.utils.openai_utils import coerce_responses_text
+from minisweagent.models.utils.openai_response_api import coerce_responses_text
 
 logger = logging.getLogger("litellm_response_api_model")
 

@@ -17,7 +17,7 @@ from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
 from minisweagent.models.utils.cache_control import set_cache_control
-from minisweagent.models.utils.openai_utils import coerce_responses_text
+from minisweagent.models.utils.openai_response_api import coerce_responses_text
 
 logger = logging.getLogger("portkey_response_api_model")
 

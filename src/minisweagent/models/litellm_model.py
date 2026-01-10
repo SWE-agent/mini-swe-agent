@@ -81,7 +81,7 @@ class LitellmModel:
             raise e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
-        if self.config.set_cache_control:
+        if self.config.set_cache_control:  # anthropic only
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
         response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
         cost_output = self._calculate_cost(response)
