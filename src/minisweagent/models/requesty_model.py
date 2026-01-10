@@ -146,7 +146,7 @@ class RequestyModel:
             )
         return [{"command": action} for action in actions]
 
-    def format_actions_output(
+    def format_observation_messages(
         self, message: dict, outputs: list[dict], template_vars: dict | None = None
     ) -> list[dict]:
         """Format execution outputs into observation messages."""

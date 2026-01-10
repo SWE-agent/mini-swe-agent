@@ -689,8 +689,8 @@ def test_output_file_is_created(tmp_path):
                 "extra": {"actions": [{"command": "echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}]},
             },
         ]
-        # format_actions_output returns observation messages
-        mock_model.format_actions_output.return_value = []
+        # format_observation_messages returns observation messages
+        mock_model.format_observation_messages.return_value = []
         mock_get_model.return_value = mock_model
 
         # Environment execute raises Submitted when COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT is seen

@@ -119,7 +119,7 @@ class DefaultAgent:
     def execute_actions(self, message: dict) -> list[dict]:
         """Execute actions in message, add observation messages, return them. Override to add hooks."""
         outputs = [self.env.execute(action) for action in message.get("extra", {}).get("actions", [])]
-        return self.add_messages(*self.model.format_actions_output(message, outputs, self.get_template_vars()))
+        return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))
 
     def serialize(self, *extra_dicts) -> dict:
         """Serialize agent state to a json-compatible nested dictionary for saving."""
@@ -137,7 +137,7 @@ class DefaultAgent:
                 },
                 "mini_version": __version__,
                 "exit_status": last_extra.get("exit_status", ""),
-                "submission": last_extra.get("submission", ""),
+                "earubmission": last_extra.get("submission", ""),
             },
             "messages": self.messages,
             "trajectory_format": "mini-swe-agent-1.1",
