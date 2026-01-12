@@ -25,6 +25,29 @@ jobs:
       with:
         python-version: '3.13'
 
+    - name: Check version matches release tag
+      if: github.event_name == 'release'
+      run: |
+        # Extract version from src/minisweagent/__init__.py
+        PACKAGE_VERSION=$(python -c "import sys; sys.path.insert(0, 'src'); from minisweagent import __version__; print(__version__)")
+
+        # Extract tag name (remove 'v' prefix if present)
+        TAG_NAME="${{ github.event.release.tag_name }}"
+        TAG_VERSION="${TAG_NAME#v}"
+
+        echo "Package version: $PACKAGE_VERSION"
+        echo "Release tag: $TAG_NAME"
+        echo "Tag version (normalized): $TAG_VERSION"
+
+        if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+          echo "❌ ERROR: Version mismatch!"
+          echo "Package version ($PACKAGE_VERSION) does not match release tag ($TAG_VERSION)"
+          echo "Please update __version__ in src/minisweagent/__init__.py to match the release tag"
+          exit 1
+        fi
+
+        echo "✅ Version check passed: $PACKAGE_VERSION matches $TAG_VERSION"
+
     - name: Install uv
       run: |
         curl -LsSf https://astral.sh/uv/install.sh | sh
