@@ -20,7 +20,7 @@ from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models import get_model
 from minisweagent.run.extra.config import configure_if_first_time
-from minisweagent.utils.serialize import recursive_merge
+from minisweagent.utils.serialize import UNSET, recursive_merge
 
 DEFAULT_CONFIG_FILE = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
 DEFAULT_OUTPUT_FILE = global_config_dir / "last_mini_run.traj.json"
@@ -78,14 +78,14 @@ def prompt_for_task() -> str:
 @app.command(help=_HELP_TEXT)
 def main(
     visual: bool = typer.Option(False, "-v", "--visual", help="Toggle (pager-style) UI (Textual) depending on the MSWEA_VISUAL_MODE_DEFAULT environment setting",),
-    model_name: str | None = typer.Option( None, "-m", "--model", help="Model to use",),
+    model_name: str | None = typer.Option(None, "-m", "--model", help="Model to use",),
     model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
     config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT),
     output: Path | None = typer.Option(DEFAULT_OUTPUT_FILE, "-o", "--output", help="Output trajectory file"),
-    exit_immediately: bool = typer.Option( False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting.", rich_help_panel="Advanced"),
+    exit_immediately: bool = typer.Option(False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting.", rich_help_panel="Advanced"),
 ) -> Any:
     # fmt: on
     configure_if_first_time()
@@ -93,18 +93,18 @@ def main(
     # Build the config from the command line arguments
     console.print(f"Building agent config from specs: [bold green]{config_spec}[/bold green]")
     configs = [get_config_from_spec(spec) for spec in config_spec]
-    if yolo:
-        configs.append({"agent": {"mode": "yolo"}})
-    if cost_limit is not None:
-        configs.append({"agent": {"cost_limit": cost_limit}})
-    if exit_immediately:
-        configs.append({"agent": {"confirm_exit": False}})
-    if model_class is not None:
-        configs.append({"model": {"model_class": model_class}})
-    if output is not None:
-        configs.append({"agent": {"output_path": output}})
-    if model_name is not None:
-        configs.append({"model": {"model_name": model_name}})
+    configs.append({
+        "agent": {
+            "mode": "yolo" if yolo else UNSET,
+            "cost_limit": cost_limit or UNSET,
+            "confirm_exit": False if exit_immediately else UNSET,
+            "output_path": output or UNSET,
+        },
+        "model": {
+            "model_class": model_class or UNSET,
+            "model_name": model_name or UNSET,
+        },
+    })
     config = recursive_merge(*configs)
 
     if not task:

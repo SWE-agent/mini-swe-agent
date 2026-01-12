@@ -24,7 +24,7 @@ from minisweagent.environments import get_environment
 from minisweagent.models import get_model
 from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
 from minisweagent.utils.log import add_file_handler, logger
-from minisweagent.utils.serialize import recursive_merge
+from minisweagent.utils.serialize import UNSET, recursive_merge
 
 _HELP_TEXT = """Run mini-SWE-agent on SWEBench instances.
 
@@ -224,7 +224,7 @@ def main(
     model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
     config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT, rich_help_panel="Basic"),
-    environment_class: str | None = typer.Option( None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
+    environment_class: str | None = typer.Option(None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
 ) -> None:
     # fmt: on
     output_path = Path(output)
@@ -245,12 +245,10 @@ def main(
 
     logger.info(f"Building agent config from specs: {config_spec}")
     configs = [get_config_from_spec(spec) for spec in config_spec]
-    if environment_class is not None:
-        configs.append({"environment": {"environment_class": environment_class}})
-    if model is not None:
-        configs.append({"model": {"model_name": model}})
-    if model_class is not None:
-        configs.append({"model": {"model_class": model_class}})
+    configs.append({
+        "environment": {"environment_class": environment_class or UNSET},
+        "model": {"model_name": model or UNSET, "model_class": model_class or UNSET},
+    })
     config = recursive_merge(*configs)
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
