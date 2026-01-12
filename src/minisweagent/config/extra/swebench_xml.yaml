@@ -126,7 +126,7 @@ agent:
 
     Example:
 
-    <mswea_bash_command>git add <file1> <file2> ... && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</mswea_bash_command>
+    <mswea_bash_command>echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add <file1> <file2> ... && git diff --cached</mswea_bash_command>
 
     <important>
     You must only add the specific source files you modified to fix the issue.
@@ -142,7 +142,7 @@ agent:
 
     For example, if you modified `src/module.py` and `src/utils.py`:
 
-    <mswea_bash_command>git add src/module.py src/utils.py && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</mswea_bash_command>
+    <mswea_bash_command>echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add src/module.py src/utils.py && git diff --cached</mswea_bash_command>
 
     This command will submit your work.
     You cannot continue working (reading, editing, testing) in any way on this task after submitting.

@@ -642,8 +642,8 @@ def test_output_file_is_created(tmp_path):
         mock_model.query.side_effect = [
             {
                 "role": "assistant",
-                "content": "```mswea_bash_command\necho done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
-                "extra": {"actions": [{"command": "echo done\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}]},
+                "content": "```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\necho done\n```",
+                "extra": {"actions": [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\necho done"}]},
             },
         ]
         # format_observation_messages returns observation messages

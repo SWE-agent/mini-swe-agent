@@ -134,10 +134,10 @@ class DockerEnvironment:
         return output
 
     def _check_finished(self, output: dict):
-        """Raises Submitted exception if the output indicates task completion."""
-        lines = output.get("output", "").rstrip().splitlines(keepends=True)
-        if lines and lines[-1].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT":
-            submission = "".join(lines[:-1])
+        """Raises Submitted if the output indicates task completion."""
+        lines = output.get("output", "").lstrip().splitlines(keepends=True)
+        if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" and output["returncode"] == 0:
+            submission = "".join(lines[1:])
             raise Submitted(
                 {
                     "role": "exit",

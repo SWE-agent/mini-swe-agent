@@ -53,7 +53,7 @@ agent:
     Example:
 
     ```bash
-    git add <file1> <file2> ... && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT
+    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add <file1> <file2> ... && git diff --cached
     ```
 
     <important>
@@ -71,7 +71,7 @@ agent:
     For example, if you modified `src/module.py` and `src/utils.py`:
 
     ```bash
-    git add src/module.py src/utils.py && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT
+    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add src/module.py src/utils.py && git diff --cached
     ```
 
     This command will submit your work.

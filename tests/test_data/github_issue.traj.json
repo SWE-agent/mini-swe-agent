@@ -81,7 +81,7 @@
   },
   {
     "role": "assistant",
-    "content": "Now let's verify that the updated file works correctly both for valid division and for the division by zero case:\n\n```mswea_bash_command\ngit add -A && git diff --cached && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```"
+    "content": "Now let's verify that the updated file works correctly both for valid division and for the division by zero case:\n\n```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached\n```"
   },
   {
     "role": "user",
