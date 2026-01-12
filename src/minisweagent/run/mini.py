@@ -84,7 +84,7 @@ def main(
     if model_class is not None:
         config.setdefault("model", {})["model_class"] = model_class
     model = get_model(model_name, config.get("model", {}))
-    env = LocalEnvironment(**config.get("env", {}))
+    env = LocalEnvironment(**config.get("environment", {}))
 
     # Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it's essentially a XOR
     agent_class = InteractiveAgent
