@@ -122,13 +122,12 @@ class DockerEnvironment:
                 stderr=subprocess.STDOUT,
             )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
-        except subprocess.TimeoutExpired as e:
-            timeout_val = timeout or self.config.timeout
+        except Exception as e:
             output = {
-                "output": e.output.decode("utf-8", errors="replace") if e.output else "",
+                "output": getattr(e, "output", b"").decode("utf-8", errors="replace"),
                 "returncode": -1,
-                "exception_info": f"Command timed out after {timeout_val}s",
-                "extra": {"exception_type": "timeout", "timeout": timeout_val},
+                "exception_info": f"An error occurred while executing the command: {e}",
+                "extra": {"exception_type": type(e).__name__, "exception": str(e)},
             }
         self._check_finished(output)
         return output
