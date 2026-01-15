@@ -119,26 +119,33 @@ agent:
 
     ## Submission
 
-    When you've completed your work, submit your changes as a git patch.
-    Follow these steps IN ORDER, using SEPARATE commands:
+    When you've completed your work (reading, editing, testing), and cannot make further progress
+    you must submit your changes, that is you must submit a git patch that others can apply.
 
-    ### Step 1: Create the patch file
-    Save a git diff of your changes to `patch.txt`. Only include source files you modified.
+    To submit output you run a command that prints your desired output followed by an echo sequence that indicates that you are done.
 
-    ### Step 2: Verify your patch
-    In a SEPARATE command, view `patch.txt` and confirm it contains the correct changes.
+    Example:
 
-    ### Step 3: Submit
-    **Only after verifying in your previous command**, use this EXACT command:
+    <mswea_bash_command>echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add <file1> <file2> ... && git diff --cached</mswea_bash_command>
 
-    <mswea_bash_command>cat patch.txt && echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</mswea_bash_command>
+    <important>
+    You must only add the specific source files you modified to fix the issue.
+    Do not submit changes to any of the following files:
 
-    <CRITICAL>
-    - Create and verify MUST be SEPARATE commands (not combined with &&)
-    - If you modify patch.txt after verifying, you MUST verify again before submitting
-    - Your command immediately before submit MUST be viewing/verifying patch.txt
-    - You CANNOT continue working (reading, editing, testing) in any way on this task after submitting
-    </CRITICAL>
+    - test files
+    - helper scripts or tools that you created
+    - installation, build, packaging, configuration, or setup scripts unless they are directly part of the issue you were fixing (assume that the environment is already set up)
+    - binary or compiled files
+
+    Do NOT use `git add -A` or `git add .` as this will include unrelated files like compiled code, cache files, or other artifacts.
+    </important>
+
+    For example, if you modified `src/module.py` and `src/utils.py`:
+
+    <mswea_bash_command>echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add src/module.py src/utils.py && git diff --cached</mswea_bash_command>
+
+    This command will submit your work.
+    You cannot continue working (reading, editing, testing) in any way on this task after submitting.
     </instructions>
   step_limit: 250
   cost_limit: 3.

@@ -23,7 +23,7 @@ def test_successful_completion(default_config):
         model=DeterministicModel(
             outputs=[
                 "I'll echo a message\n```mswea_bash_command\necho 'hello world'\n```",
-                "Now finishing\n```mswea_bash_command\necho 'Task completed successfully'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Now finishing\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'Task completed successfully'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -76,7 +76,7 @@ def test_format_error_handling(default_config):
             outputs=[
                 "No code blocks here",
                 "Multiple blocks\n```mswea_bash_command\necho 'first'\n```\n```mswea_bash_command\necho 'second'\n```",
-                "Now correct\n```mswea_bash_command\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Now correct\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -100,7 +100,7 @@ def test_timeout_handling(default_config):
         model=DeterministicModel(
             outputs=[
                 "Long sleep\n```mswea_bash_command\nsleep 5\n```",  # This will timeout
-                "Quick finish\n```mswea_bash_command\necho 'recovered'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Quick finish\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered'\n```",
             ]
         ),
         env=LocalEnvironment(timeout=1),  # Very short timeout
@@ -123,7 +123,7 @@ def test_timeout_captures_partial_output(default_config):
         model=DeterministicModel(
             outputs=[
                 f"Output then sleep\n```mswea_bash_command\n{calculation_command}\n```",
-                "Quick finish\n```mswea_bash_command\necho 'recovered'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Quick finish\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered'\n```",
             ]
         ),
         env=LocalEnvironment(timeout=1),
@@ -185,7 +185,7 @@ def test_message_history_tracking(default_config):
         model=DeterministicModel(
             outputs=[
                 "Response 1\n```mswea_bash_command\necho 'test1'\n```",
-                "Response 2\n```mswea_bash_command\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Response 2\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -209,7 +209,7 @@ def test_multiple_steps_before_completion(default_config):
                 "Step 1\n```mswea_bash_command\necho 'first'\n```",
                 "Step 2\n```mswea_bash_command\necho 'second'\n```",
                 "Step 3\n```mswea_bash_command\necho 'third'\n```",
-                "Final step\n```mswea_bash_command\necho 'completed all steps'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Final step\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed all steps'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -236,7 +236,7 @@ def test_custom_config(default_config):
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=[
-                "Test response\n```mswea_bash_command\necho 'custom config works'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"
+                "Test response\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'custom config works'\n```"
             ]
         ),
         env=LocalEnvironment(),
@@ -282,7 +282,7 @@ def test_messages_include_timestamps(default_config):
         model=DeterministicModel(
             outputs=[
                 "Response 1\n```mswea_bash_command\necho 'test1'\n```",
-                "Response 2\n```mswea_bash_command\necho 'done'\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Response 2\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'\n```",
             ]
         ),
         env=LocalEnvironment(),

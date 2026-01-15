@@ -482,7 +482,7 @@ async def test_input_container_multiple_actions(default_config):
         model=DeterministicModel(
             outputs=[
                 "First action\n```mswea_bash_command\necho '1'\n```",
-                "Second action\n```mswea_bash_command\necho '2' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Second action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && echo '2'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -575,7 +575,7 @@ async def test_yolo_mode_confirms_pending_action(default_config):
     app = TextualAgent(
         model=DeterministicModel(
             outputs=[
-                "Action requiring confirmation\n```mswea_bash_command\necho 'test' && echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                "Action requiring confirmation\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && echo 'test'\n```",
             ]
         ),
         env=LocalEnvironment(),
@@ -681,8 +681,13 @@ async def test_smart_input_container_request_input(default_config):
         thread = threading.Thread(target=request_thread)
         thread.start()
 
-        # Give thread time to start and set up
-        await asyncio.sleep(0.1)
+        # Wait for thread to set up (with retries to handle race condition)
+        for _ in range(50):  # 5 second timeout
+            await asyncio.sleep(0.1)
+            if container.pending_prompt == test_prompt and app.call_from_thread.called:
+                break
+        else:
+            raise AssertionError("Thread did not set up within 5 seconds")
 
         # Check that prompt was set
         assert container.pending_prompt == test_prompt

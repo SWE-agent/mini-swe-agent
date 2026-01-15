@@ -127,7 +127,7 @@ def test_local_environment_timeout():
     result = env.execute({"command": "sleep 2"})
     assert result["returncode"] == -1
     assert "timed out" in result["exception_info"]
-    assert result["extra"]["exception_type"] == "timeout"
+    assert result["extra"]["exception_type"] == "TimeoutExpired"
 
 
 def test_local_environment_custom_timeout():

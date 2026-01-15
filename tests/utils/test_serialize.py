@@ -1,4 +1,4 @@
-from minisweagent.utils.serialize import recursive_merge
+from minisweagent.utils.serialize import UNSET, recursive_merge
 
 
 def test_empty_input():
@@ -126,3 +126,13 @@ def test_none_dictionaries_skipped():
     assert recursive_merge(None) == {}
     assert recursive_merge({"a": 1}, None, {"b": 2}) == {"a": 1, "b": 2}
     assert recursive_merge(None, {"a": 1}, None, {"b": 2}, None) == {"a": 1, "b": 2}
+
+
+def test_unset_values_skipped():
+    """Test that UNSET values are skipped during merge."""
+    assert recursive_merge({"a": 1, "b": UNSET}) == {"a": 1}
+    assert recursive_merge({"a": 1}, {"a": UNSET, "b": 2}) == {"a": 1, "b": 2}
+    assert recursive_merge(
+        {"a": {"x": 1, "y": 2}},
+        {"a": {"y": UNSET, "z": 3}, "b": UNSET, "c": 4},
+    ) == {"a": {"x": 1, "y": 2, "z": 3}, "c": 4}
