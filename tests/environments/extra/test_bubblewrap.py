@@ -1,5 +1,4 @@
 import shutil
-import subprocess
 import tempfile
 from pathlib import Path
 
@@ -118,12 +117,14 @@ def test_bubblewrap_environment_stderr_capture():
 
 @pytest.mark.skipif(not shutil.which("bwrap"), reason="bubblewrap not available")
 def test_bubblewrap_environment_timeout():
-    """Test timeout functionality."""
+    """Test timeout functionality returns structured output instead of raising."""
     env = BubblewrapEnvironment(timeout=1)
 
     try:
-        with pytest.raises(subprocess.TimeoutExpired):
-            env.execute({"command": "sleep 2"})
+        result = env.execute({"command": "sleep 2"})
+        assert result["returncode"] == -1
+        assert "timed out" in result["exception_info"]
+        assert result["extra"]["exception_type"] == "TimeoutExpired"
     finally:
         env.cleanup()
 
