@@ -1,6 +1,18 @@
 agent:
   system_template: |
-    You are a helpful assistant that can interact with a computer shell to solve programming tasks.
+    You are a helpful assistant that can interact multiple times with a computer shell to solve programming tasks.
+    You have access to a bash tool that executes commands. Use this tool to run exactly ONE command at a time.
+
+    Before each tool call, explain your reasoning process in your response text.
+    Then make a single bash tool call with your command.
+
+    <workflow_example>
+    I need to understand the structure of the repository first. Let me check what files are in the current directory.
+
+    [Call bash tool with: {"command": "ls -la"}]
+    </workflow_example>
+
+    Failure to use the bash tool correctly will cause your response to be rejected.
   instance_template: |
     <pr_description>
     Consider the following PR description:
@@ -16,6 +28,13 @@ agent:
     You'll be helping implement necessary changes to meet requirements in the PR description.
     Your task is specifically to make changes to non-test files in the current directory in order to fix the issue described in the PR description in a way that is general and consistent with the codebase.
 
+    <important>This is an interactive process where you will think and issue ONE command via tool call, see its result, then think and issue your next command.</important>
+
+    For each response:
+
+    1. Explain your reasoning and what you're trying to accomplish in your response text
+    2. Make exactly ONE bash tool call to execute your command
+
     ## Important Boundaries
 
     - MODIFY: Regular source code files in /testbed (this is the working directory for all your subsequent commands)
@@ -29,10 +48,56 @@ agent:
     4. Verify your fix works by running your script again
     5. Test edge cases to ensure your fix is robust
 
-    ## Important Rules
+    ## Tool Call Execution Rules
 
-    1. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
-       However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
+    You are operating in an environment where:
+
+    1. You explain your reasoning in the response text
+    2. You make a single bash tool call with your command
+    3. The system executes that command in a subshell
+    4. You see the result
+    5. You explain your next step and make another tool call
+
+    Each response should include:
+
+    1. **Reasoning text** where you explain your analysis and plan
+    2. A single bash tool call with your command
+
+    **CRITICAL REQUIREMENTS:**
+
+    - Your response SHOULD include reasoning text explaining what you're doing
+    - Your response MUST include EXACTLY ONE bash tool call
+    - The bash tool call MUST contain EXACTLY ONE command (or commands connected with && or ||)
+    - If you include zero or multiple tool calls, YOUR RESPONSE WILL FAIL
+    - Do NOT try to run multiple independent commands in separate tool calls in one response
+    - Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
+    - However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
+
+    Example of a CORRECT response:
+    <example_response>
+    I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
+
+    [Makes bash tool call with command: "ls -la"]
+    </example_response>
+
+    Example of an INCORRECT response:
+
+    <example_response>
+    I need to examine the codebase and then look at a specific file. I'll run multiple commands to do this.
+
+    [Makes bash tool call with command: "ls -la"]
+
+    Now I'll read the file:
+
+    [Makes bash tool call with command: "cat file.txt"]
+    </example_response>
+
+    If you need to run multiple commands, either:
+
+    1. Combine them in one tool call using && or ||:
+       bash tool call with command: "command1 && command2 || echo 'Error occurred'"
+
+    2. Wait for the first command to complete, see its output, then issue the next command in your following response.
 
     ## Environment Details
 
@@ -111,9 +176,13 @@ model:
     }
     {%- endif -%}
   format_error_template: |
-    Tool call error. Please use the 'bash' tool to execute commands.
+    Tool call error. Please make EXACTLY ONE bash tool call per response.
 
-    Call the bash tool with your command as the argument:
+    Each response should:
+    1. Include reasoning text explaining your approach
+    2. Make exactly ONE bash tool call
+
+    Call the bash tool with your command:
     - Tool: bash
     - Arguments: {"command": "your_command_here"}
 
