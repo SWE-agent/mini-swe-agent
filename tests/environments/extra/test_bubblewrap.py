@@ -14,7 +14,7 @@ def test_bubblewrap_environment_basic_execution():
     env = BubblewrapEnvironment()
 
     try:
-        result = env.execute("echo 'hello world'")
+        result = env.execute({"command": "echo 'hello world'"})
         print(f"test_bubblewrap_environment_basic_execution result: {result}")
         assert result["returncode"] == 0
         assert "hello world" in result["output"]
@@ -29,13 +29,13 @@ def test_bubblewrap_environment_set_env_variables():
 
     try:
         # Test single environment variable
-        result = env.execute("echo $TEST_VAR")
+        result = env.execute({"command": "echo $TEST_VAR"})
         print(f"test_bubblewrap_environment_set_env_variables result (single var): {result}")
         assert result["returncode"] == 0
         assert "test_value" in result["output"]
 
         # Test multiple environment variables
-        result = env.execute("echo $TEST_VAR $ANOTHER_VAR")
+        result = env.execute({"command": "echo $TEST_VAR $ANOTHER_VAR"})
         print(f"test_bubblewrap_environment_set_env_variables result (multiple vars): {result}")
         assert result["returncode"] == 0
         assert "test_value another_value" in result["output"]
@@ -50,7 +50,7 @@ def test_bubblewrap_environment_custom_cwd():
         env = BubblewrapEnvironment(cwd=temp_dir)
 
         try:
-            result = env.execute("pwd")
+            result = env.execute({"command": "pwd"})
             print(f"test_bubblewrap_environment_custom_cwd result: {result}")
             assert result["returncode"] == 0
             assert temp_dir in result["output"]
@@ -66,7 +66,7 @@ def test_bubblewrap_environment_cwd_parameter_override():
 
         try:
             # Execute with different cwd parameter
-            result = env.execute("pwd", cwd=temp_dir2)
+            result = env.execute({"command": "pwd"}, cwd=temp_dir2)
             print(f"test_bubblewrap_environment_cwd_parameter_override result: {result}")
             assert result["returncode"] == 0
             assert temp_dir2 in result["output"]
@@ -80,7 +80,7 @@ def test_bubblewrap_environment_command_failure():
     env = BubblewrapEnvironment()
 
     try:
-        result = env.execute("exit 1")
+        result = env.execute({"command": "exit 1"})
         print(f"test_bubblewrap_environment_command_failure result: {result}")
         assert result["returncode"] == 1
         assert result["output"] == ""
@@ -94,7 +94,7 @@ def test_bubblewrap_environment_nonexistent_command():
     env = BubblewrapEnvironment()
 
     try:
-        result = env.execute("nonexistent_command_12345")
+        result = env.execute({"command": "nonexistent_command_12345"})
         print(f"test_bubblewrap_environment_nonexistent_command result: {result}")
         assert result["returncode"] != 0
         assert "nonexistent_command_12345" in result["output"] or "command not found" in result["output"]
@@ -108,7 +108,7 @@ def test_bubblewrap_environment_stderr_capture():
     env = BubblewrapEnvironment()
 
     try:
-        result = env.execute("echo 'error message' >&2")
+        result = env.execute({"command": "echo 'error message' >&2"})
         print(f"test_bubblewrap_environment_stderr_capture result: {result}")
         assert result["returncode"] == 0
         assert "error message" in result["output"]
@@ -123,7 +123,7 @@ def test_bubblewrap_environment_timeout():
 
     try:
         with pytest.raises(subprocess.TimeoutExpired):
-            env.execute("sleep 2")
+            env.execute({"command": "sleep 2"})
     finally:
         env.cleanup()
 
@@ -142,7 +142,7 @@ def test_bubblewrap_environment_return_codes(command, expected_returncode):
     env = BubblewrapEnvironment()
 
     try:
-        result = env.execute(command)
+        result = env.execute({"command": command})
         print(f"test_bubblewrap_environment_return_codes result (cmd: {command}): {result}")
         assert result["returncode"] == expected_returncode
     finally:
@@ -155,7 +155,7 @@ def test_bubblewrap_environment_multiline_output():
     env = BubblewrapEnvironment()
 
     try:
-        result = env.execute("echo -e 'line1\\nline2\\nline3'")
+        result = env.execute({"command": "echo -e 'line1\\nline2\\nline3'"})
         print(f"test_bubblewrap_environment_multiline_output result: {result}")
         assert result["returncode"] == 0
         output_lines = result["output"].strip().split("\n")
@@ -176,12 +176,12 @@ def test_bubblewrap_environment_file_operations():
 
         try:
             # Create a file
-            result = env.execute("echo 'test content' > test.txt")
+            result = env.execute({"command": "echo 'test content' > test.txt"})
             print(f"test_bubblewrap_environment_file_operations result (create file): {result}")
             assert result["returncode"] == 0
 
             # Read the file
-            result = env.execute("cat test.txt")
+            result = env.execute({"command": "cat test.txt"})
             print(f"test_bubblewrap_environment_file_operations result (read file): {result}")
             assert result["returncode"] == 0
             assert "test content" in result["output"]
