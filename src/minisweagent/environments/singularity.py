@@ -104,8 +104,12 @@ class SingularityEnvironment:
             )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
         except Exception as e:
+            raw_output = getattr(e, "output", None)
+            raw_output = (
+                raw_output.decode("utf-8", errors="replace") if isinstance(raw_output, bytes) else (raw_output or "")
+            )
             output = {
-                "output": getattr(e, "output", b"").decode("utf-8", errors="replace"),
+                "output": raw_output,
                 "returncode": -1,
                 "exception_info": f"An error occurred while executing the command: {e}",
                 "extra": {"exception_type": type(e).__name__, "exception": str(e)},
