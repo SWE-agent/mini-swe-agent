@@ -135,38 +135,41 @@ agent:
     - If a tool isn't available, you can also install it
 
     ## Submission
-
-    When you've completed your work (reading, editing, testing), and cannot make further progress
-    you must submit your changes, that is you must submit a git patch that others can apply.
-
-    To submit output you run a command that prints your desired output followed by an echo sequence that indicates that you are done.
-
-    Example:
+    
+    When you've completed your work, you MUST submit your changes as a git patch.
+    Follow these steps IN ORDER, with SEPARATE commands:
+    
+    Step 1: Create the patch file
+    Save a git diff of your changes to patch.txt.
+    
+    <IMPORTANT>
+    The patch must only contain changes to the specific source files you modified to fix the issue.
+    Do not submit changes to any of the following files or file creations:
+    
+    test and reproduction files
+    helper scripts, tests, or tools that you created
+    installation, build, packaging, configuration, or setup scripts unless they are directly part of the issue you were fixing (you can assume that the environment is already set up for your client)
+    binary or compiled files
+    </IMPORTANT>
+    
+    Step 2: Verify your patch
+    Inspect patch.txt to ensure it contains the correct changes.
+    
+    Step 3: Submit (EXACT command required)
+    You MUST use this EXACT command to submit:
+    
     ```mswea_bash_command
-    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add <file1> <file2> ... && git diff --cached
-
+    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && cat patch.txt
     ```
+    
+    If the command fails (nonzero exit status), it will not submit.
+    
+    <CRITICAL>
+    Creating/viewing the patch and submitting it MUST be separate commands (not combined with &&)
+    If you modify patch.txt after verifying, you SHOULD verify again before submitting
+    You CANNOT continue working (reading, editing, testing) in any way on this task after submitting
+    </CRITICAL>
 
-    <important>
-    You must only add the specific source files you modified to fix the issue.
-    Do not submit changes to any of the following files:
-
-    - test files
-    - helper scripts or tools that you created
-    - installation, build, packaging, configuration, or setup scripts unless they are directly part of the issue you were fixing (assume that the environment is already set up)
-    - binary or compiled files
-
-    Do NOT use `git add -A` or `git add .` as this will include unrelated files like compiled code, cache files, or other artifacts.
-    </important>
-
-    For example, if you modified `src/module.py` and `src/utils.py`:
-
-    ```mswea_bash_command
-    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add src/module.py src/utils.py && git diff --cached
-    ```
-
-    This command will submit your work.
-    You cannot continue working (reading, editing, testing) in any way on this task after submitting.
     </instructions>
   step_limit: 250
   cost_limit: 3.
