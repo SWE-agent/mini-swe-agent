@@ -41,10 +41,11 @@ class LitellmToolcallModel(LitellmModel):
         tool_calls = response.choices[0].message.tool_calls or []
         actions = []
         for tool_call in tool_calls:
+            error_msg = ""
             try:
                 args = json.loads(tool_call.function.arguments)
             except Exception as e:
-                error_msg = f"Error parsing tool call arguments: {e}."
+                error_msg = f"Error parsing tool call arguments: {e}. "
             if tool_call.function.name != "bash":
                 error_msg += f"Unknown tool '{tool_call.function.name}'"
             if error_msg:
