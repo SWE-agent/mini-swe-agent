@@ -407,13 +407,16 @@ async def test_agent_with_cost_limit(default_config):
         assert app.agent_state == "RUNNING" or app.agent_state == "AWAITING_INPUT"
 
 
-async def test_agent_with_cost_limit_invalid_input():
+async def test_agent_with_cost_limit_invalid_input(default_config):
     """Test ValueError handling when invalid input is provided for limits - now retries with while loop."""
     app = TextualAgent(
         model=DeterministicModel(outputs=["Response 1", "Response 2", "Response 3"]),
         env=LocalEnvironment(),
-        mode="yolo",
-        cost_limit=0.01,
+        **{
+            **default_config,
+            "mode": "yolo",
+            "cost_limit": 0.01,
+        },
     )
 
     app.notify = Mock()
