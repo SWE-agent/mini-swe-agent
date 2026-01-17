@@ -1,3 +1,11 @@
+# GitHub Issue solver with PR integration
+#
+# Usage:
+#   python -m minisweagent.run.extra.github_issue -c src/minisweagent/config/github_issue_pr.yaml --issue-url <github-issue-url>
+#
+# Requirements:
+#   - GITHUB_TOKEN environment variable set with repo permissions
+#
 agent:
   system_template: |
     You are a helpful assistant that can interact with a computer.
@@ -27,13 +35,13 @@ agent:
     The GitHub CLI (gh) will automatically use this token - no manual authentication needed.
 
     To create a pull request with your changes:
-    The UPSTREAM_REPO environment variable contains the upstream repo (e.g., "owner/repo").
+    You can extract the upstream repo (e.g., "owner/repo") from the GitHub issue URL provided above.
 
     1. Install GitHub CLI: `curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && apt update && apt install gh -y`
-    2. Get your username and repo name: `USERNAME=$(gh api user -q .login) && REPO_NAME=$(echo $UPSTREAM_REPO | cut -d'/' -f2)`
+    2. Get your username and extract repo info from the issue URL: `USERNAME=$(gh api user -q .login)`, then parse the issue URL to get UPSTREAM_REPO (e.g., "owner/repo") and REPO_NAME (e.g., "repo")
     3. Configure git (required for commits): `git config user.email "$USERNAME@users.noreply.github.com" && git config user.name "$USERNAME"`
     4. Create a new branch: `git checkout -b <type>/brief-description` (type: feat, fix, chore, etc.)
-    5. Stage and commit changes: `git add -A && git commit -m "<type>: Brief description of changes"`
+    5. Stage and commit changes: Review changed files with `git status`, then `git add <specific-files>` and `git commit -m "<type>: Brief description of changes"`
     6. Check if you have a fork: `gh repo list $USERNAME --limit 1000 --json nameWithOwner -q '.[].nameWithOwner' | grep -q "$USERNAME/$REPO_NAME" && HAS_FORK=true || HAS_FORK=false`
     7. Push to appropriate remote:
        - If you have a fork (HAS_FORK=true): `git remote set-url origin "https://$GITHUB_TOKEN@github.com/$USERNAME/$REPO_NAME.git" && git push -u origin <branch-name>`
