@@ -135,6 +135,22 @@ class InteractiveAgent(DefaultAgent):
             return user_input
         return user_input
 
+    def _summarize_changes(self) -> str | None:
+        """Override to display summary with rich console."""
+        console.print("\n[bold cyan]Generating summary of changes...[/bold cyan]")
+
+        with console.status("Generating summary..."):
+            summary = super()._summarize_changes()
+
+        if summary:
+            console.print("\n[bold green]Summary of changes:[/bold green]")
+            console.print(summary)
+            console.print()
+        else:
+            console.print("[bold red]Error generating summary[/bold red]")
+
+        return summary
+
     def has_finished(self, output: dict[str, str]):
         try:
             return super().has_finished(output)

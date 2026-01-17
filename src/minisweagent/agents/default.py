@@ -20,6 +20,17 @@ class AgentConfig(BaseModel):
     action_regex: str = r"```bash\s*\n(.*?)\n```"
     step_limit: int = 0
     cost_limit: float = 3.0
+    summarize_on_exit: bool = False
+    """Generate a summary of changes when the agent finishes. The summary is added to messages and saved in the trajectory."""
+    summary_template: str = (
+        "Please provide a brief summary of all the changes you made during this session. "
+        "Include:\n"
+        "- Files modified\n"
+        "- Key changes made\n"
+        "- Any important outcomes or results\n\n"
+        "Keep it concise and to the point."
+    )
+    """Template for the summary prompt sent to the model. Can be customized via YAML configuration."""
 
 
 class NonTerminatingException(Exception):
@@ -115,8 +126,23 @@ class DefaultAgent:
         self.has_finished(output)
         return output | {"action": action["action"]}
 
+    def _summarize_changes(self) -> str | None:
+        """Generate a summary of changes made during the session.
+
+        Returns the summary string, or None if generation fails.
+        Subclasses can override this to customize how the summary is displayed.
+        """
+        try:
+            self.add_message("user", self.config.summary_template)
+            response = self.model.query(self.messages)
+            return response.get("content", str(response))
+        except Exception:
+            return None
+
     def has_finished(self, output: dict[str, str]):
         """Raises Submitted exception with final output if the agent has finished its task."""
         lines = output.get("output", "").lstrip().splitlines(keepends=True)
         if lines and lines[0].strip() in ["MINI_SWE_AGENT_FINAL_OUTPUT", "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"]:
+            if self.config.summarize_on_exit:
+                self._summarize_changes()
             raise Submitted("".join(lines[1:]))
