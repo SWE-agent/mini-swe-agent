@@ -28,8 +28,6 @@ class InteractiveAgentConfig(AgentConfig):
     """Never confirm actions that match these regular expressions."""
     confirm_exit: bool = True
     """If the agent wants to finish, do we ask for confirmation from user?"""
-    summarize_on_exit: bool = False
-    """Ask model to summarize changes before exiting."""
 
 
 class InteractiveAgent(DefaultAgent):
@@ -137,42 +135,26 @@ class InteractiveAgent(DefaultAgent):
             return user_input
         return user_input
 
-    def _summarize_changes(self) -> None:
-        """Ask the model to summarize the changes made during the session."""
+    def _summarize_changes(self) -> str | None:
+        """Override to display summary with rich console."""
         console.print("\n[bold cyan]Generating summary of changes...[/bold cyan]")
 
-        summary_prompt = (
-            "Please provide a brief summary of all the changes you made during this session. "
-            "Include:\n"
-            "- Files modified\n"
-            "- Key changes made\n"
-            "- Any important outcomes or results\n\n"
-            "Keep it concise and to the point."
-        )
+        with console.status("Generating summary..."):
+            summary = super()._summarize_changes()
 
-        # Add the summary request as a user message
-        self.add_message("user", summary_prompt)
-
-        # Query the model for the summary
-        try:
-            with console.status("Generating summary..."):
-                response = self.model.query(self.messages)
-                summary = response.get("content", str(response))
-
+        if summary:
             console.print("\n[bold green]Summary of changes:[/bold green]")
             console.print(summary)
             console.print()
-        except Exception as e:
-            console.print(f"[bold red]Error generating summary: {e}[/bold red]")
+        else:
+            console.print("[bold red]Error generating summary[/bold red]")
+
+        return summary
 
     def has_finished(self, output: dict[str, str]):
         try:
             return super().has_finished(output)
         except Submitted as e:
-            # Generate summary before confirming exit, if enabled
-            if self.config.summarize_on_exit:
-                self._summarize_changes()
-
             if self.config.confirm_exit:
                 console.print(
                     "[bold green]Agent wants to finish.[/bold green] "
