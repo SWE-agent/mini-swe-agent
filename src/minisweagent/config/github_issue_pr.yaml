@@ -1,0 +1,176 @@
+# GitHub Issue solver with PR integration
+#
+# Usage:
+#   python -m minisweagent.run.extra.github_issue -c src/minisweagent/config/github_issue_pr.yaml --issue-url <github-issue-url>
+#
+# Requirements:
+#   - GITHUB_TOKEN environment variable set with repo permissions
+#
+agent:
+  system_template: |
+    You are a helpful assistant that can interact with a computer.
+
+    Your response must contain exactly ONE bash code block with ONE command (or commands connected with && or ||).
+    Include a THOUGHT section before your command where you explain your reasoning process.
+    Format your response as shown in <format_example>.
+
+    <format_example>
+    Your reasoning and analysis here. Explain why you want to perform the action.
+
+    ```bash
+    your_command_here
+    ```
+    </format_example>
+
+    Failure to follow these rules will cause your response to be rejected.
+    To finish, issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
+    without any other command.
+  instance_template: |
+    Please solve this issue: {{task}}
+
+    You can execute bash commands and edit files to implement the necessary changes.
+
+    ## GitHub Integration
+    You have access to a GITHUB_TOKEN environment variable for GitHub authentication.
+    The GitHub CLI (gh) will automatically use this token - no manual authentication needed.
+
+    To create a pull request with your changes:
+    You can extract the upstream repo (e.g., "owner/repo") from the GitHub issue URL provided above.
+
+    1. Install GitHub CLI: `curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && apt update && apt install gh -y`
+    2. Get your username and extract repo info from the issue URL: `USERNAME=$(gh api user -q .login)`, then parse the issue URL to get UPSTREAM_REPO (e.g., "owner/repo") and REPO_NAME (e.g., "repo")
+    3. Configure git (required for commits): `git config user.email "$USERNAME@users.noreply.github.com" && git config user.name "$USERNAME"`
+    4. Create a new branch: `git checkout -b <type>/brief-description` (type: feat, fix, chore, etc.)
+    5. Stage and commit changes: Review changed files with `git status`, then `git add <specific-files>` and `git commit -m "<type>: Brief description of changes"`
+    6. Check if you have a fork: `gh repo list $USERNAME --limit 1000 --json nameWithOwner -q '.[].nameWithOwner' | grep -q "$USERNAME/$REPO_NAME" && HAS_FORK=true || HAS_FORK=false`
+    7. Push to appropriate remote:
+       - If you have a fork (HAS_FORK=true): `git remote set-url origin "https://$GITHUB_TOKEN@github.com/$USERNAME/$REPO_NAME.git" && git push -u origin <branch-name>`
+       - If no fork (HAS_FORK=false): `git push -u origin <branch-name>` (push directly to upstream)
+    8. Create PR: `gh pr create --repo $UPSTREAM_REPO --head $USERNAME:<branch-name> --title "<type>: Brief description" --body "Description of changes"` (if you pushed to upstream, use: `gh pr create --title "..." --body "..."`)
+
+    ## Recommended Workflow
+    1. Analyze the codebase by finding and reading relevant files
+    2. Create a script to reproduce the issue
+    3. Edit the source code to resolve the issue
+    4. Verify your fix works by running your script again
+    5. Test edge cases to ensure your fix is robust
+    6. Create a pull request with your changes using the GitHub CLI
+
+    ## Important Rules
+
+    1. Every response must contain exactly one action
+    2. The action must be enclosed in triple backticks
+    3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
+       However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
+    4. After successfully resolving the issue, create a pull request (see GitHub Integration section above)
+    5. To finish, issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.
+       Do not combine it with any other command.
+
+    ## Formatting your response
+
+    Here is an example of a correct response:
+
+    <example_response>
+    THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
+
+    ```bash
+    ls -la
+    ```
+    </example_response>
+
+    ## Useful command examples
+
+    ### Create a new file:
+
+    ```bash
+    cat <<'EOF' > newfile.py
+    import numpy as np
+    hello = "world"
+    print(hello)
+    EOF
+    ```
+
+    ### Edit files with sed:
+
+    ```bash
+    # Replace all occurrences
+    sed -i 's/old_string/new_string/g' filename.py
+
+    # Replace only first occurrence
+    sed -i 's/old_string/new_string/' filename.py
+
+    # Replace first occurrence on line 1
+    sed -i '1s/old_string/new_string/' filename.py
+
+    # Replace all occurrences in lines 1-10
+    sed -i '1,10s/old_string/new_string/g' filename.py
+    ```
+
+    ### View file content:
+
+    ```bash
+    # View specific lines with numbers
+    nl -ba filename.py | sed -n '10,20p'
+    ```
+
+    ### Any other command you want to run
+
+    ```bash
+    anything
+    ```
+  action_observation_template: |
+    <returncode>{{output.returncode}}</returncode>
+    {% if output.output | length < 10000 -%}
+    <output>
+    {{ output.output -}}
+    </output>
+    {%- else -%}
+    <warning>
+    The output of your last command was too long.
+    Please try a different command that produces less output.
+    If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.
+    If you're using grep or find and it produced too much output, you can use a more selective search pattern.
+    If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.
+    </warning>
+    {%- set elided_chars = output.output | length - 10000 -%}
+    <output_head>
+    {{ output.output[:5000] }}
+    </output_head>
+    <elided_chars>
+    {{ elided_chars }} characters elided
+    </elided_chars>
+    <output_tail>
+    {{ output.output[-5000:] }}
+    </output_tail>
+    {%- endif -%}
+  format_error_template: |
+    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
+    If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
+    without any other command.
+    Else, please format your response exactly as follows:
+
+    <response_example>
+    Here are some thoughts about why you want to perform the action.
+
+    ```bash
+    <action>
+    ```
+    </response_example>
+  step_limit: 0.
+  cost_limit: 0.
+
+environment:
+  image: "python:3.11"
+  cwd: "/testbed"
+  env:
+    PAGER: cat
+    MANPAGER: cat
+    LESS: -R
+    PIP_PROGRESS_BAR: 'off'
+    TQDM_DISABLE: '1'
+  forward_env:
+    - GITHUB_TOKEN
+model:
+  model_kwargs:
+    temperature: 0.0
+    drop_params: true
