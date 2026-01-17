@@ -2,10 +2,10 @@
 
 !!! abstract "Agent configuration files"
 
-    * This guide shows how to configure agent behavior using YAML configuration files.
+    * You can configure the agent's behavior using YAML configuration files. This guide shows how to do that.
     * You should already be familiar with the [quickstart guide](../quickstart.md).
     * For global environment settings (API keys, default model, etc., basically anything that can be set as environment variables), see [global configuration](global_configuration.md).
-    * Want more? See the [cookbook](cookbook.md) for subclassing & developing your own agent.
+    * Want more? See [python bindings](cookbook.md) for subclassing & developing your own agent.
 
 ## Overall structure
 
@@ -35,9 +35,14 @@ or even to an import path (to use your own custom agent class even if it is not 
 ### Prompt templates
 
 We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).
-TL;DR: You include variables with double curly braces, e.g. `{{task}}`, but you can also do fairly complicated logic like this:
+
+TL;DR: You include variables with double (!) curly braces, e.g. `{{task}}` to include the task that was given to the agent.
+
+However, you can also do fairly complicated logic like this directly from your template:
 
 ??? note "Example: Dealing with long observations"
+
+    The following snippets shortens long observations and displays a warning if the output is too long.
 
     ```jinja
     <returncode>{{output.returncode}}</returncode>
@@ -73,9 +78,53 @@ TL;DR: You include variables with double curly braces, e.g. `{{task}}`, but you 
 In all builtin agents, you can use the following variables:
 
 - Environment variables (`LocalEnvironment` only, see discussion [here](https://github.com/SWE-agent/mini-swe-agent/pull/425))
-- Agent config variables
-- Environment config variables
-- Explicitly passed variables (`observation`, `task` etc.) depending on the template
+- Agent config variables (i.e., anything that was set in the `agent` section of the config file, e.g., `step_limit`, `cost_limit`, etc.)
+- Environment config variables (i.e., anything that was set in the `environment` section of the config file, e.g., `cwd`, `timeout`, etc.)
+- Variables passed to the `run` method of the agent (by default that's only `task`, but you can pass other variables if you want to)
+- Output of the last action execution (i.e., `output` from the `execute_action` method)
+
+### Custom Action Parsing
+
+By default, mini-SWE-agent parses actions from markdown code blocks (` ```bash...``` `).
+You can customize this behavior by setting the `action_regex` field to support different formats like XML.
+
+!!! warning "Important"
+
+    If you set a custom action_regex (e.g. `<action>(.*?)</action>`), you must use the same output format across all prompt templates (system_template, instance_template, format_error_template, etc.), ensuring the LLM wraps commands accordingly. See the example below for a complete configuration.
+
+
+??? example "Using XML format instead of markdown"
+
+    This example uses the same structure as the default mini.yaml config, but with `<action>` tags instead of markdown code blocks:
+
+    ```yaml
+    --8<-- "src/minisweagent/config/extra/swebench_xml.yaml"
+    ```
+
+    You can also directly load this config by specifying `--config swebench_xml`.
+
+
+??? example "Default markdown format"
+
+    This is the default configuration (already the default, you don't need to specify this):
+
+
+    ```yaml
+    agent:
+      action_regex: ```bash\s*\n(.*?)\n```
+      system_template: |
+        Your response must contain exactly ONE bash code block.
+
+        ```bash
+        your_command_here
+        ```
+    ```
+
+!!! warning "Linebreaks & escaping"
+
+    When specifying `action_regex` from the `yaml` config file, make sure you understand how escaping in yaml files works.
+    For example, when you use the `|` primitive, your regex might have a linbreak at the end which is probably not what you want.
+    The best way is to keep your regex on a single line and NOT use any quotation marks around it. You do NOT need to escape any characters in the regex. Example: `action_regex: <bash_code>(.*?)</bash_code>`
 
 ## Model configuration
 

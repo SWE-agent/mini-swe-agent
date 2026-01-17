@@ -58,16 +58,16 @@ nav:
   - Getting Started:
     - "Overview": index.md
     - "Quick start": quickstart.md
-    - "Usage":
+    - "Command line usage":
       - "<code>mini</code>": usage/mini.md
       - "<code>mini -v</code>": usage/mini_v.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
-    - "Models":
+    - "Language models":
       - "Quick start": models/quickstart.md
       - "Local models": models/local_models.md
       - "Troubleshooting": models/troubleshooting.md
-    - "Guides":
+    - "Guides & tutorials":
       - "Global configuration": advanced/global_configuration.md
       - "Yaml config files": advanced/yaml_configuration.md
       - "Environments": advanced/environments.md
@@ -83,8 +83,10 @@ nav:
       - "TextualAgent": "reference/agents/textual.md"
     - Models:
       - "LitellmModel": "reference/models/litellm.md"
+      - "LitellmResponseAPIModel": "reference/models/litellm_response.md"
       - "AnthropicModel": "reference/models/anthropic.md"
       - "OpenRouterModel": "reference/models/openrouter.md"
+      - "RequestyModel": "reference/models/requesty.md"
       - "DeterministicModel": "reference/models/test_models.md"
       - "Extra Models": "reference/models/extra.md"
       - "Model Utilities": "reference/models/utils.md"
@@ -97,6 +99,9 @@ nav:
     - Run Scripts:
       - "Hello World": "reference/run/hello_world.md"
       - "mini": "reference/run/mini.md"
+      - "mini-extra": "reference/run/mini_extra.md"
+      - "Config": "reference/run/config.md"
+      - "Inspector": "reference/run/inspector.md"
       - "GitHub Issue": "reference/run/github_issue.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"

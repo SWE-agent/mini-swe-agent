@@ -47,11 +47,11 @@ class TestGetModelName:
 
 class TestGetModelClass:
     def test_anthropic_model_selection(self):
-        """Test that anthropic-related model names return AnthropicModel."""
-        from minisweagent.models.anthropic import AnthropicModel
+        """Test that anthropic-related model names return LitellmModel by default."""
+        from minisweagent.models.litellm_model import LitellmModel
 
         for name in ["anthropic", "sonnet", "opus", "claude-sonnet", "claude-opus"]:
-            assert get_model_class(name) == AnthropicModel
+            assert get_model_class(name) == LitellmModel
 
     def test_litellm_model_fallback(self):
         """Test that non-anthropic model names return LitellmModel."""
@@ -62,14 +62,19 @@ class TestGetModelClass:
 
     def test_partial_matches(self):
         """Test that partial string matches work correctly."""
-        from minisweagent.models.anthropic import AnthropicModel
         from minisweagent.models.litellm_model import LitellmModel
 
-        assert get_model_class("my-anthropic-model") == AnthropicModel
-        assert get_model_class("sonnet-latest") == AnthropicModel
-        assert get_model_class("opus-v2") == AnthropicModel
-        assert get_model_class("gpt-anthropic-style") == AnthropicModel
+        assert get_model_class("my-anthropic-model") == LitellmModel
+        assert get_model_class("sonnet-latest") == LitellmModel
+        assert get_model_class("opus-v2") == LitellmModel
+        assert get_model_class("gpt-anthropic-style") == LitellmModel
         assert get_model_class("totally-different") == LitellmModel
+
+    def test_litellm_response_model_selection(self):
+        """Test that litellm_response model class can be selected."""
+        from minisweagent.models.litellm_response_api_model import LitellmResponseAPIModel
+
+        assert get_model_class("any-model", "litellm_response") == LitellmResponseAPIModel
 
 
 class TestGetModel:

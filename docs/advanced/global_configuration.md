@@ -55,7 +55,7 @@ export KEY="value"
 setx KEY "value"
 ```
 
-## Models and keys
+## Models, keys, costs
 
 !!! tip "See also"
 
@@ -71,20 +71,18 @@ MSWEA_MODEL_NAME="anthropic/claude-sonnet-4-5-20250929"
 MSWEA_MODEL_API_KEY="sk-..."
 ```
 
+To ignore errors from cost tracking checks (for example for free models), set:
+
+```bash
+# CAREFUL: This can lead to unmanaged spending!
+MSWEA_COST_TRACKING="ignore_errors"
+```
+
 To register extra models to litellm (see [local models](../models/local_models.md) for more details), you can either specify the path in the agent file, or set
 
 ```bash
 LITELLM_MODEL_REGISTRY_PATH="/path/to/your/model/registry.json"
 ```
-
-For Anthropic models, you can also use `ANTHROPIC_API_KEYS` for advanced parallel execution:
-
-```bash
-# Multiple Anthropic keys for parallel execution (separated by "::")
-ANTHROPIC_API_KEYS="key1::key2::key3"
-```
-
-This allows different threads to use different API keys to avoid prompt caching conflicts when running multiple agents in parallel.
 
 Global cost limits:
 
@@ -96,6 +94,10 @@ MSWEA_GLOBAL_CALL_LIMIT="100"
 # Global cost limit in dollars (0 = no limit)
 # (default: 0)
 MSWEA_GLOBAL_COST_LIMIT="10.00"
+
+# Number of retry attempts for model API calls
+# (default: 10)
+MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT="10"
 ```
 
 ## Default config files

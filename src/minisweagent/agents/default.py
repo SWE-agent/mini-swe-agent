@@ -2,7 +2,7 @@
 
 import re
 import subprocess
-from collections.abc import Callable
+import time
 from dataclasses import asdict, dataclass
 
 from jinja2 import StrictUndefined, Template
@@ -25,6 +25,7 @@ class AgentConfig:
     )
     format_error_template: str = "Please always provide EXACTLY ONE action in triple backticks."
     action_observation_template: str = "Observation: {{output}}"
+    action_regex: str = r"```bash\s*\n(.*?)\n```"
     step_limit: int = 0
     cost_limit: float = 3.0
 
@@ -54,7 +55,7 @@ class LimitsExceeded(TerminatingException):
 
 
 class DefaultAgent:
-    def __init__(self, model: Model, env: Environment, *, config_class: Callable = AgentConfig, **kwargs):
+    def __init__(self, model: Model, env: Environment, *, config_class: type = AgentConfig, **kwargs):
         self.config = config_class(**kwargs)
         self.messages: list[dict] = []
         self.model = model
@@ -68,7 +69,7 @@ class DefaultAgent:
         )
 
     def add_message(self, role: str, content: str, **kwargs):
-        self.messages.append({"role": role, "content": content, **kwargs})
+        self.messages.append({"role": role, "content": content, "timestamp": time.time(), **kwargs})
 
     def run(self, task: str, **kwargs) -> tuple[str, str]:
         """Run step() until agent is finished. Return exit status & message"""
@@ -106,7 +107,7 @@ class DefaultAgent:
 
     def parse_action(self, response: dict) -> dict:
         """Parse the action from the message. Returns the action."""
-        actions = re.findall(r"```bash\s*\n(.*?)\n```", response["content"], re.DOTALL)
+        actions = re.findall(self.config.action_regex, response["content"], re.DOTALL)
         if len(actions) == 1:
             return {"action": actions[0].strip(), **response}
         raise FormatError(self.render_template(self.config.format_error_template, actions=actions))
@@ -114,15 +115,13 @@ class DefaultAgent:
     def execute_action(self, action: dict) -> dict:
         try:
             output = self.env.execute(action["action"])
-        except subprocess.TimeoutExpired as e:
-            output = e.output.decode("utf-8", errors="replace") if e.output else ""
+        except (TimeoutError, subprocess.TimeoutExpired) as e:
+            output = e.output.decode("utf-8", errors="replace") if getattr(e, "output", None) else ""
             raise ExecutionTimeoutError(
                 self.render_template(self.config.timeout_template, action=action, output=output)
             )
-        except TimeoutError:
-            raise ExecutionTimeoutError(self.render_template(self.config.timeout_template, action=action, output=""))
         self.has_finished(output)
-        return output
+        return output | {"action": action["action"]}
 
     def has_finished(self, output: dict[str, str]):
         """Raises Submitted exception with final output if the agent has finished its task."""

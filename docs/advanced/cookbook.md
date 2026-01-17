@@ -41,7 +41,7 @@ You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` envi
     model_name = "anthropic/claude-sonnet-4-5-20250929"
 
     agent = DefaultAgent(
-        get_model(model_name=model_name),
+        get_model(input_model_name=model_name),
         LocalEnvironment(),
     )
     agent.run(task)
@@ -113,7 +113,7 @@ You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` envi
     from minisweagent.environments.local import LocalEnvironment
 
     agent = DefaultAgent(
-        get_model(model_name=model_name),
+        get_model(input_model_name=model_name),
         LocalEnvironment(),
     )
     ```

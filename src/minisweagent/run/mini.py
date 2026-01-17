@@ -77,7 +77,7 @@ def main(
 
     if yolo:
         config.setdefault("agent", {})["mode"] = "yolo"
-    if cost_limit:
+    if cost_limit is not None:
         config.setdefault("agent", {})["cost_limit"] = cost_limit
     if exit_immediately:
         config.setdefault("agent", {})["confirm_exit"] = False
@@ -100,8 +100,7 @@ def main(
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
     finally:
-        if output:
-            save_traj(agent, output, exit_status=exit_status, result=result, extra_info=extra_info)  # type: ignore[arg-type]
+        save_traj(agent, output, exit_status=exit_status, result=result, extra_info=extra_info)  # type: ignore[arg-type]
     return agent
 
 
