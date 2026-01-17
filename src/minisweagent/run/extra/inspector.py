@@ -2,9 +2,7 @@
 """
 Simple trajectory inspector for browsing agent conversation trajectories.
 
-[not dim]
-More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/inspector/[/bold green]
-[/not dim]
+More information about the usage: [bold green] https://mini-swe-agent.com/latest/usage/inspector/ [/bold green].
 """
 
 import json
@@ -38,7 +36,7 @@ class TrajectoryInspector(App):
 
     def __init__(self, trajectory_files: list[Path]):
         css_path = os.environ.get(
-            "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent / "config" / "mini.tcss")
+            "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent.parent / "config" / "mini.tcss")
         )
         self.__class__.CSS = Path(css_path).read_text()
 

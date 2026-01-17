@@ -10,10 +10,17 @@ from minisweagent.run.utils.save import save_traj
 
 def test_save_traj_includes_class_names():
     """Test that save_traj includes the full class names with import paths."""
+    # Load default config
+    import yaml
+
+    config_path = Path("src/minisweagent/config/default.yaml")
+    with open(config_path) as f:
+        default_config = yaml.safe_load(f)["agent"]
+
     # Create a simple agent setup
     model = DeterministicModel(outputs=["echo 'test'"])
     env = LocalEnvironment()
-    agent = DefaultAgent(model, env)
+    agent = DefaultAgent(model, env, **default_config)
 
     # Run a minimal task to populate the agent
     agent.add_message("system", "test system message")

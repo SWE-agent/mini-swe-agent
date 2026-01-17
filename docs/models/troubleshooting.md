@@ -67,12 +67,7 @@ Another common mistake is to not include any or the correct provider in the mode
 
 ## Temperature not supported
 
-Some models (like `gpt-5`, `o3` etc.) do not support temperature, however our default config specifies `temperature: 0.0`.
-You need to switch to a config file that does not specify temperature, e.g., `mini_no_temp.yaml`.
-
-To do this, add `-c mini_no_temp` to your `mini` command.
-
-We are working on a better solution for this (see [this issue](https://github.com/SWE-agent/mini-swe-agent/issues/488)).
+Some models (like `o1`, `o3`, `GPT-5` etc.) do not support temperature. The default config no longer specifies a temperature value, so this should work out of the box now.
 
 ## Portkey
 

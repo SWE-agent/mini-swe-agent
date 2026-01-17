@@ -68,6 +68,7 @@ nav:
       - "Local models": models/local_models.md
       - "Troubleshooting": models/troubleshooting.md
     - "Guides & tutorials":
+      - "v2.0 Migration": advanced/v2_migration.md
       - "Global configuration": advanced/global_configuration.md
       - "Yaml config files": advanced/yaml_configuration.md
       - "Environments": advanced/environments.md

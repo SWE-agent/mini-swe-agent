@@ -1,11 +1,11 @@
 import json
 import logging
 import os
-from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
 import litellm
+from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
     retry,
@@ -27,10 +27,14 @@ except ImportError:
     )
 
 
-@dataclass
-class PortkeyModelConfig:
+class PortkeyModelConfig(BaseModel):
     model_name: str
-    model_kwargs: dict[str, Any] = field(default_factory=dict)
+    model_kwargs: dict[str, Any] = {}
+    provider: str = ""
+    """The LLM provider to use (e.g., 'openai', 'anthropic', 'google').
+    If not specified, will be auto-detected from model_name.
+    Required by Portkey when not using a virtual key.
+    """
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     """We currently use litellm to calculate costs. Here you can register additional models to litellm's model registry.
     Note that this might change if we get better support for Portkey and change how we calculate costs.
@@ -70,10 +74,14 @@ class PortkeyModel:
         client_kwargs = {"api_key": self._api_key}
         if virtual_key:
             client_kwargs["virtual_key"] = virtual_key
+        elif self.config.provider:
+            # If no virtual key but provider is specified, pass it
+            client_kwargs["provider"] = self.config.provider
 
         self.client = Portkey(**client_kwargs)
 
     @retry(
+        reraise=True,
         stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
@@ -90,7 +98,7 @@ class PortkeyModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
-        response = self._query(messages, **kwargs)
+        response = self._query([{"role": msg["role"], "content": msg["content"]} for msg in messages], **kwargs)
         cost = self._calculate_cost(response)
         self.n_calls += 1
         self.cost += cost
@@ -104,7 +112,7 @@ class PortkeyModel:
         }
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}
 
     def _calculate_cost(self, response) -> float:
         response_for_cost_calc = response.model_copy()

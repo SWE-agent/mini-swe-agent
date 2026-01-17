@@ -79,7 +79,7 @@ class RunBatchProgressManager:
             "[cyan]Overall Progress", total=num_instances, total_cost="0.00", eta=""
         )
 
-        self.render_group = Group(Table(), self._task_progress_bar, self._main_progress_bar)
+        self.render_group = Group(self._main_progress_bar, Table(), self._task_progress_bar)
         self._yaml_report_path = yaml_report_path
 
     @property
@@ -112,7 +112,7 @@ class RunBatchProgressManager:
                 instances_str = _shorten_str(", ".join(reversed(instances)), 55)
                 t.add_row(status, str(len(instances)), instances_str)
         assert self.render_group is not None
-        self.render_group.renderables[0] = t
+        self.render_group.renderables[1] = t
 
     def _update_total_costs(self) -> None:
         with self._lock:

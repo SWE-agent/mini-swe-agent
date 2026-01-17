@@ -1,11 +1,24 @@
+from pathlib import Path
 from unittest.mock import patch
+
+import pytest
+import yaml
 
 from minisweagent.agents.interactive import InteractiveAgent
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models.test_models import DeterministicModel
 
 
-def test_successful_completion_with_confirmation():
+@pytest.fixture
+def default_config():
+    """Load default agent config from config/default.yaml"""
+    config_path = Path("src/minisweagent/config/default.yaml")
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+    return config["agent"]
+
+
+def test_successful_completion_with_confirmation(default_config):
     """Test agent completes successfully when user confirms all actions."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt", side_effect=["", ""]
@@ -15,6 +28,7 @@ def test_successful_completion_with_confirmation():
                 outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
             ),
             env=LocalEnvironment(),
+            **default_config,
         )
 
         exit_status, result = agent.run("Test completion with confirmation")
@@ -23,7 +37,7 @@ def test_successful_completion_with_confirmation():
         assert agent.model.n_calls == 1
 
 
-def test_action_rejection_and_recovery():
+def test_action_rejection_and_recovery(default_config):
     """Test agent handles action rejection and can recover."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -41,6 +55,7 @@ def test_action_rejection_and_recovery():
                 ]
             ),
             env=LocalEnvironment(),
+            **default_config,
         )
 
         exit_status, result = agent.run("Test action rejection")
@@ -52,7 +67,7 @@ def test_action_rejection_and_recovery():
         assert len(rejection_messages) == 1
 
 
-def test_yolo_mode_activation():
+def test_yolo_mode_activation(default_config):
     """Test entering yolo mode disables confirmations."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -67,6 +82,7 @@ def test_yolo_mode_activation():
                 outputs=["Test command\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'yolo works'\n```"]
             ),
             env=LocalEnvironment(),
+            **default_config,
         )
 
         exit_status, result = agent.run("Test yolo mode")
@@ -75,7 +91,7 @@ def test_yolo_mode_activation():
         assert agent.config.mode == "yolo"
 
 
-def test_help_command():
+def test_help_command(default_config):
     """Test help command shows help and continues normally."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -91,6 +107,7 @@ def test_help_command():
                     outputs=["Test help\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'help shown'\n```"]
                 ),
                 env=LocalEnvironment(),
+                **default_config,
             )
 
             exit_status, result = agent.run("Test help command")
@@ -101,7 +118,7 @@ def test_help_command():
             assert len(help_calls) > 0
 
 
-def test_whitelisted_actions_skip_confirmation():
+def test_whitelisted_actions_skip_confirmation(default_config):
     """Test that whitelisted actions don't require confirmation."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -114,7 +131,10 @@ def test_whitelisted_actions_skip_confirmation():
                 ]
             ),
             env=LocalEnvironment(),
-            whitelist_actions=[r"echo.*"],
+            **{
+                **default_config,
+                "whitelist_actions": [r"echo.*"],
+            },
         )
 
         exit_status, result = agent.run("Test whitelisted actions")
@@ -122,7 +142,9 @@ def test_whitelisted_actions_skip_confirmation():
         assert result == "no confirmation needed\n"
 
 
-def _test_interruption_helper(interruption_input, expected_message_fragment, problem_statement="Test interruption"):
+def _test_interruption_helper(
+    default_config, interruption_input, expected_message_fragment, problem_statement="Test interruption"
+):
     """Helper function for testing interruption scenarios."""
     agent = InteractiveAgent(
         model=DeterministicModel(
@@ -132,6 +154,7 @@ def _test_interruption_helper(interruption_input, expected_message_fragment, pro
             ]
         ),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     # Mock the query to raise KeyboardInterrupt on first call, then work normally
@@ -168,20 +191,20 @@ def _test_interruption_helper(interruption_input, expected_message_fragment, pro
     return agent, interrupt_messages[0]
 
 
-def test_interruption_handling_with_message():
+def test_interruption_handling_with_message(default_config):
     """Test that interruption with user message is handled properly."""
-    agent, interrupt_message = _test_interruption_helper("User interrupted", "Interrupted by user")
+    agent, interrupt_message = _test_interruption_helper(default_config, "User interrupted", "Interrupted by user")
 
     # Additional verification specific to this test
     assert "User interrupted" in interrupt_message["content"]
 
 
-def test_interruption_handling_empty_message():
+def test_interruption_handling_empty_message(default_config):
     """Test that interruption with empty input is handled properly."""
-    _test_interruption_helper("", "Temporary interruption caught")
+    _test_interruption_helper(default_config, "", "Temporary interruption caught")
 
 
-def test_multiple_confirmations_and_commands():
+def test_multiple_confirmations_and_commands(default_config):
     """Test complex interaction with multiple confirmations and commands."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -201,6 +224,7 @@ def test_multiple_confirmations_and_commands():
                 ]
             ),
             env=LocalEnvironment(),
+            **default_config,
         )
 
         exit_status, result = agent.run("Test complex interaction flow")
@@ -210,7 +234,7 @@ def test_multiple_confirmations_and_commands():
         assert agent.model.n_calls == 2
 
 
-def test_non_whitelisted_action_requires_confirmation():
+def test_non_whitelisted_action_requires_confirmation(default_config):
     """Test that non-whitelisted actions still require confirmation."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -223,7 +247,10 @@ def test_non_whitelisted_action_requires_confirmation():
                 ]
             ),
             env=LocalEnvironment(),
-            whitelist_actions=[r"ls.*"],  # Only ls commands whitelisted
+            **{
+                **default_config,
+                "whitelist_actions": [r"ls.*"],  # Only ls commands whitelisted
+            },
         )
 
         exit_status, result = agent.run("Test non-whitelisted action")
@@ -234,7 +261,7 @@ def test_non_whitelisted_action_requires_confirmation():
 # New comprehensive mode switching tests
 
 
-def test_human_mode_basic_functionality():
+def test_human_mode_basic_functionality(default_config):
     """Test human mode where user enters shell commands directly."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -247,7 +274,10 @@ def test_human_mode_basic_functionality():
         agent = InteractiveAgent(
             model=DeterministicModel(outputs=[]),  # LM shouldn't be called in human mode
             env=LocalEnvironment(),
-            mode="human",
+            **{
+                **default_config,
+                "mode": "human",
+            },
         )
 
         exit_status, result = agent.run("Test human mode")
@@ -257,7 +287,7 @@ def test_human_mode_basic_functionality():
         assert agent.model.n_calls == 0  # LM should not be called
 
 
-def test_human_mode_switch_to_yolo():
+def test_human_mode_switch_to_yolo(default_config):
     """Test switching from human mode to yolo mode."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -274,7 +304,10 @@ def test_human_mode_switch_to_yolo():
                 ]
             ),
             env=LocalEnvironment(),
-            mode="human",
+            **{
+                **default_config,
+                "mode": "human",
+            },
         )
 
         exit_status, result = agent.run("Test human to yolo switch")
@@ -284,7 +317,7 @@ def test_human_mode_switch_to_yolo():
         assert agent.model.n_calls == 1
 
 
-def test_human_mode_switch_to_confirm():
+def test_human_mode_switch_to_confirm(default_config):
     """Test switching from human mode to confirm mode."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -301,7 +334,10 @@ def test_human_mode_switch_to_confirm():
                 ]
             ),
             env=LocalEnvironment(),
-            mode="human",
+            **{
+                **default_config,
+                "mode": "human",
+            },
         )
 
         exit_status, result = agent.run("Test human to confirm switch")
@@ -311,7 +347,7 @@ def test_human_mode_switch_to_confirm():
         assert agent.model.n_calls == 1
 
 
-def test_confirmation_mode_switch_to_human_with_rejection():
+def test_confirmation_mode_switch_to_human_with_rejection(default_config):
     """Test switching from confirm mode to human mode with /u command."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -329,7 +365,10 @@ def test_confirmation_mode_switch_to_human_with_rejection():
                 ]
             ),
             env=LocalEnvironment(),
-            mode="confirm",
+            **{
+                **default_config,
+                "mode": "confirm",
+            },
         )
 
         exit_status, result = agent.run("Test confirm to human switch")
@@ -341,7 +380,7 @@ def test_confirmation_mode_switch_to_human_with_rejection():
         assert len(rejection_messages) == 1
 
 
-def test_confirmation_mode_switch_to_yolo_and_continue():
+def test_confirmation_mode_switch_to_yolo_and_continue(default_config):
     """Test switching from confirm mode to yolo mode with /y and continuing with action."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -357,7 +396,10 @@ def test_confirmation_mode_switch_to_yolo_and_continue():
                 ]
             ),
             env=LocalEnvironment(),
-            mode="confirm",
+            **{
+                **default_config,
+                "mode": "confirm",
+            },
         )
 
         exit_status, result = agent.run("Test confirm to yolo switch")
@@ -366,7 +408,7 @@ def test_confirmation_mode_switch_to_yolo_and_continue():
         assert agent.config.mode == "yolo"
 
 
-def test_mode_switch_during_keyboard_interrupt():
+def test_mode_switch_during_keyboard_interrupt(default_config):
     """Test mode switching during keyboard interrupt handling."""
     agent = InteractiveAgent(
         model=DeterministicModel(
@@ -376,7 +418,10 @@ def test_mode_switch_during_keyboard_interrupt():
             ]
         ),
         env=LocalEnvironment(),
-        mode="confirm",
+        **{
+            **default_config,
+            "mode": "confirm",
+        },
     )
 
     # Mock the query to raise KeyboardInterrupt on first call
@@ -408,7 +453,7 @@ def test_mode_switch_during_keyboard_interrupt():
     assert len(interrupt_messages) == 1
 
 
-def test_already_in_mode_behavior():
+def test_already_in_mode_behavior(default_config):
     """Test behavior when trying to switch to the same mode."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -425,7 +470,10 @@ def test_already_in_mode_behavior():
                 ]
             ),
             env=LocalEnvironment(),
-            mode="confirm",
+            **{
+                **default_config,
+                "mode": "confirm",
+            },
         )
 
         exit_status, result = agent.run("Test already in mode")
@@ -434,7 +482,7 @@ def test_already_in_mode_behavior():
         assert agent.config.mode == "confirm"
 
 
-def test_all_mode_transitions_yolo_to_others():
+def test_all_mode_transitions_yolo_to_others(default_config):
     """Test transitions from yolo mode to other modes."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -452,7 +500,10 @@ def test_all_mode_transitions_yolo_to_others():
                 ]
             ),
             env=LocalEnvironment(),
-            mode="yolo",
+            **{
+                **default_config,
+                "mode": "yolo",
+            },
         )
 
         # Trigger first action in yolo mode (should execute without confirmation)
@@ -475,7 +526,7 @@ def test_all_mode_transitions_yolo_to_others():
         assert agent.config.mode == "confirm"
 
 
-def test_all_mode_transitions_confirm_to_human():
+def test_all_mode_transitions_confirm_to_human(default_config):
     """Test transition from confirm mode to human mode."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -488,7 +539,10 @@ def test_all_mode_transitions_confirm_to_human():
         agent = InteractiveAgent(
             model=DeterministicModel(outputs=["LM action\n```bash\necho 'rejected action'\n```"]),
             env=LocalEnvironment(),
-            mode="confirm",
+            **{
+                **default_config,
+                "mode": "confirm",
+            },
         )
 
         exit_status, result = agent.run("Test confirm to human transition")
@@ -497,7 +551,7 @@ def test_all_mode_transitions_confirm_to_human():
         assert agent.config.mode == "human"
 
 
-def test_help_command_from_different_contexts():
+def test_help_command_from_different_contexts(default_config):
     """Test help command works from different contexts (confirmation, interrupt, human mode)."""
     # Test help during confirmation
     with patch(
@@ -516,7 +570,10 @@ def test_help_command_from_different_contexts():
                     ]
                 ),
                 env=LocalEnvironment(),
-                mode="confirm",
+                **{
+                    **default_config,
+                    "mode": "confirm",
+                },
             )
 
             exit_status, result = agent.run("Test help from confirmation")
@@ -527,7 +584,7 @@ def test_help_command_from_different_contexts():
             assert len(help_calls) > 0
 
 
-def test_help_command_from_human_mode():
+def test_help_command_from_human_mode(default_config):
     """Test help command works from human mode."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -541,7 +598,10 @@ def test_help_command_from_human_mode():
             agent = InteractiveAgent(
                 model=DeterministicModel(outputs=[]),  # LM shouldn't be called
                 env=LocalEnvironment(),
-                mode="human",
+                **{
+                    **default_config,
+                    "mode": "human",
+                },
             )
 
             exit_status, result = agent.run("Test help from human mode")
@@ -552,7 +612,7 @@ def test_help_command_from_human_mode():
             assert len(help_calls) > 0
 
 
-def test_complex_mode_switching_sequence():
+def test_complex_mode_switching_sequence(default_config):
     """Test complex sequence of mode switches across different contexts."""
     agent = InteractiveAgent(
         model=DeterministicModel(
@@ -563,7 +623,10 @@ def test_complex_mode_switching_sequence():
             ]
         ),
         env=LocalEnvironment(),
-        mode="confirm",
+        **{
+            **default_config,
+            "mode": "confirm",
+        },
     )
 
     # Mock interruption on second query
@@ -597,7 +660,7 @@ def test_complex_mode_switching_sequence():
     assert agent.config.mode == "confirm"  # Should end in confirm mode
 
 
-def test_limits_exceeded_with_user_continuation():
+def test_limits_exceeded_with_user_continuation(default_config):
     """Test that when limits are exceeded, user can provide new limits and execution continues."""
     # Create agent with very low limits that will be exceeded
     agent = InteractiveAgent(
@@ -610,9 +673,12 @@ def test_limits_exceeded_with_user_continuation():
             cost_per_call=0.6,  # Will exceed cost_limit=0.5 on first call
         ),
         env=LocalEnvironment(),
-        step_limit=10,  # High enough to not interfere initially
-        cost_limit=0.5,  # Will be exceeded with first model call (cost=0.6)
-        mode="yolo",  # Use yolo mode to avoid confirmation prompts
+        **{
+            **default_config,
+            "step_limit": 10,  # High enough to not interfere initially
+            "cost_limit": 0.5,  # Will be exceeded with first model call (cost=0.6),
+            "mode": "yolo",  # Use yolo mode to avoid confirmation prompts,
+        },
     )
 
     # Mock input() to provide new limits when prompted
@@ -628,7 +694,7 @@ def test_limits_exceeded_with_user_continuation():
     assert agent.config.cost_limit == 5.0  # Should have updated cost limit
 
 
-def test_limits_exceeded_multiple_times_with_continuation():
+def test_limits_exceeded_multiple_times_with_continuation(default_config):
     """Test that limits can be exceeded and updated multiple times."""
     agent = InteractiveAgent(
         model=DeterministicModel(
@@ -642,9 +708,12 @@ def test_limits_exceeded_multiple_times_with_continuation():
             cost_per_call=1.0,  # Standard cost per call
         ),
         env=LocalEnvironment(),
-        step_limit=1,  # Will be exceeded after first step
-        cost_limit=100.0,  # High enough to not interfere
-        mode="yolo",
+        **{
+            **default_config,
+            "step_limit": 1,  # Will be exceeded after first step
+            "cost_limit": 100.0,  # High enough to not interfere,
+            "mode": "yolo",
+        },
     )
 
     # Mock input() to provide new limits multiple times
@@ -660,7 +729,7 @@ def test_limits_exceeded_multiple_times_with_continuation():
     assert agent.config.step_limit == 10  # Should have final updated step limit
 
 
-def test_continue_after_completion_with_new_task():
+def test_continue_after_completion_with_new_task(default_config):
     """Test that user can provide a new task when agent wants to finish."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -679,6 +748,7 @@ def test_continue_after_completion_with_new_task():
                 ]
             ),
             env=LocalEnvironment(),
+            **default_config,
         )
 
         exit_status, result = agent.run("Complete the initial task")
@@ -692,7 +762,7 @@ def test_continue_after_completion_with_new_task():
         assert len(new_task_messages) == 1
 
 
-def test_continue_after_completion_without_new_task():
+def test_continue_after_completion_without_new_task(default_config):
     """Test that agent finishes normally when user doesn't provide a new task."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -708,6 +778,7 @@ def test_continue_after_completion_without_new_task():
                 ]
             ),
             env=LocalEnvironment(),
+            **default_config,
         )
 
         exit_status, result = agent.run("Complete the task")
@@ -719,7 +790,7 @@ def test_continue_after_completion_without_new_task():
         assert len(new_task_messages) == 0
 
 
-def test_continue_after_completion_multiple_cycles():
+def test_continue_after_completion_multiple_cycles(default_config):
     """Test multiple continuation cycles with new tasks."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -741,6 +812,7 @@ def test_continue_after_completion_multiple_cycles():
                 ]
             ),
             env=LocalEnvironment(),
+            **default_config,
         )
 
         exit_status, result = agent.run("Initial task")
@@ -754,7 +826,7 @@ def test_continue_after_completion_multiple_cycles():
         assert "Third task" in new_task_messages[1]["content"]
 
 
-def test_continue_after_completion_in_yolo_mode():
+def test_continue_after_completion_in_yolo_mode(default_config):
     """Test continuation when starting in yolo mode (no confirmations needed)."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -771,7 +843,10 @@ def test_continue_after_completion_in_yolo_mode():
                 ]
             ),
             env=LocalEnvironment(),
-            mode="yolo",  # Start in yolo mode
+            **{
+                **default_config,
+                "mode": "yolo",  # Start in yolo mode
+            },
         )
 
         exit_status, result = agent.run("Initial task")
@@ -784,7 +859,7 @@ def test_continue_after_completion_in_yolo_mode():
         assert len(new_task_messages) == 1
 
 
-def test_confirm_exit_enabled_asks_for_confirmation():
+def test_confirm_exit_enabled_asks_for_confirmation(default_config):
     """Test that when confirm_exit=True, agent asks for confirmation before finishing."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -795,7 +870,10 @@ def test_confirm_exit_enabled_asks_for_confirmation():
                 outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
             ),
             env=LocalEnvironment(),
-            confirm_exit=True,  # Should ask for confirmation
+            **{
+                **default_config,
+                "confirm_exit": True,  # Should ask for confirmation
+            },
         )
 
         exit_status, result = agent.run("Test confirm exit enabled")
@@ -804,7 +882,7 @@ def test_confirm_exit_enabled_asks_for_confirmation():
         assert agent.model.n_calls == 1
 
 
-def test_confirm_exit_disabled_exits_immediately():
+def test_confirm_exit_disabled_exits_immediately(default_config):
     """Test that when confirm_exit=False, agent exits immediately without asking."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -815,7 +893,10 @@ def test_confirm_exit_disabled_exits_immediately():
                 outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
             ),
             env=LocalEnvironment(),
-            confirm_exit=False,  # Should NOT ask for confirmation
+            **{
+                **default_config,
+                "confirm_exit": False,  # Should NOT ask for confirmation
+            },
         )
 
         exit_status, result = agent.run("Test confirm exit disabled")
@@ -824,7 +905,7 @@ def test_confirm_exit_disabled_exits_immediately():
         assert agent.model.n_calls == 1
 
 
-def test_confirm_exit_with_new_task_continues_execution():
+def test_confirm_exit_with_new_task_continues_execution(default_config):
     """Test that when user provides new task at exit confirmation, agent continues."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -843,7 +924,10 @@ def test_confirm_exit_with_new_task_continues_execution():
                 ]
             ),
             env=LocalEnvironment(),
-            confirm_exit=True,
+            **{
+                **default_config,
+                "confirm_exit": True,
+            },
         )
 
         exit_status, result = agent.run("Test exit with new task")
@@ -855,28 +939,35 @@ def test_confirm_exit_with_new_task_continues_execution():
         assert len(new_task_messages) == 1
 
 
-def test_confirm_exit_config_field_defaults():
+def test_confirm_exit_config_field_defaults(default_config):
     """Test that confirm_exit field has correct default value."""
     agent = InteractiveAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
+        **default_config,
     )
     # Default should be True
     assert agent.config.confirm_exit is True
 
 
-def test_confirm_exit_config_field_can_be_set():
+def test_confirm_exit_config_field_can_be_set(default_config):
     """Test that confirm_exit field can be explicitly set."""
     agent_with_confirm = InteractiveAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
-        confirm_exit=True,
+        **{
+            **default_config,
+            "confirm_exit": True,
+        },
     )
     assert agent_with_confirm.config.confirm_exit is True
 
     agent_without_confirm = InteractiveAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
-        confirm_exit=False,
+        **{
+            **default_config,
+            "confirm_exit": False,
+        },
     )
     assert agent_without_confirm.config.confirm_exit is False

@@ -1,11 +1,23 @@
+from pathlib import Path
+
 import pytest
+import yaml
 
 from minisweagent.agents.default import DefaultAgent, NonTerminatingException
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models.test_models import DeterministicModel
 
 
-def test_successful_completion():
+@pytest.fixture
+def default_config():
+    """Load default agent config from config/default.yaml"""
+    config_path = Path("src/minisweagent/config/default.yaml")
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+    return config["agent"]
+
+
+def test_successful_completion(default_config):
     """Test agent completes successfully when COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT is encountered."""
     agent = DefaultAgent(
         model=DeterministicModel(
@@ -15,6 +27,7 @@ def test_successful_completion():
             ]
         ),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     exit_status, result = agent.run("Echo hello world then finish")
@@ -24,14 +37,14 @@ def test_successful_completion():
     assert len(agent.messages) == 6  # system, user, assistant, user, assistant, user
 
 
-def test_step_limit_enforcement():
+def test_step_limit_enforcement(default_config):
     """Test agent stops when step limit is reached."""
     agent = DefaultAgent(
         model=DeterministicModel(
             outputs=["First command\n```bash\necho 'step1'\n```", "Second command\n```bash\necho 'step2'\n```"]
         ),
         env=LocalEnvironment(),
-        step_limit=1,
+        **{**default_config, "step_limit": 1},
     )
 
     exit_status, _ = agent.run("Run multiple commands")
@@ -39,21 +52,21 @@ def test_step_limit_enforcement():
     assert agent.model.n_calls == 1
 
 
-def test_cost_limit_enforcement():
+def test_cost_limit_enforcement(default_config):
     """Test agent stops when cost limit is reached."""
     model = DeterministicModel(outputs=["```bash\necho 'test'\n```"])
 
     agent = DefaultAgent(
         model=model,
         env=LocalEnvironment(),
-        cost_limit=0.5,
+        **{**default_config, "cost_limit": 0.5},
     )
 
     exit_status, _ = agent.run("Test cost limit")
     assert exit_status == "LimitsExceeded"
 
 
-def test_format_error_handling():
+def test_format_error_handling(default_config):
     """Test agent handles malformed action formats properly."""
     agent = DefaultAgent(
         model=DeterministicModel(
@@ -64,6 +77,7 @@ def test_format_error_handling():
             ]
         ),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     exit_status, result = agent.run("Test format errors")
@@ -77,7 +91,7 @@ def test_format_error_handling():
     )
 
 
-def test_timeout_handling():
+def test_timeout_handling(default_config):
     """Test agent handles command timeouts properly."""
     agent = DefaultAgent(
         model=DeterministicModel(
@@ -87,6 +101,7 @@ def test_timeout_handling():
             ]
         ),
         env=LocalEnvironment(timeout=1),  # Very short timeout
+        **default_config,
     )
 
     exit_status, result = agent.run("Test timeout handling")
@@ -96,7 +111,7 @@ def test_timeout_handling():
     assert len([msg for msg in agent.messages if "timed out" in msg.get("content", "")]) == 1
 
 
-def test_timeout_captures_partial_output():
+def test_timeout_captures_partial_output(default_config):
     """Test that timeout error captures partial output from commands that produce output before timing out."""
     num1, num2 = 111, 9
     calculation_command = f"echo $(({num1}*{num2})); sleep 10"
@@ -109,6 +124,7 @@ def test_timeout_captures_partial_output():
             ]
         ),
         env=LocalEnvironment(timeout=1),
+        **default_config,
     )
     exit_status, result = agent.run("Test timeout with partial output")
     assert exit_status == "Submitted"
@@ -118,11 +134,12 @@ def test_timeout_captures_partial_output():
     assert expected_output in timed_out_messages[0]["content"]  # ensure timed out output is still captured
 
 
-def test_parse_action_success():
+def test_parse_action_success(default_config):
     """Test action parsing works correctly for valid formats."""
     agent = DefaultAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     # Test different valid formats
@@ -139,11 +156,12 @@ def test_parse_action_success():
     assert result["content"] == "Some text\n```bash\necho 'hello'\n```\nMore text"
 
 
-def test_parse_action_failures():
+def test_parse_action_failures(default_config):
     """Test action parsing raises appropriate exceptions for invalid formats."""
     agent = DefaultAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     # No code blocks
@@ -159,7 +177,7 @@ def test_parse_action_failures():
         agent.parse_action({"content": "```\nls -la\n```"})
 
 
-def test_message_history_tracking():
+def test_message_history_tracking(default_config):
     """Test that messages are properly added and tracked."""
     agent = DefaultAgent(
         model=DeterministicModel(
@@ -169,6 +187,7 @@ def test_message_history_tracking():
             ]
         ),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     exit_status, result = agent.run("Track messages")
@@ -180,7 +199,7 @@ def test_message_history_tracking():
     assert [msg["role"] for msg in agent.messages] == ["system", "user", "assistant", "user", "assistant", "user"]
 
 
-def test_multiple_steps_before_completion():
+def test_multiple_steps_before_completion(default_config):
     """Test agent can handle multiple steps before finding completion signal."""
     agent = DefaultAgent(
         model=DeterministicModel(
@@ -192,7 +211,7 @@ def test_multiple_steps_before_completion():
             ]
         ),
         env=LocalEnvironment(),
-        cost_limit=5.0,  # Increase cost limit to allow all 4 calls (4.0 total cost)
+        **{**default_config, "cost_limit": 5.0},  # Increase cost limit to allow all 4 calls (4.0 total cost)
     )
 
     exit_status, result = agent.run("Multi-step task")
@@ -202,7 +221,7 @@ def test_multiple_steps_before_completion():
 
     # Check that all intermediate outputs are captured (final step doesn't get observation due to termination)
     observations = [
-        msg["content"] for msg in agent.messages if msg["role"] == "user" and "Observation:" in msg["content"]
+        msg["content"] for msg in agent.messages if msg["role"] == "user" and "<returncode>" in msg["content"]
     ]
     assert len(observations) == 3
     assert "first" in observations[0]
@@ -210,7 +229,7 @@ def test_multiple_steps_before_completion():
     assert "third" in observations[2]
 
 
-def test_custom_config():
+def test_custom_config(default_config):
     """Test agent works with custom configuration."""
     agent = DefaultAgent(
         model=DeterministicModel(
@@ -219,10 +238,13 @@ def test_custom_config():
             ]
         ),
         env=LocalEnvironment(),
-        system_template="You are a test assistant.",
-        instance_template="Task: {{task}}. Return bash command.",
-        step_limit=2,
-        cost_limit=1.0,
+        **{
+            **default_config,
+            "system_template": "You are a test assistant.",
+            "instance_template": "Task: {{task}}. Return bash command.",
+            "step_limit": 2,
+            "cost_limit": 1.0,
+        },
     )
 
     exit_status, result = agent.run("Test custom config")
@@ -232,11 +254,12 @@ def test_custom_config():
     assert "Test custom config" in agent.messages[1]["content"]
 
 
-def test_render_template_model_stats():
+def test_render_template_model_stats(default_config):
     """Test that render_template has access to n_model_calls and model_cost from model."""
     agent = DefaultAgent(
         model=DeterministicModel(outputs=["output1", "output2"]),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     # Make some model calls to generate stats
@@ -250,7 +273,7 @@ def test_render_template_model_stats():
     assert result == "Calls: 2, Cost: 2.0"
 
 
-def test_messages_include_timestamps():
+def test_messages_include_timestamps(default_config):
     """Test that all messages include timestamps."""
     agent = DefaultAgent(
         model=DeterministicModel(
@@ -260,6 +283,7 @@ def test_messages_include_timestamps():
             ]
         ),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     agent.run("Test timestamps")
@@ -273,11 +297,12 @@ def test_messages_include_timestamps():
     assert timestamps == sorted(timestamps)
 
 
-def test_step_output_includes_action():
+def test_step_output_includes_action(default_config):
     """Test that step output includes the action that was executed."""
     agent = DefaultAgent(
         model=DeterministicModel(outputs=["Test command\n```bash\necho 'hello'\n```"]),
         env=LocalEnvironment(),
+        **default_config,
     )
 
     agent.add_message("system", "system message")

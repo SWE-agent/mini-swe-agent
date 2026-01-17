@@ -199,7 +199,7 @@ Here's a few general examples:
 
 Here are more examples of how to configure specific models:
 
-=== "Gemini 3 Pro with Openrouter"
+=== "Gemini 3 (Openrouter)"
 
     ```yaml
     model:
@@ -209,7 +209,7 @@ Here are more examples of how to configure specific models:
             temperature: 0.0
     ```
 
-=== "GPT 5.1 medium reasoning with Portkey"
+=== "GPT 5.1 medium (Portkey)"
 
     ```yaml
     model:
@@ -218,6 +218,42 @@ Here are more examples of how to configure specific models:
         model_kwargs:
             reasoning_effort: "medium"
             verbosity: "medium"
+    ```
+
+=== "Claude Haiku 4.5"
+
+    ```yaml
+    model:
+        model_name: "anthropic/claude-haiku-4-5-20251001"
+        model_kwargs:
+            temperature: 0.0
+    ```
+
+=== "GPT 5 mini (Portkey)"
+
+    ```yaml
+    model:
+        model_name: "@openai/gpt-5-mini"
+        model_class: portkey
+    ```
+
+=== "Deepseek"
+
+    ```yaml
+    model:
+        model_name: "deepseek/deepseek-reasoner"
+        model_kwargs:
+            temperature: 0.0
+    ```
+
+=== "Minimax (Openrouter)"
+
+    ```yaml
+    model:
+        model_name: "minimax/minimax-m2"
+        model_class: openrouter
+        model_kwargs:
+            temperature: 0.0
     ```
 
 ## Model classes

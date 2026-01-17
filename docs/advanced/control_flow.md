@@ -1,5 +1,9 @@
 # Agent control flow
 
+!!! note "Understanding AI agent basics"
+
+    We also recently created a long tutorial on understanding the basics of building an AI agent: [View it here](https://minimal-agent.com).
+
 !!! abstract "Understanding the default agent"
 
     * This guide shows the control flow of the default agent.

@@ -2,11 +2,11 @@ import json
 import logging
 import os
 from collections.abc import Callable
-from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
 import litellm
+from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
     retry,
@@ -21,10 +21,9 @@ from minisweagent.models.utils.cache_control import set_cache_control
 logger = logging.getLogger("litellm_model")
 
 
-@dataclass
-class LitellmModelConfig:
+class LitellmModelConfig(BaseModel):
     model_name: str
-    model_kwargs: dict[str, Any] = field(default_factory=dict)
+    model_kwargs: dict[str, Any] = {}
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     set_cache_control: Literal["default_end"] | None = None
     """Set explicit cache control markers, for example for Anthropic models"""
@@ -41,6 +40,7 @@ class LitellmModel:
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
     @retry(
+        reraise=True,
         stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
@@ -68,9 +68,9 @@ class LitellmModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
-        response = self._query(messages, **kwargs)
+        response = self._query([{"role": msg["role"], "content": msg["content"]} for msg in messages], **kwargs)
         try:
-            cost = litellm.cost_calculator.completion_cost(response)
+            cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
             if cost <= 0.0:
                 raise ValueError(f"Cost must be > 0.0, got {cost}")
         except Exception as e:
@@ -97,4 +97,4 @@ class LitellmModel:
         }
 
     def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config) | {"n_model_calls": self.n_calls, "model_cost": self.cost}
+        return self.config.model_dump() | {"n_model_calls": self.n_calls, "model_cost": self.cost}

@@ -1,6 +1,5 @@
 import logging
 import os
-from dataclasses import dataclass
 
 import litellm
 from tenacity import (
@@ -19,7 +18,6 @@ from minisweagent.models.utils.openai_utils import coerce_responses_text
 logger = logging.getLogger("portkey_response_api_model")
 
 
-@dataclass
 class PortkeyResponseAPIModelConfig(PortkeyModelConfig):
     pass
 
@@ -30,6 +28,7 @@ class PortkeyResponseAPIModel(PortkeyModel):
         self._previous_response_id: str | None = None
 
     @retry(
+        reraise=True,
         stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
@@ -52,7 +51,7 @@ class PortkeyResponseAPIModel(PortkeyModel):
         response = self._query(messages, **kwargs)
         text = coerce_responses_text(response)
         try:
-            cost = litellm.cost_calculator.completion_cost(response)
+            cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
             assert cost > 0.0, f"Cost is not positive: {cost}"
         except Exception as e:
             if self.config.cost_tracking != "ignore_errors":

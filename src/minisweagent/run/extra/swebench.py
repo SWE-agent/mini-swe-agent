@@ -81,7 +81,7 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     env_config = config.setdefault("environment", {})
     env_config["environment_class"] = env_config.get("environment_class", "docker")
     image_name = get_swebench_docker_image_name(instance)
-    if env_config["environment_class"] == "docker":
+    if env_config["environment_class"] in ["docker", "swerex_modal"]:
         env_config["image"] = image_name
     elif env_config["environment_class"] == "singularity":
         env_config["image"] = "docker://" + image_name
@@ -139,6 +139,7 @@ def process_instance(
 
     agent = None
     extra_info = None
+    env = None
 
     try:
         env = get_sb_environment(config, instance)
@@ -155,6 +156,8 @@ def process_instance(
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
     finally:
+        if env and hasattr(env, "stop"):
+            env.stop()
         save_traj(
             agent,
             instance_dir / f"{instance_id}.traj.json",

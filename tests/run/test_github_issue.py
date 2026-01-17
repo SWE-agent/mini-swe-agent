@@ -4,7 +4,7 @@ from unittest.mock import patch
 import pytest
 
 from minisweagent.models.test_models import DeterministicModel
-from minisweagent.run.github_issue import DEFAULT_CONFIG, main
+from minisweagent.run.extra.github_issue import DEFAULT_CONFIG, main
 
 
 def normalize_outputs(s: str) -> str:
@@ -47,14 +47,14 @@ def assert_observations_match(expected_observations: list[str], messages: list[d
 def test_configure_if_first_time_called():
     """Test that configure_if_first_time is called when running github_issue main."""
     with (
-        patch("minisweagent.run.github_issue.configure_if_first_time") as mock_configure,
-        patch("minisweagent.run.github_issue.fetch_github_issue") as mock_fetch,
-        patch("minisweagent.run.github_issue.InteractiveAgent") as mock_agent,
-        patch("minisweagent.run.github_issue.get_model"),
-        patch("minisweagent.run.github_issue.DockerEnvironment"),
-        patch("minisweagent.run.github_issue.yaml.safe_load") as mock_yaml_load,
-        patch("minisweagent.run.github_issue.get_config_path") as mock_get_config_path,
-        patch("minisweagent.run.github_issue.save_traj"),
+        patch("minisweagent.run.extra.github_issue.configure_if_first_time") as mock_configure,
+        patch("minisweagent.run.extra.github_issue.fetch_github_issue") as mock_fetch,
+        patch("minisweagent.run.extra.github_issue.InteractiveAgent") as mock_agent,
+        patch("minisweagent.run.extra.github_issue.get_model"),
+        patch("minisweagent.run.extra.github_issue.DockerEnvironment"),
+        patch("minisweagent.run.extra.github_issue.yaml.safe_load") as mock_yaml_load,
+        patch("minisweagent.run.extra.github_issue.get_config_path") as mock_get_config_path,
+        patch("minisweagent.run.extra.github_issue.save_traj"),
     ):
         mock_fetch.return_value = "Test issue"
         mock_yaml_load.return_value = {"agent": {}, "environment": {}, "model": {}}
@@ -76,8 +76,8 @@ def test_github_issue_end_to_end(github_test_data):
     expected_observations = github_test_data["expected_observations"]
 
     with (
-        patch("minisweagent.run.github_issue.configure_if_first_time"),
-        patch("minisweagent.run.github_issue.get_model") as mock_get_model,
+        patch("minisweagent.run.extra.github_issue.configure_if_first_time"),
+        patch("minisweagent.run.extra.github_issue.get_model") as mock_get_model,
         patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),  # No new task
     ):
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)

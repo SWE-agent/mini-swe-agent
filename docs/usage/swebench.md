@@ -65,7 +65,7 @@
 
     === "Single instance (for debugging)"
 
-        Single instance mode runs on a single task instance with interactivity (useful for debugging).
+        Single instance mode runs on a single task instance with interactivity. This is meant for debugging, and so unlike the batch mode command above, this will not produce a preds.json file.
 
         ```bash
         mini-extra swebench-single --help
@@ -129,7 +129,7 @@
         ```bash
         python -m swebench.harness.run_evaluation \
             --dataset_name princeton-nlp/SWE-bench_Verified \
-            --predictions_path all_preds.jsonl \
+            --predictions_path preds.jsonl \
             --max_workers <num_workers> \
             --run_id <run_id>
         ```
