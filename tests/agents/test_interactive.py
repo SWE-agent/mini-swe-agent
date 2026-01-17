@@ -973,21 +973,23 @@ def test_confirm_exit_config_field_can_be_set(default_config):
     assert agent_without_confirm.config.confirm_exit is False
 
 
-def test_summarize_on_exit_config_field_defaults():
+def test_summarize_on_exit_config_field_defaults(default_config):
     """Test that summarize_on_exit field has correct default value."""
     agent = InteractiveAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
+        **default_config,
     )
     # Default should be False
     assert agent.config.summarize_on_exit is False
 
 
-def test_summarize_on_exit_config_field_can_be_set():
+def test_summarize_on_exit_config_field_can_be_set(default_config):
     """Test that summarize_on_exit field can be explicitly set."""
     agent_with_summary = InteractiveAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
+        **default_config,
         summarize_on_exit=True,
     )
     assert agent_with_summary.config.summarize_on_exit is True
@@ -995,12 +997,13 @@ def test_summarize_on_exit_config_field_can_be_set():
     agent_without_summary = InteractiveAgent(
         model=DeterministicModel(outputs=[]),
         env=LocalEnvironment(),
+        **default_config,
         summarize_on_exit=False,
     )
     assert agent_without_summary.config.summarize_on_exit is False
 
 
-def test_summarize_on_exit_disabled_no_summary():
+def test_summarize_on_exit_disabled_no_summary(default_config):
     """Test that when summarize_on_exit=False, no summary is generated."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -1011,6 +1014,7 @@ def test_summarize_on_exit_disabled_no_summary():
                 outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
             ),
             env=LocalEnvironment(),
+            **default_config,
             summarize_on_exit=False,
         )
 
@@ -1022,7 +1026,7 @@ def test_summarize_on_exit_disabled_no_summary():
         assert len(summary_messages) == 0
 
 
-def test_summarize_on_exit_enabled_generates_summary():
+def test_summarize_on_exit_enabled_generates_summary(default_config):
     """Test that when summarize_on_exit=True, summary is generated before exit."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -1036,6 +1040,7 @@ def test_summarize_on_exit_enabled_generates_summary():
                 ]
             ),
             env=LocalEnvironment(),
+            **default_config,
             summarize_on_exit=True,
             confirm_exit=True,
         )
@@ -1059,7 +1064,7 @@ def test_summarize_on_exit_enabled_generates_summary():
             assert "Generating summary" in print_calls_str or "Summary of changes" in print_calls_str
 
 
-def test_summarize_on_exit_with_confirm_exit_disabled():
+def test_summarize_on_exit_with_confirm_exit_disabled(default_config):
     """Test that summary is generated even when confirm_exit=False."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -1073,6 +1078,7 @@ def test_summarize_on_exit_with_confirm_exit_disabled():
                 ]
             ),
             env=LocalEnvironment(),
+            **default_config,
             summarize_on_exit=True,
             confirm_exit=False,  # No exit confirmation
         )
@@ -1092,7 +1098,7 @@ def test_summarize_on_exit_with_confirm_exit_disabled():
             assert agent.model.n_calls == 2
 
 
-def test_summarize_on_exit_with_new_task_continues():
+def test_summarize_on_exit_with_new_task_continues(default_config):
     """Test that when user provides new task after summary, agent continues."""
     with patch(
         "minisweagent.agents.interactive.prompt_session.prompt",
@@ -1113,6 +1119,7 @@ def test_summarize_on_exit_with_new_task_continues():
                 ]
             ),
             env=LocalEnvironment(),
+            **default_config,
             summarize_on_exit=True,
             confirm_exit=True,
         )
@@ -1136,7 +1143,7 @@ def test_summarize_on_exit_with_new_task_continues():
             assert agent.model.n_calls == 4
 
 
-def test_summarize_on_exit_error_handling():
+def test_summarize_on_exit_error_handling(default_config):
     """Test that errors during summary generation are handled gracefully."""
 
     class ErrorModel(DeterministicModel):
@@ -1157,6 +1164,7 @@ def test_summarize_on_exit_error_handling():
                 outputs=["Finishing\n```bash\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"]
             ),
             env=LocalEnvironment(),
+            **default_config,
             summarize_on_exit=True,
             confirm_exit=True,
         )
