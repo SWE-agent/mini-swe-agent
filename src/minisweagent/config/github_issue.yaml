@@ -15,19 +15,22 @@ agent:
     </format_example>
 
     Failure to follow these rules will cause your response to be rejected.
-    To finish, issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
-    without any other command.
   instance_template: |
     Please solve this issue: {{task}}
 
     You can execute bash commands and edit files to implement the necessary changes.
 
     ## Recommended Workflow
+
+    This workflows should be done step-by-step so that you can iterate on your changes and any possible problems.
+
     1. Analyze the codebase by finding and reading relevant files
     2. Create a script to reproduce the issue
     3. Edit the source code to resolve the issue
     4. Verify your fix works by running your script again
     5. Test edge cases to ensure your fix is robust
+    6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.
+       Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>
 
     ## Important Rules
 
@@ -35,8 +38,10 @@ agent:
     2. The action must be enclosed in triple backticks
     3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
        However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
-    4. To finish, issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.
-       Do not combine it with any other command.
+
+    <system_information>
+    {{system}} {{release}} {{version}} {{machine}}
+    </system_information>
 
     ## Formatting your response
 
@@ -63,6 +68,12 @@ agent:
     ```
 
     ### Edit files with sed:
+
+    {%- if system == "Darwin" -%}
+    <important>
+    You are on MacOS. For all the below examples, you need to use `sed -i ''` instead of `sed -i`.
+    </important>
+    {%- endif -%}
 
     ```mswea_bash_command
     # Replace all occurrences
@@ -91,7 +102,8 @@ agent:
     anything
     ```
   step_limit: 0.
-  cost_limit: 0.
+  cost_limit: 3.
+  mode: confirm
 
 environment:
   image: "python:3.11"
@@ -135,9 +147,8 @@ model:
     drop_params: true
   format_error_template: |
     Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
-    If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
-    without any other command.
-    Else, please format your response exactly as follows:
+
+    Please format your action in triple backticks as shown in <response_example>.
 
     <response_example>
     Here are some thoughts about why you want to perform the action.
@@ -146,3 +157,6 @@ model:
     <action>
     ```
     </response_example>
+
+    If you have completed your assignment, please consult the first message about how to
+    submit your solution (you will not be able to continue working on this task after that).

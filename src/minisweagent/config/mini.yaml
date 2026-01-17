@@ -144,9 +144,8 @@ model:
     drop_params: true
   format_error_template: |
     Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
-    If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
-    without any other command.
-    Else, please format your response exactly as follows:
+
+    Please format your action in triple backticks as shown in <response_example>.
 
     <response_example>
     Here are some thoughts about why you want to perform the action.
@@ -156,5 +155,5 @@ model:
     ```
     </response_example>
 
-    Note: In rare cases, if you need to reference a similar format in your command, you might have
-    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```mswea_bash_command.
+    If you have completed your assignment, please consult the first message about how to
+    submit your solution (you will not be able to continue working on this task after that).
