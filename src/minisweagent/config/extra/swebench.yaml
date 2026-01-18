@@ -154,7 +154,6 @@ agent:
     </IMPORTANT>
 
     Step 2: Verify your patch
-    Run `git apply --check patch.txt` to ensure it's valid.
     Inspect patch.txt to confirm it only contains your intended changes and headers show `--- a/` and `+++ b/` paths.
 
     Step 3: Submit (EXACT command required)
