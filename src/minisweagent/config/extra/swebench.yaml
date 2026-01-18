@@ -140,7 +140,8 @@ agent:
     Follow these steps IN ORDER, with SEPARATE commands:
 
     Step 1: Create the patch file
-    Save a git diff of your changes to patch.txt.
+    Run `git diff -- path/to/file1 path/to/file2 > patch.txt` listing only the source files you modified.
+    Do NOT commit your changes. NEVER use `diff -u` or backup files.
 
     <IMPORTANT>
     The patch must only contain changes to the specific source files you modified to fix the issue.
@@ -153,7 +154,8 @@ agent:
     </IMPORTANT>
 
     Step 2: Verify your patch
-    Inspect patch.txt to ensure it contains the correct changes.
+    Run `git apply --check patch.txt` to ensure it's valid.
+    Inspect patch.txt to confirm it only contains your intended changes and headers show `--- a/` and `+++ b/` paths.
 
     Step 3: Submit (EXACT command required)
     You MUST use this EXACT command to submit:
