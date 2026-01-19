@@ -5,7 +5,7 @@
 
 </div>
 
-!!! warning "⚠️ v2.0 ahead! Beware of breaking changes."
+!!! warning "v2.0 ahead! Beware of breaking changes."
 
     See the [migration guide](advanced/v2_migration.md) for details.
 
