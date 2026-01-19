@@ -73,6 +73,7 @@ nav:
       - "Environments": advanced/environments.md
       - "Control flow": advanced/control_flow.md
       - "Python bindings": advanced/cookbook.md
+      - "v2 migration guide": v2_migration.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
   - API Reference:

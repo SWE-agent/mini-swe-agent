@@ -258,13 +258,11 @@ An agent that validates actions before execution (also an example of how to use 
 
     ```python
     import re
-    from dataclasses import dataclass
-    from minisweagent.agents.default import (
-        DefaultAgent, NonTerminatingException, DefaultAgentConfig
-    )
+    from minisweagent.agents.default import DefaultAgent, AgentConfig
+    from minisweagent.exceptions import FormatError
+    from pydantic import BaseModel
 
-    @dataclass
-    class ValidatingAgentConfig(DefaultAgentConfig):
+    class ValidatingAgentConfig(AgentConfig):
         forbidden_patterns: list[str] = [
             r"rm -rf /",
             r"sudo.*passwd",
@@ -275,25 +273,26 @@ An agent that validates actions before execution (also an example of how to use 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs, config_class=ValidatingAgentConfig)
 
-        def execute_action(self, action: dict) -> dict:
-            for pattern in self.config.forbidden_patterns:
-                if re.search(pattern, action["action"], re.IGNORECASE):
-                    raise NonTerminatingException("Action blocked")
-            return super().execute_action(action)
+        def execute_actions(self, message: dict) -> list[dict]:
+            for action in message.get("extra", {}).get("actions", []):
+                for pattern in self.config.forbidden_patterns:
+                    if re.search(pattern, action, re.IGNORECASE):
+                        raise FormatError(self.model.format_message(
+                            role="user", content="Action blocked: forbidden pattern detected"
+                        ))
+            return super().execute_actions(message)
     ```
 
 === "Subclassing the environment"
 
     ```python
     import re
-    from dataclasses import dataclass
-    from minisweagent.agents.default import (
-        DefaultAgent, NonTerminatingException, DefaultAgentConfig
-    )
-    from minisweagent.environments.local import LocalEnvironment
+    from minisweagent.agents.default import DefaultAgent
+    from minisweagent.environments.local import LocalEnvironment, EnvironmentConfig
+    from minisweagent.exceptions import FormatError
+    from pydantic import BaseModel
 
-    @dataclass
-    class EnvironmentWithForbiddenPatternsConfig(LocalEnvironmentConfig):
+    class EnvironmentWithForbiddenPatternsConfig(EnvironmentConfig):
         forbidden_patterns: list[str] = [
             r"rm -rf /",
             r"sudo.*passwd",
@@ -304,11 +303,11 @@ An agent that validates actions before execution (also an example of how to use 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs, config_class=EnvironmentWithForbiddenPatternsConfig)
 
-        def execute(self, command: str, cwd: str = "") -> dict:
+        def execute(self, command: str) -> dict:
             for pattern in self.config.forbidden_patterns:
                 if re.search(pattern, command, re.IGNORECASE):
-                    raise NonTerminatingException("Action blocked")
-            return super().execute(command, cwd)
+                    return {"output": "Action blocked: forbidden pattern detected", "returncode": 1}
+            return super().execute(command)
 
     agent = DefaultAgent(
         LitellmModel(model_name=model_name),

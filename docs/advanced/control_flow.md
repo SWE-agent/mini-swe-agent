@@ -37,27 +37,24 @@ The `step` method is the core of the agent. It does the following:
 5. Adds the observation to the messages
 
 The interesting bit is how we handle error conditions and the finish condition:
-This uses exceptions of two types: `TerminatingException` and `NonTerminatingException`.
+This uses exceptions that inherit from `InterruptAgentFlow`. All these exceptions carry messages that get added to the trajectory.
 
-- `TerminatingException` is raised when the agent has finished its task or we hit a limit (cost, step limit, etc.)
-- `NonTerminatingException` is raised when the agent has not finished its task, but we want to continue the loop.
-   In this case, all we need to do is to add a new message to the messages list, so that the LM can see the new state.
-   There are two typical cases that we handle this way:
+- `Submitted` is raised when the agent has finished its task
+- `LimitsExceeded` is raised when we hit a cost or step limit
+- `FormatError` is raised when the output from the LM is not in the expected format
+- `TimeoutError` is raised when the action took too long to execute
+- `UserInterruption` is raised when the user interrupts the agent
 
-    1. `TimeoutError`: the action took too long to execute (we show partial output)
-    2. `FormatError`: the output from the LM contained zero or multiple actions (we show the error message)
-
-The `DefaultAgent.run` method catches these exceptions and handles them by adding the corresponding message to the messages list and continuing the loop.
+The `DefaultAgent.run` method catches these exceptions and handles them by adding the corresponding messages to the messages list. The loop continues until a message with `role="exit"` is added.
 
 ```python
 while True:
     try:
         self.step()
-    except NonTerminatingException as e:
-        self.add_message("user", str(e))
-    except TerminatingException as e:
-        self.add_message("user", str(e))
-        return type(e).__name__, str(e)
+    except InterruptAgentFlow as e:
+        self.add_messages(*e.messages)
+    if self.messages[-1].get("role") == "exit":
+        break
 ```
 
 Using exceptions for the control flow is a lot easier than passing around flags and states, especially when extending or subclassing the agent.

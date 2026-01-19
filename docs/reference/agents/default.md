@@ -22,8 +22,16 @@
 
 ::: minisweagent.agents.default.DefaultAgent
 
-::: minisweagent.agents.default.NonTerminatingException
+::: minisweagent.exceptions.InterruptAgentFlow
 
-::: minisweagent.agents.default.TerminatingException
+::: minisweagent.exceptions.Submitted
+
+::: minisweagent.exceptions.LimitsExceeded
+
+::: minisweagent.exceptions.FormatError
+
+::: minisweagent.exceptions.TimeoutError
+
+::: minisweagent.exceptions.UserInterruption
 
 {% include-markdown "../../_footer.md" %}

@@ -112,6 +112,10 @@
 
     Please see the [github release notes](https://github.com/SWE-agent/mini-swe-agent/releases) for recent changes.
 
+!!! info "Upgrading to v2?"
+
+    Check out our [v2 migration guide](v2_migration.md) for all the changes and how to update your code.
+
 !!! example "Example Prompts"
 
     Try mini-SWE-agent with these example prompts:
