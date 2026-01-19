@@ -105,7 +105,7 @@ nav:
       - "GitHub Issue": "reference/run/github_issue.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"
-  - Blog: https://www.swebench.com/SWE-bench/blog/category/mini-swe-agent/
+  - Blog: https://www.swebench.com/blog.html
   - Leaderboard: https://swebench.com
 plugins:
   - redirects:
