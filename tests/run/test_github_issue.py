@@ -171,7 +171,7 @@ def test_github_issue_end_to_end(github_test_data):
         patch("minisweagent.run.extra.github_issue.get_model") as mock_get_model,
         patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),  # No new task
     ):
-        mock_get_model.return_value = DeterministicModel(outputs=model_responses)
+        mock_get_model.return_value = DeterministicModel(outputs=model_responses, cost_per_call=0)
         github_url = "https://github.com/SWE-agent/test-repo/issues/1"
         agent = main(issue_url=github_url, model="tardis", config_spec=[str(DEFAULT_CONFIG)], yolo=True)  # type: ignore
 
