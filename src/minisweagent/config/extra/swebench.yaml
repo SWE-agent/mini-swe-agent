@@ -141,7 +141,7 @@ agent:
 
     Step 1: Create the patch file
     Run `git diff -- path/to/file1 path/to/file2 > patch.txt` listing only the source files you modified.
-    Do NOT commit your changes. NEVER use `diff -u` or backup files.
+    Do NOT commit your changes.
 
     <IMPORTANT>
     The patch must only contain changes to the specific source files you modified to fix the issue.
