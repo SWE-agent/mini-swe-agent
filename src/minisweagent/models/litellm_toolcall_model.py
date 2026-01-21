@@ -47,12 +47,14 @@ class LitellmToolcallModel(LitellmModel):
             except Exception as e:
                 error_msg = f"Error parsing tool call arguments: {e}. "
             if tool_call.function.name != "bash":
-                error_msg += f"Unknown tool '{tool_call.function.name}'"
+                error_msg += f"Unknown tool '{tool_call.function.name}'. "
+            if "command" not in args:
+                error_msg += "Missing 'command' argument in bash tool call."
             if error_msg:
                 raise FormatError(
                     {
                         "role": "user",
-                        "content": error_msg,
+                        "content": error_msg.strip(),
                         "extra": {
                             "interrupt_type": "FormatError",
                         },
