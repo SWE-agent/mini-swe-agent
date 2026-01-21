@@ -20,46 +20,11 @@ from tenacity import (
 
 from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models.utils.anthropic_utils import reorder_thinking_blocks
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 
 logger = logging.getLogger("litellm_model")
-
-
-def _is_thinking_block(block) -> bool:
-    """Check if a content block is a thinking-type block."""
-    if not isinstance(block, dict):
-        return False
-    block_type = block.get("type")
-    # Handle both "thinking" and "redacted_thinking" block types
-    return block_type in ("thinking", "redacted_thinking")
-
-
-def _prepare_messages_for_api(messages: list[dict]) -> list[dict]:
-    """Prepare messages for the API.
-
-    - Strips the 'extra' key from messages (internal metadata not sent to API)
-    - Reorders thinking blocks so they are not the final block in assistant messages
-      (Anthropic API requirement)
-    """
-    result = []
-    for msg in messages:
-        msg_copy = {k: v for k, v in msg.items() if k != "extra"}
-        # Only process assistant messages with list content
-        if msg_copy.get("role") == "assistant" and isinstance(msg_copy.get("content"), list):
-            content = msg_copy["content"]
-            # Check if any thinking blocks exist
-            thinking_blocks = [b for b in content if _is_thinking_block(b)]
-            if thinking_blocks:
-                other_blocks = [b for b in content if not _is_thinking_block(b)]
-                if other_blocks:
-                    # Reorder: thinking blocks first, then other blocks
-                    msg_copy["content"] = thinking_blocks + other_blocks
-                else:
-                    # Only thinking blocks - add empty text block
-                    msg_copy["content"] = thinking_blocks + [{"type": "text", "text": ""}]
-        result.append(msg_copy)
-    return result
 
 
 class LitellmModelConfig(BaseModel):
@@ -117,11 +82,15 @@ class LitellmModel:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
 
-    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
-        prepared = _prepare_messages_for_api(messages)
-        if self.config.set_cache_control:  # anthropic only
+    def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
+        prepared = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
+        prepared = reorder_thinking_blocks(prepared)  # only relevant for anthropic
+        if self.config.set_cache_control:  # mostly for anthropic
             prepared = set_cache_control(prepared, mode=self.config.set_cache_control)
-        response = self._query(prepared, **kwargs)
+        return prepared
+
+    def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+        response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = response.choices[0].message.model_dump()
