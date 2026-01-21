@@ -118,9 +118,10 @@ class LitellmModel:
             raise e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+        prepared = _prepare_messages_for_api(messages)
         if self.config.set_cache_control:  # anthropic only
-            messages = set_cache_control(messages, mode=self.config.set_cache_control)
-        response = self._query(_prepare_messages_for_api(messages), **kwargs)
+            prepared = set_cache_control(prepared, mode=self.config.set_cache_control)
+        response = self._query(prepared, **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = response.choices[0].message.model_dump()
