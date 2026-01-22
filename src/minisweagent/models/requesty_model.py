@@ -1,12 +1,10 @@
 import json
 import logging
 import os
-import re
 import time
 from typing import Any
 
 import requests
-from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
@@ -16,8 +14,8 @@ from tenacity import (
     wait_exponential,
 )
 
-from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 
 logger = logging.getLogger("requesty_model")
@@ -112,7 +110,7 @@ class RequestyModel:
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = dict(response["choices"][0]["message"])
         message["extra"] = {
-            "actions": self.parse_actions(response),
+            "actions": self._parse_actions(response),
             "response": response,
             **cost_output,
             "timestamp": time.time(),
@@ -129,25 +127,12 @@ class RequestyModel:
             )
         return {"cost": cost}
 
-    def parse_actions(self, response: dict) -> list[dict]:
+    def _parse_actions(self, response: dict) -> list[dict]:
         """Parse actions from the model response. Raises FormatError if not exactly one action."""
         content = response["choices"][0]["message"]["content"] or ""
-        actions = [a.strip() for a in re.findall(self.config.action_regex, content, re.DOTALL)]
-        if len(actions) != 1:
-            raise FormatError(
-                {
-                    "role": "user",
-                    "content": Template(self.config.format_error_template, undefined=StrictUndefined).render(
-                        actions=actions
-                    ),
-                    "extra": {
-                        "interrupt_type": "FormatError",
-                        "n_actions": len(actions),
-                        "model_response": content,
-                    },
-                }
-            )
-        return [{"command": action} for action in actions]
+        return parse_regex_actions(
+            content, action_regex=self.config.action_regex, format_error_template=self.config.format_error_template
+        )
 
     def format_message(self, **kwargs) -> dict:
         msg = dict(**kwargs)
@@ -159,28 +144,12 @@ class RequestyModel:
         self, message: dict, outputs: list[dict], template_vars: dict | None = None
     ) -> list[dict]:
         """Format execution outputs into observation messages."""
-        results = []
-        for output in outputs:
-            content = Template(self.config.observation_template, undefined=StrictUndefined).render(
-                output=output, **(template_vars or {})
-            )
-            results.append(
-                self.format_message(
-                    role="user",
-                    content=content,
-                    extra={
-                        "raw_output": output.get("output", ""),
-                        "returncode": output.get("returncode"),
-                        "timestamp": time.time(),
-                        **(
-                            {"exception_info": output["exception_info"]} | output.get("extra", {})
-                            if output.get("exception_info")
-                            else {}
-                        ),
-                    },
-                )
-            )
-        return results
+        return format_observation_messages(
+            outputs,
+            observation_template=self.config.observation_template,
+            template_vars=template_vars,
+            multimodal_regex=self.config.multimodal_regex,
+        )
 
     def get_template_vars(self, **kwargs) -> dict[str, Any]:
         return self.config.model_dump()

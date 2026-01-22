@@ -43,8 +43,6 @@ class Model(Protocol):
     """Protocol for language models."""
 
     config: Any
-    cost: float
-    n_calls: int
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict: ...
 

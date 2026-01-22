@@ -1,0 +1,91 @@
+"""Parse actions & format observations with toolcalls"""
+
+import json
+import time
+
+from jinja2 import StrictUndefined, Template
+
+from minisweagent.exceptions import FormatError
+from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
+
+BASH_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "bash",
+        "description": "Execute a bash command",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "command": {
+                    "type": "string",
+                    "description": "The bash command to execute",
+                }
+            },
+            "required": ["command"],
+        },
+    },
+}
+
+
+def parse_toolcall_actions(tool_calls: list) -> list[dict]:
+    """Parse tool calls from the response. Raises FormatError if unknown tool or invalid args."""
+    actions = []
+    for tool_call in tool_calls:
+        error_msg = ""
+        args = {}
+        try:
+            args = json.loads(tool_call.function.arguments)
+        except Exception as e:
+            error_msg = f"Error parsing tool call arguments: {e}. "
+        if tool_call.function.name != "bash":
+            error_msg += f"Unknown tool '{tool_call.function.name}'. "
+        if "command" not in args:
+            error_msg += "Missing 'command' argument in bash tool call."
+        if error_msg:
+            raise FormatError(
+                {
+                    "role": "user",
+                    "content": error_msg.strip(),
+                    "extra": {"interrupt_type": "FormatError"},
+                }
+            )
+        actions.append({"command": args["command"], "tool_call_id": tool_call.id})
+    return actions
+
+
+def _build_observation_extra(output: dict) -> dict:
+    """Build the 'extra' dict for an observation message."""
+    extra = {
+        "raw_output": output.get("output", ""),
+        "returncode": output.get("returncode"),
+        "timestamp": time.time(),
+    }
+    if output.get("exception_info"):
+        extra["exception_info"] = output["exception_info"]
+        extra.update(output.get("extra", {}))
+    return extra
+
+
+def format_toolcall_observation_messages(
+    actions: list[dict],
+    outputs: list[dict],
+    observation_template: str,
+    template_vars: dict | None = None,
+    multimodal_regex: str = "",
+) -> list[dict]:
+    """Format execution outputs into tool result messages."""
+    results = []
+    for action, output in zip(actions, outputs):
+        content = Template(observation_template, undefined=StrictUndefined).render(
+            output=output, **(template_vars or {})
+        )
+        msg: dict = {
+            "role": "tool",
+            "tool_call_id": action["tool_call_id"],
+            "content": content,
+            "extra": _build_observation_extra(output),
+        }
+        if multimodal_regex:
+            msg = expand_multimodal_content(msg, multimodal_regex)
+        results.append(msg)
+    return results

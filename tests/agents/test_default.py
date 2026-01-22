@@ -147,9 +147,11 @@ def test_model_parse_actions_success(default_config):
         return _MockResponse(choices=[_MockChoice(message=_MockMessage(content=content))])
 
     # Test different valid formats - parse_actions returns list[dict]
-    assert model.parse_actions(make_response("```mswea_bash_command\necho 'test'\n```")) == [{"command": "echo 'test'"}]
-    assert model.parse_actions(make_response("```mswea_bash_command\nls -la\n```")) == [{"command": "ls -la"}]
-    assert model.parse_actions(make_response("Some text\n```mswea_bash_command\necho 'hello'\n```\nMore text")) == [
+    assert model._parse_actions(make_response("```mswea_bash_command\necho 'test'\n```")) == [
+        {"command": "echo 'test'"}
+    ]
+    assert model._parse_actions(make_response("```mswea_bash_command\nls -la\n```")) == [{"command": "ls -la"}]
+    assert model._parse_actions(make_response("Some text\n```mswea_bash_command\necho 'hello'\n```\nMore text")) == [
         {"command": "echo 'hello'"}
     ]
 
@@ -166,17 +168,17 @@ def test_model_parse_actions_failures(default_config):
 
     # No code blocks
     with pytest.raises(InterruptAgentFlow):
-        model.parse_actions(make_response("No code blocks here"))
+        model._parse_actions(make_response("No code blocks here"))
 
     # Multiple code blocks
     with pytest.raises(InterruptAgentFlow):
-        model.parse_actions(
+        model._parse_actions(
             make_response("```mswea_bash_command\necho 'first'\n```\n```mswea_bash_command\necho 'second'\n```")
         )
 
     # Code block without bash language specifier
     with pytest.raises(InterruptAgentFlow):
-        model.parse_actions(make_response("```\nls -la\n```"))
+        model._parse_actions(make_response("```\nls -la\n```"))
 
 
 def test_message_history_tracking(default_config):

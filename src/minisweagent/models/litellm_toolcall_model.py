@@ -1,28 +1,9 @@
-import json
-import time
-
-from jinja2 import StrictUndefined, Template
-
-from minisweagent.exceptions import FormatError
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
-
-BASH_TOOL = {
-    "type": "function",
-    "function": {
-        "name": "bash",
-        "description": "Execute a bash command",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "command": {
-                    "type": "string",
-                    "description": "The bash command to execute",
-                }
-            },
-            "required": ["command"],
-        },
-    },
-}
+from minisweagent.models.utils.actions_toolcall import (
+    BASH_TOOL,
+    format_toolcall_observation_messages,
+    parse_toolcall_actions,
+)
 
 
 class LitellmToolcallModelConfig(LitellmModelConfig):
@@ -36,58 +17,16 @@ class LitellmToolcallModel(LitellmModel):
     def _query(self, messages: list[dict[str, str]], **kwargs):
         return super()._query(messages, tools=[BASH_TOOL], **kwargs)
 
-    def parse_actions(self, response) -> list[dict]:
+    def _parse_actions(self, response) -> list[dict]:
         """Parse tool calls from the response. Raises FormatError if unknown tool."""
         tool_calls = response.choices[0].message.tool_calls or []
-        actions = []
-        for tool_call in tool_calls:
-            error_msg = ""
-            try:
-                args = json.loads(tool_call.function.arguments)
-            except Exception as e:
-                error_msg = f"Error parsing tool call arguments: {e}. "
-            if tool_call.function.name != "bash":
-                error_msg += f"Unknown tool '{tool_call.function.name}'. "
-            if "command" not in args:
-                error_msg += "Missing 'command' argument in bash tool call."
-            if error_msg:
-                raise FormatError(
-                    {
-                        "role": "user",
-                        "content": error_msg.strip(),
-                        "extra": {
-                            "interrupt_type": "FormatError",
-                        },
-                    }
-                )
-            actions.append({"command": args["command"], "tool_call_id": tool_call.id})
-        return actions
+        return parse_toolcall_actions(tool_calls)
 
     def format_observation_messages(
         self, message: dict, outputs: list[dict], template_vars: dict | None = None
     ) -> list[dict]:
         """Format execution outputs into tool result messages."""
-        results = []
         actions = message.get("extra", {}).get("actions", [])
-        for action, output in zip(actions, outputs):
-            content = Template(self.config.observation_template, undefined=StrictUndefined).render(
-                output=output, **(template_vars or {})
-            )
-            results.append(
-                self.format_message(
-                    role="tool",
-                    tool_call_id=action["tool_call_id"],
-                    content=content,
-                    extra={
-                        "raw_output": output.get("output", ""),
-                        "returncode": output.get("returncode"),
-                        "timestamp": time.time(),
-                        **(
-                            {"exception_info": output["exception_info"]} | output.get("extra", {})
-                            if output.get("exception_info")
-                            else {}
-                        ),
-                    },
-                )
-            )
-        return results
+        return format_toolcall_observation_messages(
+            actions, outputs, self.config.observation_template, template_vars, self.config.multimodal_regex
+        )

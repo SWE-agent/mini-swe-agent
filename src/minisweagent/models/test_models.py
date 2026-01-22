@@ -73,7 +73,7 @@ class DeterministicModel:
             "role": "assistant",
             "content": output,
             "extra": {
-                "actions": self.parse_actions(response),
+                "actions": self._parse_actions(response),
                 **cost_output,
                 "timestamp": time.time(),
             },
@@ -82,7 +82,7 @@ class DeterministicModel:
     def _calculate_cost(self) -> dict[str, float]:
         return {"cost": self.config.cost_per_call}
 
-    def parse_actions(self, response) -> list[dict]:
+    def _parse_actions(self, response) -> list[dict]:
         """Parse actions from the model response. Raises FormatError if not exactly one action."""
         content = response.choices[0].message.content or ""
         actions = [a.strip() for a in re.findall(self.config.action_regex, content, re.DOTALL)]

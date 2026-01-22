@@ -32,7 +32,9 @@ def _expand_content_string(*, content: str, pattern: str) -> list[dict]:
 
 
 def expand_multimodal_content(content: Any, pattern: str) -> Any:
-    """Recursively expand multimodal content in messages."""
+    """Recursively expand multimodal content in messages.
+    Note: Returns copy of content, original content is not modified.
+    """
     content = copy.deepcopy(content)
     if isinstance(content, str):
         return _expand_content_string(content=content, pattern=pattern)

@@ -1,10 +1,8 @@
 import logging
-import re
 import time
 from collections.abc import Callable
 
 import litellm
-from jinja2 import StrictUndefined, Template
 from tenacity import (
     before_sleep_log,
     retry,
@@ -13,9 +11,9 @@ from tenacity import (
     wait_exponential,
 )
 
-from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
+from minisweagent.models.utils.actions_text import parse_regex_actions
 from minisweagent.models.utils.openai_response_api import coerce_responses_text
 
 logger = logging.getLogger("litellm_response_api_model")
@@ -72,32 +70,19 @@ class LitellmResponseAPIModel(LitellmModel):
             "role": "assistant",
             "content": content,
             "extra": {
-                "actions": self.parse_actions(response),
+                "actions": self._parse_actions(response),
                 "response": response.model_dump() if hasattr(response, "model_dump") else {},
                 **cost_output,
                 "timestamp": time.time(),
             },
         }
 
-    def parse_actions(self, response) -> list[dict]:
+    def _parse_actions(self, response) -> list[dict]:
         """Parse actions from the response API response. Uses coerce_responses_text for content extraction."""
         content = coerce_responses_text(response)
-        actions = [a.strip() for a in re.findall(self.config.action_regex, content, re.DOTALL)]
-        if len(actions) != 1:
-            raise FormatError(
-                {
-                    "role": "user",
-                    "content": Template(self.config.format_error_template, undefined=StrictUndefined).render(
-                        actions=actions
-                    ),
-                    "extra": {
-                        "interrupt_type": "FormatError",
-                        "n_actions": len(actions),
-                        "model_response": content,
-                    },
-                }
-            )
-        return [{"command": action} for action in actions]
+        return parse_regex_actions(
+            content, action_regex=self.config.action_regex, format_error_template=self.config.format_error_template
+        )
 
     def _calculate_cost(self, response) -> dict[str, float]:
         try:
