@@ -157,31 +157,3 @@ def test_get_model_non_anthropic_no_cache_control(model_name):
             assert user_msg["role"] == "user"
             assert user_msg["content"] == "Hello!", f"Content should remain as string for {model_name}"
             assert "cache_control" not in user_msg, f"No cache_control should be present for {model_name}"
-
-
-def test_explicit_anthropic_model_class_cache_control():
-    """Test that explicitly using AnthropicModel class also applies cache control."""
-    from minisweagent.models.anthropic import AnthropicModel
-
-    messages = [
-        {"role": "user", "content": "Test message"},
-    ]
-
-    with patch("minisweagent.models.litellm_model.LitellmModel.query") as mock_query:
-        mock_query.return_value = {"content": "Response"}
-
-        # Create AnthropicModel directly
-        model = AnthropicModel(model_name="claude-sonnet")
-        model.query(copy.deepcopy(messages))
-
-        # Verify parent query was called
-        mock_query.assert_called_once()
-        call_args = mock_query.call_args
-
-        # Check that cache control was applied before calling parent
-        passed_messages = call_args.args[0]  # messages is first positional arg
-
-        user_msg = passed_messages[0]
-        assert isinstance(user_msg["content"], list)
-        assert user_msg["content"][0]["cache_control"] == {"type": "ephemeral"}
-        assert user_msg["content"][0]["text"] == "Test message"

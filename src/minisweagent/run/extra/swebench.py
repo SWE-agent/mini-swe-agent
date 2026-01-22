@@ -13,7 +13,6 @@ import traceback
 from pathlib import Path
 
 import typer
-from datasets import load_dataset
 from jinja2 import StrictUndefined, Template
 from rich.live import Live
 
@@ -231,6 +230,8 @@ def main(
     output_path.mkdir(parents=True, exist_ok=True)
     logger.info(f"Results will be saved to {output_path}")
     add_file_handler(output_path / "minisweagent.log")
+
+    from datasets import load_dataset
 
     dataset_path = DATASET_MAPPING.get(subset, subset)
     logger.info(f"Loading dataset {dataset_path}, split {split}...")

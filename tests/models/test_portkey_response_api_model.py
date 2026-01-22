@@ -236,7 +236,7 @@ def test_response_api_model_cache_control():
         patch(
             "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.01
         ),
-        patch("minisweagent.models.portkey_response_api_model.set_cache_control") as mock_cache,
+        patch("minisweagent.models.portkey_model.set_cache_control") as mock_cache,
     ):
         mock_response = Mock()
         mock_response.id = "resp_cache"

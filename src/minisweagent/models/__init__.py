@@ -76,7 +76,6 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
 
 
 _MODEL_CLASS_MAPPING = {
-    "anthropic": "minisweagent.models.anthropic.AnthropicModel",
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
     "litellm_toolcall": "minisweagent.models.litellm_toolcall_model.LitellmToolcallModel",
     "litellm_response": "minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel",

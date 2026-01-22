@@ -28,5 +28,9 @@ class LitellmToolcallModel(LitellmModel):
         """Format execution outputs into tool result messages."""
         actions = message.get("extra", {}).get("actions", [])
         return format_toolcall_observation_messages(
-            actions, outputs, self.config.observation_template, template_vars, self.config.multimodal_regex
+            actions=actions,
+            outputs=outputs,
+            observation_template=self.config.observation_template,
+            template_vars=template_vars,
+            multimodal_regex=self.config.multimodal_regex,
         )
