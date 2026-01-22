@@ -83,9 +83,10 @@ nav:
       - "InteractiveAgent": "reference/agents/interactive.md"
       - "TextualAgent": "reference/agents/textual.md"
     - Models:
+      - "Overview": "reference/models/overview.md"
       - "LitellmModel": "reference/models/litellm.md"
       - "LitellmResponseAPIModel": "reference/models/litellm_response.md"
-      - "AnthropicModel": "reference/models/anthropic.md"
+      - "LitellmToolcallModel": "reference/models/litellm_toolcall.md"
       - "OpenRouterModel": "reference/models/openrouter.md"
       - "RequestyModel": "reference/models/requesty.md"
       - "DeterministicModel": "reference/models/test_models.md"
