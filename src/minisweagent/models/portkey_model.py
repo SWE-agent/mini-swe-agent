@@ -7,18 +7,12 @@ from typing import Any, Literal
 
 import litellm
 from pydantic import BaseModel
-from tenacity import (
-    before_sleep_log,
-    retry,
-    retry_if_not_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
+from minisweagent.models.utils.retry import retry
 
 logger = logging.getLogger("portkey_model")
 
@@ -62,12 +56,13 @@ class PortkeyModelConfig(BaseModel):
 
 
 class PortkeyModel:
+    abort_exceptions: list[type[Exception]] = [KeyboardInterrupt, TypeError, ValueError]
+
     def __init__(self, *, config_class: type = PortkeyModelConfig, **kwargs):
         self.config = config_class(**kwargs)
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
-        # Get API key from environment or raise error
         self._api_key = os.getenv("PORTKEY_API_KEY")
         if not self._api_key:
             raise ValueError(
@@ -76,25 +71,14 @@ class PortkeyModel:
                 "`mini-extra config set PORTKEY_API_KEY YOUR_KEY`."
             )
 
-        # Get virtual key from environment
         virtual_key = os.getenv("PORTKEY_VIRTUAL_KEY")
-
-        # Initialize Portkey client
         client_kwargs = {"api_key": self._api_key}
         if virtual_key:
             client_kwargs["virtual_key"] = virtual_key
 
         self.client = Portkey(**client_kwargs)
 
-    @retry(
-        reraise=True,
-        stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
-        wait=wait_exponential(multiplier=1, min=4, max=60),
-        before_sleep=before_sleep_log(logger, logging.WARNING),
-        retry=retry_if_not_exception_type((KeyboardInterrupt, TypeError, ValueError)),
-    )
     def _query(self, messages: list[dict[str, str]], **kwargs):
-        # return self.client.with_options(metadata={"request_id": request_id}).chat.completions.create(
         return self.client.chat.completions.create(
             model=self.config.model_name,
             messages=messages,
@@ -104,7 +88,9 @@ class PortkeyModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
-        response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
+        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+            with attempt:
+                response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = response.choices[0].message.model_dump()

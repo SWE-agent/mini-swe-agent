@@ -6,17 +6,11 @@ from typing import Any
 
 import requests
 from pydantic import BaseModel
-from tenacity import (
-    before_sleep_log,
-    retry,
-    retry_if_not_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
+from minisweagent.models.utils.retry import retry
 
 logger = logging.getLogger("requesty_model")
 
@@ -58,23 +52,13 @@ class RequestyRateLimitError(Exception):
 
 
 class RequestyModel:
+    abort_exceptions: list[type[Exception]] = [RequestyAuthenticationError, KeyboardInterrupt]
+
     def __init__(self, **kwargs):
         self.config = RequestyModelConfig(**kwargs)
         self._api_url = "https://router.requesty.ai/v1/chat/completions"
         self._api_key = os.getenv("REQUESTY_API_KEY", "")
 
-    @retry(
-        reraise=True,
-        stop=stop_after_attempt(10),
-        wait=wait_exponential(multiplier=1, min=4, max=60),
-        before_sleep=before_sleep_log(logger, logging.WARNING),
-        retry=retry_if_not_exception_type(
-            (
-                RequestyAuthenticationError,
-                KeyboardInterrupt,
-            )
-        ),
-    )
     def _query(self, messages: list[dict[str, str]], **kwargs):
         headers = {
             "Authorization": f"Bearer {self._api_key}",
@@ -105,7 +89,9 @@ class RequestyModel:
             raise RequestyAPIError(f"Request failed: {e}") from e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
-        response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
+        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+            with attempt:
+                response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = dict(response["choices"][0]["message"])

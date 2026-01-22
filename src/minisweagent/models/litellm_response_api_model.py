@@ -3,18 +3,12 @@ import time
 from collections.abc import Callable
 
 import litellm
-from tenacity import (
-    before_sleep_log,
-    retry,
-    retry_if_not_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.actions_text import parse_regex_actions
 from minisweagent.models.utils.openai_response_api import coerce_responses_text
+from minisweagent.models.utils.retry import retry
 
 logger = logging.getLogger("litellm_response_api_model")
 
@@ -28,26 +22,8 @@ class LitellmResponseAPIModel(LitellmModel):
         super().__init__(config_class=config_class, **kwargs)
         self._previous_response_id: str | None = None
 
-    @retry(
-        reraise=True,
-        stop=stop_after_attempt(10),
-        wait=wait_exponential(multiplier=1, min=4, max=60),
-        before_sleep=before_sleep_log(logger, logging.WARNING),
-        retry=retry_if_not_exception_type(
-            (
-                litellm.exceptions.UnsupportedParamsError,
-                litellm.exceptions.NotFoundError,
-                litellm.exceptions.PermissionDeniedError,
-                litellm.exceptions.ContextWindowExceededError,
-                litellm.exceptions.APIError,
-                litellm.exceptions.AuthenticationError,
-                KeyboardInterrupt,
-            )
-        ),
-    )
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
-            # Remove 'extra' field - not supported by OpenAI responses API
             clean_messages = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
             resp = litellm.responses(
                 model=self.config.model_name,
@@ -62,7 +38,9 @@ class LitellmResponseAPIModel(LitellmModel):
             raise e
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
-        response = self._query(messages, **kwargs)
+        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+            with attempt:
+                response = self._query(messages, **kwargs)
         content = coerce_responses_text(response)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])

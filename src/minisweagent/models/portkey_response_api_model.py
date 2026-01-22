@@ -1,21 +1,14 @@
 import logging
-import os
 import time
 
 import litellm
-from tenacity import (
-    before_sleep_log,
-    retry,
-    retry_if_not_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
 from minisweagent.models.utils.actions_text import parse_regex_actions
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_response_api import coerce_responses_text
+from minisweagent.models.utils.retry import retry
 
 logger = logging.getLogger("portkey_response_api_model")
 
@@ -29,13 +22,6 @@ class PortkeyResponseAPIModel(PortkeyModel):
         super().__init__(config_class=config_class, **kwargs)
         self._previous_response_id: str | None = None
 
-    @retry(
-        reraise=True,
-        stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
-        wait=wait_exponential(multiplier=1, min=4, max=60),
-        before_sleep=before_sleep_log(logger, logging.WARNING),
-        retry=retry_if_not_exception_type((KeyboardInterrupt, TypeError, ValueError)),
-    )
     def _query(self, messages: list[dict[str, str]], **kwargs):
         input_messages = messages if self._previous_response_id is None else messages[-1:]
         resp = self.client.responses.create(
@@ -50,7 +36,9 @@ class PortkeyResponseAPIModel(PortkeyModel):
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
-        response = self._query(messages, **kwargs)
+        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+            with attempt:
+                response = self._query(messages, **kwargs)
         content = coerce_responses_text(response)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
