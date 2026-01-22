@@ -7,7 +7,7 @@ from minisweagent.models.utils.actions_toolcall import (
 
 
 class LitellmToolcallModelConfig(LitellmModelConfig):
-    format_error_template: str = "Unknown tool '{{tool_name}}'. Valid tools: {{valid_tools}}"
+    format_error_template: str = "{{ error }}"
 
 
 class LitellmToolcallModel(LitellmModel):
@@ -20,7 +20,7 @@ class LitellmToolcallModel(LitellmModel):
     def _parse_actions(self, response) -> list[dict]:
         """Parse tool calls from the response. Raises FormatError if unknown tool."""
         tool_calls = response.choices[0].message.tool_calls or []
-        return parse_toolcall_actions(tool_calls)
+        return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
 
     def format_observation_messages(
         self, message: dict, outputs: list[dict], template_vars: dict | None = None
