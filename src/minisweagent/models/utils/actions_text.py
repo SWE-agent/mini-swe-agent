@@ -55,6 +55,6 @@ def format_observation_messages(
         )
         msg: dict = {"role": "user", "content": content, "extra": _build_observation_extra(output)}
         if multimodal_regex:
-            msg = expand_multimodal_content(msg, multimodal_regex)
+            msg = expand_multimodal_content(msg, pattern=multimodal_regex)
         results.append(msg)
     return results

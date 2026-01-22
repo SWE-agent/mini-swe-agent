@@ -88,7 +88,7 @@ def test_expand_multimodal_content_string():
     content = (
         "Text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT> more"
     )
-    result = expand_multimodal_content(content, DEFAULT_MULTIMODAL_REGEX)
+    result = expand_multimodal_content(content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert len(result) == 3
     assert result[0]["type"] == "text"
     assert result[1]["type"] == "image_url"
@@ -101,7 +101,7 @@ def test_expand_multimodal_content_list():
         "plain text",
         "text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT> more",
     ]
-    result = expand_multimodal_content(content, DEFAULT_MULTIMODAL_REGEX)
+    result = expand_multimodal_content(content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert len(result) == 2
     assert result[0] == [{"type": "text", "text": "plain text"}]
     assert len(result[1]) == 3
@@ -113,7 +113,7 @@ def test_expand_multimodal_content_dict():
         "role": "user",
         "content": "text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT>",
     }
-    result = expand_multimodal_content(content, DEFAULT_MULTIMODAL_REGEX)
+    result = expand_multimodal_content(content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert result["role"] == "user"
     assert len(result["content"]) == 2
 
@@ -121,7 +121,7 @@ def test_expand_multimodal_content_dict():
 def test_expand_multimodal_content_dict_no_content_key():
     """Test expand_multimodal_content with dict without 'content' key."""
     input_dict = {"role": "user", "other": "data"}
-    assert expand_multimodal_content(input_dict, DEFAULT_MULTIMODAL_REGEX) == input_dict
+    assert expand_multimodal_content(input_dict, pattern=DEFAULT_MULTIMODAL_REGEX) == input_dict
 
 
 def test_expand_multimodal_content_nested():
@@ -133,7 +133,7 @@ def test_expand_multimodal_content_nested():
             {"nested": "value"},
         ],
     }
-    result = expand_multimodal_content(content, DEFAULT_MULTIMODAL_REGEX)
+    result = expand_multimodal_content(content, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert result["role"] == "user"
     assert len(result["content"]) == 2
     assert len(result["content"][0]) == 2
@@ -146,7 +146,7 @@ def test_expand_multimodal_content_preserves_original():
         "content": "text <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>image.png</MSWEA_MULTIMODAL_CONTENT>",
     }
     original_content = original["content"]
-    expand_multimodal_content(original, DEFAULT_MULTIMODAL_REGEX)
+    expand_multimodal_content(original, pattern=DEFAULT_MULTIMODAL_REGEX)
     assert original["content"] == original_content
 
 

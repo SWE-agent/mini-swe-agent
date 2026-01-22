@@ -103,10 +103,7 @@ class DeterministicModel:
         return [{"command": action} for action in actions]
 
     def format_message(self, **kwargs) -> dict:
-        msg = dict(**kwargs)
-        if self.config.multimodal_regex:
-            msg = expand_multimodal_content(msg, self.config.multimodal_regex)
-        return msg
+        return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)
 
     def format_observation_messages(
         self, message: dict, outputs: list[dict], template_vars: dict | None = None

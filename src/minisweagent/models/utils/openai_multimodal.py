@@ -31,18 +31,20 @@ def _expand_content_string(*, content: str, pattern: str) -> list[dict]:
     return result
 
 
-def expand_multimodal_content(content: Any, pattern: str) -> Any:
+def expand_multimodal_content(content: Any, *, pattern: str) -> Any:
     """Recursively expand multimodal content in messages.
     Note: Returns copy of content, original content is not modified.
     """
+    if not pattern:
+        return content
     content = copy.deepcopy(content)
     if isinstance(content, str):
         return _expand_content_string(content=content, pattern=pattern)
     if isinstance(content, list):
-        return [expand_multimodal_content(item, pattern) for item in content]
+        return [expand_multimodal_content(item, pattern=pattern) for item in content]
     if isinstance(content, dict):
         if "content" not in content:
             return content
-        content["content"] = expand_multimodal_content(content["content"], pattern)
+        content["content"] = expand_multimodal_content(content["content"], pattern=pattern)
         return content
     return str(content)
