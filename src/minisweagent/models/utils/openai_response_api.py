@@ -6,7 +6,7 @@ from openai.types.responses.response_output_message import ResponseOutputMessage
 logger = logging.getLogger("openai_response_api")
 
 
-def coerce_responses_text(resp: Any) -> str:
+def _coerce_responses_text(resp: Any) -> str:
     """Helper to normalize OpenAI Responses API result to text.
 
     Works with both OpenAI client responses and LiteLLM/Portkey responses.

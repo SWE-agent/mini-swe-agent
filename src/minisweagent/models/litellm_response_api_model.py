@@ -7,7 +7,7 @@ import litellm
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.actions_text import parse_regex_actions
-from minisweagent.models.utils.openai_response_api import coerce_responses_text
+from minisweagent.models.utils.openai_response_api import _coerce_responses_text
 from minisweagent.models.utils.retry import retry
 
 logger = logging.getLogger("litellm_response_api_model")
@@ -40,7 +40,7 @@ class LitellmResponseAPIModel(LitellmModel):
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
             with attempt:
                 response = self._query(self._prepare_messages_for_api(messages), **kwargs)
-        content = coerce_responses_text(response)
+        content = _coerce_responses_text(response)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         return {
@@ -56,7 +56,7 @@ class LitellmResponseAPIModel(LitellmModel):
 
     def _parse_actions(self, response) -> list[dict]:
         """Parse actions from the response API response. Uses coerce_responses_text for content extraction."""
-        content = coerce_responses_text(response)
+        content = _coerce_responses_text(response)
         return parse_regex_actions(
             content, action_regex=self.config.action_regex, format_error_template=self.config.format_error_template
         )

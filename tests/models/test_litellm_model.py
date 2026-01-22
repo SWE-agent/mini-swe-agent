@@ -9,7 +9,7 @@ import pytest
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel
 from minisweagent.models.litellm_response_api_model import LitellmResponseAPIModel
-from minisweagent.models.utils.openai_response_api import coerce_responses_text
+from minisweagent.models.utils.openai_response_api import _coerce_responses_text
 
 
 def test_authentication_error_enhanced_message():
@@ -279,7 +279,7 @@ def test_coerce_responses_text_with_output_text_field():
     """Test that coerce_responses_text uses output_text field when available."""
     mock_resp = Mock()
     mock_resp.output_text = "Direct output text"
-    assert coerce_responses_text(mock_resp) == "Direct output text"
+    assert _coerce_responses_text(mock_resp) == "Direct output text"
 
 
 def test_coerce_responses_text_dict_single_content():
@@ -287,7 +287,7 @@ def test_coerce_responses_text_dict_single_content():
     mock_resp = Mock()
     mock_resp.output_text = None
     mock_resp.output = [{"content": [{"text": "Test response"}]}]
-    assert coerce_responses_text(mock_resp) == "Test response"
+    assert _coerce_responses_text(mock_resp) == "Test response"
 
 
 def test_coerce_responses_text_dict_multiple_content():
@@ -295,7 +295,7 @@ def test_coerce_responses_text_dict_multiple_content():
     mock_resp = Mock()
     mock_resp.output_text = None
     mock_resp.output = [{"content": [{"text": "First part"}, {"text": "Second part"}]}]
-    assert coerce_responses_text(mock_resp) == "First part\n\nSecond part"
+    assert _coerce_responses_text(mock_resp) == "First part\n\nSecond part"
 
 
 def test_coerce_responses_text_dict_multiple_messages():
@@ -303,7 +303,7 @@ def test_coerce_responses_text_dict_multiple_messages():
     mock_resp = Mock()
     mock_resp.output_text = None
     mock_resp.output = [{"content": [{"text": "Message 1"}]}, {"content": [{"text": "Message 2"}]}]
-    assert coerce_responses_text(mock_resp) == "Message 1\n\nMessage 2"
+    assert _coerce_responses_text(mock_resp) == "Message 1\n\nMessage 2"
 
 
 def test_coerce_responses_text_object_format():
@@ -315,7 +315,7 @@ def test_coerce_responses_text_object_format():
     mock_msg = Mock(spec=ResponseOutputMessage)
     mock_msg.content = [Mock(text="Object format response")]
     mock_resp.output = [mock_msg]
-    assert coerce_responses_text(mock_resp) == "Object format response"
+    assert _coerce_responses_text(mock_resp) == "Object format response"
 
 
 def test_coerce_responses_text_mixed_formats():
@@ -327,7 +327,7 @@ def test_coerce_responses_text_mixed_formats():
     mock_msg = Mock(spec=ResponseOutputMessage)
     mock_msg.content = [Mock(text="Object response")]
     mock_resp.output = [{"content": [{"text": "Dict response"}]}, mock_msg]
-    assert coerce_responses_text(mock_resp) == "Dict response\n\nObject response"
+    assert _coerce_responses_text(mock_resp) == "Dict response\n\nObject response"
 
 
 def test_coerce_responses_text_empty_response():
@@ -335,7 +335,7 @@ def test_coerce_responses_text_empty_response():
     mock_resp = Mock()
     mock_resp.output_text = None
     mock_resp.output = []
-    assert coerce_responses_text(mock_resp) == ""
+    assert _coerce_responses_text(mock_resp) == ""
 
 
 def test_coerce_responses_text_no_text_fields():
@@ -343,7 +343,7 @@ def test_coerce_responses_text_no_text_fields():
     mock_resp = Mock()
     mock_resp.output_text = None
     mock_resp.output = [{"content": [{"type": "image"}]}]
-    assert coerce_responses_text(mock_resp) == ""
+    assert _coerce_responses_text(mock_resp) == ""
 
 
 def test_coerce_responses_text_skip_non_dict_non_message():
@@ -351,7 +351,7 @@ def test_coerce_responses_text_skip_non_dict_non_message():
     mock_resp = Mock()
     mock_resp.output_text = None
     mock_resp.output = ["invalid_item", {"content": [{"text": "Valid text"}]}, None]
-    assert coerce_responses_text(mock_resp) == "Valid text"
+    assert _coerce_responses_text(mock_resp) == "Valid text"
 
 
 def test_coerce_responses_text_empty_string_not_included():
@@ -359,4 +359,4 @@ def test_coerce_responses_text_empty_string_not_included():
     mock_resp = Mock()
     mock_resp.output_text = None
     mock_resp.output = [{"content": [{"text": ""}, {"text": "Non-empty"}]}]
-    assert coerce_responses_text(mock_resp) == "Non-empty"
+    assert _coerce_responses_text(mock_resp) == "Non-empty"

@@ -27,19 +27,6 @@ def parse_regex_actions(content: str, *, action_regex: str, format_error_templat
     return [{"command": action} for action in actions]
 
 
-def _build_observation_extra(output: dict) -> dict:
-    """Build the 'extra' dict for an observation message."""
-    extra = {
-        "raw_output": output.get("output", ""),
-        "returncode": output.get("returncode"),
-        "timestamp": time.time(),
-    }
-    if output.get("exception_info"):
-        extra["exception_info"] = output["exception_info"]
-        extra.update(output.get("extra", {}))
-    return extra
-
-
 def format_observation_messages(
     outputs: list[dict],
     *,
@@ -53,7 +40,15 @@ def format_observation_messages(
         content = Template(observation_template, undefined=StrictUndefined).render(
             output=output, **(template_vars or {})
         )
-        msg: dict = {"role": "user", "content": content, "extra": _build_observation_extra(output)}
+        extra = {
+            "raw_output": output.get("output", ""),
+            "returncode": output.get("returncode"),
+            "timestamp": time.time(),
+        }
+        if output.get("exception_info"):
+            extra["exception_info"] = output["exception_info"]
+            extra.update(output.get("extra", {}))
+        msg: dict = {"role": "user", "content": content, "extra": extra}
         if multimodal_regex:
             msg = expand_multimodal_content(msg, pattern=multimodal_regex)
         results.append(msg)
