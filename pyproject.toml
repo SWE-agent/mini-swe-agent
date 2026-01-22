@@ -43,6 +43,7 @@ dependencies = [
     "platformdirs",
     "textual",
     "prompt_toolkit",
+    "datasets",
     "openai != 1.100.0,!=1.100.1",  # https://github.com/SWE-agent/mini-swe-agent/issues/446
 ]
 
@@ -59,7 +60,6 @@ modal = [
 ]
 
 dev = [
-    "datasets",
     "pytest",
     "pytest-cov",
     "pytest-asyncio",
