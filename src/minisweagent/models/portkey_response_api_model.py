@@ -6,7 +6,6 @@ import litellm
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
 from minisweagent.models.utils.actions_text import parse_regex_actions
-from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_response_api import coerce_responses_text
 from minisweagent.models.utils.retry import retry
 
@@ -34,11 +33,9 @@ class PortkeyResponseAPIModel(PortkeyModel):
         return resp
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
-        if self.config.set_cache_control:
-            messages = set_cache_control(messages, mode=self.config.set_cache_control)
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
             with attempt:
-                response = self._query(messages, **kwargs)
+                response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         content = coerce_responses_text(response)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])

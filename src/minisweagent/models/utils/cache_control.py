@@ -50,7 +50,8 @@ def set_cache_control(
     messages: list[dict], *, mode: Literal["default_end"] | None = "default_end", last_n_messages_offset: int = 0
 ) -> list[dict]:
     """This messages processor adds manual cache control marks to the messages."""
-    # ONLY ADD TO THE LAST MESSAGE
+    if mode is None:
+        return messages
     if mode != "default_end":
         raise ValueError(f"Invalid mode: {mode}")
     if last_n_messages_offset:

@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
+from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
@@ -85,12 +86,15 @@ class PortkeyModel:
             **(self.config.model_kwargs | kwargs),
         )
 
+    def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
+        prepared = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
+        prepared = _reorder_anthropic_thinking_blocks(prepared)
+        return set_cache_control(prepared, mode=self.config.set_cache_control)
+
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
-        if self.config.set_cache_control:
-            messages = set_cache_control(messages, mode=self.config.set_cache_control)
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
             with attempt:
-                response = self._query([{k: v for k, v in msg.items() if k != "extra"} for msg in messages], **kwargs)
+                response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = response.choices[0].message.model_dump()

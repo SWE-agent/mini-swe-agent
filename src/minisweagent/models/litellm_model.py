@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
-from minisweagent.models.utils.anthropic_utils import reorder_thinking_blocks
+from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
@@ -69,10 +69,8 @@ class LitellmModel:
 
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
         prepared = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
-        prepared = reorder_thinking_blocks(prepared)  # only relevant for anthropic
-        if self.config.set_cache_control:  # mostly for anthropic
-            prepared = set_cache_control(prepared, mode=self.config.set_cache_control)
-        return prepared
+        prepared = _reorder_anthropic_thinking_blocks(prepared)
+        return set_cache_control(prepared, mode=self.config.set_cache_control)
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):

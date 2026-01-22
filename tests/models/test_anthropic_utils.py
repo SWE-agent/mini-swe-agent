@@ -1,6 +1,6 @@
 import pytest
 
-from minisweagent.models.utils.anthropic_utils import reorder_thinking_blocks
+from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
 
 
 @pytest.mark.parametrize(
@@ -118,4 +118,4 @@ from minisweagent.models.utils.anthropic_utils import reorder_thinking_blocks
     ],
 )
 def test_reorder_thinking_blocks(messages, expected):
-    assert reorder_thinking_blocks(messages) == expected
+    assert _reorder_anthropic_thinking_blocks(messages) == expected

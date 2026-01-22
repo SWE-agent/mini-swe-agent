@@ -24,10 +24,9 @@ class LitellmResponseAPIModel(LitellmModel):
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
-            clean_messages = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
             resp = litellm.responses(
                 model=self.config.model_name,
-                input=clean_messages if self._previous_response_id is None else clean_messages[-1:],
+                input=messages if self._previous_response_id is None else messages[-1:],
                 previous_response_id=self._previous_response_id,
                 **(self.config.model_kwargs | kwargs),
             )
@@ -40,7 +39,7 @@ class LitellmResponseAPIModel(LitellmModel):
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
             with attempt:
-                response = self._query(messages, **kwargs)
+                response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         content = coerce_responses_text(response)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
