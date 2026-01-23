@@ -65,6 +65,7 @@ nav:
     - "Command line usage":
       - "<code>mini</code>": usage/mini.md
       - "<code>mini -v</code>": usage/mini_v.md
+      - "Config": usage/config.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
     - "Language models":
