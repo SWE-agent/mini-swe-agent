@@ -67,7 +67,7 @@ class DefaultAgent:
                 content=str(e),
                 extra={
                     "exit_status": type(e).__name__,
-                    "submission": str(e),
+                    "submission": "",
                     "exception_str": str(e),
                     "traceback": traceback.format_exc(),
                 },

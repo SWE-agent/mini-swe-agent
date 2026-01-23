@@ -152,7 +152,7 @@ def process_instance(
     agent = None
     exit_status = None
     result = None
-    extra_info = None
+    extra_info = {}
 
     try:
         env = get_sb_environment(config, instance)
@@ -168,8 +168,8 @@ def process_instance(
         result = info.get("submission")
     except Exception as e:
         logger.error(f"Error processing instance {instance_id}: {e}", exc_info=True)
-        exit_status, result = type(e).__name__, str(e)
-        extra_info = {"traceback": traceback.format_exc()}
+        exit_status, result = type(e).__name__, ""
+        extra_info = {"traceback": traceback.format_exc(), "exception_str": str(e)}
     finally:
         if agent is not None:
             traj_path = instance_dir / f"{instance_id}.traj.json"
@@ -179,7 +179,7 @@ def process_instance(
                     "info": {
                         "exit_status": exit_status,
                         "submission": result,
-                        **(extra_info or {}),
+                        **extra_info,
                     },
                     "instance_id": instance_id,
                 },
