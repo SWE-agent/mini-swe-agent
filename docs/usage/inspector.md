@@ -4,6 +4,8 @@
 
     * The `inspector` is a tool that allows you to browse `.traj.json` files that show the history of a mini-SWE-agent run.
     * Quickly start it with `mini-e i` or `mini-extra inspector`.
+    * See [output files](output_files.md) for the trajectory file format.
+    * Alternative: [jless](https://jless.io/) is a great command-line JSON viewer for browsing trajectories.
 
 <figure markdown="span">
   <div class="gif-container gif-container-styled" data-glightbox-disabled>

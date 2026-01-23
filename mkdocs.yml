@@ -68,6 +68,7 @@ nav:
       - "Config": usage/config.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
+      - "Output files": usage/output_files.md
     - "Language models":
       - "Quick start": models/quickstart.md
       - "Local models": models/local_models.md
