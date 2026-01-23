@@ -127,7 +127,7 @@ v2.0 adds native tool calling support as an alternative to text-based action par
 mini -c mini_toolcall.yaml
 
 # Use tool calling for SWE-bench
-python -m minisweagent.run.extra.swebench --config swebench_toolcall.yaml
+python -m minisweagent.run.benchmarks.swebench --config swebench_toolcall.yaml
 ```
 
 **For custom configs:**
@@ -173,7 +173,7 @@ from minisweagent.run.inspector import main
 
 # New
 from minisweagent.run.extra.github_issue import run_github_issue
-from minisweagent.run.extra.inspector import main
+from minisweagent.run.utilities.inspector import main
 ```
 
 ## Agent.run() return value changed

@@ -10,7 +10,7 @@ from minisweagent.agents.interactive import InteractiveAgent
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments.docker import DockerEnvironment
 from minisweagent.models import get_model
-from minisweagent.run.extra.config import configure_if_first_time
+from minisweagent.run.utilities.config import configure_if_first_time
 from minisweagent.utils.serialize import recursive_merge
 
 DEFAULT_CONFIG = Path(os.getenv("MSWEA_GITHUB_CONFIG_PATH", builtin_config_dir / "github_issue.yaml"))

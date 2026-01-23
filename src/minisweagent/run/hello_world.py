@@ -1,3 +1,7 @@
+"""This is the simplest possible example of how to use mini-SWE-agent with python bindings.
+For a more complete example, see mini.py
+"""
+
 import logging
 import os
 from pathlib import Path

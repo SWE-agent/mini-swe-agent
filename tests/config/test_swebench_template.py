@@ -19,7 +19,9 @@ class MockOutput:
 def test_observation_template_short_output():
     """Test that short output (< 10000 chars) is displayed in full"""
     # Load the swebench config
-    config_path = Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "extra" / "swebench.yaml"
+    config_path = (
+        Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "benchmarks" / "swebench.yaml"
+    )
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
@@ -50,7 +52,9 @@ def test_observation_template_short_output():
 def test_observation_template_long_output():
     """Test that long output (> 10000 chars) is truncated with head/tail format"""
     # Load the swebench config
-    config_path = Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "extra" / "swebench.yaml"
+    config_path = (
+        Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "benchmarks" / "swebench.yaml"
+    )
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
@@ -95,7 +99,9 @@ def test_observation_template_long_output():
 def test_observation_template_edge_case_exactly_10000_chars():
     """Test the boundary case where output is around 10000 characters"""
     # Load the swebench config
-    config_path = Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "extra" / "swebench.yaml"
+    config_path = (
+        Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "benchmarks" / "swebench.yaml"
+    )
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
@@ -121,7 +127,9 @@ def test_observation_template_edge_case_exactly_10000_chars():
 def test_observation_template_just_under_10000_chars():
     """Test that smaller output shows full output without truncation"""
     # Load the swebench config
-    config_path = Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "extra" / "swebench.yaml"
+    config_path = (
+        Path(__file__).parent.parent.parent / "src" / "minisweagent" / "config" / "benchmarks" / "swebench.yaml"
+    )
     with open(config_path) as f:
         config = yaml.safe_load(f)
 

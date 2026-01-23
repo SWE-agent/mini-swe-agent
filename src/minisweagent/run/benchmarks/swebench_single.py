@@ -9,7 +9,7 @@ from minisweagent import global_config_dir
 from minisweagent.agents.interactive import InteractiveAgent
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.models import get_model
-from minisweagent.run.extra.swebench import (
+from minisweagent.run.benchmarks.swebench import (
     DATASET_MAPPING,
     get_sb_environment,
 )
@@ -17,7 +17,7 @@ from minisweagent.utils.log import logger
 from minisweagent.utils.serialize import recursive_merge
 
 DEFAULT_OUTPUT_FILE = global_config_dir / "last_swebench_single_run.traj.json"
-DEFAULT_CONFIG_FILE = builtin_config_dir / "extra" / "swebench.yaml"
+DEFAULT_CONFIG_FILE = builtin_config_dir / "benchmarks" / "swebench.yaml"
 
 app = typer.Typer(add_completion=False)
 

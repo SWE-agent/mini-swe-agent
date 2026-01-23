@@ -78,8 +78,8 @@ Repository = "https://github.com/SWE-agent/mini-SWE-agent"
 [project.scripts]
 mini = "minisweagent.run.mini:app"
 mini-swe-agent = "minisweagent.run.mini:app"
-mini-extra = "minisweagent.run.mini_extra:main"
-mini-e= "minisweagent.run.mini_extra:main"
+mini-extra = "minisweagent.run.utilities.mini_extra:main"
+mini-e= "minisweagent.run.utilities.mini_extra:main"
 
 [tool.setuptools]
 include-package-data = true

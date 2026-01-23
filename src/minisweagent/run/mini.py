@@ -19,7 +19,7 @@ from minisweagent.agents.interactive_textual import TextualAgent
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models import get_model
-from minisweagent.run.extra.config import configure_if_first_time
+from minisweagent.run.utilities.config import configure_if_first_time
 from minisweagent.utils.serialize import UNSET, recursive_merge
 
 DEFAULT_CONFIG_FILE = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))

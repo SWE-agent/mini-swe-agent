@@ -21,7 +21,7 @@ from minisweagent.agents.default import DefaultAgent
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments import get_environment
 from minisweagent.models import get_model
-from minisweagent.run.extra.utils.batch_progress import RunBatchProgressManager
+from minisweagent.run.benchmarks.utils.batch_progress import RunBatchProgressManager
 from minisweagent.utils.log import add_file_handler, logger
 from minisweagent.utils.serialize import UNSET, recursive_merge
 
@@ -48,7 +48,7 @@ Examples:
 [bold green]-c swebench.yaml -c agent.max_iterations=50[/bold green]
 """
 
-DEFAULT_CONFIG_FILE = builtin_config_dir / "extra" / "swebench.yaml"
+DEFAULT_CONFIG_FILE = builtin_config_dir / "benchmarks" / "swebench.yaml"
 
 DATASET_MAPPING = {
     "full": "princeton-nlp/SWE-Bench",

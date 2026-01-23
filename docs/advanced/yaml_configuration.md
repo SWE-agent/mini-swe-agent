@@ -98,7 +98,7 @@ You can customize this behavior by setting the `action_regex` field to support d
     This example uses the same structure as the default mini.yaml config, but with `<action>` tags instead of markdown code blocks:
 
     ```yaml
-    --8<-- "src/minisweagent/config/extra/swebench_xml.yaml"
+    --8<-- "src/minisweagent/config/benchmarks/swebench_xml.yaml"
     ```
 
     You can also directly load this config by specifying `--config swebench_xml`.
