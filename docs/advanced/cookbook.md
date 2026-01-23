@@ -29,25 +29,7 @@ You can override the default entry point by setting the `MSWEA_DEFAULT_RUN` envi
 
 ## Hello world
 
-```python
-import logging
-
-from minisweagent.agents.default import DefaultAgent
-from minisweagent.models import get_model
-from minisweagent.environments.local import LocalEnvironment
-
-logging.basicConfig(level=logging.DEBUG)
-task = "Write a hello world program"
-model_name = "anthropic/claude-sonnet-4-5-20250929"
-
-agent = DefaultAgent(
-    get_model(input_model_name=model_name),
-    LocalEnvironment(),
-)
-
-# Run the agent
-agent.run(task)
-```
+See [Python bindings](../usage/python_bindings.md) for the most basic example.
 
 ## Mix & match
 

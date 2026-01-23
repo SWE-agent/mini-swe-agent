@@ -67,12 +67,14 @@ nav:
       - "Quick start": models/quickstart.md
       - "Local models": models/local_models.md
       - "Troubleshooting": models/troubleshooting.md
-    - "Guides & tutorials":
+    - "Configuration":
       - "Global configuration": advanced/global_configuration.md
       - "Yaml config files": advanced/yaml_configuration.md
+    - "Python bindings & more":
+      - "Basic Python bindings": usage/python_bindings.md
+      - "Understanding the agent": advanced/control_flow.md
+      - "Subclassing and more": advanced/cookbook.md
       - "Environments": advanced/environments.md
-      - "Control flow": advanced/control_flow.md
-      - "Python bindings": advanced/cookbook.md
       - "v2 migration guide": v2_migration.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
