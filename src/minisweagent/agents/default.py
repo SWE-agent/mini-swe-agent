@@ -137,7 +137,7 @@ class DefaultAgent:
                 },
                 "mini_version": __version__,
                 "exit_status": last_extra.get("exit_status", ""),
-                "earubmission": last_extra.get("submission", ""),
+                "submission": last_extra.get("submission", ""),
             },
             "messages": self.messages,
             "trajectory_format": "mini-swe-agent-1.1",
