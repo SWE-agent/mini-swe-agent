@@ -73,9 +73,10 @@ mini -c swebench.yaml -c agent.step_limit=100
 ## How has the trajectory (`.traj.json`) format changed?
 
 ### Message structure now includes `extra` field
+
+- All extra metadata (costs, timestamps, raw data) is now in `extra` rather than top-level message fields
 - Model output messages include `extra.actions` (list of parsed actions) and `extra.response` (raw API response)
 - Environment observation messages include `extra` with raw output, returncode, timestamps
-- All extra metadata (costs, timestamps, raw data) is now in `extra` rather than top-level message fields
 
 ### Code block format changed
 The default action regex changed from `` ```bash`` to `` ```mswea_bash_command`` to avoid conflicts with bash examples in prompts.
@@ -103,12 +104,14 @@ The trajectory format version changed from `mini-swe-agent-1.0` to `mini-swe-age
 ## Tell me more about the responsibility changes
 
 **What changed:**
+
 - Models parse actions from LLM output and format observations (via `parse_action()` and `format_observation_messages()`)
 - Environments execute actions and return formatted observation messages (via `execute_messages()` and `format_observation()`)
 - Agent coordinates by calling model and environment, then appending returned messages to `self.messages`
 - Cost tracking is now in Agent rather than Model
 
 **Why:**
+
 - Enables different action handling strategies (tool calls vs text parsing) by swapping model classes
 - Makes models stateless and focused on LLM interaction only
 - Agent becomes a simpler coordinator that doesn't need to know message structure details
@@ -133,7 +136,7 @@ python -m minisweagent.run.benchmarks.swebench --config swebench_toolcall.yaml
 **For custom configs:**
 ```yaml
 model:
-  _target_: minisweagent.models.LitellmToolcallModel
+  model_class: minisweagent.models.LitellmToolcallModel
   model_name: anthropic/claude-sonnet-4-5-20250929
   # ... rest of model config
 ```

@@ -83,9 +83,13 @@ In all builtin agents, you can use the following variables:
 - Variables passed to the `run` method of the agent (by default that's only `task`, but you can pass other variables if you want to)
 - Output of the last action execution (i.e., `output` from the `execute_action` method)
 
-### Custom Action Parsing
+### Using tool calls
 
-By default, mini-SWE-agent parses actions from markdown code blocks (` ```bash...``` `).
+Make sure to use the appropriate model class and matching configuration.
+
+### Custom Action Parsing from Text
+
+mini-SWE-agent can parse actions from markdown code blocks (` ```mswea_bash_command ... ``` `) or from tool calls.
 You can customize this behavior by setting the `action_regex` field to support different formats like XML.
 
 !!! warning "Important"
@@ -110,12 +114,13 @@ You can customize this behavior by setting the `action_regex` field to support d
 
 
     ```yaml
+    model:
+      action_regex: ```mswea_bash_command\s*\n(.*?)\n```
     agent:
-      action_regex: ```bash\s*\n(.*?)\n```
       system_template: |
         Your response must contain exactly ONE bash code block.
 
-        ```bash
+        ```mswea_bash_command
         your_command_here
         ```
     ```
