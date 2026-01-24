@@ -36,13 +36,13 @@ If you only changed `system_template` and `instance_template`, no changes needed
 
 Otherwise, you need to move some config keys to different sections:
 
-**Move from `agent:` to `environment:`:**
-- `action_observation_template` (how to format command output)
-- `timeout_template` (message when command times out)
-
 **Move from `agent:` to `model:`:**
+- `observation_template` (how to format command output, previously called `action_observation_template`)
 - `format_error_template` (message when model output format is wrong)
 - `action_regex` (regex to extract command from model output)
+
+**Removed config keys:**
+- `timeout_template` (timeout handling is now simpler)
 
 **New config structure:**
 ```yaml
@@ -53,10 +53,10 @@ agent:
   cost_limit: 3.
 environment:
   cwd: "..."
-  action_observation_template: "..."  # moved here
-  timeout_template: "..."             # moved here
+  timeout: 30  # timeout in seconds
 model:
   model_name: "..."
+  observation_template: "..."         # moved here (previously action_observation_template)
   format_error_template: "..."        # moved here
   action_regex: "..."                 # moved here
 ```
@@ -105,8 +105,8 @@ The trajectory format version changed from `mini-swe-agent-1.0` to `mini-swe-age
 
 **What changed:**
 
-- Models parse actions from LLM output and format observations (via `parse_action()` and `format_observation_messages()`)
-- Environments execute actions and return formatted observation messages (via `execute_messages()` and `format_observation()`)
+- Models parse actions from LLM output (internally) and format observations (via `format_observation_messages()`)
+- Environments execute actions and return raw output dicts (via `execute()`)
 - Agent coordinates by calling model and environment, then appending returned messages to `self.messages`
 - Cost tracking is now in Agent rather than Model
 
@@ -136,7 +136,7 @@ python -m minisweagent.run.benchmarks.swebench --config swebench_toolcall.yaml
 **For custom configs:**
 ```yaml
 model:
-  model_class: minisweagent.models.LitellmToolcallModel
+  model_class: litellm_toolcall  # or full path: minisweagent.models.litellm_toolcall_model.LitellmToolcallModel
   model_name: anthropic/claude-sonnet-4-5-20250929
   # ... rest of model config
 ```
@@ -171,12 +171,12 @@ from minisweagent.exceptions import Submitted, FormatError
 ### Run script imports
 ```python
 # Old
-from minisweagent.run.github_issue import run_github_issue
-from minisweagent.run.inspector import main
+from minisweagent.run.github_issue import main as github_issue_main
+from minisweagent.run.inspector import main as inspector_main
 
 # New
-from minisweagent.run.extra.github_issue import run_github_issue
-from minisweagent.run.utilities.inspector import main
+from minisweagent.run.extra.github_issue import main as github_issue_main
+from minisweagent.run.utilities.inspector import main as inspector_main
 ```
 
 ## Agent.run() return value changed
@@ -186,13 +186,12 @@ from minisweagent.run.utilities.inspector import main
 submission, exit_status = agent.run(task)  # Returns tuple[str, str]
 
 # New (v2)
-result = agent.run(task)  # Returns dict
-submission = result["info"]["submission"]
-exit_status = result["info"]["exit_status"]
-# Full trajectory data available in result
+result = agent.run(task)  # Returns dict with exit info
+submission = result["submission"]
+exit_status = result["exit_status"]
 ```
 
-The `run()` method now returns the complete serialized trajectory data (same as what gets saved to `.traj.json`).
+The `run()` method now returns the `extra` dict from the final exit message, containing `exit_status` and `submission` keys. To get the full trajectory data, use `agent.save(path)` or `agent.serialize()`.
 
 ## Misc changes
 
@@ -206,7 +205,3 @@ The `ANTHROPIC_API_KEYS` environment variable (with `::` separator for key rotat
 
 ### Renamed files
 - `openai_utils.py` → `openai_response_api.py`
-
-
-
-
