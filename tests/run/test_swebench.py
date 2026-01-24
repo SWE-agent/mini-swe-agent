@@ -442,7 +442,7 @@ def test_exception_handling_in_agent_run(tmp_path, workers):
     result = json.loads(preds_file.read_text())
     instance_id = "swe-agent__test-repo-1"
     assert instance_id in result
-    assert result[instance_id]["model_patch"] == "Agent processing failed"
+    assert result[instance_id]["model_patch"] == ""
     assert result[instance_id]["model_name_or_path"] == "exception_model"
 
     # Check that trajectory file contains exception information
@@ -452,7 +452,8 @@ def test_exception_handling_in_agent_run(tmp_path, workers):
     traj_data = json.loads(traj_file.read_text())
     assert traj_data["instance_id"] == instance_id
     assert traj_data["info"]["exit_status"] == "RuntimeError"
-    assert traj_data["info"]["submission"] == "Agent processing failed"
+    assert traj_data["info"]["submission"] == ""
+    assert traj_data["info"]["exception_str"] == "Agent processing failed"
 
 
 @pytest.mark.slow
@@ -483,7 +484,8 @@ def test_different_exception_types(tmp_path, workers):
     traj_data = json.loads(traj_file.read_text())
 
     assert traj_data["info"]["exit_status"] == "ValueError"
-    assert traj_data["info"]["submission"] == "Invalid input provided"
+    assert traj_data["info"]["submission"] == ""
+    assert traj_data["info"]["exception_str"] == "Invalid input provided"
 
 
 @pytest.mark.slow
