@@ -93,8 +93,8 @@ nav:
     - Models:
       - "Overview": "reference/models/overview.md"
       - "LitellmModel": "reference/models/litellm.md"
-      - "LitellmResponseAPIModel": "reference/models/litellm_response.md"
       - "LitellmToolcallModel": "reference/models/litellm_toolcall.md"
+      - "LitellmResponseToolcallModel": "reference/models/litellm_response_toolcall.md"
       - "OpenRouterModel": "reference/models/openrouter.md"
       - "RequestyModel": "reference/models/requesty.md"
       - "DeterministicModel": "reference/models/test_models.md"

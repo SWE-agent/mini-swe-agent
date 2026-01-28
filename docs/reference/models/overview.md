@@ -8,8 +8,7 @@ This page provides an overview of all available model classes in mini-SWE-agent.
 |-------|----------|----------|-----------|-------------|
 | [`LitellmModel`](litellm.md) | `litellm` | `/completion` | ❌ | Default model using [LiteLLM](https://docs.litellm.ai/docs/providers) for broad provider support (OpenAI, Anthropic, 100+ providers) |
 | [`LitellmToolcallModel`](litellm_toolcall.md) | `litellm_toolcall` | `/completion` | ✅ | LiteLLM with native tool calling |
-| [`LitellmResponseAPIModel`](litellm_response.md) | `litellm_response` | `/response` | ❌ | LiteLLM with [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses) support |
-| [`LitellmResponseToolcallModel`](litellm_response.md) | `litellm_response_toolcall` | `/response` | ✅ | LiteLLM Responses API with native tool calling |
+| [`LitellmResponseToolcallModel`](litellm_response_toolcall.md) | `litellm_response_toolcall` | `/response` | ✅ | LiteLLM with [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses) and native tool calling |
 | [`OpenRouterModel`](openrouter.md) | `openrouter` | `/completion` | ❌ | [OpenRouter](https://openrouter.ai/) API integration |
 | [`OpenRouterToolcallModel`](openrouter.md) | `openrouter_toolcall` | `/completion` | ✅ | OpenRouter with native tool calling |
 | [`OpenRouterResponseAPIToolcallModel`](openrouter.md) | `openrouter_response_toolcall` | `/response` | ✅ | OpenRouter Responses API with native tool calling |

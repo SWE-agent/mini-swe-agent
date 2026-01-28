@@ -148,19 +148,17 @@ Here's a few general examples:
 
 === "GPT-5 with Responses API"
 
-    For OpenAI models that support the Responses API, you can use the `litellm_response` model class:
+    For OpenAI models that support the Responses API, you can use the `litellm_response_toolcall` model class:
 
     ```yaml
     model:
-      model_class: "litellm_response"
+      model_class: "litellm_response_toolcall"
       model_name: "openai/gpt-5-mini"
       model_kwargs:
         drop_params: true
         reasoning:
           effort: "high"
     ```
-
-    See the [`LitellmResponseAPIModel` documentation](../reference/models/litellm_response.md) for more details.
 
 === "OpenRouter"
 
@@ -296,7 +294,7 @@ For example:
 
 * **`litellm`** ([`LitellmModel`](../reference/models/litellm.md)) - **Default and recommended**. Supports most models through [litellm](https://github.com/BerriAI/litellm). Works with OpenAI, Anthropic, Google, and many other providers.
 
-* **`litellm_response`** ([`LitellmResponseAPIModel`](../reference/models/litellm_response.md)) - Specialized version of `LitellmModel` that uses OpenAI's Responses API. Useful for models like GPT-5 and required for models like GPT-5-codex. Maintains conversation state across turns.
+* **`litellm_response_toolcall`** ([`LitellmResponseToolcallModel`](../reference/models/litellm_response_toolcall.md)) - Specialized version of `LitellmModel` that uses OpenAI's Responses API with native tool calling. Useful for models like GPT-5 and required for models like GPT-5-codex. Maintains conversation state across turns.
 
 * **`anthropic`** ([`AnthropicModel`](../reference/models/anthropic.md)) - Wrapper around `LitellmModel` for Anthropic models that adds cache breakpoint handling. Will be used by default if no `model_class` is specified and the model name contains "anthropic", "claude", etc.
 

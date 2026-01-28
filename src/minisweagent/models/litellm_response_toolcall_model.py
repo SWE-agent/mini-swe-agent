@@ -1,10 +1,11 @@
 import logging
 import time
+from collections.abc import Callable
 
 import litellm
 
 from minisweagent.models import GLOBAL_MODEL_STATS
-from minisweagent.models.litellm_response_api_model import LitellmResponseAPIModel, LitellmResponseAPIModelConfig
+from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
     format_toolcall_observation_messages,
@@ -15,13 +16,14 @@ from minisweagent.models.utils.retry import retry
 logger = logging.getLogger("litellm_response_toolcall_model")
 
 
-class LitellmResponseToolcallModelConfig(LitellmResponseAPIModelConfig):
+class LitellmResponseToolcallModelConfig(LitellmModelConfig):
     format_error_template: str = "{{ error }}"
 
 
-class LitellmResponseToolcallModel(LitellmResponseAPIModel):
-    def __init__(self, **kwargs):
-        super().__init__(config_class=LitellmResponseToolcallModelConfig, **kwargs)
+class LitellmResponseToolcallModel(LitellmModel):
+    def __init__(self, *, config_class: Callable = LitellmResponseToolcallModelConfig, **kwargs):
+        super().__init__(config_class=config_class, **kwargs)
+        self._previous_response_id: str | None = None
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
