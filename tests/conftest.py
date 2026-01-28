@@ -6,6 +6,17 @@ import pytest
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 
+
+def pytest_addoption(parser):
+    """Add custom command line options."""
+    parser.addoption(
+        "--run-fire",
+        action="store_true",
+        default=False,
+        help="Run fire tests (real API calls that cost money)",
+    )
+
+
 # Global lock for tests that modify global state - this works across threads
 _global_stats_lock = threading.Lock()
 
