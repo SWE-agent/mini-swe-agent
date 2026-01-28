@@ -6,11 +6,12 @@ import litellm
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
-from minisweagent.models.utils.actions_toolcall import (
-    BASH_TOOL,
+from minisweagent.models.utils.actions_toolcall_response import (
+    BASH_TOOL_RESPONSE_API,
     format_toolcall_observation_messages,
-    parse_toolcall_actions,
+    parse_toolcall_actions_response,
 )
+from minisweagent.models.utils.openai_response_api import _get_trailing_tool_outputs
 from minisweagent.models.utils.retry import retry
 
 logger = logging.getLogger("litellm_response_toolcall_model")
@@ -25,13 +26,18 @@ class LitellmResponseToolcallModel(LitellmModel):
         super().__init__(config_class=config_class, **kwargs)
         self._previous_response_id: str | None = None
 
+    def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
+        return [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
+
     def _query(self, messages: list[dict[str, str]], **kwargs):
+        input_messages = _get_trailing_tool_outputs(messages) if self._previous_response_id else messages
+
         try:
             resp = litellm.responses(
                 model=self.config.model_name,
-                input=messages if self._previous_response_id is None else messages[-1:],
+                input=input_messages,
                 previous_response_id=self._previous_response_id,
-                tools=[BASH_TOOL],
+                tools=[BASH_TOOL_RESPONSE_API],
                 **(self.config.model_kwargs | kwargs),
             )
             self._previous_response_id = getattr(resp, "id", None)
@@ -55,13 +61,9 @@ class LitellmResponseToolcallModel(LitellmModel):
         return message
 
     def _parse_actions(self, response) -> list[dict]:
-        """Parse tool calls from the response API response."""
-        tool_calls = []
-        output = getattr(response, "output", [])
-        for item in output:
-            if getattr(item, "type", None) == "function_call":
-                tool_calls.append(item)
-        return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
+        return parse_toolcall_actions_response(
+            getattr(response, "output", []), format_error_template=self.config.format_error_template
+        )
 
     def format_observation_messages(
         self, message: dict, outputs: list[dict], template_vars: dict | None = None

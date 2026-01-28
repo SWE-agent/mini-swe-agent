@@ -35,12 +35,20 @@ def _format_error_message(error_text: str) -> dict:
     }
 
 
-def parse_toolcall_actions_response(tool_calls: list[dict], *, format_error_template: str) -> list[dict]:
-    """Parse tool calls from a Responses API response.
+def parse_toolcall_actions_response(output: list, *, format_error_template: str) -> list[dict]:
+    """Parse tool calls from a Responses API response output.
 
+    Filters for function_call items and parses them.
     Response API format has name/arguments at top level with call_id:
     {"type": "function_call", "call_id": "...", "name": "bash", "arguments": "..."}
     """
+    tool_calls = []
+    for item in output:
+        item_type = item.get("type") if isinstance(item, dict) else getattr(item, "type", None)
+        if item_type == "function_call":
+            tool_calls.append(
+                item.model_dump() if hasattr(item, "model_dump") else dict(item) if not isinstance(item, dict) else item
+            )
     if not tool_calls:
         error_text = Template(format_error_template, undefined=StrictUndefined).render(
             error="No tool calls found in the response. Every response MUST include at least one tool call.",
