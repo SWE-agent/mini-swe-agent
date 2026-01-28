@@ -25,6 +25,7 @@ from textual.widgets import Footer, Header, Input, Static, TextArea
 
 from minisweagent.agents.default import AgentConfig, DefaultAgent
 from minisweagent.exceptions import Submitted, UserInterruption
+from minisweagent.models.utils.content_string import coerce_message_content
 
 
 class TextualAgentConfig(AgentConfig):
@@ -388,10 +389,7 @@ class TextualAgent(App):
             return
 
         for message in items[self.i_step]:
-            if isinstance(message["content"], list):
-                content_str = "\n".join([item["text"] for item in message["content"]])
-            else:
-                content_str = str(message["content"])
+            content_str = coerce_message_content(message)
             message_container = Vertical(classes="message-container")
             container.mount(message_container)
             role = message["role"].replace("assistant", "mini-swe-agent")

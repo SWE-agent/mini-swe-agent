@@ -17,6 +17,7 @@ from rich.rule import Rule
 from minisweagent import global_config_dir
 from minisweagent.agents.default import AgentConfig, DefaultAgent
 from minisweagent.exceptions import LimitsExceeded, Submitted, UserInterruption
+from minisweagent.models.utils.content_string import coerce_message_content
 
 console = Console(highlight=False)
 prompt_session = PromptSession(history=FileHistory(global_config_dir / "interactive_history.txt"))
@@ -41,7 +42,7 @@ class InteractiveAgent(DefaultAgent):
     def add_messages(self, *messages: dict) -> list[dict]:
         # Extend supermethod to print messages
         for msg in messages:
-            role, content = msg.get("role", "unknown"), msg.get("content", "")
+            role, content = msg.get("role", "unknown"), coerce_message_content(msg)
             if role == "assistant":
                 console.print(
                     f"\n[red][bold]mini-swe-agent[/bold] (step [bold]{self.n_calls}[/bold], [bold]${self.cost:.2f}[/bold]):[/red]\n",
