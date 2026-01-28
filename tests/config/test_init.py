@@ -1,6 +1,13 @@
 """Tests for minisweagent.config.__init__."""
 
-from minisweagent.config import _key_value_spec_to_nested_dict, get_config_from_spec
+import pytest
+
+from minisweagent.config import (
+    _key_value_spec_to_nested_dict,
+    builtin_config_dir,
+    get_config_from_spec,
+    get_config_path,
+)
 
 
 class TestKeyValueSpecToNestedDict:
@@ -93,3 +100,12 @@ class TestGetConfigFromSpec:
         config_file.write_text("key: value\nnumber: 42")
         result = get_config_from_spec(config_file)
         assert result == {"key": "value", "number": 42}
+
+
+_ALL_BUILTIN_CONFIGS = list(builtin_config_dir.rglob("*.yaml"))
+
+
+@pytest.mark.parametrize("yaml_file", [(f,) for f in _ALL_BUILTIN_CONFIGS], ids=[f.stem for f in _ALL_BUILTIN_CONFIGS])
+def test_all_builtin_configs_findable_by_name(yaml_file):
+    """All builtin YAML configs should be findable by their stem name."""
+    assert get_config_path(yaml_file.stem) == yaml_file
