@@ -12,14 +12,11 @@ from minisweagent.models.openrouter_model import (
     OpenRouterModelConfig,
     OpenRouterRateLimitError,
 )
-from minisweagent.models.utils.actions_toolcall import (
-    BASH_TOOL,
+from minisweagent.models.utils.actions_toolcall_response import (
+    BASH_TOOL_RESPONSE_API,
     format_toolcall_observation_messages,
-    parse_toolcall_actions,
+    parse_toolcall_actions_response,
 )
-from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
-from minisweagent.models.utils.cache_control import set_cache_control
-from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
 
 logger = logging.getLogger("openrouter_response_api_toolcall_model")
@@ -49,7 +46,7 @@ class OpenRouterResponseAPIToolcallModel:
         payload = {
             "model": self.config.model_name,
             "input": messages if self._previous_response_id is None else messages[-1:],
-            "tools": [BASH_TOOL],
+            "tools": [BASH_TOOL_RESPONSE_API],
             **(self.config.model_kwargs | kwargs),
         }
         if self._previous_response_id:
@@ -73,9 +70,7 @@ class OpenRouterResponseAPIToolcallModel:
             raise OpenRouterAPIError(f"Request failed: {e}") from e
 
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
-        prepared = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
-        prepared = _reorder_anthropic_thinking_blocks(prepared)
-        return set_cache_control(prepared, mode=self.config.set_cache_control)
+        return [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
@@ -106,14 +101,18 @@ class OpenRouterResponseAPIToolcallModel:
 
     def _parse_actions(self, response: dict) -> list[dict]:
         """Parse tool calls from the response API response."""
-        tool_calls = []
-        for item in response.get("output", []):
-            if item.get("type") == "function_call":
-                tool_calls.append(_DictToObj(item))
-        return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
+        tool_calls = [item for item in response.get("output", []) if item.get("type") == "function_call"]
+        return parse_toolcall_actions_response(tool_calls, format_error_template=self.config.format_error_template)
 
     def format_message(self, **kwargs) -> dict:
-        return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)
+        role = kwargs.get("role", "user")
+        content = kwargs.get("content", "")
+        extra = kwargs.get("extra")
+        content_items = [{"type": "input_text", "text": content}] if isinstance(content, str) else content
+        msg = {"type": "message", "role": role, "content": content_items}
+        if extra:
+            msg["extra"] = extra
+        return msg
 
     def format_observation_messages(
         self, message: dict, outputs: list[dict], template_vars: dict | None = None
@@ -140,11 +139,3 @@ class OpenRouterResponseAPIToolcallModel:
                 },
             }
         }
-
-
-class _DictToObj:
-    """Simple wrapper to convert dict to object with attribute access for tool calls."""
-
-    def __init__(self, d: dict):
-        self.id = d.get("call_id") or d.get("id")
-        self.function = type("Function", (), {"name": d.get("name"), "arguments": d.get("arguments", "{}")})()
