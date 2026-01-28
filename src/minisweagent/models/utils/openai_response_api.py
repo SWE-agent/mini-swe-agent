@@ -6,6 +6,17 @@ from openai.types.responses.response_output_message import ResponseOutputMessage
 logger = logging.getLogger("openai_response_api")
 
 
+def _get_trailing_tool_outputs(messages: list[dict]) -> list[dict]:
+    """Get all trailing function_call_output messages for Responses API."""
+    result = []
+    for msg in reversed(messages):
+        if msg.get("type") == "function_call_output":
+            result.append(msg)
+        else:
+            break
+    return list(reversed(result))
+
+
 def _coerce_responses_text(resp: Any) -> str:
     """Helper to normalize OpenAI Responses API result to text.
 

@@ -27,7 +27,12 @@ class OpenRouterResponseAPIToolcallModelConfig(OpenRouterModelConfig):
 
 
 class OpenRouterResponseAPIToolcallModel:
-    """OpenRouter model using the Responses API with native tool calling."""
+    """OpenRouter model using the Responses API with native tool calling.
+
+    Note: OpenRouter's Responses API is stateless - each request must include
+    the full conversation history. previous_response_id is not supported.
+    See: https://openrouter.ai/docs/api/reference/responses/overview
+    """
 
     abort_exceptions: list[type[Exception]] = [OpenRouterAuthenticationError, KeyboardInterrupt]
 
@@ -35,29 +40,22 @@ class OpenRouterResponseAPIToolcallModel:
         self.config = OpenRouterResponseAPIToolcallModelConfig(**kwargs)
         self._api_url = "https://openrouter.ai/api/v1/responses"
         self._api_key = os.getenv("OPENROUTER_API_KEY", "")
-        self._previous_response_id: str | None = None
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         headers = {
             "Authorization": f"Bearer {self._api_key}",
             "Content-Type": "application/json",
         }
-
         payload = {
             "model": self.config.model_name,
-            "input": messages if self._previous_response_id is None else messages[-1:],
+            "input": messages,
             "tools": [BASH_TOOL_RESPONSE_API],
             **(self.config.model_kwargs | kwargs),
         }
-        if self._previous_response_id:
-            payload["previous_response_id"] = self._previous_response_id
-
         try:
             response = requests.post(self._api_url, headers=headers, data=json.dumps(payload), timeout=60)
             response.raise_for_status()
-            result = response.json()
-            self._previous_response_id = result.get("id")
-            return result
+            return response.json()
         except requests.exceptions.HTTPError as e:
             if response.status_code == 401:
                 error_msg = "Authentication failed. You can permanently set your API key with `mini-extra config set OPENROUTER_API_KEY YOUR_KEY`."
@@ -70,7 +68,19 @@ class OpenRouterResponseAPIToolcallModel:
             raise OpenRouterAPIError(f"Request failed: {e}") from e
 
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
-        return [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
+        """Prepare messages for OpenRouter's stateless Responses API.
+
+        Flattens response objects into their output items since OpenRouter
+        doesn't support previous_response_id.
+        """
+        result = []
+        for msg in messages:
+            if msg.get("object") == "response":
+                for item in msg.get("output", []):
+                    result.append({k: v for k, v in item.items() if k != "extra"})
+            else:
+                result.append({k: v for k, v in msg.items() if k != "extra"})
+        return result
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
@@ -100,9 +110,9 @@ class OpenRouterResponseAPIToolcallModel:
         return {"cost": cost}
 
     def _parse_actions(self, response: dict) -> list[dict]:
-        """Parse tool calls from the response API response."""
-        tool_calls = [item for item in response.get("output", []) if item.get("type") == "function_call"]
-        return parse_toolcall_actions_response(tool_calls, format_error_template=self.config.format_error_template)
+        return parse_toolcall_actions_response(
+            response.get("output", []), format_error_template=self.config.format_error_template
+        )
 
     def format_message(self, **kwargs) -> dict:
         role = kwargs.get("role", "user")
