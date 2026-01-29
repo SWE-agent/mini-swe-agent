@@ -85,3 +85,12 @@ class ContreeEnvironment:
 
     def get_template_vars(self) -> dict[str, Any]:
         return asdict(self.config)
+
+    @staticmethod
+    def get_tag_by_image_url(url: str) -> str:
+        if ":" not in url:
+            url += ":latest"
+        domain, url_path = url.split("/", 1)
+        if "." in domain:
+            return url_path or domain
+        return domain + "/" + url_path

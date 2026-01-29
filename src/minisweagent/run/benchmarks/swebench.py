@@ -99,8 +99,11 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     elif env_config["environment_class"] == "singularity":
         env_config["image"] = "docker://" + image_name
     elif env_config["environment_class"] == "contree":
+        from minisweagent.environments.extra.contree import ContreeEnvironment
+
         env_config["image"] = "docker://" + image_name
-        env_config["image_tag"] = instance["instance_id"]
+        env_config["image_tag"] = ContreeEnvironment.get_tag_by_image_url(image_name)
+
     env = get_environment(env_config)
     if startup_command := config.get("run", {}).get("env_startup_command"):
         startup_command = Template(startup_command, undefined=StrictUndefined).render(**instance)
