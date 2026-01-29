@@ -89,30 +89,22 @@ def format_toolcall_observation_messages(
         content = Template(observation_template, undefined=StrictUndefined).render(
             output=output, **(template_vars or {})
         )
-        extra = {
-            "raw_output": output.get("output", ""),
-            "returncode": output.get("returncode"),
-            "timestamp": time.time(),
+        msg: dict = {
+            "extra": {
+                "raw_output": output.get("output", ""),
+                "returncode": output.get("returncode"),
+                "timestamp": time.time(),
+                "exception_info": output.get("exception_info"),
+                **output.get("extra", {}),
+            },
         }
-        if output.get("exception_info"):
-            extra["exception_info"] = output["exception_info"]
-            extra.update(output.get("extra", {}))
         if "tool_call_id" in action:
-            results.append(
-                {
-                    "type": "function_call_output",
-                    "call_id": action["tool_call_id"],
-                    "output": content,
-                    "extra": extra,
-                }
-            )
+            msg["type"] = "function_call_output"
+            msg["call_id"] = action["tool_call_id"]
+            msg["output"] = content
         else:  # human issued commands
-            results.append(
-                {
-                    "type": "message",
-                    "role": "user",
-                    "content": [{"type": "input_text", "text": content}],
-                    "extra": extra,
-                }
-            )
+            msg["type"] = "message"
+            msg["role"] = "user"
+            msg["content"] = [{"type": "input_text", "text": content}]
+        results.append(msg)
     return results

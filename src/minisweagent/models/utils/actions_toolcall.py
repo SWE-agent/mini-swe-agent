@@ -81,17 +81,15 @@ def format_toolcall_observation_messages(
         content = Template(observation_template, undefined=StrictUndefined).render(
             output=output, **(template_vars or {})
         )
-        extra = {
-            "raw_output": output.get("output", ""),
-            "returncode": output.get("returncode"),
-            "timestamp": time.time(),
-        }
-        if output.get("exception_info"):
-            extra["exception_info"] = output["exception_info"]
-            extra.update(output.get("extra", {}))
-        msg: dict = {
+        msg = {
             "content": content,
-            "extra": extra,
+            "extra": {
+                "raw_output": output.get("output", ""),
+                "returncode": output.get("returncode"),
+                "timestamp": time.time(),
+                "exception_info": output.get("exception_info"),
+                **output.get("extra", {}),
+            },
         }
         if "tool_call_id" in action:
             msg["tool_call_id"] = action["tool_call_id"]

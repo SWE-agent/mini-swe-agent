@@ -43,15 +43,17 @@ def format_observation_messages(
         content = Template(observation_template, undefined=StrictUndefined).render(
             output=output, **(template_vars or {})
         )
-        extra = {
-            "raw_output": output.get("output", ""),
-            "returncode": output.get("returncode"),
-            "timestamp": time.time(),
+        msg: dict = {
+            "role": "user",
+            "content": content,
+            "extra": {
+                "raw_output": output.get("output", ""),
+                "returncode": output.get("returncode"),
+                "timestamp": time.time(),
+                "exception_info": output.get("exception_info"),
+                **output.get("extra", {}),
+            },
         }
-        if output.get("exception_info"):
-            extra["exception_info"] = output["exception_info"]
-            extra.update(output.get("extra", {}))
-        msg: dict = {"role": "user", "content": content, "extra": extra}
         if multimodal_regex:
             msg = expand_multimodal_content(msg, pattern=multimodal_regex)
         results.append(msg)
