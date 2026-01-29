@@ -105,7 +105,7 @@ class TestGetConfigFromSpec:
 _ALL_BUILTIN_CONFIGS = list(builtin_config_dir.rglob("*.yaml"))
 
 
-@pytest.mark.parametrize("yaml_file", [(f,) for f in _ALL_BUILTIN_CONFIGS], ids=[f.stem for f in _ALL_BUILTIN_CONFIGS])
+@pytest.mark.parametrize("yaml_file", _ALL_BUILTIN_CONFIGS, ids=[f.stem for f in _ALL_BUILTIN_CONFIGS])
 def test_all_builtin_configs_findable_by_name(yaml_file):
     """All builtin YAML configs should be findable by their stem name."""
     assert get_config_path(yaml_file.stem) == yaml_file
