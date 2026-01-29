@@ -1,7 +1,10 @@
 import logging
 import time
 
+import pytest
+
 import minisweagent.models
+from minisweagent.exceptions import FormatError, TimeoutError
 from minisweagent.models.test_models import (
     DeterministicModel,
     DeterministicModelConfig,
@@ -76,7 +79,7 @@ def test_sleep_and_warning_commands(caplog):
     # Test sleep command - processes sleep then returns actual output (counts as 1 call)
     model = DeterministicModel(
         outputs=[
-            make_output("/sleep0.1", []),
+            make_output("", [{"command": "/sleep 0.1"}]),
             make_output("```mswea_bash_command\necho after_sleep\n```", [{"command": "echo after_sleep"}]),
         ]
     )
@@ -88,7 +91,7 @@ def test_sleep_and_warning_commands(caplog):
     # Test warning command - processes warning then returns actual output (counts as 1 call)
     model2 = DeterministicModel(
         outputs=[
-            make_output("/warningTest message", []),
+            make_output("", [{"command": "/warning Test message"}]),
             make_output("```mswea_bash_command\necho after_warning\n```", [{"command": "echo after_warning"}]),
         ]
     )
@@ -96,6 +99,17 @@ def test_sleep_and_warning_commands(caplog):
         result2 = model2.query([{"role": "user", "content": "test"}])
         assert result2["content"] == "```mswea_bash_command\necho after_warning\n```"
     assert "Test message" in caplog.text
+
+
+def test_raise_exception():
+    """Test {"raise": Exception(...)} raises the exception."""
+    model = DeterministicModel(outputs=[make_output("", [{"raise": FormatError()}])])
+    with pytest.raises(FormatError):
+        model.query([{"role": "user", "content": "test"}])
+
+    model2 = DeterministicModel(outputs=[make_output("", [{"raise": TimeoutError()}])])
+    with pytest.raises(TimeoutError):
+        model2.query([{"role": "user", "content": "test"}])
 
 
 def test_toolcall_model_basic(reset_global_stats):

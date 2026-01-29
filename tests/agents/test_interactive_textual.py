@@ -75,7 +75,7 @@ async def test_everything_integration_test(default_config):
     app = TextualAgent(
         model=_make_model(
             [
-                ("/sleep 0.5", []),
+                ("", [{"command": "/sleep 0.5"}]),
                 ("THOUGHTT 1\n ```mswea_bash_command\necho '1'\n```", [{"command": "echo '1'"}]),  # step 2
                 ("THOUGHTT 2\n ```mswea_bash_command\necho '2'\n```", [{"command": "echo '2'"}]),  # step 3
                 ("THOUGHTT 3\n ```mswea_bash_command\necho '3'\n```", [{"command": "echo '3'"}]),  # step 4
@@ -293,7 +293,7 @@ async def test_log_message_filtering(default_config):
     app = TextualAgent(
         model=_make_model(
             [
-                ("/warning Test warning message", []),
+                ("", [{"command": "/warning Test warning message"}]),
                 ("Normal response", []),
                 ("end", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}]),
             ]

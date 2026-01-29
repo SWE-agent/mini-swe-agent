@@ -72,6 +72,21 @@ def make_response_api_output(content: str | None, actions: list[dict]) -> dict:
     }
 
 
+def _process_test_actions(actions: list[dict]) -> bool:
+    """Process special test actions. Returns True if the query should be retried."""
+    for action in actions:
+        if "raise" in action:
+            raise action["raise"]
+        cmd = action.get("command", "")
+        if cmd.startswith("/sleep "):
+            time.sleep(float(cmd.split("/sleep ")[1]))
+            return True
+        if cmd.startswith("/warning"):
+            logging.warning(cmd.split("/warning")[1])
+            return True
+    return False
+
+
 class DeterministicModelConfig(BaseModel):
     outputs: list[dict]
     """List of exact output messages to return in sequence. Each dict should have 'role', 'content', and 'extra' (with 'actions')."""
@@ -95,13 +110,7 @@ class DeterministicModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         self.current_index += 1
         output = self.config.outputs[self.current_index]
-        content = output.get("content", "")
-        if "/sleep" in content:
-            print("SLEEPING")
-            time.sleep(float(content.split("/sleep")[1]))
-            return self.query(messages, **kwargs)
-        if "/warning" in content:
-            logging.warning(content.split("/warning")[1])
+        if _process_test_actions(output.get("extra", {}).get("actions", [])):
             return self.query(messages, **kwargs)
         GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
         return output
@@ -157,6 +166,8 @@ class DeterministicToolcallModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         self.current_index += 1
         output = self.config.outputs[self.current_index]
+        if _process_test_actions(output.get("extra", {}).get("actions", [])):
+            return self.query(messages, **kwargs)
         GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
         return output
 
@@ -215,6 +226,8 @@ class DeterministicResponseAPIToolcallModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         self.current_index += 1
         output = self.config.outputs[self.current_index]
+        if _process_test_actions(output.get("extra", {}).get("actions", [])):
+            return self.query(messages, **kwargs)
         GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
         return output
 
