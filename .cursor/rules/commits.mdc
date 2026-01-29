@@ -16,6 +16,10 @@ Use the following format for commit messages:
 
 Generally, the description should focus on the intent of the changes, not the implementation details.
 
+## Style notes
+
+<IMPORTANT>Do **NOT** add "Co-authored-by: Cursor" lines to the commit message or to the trailer.</IMPORTANT>
+
 ## Reviewing
 
 While preparing the commit message, flag critical issues that should be addressed before committing. Do not flag style issues or minor changes.
