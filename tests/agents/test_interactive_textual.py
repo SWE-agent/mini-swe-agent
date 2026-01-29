@@ -9,15 +9,63 @@ import yaml
 
 from minisweagent.agents.interactive_textual import AddLogEmitCallback, SmartInputContainer, TextualAgent
 from minisweagent.environments.local import LocalEnvironment
-from minisweagent.models.test_models import DeterministicModel, make_output
+from minisweagent.models.test_models import (
+    DeterministicModel,
+    DeterministicResponseAPIToolcallModel,
+    DeterministicToolcallModel,
+    make_output,
+    make_response_api_output,
+    make_toolcall_output,
+)
+
+# --- Model factory functions ---
+
+
+def make_text_model(outputs_spec: list[tuple[str, list[dict]]], **kwargs) -> DeterministicModel:
+    """Create a DeterministicModel from a list of (content, actions) tuples."""
+    return DeterministicModel(outputs=[make_output(content, actions) for content, actions in outputs_spec], **kwargs)
+
+
+def make_tc_model(outputs_spec: list[tuple[str, list[dict]]], **kwargs) -> DeterministicToolcallModel:
+    """Create a DeterministicToolcallModel from a list of (content, actions) tuples."""
+    outputs = []
+    for i, (content, actions) in enumerate(outputs_spec):
+        tc_actions = []
+        tool_calls = []
+        for j, action in enumerate(actions):
+            tool_call_id = f"call_{i}_{j}"
+            tc_actions.append({"command": action["command"], "tool_call_id": tool_call_id})
+            tool_calls.append(
+                {
+                    "id": tool_call_id,
+                    "type": "function",
+                    "function": {"name": "bash", "arguments": f'{{"command": "{action["command"]}"}}'},
+                }
+            )
+        outputs.append(make_toolcall_output(content, tool_calls, tc_actions))
+    return DeterministicToolcallModel(outputs=outputs, **kwargs)
+
+
+def make_response_api_model(
+    outputs_spec: list[tuple[str, list[dict]]], **kwargs
+) -> DeterministicResponseAPIToolcallModel:
+    """Create a DeterministicResponseAPIToolcallModel from a list of (content, actions) tuples."""
+    outputs = []
+    for i, (content, actions) in enumerate(outputs_spec):
+        api_actions = []
+        for j, action in enumerate(actions):
+            tool_call_id = f"call_resp_{i}_{j}"
+            api_actions.append({"command": action["command"], "tool_call_id": tool_call_id})
+        outputs.append(make_response_api_output(content, api_actions))
+    return DeterministicResponseAPIToolcallModel(outputs=outputs, **kwargs)
 
 
 def _make_model(outputs: list[tuple[str, list[dict]]], **kwargs) -> DeterministicModel:
-    """Create a DeterministicModel from a list of (content, actions) tuples."""
-    return DeterministicModel(
-        outputs=[make_output(content, actions) for content, actions in outputs],
-        **kwargs,
-    )
+    """Create a DeterministicModel from a list of (content, actions) tuples.
+
+    Kept for backward compatibility with tests that don't need parametrization.
+    """
+    return make_text_model(outputs, **kwargs)
 
 
 @pytest.fixture
@@ -27,6 +75,26 @@ def default_config():
     with open(config_path) as f:
         config = yaml.safe_load(f)
     return config["agent"]
+
+
+@pytest.fixture
+def toolcall_config():
+    """Load toolcall agent config from config/mini_toolcall.yaml"""
+    config_path = Path("src/minisweagent/config/mini_toolcall.yaml")
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+    return config["agent"]
+
+
+@pytest.fixture(params=["text", "toolcall", "response_api"])
+def model_factory(request, default_config, toolcall_config):
+    """Parametrized fixture that returns (factory_fn, config) for all three model types."""
+    if request.param == "text":
+        return make_text_model, default_config
+    elif request.param == "toolcall":
+        return make_tc_model, toolcall_config
+    else:  # response_api
+        return make_response_api_model, toolcall_config
 
 
 def get_screen_text(app: TextualAgent) -> str:
@@ -359,10 +427,11 @@ async def test_list_content_rendering(default_config):
         assert "Line 1\nLine 2" in get_screen_text(app)
 
 
-async def test_confirmation_rejection_with_message(default_config):
+async def test_confirmation_rejection_with_message(model_factory):
     """Test rejecting an action with a custom message."""
+    factory, config = model_factory
     app = TextualAgent(
-        model=_make_model(
+        model=factory(
             [
                 ("Test thought", [{"command": "echo 'test'"}]),
                 ("After rejection", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}]),
@@ -370,7 +439,7 @@ async def test_confirmation_rejection_with_message(default_config):
         ),
         env=LocalEnvironment(),
         **{
-            **default_config,
+            **config,
             "mode": "confirm",
         },
     )
@@ -401,10 +470,11 @@ async def test_confirmation_rejection_with_message(default_config):
         assert "Command not executed: Not safe to run" in get_screen_text(app)
 
 
-async def test_agent_with_cost_limit(default_config):
+async def test_agent_with_cost_limit(model_factory):
     """Test agent behavior when cost limit is exceeded."""
+    factory, config = model_factory
     app = TextualAgent(
-        model=_make_model(
+        model=factory(
             [
                 ("", [{"command": "echo 'test'"}]),
                 ("", [{"command": "echo 'test'"}]),
@@ -412,7 +482,7 @@ async def test_agent_with_cost_limit(default_config):
         ),
         env=LocalEnvironment(),
         **{
-            **default_config,
+            **config,
             "mode": "yolo",
             "cost_limit": 0.01,  # Very low limit,
         },
@@ -434,10 +504,11 @@ async def test_agent_with_cost_limit(default_config):
         app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
 
 
-async def test_agent_with_step_limit(default_config):
+async def test_agent_with_step_limit(model_factory):
     """Test agent behavior when step limit is exceeded."""
+    factory, config = model_factory
     app = TextualAgent(
-        model=_make_model(
+        model=factory(
             [
                 ("", [{"command": "echo 'test'"}]),
                 ("", [{"command": "echo 'test'"}]),
@@ -446,7 +517,7 @@ async def test_agent_with_step_limit(default_config):
         ),
         env=LocalEnvironment(),
         **{
-            **default_config,
+            **config,
             "mode": "yolo",
             "step_limit": 2,
         },
@@ -466,10 +537,11 @@ async def test_agent_with_step_limit(default_config):
         app.notify.assert_called_with("Agent finished with status: LimitsExceeded")
 
 
-async def test_whitelist_actions_bypass_confirmation(default_config):
+async def test_whitelist_actions_bypass_confirmation(model_factory):
     """Test that whitelisted actions bypass confirmation."""
+    factory, config = model_factory
     app = TextualAgent(
-        model=_make_model(
+        model=factory(
             [
                 ("Whitelisted action", [{"command": "echo 'safe'"}]),
                 ("Done", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}]),
@@ -477,7 +549,7 @@ async def test_whitelist_actions_bypass_confirmation(default_config):
         ),
         env=LocalEnvironment(),
         **{
-            **default_config,
+            **config,
             "mode": "confirm",
             "whitelist_actions": [r"echo.*"],
             "confirm_exit": False,
@@ -497,10 +569,11 @@ async def test_whitelist_actions_bypass_confirmation(default_config):
         assert app.agent_state == "STOPPED"
 
 
-async def test_input_container_multiple_actions(default_config):
+async def test_input_container_multiple_actions(model_factory):
     """Test input container handling multiple actions in sequence."""
+    factory, config = model_factory
     app = TextualAgent(
-        model=_make_model(
+        model=factory(
             [
                 ("First action\n```mswea_bash_command\necho '1'\n```", [{"command": "echo '1'"}]),
                 (
@@ -511,7 +584,7 @@ async def test_input_container_multiple_actions(default_config):
         ),
         env=LocalEnvironment(),
         **{
-            **default_config,
+            **config,
             "mode": "confirm",
         },
     )
@@ -596,10 +669,11 @@ def test_add_log_emit_callback():
     assert test_record == record
 
 
-async def test_yolo_mode_confirms_pending_action(default_config):
+async def test_yolo_mode_confirms_pending_action(model_factory):
     """Test that pressing 'y' to switch to YOLO mode also confirms any pending action."""
+    factory, config = model_factory
     app = TextualAgent(
-        model=_make_model(
+        model=factory(
             [
                 (
                     "Action requiring confirmation\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && echo 'test'\n```",
@@ -609,7 +683,7 @@ async def test_yolo_mode_confirms_pending_action(default_config):
         ),
         env=LocalEnvironment(),
         **{
-            **default_config,
+            **config,
             "mode": "confirm",
         },
     )
