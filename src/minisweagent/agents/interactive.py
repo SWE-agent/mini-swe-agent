@@ -104,10 +104,11 @@ class InteractiveAgent(DefaultAgent):
     def execute_actions(self, message: dict) -> list[dict]:
         # Override to handle user confirmation and confirm_exit, with try/finally to preserve partial outputs
         actions = message.get("extra", {}).get("actions", [])
+        commands = [action["command"] for action in actions]
         outputs = []
         try:
+            self._ask_confirmation_or_interrupt(commands)
             for action in actions:
-                self._ask_confirmation_or_interrupt(action["command"])
                 outputs.append(self.env.execute(action))
         except Submitted as e:
             self._check_for_new_task_or_submit(e)
@@ -142,12 +143,13 @@ class InteractiveAgent(DefaultAgent):
     def _should_ask_confirmation(self, action: str) -> bool:
         return self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions)
 
-    def _ask_confirmation_or_interrupt(self, action: str) -> None:
-        if not self._should_ask_confirmation(action):
+    def _ask_confirmation_or_interrupt(self, commands: list[str]) -> None:
+        commands_needing_confirmation = [c for c in commands if self._should_ask_confirmation(c)]
+        if not commands_needing_confirmation:
             return
+        n = len(commands_needing_confirmation)
         prompt = (
-            f"[bold yellow]Action: [/bold yellow][blue]{action}[/blue]\n"
-            "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
+            f"[bold yellow]Execute {n} action(s)?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
             "or [green]Type a comment/command[/green] (/h for available commands)\n"
             "[bold yellow]>[/bold yellow] "
         )
@@ -158,7 +160,7 @@ class InteractiveAgent(DefaultAgent):
                 raise UserInterruption(
                     {
                         "role": "user",
-                        "content": "Command not executed. Switching to human mode",
+                        "content": "Commands not executed. Switching to human mode",
                         "extra": {"interrupt_type": "UserRejection"},
                     }
                 )
@@ -166,7 +168,7 @@ class InteractiveAgent(DefaultAgent):
                 raise UserInterruption(
                     {
                         "role": "user",
-                        "content": f"Command not executed. The user rejected your command with the following message: {user_input}",
+                        "content": f"Commands not executed. The user rejected your commands with the following message: {user_input}",
                         "extra": {"interrupt_type": "UserRejection"},
                     }
                 )
