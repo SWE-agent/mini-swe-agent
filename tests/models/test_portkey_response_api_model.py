@@ -5,7 +5,7 @@ import pytest
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_response_api_model import PortkeyResponseAPIModel
-from minisweagent.models.utils.content_string import coerce_message_content
+from minisweagent.models.utils.content_string import get_content_string
 
 
 def test_response_api_model_basic_query():
@@ -36,7 +36,7 @@ def test_response_api_model_basic_query():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert coerce_message_content(result) == "```mswea_bash_command\necho test\n```"
+        assert get_content_string(result) == "```mswea_bash_command\necho test\n```"
         assert result["extra"]["actions"] == [{"command": "echo test"}]
         assert model._previous_response_id == "resp_123"
         mock_client.responses.create.assert_called_once_with(
@@ -90,7 +90,7 @@ def test_response_api_model_with_previous_id():
         ]
         result = model.query(messages2)
 
-        assert coerce_message_content(result) == "```mswea_bash_command\necho second\n```"
+        assert get_content_string(result) == "```mswea_bash_command\necho second\n```"
         assert model._previous_response_id == "resp_456"
         # On second call, should only pass the last message
         assert mock_client.responses.create.call_args[1]["input"] == [{"role": "user", "content": "second"}]
@@ -125,7 +125,7 @@ def test_response_api_model_output_text_field():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert coerce_message_content(result) == "```mswea_bash_command\necho direct\n```"
+        assert get_content_string(result) == "```mswea_bash_command\necho direct\n```"
         assert result["extra"]["actions"] == [{"command": "echo direct"}]
 
 
@@ -168,7 +168,7 @@ def test_response_api_model_multiple_output_messages():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert coerce_message_content(result) == "First part\n```mswea_bash_command\n\necho test\n```"
+        assert get_content_string(result) == "First part\n```mswea_bash_command\n\necho test\n```"
         assert result["extra"]["actions"] == [{"command": "echo test"}]
 
 
@@ -327,7 +327,7 @@ def test_response_api_model_retry_on_rate_limit():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert coerce_message_content(result) == "```mswea_bash_command\necho 'Success after retry'\n```"
+        assert get_content_string(result) == "```mswea_bash_command\necho 'Success after retry'\n```"
         assert call_count == 2
 
 
