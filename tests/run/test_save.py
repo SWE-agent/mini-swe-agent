@@ -4,7 +4,7 @@ from pathlib import Path
 
 from minisweagent.agents.default import DefaultAgent
 from minisweagent.environments.local import LocalEnvironment
-from minisweagent.models.test_models import DeterministicModel
+from minisweagent.models.test_models import DeterministicModel, make_output
 
 
 def test_agent_save_includes_class_names():
@@ -15,7 +15,7 @@ def test_agent_save_includes_class_names():
     with open(config_path) as f:
         default_config = yaml.safe_load(f)["agent"]
 
-    model = DeterministicModel(outputs=["echo 'test'"])
+    model = DeterministicModel(outputs=[make_output("echo 'test'", [])])
     env = LocalEnvironment()
     agent = DefaultAgent(model, env, **default_config)
 
@@ -56,7 +56,7 @@ def test_agent_serialize():
     with open(config_path) as f:
         default_config = yaml.safe_load(f)["agent"]
 
-    model = DeterministicModel(outputs=["echo 'test'"])
+    model = DeterministicModel(outputs=[make_output("echo 'test'", [])])
     env = LocalEnvironment()
     agent = DefaultAgent(model, env, **default_config)
 

@@ -9,7 +9,15 @@ import yaml
 
 from minisweagent.agents.interactive_textual import AddLogEmitCallback, SmartInputContainer, TextualAgent
 from minisweagent.environments.local import LocalEnvironment
-from minisweagent.models.test_models import DeterministicModel
+from minisweagent.models.test_models import DeterministicModel, make_output
+
+
+def _make_model(outputs: list[tuple[str, list[dict]]], **kwargs) -> DeterministicModel:
+    """Create a DeterministicModel from a list of (content, actions) tuples."""
+    return DeterministicModel(
+        outputs=[make_output(content, actions) for content, actions in outputs],
+        **kwargs,
+    )
 
 
 @pytest.fixture
@@ -65,18 +73,24 @@ async def type_text(pilot, text: str):
 @pytest.mark.slow
 async def test_everything_integration_test(default_config):
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=[
-                "/sleep 0.5",
-                "THOUGHTT 1\n ```mswea_bash_command\necho '1'\n```",  # step 2
-                "THOUGHTT 2\n ```mswea_bash_command\necho '2'\n```",  # step 3
-                "THOUGHTT 3\n ```mswea_bash_command\necho '3'\n```",  # step 4
-                "THOUGHTT 4\n ```mswea_bash_command\necho '4'\n```",  # step 5
-                "THOUGHTT 5\n ```mswea_bash_command\necho '5'\n```",  # step 6
-                "THOUGHTT 6\n ```mswea_bash_command\necho '6'\n```",  # step 7
-                "FINISHING\n ```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
-                "FINISHING2\n ```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
-            ],
+        model=_make_model(
+            [
+                ("/sleep 0.5", []),
+                ("THOUGHTT 1\n ```mswea_bash_command\necho '1'\n```", [{"command": "echo '1'"}]),  # step 2
+                ("THOUGHTT 2\n ```mswea_bash_command\necho '2'\n```", [{"command": "echo '2'"}]),  # step 3
+                ("THOUGHTT 3\n ```mswea_bash_command\necho '3'\n```", [{"command": "echo '3'"}]),  # step 4
+                ("THOUGHTT 4\n ```mswea_bash_command\necho '4'\n```", [{"command": "echo '4'"}]),  # step 5
+                ("THOUGHTT 5\n ```mswea_bash_command\necho '5'\n```", [{"command": "echo '5'"}]),  # step 6
+                ("THOUGHTT 6\n ```mswea_bash_command\necho '6'\n```", [{"command": "echo '6'"}]),  # step 7
+                (
+                    "FINISHING\n ```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                    [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}],
+                ),
+                (
+                    "FINISHING2\n ```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+                    [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}],
+                ),
+            ]
         ),
         env=LocalEnvironment(),
         **{
@@ -250,8 +264,10 @@ def test_messages_to_steps_edge_cases():
 async def test_empty_agent_content(default_config):
     """Test app behavior with minimal agent interaction."""
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=["Starting\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+        model=_make_model(
+            [
+                ("Starting", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}]),
+            ]
         ),
         env=LocalEnvironment(),
         **{
@@ -275,11 +291,11 @@ async def test_empty_agent_content(default_config):
 async def test_log_message_filtering(default_config):
     """Test that warning and error log messages trigger notifications."""
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=[
-                "/warning Test warning message",
-                "Normal response",
-                "end: \n```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+        model=_make_model(
+            [
+                ("/warning Test warning message", []),
+                ("Normal response", []),
+                ("end", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}]),
             ]
         ),
         env=LocalEnvironment(),
@@ -313,8 +329,10 @@ async def test_list_content_rendering(default_config):
     """Test rendering of messages with list content vs string content."""
     # Create a model that will add messages with list content
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=["Simple response\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+        model=_make_model(
+            [
+                ("Simple response", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}]),
+            ]
         ),
         env=LocalEnvironment(),
         **{
@@ -344,10 +362,10 @@ async def test_list_content_rendering(default_config):
 async def test_confirmation_rejection_with_message(default_config):
     """Test rejecting an action with a custom message."""
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=[
-                "Test thought\n```mswea_bash_command\necho 'test'\n```",
-                "After rejection\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+        model=_make_model(
+            [
+                ("Test thought", [{"command": "echo 'test'"}]),
+                ("After rejection", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}]),
             ]
         ),
         env=LocalEnvironment(),
@@ -386,8 +404,11 @@ async def test_confirmation_rejection_with_message(default_config):
 async def test_agent_with_cost_limit(default_config):
     """Test agent behavior when cost limit is exceeded."""
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=["```mswea_bash_command\necho 'test'\n```", "```mswea_bash_command\necho 'test'\n```"]
+        model=_make_model(
+            [
+                ("", [{"command": "echo 'test'"}]),
+                ("", [{"command": "echo 'test'"}]),
+            ]
         ),
         env=LocalEnvironment(),
         **{
@@ -416,11 +437,11 @@ async def test_agent_with_cost_limit(default_config):
 async def test_agent_with_step_limit(default_config):
     """Test agent behavior when step limit is exceeded."""
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=[
-                "```mswea_bash_command\necho 'test'\n```",
-                "```mswea_bash_command\necho 'test'\n```",
-                "```mswea_bash_command\necho 'test'\n```",
+        model=_make_model(
+            [
+                ("", [{"command": "echo 'test'"}]),
+                ("", [{"command": "echo 'test'"}]),
+                ("", [{"command": "echo 'test'"}]),
             ]
         ),
         env=LocalEnvironment(),
@@ -448,10 +469,10 @@ async def test_agent_with_step_limit(default_config):
 async def test_whitelist_actions_bypass_confirmation(default_config):
     """Test that whitelisted actions bypass confirmation."""
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=[
-                "Whitelisted action\n```mswea_bash_command\necho 'safe'\n```",
-                "Done\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```",
+        model=_make_model(
+            [
+                ("Whitelisted action", [{"command": "echo 'safe'"}]),
+                ("Done", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}]),
             ]
         ),
         env=LocalEnvironment(),
@@ -479,10 +500,13 @@ async def test_whitelist_actions_bypass_confirmation(default_config):
 async def test_input_container_multiple_actions(default_config):
     """Test input container handling multiple actions in sequence."""
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=[
-                "First action\n```mswea_bash_command\necho '1'\n```",
-                "Second action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && echo '2'\n```",
+        model=_make_model(
+            [
+                ("First action\n```mswea_bash_command\necho '1'\n```", [{"command": "echo '1'"}]),
+                (
+                    "Second action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && echo '2'\n```",
+                    [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && echo '2'"}],
+                ),
             ]
         ),
         env=LocalEnvironment(),
@@ -529,8 +553,10 @@ def test_log_handler_cleanup():
         default_config = yaml.safe_load(f)["agent"]
 
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=["Simple response\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\n```"]
+        model=_make_model(
+            [
+                ("Simple response", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}]),
+            ]
         ),
         env=LocalEnvironment(),
         **{**default_config, "mode": "yolo"},
@@ -573,9 +599,12 @@ def test_add_log_emit_callback():
 async def test_yolo_mode_confirms_pending_action(default_config):
     """Test that pressing 'y' to switch to YOLO mode also confirms any pending action."""
     app = TextualAgent(
-        model=DeterministicModel(
-            outputs=[
-                "Action requiring confirmation\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && echo 'test'\n```",
+        model=_make_model(
+            [
+                (
+                    "Action requiring confirmation\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && echo 'test'\n```",
+                    [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' && echo 'test'"}],
+                ),
             ]
         ),
         env=LocalEnvironment(),
@@ -962,7 +991,7 @@ async def test_system_commands_are_callable(default_config):
     which requires callable methods instead of action name strings.
     """
     app = TextualAgent(
-        model=DeterministicModel(outputs=["Test\n```mswea_bash_command\necho 'test'\n```"]),
+        model=_make_model([("Test", [{"command": "echo 'test'"}])]),
         env=LocalEnvironment(),
         **{
             **default_config,

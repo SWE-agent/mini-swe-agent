@@ -6,7 +6,15 @@ import yaml
 
 from minisweagent.agents.interactive import InteractiveAgent
 from minisweagent.environments.local import LocalEnvironment
-from minisweagent.models.test_models import DeterministicModel
+from minisweagent.models.test_models import DeterministicModel, make_output
+
+
+def _make_model(outputs: list[tuple[str, list[dict]]], **kwargs) -> DeterministicModel:
+    """Create a DeterministicModel from a list of (content, actions) tuples."""
+    return DeterministicModel(
+        outputs=[make_output(content, actions) for content, actions in outputs],
+        **kwargs,
+    )
 
 
 @pytest.fixture
@@ -24,9 +32,9 @@ def test_successful_completion_with_confirmation(default_config):
         "minisweagent.agents.interactive.prompt_session.prompt", side_effect=["", ""]
     ):  # Confirm action with Enter, then no new task
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "Finishing\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"
+            model=_make_model(
+                [
+                    ("Finishing", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'"}]),
                 ]
             ),
             env=LocalEnvironment(),
@@ -50,10 +58,10 @@ def test_action_rejection_and_recovery(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "First try\n```mswea_bash_command\necho 'first attempt'\n```",
-                    "Second try\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered'\n```",
+            model=_make_model(
+                [
+                    ("First try", [{"command": "echo 'first attempt'"}]),
+                    ("Second try", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered'"}]),
                 ]
             ),
             env=LocalEnvironment(),
@@ -80,9 +88,9 @@ def test_yolo_mode_activation(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "Test command\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'yolo works'\n```"
+            model=_make_model(
+                [
+                    ("Test command", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'yolo works'"}]),
                 ]
             ),
             env=LocalEnvironment(),
@@ -107,9 +115,9 @@ def test_help_command(default_config):
     ):
         with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
-                model=DeterministicModel(
-                    outputs=[
-                        "Test help\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'help shown'\n```"
+                model=_make_model(
+                    [
+                        ("Test help", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'help shown'"}]),
                     ]
                 ),
                 env=LocalEnvironment(),
@@ -131,9 +139,12 @@ def test_whitelisted_actions_skip_confirmation(default_config):
         side_effect=[""],  # No new task when agent wants to finish
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "Whitelisted\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'no confirmation needed'\n```"
+            model=_make_model(
+                [
+                    (
+                        "Whitelisted",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'no confirmation needed'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -153,10 +164,13 @@ def _test_interruption_helper(
 ):
     """Helper function for testing interruption scenarios."""
     agent = InteractiveAgent(
-        model=DeterministicModel(
-            outputs=[
-                "Initial step\n```mswea_bash_command\necho 'will be interrupted'\n```",
-                "Recovery\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered from interrupt'\n```",
+        model=_make_model(
+            [
+                ("Initial step", [{"command": "echo 'will be interrupted'"}]),
+                (
+                    "Recovery",
+                    [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered from interrupt'"}],
+                ),
             ]
         ),
         env=LocalEnvironment(),
@@ -223,10 +237,13 @@ def test_multiple_confirmations_and_commands(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "First action\n```mswea_bash_command\necho 'first'\n```",
-                    "Second action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'complex flow completed'\n```",
+            model=_make_model(
+                [
+                    ("First action", [{"command": "echo 'first'"}]),
+                    (
+                        "Second action",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'complex flow completed'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -247,9 +264,12 @@ def test_non_whitelisted_action_requires_confirmation(default_config):
         side_effect=["", ""],  # Confirm action, then no new task
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "Non-whitelisted\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'confirmed'\n```"
+            model=_make_model(
+                [
+                    (
+                        "Non-whitelisted",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'confirmed'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -278,7 +298,7 @@ def test_human_mode_basic_functionality(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(outputs=[]),  # LM shouldn't be called in human mode
+            model=_make_model([]),  # LM shouldn't be called in human mode
             env=LocalEnvironment(),
             **{
                 **default_config,
@@ -304,9 +324,12 @@ def test_human_mode_switch_to_yolo(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "LM action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'switched to yolo'\n```"
+            model=_make_model(
+                [
+                    (
+                        "LM action",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'switched to yolo'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -334,9 +357,12 @@ def test_human_mode_switch_to_confirm(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "LM action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'switched to confirm'\n```"
+            model=_make_model(
+                [
+                    (
+                        "LM action",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'switched to confirm'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -364,10 +390,10 @@ def test_confirmation_mode_switch_to_human_with_rejection(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "LM action\n```mswea_bash_command\necho 'first action'\n```",
-                    "Recovery action\n```mswea_bash_command\necho 'recovery'\n```",
+            model=_make_model(
+                [
+                    ("LM action", [{"command": "echo 'first action'"}]),
+                    ("Recovery action", [{"command": "echo 'recovery'"}]),
                 ]
             ),
             env=LocalEnvironment(),
@@ -396,9 +422,12 @@ def test_confirmation_mode_switch_to_yolo_and_continue(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "LM action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'switched and continued'\n```"
+            model=_make_model(
+                [
+                    (
+                        "LM action",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'switched and continued'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -417,10 +446,13 @@ def test_confirmation_mode_switch_to_yolo_and_continue(default_config):
 def test_mode_switch_during_keyboard_interrupt(default_config):
     """Test mode switching during keyboard interrupt handling."""
     agent = InteractiveAgent(
-        model=DeterministicModel(
-            outputs=[
-                "Initial step\n```mswea_bash_command\necho 'will be interrupted'\n```",
-                "Recovery\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered after mode switch'\n```",
+        model=_make_model(
+            [
+                ("Initial step", [{"command": "echo 'will be interrupted'"}]),
+                (
+                    "Recovery",
+                    [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'recovered after mode switch'"}],
+                ),
             ]
         ),
         env=LocalEnvironment(),
@@ -470,9 +502,12 @@ def test_already_in_mode_behavior(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "Test action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'already in mode'\n```"
+            model=_make_model(
+                [
+                    (
+                        "Test action",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'already in mode'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -499,10 +534,13 @@ def test_all_mode_transitions_yolo_to_others(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "First action\n```mswea_bash_command\necho 'yolo action'\n```",
-                    "Second action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'confirm action'\n```",
+            model=_make_model(
+                [
+                    ("First action", [{"command": "echo 'yolo action'"}]),
+                    (
+                        "Second action",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'confirm action'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -543,7 +581,7 @@ def test_all_mode_transitions_confirm_to_human(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(outputs=["LM action\n```mswea_bash_command\necho 'rejected action'\n```"]),
+            model=_make_model([("LM action", [{"command": "echo 'rejected action'"}])]),
             env=LocalEnvironment(),
             **{
                 **default_config,
@@ -570,9 +608,12 @@ def test_help_command_from_different_contexts(default_config):
     ):
         with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
-                model=DeterministicModel(
-                    outputs=[
-                        "Test action\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'help works'\n```"
+                model=_make_model(
+                    [
+                        (
+                            "Test action",
+                            [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'help works'"}],
+                        ),
                     ]
                 ),
                 env=LocalEnvironment(),
@@ -602,7 +643,7 @@ def test_help_command_from_human_mode(default_config):
     ):
         with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
-                model=DeterministicModel(outputs=[]),  # LM shouldn't be called
+                model=_make_model([]),  # LM shouldn't be called
                 env=LocalEnvironment(),
                 **{
                     **default_config,
@@ -621,11 +662,11 @@ def test_help_command_from_human_mode(default_config):
 def test_complex_mode_switching_sequence(default_config):
     """Test complex sequence of mode switches across different contexts."""
     agent = InteractiveAgent(
-        model=DeterministicModel(
-            outputs=[
-                "Action 1\n```mswea_bash_command\necho 'action1'\n```",
-                "Action 2\n```mswea_bash_command\necho 'action2'\n```",
-                "Action 3\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'final action'\n```",
+        model=_make_model(
+            [
+                ("Action 1", [{"command": "echo 'action1'"}]),
+                ("Action 2", [{"command": "echo 'action2'"}]),
+                ("Action 3", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'final action'"}]),
             ]
         ),
         env=LocalEnvironment(),
@@ -670,11 +711,18 @@ def test_limits_exceeded_with_user_continuation(default_config):
     """Test that when limits are exceeded, user can provide new limits and execution continues."""
     # Create agent with very low limits that will be exceeded
     agent = InteractiveAgent(
-        model=DeterministicModel(
-            outputs=[
-                "Step 1\n```mswea_bash_command\necho 'first step'\n```",
-                "Step 2\n```mswea_bash_command\necho 'second step'\n```",
-                "Final step\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed after limit increase'\n```",
+        model=_make_model(
+            [
+                ("Step 1", [{"command": "echo 'first step'"}]),
+                ("Step 2", [{"command": "echo 'second step'"}]),
+                (
+                    "Final step",
+                    [
+                        {
+                            "command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed after limit increase'"
+                        }
+                    ],
+                ),
             ],
             cost_per_call=0.6,  # Will exceed cost_limit=0.5 on first call
         ),
@@ -703,13 +751,20 @@ def test_limits_exceeded_with_user_continuation(default_config):
 def test_limits_exceeded_multiple_times_with_continuation(default_config):
     """Test that limits can be exceeded and updated multiple times."""
     agent = InteractiveAgent(
-        model=DeterministicModel(
-            outputs=[
-                "Step 1\n```mswea_bash_command\necho 'step1'\n```",
-                "Step 2\n```mswea_bash_command\necho 'step2'\n```",
-                "Step 3\n```mswea_bash_command\necho 'step3'\n```",
-                "Step 4\n```mswea_bash_command\necho 'step4'\n```",
-                "Final\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed after multiple increases'\n```",
+        model=_make_model(
+            [
+                ("Step 1", [{"command": "echo 'step1'"}]),
+                ("Step 2", [{"command": "echo 'step2'"}]),
+                ("Step 3", [{"command": "echo 'step3'"}]),
+                ("Step 4", [{"command": "echo 'step4'"}]),
+                (
+                    "Final",
+                    [
+                        {
+                            "command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed after multiple increases'"
+                        }
+                    ],
+                ),
             ],
             cost_per_call=1.0,  # Standard cost per call
         ),
@@ -747,10 +802,16 @@ def test_continue_after_completion_with_new_task(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "First task\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first task completed'\n```",
-                    "Second task\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'new task completed'\n```",
+            model=_make_model(
+                [
+                    (
+                        "First task",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first task completed'"}],
+                    ),
+                    (
+                        "Second task",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'new task completed'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -778,9 +839,12 @@ def test_continue_after_completion_without_new_task(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "Task completion\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'original task completed'\n```"
+            model=_make_model(
+                [
+                    (
+                        "Task completion",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'original task completed'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -810,11 +874,11 @@ def test_continue_after_completion_multiple_cycles(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "First\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first completed'\n```",
-                    "Second\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'second completed'\n```",
-                    "Third\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'third completed'\n```",
+            model=_make_model(
+                [
+                    ("First", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first completed'"}]),
+                    ("Second", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'second completed'"}]),
+                    ("Third", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'third completed'"}]),
                 ]
             ),
             env=LocalEnvironment(),
@@ -842,10 +906,13 @@ def test_continue_after_completion_in_yolo_mode(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "First\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first completed'\n```",
-                    "Second\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'second task completed'\n```",
+            model=_make_model(
+                [
+                    ("First", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first completed'"}]),
+                    (
+                        "Second",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'second task completed'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -872,9 +939,9 @@ def test_confirm_exit_enabled_asks_for_confirmation(default_config):
         side_effect=["", ""],  # Confirm action, then no new task (empty string to exit)
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "Finishing\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"
+            model=_make_model(
+                [
+                    ("Finishing", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'"}]),
                 ]
             ),
             env=LocalEnvironment(),
@@ -897,9 +964,9 @@ def test_confirm_exit_disabled_exits_immediately(default_config):
         side_effect=[""],  # Only confirm action, no exit confirmation needed
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "Finishing\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'\n```"
+            model=_make_model(
+                [
+                    ("Finishing", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'"}]),
                 ]
             ),
             env=LocalEnvironment(),
@@ -927,10 +994,13 @@ def test_confirm_exit_with_new_task_continues_execution(default_config):
         ],
     ):
         agent = InteractiveAgent(
-            model=DeterministicModel(
-                outputs=[
-                    "First task\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first done'\n```",
-                    "Additional task\n```mswea_bash_command\necho 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'additional done'\n```",
+            model=_make_model(
+                [
+                    ("First task", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'first done'"}]),
+                    (
+                        "Additional task",
+                        [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'additional done'"}],
+                    ),
                 ]
             ),
             env=LocalEnvironment(),
@@ -952,7 +1022,7 @@ def test_confirm_exit_with_new_task_continues_execution(default_config):
 def test_confirm_exit_config_field_defaults(default_config):
     """Test that confirm_exit field has correct default value."""
     agent = InteractiveAgent(
-        model=DeterministicModel(outputs=[]),
+        model=_make_model([]),
         env=LocalEnvironment(),
         **default_config,
     )
@@ -963,7 +1033,7 @@ def test_confirm_exit_config_field_defaults(default_config):
 def test_confirm_exit_config_field_can_be_set(default_config):
     """Test that confirm_exit field can be explicitly set."""
     agent_with_confirm = InteractiveAgent(
-        model=DeterministicModel(outputs=[]),
+        model=_make_model([]),
         env=LocalEnvironment(),
         **{
             **default_config,
@@ -973,7 +1043,7 @@ def test_confirm_exit_config_field_can_be_set(default_config):
     assert agent_with_confirm.config.confirm_exit is True
 
     agent_without_confirm = InteractiveAgent(
-        model=DeterministicModel(outputs=[]),
+        model=_make_model([]),
         env=LocalEnvironment(),
         **{
             **default_config,

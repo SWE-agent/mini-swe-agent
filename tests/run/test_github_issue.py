@@ -5,8 +5,22 @@ from unittest.mock import Mock, patch
 import pytest
 import yaml
 
-from minisweagent.models.test_models import DeterministicModel
+from minisweagent.models.test_models import DeterministicModel, make_output
 from minisweagent.run.extra.github_issue import DEFAULT_CONFIG, main
+
+
+def _make_model_from_fixture(text_outputs: list[str], cost_per_call: float = 1.0, **kwargs) -> DeterministicModel:
+    """Create a DeterministicModel from trajectory fixture data (raw text outputs)."""
+
+    def parse_command(text: str) -> list[dict]:
+        match = re.search(r"```mswea_bash_command\s*\n(.*?)\n```", text, re.DOTALL)
+        return [{"command": match.group(1)}] if match else []
+
+    return DeterministicModel(
+        outputs=[make_output(text, parse_command(text), cost=cost_per_call) for text in text_outputs],
+        cost_per_call=cost_per_call,
+        **kwargs,
+    )
 
 
 def normalize_outputs(s: str) -> str:
@@ -169,9 +183,10 @@ def test_github_issue_end_to_end(github_test_data):
     with (
         patch("minisweagent.run.extra.github_issue.configure_if_first_time"),
         patch("minisweagent.run.extra.github_issue.get_model") as mock_get_model,
-        patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),  # No new task
+        patch("minisweagent.agents.interactive.prompt_session.prompt", side_effect=lambda *a, **kw: ""),
+        patch("builtins.input", return_value=""),  # For LimitsExceeded handling
     ):
-        mock_get_model.return_value = DeterministicModel(outputs=model_responses, cost_per_call=0)
+        mock_get_model.return_value = _make_model_from_fixture(model_responses, cost_per_call=0)
         github_url = "https://github.com/SWE-agent/test-repo/issues/1"
         agent = main(issue_url=github_url, model="tardis", config_spec=[str(DEFAULT_CONFIG)], yolo=True)  # type: ignore
 
