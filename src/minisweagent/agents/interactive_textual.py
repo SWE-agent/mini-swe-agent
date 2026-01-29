@@ -55,8 +55,8 @@ class _TextualAgent(DefaultAgent):
             human_input = self.app.input_container.request_input("Enter your command:")
             self._current_action_from_human = True
             msg = {
-                "role": "assistant",
-                "content": f"\n```mswea_bash_command\n{human_input}\n```",
+                "role": "user",
+                "content": f"User command: \n```bash\n{human_input}\n```",
                 "extra": {"actions": [{"command": human_input}]},
             }
             self.add_messages(msg)
@@ -148,7 +148,10 @@ def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
     current_step = []
     for message in messages:
         current_step.append(message)
-        if message["role"] == "user":
+        # Step ends on tool/user observations, but not human-issued commands (which have actions)
+        is_tool_obs = message.get("role") == "tool" or message.get("type") == "function_call_output"
+        is_user_obs = message.get("role") == "user" and not message.get("extra", {}).get("actions")
+        if is_tool_obs or is_user_obs:
             steps.append(current_step)
             current_step = []
     if current_step:
@@ -401,7 +404,8 @@ class TextualAgent(App):
             content_str = coerce_message_content(message)
             message_container = Vertical(classes="message-container")
             container.mount(message_container)
-            role = message["role"].replace("assistant", "mini-swe-agent")
+            role = message.get("role") or message.get("type") or "assistant"
+            role = role.replace("assistant", "mini-swe-agent")
             message_container.mount(Static(role.upper(), classes="message-header"))
             message_container.mount(Static(Text(content_str, no_wrap=False), classes="message-content"))
 
