@@ -7,7 +7,7 @@ There are three modes:
 """
 
 import re
-from typing import Literal
+from typing import Literal, NoReturn
 
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.shortcuts import PromptSession
@@ -57,7 +57,7 @@ class InteractiveAgent(DefaultAgent):
     def query(self) -> dict:
         # Extend supermethod to handle human mode
         if self.config.mode == "human":
-            match command := self._prompt_and_handle_special("[bold yellow]>[/bold yellow] "):
+            match command := self._prompt_and_handle_slash_commands("[bold yellow]>[/bold yellow] "):
                 case "/y" | "/c":
                     pass
                 case _:
@@ -86,7 +86,7 @@ class InteractiveAgent(DefaultAgent):
             console.print(Rule())
             return super().step()
         except KeyboardInterrupt:
-            interruption_message = self._prompt_and_handle_special(
+            interruption_message = self._prompt_and_handle_slash_commands(
                 "\n\n[bold yellow]Interrupted.[/bold yellow] "
                 "[green]Type a comment/command[/green] (/h for available commands)"
                 "\n[bold yellow]>[/bold yellow] "
@@ -107,35 +107,39 @@ class InteractiveAgent(DefaultAgent):
         outputs = []
         try:
             for action in actions:
-                self.ask_confirmation(action["command"])
+                self._ask_confirmation_or_interrupt(action["command"])
                 outputs.append(self.env.execute(action))
-        except Submitted:
-            if self.config.confirm_exit:
-                console.print(
-                    "[bold green]Agent wants to finish.[/bold green] "
-                    "[green]Type a comment to give it a new task or press enter to quit.\n"
-                    "[bold yellow]>[/bold yellow] ",
-                    end="",
-                )
-                if new_task := self._prompt_and_handle_special("").strip():
-                    raise UserInterruption(
-                        {
-                            "role": "user",
-                            "content": f"The user added a new task: {new_task}",
-                            "extra": {"interrupt_type": "UserNewTask"},
-                        }
-                    )
-            raise
+        except Submitted as e:
+            self._check_for_new_task_or_submit(e)
         finally:
             result = self.add_messages(
                 *self.model.format_observation_messages(message, outputs, self.get_template_vars())
             )
         return result
 
+    def _check_for_new_task_or_submit(self, e: Submitted) -> NoReturn:
+        """Check if user wants to add a new task or submit."""
+        if self.config.confirm_exit:
+            console.print(
+                "[bold green]Agent wants to finish.[/bold green] "
+                "[green]Type a comment to give it a new task or press enter to quit.\n"
+                "[bold yellow]>[/bold yellow] ",
+                end="",
+            )
+            if new_task := self._prompt_and_handle_slash_commands("").strip():
+                raise UserInterruption(
+                    {
+                        "role": "user",
+                        "content": f"The user added a new task: {new_task}",
+                        "extra": {"interrupt_type": "UserNewTask"},
+                    }
+                )
+        raise e
+
     def _should_ask_confirmation(self, action: str) -> bool:
         return self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions)
 
-    def ask_confirmation(self, action: str) -> None:
+    def _ask_confirmation_or_interrupt(self, action: str) -> None:
         if not self._should_ask_confirmation(action):
             return
         prompt = (
@@ -144,7 +148,7 @@ class InteractiveAgent(DefaultAgent):
             "or [green]Type a comment/command[/green] (/h for available commands)\n"
             "[bold yellow]>[/bold yellow] "
         )
-        match user_input := self._prompt_and_handle_special(prompt).strip():
+        match user_input := self._prompt_and_handle_slash_commands(prompt).strip():
             case "" | "/y":
                 pass  # confirmed, do nothing
             case "/u":  # Skip execution action and get back to query
@@ -164,7 +168,7 @@ class InteractiveAgent(DefaultAgent):
                     }
                 )
 
-    def _prompt_and_handle_special(self, prompt: str) -> str:
+    def _prompt_and_handle_slash_commands(self, prompt: str) -> str:
         """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""
         console.print(prompt, end="")
         user_input = prompt_session.prompt("")
@@ -175,10 +179,10 @@ class InteractiveAgent(DefaultAgent):
                 f"[bold green]/c[/bold green] to switch to [bold yellow]confirmation[/bold yellow] mode (ask for confirmation before executing LM commands)\n"
                 f"[bold green]/u[/bold green] to switch to [bold yellow]human[/bold yellow] mode (execute commands issued by the user)\n"
             )
-            return self._prompt_and_handle_special(prompt)
+            return self._prompt_and_handle_slash_commands(prompt)
         if user_input in self._MODE_COMMANDS_MAPPING:
             if self.config.mode == self._MODE_COMMANDS_MAPPING[user_input]:
-                return self._prompt_and_handle_special(
+                return self._prompt_and_handle_slash_commands(
                     f"[bold red]Already in {self.config.mode} mode.[/bold red]\n{prompt}"
                 )
             self.config.mode = self._MODE_COMMANDS_MAPPING[user_input]
