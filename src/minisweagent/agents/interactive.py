@@ -102,12 +102,13 @@ class InteractiveAgent(DefaultAgent):
             )
 
     def execute_actions(self, message: dict) -> list[dict]:
-        # Override to handle user confirmation and confirm_exit
-        for action in message.get("extra", {}).get("actions", []):
-            if self.should_ask_confirmation(action["command"]):
-                self.ask_confirmation(action["command"])
+        # Override to handle user confirmation and confirm_exit, with try/finally to preserve partial outputs
+        actions = message.get("extra", {}).get("actions", [])
+        outputs = []
         try:
-            return super().execute_actions(message)
+            for action in actions:
+                self.ask_confirmation(action["command"])
+                outputs.append(self.env.execute(action))
         except Submitted:
             if self.config.confirm_exit:
                 console.print(
@@ -125,11 +126,18 @@ class InteractiveAgent(DefaultAgent):
                         }
                     )
             raise
+        finally:
+            result = self.add_messages(
+                *self.model.format_observation_messages(message, outputs, self.get_template_vars())
+            )
+        return result
 
-    def should_ask_confirmation(self, action: str) -> bool:
+    def _should_ask_confirmation(self, action: str) -> bool:
         return self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions)
 
     def ask_confirmation(self, action: str) -> None:
+        if not self._should_ask_confirmation(action):
+            return
         prompt = (
             f"[bold yellow]Action: [/bold yellow][blue]{action}[/blue]\n"
             "[bold yellow]Execute?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "

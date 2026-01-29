@@ -80,7 +80,7 @@ class _TextualAgent(DefaultAgent):
         return info
 
     def execute_actions(self, message: dict) -> list[dict]:
-        # Override to handle user confirmation and confirm_exit
+        # Override to handle user confirmation and confirm_exit, with try/finally to preserve partial outputs
         if self.config.mode == "human" and not self._current_action_from_human:  # threading, grrrrr
             raise UserInterruption(
                 {
@@ -89,24 +89,28 @@ class _TextualAgent(DefaultAgent):
                     "extra": {"interrupt_type": "UserInterruption"},
                 }
             )
-        for action in message.get("extra", {}).get("actions", []):
-            command = action["command"]
-            if (
-                self.config.mode == "confirm"
-                and command.strip()
-                and not any(re.match(r, command) for r in self.config.whitelist_actions)
-            ):
-                result = self.app.input_container.request_input("Press ENTER to confirm or provide rejection reason")
-                if result:
-                    raise UserInterruption(
-                        {
-                            "role": "user",
-                            "content": f"Command not executed: {result}",
-                            "extra": {"interrupt_type": "UserRejection"},
-                        }
-                    )
+        actions = message.get("extra", {}).get("actions", [])
+        outputs = []
         try:
-            return super().execute_actions(message)
+            for action in actions:
+                command = action["command"]
+                if (
+                    self.config.mode == "confirm"
+                    and command.strip()
+                    and not any(re.match(r, command) for r in self.config.whitelist_actions)
+                ):
+                    user_input = self.app.input_container.request_input(
+                        "Press ENTER to confirm or provide rejection reason"
+                    )
+                    if user_input:
+                        raise UserInterruption(
+                            {
+                                "role": "user",
+                                "content": f"Command not executed: {user_input}",
+                                "extra": {"interrupt_type": "UserRejection"},
+                            }
+                        )
+                outputs.append(self.env.execute(action))
         except Submitted:
             if self.config.confirm_exit:
                 if new_task := self.app.input_container.request_input(
@@ -121,6 +125,11 @@ class _TextualAgent(DefaultAgent):
                         }
                     )
             raise
+        finally:
+            result = self.add_messages(
+                *self.model.format_observation_messages(message, outputs, self.get_template_vars())
+            )
+        return result
 
 
 class AddLogEmitCallback(logging.Handler):

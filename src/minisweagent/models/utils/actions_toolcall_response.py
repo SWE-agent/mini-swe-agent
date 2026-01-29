@@ -82,8 +82,10 @@ def format_toolcall_observation_messages(
     multimodal_regex: str = "",
 ) -> list[dict]:
     """Format execution outputs into function_call_output messages for Responses API."""
+    not_executed = {"output": "", "returncode": -1, "exception_info": "action was not executed"}
+    padded_outputs = outputs + [not_executed] * (len(actions) - len(outputs))
     results = []
-    for action, output in zip(actions, outputs):
+    for action, output in zip(actions, padded_outputs):
         content = Template(observation_template, undefined=StrictUndefined).render(
             output=output, **(template_vars or {})
         )
