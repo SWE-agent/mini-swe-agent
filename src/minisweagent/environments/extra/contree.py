@@ -91,6 +91,6 @@ class ContreeEnvironment:
         if ":" not in url:
             url += ":latest"
         domain, url_path = url.split("/", 1)
-        if "." in domain:
+        if "." in domain and ("docker" in domain or "io" in domain):
             return url_path or domain
         return domain + "/" + url_path
