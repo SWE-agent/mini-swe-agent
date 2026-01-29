@@ -51,7 +51,6 @@ class LitellmModel:
         litellm.exceptions.NotFoundError,
         litellm.exceptions.PermissionDeniedError,
         litellm.exceptions.ContextWindowExceededError,
-        litellm.exceptions.APIError,
         litellm.exceptions.AuthenticationError,
         KeyboardInterrupt,
     ]
