@@ -62,8 +62,8 @@ class InteractiveAgent(DefaultAgent):
                     pass
                 case _:
                     msg = {
-                        "role": "assistant",
-                        "content": f"\n```mswea_bash_command\n{command}\n```",
+                        "role": "user",
+                        "content": f"User command: \n```bash\n{command}\n```",
                         "extra": {"actions": [{"command": command}]},
                     }
                     self.add_messages(msg)
@@ -116,6 +116,9 @@ class InteractiveAgent(DefaultAgent):
                 *self.model.format_observation_messages(message, outputs, self.get_template_vars())
             )
         return result
+
+    def _add_observation_messages(self, message: dict, outputs: list[dict]) -> list[dict]:
+        return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))
 
     def _check_for_new_task_or_submit(self, e: Submitted) -> NoReturn:
         """Check if user wants to add a new task or submit."""

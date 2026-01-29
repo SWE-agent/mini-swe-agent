@@ -97,12 +97,22 @@ def format_toolcall_observation_messages(
         if output.get("exception_info"):
             extra["exception_info"] = output["exception_info"]
             extra.update(output.get("extra", {}))
-        results.append(
-            {
-                "type": "function_call_output",
-                "call_id": action["tool_call_id"],
-                "output": content,
-                "extra": extra,
-            }
-        )
+        if "tool_call_id" in action:
+            results.append(
+                {
+                    "type": "function_call_output",
+                    "call_id": action["tool_call_id"],
+                    "output": content,
+                    "extra": extra,
+                }
+            )
+        else:  # human issued commands
+            results.append(
+                {
+                    "type": "message",
+                    "role": "user",
+                    "content": [{"type": "input_text", "text": content}],
+                    "extra": extra,
+                }
+            )
     return results
