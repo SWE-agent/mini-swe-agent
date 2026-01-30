@@ -2,7 +2,7 @@
 <a href="https://mini-swe-agent.com/latest/"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/mini-swe-agent-banner.svg" alt="mini-swe-agent banner" style="height: 7em"/></a>
 </div>
 
-# The 100 line AI agent that solves GitHub issues & more
+# The minimal AI software engineering agent
 
 📣 [New tutorial on building minimal AI agents](https://minimal-agent.com/)<br/>
 📣 [Gemini 3 Pro reaches 74% on SWE-bench verified with mini-swe-agent!](https://x.com/KLieret/status/1991164693839270372)<br/>
@@ -12,9 +12,9 @@
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ)
 [![PyPI - Version](https://img.shields.io/pypi/v/mini-swe-agent?style=for-the-badge&logo=python&logoColor=white&labelColor=black&color=deeppink)](https://pypi.org/project/mini-swe-agent/)
 
-In 2024, [SWE-bench](https://github.com/swe-bench/SWE-bench) & [SWE-agent](https://github.com/swe-agent/swe-agent) helped kickstart the coding agent revolution.
+In 2024, we built [SWE-bench](https://github.com/swe-bench/SWE-bench) & [SWE-agent](https://github.com/swe-agent/swe-agent) and helped kickstart the coding agent revolution.
 
-We now ask: **What if SWE-agent was 100x smaller, and still worked nearly as well?**
+We now ask: **What if our agent was 100x smaller, and still worked nearly as well?**
 
 The `mini` agent is for
 
@@ -24,11 +24,11 @@ The `mini` agent is for
 
 Here's some details:
 
-- **Minimal**: Just [100 lines of python](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py) (+100 total for [env](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/environments/local.py),
-[model](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py), [script](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py)) — no fancy dependencies!
-- **Performant:** Scores >74% on the [SWE-bench verified benchmark](https://www.swebench.com/) benchmark; starts faster than Claude Code
+- **Minimal**: Just some 100 lines of python for the [agent class](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py) (and a bit more for the [environment](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/environments/local.py),
+[model](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py), and [run script](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py)) — no fancy dependencies!
+- **Performant:** Scores >74% on the [SWE-bench verified benchmark](https://www.swebench.com/) benchmark; starts much faster than Claude Code
 - **Deployable:** In addition to local envs, you can use **docker**, **podman**, **singularity**, **apptainer**, and more
-- **Cutting edge:** Built by the Princeton & Stanford team behind [SWE-bench](https://swebench.com) and [SWE-agent](https://swe-agent.com).
+- Built by the Princeton & Stanford team behind [SWE-bench](https://swebench.com), [SWE-agent](https://swe-agent.com), and more (see below)
 - **Widely adopted:** In use by Meta, NVIDIA, Essential AI, Anyscale, and others
 - **Tested:** [![Codecov](https://img.shields.io/codecov/c/github/swe-agent/mini-swe-agent?style=flat-square)](https://codecov.io/gh/SWE-agent/mini-swe-agent)
 
@@ -40,7 +40,7 @@ Here's some details:
 However, one year later, as LMs have become more capable, a lot of this is not needed at all to build a useful agent!
 In fact, the `mini` agent
 
-- **Does not have any tools other than bash** — it doesn't even use the tool-calling interface of the LMs.
+- **Does not have any tools other than bash** — it doesn't even need to use the tool-calling interface of the LMs.
   This means that you can run it with literally any model. When running in sandboxed environments you also don't need to take care
   of installing a single package — all it needs is bash.
 - **Has a completely linear history** — every step of the agent just appends to the messages and that's it.
@@ -69,7 +69,7 @@ The `mini` agent wants to be a hackable tool, not a black box.
 
 Unlike other agents (including our own [swe-agent](https://swe-agent.com/latest/)), it is radically simpler, because it:
 
-- **Does not have any tools other than bash** — it doesn't even use the tool-calling interface of the LMs.
+- **Does not have any tools other than bash** — it doesn't even need to use the tool-calling interface of the LMs.
   Instead of implementing custom tools for every specific thing the agent might want to do, the focus is fully on the LM utilizing the shell to its full potential.
   Want it to do something specific like opening a PR?
   Just tell the LM to figure it out rather than spending time to implement it in the agent.
