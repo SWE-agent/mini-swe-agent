@@ -65,11 +65,13 @@ class LitellmModel:
             id=last_chunk.id if last_chunk else "stream-response",
             created=last_chunk.created if last_chunk else 0,
             model=last_chunk.model if last_chunk else self.config.model_name,
-            choices=[Choices(
-                index=0,
-                finish_reason="stop",
-                message=Message(role="assistant", content=content),
-            )],
+            choices=[
+                Choices(
+                    index=0,
+                    finish_reason="stop",
+                    message=Message(role="assistant", content=content),
+                )
+            ],
             # Usage stats not available in streaming; use estimates
             usage=Usage(
                 prompt_tokens=0,
@@ -100,10 +102,7 @@ class LitellmModel:
             if self.config.use_streaming:
                 # Use streaming to avoid HTTP read timeouts on long generations
                 stream_response = litellm.completion(
-                    model=self.config.model_name,
-                    messages=messages,
-                    stream=True,
-                    **(self.config.model_kwargs | kwargs)
+                    model=self.config.model_name, messages=messages, stream=True, **(self.config.model_kwargs | kwargs)
                 )
                 return self._reconstruct_response_from_stream(stream_response)
             else:
