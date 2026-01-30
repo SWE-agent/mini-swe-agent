@@ -9,7 +9,7 @@ def _format_tool_call(args_str: str) -> str:
         args = json.loads(args_str) if isinstance(args_str, str) else args_str
         if isinstance(args, dict) and "command" in args:
             return f"```\n{args['command']}\n```"
-    except json.JSONDecodeError:
+    except Exception:
         pass
     return f"```\n{args_str}\n```"
 
@@ -18,15 +18,15 @@ def _format_observation(content: str) -> str | None:
     """Try to format an observation JSON as key-value pairs."""
     try:
         data = json.loads(content)
-        if isinstance(data, dict):
+        if isinstance(data, dict) and "returncode" in data:
             lines = []
             for key, value in data.items():
                 lines.append(f"<{key}>")
                 lines.append(str(value))
             return "\n".join(lines)
-    except (json.JSONDecodeError, TypeError):
-        pass
-    return None
+        return content
+    except Exception:
+        return content
 
 
 def get_content_string(message: dict) -> str:
@@ -44,11 +44,7 @@ def get_content_string(message: dict) -> str:
     # Extract content (string or multimodal list)
     content = message.get("content")
     if isinstance(content, str):
-        # Check if it's an observation with returncode/output structure
-        if (output := _format_observation(content)) is not None:
-            texts.append(output)
-        else:
-            texts.append(content)
+        texts.append(_format_observation(content))
     elif isinstance(content, list):
         texts.append("\n".join(item.get("text", "") for item in content if isinstance(item, dict)))
 
@@ -63,10 +59,7 @@ def get_content_string(message: dict) -> str:
     # Handle Responses API format (output array)
     if output := message.get("output"):
         if isinstance(output, str):
-            if (output := _format_observation(output)) is not None:
-                texts.append(output)
-            else:
-                texts.append(output)
+            texts.append(_format_observation(output))
         elif isinstance(output, list):
             for item in output:
                 if not isinstance(item, dict):
