@@ -62,14 +62,20 @@ def get_content_string(message: dict) -> str:
 
     # Handle Responses API format (output array)
     if output := message.get("output"):
-        for item in output:
-            if not isinstance(item, dict):
-                continue
-            if item.get("type") == "message":
-                for c in item.get("content", []):
-                    if isinstance(c, dict) and (text := c.get("text")):
-                        texts.append(text)
-            elif item.get("type") == "function_call":
-                texts.append(_format_tool_call(item.get("arguments", "{}")))
+        if isinstance(output, str):
+            if (output := _format_observation(output)) is not None:
+                texts.append(output)
+            else:
+                texts.append(output)
+        elif isinstance(output, list):
+            for item in output:
+                if not isinstance(item, dict):
+                    continue
+                if item.get("type") == "message":
+                    for c in item.get("content", []):
+                        if isinstance(c, dict) and (text := c.get("text")):
+                            texts.append(text)
+                elif item.get("type") == "function_call":
+                    texts.append(_format_tool_call(item.get("arguments", "{}")))
 
     return "\n\n".join(t for t in texts if t)

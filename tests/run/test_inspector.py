@@ -106,13 +106,13 @@ async def test_trajectory_inspector_basic_navigation(temp_trajectory_files):
         # Navigate to next step
         await pilot.press("l")
         assert "Step 2/3" in app.title
-        assert "MINI-SWE-AGENT" in get_screen_text(app)
+        assert "ASSISTANT" in get_screen_text(app)
         assert "I'll help you solve this" in get_screen_text(app)
 
         # Navigate to last step
         await pilot.press("$")
         assert "Step 3/3" in app.title
-        assert "MINI-SWE-AGENT" in get_screen_text(app)
+        assert "ASSISTANT" in get_screen_text(app)
         assert "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" in get_screen_text(app)
 
         # Navigate back to first step
