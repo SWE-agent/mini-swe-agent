@@ -5,17 +5,17 @@ import pytest
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_response_api_model import PortkeyResponseAPIModel
-from minisweagent.models.utils.content_string import get_content_string
+from minisweagent.models.utils.actions_toolcall_response import BASH_TOOL_RESPONSE_API
 
 
 def test_response_api_model_basic_query():
-    """Test that Response API model uses client.responses and tracks previous_response_id."""
+    """Test that Response API model uses client.responses with stateless interface."""
     mock_portkey_class = MagicMock()
     mock_client = MagicMock()
     mock_portkey_class.return_value = mock_client
 
     with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
         patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
         patch(
             "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.01
@@ -23,12 +23,12 @@ def test_response_api_model_basic_query():
     ):
         mock_response = Mock()
         mock_response.id = "resp_123"
-        # Response must include bash block to avoid FormatError from parse_action
-        mock_response.output_text = "```mswea_bash_command\necho test\n```"
-        mock_response.output = []
+        mock_response.output = [
+            {"type": "function_call", "call_id": "call_abc", "name": "bash", "arguments": '{"command": "echo test"}'}
+        ]
         mock_response.model_dump.return_value = {
             "id": "resp_123",
-            "output": [{"type": "message", "content": [{"text": "```mswea_bash_command\necho test\n```"}]}],
+            "output": mock_response.output,
         }
         mock_client.responses.create.return_value = mock_response
 
@@ -36,75 +36,72 @@ def test_response_api_model_basic_query():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert get_content_string(result) == "```mswea_bash_command\necho test\n```"
-        assert result["extra"]["actions"] == [{"command": "echo test"}]
-        assert model._previous_response_id == "resp_123"
+        assert result["extra"]["actions"] == [{"command": "echo test", "tool_call_id": "call_abc"}]
         mock_client.responses.create.assert_called_once_with(
-            model="gpt-5-mini", input=messages, previous_response_id=None
+            model="gpt-5-mini", input=messages, tools=[BASH_TOOL_RESPONSE_API]
         )
 
 
-def test_response_api_model_with_previous_id():
-    """Test that Response API model passes previous_response_id on subsequent calls."""
+def test_response_api_model_stateless_flattens_response():
+    """Test that Response API model flattens response objects for stateless API."""
     mock_portkey_class = MagicMock()
     mock_client = MagicMock()
     mock_portkey_class.return_value = mock_client
 
     with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
         patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
         patch(
             "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.01
         ),
     ):
-        # First call - response must include bash block
-        mock_response1 = Mock()
-        mock_response1.id = "resp_123"
-        mock_response1.output_text = "```mswea_bash_command\necho first\n```"
-        mock_response1.output = []
-        mock_response1.model_dump.return_value = {
-            "id": "resp_123",
-            "output": [{"type": "message", "content": [{"text": "```mswea_bash_command\necho first\n```"}]}],
-        }
-        mock_client.responses.create.return_value = mock_response1
+        mock_response = Mock()
+        mock_response.id = "resp_456"
+        mock_response.output = [
+            {"type": "function_call", "call_id": "call_2", "name": "bash", "arguments": '{"command": "echo second"}'}
+        ]
+        mock_response.model_dump.return_value = {"id": "resp_456", "output": mock_response.output}
+        mock_client.responses.create.return_value = mock_response
 
         model = PortkeyResponseAPIModel(model_name="gpt-5-mini")
-        messages1 = [{"role": "user", "content": "first"}]
-        model.query(messages1)
-
-        # Second call - response must include bash block
-        mock_response2 = Mock()
-        mock_response2.id = "resp_456"
-        mock_response2.output_text = "```mswea_bash_command\necho second\n```"
-        mock_response2.output = []
-        mock_response2.model_dump.return_value = {
-            "id": "resp_456",
-            "output": [{"type": "message", "content": [{"text": "```mswea_bash_command\necho second\n```"}]}],
-        }
-        mock_client.responses.create.return_value = mock_response2
-
-        messages2 = [
-            {"role": "user", "content": "first"},
-            {"role": "assistant", "content": "```mswea_bash_command\necho first\n```"},
-            {"role": "user", "content": "second"},
+        messages = [
+            {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "first"}]},
+            {
+                "object": "response",
+                "output": [
+                    {
+                        "type": "function_call",
+                        "call_id": "call_1",
+                        "name": "bash",
+                        "arguments": '{"command": "echo first"}',
+                    },
+                ],
+                "extra": {"actions": [{"command": "echo first", "tool_call_id": "call_1"}]},
+            },
+            {"type": "function_call_output", "call_id": "call_1", "output": "first"},
+            {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "second"}]},
         ]
-        result = model.query(messages2)
+        result = model.query(messages)
 
-        assert get_content_string(result) == "```mswea_bash_command\necho second\n```"
-        assert model._previous_response_id == "resp_456"
-        # On second call, should only pass the last message
-        assert mock_client.responses.create.call_args[1]["input"] == [{"role": "user", "content": "second"}]
-        assert mock_client.responses.create.call_args[1]["previous_response_id"] == "resp_123"
+        assert result["extra"]["actions"] == [{"command": "echo second", "tool_call_id": "call_2"}]
+        # Verify that response objects are flattened and extra is stripped
+        expected_input = [
+            {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "first"}]},
+            {"type": "function_call", "call_id": "call_1", "name": "bash", "arguments": '{"command": "echo first"}'},
+            {"type": "function_call_output", "call_id": "call_1", "output": "first"},
+            {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "second"}]},
+        ]
+        assert mock_client.responses.create.call_args[1]["input"] == expected_input
 
 
-def test_response_api_model_output_text_field():
-    """Test that Response API model uses output_text field when available."""
+def test_response_api_model_multiple_tool_calls():
+    """Test that Response API model handles multiple tool calls."""
     mock_portkey_class = MagicMock()
     mock_client = MagicMock()
     mock_portkey_class.return_value = mock_client
 
     with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
         patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
         patch(
             "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.01
@@ -112,12 +109,13 @@ def test_response_api_model_output_text_field():
     ):
         mock_response = Mock()
         mock_response.id = "resp_789"
-        # Response must include bash block to avoid FormatError from parse_action
-        mock_response.output_text = "```mswea_bash_command\necho direct\n```"
-        mock_response.output = []
+        mock_response.output = [
+            {"type": "function_call", "call_id": "call_1", "name": "bash", "arguments": '{"command": "echo first"}'},
+            {"type": "function_call", "call_id": "call_2", "name": "bash", "arguments": '{"command": "echo second"}'},
+        ]
         mock_response.model_dump.return_value = {
             "id": "resp_789",
-            "output": [{"type": "message", "content": [{"text": "```mswea_bash_command\necho direct\n```"}]}],
+            "output": mock_response.output,
         }
         mock_client.responses.create.return_value = mock_response
 
@@ -125,51 +123,10 @@ def test_response_api_model_output_text_field():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert get_content_string(result) == "```mswea_bash_command\necho direct\n```"
-        assert result["extra"]["actions"] == [{"command": "echo direct"}]
-
-
-def test_response_api_model_multiple_output_messages():
-    """Test that Response API model concatenates multiple output messages."""
-    mock_portkey_class = MagicMock()
-    mock_client = MagicMock()
-    mock_portkey_class.return_value = mock_client
-
-    with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
-        patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
-        patch(
-            "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.01
-        ),
-    ):
-        from openai.types.responses.response_output_message import ResponseOutputMessage
-
-        mock_response = Mock()
-        mock_response.id = "resp_999"
-        mock_response.output_text = None
-
-        # Create multiple output messages - together they form a valid bash block
-        mock_msg1 = Mock(spec=ResponseOutputMessage)
-        mock_msg1.content = [Mock(text="First part\n```mswea_bash_command")]
-        mock_msg2 = Mock(spec=ResponseOutputMessage)
-        mock_msg2.content = [Mock(text="echo test\n```")]
-
-        mock_response.output = [mock_msg1, mock_msg2]
-        mock_response.model_dump.return_value = {
-            "id": "resp_999",
-            "output": [
-                {"type": "message", "content": [{"text": "First part\n```mswea_bash_command"}]},
-                {"type": "message", "content": [{"text": "echo test\n```"}]},
-            ],
-        }
-        mock_client.responses.create.return_value = mock_response
-
-        model = PortkeyResponseAPIModel(model_name="gpt-5-mini")
-        messages = [{"role": "user", "content": "test"}]
-        result = model.query(messages)
-
-        assert get_content_string(result) == "First part\n```mswea_bash_command\n\necho test\n```"
-        assert result["extra"]["actions"] == [{"command": "echo test"}]
+        assert result["extra"]["actions"] == [
+            {"command": "echo first", "tool_call_id": "call_1"},
+            {"command": "echo second", "tool_call_id": "call_2"},
+        ]
 
 
 def test_response_api_model_cost_tracking():
@@ -179,7 +136,7 @@ def test_response_api_model_cost_tracking():
     mock_portkey_class.return_value = mock_client
 
     with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
         patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
         patch(
             "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.05
@@ -187,9 +144,10 @@ def test_response_api_model_cost_tracking():
     ):
         mock_response = Mock()
         mock_response.id = "resp_cost"
-        # Response must include bash block to avoid FormatError from parse_action
-        mock_response.output_text = "```mswea_bash_command\necho cost\n```"
-        mock_response.model_dump.return_value = {"id": "resp_cost"}
+        mock_response.output = [
+            {"type": "function_call", "call_id": "call_cost", "name": "bash", "arguments": '{"command": "echo cost"}'}
+        ]
+        mock_response.model_dump.return_value = {"id": "resp_cost", "output": mock_response.output}
         mock_client.responses.create.return_value = mock_response
 
         initial_global_cost = GLOBAL_MODEL_STATS.cost
@@ -209,7 +167,7 @@ def test_response_api_model_zero_cost_assertion():
     mock_portkey_class.return_value = mock_client
 
     with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
         patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
         patch(
             "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.0
@@ -217,8 +175,10 @@ def test_response_api_model_zero_cost_assertion():
     ):
         mock_response = Mock()
         mock_response.id = "resp_zero"
-        mock_response.output_text = "Response"
-        mock_response.model_dump.return_value = {"id": "resp_zero"}
+        mock_response.output = [
+            {"type": "function_call", "call_id": "call_zero", "name": "bash", "arguments": '{"command": "echo test"}'}
+        ]
+        mock_response.model_dump.return_value = {"id": "resp_zero", "output": mock_response.output}
         mock_client.responses.create.return_value = mock_response
 
         model = PortkeyResponseAPIModel(model_name="gpt-5-mini")
@@ -228,37 +188,6 @@ def test_response_api_model_zero_cost_assertion():
             model.query(messages)
 
 
-def test_response_api_model_cache_control():
-    """Test that Response API model applies cache control when configured."""
-    mock_portkey_class = MagicMock()
-    mock_client = MagicMock()
-    mock_portkey_class.return_value = mock_client
-
-    with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
-        patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
-        patch(
-            "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.01
-        ),
-        patch("minisweagent.models.portkey_model.set_cache_control") as mock_cache,
-    ):
-        mock_response = Mock()
-        mock_response.id = "resp_cache"
-        # Response must include bash block to avoid FormatError from parse_action
-        mock_response.output_text = "```mswea_bash_command\necho cache\n```"
-        mock_response.model_dump.return_value = {"id": "resp_cache"}
-        mock_client.responses.create.return_value = mock_response
-
-        messages_original = [{"role": "user", "content": "test"}]
-        messages_cached = [{"role": "user", "content": "test", "cache_control": {"type": "ephemeral"}}]
-        mock_cache.return_value = messages_cached
-
-        model = PortkeyResponseAPIModel(model_name="gpt-5-mini", set_cache_control="default_end")
-        model.query(messages_original)
-
-        mock_cache.assert_called_once_with(messages_original, mode="default_end")
-
-
 def test_response_api_model_with_model_kwargs():
     """Test that Response API model passes model_kwargs to the API."""
     mock_portkey_class = MagicMock()
@@ -266,7 +195,7 @@ def test_response_api_model_with_model_kwargs():
     mock_portkey_class.return_value = mock_client
 
     with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
         patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
         patch(
             "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.01
@@ -274,9 +203,10 @@ def test_response_api_model_with_model_kwargs():
     ):
         mock_response = Mock()
         mock_response.id = "resp_kwargs"
-        # Response must include bash block to avoid FormatError from parse_action
-        mock_response.output_text = "```mswea_bash_command\necho kwargs\n```"
-        mock_response.model_dump.return_value = {"id": "resp_kwargs"}
+        mock_response.output = [
+            {"type": "function_call", "call_id": "call_kw", "name": "bash", "arguments": '{"command": "echo kwargs"}'}
+        ]
+        mock_response.model_dump.return_value = {"id": "resp_kwargs", "output": mock_response.output}
         mock_client.responses.create.return_value = mock_response
 
         model = PortkeyResponseAPIModel(model_name="gpt-5-mini", model_kwargs={"temperature": 0.7, "max_tokens": 100})
@@ -295,7 +225,7 @@ def test_response_api_model_retry_on_rate_limit():
     mock_portkey_class.return_value = mock_client
 
     with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
         patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key", "MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT": "2"}),
         patch(
             "minisweagent.models.portkey_response_api_model.litellm.cost_calculator.completion_cost", return_value=0.01
@@ -310,14 +240,17 @@ def test_response_api_model_retry_on_rate_limit():
                 raise Exception("Rate limit exceeded")
             mock_response = Mock()
             mock_response.id = "resp_retry"
-            # Response must include bash block to avoid FormatError from parse_action
-            mock_response.output_text = "```mswea_bash_command\necho 'Success after retry'\n```"
-            mock_response.output = []
+            mock_response.output = [
+                {
+                    "type": "function_call",
+                    "call_id": "call_retry",
+                    "name": "bash",
+                    "arguments": '{"command": "echo Success after retry"}',
+                }
+            ]
             mock_response.model_dump.return_value = {
                 "id": "resp_retry",
-                "output": [
-                    {"type": "message", "content": [{"text": "```mswea_bash_command\necho 'Success after retry'\n```"}]}
-                ],
+                "output": mock_response.output,
             }
             return mock_response
 
@@ -327,7 +260,7 @@ def test_response_api_model_retry_on_rate_limit():
         messages = [{"role": "user", "content": "test"}]
         result = model.query(messages)
 
-        assert get_content_string(result) == "```mswea_bash_command\necho 'Success after retry'\n```"
+        assert result["extra"]["actions"] == [{"command": "echo Success after retry", "tool_call_id": "call_retry"}]
         assert call_count == 2
 
 
@@ -338,7 +271,7 @@ def test_response_api_model_no_retry_on_type_error():
     mock_portkey_class.return_value = mock_client
 
     with (
-        patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class),
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
         patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
     ):
         mock_client.responses.create.side_effect = TypeError("Invalid type")
@@ -351,3 +284,36 @@ def test_response_api_model_no_retry_on_type_error():
 
         # Should only be called once (no retries)
         assert mock_client.responses.create.call_count == 1
+
+
+def test_response_api_model_serialize():
+    """Test that Response API model serializes correctly."""
+    mock_portkey_class = MagicMock()
+    mock_client = MagicMock()
+    mock_portkey_class.return_value = mock_client
+
+    with (
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
+        patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
+    ):
+        model = PortkeyResponseAPIModel(model_name="gpt-5-mini")
+        serialized = model.serialize()
+
+        assert serialized["info"]["config"]["model"]["model_name"] == "gpt-5-mini"
+        assert "PortkeyResponseAPIModel" in serialized["info"]["config"]["model_type"]
+
+
+def test_response_api_model_get_template_vars():
+    """Test that Response API model returns template vars from config."""
+    mock_portkey_class = MagicMock()
+    mock_client = MagicMock()
+    mock_portkey_class.return_value = mock_client
+
+    with (
+        patch("minisweagent.models.portkey_response_api_model.Portkey", mock_portkey_class),
+        patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}),
+    ):
+        model = PortkeyResponseAPIModel(model_name="gpt-5-mini")
+        template_vars = model.get_template_vars()
+
+        assert template_vars["model_name"] == "gpt-5-mini"
