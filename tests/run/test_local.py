@@ -39,7 +39,6 @@ def test_local_end_to_end(local_test_data):
             yolo=True,
             task="Blah blah blah",
             output=None,
-            visual=False,
             cost_limit=10,
             model_class=None,
         )  # type: ignore

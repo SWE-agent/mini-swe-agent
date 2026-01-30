@@ -97,10 +97,10 @@ Here's some details:
 <table>
 <tr>
 <td width="50%">
-<a href="usage/mini"><strong>Simple UI</strong></a> (<code>mini</code>)
+<a href="usage/mini"><strong>CLI</strong></a> (<code>mini</code>)
 </td>
 <td>
-<a href="usage/mini_v"><strong>Visual UI</strong></a> (<code>mini -v</code>)
+<a href="usage/swebench/"><strong>Batch inference</strong></a>
 </td>
 </tr>
 <tr>
@@ -112,29 +112,22 @@ Here's some details:
   </div>
 </td>
 <td>
-  <div class="gif-container" data-glightbox-disabled>
-    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini2.png?raw=true"
-         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini2.gif?raw=true"
-         alt="miniv" data-glightbox="false" />
-  </div>
-</td>
-</tr>
-<tr>
-<td>
-<a href="usage/swebench/"><strong>Batch inference</strong></a>
-</td>
-<td>
-<a href="usage/inspector/"><strong>Trajectory browser</strong></a>
-</td>
-</tr>
-<tr>
-<td>
 <div class="gif-container" data-glightbox-disabled>
   <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/swebench.png?raw=true"
        data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/swebench.gif?raw=true"
        alt="swebench" data-glightbox="false" />
 </div>
 </td>
+</tr>
+<tr>
+<td>
+<a href="usage/inspector/"><strong>Trajectory browser</strong></a>
+</td>
+<td>
+<a href="advanced/cookbook/"><strong>Python bindings</strong></a>
+</td>
+</tr>
+<tr>
 <td>
 <div class="gif-container" data-glightbox-disabled>
   <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true"
@@ -142,31 +135,12 @@ Here's some details:
        alt="inspector" data-glightbox="false" />
 </div>
 </td>
-</tr>
-<tr>
-<td>
-<a href="advanced/cookbook/"><strong>Python bindings</strong></a>
-</td>
-<td>
-<a href="https://mini-swe-agent.com"><strong>More in the docs</strong></a>
-</td>
-</tr>
-<tr>
 <td>
 <pre><code class="language-python">agent = DefaultAgent(
     LitellmModel(model_name=...),
     LocalEnvironment(),
 )
 agent.run("Write a sudoku game")</code></pre>
-</td>
-<td>
-<ul>
-<li><a href="quickstart">Quick start</a></li>
-<li><a href="usage/mini"><code>mini</code></a></li>
-<li><a href="faq">FAQ</a></li>
-<li><a href="advanced/global_configuration">Global configuration</a></li>
-<li><a href="advanced/yaml_configuration">Yaml configuration</a></li>
-</ul>
 </td>
 </tr>
 </table>
@@ -196,16 +170,6 @@ agent.run("Write a sudoku game")</code></pre>
         <span class="nav-card-title">Usage: Simple UI</span>
       </div>
       <p class="nav-card-description">Learn to use the <code>mini</code> command</p>
-    </div>
-  </a>
-
-  <a href="usage/mini_v/" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">visibility</span>
-        <span class="nav-card-title">Usage: Visual UI</span>
-      </div>
-      <p class="nav-card-description">Try the visual interface with <code>mini -v</code></p>
     </div>
   </a>
 

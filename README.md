@@ -106,55 +106,38 @@ What you get with both
 <table>
 <tr>
 <td width="50%">
-<a href="https://mini-swe-agent.com/latest/usage/mini/"><strong>Simple UI</strong></a> (<code>mini</code>)
+<a href="https://mini-swe-agent.com/latest/usage/mini/"><strong>CLI</strong></a> (<code>mini</code>)
 </td>
 <td>
-<a href="https://mini-swe-agent.com/latest/usage/mini_v/"><strong>Visual UI</strong></a> (<code>mini -v</code>)
+<a href="https://mini-swe-agent.com/latest/usage/swebench/"><strong>Batch inference</strong></a>
 </td>
 </tr>
 <tr>
 <td width="50%">
 
-  ![mini](https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini.gif?raw=true)
+![mini](https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini.gif?raw=true)
 
 </td>
-<td>
-
-  ![miniv](https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini2.gif?raw=true)
-
-</td>
-</tr>
-<tr>
-  <td>
-    <a href="https://mini-swe-agent.com/latest/usage/swebench/"><strong>Batch inference</strong></a>
-  </td>
-  <td>
-    <a href="https://mini-swe-agent.com/latest/usage/inspector/"><strong>Trajectory browser</strong></a>
-  </td>
-<tr>
-<tr>
-
 <td>
 
 ![swebench](https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/swebench.gif?raw=true)
 
 </td>
-
+</tr>
+<tr>
+<td>
+<a href="https://mini-swe-agent.com/latest/usage/inspector/"><strong>Trajectory browser</strong></a>
+</td>
+<td>
+<a href="https://mini-swe-agent.com/latest/advanced/cookbook/"><strong>Python bindings</strong></a>
+</td>
+</tr>
+<tr>
 <td>
 
 ![inspector](https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/inspector.gif?raw=true)
 
 </td>
-
-</tr>
-<td>
-<a href="https://mini-swe-agent.com/latest/advanced/cookbook/"><strong>Python bindings</strong></a>
-</td>
-<td>
-<a href="https://mini-swe-agent.com"><strong>More in the docs</strong></a>
-</td>
-</tr>
-<tr>
 <td>
 
 ```python
@@ -164,15 +147,6 @@ agent = DefaultAgent(
 )
 agent.run("Write a sudoku game")
 ```
-</td>
-<td>
-
-* [Quick start](https://mini-swe-agent.com/latest/quickstart/)
-* [`mini`](https://mini-swe-agent.com/latest/usage/mini/)
-* [FAQ](https://mini-swe-agent.com/latest/faq/)
-* [Global configuration](https://mini-swe-agent.com/latest/advanced/global_configuration/)
-* [Yaml configuration files](https://mini-swe-agent.com/latest/advanced/yaml_configuration/)
-* [Power up](https://mini-swe-agent.com/latest/advanced/cookbook/)
 
 </td>
 </tr>
@@ -183,16 +157,16 @@ agent.run("Write a sudoku game")
 **Option 1:** If you just want to try out the CLI (package installed in anonymous virtual environment)
 
 ```bash
-pip install uv && uvx mini-swe-agent [-v]
+pip install uv && uvx mini-swe-agent
 # or
-pip install pipx && pipx ensurepath && pipx run mini-swe-agent [-v]
+pip install pipx && pipx ensurepath && pipx run mini-swe-agent
 ```
 
 **Option 2:** Install CLI & python bindings in current environment
 
 ```bash
 pip install mini-swe-agent
-mini -v  # run the CLI
+mini  # run the CLI
 ```
 
 **Option 3:** Install from source (developer setup)
@@ -200,13 +174,13 @@ mini -v  # run the CLI
 ```bash
 git clone https://github.com/SWE-agent/mini-swe-agent.git
 cd mini-swe-agent && pip install -e .
-mini [-v]  # run the CLI
+mini  # run the CLI
 ```
 
 Read more in our [documentation](https://mini-swe-agent.com/latest/):
 
 * [Quick start guide](https://mini-swe-agent.com/latest/quickstart/)
-* More on [`mini`](https://mini-swe-agent.com/latest/usage/mini/) and [`mini -v`](https://mini-swe-agent.com/latest/usage/mini_v/)
+* [Using the `mini` CLI](https://mini-swe-agent.com/latest/usage/mini/)
 * [Global configuration](https://mini-swe-agent.com/latest/advanced/global_configuration/)
 * [Yaml configuration files](https://mini-swe-agent.com/latest/advanced/yaml_configuration/)
 * [Power up with the cookbook](https://mini-swe-agent.com/latest/advanced/cookbook/)

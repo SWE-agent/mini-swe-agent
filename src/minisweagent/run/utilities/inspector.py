@@ -16,7 +16,23 @@ from textual.binding import Binding
 from textual.containers import Container, Vertical, VerticalScroll
 from textual.widgets import Footer, Header, Static
 
-from minisweagent.agents.interactive_textual import _messages_to_steps
+
+def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
+    """Group messages into "pages" as shown by the UI."""
+    steps = []
+    current_step = []
+    for message in messages:
+        current_step.append(message)
+        # Step ends on tool/user observations, but not human-issued commands (which have actions)
+        is_tool_obs = message.get("role") == "tool" or message.get("type") == "function_call_output"
+        is_user_obs = message.get("role") == "user" and not message.get("extra", {}).get("actions")
+        if is_tool_obs or is_user_obs:
+            steps.append(current_step)
+            current_step = []
+    if current_step:
+        steps.append(current_step)
+    return steps
+
 
 app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
@@ -36,7 +52,7 @@ class TrajectoryInspector(App):
 
     def __init__(self, trajectory_files: list[Path]):
         css_path = os.environ.get(
-            "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent.parent / "config" / "mini.tcss")
+            "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent.parent / "config" / "inspector.tcss")
         )
         self.__class__.CSS = Path(css_path).read_text()
 

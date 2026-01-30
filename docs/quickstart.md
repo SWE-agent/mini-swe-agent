@@ -13,8 +13,7 @@
         And try our command line interface
 
         ```bash
-        mini  # simple UI
-        mini -v  # visual UI
+        mini  # CLI
         mini-extra  # extra utilities
         ```
 
@@ -26,8 +25,7 @@
         Quickly install + run:
 
         ```bash
-        uvx mini-swe-agent  # simple UI
-        uvx mini-swe-agent -v  # visual UI
+        uvx mini-swe-agent  # CLI
         uvx --from mini-swe-agent mini-extra  # extra utilities
         ```
 
@@ -36,8 +34,7 @@
         ```bash
         uv tool install mini-swe-agent
         # then
-        mini  # simple UI
-        mini -v  # visual UI
+        mini  # CLI
         mini-extra  # extra utilities
         ```
 
@@ -49,10 +46,8 @@
         Quick install + run:
 
         ```bash
-        # Simple UI
+        # CLI
         pipx run mini-swe-agent
-        # Textual UI
-        pipx run mini-swe-agent -v
         # Extra utilities
         pipx run --spec mini-swe-agent mini-extra
         ```
@@ -62,8 +57,7 @@
         ```bash
         pipx install mini-swe-agent
         # then
-        mini  # simple UI
-        mini -v  # visual UI
+        mini  # CLI
         mini-extra  # extra utilities
         ```
 
@@ -82,8 +76,7 @@
         Then run:
 
         ```bash
-        mini  # simple UI
-        mini -v  # visual UI
+        mini  # CLI
         mini-extra  # extra utilities
         ```
 

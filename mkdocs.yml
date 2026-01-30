@@ -64,7 +64,6 @@ nav:
     - "Quick start": quickstart.md
     - "Command line usage":
       - "<code>mini</code>": usage/mini.md
-      - "<code>mini -v</code>": usage/mini_v.md
       - "Config": usage/config.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
@@ -89,7 +88,6 @@ nav:
     - Agents:
       - "DefaultAgent": "reference/agents/default.md"
       - "InteractiveAgent": "reference/agents/interactive.md"
-      - "TextualAgent": "reference/agents/textual.md"
     - Models:
       - "Overview": "reference/models/overview.md"
       - "LitellmModel": "reference/models/litellm.md"

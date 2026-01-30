@@ -15,7 +15,6 @@ from rich.console import Console
 
 from minisweagent import global_config_dir
 from minisweagent.agents.interactive import InteractiveAgent
-from minisweagent.agents.interactive_textual import TextualAgent
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models import get_model
@@ -29,11 +28,6 @@ DEFAULT_OUTPUT_FILE = global_config_dir / "last_mini_run.traj.json"
 _HELP_TEXT = """Run mini-SWE-agent in your local environment.
 
 [not dim]
-There are two different user interfaces:
-
-[bold green]mini[/bold green] Simple REPL-style interface
-[bold green]mini -v[/bold green] Pager-style interface (Textual)
-
 More information about the usage: [bold green]https://mini-swe-agent.com/latest/usage/mini/[/bold green]
 [/not dim]
 """
@@ -77,7 +71,6 @@ def prompt_for_task() -> str:
 # fmt: off
 @app.command(help=_HELP_TEXT)
 def main(
-    visual: bool = typer.Option(False, "-v", "--visual", help="Toggle (pager-style) UI (Textual) depending on the MSWEA_VISUAL_MODE_DEFAULT environment setting",),
     model_name: str | None = typer.Option(None, "-m", "--model", help="Model to use",),
     model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
     task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
@@ -112,13 +105,7 @@ def main(
 
     model = get_model(config=config.get("model", {}))
     env = LocalEnvironment(**config.get("environment", {}))
-
-    # Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it's essentially a XOR
-    agent_class = InteractiveAgent
-    if visual == (os.getenv("MSWEA_VISUAL_MODE_DEFAULT", "false") == "false"):
-        agent_class = TextualAgent
-
-    agent = agent_class(model, env, **config.get("agent", {}))
+    agent = InteractiveAgent(model, env, **config.get("agent", {}))
     agent.run(task)  # type: ignore[arg-type]
     if output:
         console.print(f"Saved trajectory to [bold green]'{output}'[/bold green]")

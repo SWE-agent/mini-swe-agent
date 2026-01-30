@@ -112,12 +112,8 @@ MSWEA_MINI_CONFIG_PATH="/path/to/your/own/config"
 MSWEA_GITHUB_CONFIG_PATH="/path/to/your/github/config.yaml"
 
 # Custom style path for trajectory inspector
-# (default: package_dir / "config" / "mini.tcss")
+# (default: package_dir / "config" / "inspector.tcss")
 MSWEA_INSPECTOR_STYLE_PATH="/path/to/your/inspector/style.tcss"
-
-# Custom style path for mini textual interface
-# (default: package_dir / "config" / "mini.tcss")
-MSWEA_MINI_STYLE_PATH="/path/to/your/mini/style.tcss"
 ```
 
 ### Settings for environments
@@ -142,10 +138,6 @@ MSWEA_BUBBLEWRAP_EXECUTABLE="bwrap"
 # Default run script entry point for the main CLI
 # (default: "minisweagent.run.mini")
 MSWEA_DEFAULT_RUN="minisweagent.run.mini"
-
-# Set to true to use visual mode by default for the main CLI
-# (default: false)
-MSWEA_VISUAL_MODE_DEFAULT="false"
 ```
 
 {% include-markdown "_footer.md" %}

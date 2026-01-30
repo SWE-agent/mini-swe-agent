@@ -119,19 +119,6 @@ See [Python bindings](../usage/python_bindings.md) for the most basic example.
     )
     ```
 
-=== "Human in the loop (textual)"
-
-    ```python
-    from minisweagent.agents.interactive_textual import TextualAgent
-    from minisweagent.models import get_model
-    from minisweagent.environments.local import LocalEnvironment
-
-    agent = TextualAgent(
-        get_model(input_model_name=model_name),
-        LocalEnvironment(),
-    )
-    ```
-
 ## Advanced
 
 ### Customizing execution
