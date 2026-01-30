@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import litellm
+from litellm.types.utils import Choices, Message, ModelResponse, Usage
 from pydantic import BaseModel
 from tenacity import (
     before_sleep_log,
@@ -29,6 +30,10 @@ class LitellmModelConfig(BaseModel):
     """Set explicit cache control markers, for example for Anthropic models"""
     cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
     """Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""
+    use_streaming: bool = os.getenv("MSWEA_USE_STREAMING", "true").lower() == "true"
+    """Use streaming mode to avoid HTTP read timeouts on long generations. Default: true.
+    When enabled, responses are streamed token-by-token, keeping the connection alive.
+    This prevents timeout errors when vLLM takes >10 minutes to generate a response."""
 
 
 class LitellmModel:
@@ -38,6 +43,42 @@ class LitellmModel:
         self.n_calls = 0
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
+
+    def _reconstruct_response_from_stream(self, stream_response) -> ModelResponse:
+        """Accumulate streaming chunks into a complete ModelResponse.
+
+        This avoids HTTP read timeouts on long generations by keeping the
+        connection alive as tokens stream in.
+        """
+        content_parts = []
+        last_chunk = None
+
+        for chunk in stream_response:
+            last_chunk = chunk
+            if chunk.choices and chunk.choices[0].delta.content:
+                content_parts.append(chunk.choices[0].delta.content)
+
+        content = "".join(content_parts)
+
+        # Reconstruct a ModelResponse compatible with non-streaming code
+        return ModelResponse(
+            id=last_chunk.id if last_chunk else "stream-response",
+            created=last_chunk.created if last_chunk else 0,
+            model=last_chunk.model if last_chunk else self.config.model_name,
+            choices=[
+                Choices(
+                    index=0,
+                    finish_reason="stop",
+                    message=Message(role="assistant", content=content),
+                )
+            ],
+            # Usage stats not available in streaming; use estimates
+            usage=Usage(
+                prompt_tokens=0,
+                completion_tokens=len(content_parts),
+                total_tokens=len(content_parts),
+            ),
+        )
 
     @retry(
         reraise=True,
@@ -58,9 +99,17 @@ class LitellmModel:
     )
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
-            return litellm.completion(
-                model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
-            )
+            if self.config.use_streaming:
+                # Use streaming to avoid HTTP read timeouts on long generations
+                stream_response = litellm.completion(
+                    model=self.config.model_name, messages=messages, stream=True, **(self.config.model_kwargs | kwargs)
+                )
+                return self._reconstruct_response_from_stream(stream_response)
+            else:
+                # Non-streaming mode (original behavior)
+                return litellm.completion(
+                    model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
+                )
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
