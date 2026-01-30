@@ -125,12 +125,12 @@ class InteractiveAgent(DefaultAgent):
         """Check if user wants to add a new task or submit."""
         if self.config.confirm_exit:
             console.print(
-                "[bold green]Agent wants to finish.[/bold green] "
-                "[green]Type a comment to give it a new task or press enter to quit.\n"
+                "[bold yellow]Agent wants to finish.[/bold yellow] "
+                "[bold green]Type new task[/bold green] or [red][bold]enter[/bold] to quit.[/red]\n"
                 "[bold yellow]>[/bold yellow] ",
                 end="",
             )
-            if new_task := self._prompt_and_handle_slash_commands("").strip():
+            if new_task := prompt_session.prompt("").strip():
                 raise UserInterruption(
                     {
                         "role": "user",
@@ -149,8 +149,8 @@ class InteractiveAgent(DefaultAgent):
             return
         n = len(commands_needing_confirmation)
         prompt = (
-            f"[bold yellow]Execute {n} action(s)?[/bold yellow] [green][bold]Enter[/bold] to confirm[/green], "
-            "or [green]Type a comment/command[/green] (/h for available commands)\n"
+            f"[bold yellow]Execute {n} action(s)?[/] [green][bold]Enter[/] to confirm[/], "
+            "[red]type [bold]comment[/] to reject[/], or [blue][bold]/h[/] to show available commands[/]\n"
             "[bold yellow]>[/bold yellow] "
         )
         match user_input := self._prompt_and_handle_slash_commands(prompt).strip():
