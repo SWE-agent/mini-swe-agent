@@ -200,6 +200,4 @@ The `ANTHROPIC_API_KEYS` environment variable (with `::` separator for key rotat
 - `src/minisweagent/models/utils/key_per_thread.py` (key rotation utility)
 - `src/minisweagent/run/utils/save.py` (saving logic moved to Agent.save())
 - `src/minisweagent/config/extra/swebench_roulette.yaml`
-
-### Renamed files
-- `openai_utils.py` → `openai_response_api.py`
+- `src/minisweagent/models/utils/openai_response_api.py` (formerly `openai_utils.py`)
