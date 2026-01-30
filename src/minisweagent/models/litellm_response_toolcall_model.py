@@ -11,7 +11,6 @@ from minisweagent.models.utils.actions_toolcall_response import (
     format_toolcall_observation_messages,
     parse_toolcall_actions_response,
 )
-from minisweagent.models.utils.openai_response_api import _get_trailing_tool_outputs
 from minisweagent.models.utils.retry import retry
 
 logger = logging.getLogger("litellm_response_toolcall_model")
@@ -24,24 +23,26 @@ class LitellmResponseToolcallModelConfig(LitellmModelConfig):
 class LitellmResponseToolcallModel(LitellmModel):
     def __init__(self, *, config_class: Callable = LitellmResponseToolcallModelConfig, **kwargs):
         super().__init__(config_class=config_class, **kwargs)
-        self._previous_response_id: str | None = None
 
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
-        return [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
+        """Flatten response objects into their output items for stateless API calls."""
+        result = []
+        for msg in messages:
+            if msg.get("object") == "response":
+                for item in msg.get("output", []):
+                    result.append({k: v for k, v in item.items() if k != "extra"})
+            else:
+                result.append({k: v for k, v in msg.items() if k != "extra"})
+        return result
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
-        input_messages = _get_trailing_tool_outputs(messages) if self._previous_response_id else messages
-
         try:
-            resp = litellm.responses(
+            return litellm.responses(
                 model=self.config.model_name,
-                input=input_messages,
-                previous_response_id=self._previous_response_id,
+                input=messages,
                 tools=[BASH_TOOL_RESPONSE_API],
                 **(self.config.model_kwargs | kwargs),
             )
-            self._previous_response_id = getattr(resp, "id", None)
-            return resp
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
