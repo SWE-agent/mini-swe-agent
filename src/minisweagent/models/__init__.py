@@ -83,7 +83,7 @@ _MODEL_CLASS_MAPPING = {
     "openrouter_textbased": "minisweagent.models.openrouter_textbased_model.OpenRouterTextbasedModel",
     "openrouter_response": "minisweagent.models.openrouter_response_model.OpenRouterResponseModel",
     "portkey": "minisweagent.models.portkey_model.PortkeyModel",
-    "portkey_response": "minisweagent.models.portkey_response_api_model.PortkeyResponseAPIModel",
+    "portkey_response": "minisweagent.models.portkey_response_model.PortkeyResponseAPIModel",
     "requesty": "minisweagent.models.requesty_model.RequestyModel",
     "deterministic": "minisweagent.models.test_models.DeterministicModel",
 }

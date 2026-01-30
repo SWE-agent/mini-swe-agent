@@ -16,7 +16,7 @@ from minisweagent.models.utils.actions_toolcall_response import (
 )
 from minisweagent.models.utils.retry import retry
 
-logger = logging.getLogger("portkey_response_api_model")
+logger = logging.getLogger("portkey_response_model")
 
 try:
     from portkey_ai import Portkey
