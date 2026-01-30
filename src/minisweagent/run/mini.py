@@ -8,13 +8,10 @@ from pathlib import Path
 from typing import Any
 
 import typer
-from prompt_toolkit.formatted_text import HTML
-from prompt_toolkit.history import FileHistory
-from prompt_toolkit.shortcuts import PromptSession
 from rich.console import Console
 
 from minisweagent import global_config_dir
-from minisweagent.agents.interactive import InteractiveAgent
+from minisweagent.agents.interactive import InteractiveAgent, _multiline_prompt
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments.local import LocalEnvironment
 from minisweagent.models import get_model
@@ -50,22 +47,6 @@ Examples:
 
 console = Console(highlight=False)
 app = typer.Typer(rich_markup_mode="rich")
-prompt_session = PromptSession(history=FileHistory(global_config_dir / "mini_task_history.txt"))
-
-
-def prompt_for_task() -> str:
-    console.print("[bold yellow]What do you want to do?")
-    task = prompt_session.prompt(
-        "",
-        multiline=True,
-        bottom_toolbar=HTML(
-            "Submit task: <b fg='yellow' bg='black'>Esc+Enter</b> | "
-            "Navigate history: <b fg='yellow' bg='black'>Arrow Up/Down</b> | "
-            "Search history: <b fg='yellow' bg='black'>Ctrl+R</b>"
-        ),
-    )
-    console.print("[bold green]Got that, thanks![/bold green]")
-    return task
 
 
 # fmt: off
@@ -101,7 +82,9 @@ def main(
     config = recursive_merge(*configs)
 
     if not task:
-        task = prompt_for_task()
+        console.print("[bold yellow]What do you want to do?")
+        task = _multiline_prompt()
+        console.print("[bold green]Got that, thanks![/bold green]")
 
     model = get_model(config=config.get("model", {}))
     env = LocalEnvironment(**config.get("environment", {}))

@@ -9,6 +9,7 @@ There are three modes:
 import re
 from typing import Literal, NoReturn
 
+from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.shortcuts import PromptSession
 from rich.console import Console
@@ -20,7 +21,7 @@ from minisweagent.exceptions import LimitsExceeded, Submitted, UserInterruption
 from minisweagent.models.utils.content_string import get_content_string
 
 console = Console(highlight=False)
-prompt_session = PromptSession(history=FileHistory(global_config_dir / "interactive_history.txt"))
+_history = FileHistory(global_config_dir / "interactive_history.txt")
 
 
 class InteractiveAgentConfig(AgentConfig):
@@ -30,6 +31,18 @@ class InteractiveAgentConfig(AgentConfig):
     """Never confirm actions that match these regular expressions."""
     confirm_exit: bool = True
     """If the agent wants to finish, do we ask for confirmation from user?"""
+
+
+def _multiline_prompt() -> str:
+    return PromptSession(history=_history).prompt(
+        "",
+        multiline=True,
+        bottom_toolbar=HTML(
+            "Submit message: <b fg='yellow' bg='black'>Esc, then Enter</b> | "
+            "Navigate history: <b fg='yellow' bg='black'>Arrow Up/Down</b> | "
+            "Search history: <b fg='yellow' bg='black'>Ctrl+R</b>"
+        ),
+    )
 
 
 class InteractiveAgent(DefaultAgent):
@@ -124,13 +137,12 @@ class InteractiveAgent(DefaultAgent):
     def _check_for_new_task_or_submit(self, e: Submitted) -> NoReturn:
         """Check if user wants to add a new task or submit."""
         if self.config.confirm_exit:
-            console.print(
+            message = (
                 "[bold yellow]Agent wants to finish.[/bold yellow] "
-                "[bold green]Type new task[/bold green] or [red][bold]enter[/bold] to quit.[/red]\n"
-                "[bold yellow]>[/bold yellow] ",
-                end="",
+                "[bold green]Type new task[/bold green] or [red][bold]Esc, then enter[/bold] to quit.[/red]\n"
+                "[bold yellow]>[/bold yellow] "
             )
-            if new_task := prompt_session.prompt("").strip():
+            if new_task := self._prompt_and_handle_slash_commands(message, _multiline=True).strip():
                 raise UserInterruption(
                     {
                         "role": "user",
@@ -173,16 +185,21 @@ class InteractiveAgent(DefaultAgent):
                     }
                 )
 
-    def _prompt_and_handle_slash_commands(self, prompt: str) -> str:
+    def _prompt_and_handle_slash_commands(self, prompt: str, *, _multiline: bool = False) -> str:
         """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""
         console.print(prompt, end="")
-        user_input = prompt_session.prompt("")
+        if _multiline:
+            return _multiline_prompt()
+        user_input = PromptSession(history=_history).prompt("")
+        if user_input == "/m":
+            return self._prompt_and_handle_slash_commands(prompt, _multiline=True)
         if user_input == "/h":
             console.print(
                 f"Current mode: [bold green]{self.config.mode}[/bold green]\n"
                 f"[bold green]/y[/bold green] to switch to [bold yellow]yolo[/bold yellow] mode (execute LM commands without confirmation)\n"
                 f"[bold green]/c[/bold green] to switch to [bold yellow]confirmation[/bold yellow] mode (ask for confirmation before executing LM commands)\n"
                 f"[bold green]/u[/bold green] to switch to [bold yellow]human[/bold yellow] mode (execute commands issued by the user)\n"
+                f"[bold green]/m[/bold green] to enter multiline comment",
             )
             return self._prompt_and_handle_slash_commands(prompt)
         if user_input in self._MODE_COMMANDS_MAPPING:
