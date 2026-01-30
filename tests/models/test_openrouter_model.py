@@ -103,13 +103,11 @@ def test_openrouter_model_authentication_error():
 
             messages = [{"role": "user", "content": "test"}]
 
-            # Patch the retry decorator to avoid waiting (auth errors don't retry anyway)
-            with patch("minisweagent.models.openrouter_model.retry", lambda **kwargs: lambda f: f):
-                with pytest.raises(OpenRouterAuthenticationError) as exc_info:
-                    model._query(messages)
+            with pytest.raises(OpenRouterAuthenticationError) as exc_info:
+                model._query(messages)
 
-                assert "Authentication failed" in str(exc_info.value)
-                assert "mini-extra config set OPENROUTER_API_KEY" in str(exc_info.value)
+            assert "Authentication failed" in str(exc_info.value)
+            assert "mini-extra config set OPENROUTER_API_KEY" in str(exc_info.value)
 
 
 def test_openrouter_model_no_cost_information(mock_response_no_cost):
@@ -197,7 +195,5 @@ def test_openrouter_model_no_api_key():
 
             messages = [{"role": "user", "content": "test"}]
 
-            # Patch the retry decorator to avoid waiting
-            with patch("minisweagent.models.openrouter_model.retry", lambda **kwargs: lambda f: f):
-                with pytest.raises(OpenRouterAuthenticationError):
-                    model._query(messages)
+            with pytest.raises(OpenRouterAuthenticationError):
+                model._query(messages)

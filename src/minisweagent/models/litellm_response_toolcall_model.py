@@ -5,7 +5,7 @@ from collections.abc import Callable
 import litellm
 
 from minisweagent.models import GLOBAL_MODEL_STATS
-from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
+from minisweagent.models.litellm_toolcall_model import LitellmToolcallModel, LitellmToolcallModelConfig
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
     format_toolcall_observation_messages,
@@ -16,11 +16,11 @@ from minisweagent.models.utils.retry import retry
 logger = logging.getLogger("litellm_response_toolcall_model")
 
 
-class LitellmResponseToolcallModelConfig(LitellmModelConfig):
-    format_error_template: str = "{{ error }}"
+class LitellmResponseToolcallModelConfig(LitellmToolcallModelConfig):
+    pass
 
 
-class LitellmResponseToolcallModel(LitellmModel):
+class LitellmResponseToolcallModel(LitellmToolcallModel):
     def __init__(self, *, config_class: Callable = LitellmResponseToolcallModelConfig, **kwargs):
         super().__init__(config_class=config_class, **kwargs)
 

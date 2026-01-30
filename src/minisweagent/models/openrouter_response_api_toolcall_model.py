@@ -1,16 +1,16 @@
 import json
 import logging
-import os
 import time
 
 import requests
 
 from minisweagent.models import GLOBAL_MODEL_STATS
-from minisweagent.models.openrouter_model import (
+from minisweagent.models.openrouter_toolcall_model import (
     OpenRouterAPIError,
     OpenRouterAuthenticationError,
-    OpenRouterModelConfig,
     OpenRouterRateLimitError,
+    OpenRouterToolcallModel,
+    OpenRouterToolcallModelConfig,
 )
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
@@ -22,11 +22,11 @@ from minisweagent.models.utils.retry import retry
 logger = logging.getLogger("openrouter_response_api_toolcall_model")
 
 
-class OpenRouterResponseAPIToolcallModelConfig(OpenRouterModelConfig):
-    format_error_template: str = "{{ error }}"
+class OpenRouterResponseAPIToolcallModelConfig(OpenRouterToolcallModelConfig):
+    pass
 
 
-class OpenRouterResponseAPIToolcallModel:
+class OpenRouterResponseAPIToolcallModel(OpenRouterToolcallModel):
     """OpenRouter model using the Responses API with native tool calling.
 
     Note: OpenRouter's Responses API is stateless - each request must include
@@ -34,12 +34,10 @@ class OpenRouterResponseAPIToolcallModel:
     See: https://openrouter.ai/docs/api/reference/responses/overview
     """
 
-    abort_exceptions: list[type[Exception]] = [OpenRouterAuthenticationError, KeyboardInterrupt]
-
     def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.config = OpenRouterResponseAPIToolcallModelConfig(**kwargs)
         self._api_url = "https://openrouter.ai/api/v1/responses"
-        self._api_key = os.getenv("OPENROUTER_API_KEY", "")
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         headers = {
@@ -96,19 +94,6 @@ class OpenRouterResponseAPIToolcallModel:
         }
         return message
 
-    def _calculate_cost(self, response: dict) -> dict[str, float]:
-        usage = response.get("usage", {})
-        cost = usage.get("cost", 0.0)
-        if cost <= 0.0 and self.config.cost_tracking != "ignore_errors":
-            raise RuntimeError(
-                f"No valid cost information available from OpenRouter API for model {self.config.model_name}: "
-                f"Usage {usage}, cost {cost}. Cost must be > 0.0. Set cost_tracking: 'ignore_errors' in your config file or "
-                "export MSWEA_COST_TRACKING='ignore_errors' to ignore cost tracking errors "
-                "(for example for free/local models), more information at https://klieret.short.gy/mini-local-models "
-                "for more details. Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
-            )
-        return {"cost": cost}
-
     def _parse_actions(self, response: dict) -> list[dict]:
         return parse_toolcall_actions_response(
             response.get("output", []), format_error_template=self.config.format_error_template
@@ -136,16 +121,3 @@ class OpenRouterResponseAPIToolcallModel:
             template_vars=template_vars,
             multimodal_regex=self.config.multimodal_regex,
         )
-
-    def get_template_vars(self, **kwargs) -> dict:
-        return self.config.model_dump()
-
-    def serialize(self) -> dict:
-        return {
-            "info": {
-                "config": {
-                    "model": self.config.model_dump(mode="json"),
-                    "model_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
-                },
-            }
-        }
