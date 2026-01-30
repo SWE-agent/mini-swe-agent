@@ -66,8 +66,8 @@ def default_config():
 
 @pytest.fixture
 def toolcall_config():
-    """Load toolcall agent config from config/mini_toolcall.yaml"""
-    config_path = Path("src/minisweagent/config/mini_toolcall.yaml")
+    """Load toolcall agent config from config/mini.yaml"""
+    config_path = Path("src/minisweagent/config/mini.yaml")
     with open(config_path) as f:
         config = yaml.safe_load(f)
     return config["agent"]

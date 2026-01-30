@@ -5,23 +5,23 @@ from collections.abc import Callable
 import litellm
 
 from minisweagent.models import GLOBAL_MODEL_STATS
-from minisweagent.models.litellm_toolcall_model import LitellmToolcallModel, LitellmToolcallModelConfig
+from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
-    _format_toolcall_observation_messages,
-    _parse_toolcall_actions_response,
+    format_toolcall_observation_messages,
+    parse_toolcall_actions_response,
 )
 from minisweagent.models.utils.retry import retry
 
-logger = logging.getLogger("litellm_response_toolcall_model")
+logger = logging.getLogger("litellm_response_model")
 
 
-class LitellmResponseToolcallModelConfig(LitellmToolcallModelConfig):
+class LitellmResponseModelConfig(LitellmModelConfig):
     pass
 
 
-class LitellmResponseToolcallModel(LitellmToolcallModel):
-    def __init__(self, *, config_class: Callable = LitellmResponseToolcallModelConfig, **kwargs):
+class LitellmResponseModel(LitellmModel):
+    def __init__(self, *, config_class: Callable = LitellmResponseModelConfig, **kwargs):
         super().__init__(config_class=config_class, **kwargs)
 
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
@@ -62,7 +62,7 @@ class LitellmResponseToolcallModel(LitellmToolcallModel):
         return message
 
     def _parse_actions(self, response) -> list[dict]:
-        return _parse_toolcall_actions_response(
+        return parse_toolcall_actions_response(
             getattr(response, "output", []), format_error_template=self.config.format_error_template
         )
 
@@ -71,7 +71,7 @@ class LitellmResponseToolcallModel(LitellmToolcallModel):
     ) -> list[dict]:
         """Format execution outputs into tool result messages."""
         actions = message.get("extra", {}).get("actions", [])
-        return _format_toolcall_observation_messages(
+        return format_toolcall_observation_messages(
             actions=actions,
             outputs=outputs,
             observation_template=self.config.observation_template,

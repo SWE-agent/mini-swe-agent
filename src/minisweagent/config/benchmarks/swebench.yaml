@@ -1,20 +1,6 @@
 agent:
   system_template: |
-    You are a helpful assistant that can interact multiple times with a computer shell to solve programming tasks.
-    Your response must contain exactly ONE bash code block with ONE command (or commands connected with && or ||).
-
-    Include a THOUGHT section before your command where you explain your reasoning process.
-    Format your response as shown in <format_example>.
-
-    <format_example>
-    THOUGHT: Your reasoning and analysis here
-
-    ```mswea_bash_command
-    your_command_here
-    ```
-    </format_example>
-
-    Failure to follow these rules will cause your response to be rejected.
+    You are a helpful assistant that can interact with a computer shell to solve programming tasks.
   instance_template: |
     <pr_description>
     Consider the following PR description:
@@ -29,8 +15,7 @@ agent:
     You're a software engineer interacting continuously with a computer by submitting commands.
     You'll be helping implement necessary changes to meet requirements in the PR description.
     Your task is specifically to make changes to non-test files in the current directory in order to fix the issue described in the PR description in a way that is general and consistent with the codebase.
-
-    <IMPORTANT>This is an interactive process where you will think and issue ONE command, see its result, then think and issue your next command.</IMPORTANT>
+    <IMPORTANT>This is an interactive process where you will think and issue AT LEAST ONE command, see the result, then think and issue your next command(s).</important>
 
     For each response:
 
@@ -54,76 +39,29 @@ agent:
 
     You are operating in an environment where
 
-    1. You write a single command
-    2. The system executes that command in a subshell
-    3. You see the result
-    4. You write your next command
+    1. You issue at least one command
+    3. The system executes the command(s) in a subshell
+    4. You see the result(s)
+    5. You write your next command(s)
 
     Each response should include:
 
-    1. A **THOUGHT** section where you explain your reasoning and plan
-    2. A single bash code block with your command
-
-    Format your responses like demonstrated within the <format_example> block:
-
-    <format_example>
-    THOUGHT: Here I explain my reasoning process, analysis of the current situation,
-    and what I'm trying to accomplish with the command below.
-
-    ```mswea_bash_command
-    your_command_here
-    ```
-    </format_example>
-
-    Commands must be specified in a single bash code block:
-
-    ```mswea_bash_command
-    your_command_here
-    ```
+    1. **Reasoning text** where you explain your analysis and plan
+    2. At least one tool call with your command
 
     **CRITICAL REQUIREMENTS:**
 
-    - Your response SHOULD include a THOUGHT section explaining your reasoning
-    - Your response MUST include EXACTLY ONE bash code block
-    - This bash block MUST contain EXACTLY ONE command (or a set of commands connected with && or ||)
-    - If you include zero or multiple bash blocks, or no command at all, YOUR RESPONSE WILL FAIL
-    - Do NOT try to run multiple independent commands in separate blocks in one response
+    - Your response SHOULD include reasoning text explaining what you're doing
+    - Your response MUST include AT LEAST ONE bash tool call
     - Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
     - However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
 
     Example of a CORRECT response:
     <example_response>
-    THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
+    I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
 
-    ```mswea_bash_command
-    ls -la
-    ```
+    [Makes bash tool call with {"command": "ls -la"} as arguments]
     </example_response>
-
-    Example of an INCORRECT response:
-
-    <example_response>
-    THOUGHT: I need to examine the codebase and then look at a specific file. I'll run multiple commands to do this.
-
-    ```mswea_bash_command
-    ls -la
-    ```
-
-    Now I'll read the file:
-
-    ```mswea_bash_command
-    cat file.txt
-    ```
-    </example_response>
-
-    If you need to run multiple commands, either:
-
-    1. Combine them in one block using && or ||
-    ```mswea_bash_command
-    command1 && command2 || echo "Error occurred"
-    ```
-
-    2. Wait for the first command to complete, see its output, then issue the next command in your following response.
 
     ## Environment Details
 
@@ -159,7 +97,7 @@ agent:
     Step 3: Submit (EXACT command required)
     You MUST use this EXACT command to submit:
 
-    ```mswea_bash_command
+    ```bash
     echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && cat patch.txt
     ```
 
@@ -187,45 +125,28 @@ environment:
 
 model:
   observation_template: |
-    {% if output.exception_info -%}
-    <exception>{{output.exception_info}}</exception>
-    {% endif -%}
-    <returncode>{{output.returncode}}</returncode>
-    {% if output.output | length < 10000 -%}
-    <output>
-    {{ output.output -}}
-    </output>
+    {%- if output.output | length < 10000 -%}
+    {
+      "returncode": {{ output.returncode }},
+      "output": {{ output.output | tojson }}
+      {%- if output.exception_info %}, "exception_info": {{ output.exception_info | tojson }}{% endif %}
+    }
     {%- else -%}
-    <warning>
-    The output of your last command was too long.
-    Please try a different command that produces less output.
-    If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.
-    If you're using grep or find and it produced too much output, you can use a more selective search pattern.
-    If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.
-    </warning>
-    {%- set elided_chars = output.output | length - 10000 -%}
-    <output_head>
-    {{ output.output[:5000] }}
-    </output_head>
-    <elided_chars>
-    {{ elided_chars }} characters elided
-    </elided_chars>
-    <output_tail>
-    {{ output.output[-5000:] }}
-    </output_tail>
+    {
+      "returncode": {{ output.returncode }},
+      "output_head": {{ output.output[:5000] | tojson }},
+      "output_tail": {{ output.output[-5000:] | tojson }},
+      "elided_chars": {{ output.output | length - 10000 }},
+      "warning": "Output too long."
+      {%- if output.exception_info %}, "exception_info": {{ output.exception_info | tojson }}{% endif %}
+    }
     {%- endif -%}
   format_error_template: |
-    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
+    Tool call error. Every response needs to use the 'bash' tool at least once to execute commands.
 
-    Please format your action in triple backticks as shown in <response_example>.
-
-    <response_example>
-    Here are some thoughts about why you want to perform the action.
-
-    ```mswea_bash_command
-    <action>
-    ```
-    </response_example>
+    Call the bash tool with your command as the argument:
+    - Tool: bash
+    - Arguments: {"command": "your_command_here"}
 
     If you have completed your assignment, please consult the first message about how to
     submit your solution (you will not be able to continue working on this task after that).

@@ -5,28 +5,28 @@ import time
 import requests
 
 from minisweagent.models import GLOBAL_MODEL_STATS
-from minisweagent.models.openrouter_toolcall_model import (
+from minisweagent.models.openrouter_model import (
     OpenRouterAPIError,
     OpenRouterAuthenticationError,
+    OpenRouterModel,
+    OpenRouterModelConfig,
     OpenRouterRateLimitError,
-    OpenRouterToolcallModel,
-    OpenRouterToolcallModelConfig,
 )
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
-    _format_toolcall_observation_messages,
-    _parse_toolcall_actions_response,
+    format_toolcall_observation_messages,
+    parse_toolcall_actions_response,
 )
 from minisweagent.models.utils.retry import retry
 
-logger = logging.getLogger("openrouter_response_api_toolcall_model")
+logger = logging.getLogger("openrouter_response_model")
 
 
-class OpenRouterResponseAPIToolcallModelConfig(OpenRouterToolcallModelConfig):
+class OpenRouterResponseModelConfig(OpenRouterModelConfig):
     pass
 
 
-class OpenRouterResponseAPIToolcallModel(OpenRouterToolcallModel):
+class OpenRouterResponseModel(OpenRouterModel):
     """OpenRouter model using the Responses API with native tool calling.
 
     Note: OpenRouter's Responses API is stateless - each request must include
@@ -36,7 +36,7 @@ class OpenRouterResponseAPIToolcallModel(OpenRouterToolcallModel):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.config = OpenRouterResponseAPIToolcallModelConfig(**kwargs)
+        self.config = OpenRouterResponseModelConfig(**kwargs)
         self._api_url = "https://openrouter.ai/api/v1/responses"
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
@@ -95,7 +95,7 @@ class OpenRouterResponseAPIToolcallModel(OpenRouterToolcallModel):
         return message
 
     def _parse_actions(self, response: dict) -> list[dict]:
-        return _parse_toolcall_actions_response(
+        return parse_toolcall_actions_response(
             response.get("output", []), format_error_template=self.config.format_error_template
         )
 
@@ -114,7 +114,7 @@ class OpenRouterResponseAPIToolcallModel(OpenRouterToolcallModel):
     ) -> list[dict]:
         """Format execution outputs into tool result messages."""
         actions = message.get("extra", {}).get("actions", [])
-        return _format_toolcall_observation_messages(
+        return format_toolcall_observation_messages(
             actions=actions,
             outputs=outputs,
             observation_template=self.config.observation_template,

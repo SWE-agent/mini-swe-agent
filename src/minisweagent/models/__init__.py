@@ -77,11 +77,11 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
 
 _MODEL_CLASS_MAPPING = {
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
-    "litellm_toolcall": "minisweagent.models.litellm_toolcall_model.LitellmToolcallModel",
-    "litellm_response_toolcall": "minisweagent.models.litellm_response_toolcall_model.LitellmResponseToolcallModel",
+    "litellm_textbased": "minisweagent.models.litellm_textbased_model.LitellmTextbasedModel",
+    "litellm_response": "minisweagent.models.litellm_response_model.LitellmResponseModel",
     "openrouter": "minisweagent.models.openrouter_model.OpenRouterModel",
-    "openrouter_toolcall": "minisweagent.models.openrouter_toolcall_model.OpenRouterToolcallModel",
-    "openrouter_response_toolcall": "minisweagent.models.openrouter_response_api_toolcall_model.OpenRouterResponseAPIToolcallModel",
+    "openrouter_textbased": "minisweagent.models.openrouter_textbased_model.OpenRouterTextbasedModel",
+    "openrouter_response": "minisweagent.models.openrouter_response_model.OpenRouterResponseModel",
     "portkey": "minisweagent.models.portkey_model.PortkeyModel",
     "portkey_response": "minisweagent.models.portkey_response_api_model.PortkeyResponseAPIModel",
     "requesty": "minisweagent.models.requesty_model.RequestyModel",

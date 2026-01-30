@@ -10,11 +10,11 @@ from pydantic import BaseModel
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
-    format_toolcall_observation_messages,
-    parse_toolcall_actions,
+    _format_toolcall_observation_messages,
+    _parse_toolcall_actions,
 )
 from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
-from minisweagent.models.utils.cache_control import set_cache_control
+from minisweagent.models.utils.cache_control import _set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
 
@@ -91,7 +91,7 @@ class OpenRouterToolcallModel:
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
         prepared = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
         prepared = _reorder_anthropic_thinking_blocks(prepared)
-        return set_cache_control(prepared, mode=self.config.set_cache_control)
+        return _set_cache_control(prepared, mode=self.config.set_cache_control)
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
@@ -125,7 +125,7 @@ class OpenRouterToolcallModel:
         """Parse tool calls from the response. Raises FormatError if unknown tool."""
         tool_calls = response["choices"][0]["message"].get("tool_calls") or []
         tool_calls = [_DictToObj(tc) for tc in tool_calls]
-        return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
+        return _parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
 
     def format_message(self, **kwargs) -> dict:
         return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)
@@ -135,7 +135,7 @@ class OpenRouterToolcallModel:
     ) -> list[dict]:
         """Format execution outputs into tool result messages."""
         actions = message.get("extra", {}).get("actions", [])
-        return format_toolcall_observation_messages(
+        return _format_toolcall_observation_messages(
             actions=actions,
             outputs=outputs,
             observation_template=self.config.observation_template,

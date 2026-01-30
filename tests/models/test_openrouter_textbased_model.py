@@ -8,7 +8,9 @@ import requests
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.openrouter_model import (
     OpenRouterAuthenticationError,
-    OpenRouterModel,
+)
+from minisweagent.models.openrouter_textbased_model import (
+    OpenRouterTextbasedModel,
 )
 
 
@@ -47,7 +49,7 @@ def mock_response_no_cost():
 def test_openrouter_model_successful_query(mock_response):
     """Test successful OpenRouter API query with cost tracking."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-        model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet", model_kwargs={"temperature": 0.7})
+        model = OpenRouterTextbasedModel(model_name="anthropic/claude-3.5-sonnet", model_kwargs={"temperature": 0.7})
 
         initial_cost = GLOBAL_MODEL_STATS.cost
 
@@ -91,7 +93,7 @@ def test_openrouter_model_successful_query(mock_response):
 def test_openrouter_model_authentication_error():
     """Test authentication error handling."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "invalid-key"}):
-        model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet")
+        model = OpenRouterTextbasedModel(model_name="anthropic/claude-3.5-sonnet")
 
         with patch("requests.post") as mock_post:
             # Mock 401 authentication error
@@ -113,7 +115,7 @@ def test_openrouter_model_authentication_error():
 def test_openrouter_model_no_cost_information(mock_response_no_cost):
     """Test error when cost information is missing."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-        model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet")
+        model = OpenRouterTextbasedModel(model_name="anthropic/claude-3.5-sonnet")
 
         with patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
@@ -132,7 +134,7 @@ def test_openrouter_model_no_cost_information(mock_response_no_cost):
 def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
     """Test that free models with zero cost work correctly when cost_tracking='ignore_errors' is set."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-        model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet", cost_tracking="ignore_errors")
+        model = OpenRouterTextbasedModel(model_name="anthropic/claude-3.5-sonnet", cost_tracking="ignore_errors")
 
         initial_cost = GLOBAL_MODEL_STATS.cost
 
@@ -159,7 +161,7 @@ def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
 def test_openrouter_model_config():
     """Test OpenRouter model configuration."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-        model = OpenRouterModel(
+        model = OpenRouterTextbasedModel(
             model_name="anthropic/claude-3.5-sonnet", model_kwargs={"temperature": 0.5, "max_tokens": 1000}
         )
 
@@ -171,7 +173,7 @@ def test_openrouter_model_config():
 def test_openrouter_model_get_template_vars():
     """Test get_template_vars method."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-        model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet", model_kwargs={"temperature": 0.7})
+        model = OpenRouterTextbasedModel(model_name="anthropic/claude-3.5-sonnet", model_kwargs={"temperature": 0.7})
 
         template_vars = model.get_template_vars()
 
@@ -182,7 +184,7 @@ def test_openrouter_model_get_template_vars():
 def test_openrouter_model_no_api_key():
     """Test behavior when no API key is provided."""
     with patch.dict(os.environ, {}, clear=True):
-        model = OpenRouterModel(model_name="anthropic/claude-3.5-sonnet")
+        model = OpenRouterTextbasedModel(model_name="anthropic/claude-3.5-sonnet")
 
         assert model._api_key == ""
 

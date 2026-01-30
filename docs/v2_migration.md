@@ -125,23 +125,28 @@ v2.0 adds native tool calling support as an alternative to text-based action par
 - Tool calling: Model uses native tool calling API to invoke a "bash" tool function
 
 **How to use it:**
-```bash
-# Use tool calling with mini CLI
-mini -c mini_toolcall.yaml
 
-# Use tool calling for SWE-bench
-python -m minisweagent.run.benchmarks.swebench --config swebench_toolcall.yaml
+Tool calling is now the default. The CLI uses `mini.yaml` and `swebench.yaml` which are configured for tool calling.
+
+```bash
+# Default (tool calling)
+mini
+python -m minisweagent.run.benchmarks.swebench
+
+# Use text-based parsing (legacy)
+mini -c mini_textbased.yaml
+python -m minisweagent.run.benchmarks.swebench --config swebench_backticks.yaml
 ```
 
 **For custom configs:**
 ```yaml
 model:
-  model_class: litellm_toolcall  # or full path: minisweagent.models.litellm_toolcall_model.LitellmToolcallModel
+  model_class: litellm  # or full path: minisweagent.models.litellm_model.LitellmModel
   model_name: anthropic/claude-sonnet-4-5-20250929
   # ... rest of model config
 ```
 
-The `LitellmToolcallModel` class handles tool calling automatically and works with any model that supports OpenAI-style tool calling (Claude, GPT-4, etc.).
+The `LitellmModel` class handles tool calling automatically and works with any model that supports OpenAI-style tool calling (Claude, GPT-4, etc.).
 
 ## Exception hierarchy changes
 
