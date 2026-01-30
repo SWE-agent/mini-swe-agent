@@ -94,7 +94,7 @@ def test_mini_calls_prompt_when_no_task_provided():
     """Test that mini calls prompt when no task is provided."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.prompt_session.prompt") as mock_prompt,
+        patch("minisweagent.run.mini._multiline_prompt") as mock_prompt,
         patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
         patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
@@ -529,7 +529,8 @@ def test_output_file_is_created(tmp_path):
         patch("minisweagent.run.mini.configure_if_first_time"),
         patch("minisweagent.run.mini.get_model") as mock_get_model,
         patch("minisweagent.run.mini.LocalEnvironment") as mock_env_class,
-        patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),
+        patch("minisweagent.agents.interactive._prompt_session.prompt", return_value=""),
+        patch("minisweagent.agents.interactive._multiline_prompt_session.prompt", return_value=""),
     ):
         # Setup mocks
         mock_model = Mock()

@@ -32,7 +32,8 @@ def test_swebench_single_end_to_end(github_test_data, tmp_path):
 
     with (
         patch("minisweagent.run.benchmarks.swebench_single.get_model") as mock_get_model,
-        patch("minisweagent.agents.interactive.prompt_session.prompt", side_effect=lambda *a, **kw: ""),
+        patch("minisweagent.agents.interactive._prompt_session.prompt", side_effect=lambda *a, **kw: ""),
+        patch("minisweagent.agents.interactive._multiline_prompt_session.prompt", side_effect=lambda *a, **kw: ""),
         patch("builtins.input", return_value=""),  # For LimitsExceeded handling
     ):
         mock_get_model.return_value = _make_model_from_fixture(model_responses, cost_per_call=0.1)
@@ -64,7 +65,8 @@ def test_swebench_single_end_to_end_exit_immediately(github_test_data, tmp_path)
 
     with (
         patch("minisweagent.run.benchmarks.swebench_single.get_model") as mock_get_model,
-        patch("minisweagent.agents.interactive.prompt_session.prompt", side_effect=lambda *a, **kw: ""),
+        patch("minisweagent.agents.interactive._prompt_session.prompt", side_effect=lambda *a, **kw: ""),
+        patch("minisweagent.agents.interactive._multiline_prompt_session.prompt", side_effect=lambda *a, **kw: ""),
         patch("builtins.input", return_value=""),  # For LimitsExceeded handling
     ):
         mock_get_model.return_value = _make_model_from_fixture(model_responses, cost_per_call=0.1)

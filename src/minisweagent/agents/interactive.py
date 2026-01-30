@@ -22,6 +22,8 @@ from minisweagent.models.utils.content_string import get_content_string
 
 console = Console(highlight=False)
 _history = FileHistory(global_config_dir / "interactive_history.txt")
+_prompt_session = PromptSession(history=_history)
+_multiline_prompt_session = PromptSession(history=_history, multiline=True)
 
 
 class InteractiveAgentConfig(AgentConfig):
@@ -34,9 +36,8 @@ class InteractiveAgentConfig(AgentConfig):
 
 
 def _multiline_prompt() -> str:
-    return PromptSession(history=_history).prompt(
+    return _multiline_prompt_session.prompt(
         "",
-        multiline=True,
         bottom_toolbar=HTML(
             "Submit message: <b fg='yellow' bg='black'>Esc, then Enter</b> | "
             "Navigate history: <b fg='yellow' bg='black'>Arrow Up/Down</b> | "
@@ -190,7 +191,7 @@ class InteractiveAgent(DefaultAgent):
         console.print(prompt, end="")
         if _multiline:
             return _multiline_prompt()
-        user_input = PromptSession(history=_history).prompt("")
+        user_input = _prompt_session.prompt("")
         if user_input == "/m":
             return self._prompt_and_handle_slash_commands(prompt, _multiline=True)
         if user_input == "/h":

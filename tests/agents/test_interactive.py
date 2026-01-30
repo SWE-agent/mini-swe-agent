@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import patch
 
@@ -14,6 +15,23 @@ from minisweagent.models.test_models import (
     make_response_api_output,
     make_toolcall_output,
 )
+
+
+@contextmanager
+def mock_prompts(side_effect):
+    """Patch both single-line and multiline prompt sessions with shared side_effect."""
+    if callable(side_effect):
+        se = side_effect
+    else:
+        it = iter(side_effect)
+
+        def se(*args, **kwargs):
+            return next(it)
+
+    with patch("minisweagent.agents.interactive._prompt_session.prompt", side_effect=se):
+        with patch("minisweagent.agents.interactive._multiline_prompt_session.prompt", side_effect=se):
+            yield
+
 
 # --- Helper functions to abstract message format differences ---
 
@@ -115,9 +133,7 @@ def model_factory(request, default_config, toolcall_config):
 def test_successful_completion_with_confirmation(model_factory):
     """Test agent completes successfully when user confirms all actions."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt", side_effect=["", ""]
-    ):  # Confirm action with Enter, then no new task
+    with mock_prompts(["", ""]):  # Confirm action with Enter, then no new task
         agent = InteractiveAgent(
             model=factory(
                 [
@@ -137,13 +153,12 @@ def test_successful_completion_with_confirmation(model_factory):
 def test_action_rejection_and_recovery(model_factory):
     """Test agent handles action rejection and can recover."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "User rejected this action",  # Reject first action
             "",  # Confirm second action
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -168,13 +183,12 @@ def test_action_rejection_and_recovery(model_factory):
 def test_yolo_mode_activation(model_factory):
     """Test entering yolo mode disables confirmations."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/y",  # Enter yolo mode
             "",  # This should be ignored since yolo mode is on
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -195,13 +209,12 @@ def test_yolo_mode_activation(model_factory):
 def test_help_command(model_factory):
     """Test help command shows help and continues normally."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/h",  # Show help
             "",  # Confirm action after help
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
@@ -225,10 +238,7 @@ def test_help_command(model_factory):
 def test_whitelisted_actions_skip_confirmation(model_factory):
     """Test that whitelisted actions don't require confirmation."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[""],  # No new task when agent wants to finish
-    ):
+    with mock_prompts([""]):  # No new task when agent wants to finish
         agent = InteractiveAgent(
             model=factory(
                 [
@@ -282,14 +292,14 @@ def _test_interruption_helper(
     # Mock console.input based on the interruption_input parameter
     input_call_count = 0
 
-    def mock_input(prompt):
+    def mock_input(prompt, **kwargs):
         nonlocal input_call_count
         input_call_count += 1
         if input_call_count == 1:
             return interruption_input  # For the interruption handling
         return ""  # Confirm all subsequent actions
 
-    with patch("minisweagent.agents.interactive.prompt_session.prompt", side_effect=mock_input):
+    with mock_prompts(mock_input):
         with patch.object(agent, "query", side_effect=mock_query):
             info = agent.run(problem_statement)
 
@@ -320,15 +330,14 @@ def test_interruption_handling_empty_message(model_factory):
 def test_multiple_confirmations_and_commands(model_factory):
     """Test complex interaction with multiple confirmations and commands."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "reject first",  # Reject first action
             "/h",  # Show help for second action
             "/y",  # After help, enter yolo mode
             "",  # After yolo mode enabled, confirm (but yolo mode will skip future confirmations)
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -354,10 +363,7 @@ def test_multiple_confirmations_and_commands(model_factory):
 def test_non_whitelisted_action_requires_confirmation(model_factory):
     """Test that non-whitelisted actions still require confirmation."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=["", ""],  # Confirm action, then no new task
-    ):
+    with mock_prompts(["", ""]):  # Confirm action, then no new task
         agent = InteractiveAgent(
             model=factory(
                 [
@@ -385,13 +391,12 @@ def test_non_whitelisted_action_requires_confirmation(model_factory):
 def test_human_mode_basic_functionality(model_factory):
     """Test human mode where user enters shell commands directly."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "echo 'user command'",  # User enters shell command
             "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'human mode works'",  # User enters final command
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory([]),  # LM shouldn't be called in human mode
@@ -412,13 +417,12 @@ def test_human_mode_basic_functionality(model_factory):
 def test_human_mode_switch_to_yolo(model_factory):
     """Test switching from human mode to yolo mode."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/y",  # Switch to yolo mode from human mode
             "",  # Confirm action in yolo mode (though no confirmation needed)
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -446,13 +450,12 @@ def test_human_mode_switch_to_yolo(model_factory):
 def test_human_mode_switch_to_confirm(model_factory):
     """Test switching from human mode to confirm mode."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/c",  # Switch to confirm mode from human mode
             "",  # Confirm action in confirm mode
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -480,13 +483,12 @@ def test_human_mode_switch_to_confirm(model_factory):
 def test_confirmation_mode_switch_to_human_with_rejection(model_factory):
     """Test switching from confirm mode to human mode with /u command."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/u",  # Switch to human mode and reject action
             "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'human command after rejection'",  # Human command
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -514,12 +516,11 @@ def test_confirmation_mode_switch_to_human_with_rejection(model_factory):
 def test_confirmation_mode_switch_to_yolo_and_continue(model_factory):
     """Test switching from confirm mode to yolo mode with /y and continuing with action."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/y",  # Switch to yolo mode and confirm current action
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -574,12 +575,11 @@ def test_mode_switch_during_keyboard_interrupt(model_factory):
             raise KeyboardInterrupt()
         return original_query(*args, **kwargs)
 
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/y",  # Switch to yolo mode during interrupt
             "",  # Confirm subsequent actions (though yolo mode won't ask)
-        ],
+        ]
     ):
         with patch.object(agent, "query", side_effect=mock_query):
             info = agent.run("Test interrupt mode switch")
@@ -595,13 +595,12 @@ def test_mode_switch_during_keyboard_interrupt(model_factory):
 def test_already_in_mode_behavior(model_factory):
     """Test behavior when trying to switch to the same mode."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/c",  # Try to switch to confirm mode when already in confirm mode
             "",  # Confirm action after the "already in mode" recursive prompt
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -628,13 +627,12 @@ def test_already_in_mode_behavior(model_factory):
 def test_all_mode_transitions_yolo_to_others(model_factory):
     """Test transitions from yolo mode to other modes."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/c",  # Switch from yolo to confirm
             "",  # Confirm action in confirm mode
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -676,13 +674,12 @@ def test_all_mode_transitions_yolo_to_others(model_factory):
 def test_all_mode_transitions_confirm_to_human(model_factory):
     """Test transition from confirm mode to human mode."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/u",  # Switch from confirm to human (rejecting action)
             "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'human command'",  # User enters command in human mode
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory([("LM action", [{"command": "echo 'rejected action'"}])]),
@@ -703,13 +700,12 @@ def test_help_command_from_different_contexts(model_factory):
     """Test help command works from different contexts (confirmation, interrupt, human mode)."""
     factory, config = model_factory
     # Test help during confirmation
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/h",  # Show help during confirmation
             "",  # Confirm after help
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
@@ -739,13 +735,12 @@ def test_help_command_from_different_contexts(model_factory):
 def test_help_command_from_human_mode(model_factory):
     """Test help command works from human mode."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/h",  # Show help in human mode
             "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'help in human mode'",  # User command after help
             "",  # No new task when agent wants to finish
-        ],
+        ]
     ):
         with patch("minisweagent.agents.interactive.console.print") as mock_print:
             agent = InteractiveAgent(
@@ -794,9 +789,8 @@ def test_complex_mode_switching_sequence(model_factory):
             raise KeyboardInterrupt()
         return original_query(*args, **kwargs)
 
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "/y",  # Confirm->Yolo during first action confirmation
             "/u",  # Yolo->Human during interrupt
             "/c",  # Human->Confirm in human mode
@@ -804,7 +798,7 @@ def test_complex_mode_switching_sequence(model_factory):
             "",  # No new task when agent wants to finish
             "",  # Extra empty input for any additional prompts
             "",  # Extra empty input for any additional prompts
-        ],
+        ]
     ):
         with patch.object(agent, "query", side_effect=mock_query):
             info = agent.run("Test complex mode switching")
@@ -845,7 +839,7 @@ def test_limits_exceeded_with_user_continuation(model_factory):
 
     # Mock input() to provide new limits when prompted
     with patch("builtins.input", side_effect=["10", "5.0"]):  # New step_limit=10, cost_limit=5.0
-        with patch("minisweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # No new task
+        with mock_prompts([""]):  # No new task
             with patch("minisweagent.agents.interactive.console.print"):  # Suppress console output
                 info = agent.run("Test limits exceeded with continuation")
 
@@ -889,7 +883,7 @@ def test_limits_exceeded_multiple_times_with_continuation(model_factory):
     # Mock input() to provide new limits multiple times
     # First limit increase: step_limit=2, then step_limit=10 when exceeded again
     with patch("builtins.input", side_effect=["2", "100.0", "10", "100.0"]):
-        with patch("minisweagent.agents.interactive.prompt_session.prompt", side_effect=[""]):  # No new task
+        with mock_prompts([""]):  # No new task
             with patch("minisweagent.agents.interactive.console.print"):
                 info = agent.run("Test multiple limit increases")
 
@@ -902,14 +896,13 @@ def test_limits_exceeded_multiple_times_with_continuation(model_factory):
 def test_continue_after_completion_with_new_task(model_factory):
     """Test that user can provide a new task when agent wants to finish."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "",  # Confirm first action
             "Create a new file",  # Provide new task when agent wants to finish
             "",  # Confirm second action for new task
             "",  # Don't provide another task after second completion (finish)
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -942,12 +935,11 @@ def test_continue_after_completion_with_new_task(model_factory):
 def test_continue_after_completion_without_new_task(model_factory):
     """Test that agent finishes normally when user doesn't provide a new task."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "",  # Confirm first action
             "",  # Don't provide new task when agent wants to finish (empty input)
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -974,16 +966,15 @@ def test_continue_after_completion_without_new_task(model_factory):
 def test_continue_after_completion_multiple_cycles(model_factory):
     """Test multiple continuation cycles with new tasks."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "",  # Confirm first action
             "Second task",  # Provide first new task
             "",  # Confirm second action
             "Third task",  # Provide second new task
             "",  # Confirm third action
             "",  # Don't provide another task (finish)
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -1011,12 +1002,11 @@ def test_continue_after_completion_multiple_cycles(model_factory):
 def test_continue_after_completion_in_yolo_mode(model_factory):
     """Test continuation when starting in yolo mode (no confirmations needed)."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "Create a second task",  # Provide new task when agent wants to finish
             "",  # Don't provide another task after second completion (finish)
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
@@ -1048,10 +1038,7 @@ def test_continue_after_completion_in_yolo_mode(model_factory):
 def test_confirm_exit_enabled_asks_for_confirmation(model_factory):
     """Test that when confirm_exit=True, agent asks for confirmation before finishing."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=["", ""],  # Confirm action, then no new task (empty string to exit)
-    ):
+    with mock_prompts(["", ""]):  # Confirm action, then no new task (empty string to exit)
         agent = InteractiveAgent(
             model=factory(
                 [
@@ -1074,10 +1061,7 @@ def test_confirm_exit_enabled_asks_for_confirmation(model_factory):
 def test_confirm_exit_disabled_exits_immediately(model_factory):
     """Test that when confirm_exit=False, agent exits immediately without asking."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[""],  # Only confirm action, no exit confirmation needed
-    ):
+    with mock_prompts([""]):  # Only confirm action, no exit confirmation needed
         agent = InteractiveAgent(
             model=factory(
                 [
@@ -1100,14 +1084,13 @@ def test_confirm_exit_disabled_exits_immediately(model_factory):
 def test_confirm_exit_with_new_task_continues_execution(model_factory):
     """Test that when user provides new task at exit confirmation, agent continues."""
     factory, config = model_factory
-    with patch(
-        "minisweagent.agents.interactive.prompt_session.prompt",
-        side_effect=[
+    with mock_prompts(
+        [
             "",  # Confirm first action
             "Please do one more thing",  # Provide new task instead of exiting
             "",  # Confirm second action
             "",  # No new task on second exit confirmation
-        ],
+        ]
     ):
         agent = InteractiveAgent(
             model=factory(
