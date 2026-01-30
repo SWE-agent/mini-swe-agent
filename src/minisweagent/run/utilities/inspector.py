@@ -16,19 +16,20 @@ from textual.binding import Binding
 from textual.containers import Container, Vertical, VerticalScroll
 from textual.widgets import Footer, Header, Static
 
+from minisweagent.models.utils.content_string import get_content_string
+
 
 def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
     """Group messages into "pages" as shown by the UI."""
     steps = []
     current_step = []
     for message in messages:
-        current_step.append(message)
-        # Step ends on tool/user observations, but not human-issued commands (which have actions)
-        is_tool_obs = message.get("role") == "tool" or message.get("type") == "function_call_output"
-        is_user_obs = message.get("role") == "user" and not message.get("extra", {}).get("actions")
-        if is_tool_obs or is_user_obs:
+        # Start new step with new tool uses
+        if message.get("extra", {}).get("actions") or message.get("role") == "assistant":
             steps.append(current_step)
-            current_step = []
+            current_step = [message]
+        else:
+            current_step.append(message)
     if current_step:
         steps.append(current_step)
     return steps
@@ -158,13 +159,10 @@ class TrajectoryInspector(App):
             return
 
         for message in self.steps[self.i_step]:
-            if isinstance(message["content"], list):
-                content_str = "\n".join([item["text"] for item in message["content"]])
-            else:
-                content_str = str(message["content"])
+            content_str = get_content_string(message)
             message_container = Vertical(classes="message-container")
             container.mount(message_container)
-            role = message["role"].replace("assistant", "mini-swe-agent")
+            role = message.get("role") or message.get("type") or "unknown"
             message_container.mount(Static(role.upper(), classes="message-header"))
             message_container.mount(Static(Text(content_str, no_wrap=False), classes="message-content"))
 
