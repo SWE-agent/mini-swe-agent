@@ -8,7 +8,11 @@ import requests
 from pydantic import BaseModel
 
 from minisweagent.models import GLOBAL_MODEL_STATS
-from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
+from minisweagent.models.utils.actions_toolcall import (
+    BASH_TOOL,
+    format_toolcall_observation_messages,
+    parse_toolcall_actions,
+)
 from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
@@ -22,11 +26,7 @@ class RequestyModelConfig(BaseModel):
     model_kwargs: dict[str, Any] = {}
     set_cache_control: Literal["default_end"] | None = None
     """Set explicit cache control markers, for example for Anthropic models"""
-    action_regex: str = r"```mswea_bash_command\s*\n(.*?)\n```"
-    """Regex to extract the action from the LM's output."""
-    format_error_template: str = (
-        "Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions."
-    )
+    format_error_template: str = "{{ error }}"
     """Template used when the LM's output is not in the expected format."""
     observation_template: str = (
         "{% if output.exception_info %}<exception>{{output.exception_info}}</exception>\n{% endif %}"
@@ -74,6 +74,7 @@ class RequestyModel:
         payload = {
             "model": self.config.model_name,
             "messages": messages,
+            "tools": [BASH_TOOL],
             **(self.config.model_kwargs | kwargs),
         }
 
@@ -123,11 +124,10 @@ class RequestyModel:
         return {"cost": cost}
 
     def _parse_actions(self, response: dict) -> list[dict]:
-        """Parse actions from the model response. Raises FormatError if not exactly one action."""
-        content = response["choices"][0]["message"]["content"] or ""
-        return parse_regex_actions(
-            content, action_regex=self.config.action_regex, format_error_template=self.config.format_error_template
-        )
+        """Parse tool calls from the response. Raises FormatError if unknown tool."""
+        tool_calls = response["choices"][0]["message"].get("tool_calls") or []
+        tool_calls = [_DictToObj(tc) for tc in tool_calls]
+        return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
 
     def format_message(self, **kwargs) -> dict:
         return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)
@@ -135,9 +135,11 @@ class RequestyModel:
     def format_observation_messages(
         self, message: dict, outputs: list[dict], template_vars: dict | None = None
     ) -> list[dict]:
-        """Format execution outputs into observation messages."""
-        return format_observation_messages(
-            outputs,
+        """Format execution outputs into tool result messages."""
+        actions = message.get("extra", {}).get("actions", [])
+        return format_toolcall_observation_messages(
+            actions=actions,
+            outputs=outputs,
             observation_template=self.config.observation_template,
             template_vars=template_vars,
             multimodal_regex=self.config.multimodal_regex,
@@ -155,3 +157,14 @@ class RequestyModel:
                 },
             }
         }
+
+
+class _DictToObj:
+    """Simple wrapper to convert dict to object with attribute access."""
+
+    def __init__(self, d: dict):
+        self._d = d
+        self.id = d.get("id")
+        self.function = _DictToObj(d.get("function", {})) if "function" in d else None
+        self.name = d.get("name")
+        self.arguments = d.get("arguments")
