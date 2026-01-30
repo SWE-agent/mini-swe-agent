@@ -7,5 +7,4 @@
 
 ## Extras
 
-* `extra/github_issue.py` - Solve a GitHub issue with a docker environment.
 * `extra/swebench.py` - Benchmark the performance of the `default.py` agent.

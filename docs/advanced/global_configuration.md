@@ -107,10 +107,6 @@ MSWEA_CONFIG_DIR="/path/to/your/own/config/dir"
 # (default: package_dir / "config" / "mini.yaml")
 MSWEA_MINI_CONFIG_PATH="/path/to/your/own/config"
 
-# Config path for GitHub issue script
-# (default: package_dir / "config" / "github_issue.yaml")
-MSWEA_GITHUB_CONFIG_PATH="/path/to/your/github/config.yaml"
-
 # Custom style path for trajectory inspector
 # (default: package_dir / "config" / "inspector.tcss")
 MSWEA_INSPECTOR_STYLE_PATH="/path/to/your/inspector/style.tcss"

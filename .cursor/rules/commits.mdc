@@ -42,7 +42,7 @@ Use these component names in parentheses for `fix`, `feat`, `enh`, and `ref` com
 - `agents` - Changes to agent classes (default, interactive, multimodal)
 - `env` - Changes to environments (docker, local, singularity, bubblewrap, swerex)
 - `config` - Changes to configuration files or config handling
-- `run` - Changes to run scripts (mini, hello_world, github_issue)
+- `run` - Changes to run scripts (mini, hello_world)
 - `benchmarks` - Changes to benchmark runners (swebench, inspector)
 - `cli` - Changes to CLI argument handling
 - `deps` - Dependency updates

@@ -350,7 +350,6 @@ def test_mini_extra_help():
     assert "central entry point for all extra commands" in clean_output
     assert "config" in clean_output
     assert "inspect" in clean_output
-    assert "github-issue" in clean_output
     assert "swebench" in clean_output
 
 
@@ -373,7 +372,6 @@ def test_mini_e_help():
     [
         ("config", ["config"]),
         ("inspect", ["inspect", "i", "inspector"]),
-        ("github-issue", ["github-issue", "gh"]),
         ("swebench", ["swebench"]),
         ("swebench-single", ["swebench-single"]),
     ],

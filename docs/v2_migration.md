@@ -171,11 +171,9 @@ from minisweagent.exceptions import Submitted, FormatError
 ### Run script imports
 ```python
 # Old
-from minisweagent.run.github_issue import main as github_issue_main
 from minisweagent.run.inspector import main as inspector_main
 
 # New
-from minisweagent.run.extra.github_issue import main as github_issue_main
 from minisweagent.run.utilities.inspector import main as inspector_main
 ```
 

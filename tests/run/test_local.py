@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from minisweagent.models.test_models import DeterministicModel, make_output
 from minisweagent.run.mini import DEFAULT_CONFIG_FILE, main
-from tests.run.test_github_issue import assert_observations_match
+from tests.conftest import assert_observations_match
 
 
 def _make_model_from_fixture(text_outputs: list[str], cost_per_call: float = 1.0, **kwargs) -> DeterministicModel:

@@ -110,7 +110,6 @@ nav:
       - "mini-extra": "reference/run/mini_extra.md"
       - "Config": "reference/run/config.md"
       - "Inspector": "reference/run/inspector.md"
-      - "GitHub Issue": "reference/run/github_issue.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"
   - Blog: https://www.swebench.com/blog.html
