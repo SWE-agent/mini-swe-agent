@@ -1,0 +1,101 @@
+agent:
+  system_template: ""
+  instance_template: ""
+
+  # Two deterministic steps: (1) run Codex; (2) submit patch
+  step_limit: 2
+  cost_limit: 0
+
+  action_observation_template: |
+    <returncode>{{output.returncode}}</returncode>
+    <output>
+    {{ output.output -}}
+    </output>
+
+environment:
+  environment_class: docker
+  cwd: "/testbed"
+  timeout: 7200          # generous for Codex
+  container_timeout: "8h"
+  forward_env:
+    - OPENAI_API_KEY
+  # Mount actual binary of Node and Codex from the host system, if applicable
+  # Comment out if you want to install Node and Codex inside each instance container
+  run_args:
+    - "-v"
+    - "/usr/bin/node:/opt/node/bin/node:ro"
+    - "-v"
+    - "/usr/lib/node_modules/@openai/codex:/opt/codex:ro"
+
+run:
+  # Prepare prompt file inside the environment with the problem statement and strict CLI format
+  env_startup_command: |
+    if [ -f /opt/codex/bin/codex.js ]; then
+      # Use mounted Node and Codex
+      cat <<-'CODEX_WRAPPER_EOF' > /usr/local/bin/codex
+    #!/bin/bash
+    exec /opt/node/bin/node /opt/codex/bin/codex.js "$@"
+    CODEX_WRAPPER_EOF
+      chmod +x /usr/local/bin/codex
+    else
+      # Install Node.js and codex from apt/npm
+      curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
+      apt-get install nodejs -y
+      npm install -g npm@latest
+      npm install -g @openai/codex
+    fi
+
+    # Create a prompt file for Codex CLI
+    cat <<-'PROMPT_EOF' > /tmp/prompt.md
+    You are a helpful assistant that can interact multiple times with a computer shell to solve programming tasks.
+
+    <pr_description>
+    Consider the following PR description:
+    {{task}}
+    </pr_description>
+
+    <instructions>
+    Please help implement necessary changes to meet requirements in the PR description.
+    Your task is specifically to make changes to non-test files in the current directory
+    in order to fix the issue described in the PR description in a way that is general
+    and consistent with the codebase.
+
+    ## Important Boundaries
+    - MODIFY: Regular source code files in /testbed (this is the working directory for all your subsequent commands)
+    - DO NOT MODIFY: Tests, configuration files (pyproject.toml, setup.cfg, etc.)
+
+    ## Recommended Workflow
+    1. Analyze the codebase by finding and reading relevant files
+    2. Create a script to reproduce the issue
+    3. Edit the source code to resolve the issue
+    4. Verify your fix works by running your script again
+    5. Test edge cases to ensure your fix is robust
+
+    Before you are finished, clean up the codebase to remove all temporary files. Only keep
+    the minimal changes that are ready to be committed, and do not commit yet.
+
+    ## Environment Details
+    - You have a full Linux shell environment
+    - Always use non-interactive flags (-y, -f) for commands
+    - Avoid interactive tools like vi, nano, or any that require user input
+    - If a command isn't available, you can install it
+    </instructions>
+    PROMPT_EOF
+
+model:
+  model_name: "deterministic"
+  model_class: "deterministic"
+  cost_per_call: 0.0
+  outputs:
+    - |
+      THOUGHT: Run Codex CLI with the prepared prompt to make the necessary edits in /testbed.
+
+      ```bash
+      codex exec --model gpt-5 --config model_reasoning_effort=medium -C /testbed --yolo < /tmp/prompt.md
+      ```
+    - |
+      THOUGHT: Submit final output and patch.
+
+      ```bash
+      echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached
+      ```
