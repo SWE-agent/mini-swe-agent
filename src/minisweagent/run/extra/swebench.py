@@ -44,6 +44,7 @@ DATASET_MAPPING = {
     "multilingual": "swe-bench/SWE-Bench_Multilingual",
     "smith": "SWE-bench/SWE-smith",
     "_test": "klieret/swe-bench-dummy-test-dataset",
+    "rebench": "nebius/SWE-rebench",
 }
 
 
@@ -68,7 +69,7 @@ class ProgressTrackingAgent(DefaultAgent):
 
 def get_swebench_docker_image_name(instance: dict) -> str:
     """Get the image name for a SWEBench instance."""
-    image_name = instance.get("image_name", None)
+    image_name = instance.get("image_name", None) or instance.get("docker_image", None)
     if image_name is None:
         # Docker doesn't allow double underscore, so we replace them with a magic token
         iid = instance["instance_id"]
@@ -85,6 +86,12 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
         env_config["image"] = image_name
     elif env_config["environment_class"] == "singularity":
         env_config["image"] = "docker://" + image_name
+    elif env_config["environment_class"] == "contree":
+        from minisweagent.environments.extra.contree import ContreeEnvironment
+
+        env_config["image"] = "docker://" + image_name
+        env_config["image_tag"] = ContreeEnvironment.get_tag_by_image_url(image_name)
+
     env = get_environment(env_config)
     if startup_command := config.get("run", {}).get("env_startup_command"):
         startup_command = Template(startup_command, undefined=StrictUndefined).render(**instance)
