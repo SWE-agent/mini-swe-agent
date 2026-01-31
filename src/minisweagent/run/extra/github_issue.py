@@ -34,7 +34,7 @@ def fetch_github_issue(issue_url: str) -> str:
     title = issue_data["title"]
     body = issue_data["body"] or ""
 
-    return f"GitHub Issue: {title}\n\n{body}"
+    return f"GitHub Issue: {issue_url}\n\nTitle: {title}\n\n{body}"
 
 
 # fmt: off
