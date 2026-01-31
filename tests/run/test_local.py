@@ -26,6 +26,11 @@ def test_local_end_to_end(local_test_data):
             visual=False,
             cost_limit=10,
             model_class=None,
+            step_limit=None,
+            temperature=None,
+            timeout=None,
+            max_tokens=None,
+            exit_immediately=False,
         )  # type: ignore
 
     assert agent is not None
