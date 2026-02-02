@@ -4,7 +4,6 @@ We happily accept contributions!
 
 ## Areas of help
 
-- Feedback on the `mini` interface at [this github issue](https://github.com/swe-agent/mini-swe-agent/issues/161) or in our [Slack channel](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ).
 - Documentation, examples, tutorials, etc. In particular, we're looking for
     - examples of how this library is used in the wild
     - additional examples for the [cookbook](advanced/cookbook.md)
