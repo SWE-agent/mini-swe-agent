@@ -15,6 +15,7 @@ import typer
 from rich.text import Text
 from textual.app import App, ComposeResult
 from textual.binding import Binding
+from textual.command import DiscoveryHit, Hit, Hits, Provider
 from textual.containers import Container, Vertical, VerticalScroll
 from textual.widgets import Footer, Header, Static
 
@@ -40,7 +41,41 @@ def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
 app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
 
+class BindingCommandProvider(Provider):
+    """Provide bindings as commands in the palette."""
+
+    COMMAND_DESCRIPTIONS = {
+        "next_step": "Next step in the current trajectory",
+        "previous_step": "Previous step in the current trajectory",
+        "first_step": "First step in the current trajectory",
+        "last_step": "Last step in the current trajectory",
+        "scroll_down": "Scroll down",
+        "scroll_up": "Scroll up",
+        "next_trajectory": "Next trajectory",
+        "previous_trajectory": "Previous trajectory",
+        "open_in_jless": "Open the current step in jless",
+        "open_in_jless_all": "Open the entire trajectory in jless",
+        "quit": "Quit the inspector",
+    }
+
+    async def discover(self) -> Hits:
+        app = self.app
+        for binding in app.BINDINGS:
+            desc = self.COMMAND_DESCRIPTIONS.get(binding.action, binding.description)
+            yield DiscoveryHit(desc, lambda b=binding: app.run_action(b.action))
+
+    async def search(self, query: str) -> Hits:
+        matcher = self.matcher(query)
+        app = self.app
+        for binding in app.BINDINGS:
+            desc = self.COMMAND_DESCRIPTIONS.get(binding.action, binding.description)
+            score = matcher.match(desc)
+            if score > 0:
+                yield Hit(score, matcher.highlight(desc), lambda b=binding: app.run_action(b.action))
+
+
 class TrajectoryInspector(App):
+    COMMANDS = {BindingCommandProvider}
     BINDINGS = [
         Binding("right,l", "next_step", "Step++"),
         Binding("left,h", "previous_step", "Step--"),
@@ -51,6 +86,7 @@ class TrajectoryInspector(App):
         Binding("L", "next_trajectory", "Traj++"),
         Binding("H", "previous_trajectory", "Traj--"),
         Binding("e", "open_in_jless", "Jless"),
+        Binding("E", "open_in_jless_all", "Jless (all)"),
         Binding("q", "quit", "Quit"),
     ]
 
@@ -203,6 +239,14 @@ class TrajectoryInspector(App):
         vs = self.query_one(VerticalScroll)
         vs.scroll_to(y=vs.scroll_target_y - 15)
 
+    def _open_in_jless(self, path: Path) -> None:
+        """Open file in jless."""
+        with self.suspend():
+            try:
+                subprocess.run(["jless", path])
+            except FileNotFoundError:
+                self.notify("jless not found. Install with: `brew install jless`", severity="error")
+
     def action_open_in_jless(self) -> None:
         """Open the current step's messages in jless."""
         if not self.steps:
@@ -210,10 +254,16 @@ class TrajectoryInspector(App):
             return
         with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(self.steps[self.i_step], f, indent=2)
-            temp_path = f.name
-        with self.suspend():
-            subprocess.run(["jless", temp_path])
-        Path(temp_path).unlink()
+            temp_path = Path(f.name)
+        self._open_in_jless(temp_path)
+        temp_path.unlink()
+
+    def action_open_in_jless_all(self) -> None:
+        """Open the entire trajectory in jless."""
+        if not self.trajectory_files:
+            self.notify("No trajectory to display", severity="warning")
+            return
+        self._open_in_jless(self.trajectory_files[self.i_trajectory])
 
 
 @app.command(help=__doc__)
