@@ -3,11 +3,11 @@ name: build-docs
 on:
   push:
     branches:
-      - main
+      - v1
       - "build-docs-*"
   pull_request:
     branches:
-      - main
+      - v1
 
 # Prevent concurrent runs that could conflict when pushing to gh-pages
 concurrency:
@@ -42,8 +42,8 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
       - run: uv pip install --python ${Python_ROOT_DIR} '.[full]'
       - name: Build + Deploy Documentation
-        if: github.ref == 'refs/heads/main'
-        run: mike deploy --push 1.0 latest
+        if: github.ref == 'refs/heads/v1'
+        run: mike deploy --push v1
       - name: Build Documentation (strict)
         # Do this even if we've already deployed, just so we can catch errors
         # and mark the build as failed.
