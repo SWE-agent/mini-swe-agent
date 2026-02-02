@@ -28,8 +28,8 @@ jobs:
     - name: Check version matches release tag
       if: github.event_name == 'release'
       run: |
-        # Extract version from src/minisweagent/__init__.py
-        PACKAGE_VERSION=$(python -c "import sys; sys.path.insert(0, 'src'); from minisweagent import __version__; print(__version__)")
+        # Extract version from src/minisweagent/__init__.py using regex (no imports needed)
+        PACKAGE_VERSION=$(grep -oP '^__version__\s*=\s*"\K[^"]+' src/minisweagent/__init__.py)
 
         # Extract tag name (remove 'v' prefix if present)
         TAG_NAME="${{ github.event.release.tag_name }}"
