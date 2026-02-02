@@ -7,7 +7,7 @@
 
 !!! warning "This is mini-swe-agent v2"
 
-    For the previous version, check out the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
+    For the previous version, check out the [v1 documentation](https://mini-swe-agent.com/v1/) or the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
 
 <div align="center">
 
