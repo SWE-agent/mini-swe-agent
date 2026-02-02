@@ -67,6 +67,37 @@ def sample_swebench_trajectory():
 
 
 @pytest.fixture
+def sample_toolcall_trajectory():
+    """Sample trajectory with tool_calls format."""
+    return [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "List files."},
+        {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [{"id": "1", "function": {"name": "bash", "arguments": '{"command": "ls -la"}'}}],
+        },
+        {"role": "tool", "tool_call_id": "1", "content": '{"returncode": 0, "output": "file.txt"}'},
+    ]
+
+
+@pytest.fixture
+def sample_response_api_trajectory():
+    """Sample trajectory with Responses API format."""
+    return [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "List files."},
+        {
+            "type": "assistant",
+            "output": [
+                {"type": "message", "content": [{"type": "text", "text": "Let me check."}]},
+                {"type": "function_call", "name": "bash", "arguments": '{"command": "ls"}'},
+            ],
+        },
+    ]
+
+
+@pytest.fixture
 def temp_trajectory_files(sample_simple_trajectory, sample_swebench_trajectory):
     """Create temporary trajectory files for testing."""
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -236,26 +267,40 @@ async def test_trajectory_inspector_invalid_file(temp_trajectory_files):
     assert app.steps == []
 
 
-def test_trajectory_inspector_load_trajectory_formats(sample_simple_trajectory, sample_swebench_trajectory):
+def test_trajectory_inspector_load_trajectory_formats(
+    sample_simple_trajectory, sample_swebench_trajectory, sample_toolcall_trajectory, sample_response_api_trajectory
+):
     """Test loading different trajectory formats."""
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
 
-        # Test simple format
+        # Test simple format (text-based actions)
         simple_file = temp_path / "simple.traj.json"
         simple_file.write_text(json.dumps(sample_simple_trajectory))
-
         app = TrajectoryInspector([simple_file])
         assert len(app.messages) == 5
         assert len(app.steps) == 3
 
-        # Test SWEBench format
+        # Test SWEBench format (dict with messages array)
         swebench_file = temp_path / "swebench.traj.json"
         swebench_file.write_text(json.dumps(sample_swebench_trajectory))
-
         app = TrajectoryInspector([swebench_file])
         assert len(app.messages) == 5
         assert len(app.steps) == 3
+
+        # Test tool_calls format (OpenAI function calling)
+        toolcall_file = temp_path / "toolcall.traj.json"
+        toolcall_file.write_text(json.dumps(sample_toolcall_trajectory))
+        app = TrajectoryInspector([toolcall_file])
+        assert len(app.messages) == 4
+        assert len(app.steps) == 2
+
+        # Test Responses API format (step splitting uses 'role', not 'type')
+        response_api_file = temp_path / "response_api.traj.json"
+        response_api_file.write_text(json.dumps(sample_response_api_trajectory))
+        app = TrajectoryInspector([response_api_file])
+        assert len(app.messages) == 3
+        assert len(app.steps) == 1
 
 
 def test_trajectory_inspector_unrecognized_format():
