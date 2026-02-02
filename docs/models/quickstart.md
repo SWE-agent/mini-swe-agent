@@ -292,11 +292,9 @@ For example:
     ```
 
 
-* **`litellm`** ([`LitellmModel`](../reference/models/litellm.md)) - **Default and recommended**. Supports most models through [litellm](https://github.com/BerriAI/litellm). Works with OpenAI, Anthropic, Google, and many other providers.
+* **`litellm`** ([`LitellmModel`](../reference/models/litellm.md)) - **Default and recommended**. Supports most models through [litellm](https://github.com/BerriAI/litellm). Works with OpenAI, Anthropic, Google, and many other providers. Anthropic models automatically get cache control settings when the model name contains "anthropic", "claude", "sonnet", or "opus".
 
-* **`litellm_response_toolcall`** ([`LitellmResponseToolcallModel`](../reference/models/litellm_response_toolcall.md)) - Specialized version of `LitellmModel` that uses OpenAI's Responses API with native tool calling. Useful for models like GPT-5 and required for models like GPT-5-codex. Maintains conversation state across turns.
-
-* **`anthropic`** ([`AnthropicModel`](../reference/models/anthropic.md)) - Wrapper around `LitellmModel` for Anthropic models that adds cache breakpoint handling. Will be used by default if no `model_class` is specified and the model name contains "anthropic", "claude", etc.
+* **`litellm_response`** ([`LitellmResponseModel`](../reference/models/litellm_response_toolcall.md)) - Specialized version of `LitellmModel` that uses OpenAI's Responses API with native tool calling. Useful for models like GPT-5 and required for models like GPT-5-codex. Maintains conversation state across turns.
 
 * **`openrouter`** ([`OpenRouterModel`](../reference/models/openrouter.md)) - Direct integration with [OpenRouter](https://openrouter.ai/) API for accessing various models through a single endpoint.
 
