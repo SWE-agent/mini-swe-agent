@@ -20,7 +20,7 @@ agent:
     For each response:
 
     1. Include a THOUGHT section explaining your reasoning and what you're trying to accomplish
-    2. Provide exactly ONE bash command to execute
+    2. Provide one or more bash tool calls to execute
 
     ## Important Boundaries
 
@@ -52,15 +52,15 @@ agent:
     **CRITICAL REQUIREMENTS:**
 
     - Your response SHOULD include reasoning text explaining what you're doing
-    - Your response MUST include AT LEAST ONE bash tool call
+    - Your response MUST include AT LEAST ONE bash tool call. You can make MULTIPLE tool calls in a single response when the commands are independent (e.g., searching multiple files, reading different parts of the codebase). This saves rounds and is strongly encouraged during exploration.
     - Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
     - However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
 
     Example of a CORRECT response:
     <example_response>
-    I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
+    I need to understand the Builder-related code. Let me find relevant files and check the project structure.
 
-    [Makes bash tool call with {"command": "ls -la"} as arguments]
+    [Makes multiple bash tool calls: {"command": "ls -la"}, {"command": "find src -name '*.java' | grep -i builder"}, {"command": "cat README.md | head -50"}]
     </example_response>
 
     ## Environment Details
@@ -125,22 +125,16 @@ environment:
 
 model:
   observation_template: |
+    {%- if output.exception_info %}Exception: {{ output.exception_info }}
+    {% endif -%}
     {%- if output.output | length < 10000 -%}
-    {
-      "returncode": {{ output.returncode }},
-      "output": {{ output.output | tojson }}
-      {%- if output.exception_info %}, "exception_info": {{ output.exception_info | tojson }}{% endif %}
-    }
+    {{ output.output }}
     {%- else -%}
-    {
-      "returncode": {{ output.returncode }},
-      "output_head": {{ output.output[:5000] | tojson }},
-      "output_tail": {{ output.output[-5000:] | tojson }},
-      "elided_chars": {{ output.output | length - 10000 }},
-      "warning": "Output too long."
-      {%- if output.exception_info %}, "exception_info": {{ output.exception_info | tojson }}{% endif %}
-    }
+    {{ output.output[:5000] }}
+    ... [{{ output.output | length - 10000 }} characters elided] ...
+    {{ output.output[-5000:] }}
     {%- endif -%}
+    [exit code {{ output.returncode }}]
   format_error_template: |
     Tool call error. Every response needs to use the 'bash' tool at least once to execute commands.
 
@@ -154,3 +148,4 @@ model:
   model_kwargs:
     drop_params: true
     temperature: 0.0
+    parallel_tool_calls: true
