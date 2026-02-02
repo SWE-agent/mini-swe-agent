@@ -5,7 +5,7 @@
 
 </div>
 
-!!! note "This is mini-swe-agent v2"
+!!! warning "This is mini-swe-agent v2"
 
     For the previous version, check out the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
 
