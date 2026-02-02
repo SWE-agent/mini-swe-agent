@@ -154,7 +154,7 @@ vllm serve ricdomolm/mini-coder-1.7b &
 
 By default, the server will be available at `http://localhost:8000`.
 
-Second, edit the mini-swe-agent SWE-bench config file located in `src/minisweagent/config/extra/swebench.yaml` to include your local vLLM model:
+Second, edit the mini-swe-agent SWE-bench config file located in `src/minisweagent/config/benchmarks/swebench.yaml` to include your local vLLM model:
 
 ```yaml
 model:

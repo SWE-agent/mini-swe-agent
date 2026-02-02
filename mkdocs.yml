@@ -44,7 +44,11 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.tabbed:
       alternate_style: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.magiclink
   - footnotes
   - attr_list
@@ -60,20 +64,23 @@ nav:
     - "Quick start": quickstart.md
     - "Command line usage":
       - "<code>mini</code>": usage/mini.md
-      - "<code>mini -v</code>": usage/mini_v.md
+      - "Config": usage/config.md
       - "SWE-bench": usage/swebench.md
       - "Inspector": usage/inspector.md
+      - "Output files": usage/output_files.md
     - "Language models":
       - "Quick start": models/quickstart.md
       - "Local models": models/local_models.md
       - "Troubleshooting": models/troubleshooting.md
-    - "Guides & tutorials":
-      - "v2.0 Migration": advanced/v2_migration.md
+    - "Configuration":
       - "Global configuration": advanced/global_configuration.md
       - "Yaml config files": advanced/yaml_configuration.md
+    - "Python bindings & more":
+      - "Basic Python bindings": usage/python_bindings.md
+      - "Understanding the agent": advanced/control_flow.md
+      - "Subclassing and more": advanced/cookbook.md
       - "Environments": advanced/environments.md
-      - "Control flow": advanced/control_flow.md
-      - "Python bindings": advanced/cookbook.md
+      - "v2 migration guide": v2_migration.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
   - API Reference:
@@ -81,11 +88,11 @@ nav:
     - Agents:
       - "DefaultAgent": "reference/agents/default.md"
       - "InteractiveAgent": "reference/agents/interactive.md"
-      - "TextualAgent": "reference/agents/textual.md"
     - Models:
+      - "Overview": "reference/models/overview.md"
       - "LitellmModel": "reference/models/litellm.md"
-      - "LitellmResponseAPIModel": "reference/models/litellm_response.md"
-      - "AnthropicModel": "reference/models/anthropic.md"
+      - "LitellmToolcallModel": "reference/models/litellm_toolcall.md"
+      - "LitellmResponseToolcallModel": "reference/models/litellm_response_toolcall.md"
       - "OpenRouterModel": "reference/models/openrouter.md"
       - "RequestyModel": "reference/models/requesty.md"
       - "DeterministicModel": "reference/models/test_models.md"
@@ -103,7 +110,6 @@ nav:
       - "mini-extra": "reference/run/mini_extra.md"
       - "Config": "reference/run/config.md"
       - "Inspector": "reference/run/inspector.md"
-      - "GitHub Issue": "reference/run/github_issue.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"
   - Blog: https://www.swebench.com/blog.html

@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - v2.0
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -19,6 +20,7 @@ on:
   pull_request:
     branches:
       - main
+      - v2.0
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -62,8 +64,15 @@ jobs:
       - name: Install dependencies
         run: |
             uv pip install --python ${Python_ROOT_DIR} -e '.[full]'
+      - name: Configure mini-swe-agent
+        run: |
+          mini-extra config set MSWEA_CONFIGURED 'true'
+          mini-extra config set OPENAI_API_KEY '${{ secrets.OPENAI_API_KEY }}'
+          mini-extra config set OPENROUTER_API_KEY '${{ secrets.OPENROUTER_API_KEY }}'
+          # mini-extra config set PORTKEY_API_KEY '${{ secrets.PORTKEY_API_KEY }}'
+          mini-extra config set REQUESTY_API_KEY '${{ secrets.REQUESTY_API_KEY }}'
       - name: Run pytest
-        run: pytest -v --cov --cov-branch --cov-report=xml -n auto
+        run: pytest -v --cov --cov-branch --cov-report=xml -n auto --run-fire
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
