@@ -1,13 +1,17 @@
 # Quick start
 
+!!! warning "v1 Documentation"
+
+    You're currently viewing the v1 docs. For the new version, see [github.com/swe-agent/mini-swe-agent](https://github.com/swe-agent/mini-swe-agent) and [mini-swe-agent.com](https://mini-swe-agent.com).
+
 !!! tip "Installation Options"
 
     === "pip"
 
-        Use pip to install `mini` in your current environment:
+        Use pip to install `mini` v1 in your current environment:
 
         ```bash
-        pip install mini-swe-agent
+        pip install 'mini-swe-agent<2'
         ```
 
         And try our command line interface
@@ -20,21 +24,21 @@
 
     === "uv (isolated)"
 
-        Use `uv`/`uvx` ([installation](https://docs.astral.sh/uv/getting-started/installation/)) to directly run the `mini` CLI.
-        Use this if you're only interested in the CLI but don't need python bindings (`mini` will be installed in an anonymous virtual environment).
+        Use `uv`/`uvx` ([installation](https://docs.astral.sh/uv/getting-started/installation/)) to directly run the `mini` v1 CLI.
+        Use this if you're only interested in the CLI but don't need python bindings (`mini` v1 will be installed in an anonymous virtual environment).
 
         Quickly install + run:
 
         ```bash
-        uvx mini-swe-agent  # simple UI
-        uvx mini-swe-agent -v  # visual UI
-        uvx --from mini-swe-agent mini-extra  # extra utilities
+        uvx 'mini-swe-agent<2'  # simple UI
+        uvx 'mini-swe-agent<2' -v  # visual UI
+        uvx --from 'mini-swe-agent<2' mini-extra  # extra utilities
         ```
 
         Permanently install
 
         ```bash
-        uv tool install mini-swe-agent
+        uv tool install 'mini-swe-agent<2'
         # then
         mini  # simple UI
         mini -v  # visual UI
@@ -44,23 +48,23 @@
     === "pipx (isolated)"
 
         Use pipx ([installation](https://pipx.pypa.io/stable/installation/)) to directly run the `mini` CLI.
-        Use this if you're only interested in the CLI but don't need python bindings (`mini` will be installed in an anonymous virtual environment).
+        Use this if you're only interested in the CLI but don't need python bindings (`mini` v1 will be installed in an anonymous virtual environment).
 
         Quick install + run:
 
         ```bash
         # Simple UI
-        pipx run mini-swe-agent
+        pipx run 'mini-swe-agent<2'
         # Textual UI
-        pipx run mini-swe-agent -v
+        pipx run 'mini-swe-agent<2' -v
         # Extra utilities
-        pipx run --spec mini-swe-agent mini-extra
+        pipx run --spec 'mini-swe-agent<2' mini-extra
         ```
 
         or for a persistent installation (recommended):
 
         ```bash
-        pipx install mini-swe-agent
+        pipx install 'mini-swe-agent<2'
         # then
         mini  # simple UI
         mini -v  # visual UI
@@ -71,10 +75,11 @@
 
     === "From source/dev"
 
-        For development or if you want to customize the agent:
+        For development or if you want to customize the agent based on the v1 codebase
+        (of course, starting with the current [main branch](https://github.com/SWE-agent/mini-swe-agent/tree/main) would be more recommended):
 
         ```bash
-        git clone https://github.com/SWE-agent/mini-swe-agent.git
+        git clone https://github.com/SWE-agent/mini-swe-agent.git -b v1
         cd mini-swe-agent
         pip install -e .
         ```

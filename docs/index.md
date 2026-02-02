@@ -1,3 +1,7 @@
+!!! warning "v1 Documentation"
+
+    You're currently viewing the v1 docs. For the new version, see [github.com/swe-agent/mini-swe-agent](https://github.com/swe-agent/mini-swe-agent) and [mini-swe-agent.com](https://mini-swe-agent.com).
+
 <div align="center">
 <img src="assets/mini-swe-agent-banner.svg" alt="mini-swe-agent banner" style="height: 7em"/>
 

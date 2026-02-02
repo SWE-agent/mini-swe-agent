@@ -179,25 +179,25 @@ agent.run("Write a sudoku game")
 
 ## Let's get started!
 
-**Option 1:** If you just want to try out the CLI (package installed in anonymous virtual environment)
+**Option 1:** If you just want to try out the CLI (`mini` v1 installed in anonymous virtual environment)
 
 ```bash
-pip install uv && uvx mini-swe-agent [-v]
+pip install uv && uvx 'mini-swe-agent<2' [-v]
 # or
-pip install pipx && pipx ensurepath && pipx run mini-swe-agent [-v]
+pip install pipx && pipx ensurepath && pipx run 'mini-swe-agent<2' [-v]
 ```
 
-**Option 2:** Install CLI & python bindings in current environment
+**Option 2:** Install `mini` v1 CLI & python bindings in current environment
 
 ```bash
-pip install mini-swe-agent
+pip install 'mini-swe-agent<2'
 mini -v  # run the CLI
 ```
 
-**Option 3:** Install from source (developer setup)
+**Option 3:** Install `mini` v1 from source (developer setup)
 
 ```bash
-git clone https://github.com/SWE-agent/mini-swe-agent.git
+git clone https://github.com/SWE-agent/mini-swe-agent.git -b v1
 cd mini-swe-agent && pip install -e .
 mini [-v]  # run the CLI
 ```
