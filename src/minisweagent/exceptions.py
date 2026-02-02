@@ -20,7 +20,3 @@ class UserInterruption(InterruptAgentFlow):
 
 class FormatError(InterruptAgentFlow):
     """Raised when the LM's output is not in the expected format."""
-
-
-class TimeoutError(InterruptAgentFlow):
-    """Raised when something timed out."""
