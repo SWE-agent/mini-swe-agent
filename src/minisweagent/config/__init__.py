@@ -36,7 +36,7 @@ def _key_value_spec_to_nested_dict(config_spec: str) -> dict:
     "model.model_name=anthropic/claude-sonnet-4-5-20250929"   ->
     {"model": {"model_name": "anthropic/claude-sonnet-4-5-20250929"}}
     """
-    key, value = config_spec.split("=")
+    key, value = config_spec.split("=", 1)
     try:
         value = json.loads(value)
     except json.JSONDecodeError:
