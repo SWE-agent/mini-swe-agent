@@ -1,0 +1,62 @@
+/* GIF Container Styles */
+.gif-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.gif-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.gif-container img:hover {
+  opacity: 0.9;
+}
+
+/* Play Button Styles */
+.gif-play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.gif-play-button:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.gif-play-button::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 20px solid white;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  margin-left: 4px;
+}
+
+/* Hide play button when GIF is playing */
+.gif-container.playing .gif-play-button {
+  display: none;
+}
+
+/* Disable glightbox for GIF containers */
+.gif-container[data-glightbox-disabled] img {
+  pointer-events: auto;
+}

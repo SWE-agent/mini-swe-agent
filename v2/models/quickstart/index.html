@@ -1,0 +1,4416 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/models/quickstart/">
+      
+      
+        <link rel="prev" href="../../usage/output_files/">
+      
+      
+        <link rel="next" href="../local_models/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/mini_square.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Quick start - mini-SWE-agent documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+  
+  
+  
+  
+  <style>:root{--md-annotation-icon:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M22%2012a10%2010%200%200%201-10%2010A10%2010%200%200%201%202%2012%2010%2010%200%200%201%2012%202a10%2010%200%200%201%2010%2010m-12%206%206-6-6-6-1.4%201.4%204.6%204.6-4.6%204.6z%22/%3E%3C/svg%3E');}</style>
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/custom.css">
+    
+      <link rel="stylesheet" href="../../assets/gif-controls.css">
+    
+      <link rel="stylesheet" href="../../assets/mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/image_theme.css">
+    
+      <link rel="stylesheet" href="../../assets/bubbles.css">
+    
+      <link rel="stylesheet" href="../../assets/navigation_cards.css">
+    
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SG2NC1GDRD"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SG2NC1GDRD",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SG2NC1GDRD",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model-setup-quickstart" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+      
+  <img src="../../assets/mini_square.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            mini-SWE-agent documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Quick start
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="deep-orange" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SWE-agent/mini-SWE-agent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    SWE-agent/mini-SWE-agent
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://www.swebench.com/blog.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Blog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://swebench.com" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Leaderboard
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+      
+  <img src="../../assets/mini_square.svg" alt="logo">
+
+    </a>
+    mini-SWE-agent documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SWE-agent/mini-SWE-agent" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    SWE-agent/mini-SWE-agent
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3">
+        
+          
+          <label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command line usage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Command line usage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/mini/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <code>mini</code>
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/swebench/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SWE-bench
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/inspector/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inspector
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/output_files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Output files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1_4" id="__nav_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting API keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#selecting-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selecting a model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-model-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extra model settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model classes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5">
+        
+          
+          <label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/global_configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Global configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/yaml_configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yaml config files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6">
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python bindings &amp; more
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Python bindings &amp; more
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Python bindings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/control_flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding the agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subclassing and more
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/environments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../v2_migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v2 migration guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/agents/default/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DefaultAgent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/agents/interactive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InteractiveAgent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3">
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Models
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/litellm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LitellmModel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/litellm_toolcall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LitellmToolcallModel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/litellm_response_toolcall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LitellmResponseToolcallModel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/openrouter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenRouterModel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/requesty/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RequestyModel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/test_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeterministicModel
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extra Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/models/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4">
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environments
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Environments
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environments/local/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LocalEnvironment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environments/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DockerEnvironment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environments/singularity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SingularityEnvironment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environments/swerex_docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SwerexDockerEnvironment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/environments/bubblewrap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BubblewrapEnvironment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5">
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run Scripts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Run Scripts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/hello_world/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hello World
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/mini/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    mini
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/mini_extra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    mini-extra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/inspector/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inspector
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/swebench/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SWE-bench (batch)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/run/swebench_single/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SWE-bench (single)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://www.swebench.com/blog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://swebench.com" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Leaderboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting API keys
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#selecting-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selecting a model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-model-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extra model settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model classes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+
+                  
+
+
+  
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/models/quickstart.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"></path></svg>
+    </a>
+  
+  
+
+
+<h1 id="model-setup-quickstart">Model setup quickstart</h1>
+<div class="admonition tip">
+<p class="admonition-title">Setup</p>
+<ul>
+<li>In most cases, you can simply run <code>mini-extra config setup</code> to set up your default model and API keys.
+  This should be run the first time you run <code>mini</code>.</li>
+<li>By default we support all models using <a href="https://github.com/BerriAI/litellm"><code>litellm</code></a>.</li>
+<li>We also offer support for models via <a href="https://openrouter.ai/">Openrouter</a> and <a href="https://portkey.ai/">Portkey</a>.</li>
+</ul>
+</div>
+<h2 id="setting-api-keys">Setting API keys</h2>
+<p>There are several ways to set your API keys:</p>
+<ul>
+<li><strong>Recommended</strong>: Run our setup script: <code>mini-extra config setup</code>. This should also run automatically the first time you run <code>mini</code>.</li>
+<li>Use <code>mini-extra config set ANTHROPIC_API_KEY &lt;your-api-key&gt;</code> to put the key in the <code>mini</code> <a href="../../advanced/global_configuration/">config file</a>.</li>
+<li>Export your key as an environment variable: <code>export ANTHROPIC_API_KEY=&lt;your-api-key&gt;</code> (this is not persistent if you restart your shell, unless you add it to your shell config, like <code>~/.bashrc</code> or <code>~/.zshrc</code>).</li>
+<li>If you run several agents in parallel, see our note about rotating anthropic keys <a href="../../advanced/global_configuration/">here</a>.</li>
+</ul>
+<details class="note">
+<summary>All the API key names</summary>
+<p>We use <a href="https://github.com/BerriAI/litellm"><code>litellm</code></a> to support most models.
+Here's a list of all the API key names available in <code>litellm</code>:</p>
+<div class="highlight"><pre><span></span><code>ALEPH_ALPHA_API_KEY
+ALEPHALPHA_API_KEY
+ANTHROPIC_API_KEY
+ANYSCALE_API_KEY
+AZURE_AI_API_KEY
+AZURE_API_KEY
+AZURE_OPENAI_API_KEY
+BASETEN_API_KEY
+CEREBRAS_API_KEY
+CLARIFAI_API_KEY
+CLOUDFLARE_API_KEY
+CO_API_KEY
+CODESTRAL_API_KEY
+COHERE_API_KEY
+DATABRICKS_API_KEY
+DEEPINFRA_API_KEY
+DEEPSEEK_API_KEY
+FEATHERLESS_AI_API_KEY
+FIREWORKS_AI_API_KEY
+FIREWORKS_API_KEY
+FIREWORKSAI_API_KEY
+GEMINI_API_KEY
+GROQ_API_KEY
+HUGGINGFACE_API_KEY
+INFINITY_API_KEY
+MARITALK_API_KEY
+MISTRAL_API_KEY
+NEBIUS_API_KEY
+NLP_CLOUD_API_KEY
+NOVITA_API_KEY
+NVIDIA_NIM_API_KEY
+OLLAMA_API_KEY
+OPENAI_API_KEY
+OPENAI_LIKE_API_KEY
+OPENROUTER_API_KEY
+OR_API_KEY
+PALM_API_KEY
+PERPLEXITYAI_API_KEY
+PREDIBASE_API_KEY
+PROVIDER_API_KEY
+REPLICATE_API_KEY
+TOGETHERAI_API_KEY
+VOLCENGINE_API_KEY
+VOYAGE_API_KEY
+WATSONX_API_KEY
+WX_API_KEY
+XAI_API_KEY
+XINFERENCE_API_KEY
+</code></pre></div>
+<p>In addition, Portkey models use the <code>PORTKEY_API_KEY</code> environment variable.</p>
+</details>
+<h2 id="selecting-a-model">Selecting a model</h2>
+<div class="admonition note">
+<p class="admonition-title">Model names and providers.</p>
+<p>We support most models using <a href="https://github.com/BerriAI/litellm"><code>litellm</code></a>.
+You can find a list of their supported models <a href="https://docs.litellm.ai/docs/providers">here</a>.
+Please always include the provider in the model name, e.g., <code>anthropic/claude-...</code>.</p>
+</div>
+<ul>
+<li><strong>Recommended</strong>: <code>mini-extra config setup</code> (should be run the first time you run <code>mini</code>) can set the default model for you</li>
+<li>All command line interfaces allow you to set the model name with <code>-m</code> or <code>--model</code>.</li>
+<li>In addition, you can set the default model with <code>mini-extra config set MSWEA_MODEL_NAME &lt;model-name&gt;</code>, by editing the global <a href="../../advanced/global_configuration/">config file</a> (shortcut: <code>mini-extra config edit</code>), or by setting the <code>MSWEA_MODEL_NAME</code> environment variable.</li>
+<li>You can also set your model in a config file (key <code>model_name</code> under <code>model</code>).</li>
+<li>If you want to use local models, please check this <a href="../local_models/">guide</a>.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Popular models</p>
+<p>Here's a few examples of popular models:</p>
+<div class="highlight"><pre><span></span><code>anthropic/claude-sonnet-4-5-20250929
+openai/gpt-5
+openai/gpt-5-mini
+gemini/gemini-2.5-pro
+deepseek/deepseek-chat
+</code></pre></div>
+<details class="note">
+<summary>List of all supported models</summary>
+<p>Here's a list of all model names supported by <code>litellm</code> as of Aug 29th 2025.
+For even more recent models, check the <a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json"><code>model_prices_and_context_window.json</code> file from litellm</a>.</p>
+<div class="highlight"><pre><span></span><code>1024-x-1024/50-steps/bedrock/amazon.nova-canvas-v1:0
+1024-x-1024/50-steps/stability.stable-diffusion-xl-v1
+1024-x-1024/dall-e-2
+1024-x-1024/max-steps/stability.stable-diffusion-xl-v1
+256-x-256/dall-e-2
+512-x-512/50-steps/stability.stable-diffusion-xl-v0
+512-x-512/dall-e-2
+512-x-512/max-steps/stability.stable-diffusion-xl-v0
+ai21.j2-mid-v1
+ai21.j2-ultra-v1
+ai21.jamba-1-5-large-v1:0
+ai21.jamba-1-5-mini-v1:0
+ai21.jamba-instruct-v1:0
+aiml/dall-e-2
+aiml/dall-e-3
+aiml/flux-pro
+aiml/flux-pro/v1.1
+aiml/flux-pro/v1.1-ultra
+aiml/flux-realism
+aiml/flux/dev
+aiml/flux/kontext-max/text-to-image
+aiml/flux/kontext-pro/text-to-image
+aiml/flux/schnell
+amazon.nova-lite-v1:0
+amazon.nova-micro-v1:0
+amazon.nova-pro-v1:0
+amazon.rerank-v1:0
+amazon.titan-embed-image-v1
+amazon.titan-embed-text-v1
+amazon.titan-embed-text-v2:0
+amazon.titan-text-express-v1
+amazon.titan-text-lite-v1
+amazon.titan-text-premier-v1:0
+anthropic.claude-3-5-haiku-20241022-v1:0
+anthropic.claude-3-5-sonnet-20240620-v1:0
+anthropic.claude-3-5-sonnet-20241022-v2:0
+anthropic.claude-3-7-sonnet-20250219-v1:0
+anthropic.claude-3-haiku-20240307-v1:0
+anthropic.claude-3-opus-20240229-v1:0
+anthropic.claude-3-sonnet-20240229-v1:0
+anthropic.claude-instant-v1
+anthropic.claude-opus-4-1-20250805-v1:0
+anthropic.claude-opus-4-20250514-v1:0
+anthropic.claude-sonnet-4-20250514-v1:0
+anthropic.claude-sonnet-4-5-20250929-v1:0
+anthropic.claude-v1
+anthropic.claude-v2
+anthropic.claude-v2:1
+anyscale/HuggingFaceH4/zephyr-7b-beta
+anyscale/codellama/CodeLlama-34b-Instruct-hf
+anyscale/codellama/CodeLlama-70b-Instruct-hf
+anyscale/google/gemma-7b-it
+anyscale/meta-llama/Llama-2-13b-chat-hf
+anyscale/meta-llama/Llama-2-70b-chat-hf
+anyscale/meta-llama/Llama-2-7b-chat-hf
+anyscale/meta-llama/Meta-Llama-3-70B-Instruct
+anyscale/meta-llama/Meta-Llama-3-8B-Instruct
+anyscale/mistralai/Mistral-7B-Instruct-v0.1
+anyscale/mistralai/Mixtral-8x22B-Instruct-v0.1
+anyscale/mistralai/Mixtral-8x7B-Instruct-v0.1
+apac.amazon.nova-lite-v1:0
+apac.amazon.nova-micro-v1:0
+apac.amazon.nova-pro-v1:0
+apac.anthropic.claude-3-5-sonnet-20240620-v1:0
+apac.anthropic.claude-3-5-sonnet-20241022-v2:0
+apac.anthropic.claude-3-haiku-20240307-v1:0
+apac.anthropic.claude-3-sonnet-20240229-v1:0
+apac.anthropic.claude-sonnet-4-20250514-v1:0
+apac.anthropic.claude-sonnet-4-5-20250929-v1:0
+assemblyai/best
+assemblyai/nano
+azure/ada
+azure/codex-mini
+azure/command-r-plus
+azure/computer-use-preview
+azure/eu/gpt-4o-2024-08-06
+azure/eu/gpt-4o-2024-11-20
+azure/eu/gpt-4o-mini-2024-07-18
+azure/eu/gpt-4o-mini-realtime-preview-2024-12-17
+azure/eu/gpt-4o-realtime-preview-2024-10-01
+azure/eu/gpt-4o-realtime-preview-2024-12-17
+azure/eu/o1-2024-12-17
+azure/eu/o1-mini-2024-09-12
+azure/eu/o1-preview-2024-09-12
+azure/eu/o3-mini-2025-01-31
+azure/global-standard/gpt-4o-2024-08-06
+azure/global-standard/gpt-4o-2024-11-20
+azure/global-standard/gpt-4o-mini
+azure/global/gpt-4o-2024-08-06
+azure/global/gpt-4o-2024-11-20
+azure/gpt-3.5-turbo
+azure/gpt-3.5-turbo-0125
+azure/gpt-3.5-turbo-instruct-0914
+azure/gpt-35-turbo
+azure/gpt-35-turbo-0125
+azure/gpt-35-turbo-0301
+azure/gpt-35-turbo-0613
+azure/gpt-35-turbo-1106
+azure/gpt-35-turbo-16k
+azure/gpt-35-turbo-16k-0613
+azure/gpt-35-turbo-instruct
+azure/gpt-35-turbo-instruct-0914
+azure/gpt-4
+azure/gpt-4-0125-preview
+azure/gpt-4-0613
+azure/gpt-4-1106-preview
+azure/gpt-4-32k
+azure/gpt-4-32k-0613
+azure/gpt-4-turbo
+azure/gpt-4-turbo-2024-04-09
+azure/gpt-4-turbo-vision-preview
+azure/gpt-4.1
+azure/gpt-4.1-2025-04-14
+azure/gpt-4.1-mini
+azure/gpt-4.1-mini-2025-04-14
+azure/gpt-4.1-nano
+azure/gpt-4.1-nano-2025-04-14
+azure/gpt-4.5-preview
+azure/gpt-4o
+azure/gpt-4o-2024-05-13
+azure/gpt-4o-2024-08-06
+azure/gpt-4o-2024-11-20
+azure/gpt-4o-audio-preview-2024-12-17
+azure/gpt-4o-mini
+azure/gpt-4o-mini-2024-07-18
+azure/gpt-4o-mini-audio-preview-2024-12-17
+azure/gpt-4o-mini-realtime-preview-2024-12-17
+azure/gpt-4o-mini-transcribe
+azure/gpt-4o-mini-tts
+azure/gpt-4o-realtime-preview-2024-10-01
+azure/gpt-4o-realtime-preview-2024-12-17
+azure/gpt-4o-transcribe
+azure/gpt-5
+azure/gpt-5-2025-08-07
+azure/gpt-5-chat
+azure/gpt-5-chat-latest
+azure/gpt-5-mini
+azure/gpt-5-mini-2025-08-07
+azure/gpt-5-nano
+azure/gpt-5-nano-2025-08-07
+azure/gpt-image-1
+azure/hd/1024-x-1024/dall-e-3
+azure/hd/1024-x-1792/dall-e-3
+azure/hd/1792-x-1024/dall-e-3
+azure/high/1024-x-1024/gpt-image-1
+azure/high/1024-x-1536/gpt-image-1
+azure/high/1536-x-1024/gpt-image-1
+azure/low/1024-x-1024/gpt-image-1
+azure/low/1024-x-1536/gpt-image-1
+azure/low/1536-x-1024/gpt-image-1
+azure/medium/1024-x-1024/gpt-image-1
+azure/medium/1024-x-1536/gpt-image-1
+azure/medium/1536-x-1024/gpt-image-1
+azure/mistral-large-2402
+azure/mistral-large-latest
+azure/o1
+azure/o1-2024-12-17
+azure/o1-mini
+azure/o1-mini-2024-09-12
+azure/o1-preview
+azure/o1-preview-2024-09-12
+azure/o3
+azure/o3-2025-04-16
+azure/o3-deep-research
+azure/o3-mini
+azure/o3-mini-2025-01-31
+azure/o3-pro
+azure/o3-pro-2025-06-10
+azure/o4-mini
+azure/o4-mini-2025-04-16
+azure/standard/1024-x-1024/dall-e-2
+azure/standard/1024-x-1024/dall-e-3
+azure/standard/1024-x-1792/dall-e-3
+azure/standard/1792-x-1024/dall-e-3
+azure/text-embedding-3-large
+azure/text-embedding-3-small
+azure/text-embedding-ada-002
+azure/tts-1
+azure/tts-1-hd
+azure/us/gpt-4o-2024-08-06
+azure/us/gpt-4o-2024-11-20
+azure/us/gpt-4o-mini-2024-07-18
+azure/us/gpt-4o-mini-realtime-preview-2024-12-17
+azure/us/gpt-4o-realtime-preview-2024-10-01
+azure/us/gpt-4o-realtime-preview-2024-12-17
+azure/us/o1-2024-12-17
+azure/us/o1-mini-2024-09-12
+azure/us/o1-preview-2024-09-12
+azure/us/o3-mini-2025-01-31
+azure/whisper-1
+azure_ai/Cohere-embed-v3-english
+azure_ai/Cohere-embed-v3-multilingual
+azure_ai/FLUX-1.1-pro
+azure_ai/FLUX.1-Kontext-pro
+azure_ai/Llama-3.2-11B-Vision-Instruct
+azure_ai/Llama-3.2-90B-Vision-Instruct
+azure_ai/Llama-3.3-70B-Instruct
+azure_ai/Llama-4-Maverick-17B-128E-Instruct-FP8
+azure_ai/Llama-4-Scout-17B-16E-Instruct
+azure_ai/Meta-Llama-3-70B-Instruct
+azure_ai/Meta-Llama-3.1-405B-Instruct
+azure_ai/Meta-Llama-3.1-70B-Instruct
+azure_ai/Meta-Llama-3.1-8B-Instruct
+azure_ai/Phi-3-medium-128k-instruct
+azure_ai/Phi-3-medium-4k-instruct
+azure_ai/Phi-3-mini-128k-instruct
+azure_ai/Phi-3-mini-4k-instruct
+azure_ai/Phi-3-small-128k-instruct
+azure_ai/Phi-3-small-8k-instruct
+azure_ai/Phi-3.5-MoE-instruct
+azure_ai/Phi-3.5-mini-instruct
+azure_ai/Phi-3.5-vision-instruct
+azure_ai/Phi-4
+azure_ai/Phi-4-mini-instruct
+azure_ai/Phi-4-multimodal-instruct
+azure_ai/cohere-rerank-v3-english
+azure_ai/cohere-rerank-v3-multilingual
+azure_ai/cohere-rerank-v3.5
+azure_ai/deepseek-r1
+azure_ai/deepseek-v3
+azure_ai/deepseek-v3-0324
+azure_ai/embed-v-4-0
+azure_ai/global/grok-3
+azure_ai/global/grok-3-mini
+azure_ai/grok-3
+azure_ai/grok-3-mini
+azure_ai/jais-30b-chat
+azure_ai/jamba-instruct
+azure_ai/ministral-3b
+azure_ai/mistral-large
+azure_ai/mistral-large-2407
+azure_ai/mistral-large-latest
+azure_ai/mistral-medium-2505
+azure_ai/mistral-nemo
+azure_ai/mistral-small
+azure_ai/mistral-small-2503
+babbage-002
+bedrock/*/1-month-commitment/cohere.command-light-text-v14
+bedrock/*/1-month-commitment/cohere.command-text-v14
+bedrock/*/6-month-commitment/cohere.command-light-text-v14
+bedrock/*/6-month-commitment/cohere.command-text-v14
+bedrock/ap-northeast-1/1-month-commitment/anthropic.claude-instant-v1
+bedrock/ap-northeast-1/1-month-commitment/anthropic.claude-v1
+bedrock/ap-northeast-1/1-month-commitment/anthropic.claude-v2
+bedrock/ap-northeast-1/1-month-commitment/anthropic.claude-v2:1
+bedrock/ap-northeast-1/6-month-commitment/anthropic.claude-instant-v1
+bedrock/ap-northeast-1/6-month-commitment/anthropic.claude-v1
+bedrock/ap-northeast-1/6-month-commitment/anthropic.claude-v2
+bedrock/ap-northeast-1/6-month-commitment/anthropic.claude-v2:1
+bedrock/ap-northeast-1/anthropic.claude-instant-v1
+bedrock/ap-northeast-1/anthropic.claude-v1
+bedrock/ap-northeast-1/anthropic.claude-v2
+bedrock/ap-northeast-1/anthropic.claude-v2:1
+bedrock/ap-south-1/meta.llama3-70b-instruct-v1:0
+bedrock/ap-south-1/meta.llama3-8b-instruct-v1:0
+bedrock/ca-central-1/meta.llama3-70b-instruct-v1:0
+bedrock/ca-central-1/meta.llama3-8b-instruct-v1:0
+bedrock/eu-central-1/1-month-commitment/anthropic.claude-instant-v1
+bedrock/eu-central-1/1-month-commitment/anthropic.claude-v1
+bedrock/eu-central-1/1-month-commitment/anthropic.claude-v2
+bedrock/eu-central-1/1-month-commitment/anthropic.claude-v2:1
+bedrock/eu-central-1/6-month-commitment/anthropic.claude-instant-v1
+bedrock/eu-central-1/6-month-commitment/anthropic.claude-v1
+bedrock/eu-central-1/6-month-commitment/anthropic.claude-v2
+bedrock/eu-central-1/6-month-commitment/anthropic.claude-v2:1
+bedrock/eu-central-1/anthropic.claude-instant-v1
+bedrock/eu-central-1/anthropic.claude-v1
+bedrock/eu-central-1/anthropic.claude-v2
+bedrock/eu-central-1/anthropic.claude-v2:1
+bedrock/eu-west-1/meta.llama3-70b-instruct-v1:0
+bedrock/eu-west-1/meta.llama3-8b-instruct-v1:0
+bedrock/eu-west-2/meta.llama3-70b-instruct-v1:0
+bedrock/eu-west-2/meta.llama3-8b-instruct-v1:0
+bedrock/eu-west-3/mistral.mistral-7b-instruct-v0:2
+bedrock/eu-west-3/mistral.mistral-large-2402-v1:0
+bedrock/eu-west-3/mistral.mixtral-8x7b-instruct-v0:1
+bedrock/invoke/anthropic.claude-3-5-sonnet-20240620-v1:0
+bedrock/sa-east-1/meta.llama3-70b-instruct-v1:0
+bedrock/sa-east-1/meta.llama3-8b-instruct-v1:0
+bedrock/us-east-1/1-month-commitment/anthropic.claude-instant-v1
+bedrock/us-east-1/1-month-commitment/anthropic.claude-v1
+bedrock/us-east-1/1-month-commitment/anthropic.claude-v2
+bedrock/us-east-1/1-month-commitment/anthropic.claude-v2:1
+bedrock/us-east-1/6-month-commitment/anthropic.claude-instant-v1
+bedrock/us-east-1/6-month-commitment/anthropic.claude-v1
+bedrock/us-east-1/6-month-commitment/anthropic.claude-v2
+bedrock/us-east-1/6-month-commitment/anthropic.claude-v2:1
+bedrock/us-east-1/anthropic.claude-instant-v1
+bedrock/us-east-1/anthropic.claude-v1
+bedrock/us-east-1/anthropic.claude-v2
+bedrock/us-east-1/anthropic.claude-v2:1
+bedrock/us-east-1/meta.llama3-70b-instruct-v1:0
+bedrock/us-east-1/meta.llama3-8b-instruct-v1:0
+bedrock/us-east-1/mistral.mistral-7b-instruct-v0:2
+bedrock/us-east-1/mistral.mistral-large-2402-v1:0
+bedrock/us-east-1/mistral.mixtral-8x7b-instruct-v0:1
+bedrock/us-gov-east-1/amazon.nova-pro-v1:0
+bedrock/us-gov-east-1/amazon.titan-embed-text-v1
+bedrock/us-gov-east-1/amazon.titan-embed-text-v2:0
+bedrock/us-gov-east-1/amazon.titan-text-express-v1
+bedrock/us-gov-east-1/amazon.titan-text-lite-v1
+bedrock/us-gov-east-1/amazon.titan-text-premier-v1:0
+bedrock/us-gov-east-1/anthropic.claude-3-5-sonnet-20240620-v1:0
+bedrock/us-gov-east-1/anthropic.claude-3-haiku-20240307-v1:0
+bedrock/us-gov-east-1/meta.llama3-70b-instruct-v1:0
+bedrock/us-gov-east-1/meta.llama3-8b-instruct-v1:0
+bedrock/us-gov-west-1/amazon.nova-pro-v1:0
+bedrock/us-gov-west-1/amazon.titan-embed-text-v1
+bedrock/us-gov-west-1/amazon.titan-embed-text-v2:0
+bedrock/us-gov-west-1/amazon.titan-text-express-v1
+bedrock/us-gov-west-1/amazon.titan-text-lite-v1
+bedrock/us-gov-west-1/amazon.titan-text-premier-v1:0
+bedrock/us-gov-west-1/anthropic.claude-3-5-sonnet-20240620-v1:0
+bedrock/us-gov-west-1/anthropic.claude-3-haiku-20240307-v1:0
+bedrock/us-gov-west-1/meta.llama3-70b-instruct-v1:0
+bedrock/us-gov-west-1/meta.llama3-8b-instruct-v1:0
+bedrock/us-west-1/meta.llama3-70b-instruct-v1:0
+bedrock/us-west-1/meta.llama3-8b-instruct-v1:0
+bedrock/us-west-2/1-month-commitment/anthropic.claude-instant-v1
+bedrock/us-west-2/1-month-commitment/anthropic.claude-v1
+bedrock/us-west-2/1-month-commitment/anthropic.claude-v2
+bedrock/us-west-2/1-month-commitment/anthropic.claude-v2:1
+bedrock/us-west-2/6-month-commitment/anthropic.claude-instant-v1
+bedrock/us-west-2/6-month-commitment/anthropic.claude-v1
+bedrock/us-west-2/6-month-commitment/anthropic.claude-v2
+bedrock/us-west-2/6-month-commitment/anthropic.claude-v2:1
+bedrock/us-west-2/anthropic.claude-instant-v1
+bedrock/us-west-2/anthropic.claude-v1
+bedrock/us-west-2/anthropic.claude-v2
+bedrock/us-west-2/anthropic.claude-v2:1
+bedrock/us-west-2/mistral.mistral-7b-instruct-v0:2
+bedrock/us-west-2/mistral.mistral-large-2402-v1:0
+bedrock/us-west-2/mistral.mixtral-8x7b-instruct-v0:1
+cerebras/llama-3.3-70b
+cerebras/llama3.1-70b
+cerebras/llama3.1-8b
+cerebras/openai/gpt-oss-120b
+cerebras/openai/gpt-oss-20b
+cerebras/qwen-3-32b
+chat-bison
+chat-bison-32k
+chat-bison-32k@002
+chat-bison@001
+chat-bison@002
+chatdolphin
+chatgpt-4o-latest
+claude-3-5-haiku-20241022
+claude-3-5-haiku-latest
+claude-3-5-sonnet-20240620
+claude-3-5-sonnet-20241022
+claude-3-5-sonnet-latest
+claude-3-7-sonnet-20250219
+claude-3-7-sonnet-latest
+claude-3-haiku-20240307
+claude-3-opus-20240229
+claude-3-opus-latest
+claude-4-opus-20250514
+claude-4-sonnet-20250514
+claude-opus-4-1
+claude-opus-4-1-20250805
+claude-opus-4-20250514
+claude-sonnet-4-20250514
+claude-sonnet-4-5-20250929
+cloudflare/@cf/meta/llama-2-7b-chat-fp16
+cloudflare/@cf/meta/llama-2-7b-chat-int8
+cloudflare/@cf/mistral/mistral-7b-instruct-v0.1
+cloudflare/@hf/thebloke/codellama-7b-instruct-awq
+code-bison
+code-bison-32k@002
+code-bison32k
+code-bison@001
+code-bison@002
+code-gecko
+code-gecko-latest
+code-gecko@001
+code-gecko@002
+codechat-bison
+codechat-bison-32k
+codechat-bison-32k@002
+codechat-bison@001
+codechat-bison@002
+codechat-bison@latest
+codestral/codestral-2405
+codestral/codestral-latest
+codex-mini-latest
+cohere.command-light-text-v14
+cohere.command-r-plus-v1:0
+cohere.command-r-v1:0
+cohere.command-text-v14
+cohere.embed-english-v3
+cohere.embed-multilingual-v3
+cohere.rerank-v3-5:0
+command
+command-a-03-2025
+command-light
+command-nightly
+command-r
+command-r-08-2024
+command-r-plus
+command-r-plus-08-2024
+command-r7b-12-2024
+computer-use-preview
+dashscope/qwen-max
+dashscope/qwen-plus-latest
+dashscope/qwen-turbo-latest
+dashscope/qwen3-30b-a3b
+databricks/databricks-bge-large-en
+databricks/databricks-claude-3-7-sonnet
+databricks/databricks-gte-large-en
+databricks/databricks-llama-2-70b-chat
+databricks/databricks-llama-4-maverick
+databricks/databricks-meta-llama-3-1-405b-instruct
+databricks/databricks-meta-llama-3-3-70b-instruct
+databricks/databricks-meta-llama-3-70b-instruct
+databricks/databricks-mixtral-8x7b-instruct
+databricks/databricks-mpt-30b-instruct
+databricks/databricks-mpt-7b-instruct
+davinci-002
+deepgram/base
+deepgram/base-conversationalai
+deepgram/base-finance
+deepgram/base-general
+deepgram/base-meeting
+deepgram/base-phonecall
+deepgram/base-video
+deepgram/base-voicemail
+deepgram/enhanced
+deepgram/enhanced-finance
+deepgram/enhanced-general
+deepgram/enhanced-meeting
+deepgram/enhanced-phonecall
+deepgram/nova
+deepgram/nova-2
+deepgram/nova-2-atc
+deepgram/nova-2-automotive
+deepgram/nova-2-conversationalai
+deepgram/nova-2-drivethru
+deepgram/nova-2-finance
+deepgram/nova-2-general
+deepgram/nova-2-meeting
+deepgram/nova-2-phonecall
+deepgram/nova-2-video
+deepgram/nova-2-voicemail
+deepgram/nova-3
+deepgram/nova-3-general
+deepgram/nova-3-medical
+deepgram/nova-general
+deepgram/nova-phonecall
+deepgram/whisper
+deepgram/whisper-base
+deepgram/whisper-large
+deepgram/whisper-medium
+deepgram/whisper-small
+deepgram/whisper-tiny
+deepinfra/Austism/chronos-hermes-13b-v2
+deepinfra/Gryphe/MythoMax-L2-13b
+deepinfra/Gryphe/MythoMax-L2-13b-turbo
+deepinfra/KoboldAI/LLaMA2-13B-Tiefighter
+deepinfra/NousResearch/Hermes-3-Llama-3.1-405B
+deepinfra/NousResearch/Hermes-3-Llama-3.1-70B
+deepinfra/NovaSky-AI/Sky-T1-32B-Preview
+deepinfra/Phind/Phind-CodeLlama-34B-v2
+deepinfra/Qwen/QVQ-72B-Preview
+deepinfra/Qwen/QwQ-32B
+deepinfra/Qwen/QwQ-32B-Preview
+deepinfra/Qwen/Qwen2-72B-Instruct
+deepinfra/Qwen/Qwen2-7B-Instruct
+deepinfra/Qwen/Qwen2.5-72B-Instruct
+deepinfra/Qwen/Qwen2.5-7B-Instruct
+deepinfra/Qwen/Qwen2.5-Coder-32B-Instruct
+deepinfra/Qwen/Qwen2.5-Coder-7B
+deepinfra/Qwen/Qwen2.5-VL-32B-Instruct
+deepinfra/Qwen/Qwen3-14B
+deepinfra/Qwen/Qwen3-235B-A22B
+deepinfra/Qwen/Qwen3-235B-A22B-Instruct-2507
+deepinfra/Qwen/Qwen3-235B-A22B-Thinking-2507
+deepinfra/Qwen/Qwen3-30B-A3B
+deepinfra/Qwen/Qwen3-32B
+deepinfra/Qwen/Qwen3-Coder-480B-A35B-Instruct
+deepinfra/Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo
+deepinfra/Sao10K/L3-70B-Euryale-v2.1
+deepinfra/Sao10K/L3-8B-Lunaris-v1
+deepinfra/Sao10K/L3-8B-Lunaris-v1-Turbo
+deepinfra/Sao10K/L3.1-70B-Euryale-v2.2
+deepinfra/Sao10K/L3.3-70B-Euryale-v2.3
+deepinfra/allenai/olmOCR-7B-0725-FP8
+deepinfra/anthropic/claude-3-7-sonnet-latest
+deepinfra/anthropic/claude-4-opus
+deepinfra/anthropic/claude-4-sonnet
+deepinfra/bigcode/starcoder2-15b-instruct-v0.1
+deepinfra/cognitivecomputations/dolphin-2.6-mixtral-8x7b
+deepinfra/cognitivecomputations/dolphin-2.9.1-llama-3-70b
+deepinfra/deepinfra/airoboros-70b
+deepinfra/deepseek-ai/DeepSeek-Prover-V2-671B
+deepinfra/deepseek-ai/DeepSeek-R1
+deepinfra/deepseek-ai/DeepSeek-R1-0528
+deepinfra/deepseek-ai/DeepSeek-R1-0528-Turbo
+deepinfra/deepseek-ai/DeepSeek-R1-Distill-Llama-70B
+deepinfra/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+deepinfra/deepseek-ai/DeepSeek-R1-Turbo
+deepinfra/deepseek-ai/DeepSeek-V3
+deepinfra/deepseek-ai/DeepSeek-V3-0324
+deepinfra/deepseek-ai/DeepSeek-V3-0324-Turbo
+deepinfra/deepseek-ai/DeepSeek-V3.1
+deepinfra/google/codegemma-7b-it
+deepinfra/google/gemini-1.5-flash
+deepinfra/google/gemini-1.5-flash-8b
+deepinfra/google/gemini-2.0-flash-001
+deepinfra/google/gemini-2.5-flash
+deepinfra/google/gemini-2.5-pro
+deepinfra/google/gemma-1.1-7b-it
+deepinfra/google/gemma-2-27b-it
+deepinfra/google/gemma-2-9b-it
+deepinfra/google/gemma-3-12b-it
+deepinfra/google/gemma-3-27b-it
+deepinfra/google/gemma-3-4b-it
+deepinfra/lizpreciatior/lzlv_70b_fp16_hf
+deepinfra/mattshumer/Reflection-Llama-3.1-70B
+deepinfra/meta-llama/Llama-2-13b-chat-hf
+deepinfra/meta-llama/Llama-2-70b-chat-hf
+deepinfra/meta-llama/Llama-3.2-11B-Vision-Instruct
+deepinfra/meta-llama/Llama-3.2-1B-Instruct
+deepinfra/meta-llama/Llama-3.2-3B-Instruct
+deepinfra/meta-llama/Llama-3.2-90B-Vision-Instruct
+deepinfra/meta-llama/Llama-3.3-70B-Instruct
+deepinfra/meta-llama/Llama-3.3-70B-Instruct-Turbo
+deepinfra/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+deepinfra/meta-llama/Llama-4-Maverick-17B-128E-Instruct-Turbo
+deepinfra/meta-llama/Llama-4-Scout-17B-16E-Instruct
+deepinfra/meta-llama/Llama-Guard-3-8B
+deepinfra/meta-llama/Llama-Guard-4-12B
+deepinfra/meta-llama/Meta-Llama-3-70B-Instruct
+deepinfra/meta-llama/Meta-Llama-3-8B-Instruct
+deepinfra/meta-llama/Meta-Llama-3.1-405B-Instruct
+deepinfra/meta-llama/Meta-Llama-3.1-70B-Instruct
+deepinfra/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+deepinfra/meta-llama/Meta-Llama-3.1-8B-Instruct
+deepinfra/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+deepinfra/microsoft/Phi-3-medium-4k-instruct
+deepinfra/microsoft/Phi-4-multimodal-instruct
+deepinfra/microsoft/WizardLM-2-7B
+deepinfra/microsoft/WizardLM-2-8x22B
+deepinfra/microsoft/phi-4
+deepinfra/microsoft/phi-4-reasoning-plus
+deepinfra/mistralai/Devstral-Small-2505
+deepinfra/mistralai/Devstral-Small-2507
+deepinfra/mistralai/Mistral-7B-Instruct-v0.1
+deepinfra/mistralai/Mistral-7B-Instruct-v0.2
+deepinfra/mistralai/Mistral-7B-Instruct-v0.3
+deepinfra/mistralai/Mistral-Nemo-Instruct-2407
+deepinfra/mistralai/Mistral-Small-24B-Instruct-2501
+deepinfra/mistralai/Mistral-Small-3.1-24B-Instruct-2503
+deepinfra/mistralai/Mistral-Small-3.2-24B-Instruct-2506
+deepinfra/mistralai/Mixtral-8x22B-Instruct-v0.1
+deepinfra/mistralai/Mixtral-8x7B-Instruct-v0.1
+deepinfra/moonshotai/Kimi-K2-Instruct
+deepinfra/nvidia/Llama-3.1-Nemotron-70B-Instruct
+deepinfra/nvidia/Nemotron-4-340B-Instruct
+deepinfra/openai/gpt-oss-120b
+deepinfra/openai/gpt-oss-20b
+deepinfra/openbmb/MiniCPM-Llama3-V-2_5
+deepinfra/openchat/openchat-3.6-8b
+deepinfra/openchat/openchat_3.5
+deepinfra/zai-org/GLM-4.5
+deepinfra/zai-org/GLM-4.5-Air
+deepseek/deepseek-chat
+deepseek/deepseek-coder
+deepseek/deepseek-r1
+deepseek/deepseek-reasoner
+deepseek/deepseek-v3
+dolphin
+elevenlabs/scribe_v1
+elevenlabs/scribe_v1_experimental
+embed-english-light-v2.0
+embed-english-light-v3.0
+embed-english-v2.0
+embed-english-v3.0
+embed-multilingual-v2.0
+embed-multilingual-v3.0
+eu.amazon.nova-lite-v1:0
+eu.amazon.nova-micro-v1:0
+eu.amazon.nova-pro-v1:0
+eu.anthropic.claude-3-5-haiku-20241022-v1:0
+eu.anthropic.claude-3-5-sonnet-20240620-v1:0
+eu.anthropic.claude-3-5-sonnet-20241022-v2:0
+eu.anthropic.claude-3-7-sonnet-20250219-v1:0
+eu.anthropic.claude-3-haiku-20240307-v1:0
+eu.anthropic.claude-3-opus-20240229-v1:0
+eu.anthropic.claude-3-sonnet-20240229-v1:0
+eu.anthropic.claude-opus-4-1-20250805-v1:0
+eu.anthropic.claude-opus-4-20250514-v1:0
+eu.anthropic.claude-sonnet-4-20250514-v1:0
+eu.anthropic.claude-sonnet-4-5-20250929-v1:0
+eu.meta.llama3-2-1b-instruct-v1:0
+eu.meta.llama3-2-3b-instruct-v1:0
+eu.mistral.pixtral-large-2502-v1:0
+featherless_ai/featherless-ai/Qwerky-72B
+featherless_ai/featherless-ai/Qwerky-QwQ-32B
+fireworks-ai-4.1b-to-16b
+fireworks-ai-56b-to-176b
+fireworks-ai-above-16b
+fireworks-ai-default
+fireworks-ai-embedding-150m-to-350m
+fireworks-ai-embedding-up-to-150m
+fireworks-ai-moe-up-to-56b
+fireworks-ai-up-to-4b
+fireworks_ai/WhereIsAI/UAE-Large-V1
+fireworks_ai/accounts/fireworks/models/deepseek-coder-v2-instruct
+fireworks_ai/accounts/fireworks/models/deepseek-r1
+fireworks_ai/accounts/fireworks/models/deepseek-r1-0528
+fireworks_ai/accounts/fireworks/models/deepseek-r1-basic
+fireworks_ai/accounts/fireworks/models/deepseek-v3
+fireworks_ai/accounts/fireworks/models/deepseek-v3-0324
+fireworks_ai/accounts/fireworks/models/deepseek-v3p1
+fireworks_ai/accounts/fireworks/models/firefunction-v2
+fireworks_ai/accounts/fireworks/models/glm-4p5
+fireworks_ai/accounts/fireworks/models/glm-4p5-air
+fireworks_ai/accounts/fireworks/models/gpt-oss-120b
+fireworks_ai/accounts/fireworks/models/gpt-oss-20b
+fireworks_ai/accounts/fireworks/models/kimi-k2-instruct
+fireworks_ai/accounts/fireworks/models/llama-v3p1-405b-instruct
+fireworks_ai/accounts/fireworks/models/llama-v3p1-8b-instruct
+fireworks_ai/accounts/fireworks/models/llama-v3p2-11b-vision-instruct
+fireworks_ai/accounts/fireworks/models/llama-v3p2-1b-instruct
+fireworks_ai/accounts/fireworks/models/llama-v3p2-3b-instruct
+fireworks_ai/accounts/fireworks/models/llama-v3p2-90b-vision-instruct
+fireworks_ai/accounts/fireworks/models/llama4-maverick-instruct-basic
+fireworks_ai/accounts/fireworks/models/llama4-scout-instruct-basic
+fireworks_ai/accounts/fireworks/models/mixtral-8x22b-instruct-hf
+fireworks_ai/accounts/fireworks/models/qwen2-72b-instruct
+fireworks_ai/accounts/fireworks/models/qwen2p5-coder-32b-instruct
+fireworks_ai/accounts/fireworks/models/yi-large
+fireworks_ai/nomic-ai/nomic-embed-text-v1
+fireworks_ai/nomic-ai/nomic-embed-text-v1.5
+fireworks_ai/thenlper/gte-base
+fireworks_ai/thenlper/gte-large
+friendliai/meta-llama-3.1-70b-instruct
+friendliai/meta-llama-3.1-8b-instruct
+ft:babbage-002
+ft:davinci-002
+ft:gpt-3.5-turbo
+ft:gpt-3.5-turbo-0125
+ft:gpt-3.5-turbo-0613
+ft:gpt-3.5-turbo-1106
+ft:gpt-4-0613
+ft:gpt-4o-2024-08-06
+ft:gpt-4o-2024-11-20
+ft:gpt-4o-mini-2024-07-18
+gemini-1.0-pro
+gemini-1.0-pro-001
+gemini-1.0-pro-002
+gemini-1.0-pro-vision
+gemini-1.0-pro-vision-001
+gemini-1.0-ultra
+gemini-1.0-ultra-001
+gemini-1.5-flash
+gemini-1.5-flash-001
+gemini-1.5-flash-002
+gemini-1.5-flash-exp-0827
+gemini-1.5-flash-preview-0514
+gemini-1.5-pro
+gemini-1.5-pro-001
+gemini-1.5-pro-002
+gemini-1.5-pro-preview-0215
+gemini-1.5-pro-preview-0409
+gemini-1.5-pro-preview-0514
+gemini-2.0-flash
+gemini-2.0-flash-001
+gemini-2.0-flash-exp
+gemini-2.0-flash-lite
+gemini-2.0-flash-lite-001
+gemini-2.0-flash-live-preview-04-09
+gemini-2.0-flash-preview-image-generation
+gemini-2.0-flash-thinking-exp
+gemini-2.0-flash-thinking-exp-01-21
+gemini-2.0-pro-exp-02-05
+gemini-2.5-flash
+gemini-2.5-flash-image-preview
+gemini-2.5-flash-lite
+gemini-2.5-flash-lite-preview-06-17
+gemini-2.5-flash-preview-04-17
+gemini-2.5-flash-preview-05-20
+gemini-2.5-pro
+gemini-2.5-pro-exp-03-25
+gemini-2.5-pro-preview-03-25
+gemini-2.5-pro-preview-05-06
+gemini-2.5-pro-preview-06-05
+gemini-2.5-pro-preview-tts
+gemini-embedding-001
+gemini-flash-experimental
+gemini-pro
+gemini-pro-experimental
+gemini-pro-vision
+gemini/gemini-1.5-flash
+gemini/gemini-1.5-flash-001
+gemini/gemini-1.5-flash-002
+gemini/gemini-1.5-flash-8b
+gemini/gemini-1.5-flash-8b-exp-0827
+gemini/gemini-1.5-flash-8b-exp-0924
+gemini/gemini-1.5-flash-exp-0827
+gemini/gemini-1.5-flash-latest
+gemini/gemini-1.5-pro
+gemini/gemini-1.5-pro-001
+gemini/gemini-1.5-pro-002
+gemini/gemini-1.5-pro-exp-0801
+gemini/gemini-1.5-pro-exp-0827
+gemini/gemini-1.5-pro-latest
+gemini/gemini-2.0-flash
+gemini/gemini-2.0-flash-001
+gemini/gemini-2.0-flash-exp
+gemini/gemini-2.0-flash-lite
+gemini/gemini-2.0-flash-lite-preview-02-05
+gemini/gemini-2.0-flash-live-001
+gemini/gemini-2.0-flash-preview-image-generation
+gemini/gemini-2.0-flash-thinking-exp
+gemini/gemini-2.0-flash-thinking-exp-01-21
+gemini/gemini-2.0-pro-exp-02-05
+gemini/gemini-2.5-flash
+gemini/gemini-2.5-flash-image-preview
+gemini/gemini-2.5-flash-lite
+gemini/gemini-2.5-flash-lite-preview-06-17
+gemini/gemini-2.5-flash-preview-04-17
+gemini/gemini-2.5-flash-preview-05-20
+gemini/gemini-2.5-flash-preview-tts
+gemini/gemini-2.5-pro
+gemini/gemini-2.5-pro-exp-03-25
+gemini/gemini-2.5-pro-preview-03-25
+gemini/gemini-2.5-pro-preview-05-06
+gemini/gemini-2.5-pro-preview-06-05
+gemini/gemini-2.5-pro-preview-tts
+gemini/gemini-exp-1114
+gemini/gemini-exp-1206
+gemini/gemini-gemma-2-27b-it
+gemini/gemini-gemma-2-9b-it
+gemini/gemini-pro
+gemini/gemini-pro-vision
+gemini/gemma-3-27b-it
+gemini/imagen-3.0-fast-generate-001
+gemini/imagen-3.0-generate-001
+gemini/imagen-3.0-generate-002
+gemini/imagen-4.0-fast-generate-001
+gemini/imagen-4.0-generate-001
+gemini/imagen-4.0-ultra-generate-001
+gemini/learnlm-1.5-pro-experimental
+gpt-3.5-turbo
+gpt-3.5-turbo-0125
+gpt-3.5-turbo-0301
+gpt-3.5-turbo-0613
+gpt-3.5-turbo-1106
+gpt-3.5-turbo-16k
+gpt-3.5-turbo-16k-0613
+gpt-3.5-turbo-instruct
+gpt-3.5-turbo-instruct-0914
+gpt-4
+gpt-4-0125-preview
+gpt-4-0314
+gpt-4-0613
+gpt-4-1106-preview
+gpt-4-1106-vision-preview
+gpt-4-32k
+gpt-4-32k-0314
+gpt-4-32k-0613
+gpt-4-turbo
+gpt-4-turbo-2024-04-09
+gpt-4-turbo-preview
+gpt-4-vision-preview
+gpt-4.1
+gpt-4.1-2025-04-14
+gpt-4.1-mini
+gpt-4.1-mini-2025-04-14
+gpt-4.1-nano
+gpt-4.1-nano-2025-04-14
+gpt-4.5-preview
+gpt-4.5-preview-2025-02-27
+gpt-4o
+gpt-4o-2024-05-13
+gpt-4o-2024-08-06
+gpt-4o-2024-11-20
+gpt-4o-audio-preview
+gpt-4o-audio-preview-2024-10-01
+gpt-4o-audio-preview-2024-12-17
+gpt-4o-audio-preview-2025-06-03
+gpt-4o-mini
+gpt-4o-mini-2024-07-18
+gpt-4o-mini-audio-preview
+gpt-4o-mini-audio-preview-2024-12-17
+gpt-4o-mini-realtime-preview
+gpt-4o-mini-realtime-preview-2024-12-17
+gpt-4o-mini-search-preview
+gpt-4o-mini-search-preview-2025-03-11
+gpt-4o-mini-transcribe
+gpt-4o-mini-tts
+gpt-4o-realtime-preview
+gpt-4o-realtime-preview-2024-10-01
+gpt-4o-realtime-preview-2024-12-17
+gpt-4o-realtime-preview-2025-06-03
+gpt-4o-search-preview
+gpt-4o-search-preview-2025-03-11
+gpt-4o-transcribe
+gpt-5
+gpt-5-2025-08-07
+gpt-5-chat
+gpt-5-chat-latest
+gpt-5-mini
+gpt-5-mini-2025-08-07
+gpt-5-nano
+gpt-5-nano-2025-08-07
+gpt-image-1
+gradient_ai/alibaba-qwen3-32b
+gradient_ai/anthropic-claude-3-opus
+gradient_ai/anthropic-claude-3.5-haiku
+gradient_ai/anthropic-claude-3.5-sonnet
+gradient_ai/anthropic-claude-3.7-sonnet
+gradient_ai/deepseek-r1-distill-llama-70b
+gradient_ai/llama3-8b-instruct
+gradient_ai/llama3.3-70b-instruct
+gradient_ai/mistral-nemo-instruct-2407
+gradient_ai/openai-gpt-4o
+gradient_ai/openai-gpt-4o-mini
+gradient_ai/openai-o3
+gradient_ai/openai-o3-mini
+groq/deepseek-r1-distill-llama-70b
+groq/distil-whisper-large-v3-en
+groq/gemma-7b-it
+groq/gemma2-9b-it
+groq/llama-3.1-405b-reasoning
+groq/llama-3.1-70b-versatile
+groq/llama-3.1-8b-instant
+groq/llama-3.2-11b-text-preview
+groq/llama-3.2-11b-vision-preview
+groq/llama-3.2-1b-preview
+groq/llama-3.2-3b-preview
+groq/llama-3.2-90b-text-preview
+groq/llama-3.2-90b-vision-preview
+groq/llama-3.3-70b-specdec
+groq/llama-3.3-70b-versatile
+groq/llama-guard-3-8b
+groq/llama2-70b-4096
+groq/llama3-70b-8192
+groq/llama3-8b-8192
+groq/llama3-groq-70b-8192-tool-use-preview
+groq/llama3-groq-8b-8192-tool-use-preview
+groq/meta-llama/llama-4-maverick-17b-128e-instruct
+groq/meta-llama/llama-4-scout-17b-16e-instruct
+groq/mistral-saba-24b
+groq/mixtral-8x7b-32768
+groq/moonshotai/kimi-k2-instruct
+groq/openai/gpt-oss-120b
+groq/openai/gpt-oss-20b
+groq/playai-tts
+groq/qwen/qwen3-32b
+groq/whisper-large-v3
+groq/whisper-large-v3-turbo
+hd/1024-x-1024/dall-e-3
+hd/1024-x-1792/dall-e-3
+hd/1792-x-1024/dall-e-3
+high/1024-x-1024/gpt-image-1
+high/1024-x-1536/gpt-image-1
+high/1536-x-1024/gpt-image-1
+hyperbolic/NousResearch/Hermes-3-Llama-3.1-70B
+hyperbolic/Qwen/QwQ-32B
+hyperbolic/Qwen/Qwen2.5-72B-Instruct
+hyperbolic/Qwen/Qwen2.5-Coder-32B-Instruct
+hyperbolic/Qwen/Qwen3-235B-A22B
+hyperbolic/deepseek-ai/DeepSeek-R1
+hyperbolic/deepseek-ai/DeepSeek-R1-0528
+hyperbolic/deepseek-ai/DeepSeek-V3
+hyperbolic/deepseek-ai/DeepSeek-V3-0324
+hyperbolic/meta-llama/Llama-3.2-3B-Instruct
+hyperbolic/meta-llama/Llama-3.3-70B-Instruct
+hyperbolic/meta-llama/Meta-Llama-3-70B-Instruct
+hyperbolic/meta-llama/Meta-Llama-3.1-405B-Instruct
+hyperbolic/meta-llama/Meta-Llama-3.1-70B-Instruct
+hyperbolic/meta-llama/Meta-Llama-3.1-8B-Instruct
+hyperbolic/moonshotai/Kimi-K2-Instruct
+j2-light
+j2-mid
+j2-ultra
+jamba-1.5
+jamba-1.5-large
+jamba-1.5-large@001
+jamba-1.5-mini
+jamba-1.5-mini@001
+jamba-large-1.6
+jamba-large-1.7
+jamba-mini-1.6
+jamba-mini-1.7
+jina-reranker-v2-base-multilingual
+lambda_ai/deepseek-llama3.3-70b
+lambda_ai/deepseek-r1-0528
+lambda_ai/deepseek-r1-671b
+lambda_ai/deepseek-v3-0324
+lambda_ai/hermes3-405b
+lambda_ai/hermes3-70b
+lambda_ai/hermes3-8b
+lambda_ai/lfm-40b
+lambda_ai/lfm-7b
+lambda_ai/llama-4-maverick-17b-128e-instruct-fp8
+lambda_ai/llama-4-scout-17b-16e-instruct
+lambda_ai/llama3.1-405b-instruct-fp8
+lambda_ai/llama3.1-70b-instruct-fp8
+lambda_ai/llama3.1-8b-instruct
+lambda_ai/llama3.1-nemotron-70b-instruct-fp8
+lambda_ai/llama3.2-11b-vision-instruct
+lambda_ai/llama3.2-3b-instruct
+lambda_ai/llama3.3-70b-instruct-fp8
+lambda_ai/qwen25-coder-32b-instruct
+lambda_ai/qwen3-32b-fp8
+low/1024-x-1024/gpt-image-1
+low/1024-x-1536/gpt-image-1
+low/1536-x-1024/gpt-image-1
+luminous-base
+luminous-base-control
+luminous-extended
+luminous-extended-control
+luminous-supreme
+luminous-supreme-control
+max-x-max/50-steps/stability.stable-diffusion-xl-v0
+max-x-max/max-steps/stability.stable-diffusion-xl-v0
+medium/1024-x-1024/gpt-image-1
+medium/1024-x-1536/gpt-image-1
+medium/1536-x-1024/gpt-image-1
+medlm-large
+medlm-medium
+meta.llama2-13b-chat-v1
+meta.llama2-70b-chat-v1
+meta.llama3-1-405b-instruct-v1:0
+meta.llama3-1-70b-instruct-v1:0
+meta.llama3-1-8b-instruct-v1:0
+meta.llama3-2-11b-instruct-v1:0
+meta.llama3-2-1b-instruct-v1:0
+meta.llama3-2-3b-instruct-v1:0
+meta.llama3-2-90b-instruct-v1:0
+meta.llama3-3-70b-instruct-v1:0
+meta.llama3-70b-instruct-v1:0
+meta.llama3-8b-instruct-v1:0
+meta.llama4-maverick-17b-instruct-v1:0
+meta.llama4-scout-17b-instruct-v1:0
+meta_llama/Llama-3.3-70B-Instruct
+meta_llama/Llama-3.3-8B-Instruct
+meta_llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+meta_llama/Llama-4-Scout-17B-16E-Instruct-FP8
+mistral.mistral-7b-instruct-v0:2
+mistral.mistral-large-2402-v1:0
+mistral.mistral-large-2407-v1:0
+mistral.mistral-small-2402-v1:0
+mistral.mixtral-8x7b-instruct-v0:1
+mistral/codestral-2405
+mistral/codestral-latest
+mistral/codestral-mamba-latest
+mistral/devstral-medium-2507
+mistral/devstral-small-2505
+mistral/devstral-small-2507
+mistral/magistral-medium-2506
+mistral/magistral-medium-latest
+mistral/magistral-small-2506
+mistral/magistral-small-latest
+mistral/mistral-embed
+mistral/mistral-large-2402
+mistral/mistral-large-2407
+mistral/mistral-large-2411
+mistral/mistral-large-latest
+mistral/mistral-medium
+mistral/mistral-medium-2312
+mistral/mistral-medium-2505
+mistral/mistral-medium-latest
+mistral/mistral-small
+mistral/mistral-small-latest
+mistral/mistral-tiny
+mistral/open-codestral-mamba
+mistral/open-mistral-7b
+mistral/open-mistral-nemo
+mistral/open-mistral-nemo-2407
+mistral/open-mixtral-8x22b
+mistral/open-mixtral-8x7b
+mistral/pixtral-12b-2409
+mistral/pixtral-large-2411
+mistral/pixtral-large-latest
+moonshot/kimi-k2-0711-preview
+moonshot/kimi-latest
+moonshot/kimi-latest-128k
+moonshot/kimi-latest-32k
+moonshot/kimi-latest-8k
+moonshot/kimi-thinking-preview
+moonshot/moonshot-v1-128k
+moonshot/moonshot-v1-128k-0430
+moonshot/moonshot-v1-128k-vision-preview
+moonshot/moonshot-v1-32k
+moonshot/moonshot-v1-32k-0430
+moonshot/moonshot-v1-32k-vision-preview
+moonshot/moonshot-v1-8k
+moonshot/moonshot-v1-8k-0430
+moonshot/moonshot-v1-8k-vision-preview
+moonshot/moonshot-v1-auto
+morph/morph-v3-fast
+morph/morph-v3-large
+multimodalembedding
+multimodalembedding@001
+nscale/Qwen/QwQ-32B
+nscale/Qwen/Qwen2.5-Coder-32B-Instruct
+nscale/Qwen/Qwen2.5-Coder-3B-Instruct
+nscale/Qwen/Qwen2.5-Coder-7B-Instruct
+nscale/black-forest-labs/FLUX.1-schnell
+nscale/deepseek-ai/DeepSeek-R1-Distill-Llama-70B
+nscale/deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+nscale/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+nscale/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+nscale/deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+nscale/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+nscale/meta-llama/Llama-3.1-8B-Instruct
+nscale/meta-llama/Llama-3.3-70B-Instruct
+nscale/meta-llama/Llama-4-Scout-17B-16E-Instruct
+nscale/mistralai/mixtral-8x22b-instruct-v0.1
+nscale/stabilityai/stable-diffusion-xl-base-1.0
+o1
+o1-2024-12-17
+o1-mini
+o1-mini-2024-09-12
+o1-preview
+o1-preview-2024-09-12
+o1-pro
+o1-pro-2025-03-19
+o3
+o3-2025-04-16
+o3-deep-research
+o3-deep-research-2025-06-26
+o3-mini
+o3-mini-2025-01-31
+o3-pro
+o3-pro-2025-06-10
+o4-mini
+o4-mini-2025-04-16
+o4-mini-deep-research
+o4-mini-deep-research-2025-06-26
+oci/meta.llama-3.1-405b-instruct
+oci/meta.llama-3.2-90b-vision-instruct
+oci/meta.llama-3.3-70b-instruct
+oci/meta.llama-4-maverick-17b-128e-instruct-fp8
+oci/meta.llama-4-scout-17b-16e-instruct
+oci/xai.grok-3
+oci/xai.grok-3-fast
+oci/xai.grok-3-mini
+oci/xai.grok-3-mini-fast
+oci/xai.grok-4
+ollama/codegeex4
+ollama/codegemma
+ollama/codellama
+ollama/deepseek-coder-v2-base
+ollama/deepseek-coder-v2-instruct
+ollama/deepseek-coder-v2-lite-base
+ollama/deepseek-coder-v2-lite-instruct
+ollama/internlm2_5-20b-chat
+ollama/llama2
+ollama/llama2-uncensored
+ollama/llama2:13b
+ollama/llama2:70b
+ollama/llama2:7b
+ollama/llama3
+ollama/llama3.1
+ollama/llama3:70b
+ollama/llama3:8b
+ollama/mistral
+ollama/mistral-7B-Instruct-v0.1
+ollama/mistral-7B-Instruct-v0.2
+ollama/mistral-large-instruct-2407
+ollama/mixtral-8x22B-Instruct-v0.1
+ollama/mixtral-8x7B-Instruct-v0.1
+ollama/orca-mini
+ollama/vicuna
+omni-moderation-2024-09-26
+omni-moderation-latest
+omni-moderation-latest-intents
+openai.gpt-oss-120b-1:0
+openai.gpt-oss-20b-1:0
+openrouter/anthropic/claude-2
+openrouter/anthropic/claude-3-5-haiku
+openrouter/anthropic/claude-3-5-haiku-20241022
+openrouter/anthropic/claude-3-haiku
+openrouter/anthropic/claude-3-haiku-20240307
+openrouter/anthropic/claude-3-opus
+openrouter/anthropic/claude-3-sonnet
+openrouter/anthropic/claude-3.5-sonnet
+openrouter/anthropic/claude-3.5-sonnet:beta
+openrouter/anthropic/claude-3.7-sonnet
+openrouter/anthropic/claude-3.7-sonnet:beta
+openrouter/anthropic/claude-instant-v1
+openrouter/anthropic/claude-opus-4
+openrouter/anthropic/claude-opus-4.1
+openrouter/anthropic/claude-sonnet-4
+openrouter/bytedance/ui-tars-1.5-7b
+openrouter/cognitivecomputations/dolphin-mixtral-8x7b
+openrouter/cohere/command-r-plus
+openrouter/databricks/dbrx-instruct
+openrouter/deepseek/deepseek-chat
+openrouter/deepseek/deepseek-chat-v3-0324
+openrouter/deepseek/deepseek-chat-v3.1
+openrouter/deepseek/deepseek-coder
+openrouter/deepseek/deepseek-r1
+openrouter/deepseek/deepseek-r1-0528
+openrouter/fireworks/firellava-13b
+openrouter/google/gemini-2.0-flash-001
+openrouter/google/gemini-2.5-flash
+openrouter/google/gemini-2.5-pro
+openrouter/google/gemini-pro-1.5
+openrouter/google/gemini-pro-vision
+openrouter/google/palm-2-chat-bison
+openrouter/google/palm-2-codechat-bison
+openrouter/gryphe/mythomax-l2-13b
+openrouter/jondurbin/airoboros-l2-70b-2.1
+openrouter/mancer/weaver
+openrouter/meta-llama/codellama-34b-instruct
+openrouter/meta-llama/llama-2-13b-chat
+openrouter/meta-llama/llama-2-70b-chat
+openrouter/meta-llama/llama-3-70b-instruct
+openrouter/meta-llama/llama-3-70b-instruct:nitro
+openrouter/meta-llama/llama-3-8b-instruct:extended
+openrouter/meta-llama/llama-3-8b-instruct:free
+openrouter/microsoft/wizardlm-2-8x22b:nitro
+openrouter/mistralai/mistral-7b-instruct
+openrouter/mistralai/mistral-7b-instruct:free
+openrouter/mistralai/mistral-large
+openrouter/mistralai/mistral-small-3.1-24b-instruct
+openrouter/mistralai/mistral-small-3.2-24b-instruct
+openrouter/mistralai/mixtral-8x22b-instruct
+openrouter/nousresearch/nous-hermes-llama2-13b
+openrouter/openai/gpt-3.5-turbo
+openrouter/openai/gpt-3.5-turbo-16k
+openrouter/openai/gpt-4
+openrouter/openai/gpt-4-vision-preview
+openrouter/openai/gpt-4o
+openrouter/openai/gpt-4o-2024-05-13
+openrouter/openai/gpt-5-chat
+openrouter/openai/gpt-5-mini
+openrouter/openai/gpt-5-nano
+openrouter/openai/gpt-oss-120b
+openrouter/openai/gpt-oss-20b
+openrouter/openai/o1
+openrouter/openai/o1-mini
+openrouter/openai/o1-mini-2024-09-12
+openrouter/openai/o1-preview
+openrouter/openai/o1-preview-2024-09-12
+openrouter/openai/o3-mini
+openrouter/openai/o3-mini-high
+openrouter/pygmalionai/mythalion-13b
+openrouter/qwen/qwen-2.5-coder-32b-instruct
+openrouter/qwen/qwen-vl-plus
+openrouter/qwen/qwen3-coder
+openrouter/switchpoint/router
+openrouter/undi95/remm-slerp-l2-13b
+openrouter/x-ai/grok-4
+palm/chat-bison
+palm/chat-bison-001
+palm/text-bison
+palm/text-bison-001
+palm/text-bison-safety-off
+palm/text-bison-safety-recitation-off
+perplexity/codellama-34b-instruct
+perplexity/codellama-70b-instruct
+perplexity/llama-2-70b-chat
+perplexity/llama-3.1-70b-instruct
+perplexity/llama-3.1-8b-instruct
+perplexity/llama-3.1-sonar-huge-128k-online
+perplexity/llama-3.1-sonar-large-128k-chat
+perplexity/llama-3.1-sonar-large-128k-online
+perplexity/llama-3.1-sonar-small-128k-chat
+perplexity/llama-3.1-sonar-small-128k-online
+perplexity/mistral-7b-instruct
+perplexity/mixtral-8x7b-instruct
+perplexity/pplx-70b-chat
+perplexity/pplx-70b-online
+perplexity/pplx-7b-chat
+perplexity/pplx-7b-online
+perplexity/sonar
+perplexity/sonar-deep-research
+perplexity/sonar-medium-chat
+perplexity/sonar-medium-online
+perplexity/sonar-pro
+perplexity/sonar-reasoning
+perplexity/sonar-reasoning-pro
+perplexity/sonar-small-chat
+perplexity/sonar-small-online
+recraft/recraftv2
+recraft/recraftv3
+replicate/meta/llama-2-13b
+replicate/meta/llama-2-13b-chat
+replicate/meta/llama-2-70b
+replicate/meta/llama-2-70b-chat
+replicate/meta/llama-2-7b
+replicate/meta/llama-2-7b-chat
+replicate/meta/llama-3-70b
+replicate/meta/llama-3-70b-instruct
+replicate/meta/llama-3-8b
+replicate/meta/llama-3-8b-instruct
+replicate/mistralai/mistral-7b-instruct-v0.2
+replicate/mistralai/mistral-7b-v0.1
+replicate/mistralai/mixtral-8x7b-instruct-v0.1
+rerank-english-v2.0
+rerank-english-v3.0
+rerank-multilingual-v2.0
+rerank-multilingual-v3.0
+rerank-v3.5
+sagemaker/meta-textgeneration-llama-2-13b
+sagemaker/meta-textgeneration-llama-2-13b-f
+sagemaker/meta-textgeneration-llama-2-70b
+sagemaker/meta-textgeneration-llama-2-70b-b-f
+sagemaker/meta-textgeneration-llama-2-7b
+sagemaker/meta-textgeneration-llama-2-7b-f
+sambanova/DeepSeek-R1
+sambanova/DeepSeek-R1-Distill-Llama-70B
+sambanova/DeepSeek-V3-0324
+sambanova/Llama-4-Maverick-17B-128E-Instruct
+sambanova/Llama-4-Scout-17B-16E-Instruct
+sambanova/Meta-Llama-3.1-405B-Instruct
+sambanova/Meta-Llama-3.1-8B-Instruct
+sambanova/Meta-Llama-3.2-1B-Instruct
+sambanova/Meta-Llama-3.2-3B-Instruct
+sambanova/Meta-Llama-3.3-70B-Instruct
+sambanova/Meta-Llama-Guard-3-8B
+sambanova/QwQ-32B
+sambanova/Qwen2-Audio-7B-Instruct
+sambanova/Qwen3-32B
+sample_spec
+snowflake/claude-3-5-sonnet
+snowflake/deepseek-r1
+snowflake/gemma-7b
+snowflake/jamba-1.5-large
+snowflake/jamba-1.5-mini
+snowflake/jamba-instruct
+snowflake/llama2-70b-chat
+snowflake/llama3-70b
+snowflake/llama3-8b
+snowflake/llama3.1-405b
+snowflake/llama3.1-70b
+snowflake/llama3.1-8b
+snowflake/llama3.2-1b
+snowflake/llama3.2-3b
+snowflake/llama3.3-70b
+snowflake/mistral-7b
+snowflake/mistral-large
+snowflake/mistral-large2
+snowflake/mixtral-8x7b
+snowflake/reka-core
+snowflake/reka-flash
+snowflake/snowflake-arctic
+snowflake/snowflake-llama-3.1-405b
+snowflake/snowflake-llama-3.3-70b
+stability.sd3-5-large-v1:0
+stability.sd3-large-v1:0
+stability.stable-image-core-v1:0
+stability.stable-image-core-v1:1
+stability.stable-image-ultra-v1:0
+stability.stable-image-ultra-v1:1
+standard/1024-x-1024/dall-e-3
+standard/1024-x-1792/dall-e-3
+standard/1792-x-1024/dall-e-3
+text-bison
+text-bison32k
+text-bison32k@002
+text-bison@001
+text-bison@002
+text-completion-codestral/codestral-2405
+text-completion-codestral/codestral-latest
+text-embedding-004
+text-embedding-005
+text-embedding-3-large
+text-embedding-3-small
+text-embedding-ada-002
+text-embedding-ada-002-v2
+text-embedding-large-exp-03-07
+text-embedding-preview-0409
+text-moderation-007
+text-moderation-latest
+text-moderation-stable
+text-multilingual-embedding-002
+text-multilingual-embedding-preview-0409
+text-unicorn
+text-unicorn@001
+textembedding-gecko
+textembedding-gecko-multilingual
+textembedding-gecko-multilingual@001
+textembedding-gecko@001
+textembedding-gecko@003
+together-ai-21.1b-41b
+together-ai-4.1b-8b
+together-ai-41.1b-80b
+together-ai-8.1b-21b
+together-ai-81.1b-110b
+together-ai-embedding-151m-to-350m
+together-ai-embedding-up-to-150m
+together-ai-up-to-4b
+together_ai/OpenAI/gpt-oss-20B
+together_ai/Qwen/Qwen2.5-72B-Instruct-Turbo
+together_ai/Qwen/Qwen2.5-7B-Instruct-Turbo
+together_ai/Qwen/Qwen3-235B-A22B-Instruct-2507-tput
+together_ai/Qwen/Qwen3-235B-A22B-Thinking-2507
+together_ai/Qwen/Qwen3-235B-A22B-fp8-tput
+together_ai/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
+together_ai/deepseek-ai/DeepSeek-R1
+together_ai/deepseek-ai/DeepSeek-R1-0528-tput
+together_ai/deepseek-ai/DeepSeek-V3
+together_ai/meta-llama/Llama-3.2-3B-Instruct-Turbo
+together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo-Free
+together_ai/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
+together_ai/meta-llama/Llama-4-Scout-17B-16E-Instruct
+together_ai/meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo
+together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+together_ai/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
+together_ai/mistralai/Mistral-7B-Instruct-v0.1
+together_ai/mistralai/Mistral-Small-24B-Instruct-2501
+together_ai/mistralai/Mixtral-8x7B-Instruct-v0.1
+together_ai/moonshotai/Kimi-K2-Instruct
+together_ai/openai/gpt-oss-120b
+together_ai/togethercomputer/CodeLlama-34b-Instruct
+together_ai/zai-org/GLM-4.5-Air-FP8
+tts-1
+tts-1-hd
+us.amazon.nova-lite-v1:0
+us.amazon.nova-micro-v1:0
+us.amazon.nova-premier-v1:0
+us.amazon.nova-pro-v1:0
+us.anthropic.claude-3-5-haiku-20241022-v1:0
+us.anthropic.claude-3-5-sonnet-20240620-v1:0
+us.anthropic.claude-3-5-sonnet-20241022-v2:0
+us.anthropic.claude-3-7-sonnet-20250219-v1:0
+us.anthropic.claude-3-haiku-20240307-v1:0
+us.anthropic.claude-3-opus-20240229-v1:0
+us.anthropic.claude-3-sonnet-20240229-v1:0
+us.anthropic.claude-opus-4-1-20250805-v1:0
+us.anthropic.claude-opus-4-20250514-v1:0
+us.anthropic.claude-sonnet-4-20250514-v1:0
+us.anthropic.claude-sonnet-4-5-20250929-v1:0
+us.deepseek.r1-v1:0
+us.meta.llama3-1-405b-instruct-v1:0
+us.meta.llama3-1-70b-instruct-v1:0
+us.meta.llama3-1-8b-instruct-v1:0
+us.meta.llama3-2-11b-instruct-v1:0
+us.meta.llama3-2-1b-instruct-v1:0
+us.meta.llama3-2-3b-instruct-v1:0
+us.meta.llama3-2-90b-instruct-v1:0
+us.meta.llama3-3-70b-instruct-v1:0
+us.meta.llama4-maverick-17b-instruct-v1:0
+us.meta.llama4-scout-17b-instruct-v1:0
+us.mistral.pixtral-large-2502-v1:0
+v0/v0-1.0-md
+v0/v0-1.5-lg
+v0/v0-1.5-md
+vertex_ai/claude-3-5-haiku
+vertex_ai/claude-3-5-haiku@20241022
+vertex_ai/claude-3-5-sonnet
+vertex_ai/claude-3-5-sonnet-v2
+vertex_ai/claude-3-5-sonnet-v2@20241022
+vertex_ai/claude-3-5-sonnet@20240620
+vertex_ai/claude-3-7-sonnet@20250219
+vertex_ai/claude-3-haiku
+vertex_ai/claude-3-haiku@20240307
+vertex_ai/claude-3-opus
+vertex_ai/claude-3-opus@20240229
+vertex_ai/claude-3-sonnet
+vertex_ai/claude-3-sonnet@20240229
+vertex_ai/claude-opus-4
+vertex_ai/claude-opus-4-1
+vertex_ai/claude-opus-4-1@20250805
+vertex_ai/claude-opus-4@20250514
+vertex_ai/claude-sonnet-4
+vertex_ai/claude-sonnet-4@20250514
+vertex_ai/codestral-2501
+vertex_ai/codestral@2405
+vertex_ai/codestral@latest
+vertex_ai/deepseek-ai/deepseek-r1-0528-maas
+vertex_ai/imagegeneration@006
+vertex_ai/imagen-3.0-fast-generate-001
+vertex_ai/imagen-3.0-generate-001
+vertex_ai/imagen-3.0-generate-002
+vertex_ai/imagen-4.0-fast-generate-001
+vertex_ai/imagen-4.0-generate-001
+vertex_ai/imagen-4.0-ultra-generate-001
+vertex_ai/jamba-1.5
+vertex_ai/jamba-1.5-large
+vertex_ai/jamba-1.5-large@001
+vertex_ai/jamba-1.5-mini
+vertex_ai/jamba-1.5-mini@001
+vertex_ai/meta/llama-3.1-405b-instruct-maas
+vertex_ai/meta/llama-3.1-70b-instruct-maas
+vertex_ai/meta/llama-3.1-8b-instruct-maas
+vertex_ai/meta/llama-3.2-90b-vision-instruct-maas
+vertex_ai/meta/llama-4-maverick-17b-128e-instruct-maas
+vertex_ai/meta/llama-4-maverick-17b-16e-instruct-maas
+vertex_ai/meta/llama-4-scout-17b-128e-instruct-maas
+vertex_ai/meta/llama-4-scout-17b-16e-instruct-maas
+vertex_ai/meta/llama3-405b-instruct-maas
+vertex_ai/meta/llama3-70b-instruct-maas
+vertex_ai/meta/llama3-8b-instruct-maas
+vertex_ai/mistral-large-2411
+vertex_ai/mistral-large@2407
+vertex_ai/mistral-large@2411-001
+vertex_ai/mistral-large@latest
+vertex_ai/mistral-nemo@2407
+vertex_ai/mistral-nemo@latest
+vertex_ai/mistral-small-2503
+vertex_ai/mistral-small-2503@001
+vertex_ai/qwen/qwen3-235b-a22b-instruct-2507-maas
+vertex_ai/qwen/qwen3-coder-480b-a35b-instruct-maas
+voyage/rerank-2
+voyage/rerank-2-lite
+voyage/voyage-2
+voyage/voyage-3
+voyage/voyage-3-large
+voyage/voyage-3-lite
+voyage/voyage-code-2
+voyage/voyage-code-3
+voyage/voyage-context-3
+voyage/voyage-finance-2
+voyage/voyage-large-2
+voyage/voyage-law-2
+voyage/voyage-lite-01
+voyage/voyage-lite-02-instruct
+voyage/voyage-multimodal-3
+watsonx/ibm/granite-3-8b-instruct
+watsonx/mistralai/mistral-large
+whisper-1
+xai/grok-2
+xai/grok-2-1212
+xai/grok-2-latest
+xai/grok-2-vision
+xai/grok-2-vision-1212
+xai/grok-2-vision-latest
+xai/grok-3
+xai/grok-3-beta
+xai/grok-3-fast-beta
+xai/grok-3-fast-latest
+xai/grok-3-latest
+xai/grok-3-mini
+xai/grok-3-mini-beta
+xai/grok-3-mini-fast
+xai/grok-3-mini-fast-beta
+xai/grok-3-mini-fast-latest
+xai/grok-3-mini-latest
+xai/grok-4
+xai/grok-4-0709
+xai/grok-4-latest
+xai/grok-beta
+xai/grok-code-fast
+xai/grok-code-fast-1
+xai/grok-code-fast-1-0825
+xai/grok-vision-beta
+</code></pre></div>
+</details>
+</div>
+<p>To find the corresponding API key, check the previous section.</p>
+<h2 id="extra-model-settings">Extra model settings</h2>
+<p>To configure reasoning efforts or similar settings, you need to edit the <a href="../../advanced/yaml_configuration/">agent config file</a>.
+In newer versions, the location of the config file is printed when you run <code>mini</code> ("agent config" in the output).</p>
+<p>Here's a few general examples:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><input id="__tabbed_1_4" name="__tabbed_1" type="radio"><input id="__tabbed_1_5" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Temperature</label><label for="__tabbed_1_2">GPT-5 reasoning effort (Chat Completions API)</label><label for="__tabbed_1_3">GPT-5 with Responses API</label><label for="__tabbed_1_4">OpenRouter</label><label for="__tabbed_1_5">Local models</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><code>litellm</code> allows to set model-specific settings with the <code>model_kwargs</code> key:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"anthropic/claude-sonnet-4-5-20250929"</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</code></pre></div>
+<p>Note that temperature isn't supported by all models.</p>
+</div>
+<div class="tabbed-block">
+<p><code>litellm</code> allows to set model-specific settings with the <code>model_kwargs</code> key:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"openai/gpt-5-mini"</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">reasoning_effort</span><span class="p">:</span><span class="w"> </span><span class="s">"high"</span>
+<span class="w">    </span><span class="nt">verbosity</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+</code></pre></div>
+<p>Here, <code>drop_params</code> is used to drop any parameters that are not supported by the model.</p>
+</div>
+<div class="tabbed-block">
+<p>For OpenAI models that support the Responses API, you can use the <code>litellm_response_toolcall</code> model class:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"litellm_response_toolcall"</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"openai/gpt-5-mini"</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">reasoning</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="s">"high"</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>This example explicitly sets the model class to <code>openrouter</code> (see the next section for more details).
+It also explicitly sets the providers to disable switching between them (this is useful if you need
+very consistent cost behavior, e.g., for benchmarking, but it's not recommended if you're just interested
+in getting low latency and good prices).</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"moonshotai/kimi-k2-0905"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"openrouter"</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">        </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">allow_fallbacks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">          </span><span class="nt">only</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"Moonshot</span><span class="nv"> </span><span class="s">AI"</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>Using <code>litellm</code> with local models:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"my-local-model"</span>
+<span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">custom_llm_provider</span><span class="p">:</span><span class="w"> </span><span class="s">"openai"</span>
+<span class="w">    </span><span class="nt">api_base</span><span class="p">:</span><span class="w"> </span><span class="s">"https://..."</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</code></pre></div>
+<p>See <a href="../local_models/">this guide</a> for more details on local models.
+In particular, you need to configure token costs for local models.</p>
+</div>
+</div>
+</div>
+<p>Here are more examples of how to configure specific models:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:6"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><input id="__tabbed_2_3" name="__tabbed_2" type="radio"><input id="__tabbed_2_4" name="__tabbed_2" type="radio"><input id="__tabbed_2_5" name="__tabbed_2" type="radio"><input id="__tabbed_2_6" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">Gemini 3 (Openrouter)</label><label for="__tabbed_2_2">GPT 5.1 medium (Portkey)</label><label for="__tabbed_2_3">Claude Haiku 4.5</label><label for="__tabbed_2_4">GPT 5 mini (Portkey)</label><label for="__tabbed_2_5">Deepseek</label><label for="__tabbed_2_6">Minimax (Openrouter)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"google/gemini-3-pro-preview"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openrouter</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"@openai/gpt-5.1"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">portkey</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">reasoning_effort</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+<span class="w">        </span><span class="nt">verbosity</span><span class="p">:</span><span class="w"> </span><span class="s">"medium"</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"anthropic/claude-haiku-4-5-20251001"</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"@openai/gpt-5-mini"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">portkey</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"deepseek/deepseek-reasoner"</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"minimax/minimax-m2"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openrouter</span>
+<span class="w">    </span><span class="nt">model_kwargs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="model-classes">Model classes</h2>
+<p>We support the various models through different backends.
+By default (if you only specify the model name), we pick the best backend for you.
+This will almost always default to <code>litellm</code> (with Anthropic models being a special case as they need to have explicit cache breakpoint handling).</p>
+<p>However, there are a few other backends that you can use and specify with the <code>--model-class</code> flag or the
+<code>model.model_class</code> key in the agent config file (see previous section).</p>
+<p>For example:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio"><input id="__tabbed_3_2" name="__tabbed_3" type="radio"><div class="tabbed-labels"><label for="__tabbed_3_1">Openrouter model</label><label for="__tabbed_3_2">Portkey model</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"moonshotai/kimi-k2-0905"</span><span class="w"> </span>--model-class<span class="w"> </span>openrouter
+</code></pre></div>
+<p><strong>Alternatively:</strong> In the agent config file:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"moonshotai/kimi-k2-0905"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openrouter</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"claude-sonnet-4-5-20250929"</span><span class="w"> </span>--model-class<span class="w"> </span>portkey
+</code></pre></div>
+<p><strong>Alternatively:</strong> In the agent config file:
+</p><div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"claude-sonnet-4-5-20250929"</span>
+<span class="w">    </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">portkey</span>
+</code></pre></div><p></p>
+</div>
+</div>
+</div>
+<ul>
+<li>
+<p><strong><code>litellm</code></strong> (<a href="../../reference/models/litellm/"><code>LitellmModel</code></a>) - <strong>Default and recommended</strong>. Supports most models through <a href="https://github.com/BerriAI/litellm">litellm</a>. Works with OpenAI, Anthropic, Google, and many other providers.</p>
+</li>
+<li>
+<p><strong><code>litellm_response_toolcall</code></strong> (<a href="../../reference/models/litellm_response_toolcall/"><code>LitellmResponseToolcallModel</code></a>) - Specialized version of <code>LitellmModel</code> that uses OpenAI's Responses API with native tool calling. Useful for models like GPT-5 and required for models like GPT-5-codex. Maintains conversation state across turns.</p>
+</li>
+<li>
+<p><strong><code>anthropic</code></strong> (<a href="../reference/models/anthropic.md"><code>AnthropicModel</code></a>) - Wrapper around <code>LitellmModel</code> for Anthropic models that adds cache breakpoint handling. Will be used by default if no <code>model_class</code> is specified and the model name contains "anthropic", "claude", etc.</p>
+</li>
+<li>
+<p><strong><code>openrouter</code></strong> (<a href="../../reference/models/openrouter/"><code>OpenRouterModel</code></a>) - Direct integration with <a href="https://openrouter.ai/">OpenRouter</a> API for accessing various models through a single endpoint.</p>
+</li>
+<li>
+<p><strong><code>portkey</code></strong> (<a href="../../reference/models/portkey/"><code>PortkeyModel</code></a>) - Integration with <a href="https://portkey.ai/">Portkey</a> for accessing various models with enhanced observability, caching, and routing features. Note that this still uses <code>litellm</code> to calculate costs.</p>
+</li>
+</ul>
+<p>On top, there's a few more exotic model classes that you can use:</p>
+<ul>
+<li><strong><code>deterministic</code></strong> (<a href="../../reference/models/test_models/"><code>DeterministicModel</code></a>) - Returns predefined responses for testing and development purposes.</li>
+<li><strong><code>minisweagent.models.extra.roulette.RouletteModel</code> and <code>minisweagent.models.extra.roulette.InterleavingModel</code></strong> (<a href="../../reference/models/extra/"><code>RouletteModel</code></a> and <a href="../../reference/models/extra/"><code>InterleavingModel</code></a>) - Randomly selects or interleaves multiple configured models for each query. See <a href="https://www.swebench.com/SWE-bench/blog/2025/08/19/mini-roulette/">this blog post</a> for more details.</li>
+</ul>
+<p>As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the mini-SWE-agent package).</p>
+<div class="grid cards">
+  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">bug_report</span>
+        <span class="nav-card-title">Something broken/unclear?</span>
+      </div>
+      <p class="nav-card-description">Open an issue on GitHub!</p>
+    </div>
+  </a>
+
+  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
+    <div class="nav-card">
+      <div class="nav-card-header">
+        <span class="material-icons nav-card-icon">help</span>
+        <span class="nav-card-title">Open-ended discussions</span>
+      </div>
+      <p class="nav-card-description">Join our Slack!</p>
+    </div>
+  </a>
+</div>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+
+
+<div class="floating-bubbles">
+<div class="floating-bubbles-title">Our projects</div>
+  <a href="https://swe-agent.com/" class="bubble" title="SWE-agent">
+    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sweagent_logo.svg" alt="SWE-agent">
+    <span class="bubble-tooltip">SWE-agent</span>
+  </a>
+  <a href="https://swe-rex.com/" class="bubble" title="SWE-rex">
+    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swerex_logo.svg" alt="SWE-rex">
+    <span class="bubble-tooltip">SWE-ReX</span>
+  </a>
+  <a href="https://swesmith.com" class="bubble" title="SWE-smith">
+    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swesmith_logo.png" alt="SWE-smith">
+    <span class="bubble-tooltip">SWE-smith</span>
+  </a>
+  <a href="https://swebench.com" class="bubble" title="SWE-bench">
+    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/swebench_logo.png" alt="SWE-bench">
+    <span class="bubble-tooltip">SWE-bench</span>
+  </a>
+  <a href="https://codeclash.ai" class="bubble" title="CodeClash">
+    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/codeclash_logo.svg" alt="CodeClash">
+    <span class="bubble-tooltip">CodeClash</span>
+  </a>
+  <a href="https://www.swebench.com/sb-cli/" class="bubble" title="sb-cli">
+    <img src="https://raw.githubusercontent.com/SWE-agent/swe-agent-media/refs/heads/main/media/logos_banners/sbcli_logo.svg" alt="sb-cli">
+    <span class="bubble-tooltip">sb-cli</span>
+  </a>
+</div>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../../usage/output_files/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Output files">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Output files
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../local_models/" class="md-footer__link md-footer__link--next" aria-label="Next: Local models">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Local models
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/js/sh-annotation.js"></script>
+      
+        <script src="../../assets/js/gif-controls.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html><!-- Floating Bubbles -->
