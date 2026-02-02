@@ -143,8 +143,8 @@ class RunBatchProgressManager:
             )
 
     def on_instance_end(self, instance_id: str, exit_status: str | None) -> None:
-        self._instances_by_exit_status[exit_status].append(instance_id)
         with self._lock:
+            self._instances_by_exit_status[exit_status].append(instance_id)
             try:
                 self._task_progress_bar.remove_task(self._spinner_tasks[instance_id])
             except KeyError:
