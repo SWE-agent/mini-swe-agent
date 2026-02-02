@@ -122,6 +122,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -411,6 +430,8 @@
       
         
       
+        
+      
     
     
       
@@ -490,6 +511,8 @@
       
         
       
+        
+      
     
     
       
@@ -549,11 +572,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/mini_v/" class="md-nav__link">
+      <a href="../../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -596,6 +619,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -743,12 +787,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -766,7 +804,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -776,7 +814,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -822,6 +860,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -850,32 +1009,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/control_flow/" class="md-nav__link">
+      <a href="../../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -1022,8 +1160,6 @@
       
         
       
-        
-      
     
     
       
@@ -1088,27 +1224,6 @@
   
   <span class="md-ellipsis">
     InteractiveAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
   </span>
   
 
@@ -1191,6 +1306,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../litellm/" class="md-nav__link">
         
   
@@ -1212,32 +1348,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../litellm_response/" class="md-nav__link">
+      <a href="../litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../anthropic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
+    LitellmResponseModel
   </span>
   
 
@@ -1613,8 +1728,6 @@
       
         
       
-        
-      
     
     
       
@@ -1742,27 +1855,6 @@
   
   <span class="md-ellipsis">
     Inspector
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../run/github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
   </span>
   
 
@@ -2008,9 +2100,6 @@
 
     <span class="n">model_class</span> <span class="o">=</span> <span class="n">get_model_class</span><span class="p">(</span><span class="n">resolved_model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model_class&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MODEL_API_KEY&quot;</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">model_class</span><span class="p">))</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;DeterministicModel&quot;</span><span class="p">):</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;model_kwargs&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;api_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_env</span>
-
     <span class="k">if</span> <span class="p">(</span>
         <span class="nb">any</span><span class="p">(</span><span class="n">s</span> <span class="ow">in</span> <span class="n">resolved_model_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;anthropic&quot;</span><span class="p">,</span> <span class="s2">&quot;sonnet&quot;</span><span class="p">,</span> <span class="s2">&quot;opus&quot;</span><span class="p">,</span> <span class="s2">&quot;claude&quot;</span><span class="p">])</span>
         <span class="ow">and</span> <span class="s2">&quot;set_cache_control&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span>
@@ -2035,12 +2124,14 @@
 
 
 <span class="n">_MODEL_CLASS_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;anthropic&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.anthropic.AnthropicModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;litellm&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.litellm_model.LitellmModel&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;litellm_response&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;litellm_textbased&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.litellm_textbased_model.LitellmTextbasedModel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;litellm_response&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.litellm_response_model.LitellmResponseModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;openrouter&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.openrouter_model.OpenRouterModel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;openrouter_textbased&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.openrouter_textbased_model.OpenRouterTextbasedModel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;openrouter_response&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.openrouter_response_model.OpenRouterResponseModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;portkey&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.portkey_model.PortkeyModel&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;portkey_response&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.portkey_response_api_model.PortkeyResponseAPIModel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;portkey_response&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.portkey_response_model.PortkeyResponseAPIModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;requesty&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.requesty_model.RequestyModel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="s2">&quot;minisweagent.models.test_models.DeterministicModel&quot;</span><span class="p">,</span>
 <span class="p">}</span>
@@ -2108,10 +2199,7 @@
 <span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an initialized model object from any kind of user input or settings.&quot;&quot;&quot;</span>
     <span class="n">resolved_model_name</span> <span class="o">=</span> <span class="n">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2120,9 +2208,6 @@
     <span class="n">config</span><span class="p">[</span><span class="s2">&quot;model_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolved_model_name</span>
 
     <span class="n">model_class</span> <span class="o">=</span> <span class="n">get_model_class</span><span class="p">(</span><span class="n">resolved_model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model_class&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">from_env</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MODEL_API_KEY&quot;</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">model_class</span><span class="p">))</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;DeterministicModel&quot;</span><span class="p">):</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;model_kwargs&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;api_key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_env</span>
 
     <span class="k">if</span> <span class="p">(</span>
         <span class="nb">any</span><span class="p">(</span><span class="n">s</span> <span class="ow">in</span> <span class="n">resolved_model_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;anthropic&quot;</span><span class="p">,</span> <span class="s2">&quot;sonnet&quot;</span><span class="p">,</span> <span class="s2">&quot;opus&quot;</span><span class="p">,</span> <span class="s2">&quot;claude&quot;</span><span class="p">])</span>
@@ -2155,17 +2240,17 @@
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/models/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
 <span class="normal">69</span>
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_name</span><span class="p">(</span><span class="n">input_model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a model name from any kind of user input or settings.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
@@ -2203,7 +2288,8 @@ Otherwise, the model_name is used to select the best model class.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/models/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 92</span>
+<span class="normal"> 93</span>
 <span class="normal"> 94</span>
 <span class="normal"> 95</span>
 <span class="normal"> 96</span>
@@ -2223,8 +2309,7 @@ Otherwise, the model_name is used to select the best model class.</p>
 <span class="normal">110</span>
 <span class="normal">111</span>
 <span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_class</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_model_class</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Select the best model class.</span>
 
 <span class="sd">    If a model_class is provided (as shortcut name, or as full import path,</span>

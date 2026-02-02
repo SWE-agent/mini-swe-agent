@@ -14,7 +14,7 @@
         <link rel="prev" href="../global_configuration/">
       
       
-        <link rel="next" href="../environments/">
+        <link rel="next" href="../../usage/python_bindings/">
       
       
       <link rel="icon" href="../../assets/mini_square.svg">
@@ -121,6 +121,25 @@
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
       
     </div>
     
@@ -413,6 +432,8 @@
       
         
       
+        
+      
     
     
       
@@ -495,6 +516,8 @@
       
         
       
+        
+      
     
     
       
@@ -554,11 +577,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/mini_v/" class="md-nav__link">
+      <a href="../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -601,6 +624,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -750,12 +794,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -773,7 +811,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -783,7 +821,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -889,9 +927,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-action-parsing" class="md-nav__link">
+  <a href="#using-tool-calls" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Action Parsing
+      Using tool calls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-action-parsing-from-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Action Parsing from Text
     </span>
   </a>
   
@@ -938,6 +985,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -966,32 +1134,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../control_flow/" class="md-nav__link">
+      <a href="../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -1133,8 +1280,6 @@
       
         
       
-        
-      
     
     
       
@@ -1199,27 +1344,6 @@
   
   <span class="md-ellipsis">
     InteractiveAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
   </span>
   
 
@@ -1300,6 +1424,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/models/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/models/litellm/" class="md-nav__link">
         
   
@@ -1321,32 +1466,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/models/litellm_response/" class="md-nav__link">
+      <a href="../../reference/models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/models/anthropic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
+    LitellmResponseModel
   </span>
   
 
@@ -1655,8 +1779,6 @@
       
         
       
-        
-      
     
     
       
@@ -1784,27 +1906,6 @@
   
   <span class="md-ellipsis">
     Inspector
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/run/github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
   </span>
   
 
@@ -1966,9 +2067,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#custom-action-parsing" class="md-nav__link">
+  <a href="#using-tool-calls" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Action Parsing
+      Using tool calls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-action-parsing-from-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Action Parsing from Text
     </span>
   </a>
   
@@ -2047,20 +2157,6 @@
 <div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">You are a helpful assistant that can interact with a computer.</span>
-
-<span class="w">    </span><span class="no">Your response must contain exactly ONE bash code block with ONE command (or commands connected with &amp;&amp; or ||).</span>
-<span class="w">    </span><span class="no">Include a THOUGHT section before your command where you explain your reasoning process.</span>
-<span class="w">    </span><span class="no">Format your response as shown in &lt;format_example&gt;.</span>
-
-<span class="w">    </span><span class="no">&lt;format_example&gt;</span>
-<span class="w">    </span><span class="no">Your reasoning and analysis here. Explain why you want to perform the action.</span>
-
-<span class="w">    </span><span class="no">```bash</span>
-<span class="w">    </span><span class="no">your_command_here</span>
-<span class="w">    </span><span class="no">```</span>
-<span class="w">    </span><span class="no">&lt;/format_example&gt;</span>
-
-<span class="w">    </span><span class="no">Failure to follow these rules will cause your response to be rejected.</span>
 <span class="w">  </span><span class="nt">instance_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">Please solve this issue: {{task}}</span>
 
@@ -2078,28 +2174,39 @@
 <span class="w">    </span><span class="no">6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.</span>
 <span class="w">       </span><span class="no">Do not combine it with any other command. &lt;important&gt;After this command, you cannot continue working on this task.&lt;/important&gt;</span>
 
-<span class="w">    </span><span class="no">## Important Rules</span>
+<span class="w">    </span><span class="no">## Command Execution Rules</span>
 
-<span class="w">    </span><span class="no">1. Every response must contain exactly one action</span>
-<span class="w">    </span><span class="no">2. The action must be enclosed in triple backticks</span>
-<span class="w">    </span><span class="no">3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.</span>
-<span class="w">       </span><span class="no">However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir &amp;&amp; ...` or write/load environment variables from files</span>
+<span class="w">    </span><span class="no">You are operating in an environment where</span>
+
+<span class="w">    </span><span class="no">1. You issue at least one command</span>
+<span class="w">    </span><span class="no">2. The system executes the command(s) in a subshell</span>
+<span class="w">    </span><span class="no">3. You see the result(s)</span>
+<span class="w">    </span><span class="no">4. You write your next command(s)</span>
+
+<span class="w">    </span><span class="no">Each response should include:</span>
+
+<span class="w">    </span><span class="no">1. **Reasoning text** where you explain your analysis and plan</span>
+<span class="w">    </span><span class="no">2. At least one tool call with your command</span>
+
+<span class="w">    </span><span class="no">**CRITICAL REQUIREMENTS:**</span>
+
+<span class="w">    </span><span class="no">- Your response SHOULD include reasoning text explaining what you&#39;re doing</span>
+<span class="w">    </span><span class="no">- Your response MUST include AT LEAST ONE bash tool call</span>
+<span class="w">    </span><span class="no">- Directory or environment variable changes are not persistent. Every action is executed in a new subshell.</span>
+<span class="w">    </span><span class="no">- However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir &amp;&amp; ...` or write/load environment variables from files</span>
+<span class="w">    </span><span class="no">- Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.</span>
+<span class="w">      </span><span class="no">Do not combine it with any other command. &lt;important&gt;After this command, you cannot continue working on this task.&lt;/important&gt;</span>
+
+<span class="w">    </span><span class="no">Example of a CORRECT response:</span>
+<span class="w">    </span><span class="no">&lt;example_response&gt;</span>
+<span class="w">    </span><span class="no">I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.</span>
+
+<span class="w">    </span><span class="no">[Makes bash tool call with {&quot;command&quot;: &quot;ls -la&quot;} as arguments]</span>
+<span class="w">    </span><span class="no">&lt;/example_response&gt;</span>
 
 <span class="w">    </span><span class="no">&lt;system_information&gt;</span>
 <span class="w">    </span><span class="no">{{system}} {{release}} {{version}} {{machine}}</span>
 <span class="w">    </span><span class="no">&lt;/system_information&gt;</span>
-
-<span class="w">    </span><span class="no">## Formatting your response</span>
-
-<span class="w">    </span><span class="no">Here is an example of a correct response:</span>
-
-<span class="w">    </span><span class="no">&lt;example_response&gt;</span>
-<span class="w">    </span><span class="no">THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.</span>
-
-<span class="w">    </span><span class="no">```bash</span>
-<span class="w">    </span><span class="no">ls -la</span>
-<span class="w">    </span><span class="no">```</span>
-<span class="w">    </span><span class="no">&lt;/example_response&gt;</span>
 
 <span class="w">    </span><span class="no">## Useful command examples</span>
 
@@ -2147,47 +2254,6 @@
 <span class="w">    </span><span class="no">```bash</span>
 <span class="w">    </span><span class="no">anything</span>
 <span class="w">    </span><span class="no">```</span>
-<span class="w">  </span><span class="nt">action_observation_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">&lt;returncode&gt;{{output.returncode}}&lt;/returncode&gt;</span>
-<span class="w">    </span><span class="no">{% if output.output | length &lt; 10000 -%}</span>
-<span class="w">    </span><span class="no">&lt;output&gt;</span>
-<span class="w">    </span><span class="no">{{ output.output -}}</span>
-<span class="w">    </span><span class="no">&lt;/output&gt;</span>
-<span class="w">    </span><span class="no">{%- else -%}</span>
-<span class="w">    </span><span class="no">&lt;warning&gt;</span>
-<span class="w">    </span><span class="no">The output of your last command was too long.</span>
-<span class="w">    </span><span class="no">Please try a different command that produces less output.</span>
-<span class="w">    </span><span class="no">If you&#39;re looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.</span>
-<span class="w">    </span><span class="no">If you&#39;re using grep or find and it produced too much output, you can use a more selective search pattern.</span>
-<span class="w">    </span><span class="no">If you really need to see something from the full command&#39;s output, you can redirect output to a file and then search in that file.</span>
-<span class="w">    </span><span class="no">&lt;/warning&gt;</span>
-<span class="w">    </span><span class="no">{%- set elided_chars = output.output | length - 10000 -%}</span>
-<span class="w">    </span><span class="no">&lt;output_head&gt;</span>
-<span class="w">    </span><span class="no">{{ output.output[:5000] }}</span>
-<span class="w">    </span><span class="no">&lt;/output_head&gt;</span>
-<span class="w">    </span><span class="no">&lt;elided_chars&gt;</span>
-<span class="w">    </span><span class="no">{{ elided_chars }} characters elided</span>
-<span class="w">    </span><span class="no">&lt;/elided_chars&gt;</span>
-<span class="w">    </span><span class="no">&lt;output_tail&gt;</span>
-<span class="w">    </span><span class="no">{{ output.output[-5000:] }}</span>
-<span class="w">    </span><span class="no">&lt;/output_tail&gt;</span>
-<span class="w">    </span><span class="no">{%- endif -%}</span>
-<span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.</span>
-<span class="w">    </span><span class="no">If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`</span>
-<span class="w">    </span><span class="no">without any other command.</span>
-<span class="w">    </span><span class="no">Else, please format your response exactly as follows:</span>
-
-<span class="w">    </span><span class="no">&lt;response_example&gt;</span>
-<span class="w">    </span><span class="no">Here are some thoughts about why you want to perform the action.</span>
-
-<span class="w">    </span><span class="no">```bash</span>
-<span class="w">    </span><span class="no">&lt;action&gt;</span>
-<span class="w">    </span><span class="no">```</span>
-<span class="w">    </span><span class="no">&lt;/response_example&gt;</span>
-
-<span class="w">    </span><span class="no">Note: In rare cases, if you need to reference a similar format in your command, you might have</span>
-<span class="w">    </span><span class="no">to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```bash.</span>
 <span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.</span>
 <span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
 <span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confirm</span>
@@ -2199,6 +2265,32 @@
 <span class="w">    </span><span class="nt">PIP_PROGRESS_BAR</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;off&#39;</span>
 <span class="w">    </span><span class="nt">TQDM_DISABLE</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
 <span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">observation_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">{%- if output.output | length &lt; 10000 -%}</span>
+<span class="w">    </span><span class="no">{</span>
+<span class="w">      </span><span class="no">&quot;returncode&quot;: {{ output.returncode }},</span>
+<span class="w">      </span><span class="no">&quot;output&quot;: {{ output.output | tojson }}</span>
+<span class="w">      </span><span class="no">{%- if output.exception_info %}, &quot;exception_info&quot;: {{ output.exception_info | tojson }}{% endif %}</span>
+<span class="w">    </span><span class="no">}</span>
+<span class="w">    </span><span class="no">{%- else -%}</span>
+<span class="w">    </span><span class="no">{</span>
+<span class="w">      </span><span class="no">&quot;returncode&quot;: {{ output.returncode }},</span>
+<span class="w">      </span><span class="no">&quot;output_head&quot;: {{ output.output[:5000] | tojson }},</span>
+<span class="w">      </span><span class="no">&quot;output_tail&quot;: {{ output.output[-5000:] | tojson }},</span>
+<span class="w">      </span><span class="no">&quot;elided_chars&quot;: {{ output.output | length - 10000 }},</span>
+<span class="w">      </span><span class="no">&quot;warning&quot;: &quot;Output too long.&quot;</span>
+<span class="w">      </span><span class="no">{%- if output.exception_info %}, &quot;exception_info&quot;: {{ output.exception_info | tojson }}{% endif %}</span>
+<span class="w">    </span><span class="no">}</span>
+<span class="w">    </span><span class="no">{%- endif -%}</span>
+<span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Tool call error. Every response needs to use the &#39;bash&#39; tool at least once to execute commands.</span>
+
+<span class="w">    </span><span class="no">Call the bash tool with your command as the argument:</span>
+<span class="w">    </span><span class="no">- Tool: bash</span>
+<span class="w">    </span><span class="no">- Arguments: {&quot;command&quot;: &quot;your_command_here&quot;}</span>
+
+<span class="w">    </span><span class="no">If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`</span>
+<span class="w">    </span><span class="no">without any other command.</span>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
@@ -2260,8 +2352,10 @@ or even to an import path (to use your own custom agent class even if it is not 
 <li>Variables passed to the <code>run</code> method of the agent (by default that's only <code>task</code>, but you can pass other variables if you want to)</li>
 <li>Output of the last action execution (i.e., <code>output</code> from the <code>execute_action</code> method)</li>
 </ul>
-<h3 id="custom-action-parsing">Custom Action Parsing</h3>
-<p>By default, mini-SWE-agent parses actions from markdown code blocks (<code>```bash...```</code>).
+<h3 id="using-tool-calls">Using tool calls</h3>
+<p>Make sure to use the appropriate model class and matching configuration.</p>
+<h3 id="custom-action-parsing-from-text">Custom Action Parsing from Text</h3>
+<p>mini-SWE-agent can parse actions from markdown code blocks (<code>```mswea_bash_command ... ```</code>) or from tool calls.
 You can customize this behavior by setting the <code>action_regex</code> field to support different formats like XML.</p>
 <div class="admonition warning">
 <p class="admonition-title">Important</p>
@@ -2281,7 +2375,7 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">&lt;format_example&gt;</span>
 <span class="w">    </span><span class="no">THOUGHT: Your reasoning and analysis here</span>
 
-<span class="w">    </span><span class="no">&lt;bash_code&gt;your_command_here&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">&lt;mswea_bash_command&gt;your_command_here&lt;/mswea_bash_command&gt;</span>
 <span class="w">    </span><span class="no">&lt;/format_example&gt;</span>
 
 <span class="w">    </span><span class="no">Failure to follow these rules will cause your response to be rejected.</span>
@@ -2295,21 +2389,25 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no"># Task Instructions</span>
 
 <span class="w">    </span><span class="no">## Overview</span>
+
 <span class="w">    </span><span class="no">You&#39;re a software engineer interacting continuously with a computer by submitting commands.</span>
 <span class="w">    </span><span class="no">You&#39;ll be helping implement necessary changes to meet requirements in the PR description.</span>
 <span class="w">    </span><span class="no">Your task is specifically to make changes to non-test files in the current directory in order to fix the issue described in the PR description in a way that is general and consistent with the codebase.</span>
 
-<span class="w">    </span><span class="no">IMPORTANT: This is an interactive process where you will think and issue ONE command, see its result, then think and issue your next command.</span>
+<span class="w">    </span><span class="no">&lt;IMPORTANT&gt;This is an interactive process where you will think and issue ONE command, see its result, then think and issue your next command.&lt;/IMPORTANT&gt;</span>
 
 <span class="w">    </span><span class="no">For each response:</span>
+
 <span class="w">    </span><span class="no">1. Include a THOUGHT section explaining your reasoning and what you&#39;re trying to accomplish</span>
 <span class="w">    </span><span class="no">2. Provide exactly ONE bash command to execute</span>
 
 <span class="w">    </span><span class="no">## Important Boundaries</span>
+
 <span class="w">    </span><span class="no">- MODIFY: Regular source code files in /testbed (this is the working directory for all your subsequent commands)</span>
 <span class="w">    </span><span class="no">- DO NOT MODIFY: Tests, configuration files (pyproject.toml, setup.cfg, etc.)</span>
 
 <span class="w">    </span><span class="no">## Recommended Workflow</span>
+
 <span class="w">    </span><span class="no">1. Analyze the codebase by finding and reading relevant files</span>
 <span class="w">    </span><span class="no">2. Create a script to reproduce the issue</span>
 <span class="w">    </span><span class="no">3. Edit the source code to resolve the issue</span>
@@ -2317,29 +2415,36 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">5. Test edge cases to ensure your fix is robust</span>
 
 <span class="w">    </span><span class="no">## Command Execution Rules</span>
+
 <span class="w">    </span><span class="no">You are operating in an environment where</span>
+
 <span class="w">    </span><span class="no">1. You write a single command</span>
 <span class="w">    </span><span class="no">2. The system executes that command in a subshell</span>
 <span class="w">    </span><span class="no">3. You see the result</span>
 <span class="w">    </span><span class="no">4. You write your next command</span>
 
 <span class="w">    </span><span class="no">Each response should include:</span>
+
 <span class="w">    </span><span class="no">1. A **THOUGHT** section where you explain your reasoning and plan</span>
 <span class="w">    </span><span class="no">2. A single bash code block with your command</span>
 
-<span class="w">    </span><span class="no">Format your responses like included within the &lt;format_example&gt; block:</span>
+<span class="w">    </span><span class="no">Format your responses like demonstrated within the &lt;format_example&gt; block:</span>
 
 <span class="w">    </span><span class="no">&lt;format_example&gt;</span>
 <span class="w">    </span><span class="no">THOUGHT: Here I explain my reasoning process, analysis of the current situation,</span>
 <span class="w">    </span><span class="no">and what I&#39;m trying to accomplish with the command below.</span>
 
-<span class="w">    </span><span class="no">&lt;bash_code&gt;your_command_here &lt;/bash_code&gt;&lt;/format_example&gt;</span>
+<span class="w">    </span><span class="no">&lt;mswea_bash_command&gt;your_command_here&lt;/mswea_bash_command&gt;&lt;/format_example&gt;</span>
+<span class="w">    </span><span class="no">Commands must be specified in a single bash XML tag:</span>
+
+<span class="w">    </span><span class="no">&lt;mswea_bash_command&gt;your_command_here&lt;/mswea_bash_command&gt;</span>
 
 <span class="w">    </span><span class="no">**CRITICAL REQUIREMENTS:**</span>
+
 <span class="w">    </span><span class="no">- Your response SHOULD include a THOUGHT section explaining your reasoning</span>
-<span class="w">    </span><span class="no">- Your response MUST include EXACTLY ONE bash code block</span>
-<span class="w">    </span><span class="no">- This bash block MUST contain EXACTLY ONE command (or a set of commands connected with &amp;&amp; or ||)</span>
-<span class="w">    </span><span class="no">- If you include zero or multiple bash blocks, or no command at all, YOUR RESPONSE WILL FAIL</span>
+<span class="w">    </span><span class="no">- Your response MUST include EXACTLY ONE mswea_bash_command tag</span>
+<span class="w">    </span><span class="no">- This bash mswea_bash_command MUST contain EXACTLY ONE command (or a set of commands connected with &amp;&amp; or ||)</span>
+<span class="w">    </span><span class="no">- If you include zero or multiple tags, or no command at all, YOUR RESPONSE WILL FAIL</span>
 <span class="w">    </span><span class="no">- Do NOT try to run multiple independent commands in separate blocks in one response</span>
 <span class="w">    </span><span class="no">- Directory or environment variable changes are not persistent. Every action is executed in a new subshell.</span>
 <span class="w">    </span><span class="no">- However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir &amp;&amp; ...` or write/load environment variables from files</span>
@@ -2349,7 +2454,7 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">&lt;example_response&gt;</span>
 <span class="w">    </span><span class="no">THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.</span>
 
-<span class="w">    </span><span class="no">&lt;bash_code&gt;ls -la&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">&lt;mswea_bash_command&gt;ls -la&lt;/mswea_bash_command&gt;</span>
 <span class="w">    </span><span class="no">&lt;/example_response&gt;</span>
 
 <span class="w">    </span><span class="no">Example of an INCORRECT response:</span>
@@ -2357,18 +2462,18 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">&lt;example_response&gt;</span>
 <span class="w">    </span><span class="no">THOUGHT: I need to examine the codebase and then look at a specific file. I&#39;ll run multiple commands to do this.</span>
 
-<span class="w">    </span><span class="no">&lt;bash_code&gt;ls -la&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">&lt;mswea_bash_command&gt;ls -la&lt;/mswea_bash_command&gt;</span>
 
 <span class="w">    </span><span class="no">Now I&#39;ll read the file:</span>
 
-<span class="w">    </span><span class="no">&lt;bash_code&gt;cat file.txt&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">&lt;mswea_bash_command&gt;cat file.txt&lt;/mswea_bash_command&gt;</span>
 <span class="w">    </span><span class="no">&lt;/example_response&gt;</span>
 
 <span class="w">    </span><span class="no">If you need to run multiple commands, either:</span>
 
 <span class="w">    </span><span class="no">1. Combine them in one block using &amp;&amp; or ||</span>
 
-<span class="w">    </span><span class="no">&lt;bash_code&gt;command1 &amp;&amp; command2 || echo &quot;Error occurred&quot;&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">&lt;mswea_bash_command&gt;command1 &amp;&amp; command2 || echo &quot;Error occurred&quot;&lt;/mswea_bash_command&gt;</span>
 
 <span class="w">    </span><span class="no">2. Wait for the first command to complete, see its output, then issue the next command in your following response.</span>
 
@@ -2377,57 +2482,64 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">- You have a full Linux shell environment</span>
 <span class="w">    </span><span class="no">- Always use non-interactive flags (-y, -f) for commands</span>
 <span class="w">    </span><span class="no">- Avoid interactive tools like vi, nano, or any that require user input</span>
-<span class="w">    </span><span class="no">- If a command isn&#39;t available, you can install it</span>
-
-<span class="w">    </span><span class="no">## Useful Command Examples</span>
-
-<span class="w">    </span><span class="no">### Create a new file:</span>
-
-<span class="w">    </span><span class="no">&lt;bash_code&gt;cat &lt;&lt;&#39;EOF&#39; &gt; newfile.py</span>
-<span class="w">    </span><span class="no">import numpy as np</span>
-<span class="w">    </span><span class="no">hello = &quot;world&quot;</span>
-<span class="w">    </span><span class="no">print(hello)</span>
-<span class="w">    </span><span class="no">EOF&lt;/bash_code&gt;</span>
-
-<span class="w">    </span><span class="no">### Edit files with sed:</span>
-
-<span class="w">    </span><span class="no">Replace all occurrences</span>
-
-<span class="w">    </span><span class="no">&lt;bash_code&gt;sed -i &#39;s/old_string/new_string/g&#39; filename.py&lt;/bash_code&gt;</span>
-
-<span class="w">    </span><span class="no">Replace only first occurrence</span>
-
-<span class="w">    </span><span class="no">&lt;bash_code&gt;sed -i &#39;s/old_string/new_string/&#39; filename.py&lt;/bash_code&gt;</span>
-
-<span class="w">    </span><span class="no">Replace first occurrence on line 1</span>
-
-<span class="w">    </span><span class="no">&lt;bash_code&gt;sed -i &#39;1s/old_string/new_string/&#39; filename.py&lt;/bash_code&gt;</span>
-
-<span class="w">    </span><span class="no">Replace all occurrences in lines 1-10</span>
-
-<span class="w">    </span><span class="no">&lt;bash_code&gt;sed -i &#39;1,10s/old_string/new_string/g&#39; filename.py&lt;/bash_code&gt;</span>
-
-<span class="w">    </span><span class="no">### View file content:</span>
-
-<span class="w">    </span><span class="no">View specific lines with numbers</span>
-
-<span class="w">    </span><span class="no">&lt;bash_code&gt; nl -ba filename.py | sed -n &#39;10,20p&#39;&lt;/bash_code&gt;</span>
-
-<span class="w">    </span><span class="no">Any other command you want to run</span>
-
-<span class="w">    </span><span class="no">&lt;bash_code&gt;anything&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">- You can use bash commands or invoke any tool that is available in the environment</span>
+<span class="w">    </span><span class="no">- You can also create new tools or scripts to help you with the task</span>
+<span class="w">    </span><span class="no">- If a tool isn&#39;t available, you can also install it</span>
 
 <span class="w">    </span><span class="no">## Submission</span>
 
-<span class="w">    </span><span class="no">When you&#39;ve completed your work (reading, editing, testing), and cannot make further progress</span>
-<span class="w">    </span><span class="no">issue exactly the following command:</span>
+<span class="w">    </span><span class="no">When you&#39;ve completed your work, you MUST submit your changes as a git patch.</span>
+<span class="w">    </span><span class="no">Follow these steps IN ORDER, with SEPARATE commands:</span>
 
-<span class="w">    </span><span class="no">&lt;bash_code&gt;echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT &amp;&amp; git add -A &amp;&amp; git diff --cached&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">Step 1: Create the patch file</span>
+<span class="w">    </span><span class="no">Run `git diff -- path/to/file1 path/to/file2 &gt; patch.txt` listing only the source files you modified.</span>
+<span class="w">    </span><span class="no">Do NOT commit your changes.</span>
 
-<span class="w">    </span><span class="no">This command will submit your work.</span>
-<span class="w">    </span><span class="no">You cannot continue working (reading, editing, testing) in any way on this task after submitting.</span>
+<span class="w">    </span><span class="no">&lt;IMPORTANT&gt;</span>
+<span class="w">    </span><span class="no">The patch must only contain changes to the specific source files you modified to fix the issue.</span>
+<span class="w">    </span><span class="no">Do not submit file creations or changes to any of the following files:</span>
+
+<span class="w">    </span><span class="no">- test and reproduction files</span>
+<span class="w">    </span><span class="no">- helper scripts, tests, or tools that you created</span>
+<span class="w">    </span><span class="no">- installation, build, packaging, configuration, or setup scripts unless they are directly part of the issue you were fixing (you can assume that the environment is already set up for your client)</span>
+<span class="w">    </span><span class="no">- binary or compiled files</span>
+<span class="w">    </span><span class="no">&lt;/IMPORTANT&gt;</span>
+
+<span class="w">    </span><span class="no">Step 2: Verify your patch</span>
+<span class="w">    </span><span class="no">Inspect patch.txt to confirm it only contains your intended changes and headers show `--- a/` and `+++ b/` paths.</span>
+
+<span class="w">    </span><span class="no">Step 3: Submit (EXACT command required)</span>
+<span class="w">    </span><span class="no">You MUST use this EXACT command to submit:</span>
+
+<span class="w">    </span><span class="no">&lt;mswea_bash_command&gt;echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT &amp;&amp; cat patch.txt&lt;/mswea_bash_command&gt;</span>
+
+<span class="w">    </span><span class="no">If the command fails (nonzero exit status), it will not submit.</span>
+
+<span class="w">    </span><span class="no">&lt;CRITICAL&gt;</span>
+<span class="w">    </span><span class="no">- Creating/viewing the patch and submitting it MUST be separate commands (not combined with &amp;&amp;).</span>
+<span class="w">    </span><span class="no">- If you modify patch.txt after verifying, you SHOULD verify again before submitting.</span>
+<span class="w">    </span><span class="no">- You CANNOT continue working (reading, editing, testing) in any way on this task after submitting.</span>
+<span class="w">    </span><span class="no">&lt;/CRITICAL&gt;</span>
 <span class="w">    </span><span class="no">&lt;/instructions&gt;</span>
-<span class="w">  </span><span class="nt">action_observation_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span>
+<span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
+
+<span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cwd</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/testbed&quot;</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">  </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">PAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
+<span class="w">    </span><span class="nt">MANPAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
+<span class="w">    </span><span class="nt">LESS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-R</span>
+<span class="w">    </span><span class="nt">PIP_PROGRESS_BAR</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;off&#39;</span>
+<span class="w">    </span><span class="nt">TQDM_DISABLE</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
+<span class="w">  </span><span class="nt">environment_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker</span>
+
+<span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">observation_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">{% if output.exception_info -%}</span>
+<span class="w">    </span><span class="no">&lt;exception&gt;{{output.exception_info}}&lt;/exception&gt;</span>
+<span class="w">    </span><span class="no">{% endif -%}</span>
 <span class="w">    </span><span class="no">&lt;returncode&gt;{{output.returncode}}&lt;/returncode&gt;</span>
 <span class="w">    </span><span class="no">{% if output.output | length &lt; 10000 -%}</span>
 <span class="w">    </span><span class="no">&lt;output&gt;</span>
@@ -2452,35 +2564,20 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">{{ output.output[-5000:] }}</span>
 <span class="w">    </span><span class="no">&lt;/output_tail&gt;</span>
 <span class="w">    </span><span class="no">{%- endif -%}</span>
+<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;mswea_bash_command&gt;(.*?)&lt;/mswea_bash_command&gt;</span>
 <span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">Please always provide EXACTLY ONE action in the `&lt;bash_code&gt;` block, found {{actions|length}} actions.</span>
+<span class="w">    </span><span class="no">Please always provide EXACTLY ONE action in the `&lt;mswea_bash_command&gt;` block, found {{actions|length}} actions.</span>
 
-<span class="w">    </span><span class="no">Please format your action in a `&lt;bash_code&gt;` block as shown in &lt;response_example&gt;.</span>
+<span class="w">    </span><span class="no">Please format your action in a `&lt;mswea_bash_command&gt;` block as shown in &lt;response_example&gt;.</span>
 
 <span class="w">    </span><span class="no">&lt;response_example&gt;</span>
 <span class="w">    </span><span class="no">Here are some thoughts about why you want to perform the action.</span>
 
-<span class="w">    </span><span class="no">&lt;bash_code&gt;ls -la&lt;/bash_code&gt;</span>
+<span class="w">    </span><span class="no">&lt;mswea_bash_command&gt;ls -la&lt;/mswea_bash_command&gt;</span>
 <span class="w">    </span><span class="no">&lt;/response_example&gt;</span>
 
 <span class="w">    </span><span class="no">If you have completed your assignment, please consult the first message about how to</span>
 <span class="w">    </span><span class="no">submit your solution (you will not be able to continue working on this task after that).</span>
-<span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250</span>
-<span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
-<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;bash_code&gt;(.*?)&lt;/bash_code&gt;</span>
-
-<span class="nt">environment</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">cwd</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/testbed&quot;</span>
-<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<span class="w">  </span><span class="nt">env</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">PAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
-<span class="w">    </span><span class="nt">MANPAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
-<span class="w">    </span><span class="nt">LESS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-R</span>
-<span class="w">    </span><span class="nt">PIP_PROGRESS_BAR</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;off&#39;</span>
-<span class="w">    </span><span class="nt">TQDM_DISABLE</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;1&#39;</span>
-<span class="w">  </span><span class="nt">environment_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker</span>
-
-<span class="nt">model</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;minimax/minimax-m2&quot;</span>
 <span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openrouter</span>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
@@ -2491,12 +2588,13 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <details class="example">
 <summary>Default markdown format</summary>
 <p>This is the default configuration (already the default, you don't need to specify this):</p>
-<div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash\s*\n(.*?)\n```</span>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">mswea_bash_command\s*\n(.*?)\n```</span>
+<span class="nt">agent</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">Your response must contain exactly ONE bash code block.</span>
 
-<span class="w">    </span><span class="no">```bash</span>
+<span class="w">    </span><span class="no">```mswea_bash_command</span>
 <span class="w">    </span><span class="no">your_command_here</span>
 <span class="w">    </span><span class="no">```</span>
 </code></pre></div>
@@ -2618,13 +2716,13 @@ The best way is to keep your regex on a single line and NOT use any quotation ma
         
         
           
-          <a href="../environments/" class="md-footer__link md-footer__link--next" aria-label="Next: Environments">
+          <a href="../../usage/python_bindings/" class="md-footer__link md-footer__link--next" aria-label="Next: Basic Python bindings">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Environments
+                Basic Python bindings
               </div>
             </div>
             <div class="md-footer__button md-icon">

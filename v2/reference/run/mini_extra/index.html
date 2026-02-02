@@ -122,6 +122,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -411,6 +430,8 @@
       
         
       
+        
+      
     
     
       
@@ -490,6 +511,8 @@
       
         
       
+        
+      
     
     
       
@@ -549,11 +572,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/mini_v/" class="md-nav__link">
+      <a href="../../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -596,6 +619,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -743,12 +787,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -766,7 +804,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -776,7 +814,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -822,6 +860,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -850,32 +1009,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/control_flow/" class="md-nav__link">
+      <a href="../../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -1022,8 +1160,6 @@
       
         
       
-        
-      
     
     
       
@@ -1088,27 +1224,6 @@
   
   <span class="md-ellipsis">
     InteractiveAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
   </span>
   
 
@@ -1189,6 +1304,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../models/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../models/litellm/" class="md-nav__link">
         
   
@@ -1210,32 +1346,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/litellm_response/" class="md-nav__link">
+      <a href="../../models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../models/anthropic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
+    LitellmResponseModel
   </span>
   
 
@@ -1546,8 +1661,6 @@
       
         
       
-        
-      
     
     
       
@@ -1674,7 +1787,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.run.mini_extra" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.mini_extra" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;mini_extra
     </span>
@@ -1684,7 +1797,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.mini_extra.subcommands" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.mini_extra.subcommands" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;subcommands
     </span>
@@ -1693,7 +1806,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.mini_extra.get_docstring" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.mini_extra.get_docstring" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_docstring
     </span>
@@ -1702,7 +1815,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.mini_extra.main" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.mini_extra.main" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
     </span>
@@ -1757,27 +1870,6 @@
   
   <span class="md-ellipsis">
     Inspector
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
   </span>
   
 
@@ -1911,7 +2003,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.run.mini_extra" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.mini_extra" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;mini_extra
     </span>
@@ -1921,7 +2013,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.mini_extra.subcommands" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.mini_extra.subcommands" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;subcommands
     </span>
@@ -1930,7 +2022,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.mini_extra.get_docstring" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.mini_extra.get_docstring" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;get_docstring
     </span>
@@ -1939,7 +2031,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.mini_extra.main" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.mini_extra.main" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
     </span>
@@ -1980,11 +2072,16 @@
 <div class="admonition note">
 <p class="admonition-title">Mini Extra CLI</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/mini_extra.py">Read on GitHub</a></li>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/utilities/mini_extra.py">Read on GitHub</a></li>
 </ul>
 <details class="note">
 <summary>Full source code</summary>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;This is the central entry point to the mini-extra script. Use subcommands</span>
+<span class="sd">to invoke other command line utilities like running on benchmarks, editing config,</span>
+<span class="sd">inspecting trajectories, etc.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_module</span>
@@ -1992,11 +2089,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
 
 <span class="n">subcommands</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">&quot;minisweagent.run.extra.config&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">],</span> <span class="s2">&quot;Manage the global config file&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;minisweagent.run.inspector&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;inspect&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;inspector&quot;</span><span class="p">],</span> <span class="s2">&quot;Run inspector (browse trajectories)&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;minisweagent.run.github_issue&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;github-issue&quot;</span><span class="p">,</span> <span class="s2">&quot;gh&quot;</span><span class="p">],</span> <span class="s2">&quot;Run on a GitHub issue&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;minisweagent.run.extra.swebench&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;swebench&quot;</span><span class="p">],</span> <span class="s2">&quot;Evaluate on SWE-bench (batch mode)&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;minisweagent.run.extra.swebench_single&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;swebench-single&quot;</span><span class="p">],</span> <span class="s2">&quot;Evaluate on SWE-bench (single instance)&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;minisweagent.run.utilities.config&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;config&quot;</span><span class="p">],</span> <span class="s2">&quot;Manage the global config file&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;minisweagent.run.utilities.inspector&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;inspect&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;inspector&quot;</span><span class="p">],</span> <span class="s2">&quot;Run inspector (browse trajectories)&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;minisweagent.run.benchmarks.swebench&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;swebench&quot;</span><span class="p">],</span> <span class="s2">&quot;Evaluate on SWE-bench (batch mode)&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;minisweagent.run.benchmarks.swebench_single&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;swebench-single&quot;</span><span class="p">],</span> <span class="s2">&quot;Evaluate on SWE-bench (single instance)&quot;</span><span class="p">),</span>
 <span class="p">]</span>
 
 
@@ -2038,13 +2134,17 @@
 
 
 
-<h2 id="minisweagent.run.mini_extra" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.run.mini_extra</span>
+<h2 id="minisweagent.run.utilities.mini_extra" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.run.utilities.mini_extra</span>
 
 
 </h2>
 
     <div class="doc doc-contents first">
+
+        <p>This is the central entry point to the mini-extra script. Use subcommands
+to invoke other command line utilities like running on benchmarks, editing config,
+inspecting trajectories, etc.</p>
 
 
 
@@ -2065,7 +2165,7 @@
 
 
 
-<h3 id="minisweagent.run.mini_extra.subcommands" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.mini_extra.subcommands" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">subcommands</span>
 
 
@@ -2074,7 +2174,7 @@
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">subcommands</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;minisweagent.run.extra.config&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">],</span> <span class="s1">&#39;Manage the global config file&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;minisweagent.run.inspector&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;inspect&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;inspector&#39;</span><span class="p">],</span> <span class="s1">&#39;Run inspector (browse trajectories)&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;minisweagent.run.github_issue&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;github-issue&#39;</span><span class="p">,</span> <span class="s1">&#39;gh&#39;</span><span class="p">],</span> <span class="s1">&#39;Run on a GitHub issue&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;minisweagent.run.extra.swebench&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;swebench&#39;</span><span class="p">],</span> <span class="s1">&#39;Evaluate on SWE-bench (batch mode)&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;minisweagent.run.extra.swebench_single&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;swebench-single&#39;</span><span class="p">],</span> <span class="s1">&#39;Evaluate on SWE-bench (single instance)&#39;</span><span class="p">)]</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">subcommands</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;minisweagent.run.utilities.config&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">],</span> <span class="s1">&#39;Manage the global config file&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;minisweagent.run.utilities.inspector&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;inspect&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;inspector&#39;</span><span class="p">],</span> <span class="s1">&#39;Run inspector (browse trajectories)&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;minisweagent.run.benchmarks.swebench&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;swebench&#39;</span><span class="p">],</span> <span class="s1">&#39;Evaluate on SWE-bench (batch mode)&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;minisweagent.run.benchmarks.swebench_single&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;swebench-single&#39;</span><span class="p">],</span> <span class="s1">&#39;Evaluate on SWE-bench (single instance)&#39;</span><span class="p">)]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2087,7 +2187,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="minisweagent.run.mini_extra.get_docstring" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.mini_extra.get_docstring" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">get_docstring</span>
 
 
@@ -2098,18 +2198,18 @@
     <div class="doc doc-contents ">
 
             <details class="quote">
-              <summary>Source code in <code>src/minisweagent/run/mini_extra.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
+              <summary>Source code in <code>src/minisweagent/run/utilities/mini_extra.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_docstring</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_docstring</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;This is the [yellow]central entry point for all extra commands[/yellow] from mini-swe-agent.&quot;</span><span class="p">,</span>
         <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -2129,7 +2229,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="minisweagent.run.mini_extra.main" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.mini_extra.main" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">main</span>
 
 
@@ -2140,18 +2240,18 @@
     <div class="doc doc-contents ">
 
             <details class="quote">
-              <summary>Source code in <code>src/minisweagent/run/mini_extra.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
+              <summary>Source code in <code>src/minisweagent/run/utilities/mini_extra.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
 <span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
-<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;-h&quot;</span><span class="p">,</span> <span class="s2">&quot;--help&quot;</span><span class="p">]:</span>

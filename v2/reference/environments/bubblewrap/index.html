@@ -122,6 +122,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -411,6 +430,8 @@
       
         
       
+        
+      
     
     
       
@@ -490,6 +511,8 @@
       
         
       
+        
+      
     
     
       
@@ -549,11 +572,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/mini_v/" class="md-nav__link">
+      <a href="../../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -596,6 +619,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -743,12 +787,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -766,7 +804,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -776,7 +814,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -822,6 +860,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -850,32 +1009,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/control_flow/" class="md-nav__link">
+      <a href="../../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -1022,8 +1160,6 @@
       
         
       
-        
-      
     
     
       
@@ -1088,27 +1224,6 @@
   
   <span class="md-ellipsis">
     InteractiveAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
   </span>
   
 
@@ -1189,6 +1304,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../models/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../models/litellm/" class="md-nav__link">
         
   
@@ -1210,32 +1346,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/litellm_response/" class="md-nav__link">
+      <a href="../../models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../models/anthropic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
+    LitellmResponseModel
   </span>
   
 
@@ -1680,6 +1795,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment.serialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;serialize
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1715,8 +1839,6 @@
   
     
     
-      
-        
       
         
       
@@ -1859,27 +1981,6 @@
   
   <span class="md-ellipsis">
     Inspector
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../run/github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
   </span>
   
 
@@ -2146,6 +2247,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment.serialize" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;serialize
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2231,15 +2341,12 @@ This environment uses bubblewrap to execute commands in a sandboxed environment.
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BubblewrapEnvironmentConfig</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">BubblewrapEnvironmentConfig</span><span class="p">(</span><span class="n">cwd</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict</span><span class="p">(),</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">executable</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span><span class="s1">&#39;MSWEA_BUBBLEWRAP_EXECUTABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;bwrap&#39;</span><span class="p">),</span> <span class="n">wrapper_args</span><span class="p">:</span> <span class="n">list</span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;--unshare-user-try&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/bin&#39;</span><span class="p">,</span> <span class="s1">&#39;/bin&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib64&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib64&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/etc&#39;</span><span class="p">,</span> <span class="s1">&#39;/etc&#39;</span><span class="p">,</span> <span class="s1">&#39;--tmpfs&#39;</span><span class="p">,</span> <span class="s1">&#39;/tmp&#39;</span><span class="p">,</span> <span class="s1">&#39;--proc&#39;</span><span class="p">,</span> <span class="s1">&#39;/proc&#39;</span><span class="p">,</span> <span class="s1">&#39;--dev&#39;</span><span class="p">,</span> <span class="s1">&#39;/dev&#39;</span><span class="p">,</span> <span class="s1">&#39;--new-session&#39;</span><span class="p">,</span> <span class="s1">&#39;--setenv&#39;</span><span class="p">,</span> <span class="s1">&#39;PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr/local/bin:/usr/sbin:/usr/bin:/bin&#39;</span><span class="p">]())</span>
-</code></pre></div>
+
 
     <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
@@ -2296,7 +2403,7 @@ This environment uses bubblewrap to execute commands in a sandboxed environment.
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">env</span><span class="p">:</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dataclasses.field">field</span></span><span class="p">(</span><span class="n"><span title="dataclasses.field(default_factory)">default_factory</span></span><span class="o">=</span><span class="n">dict</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">env</span><span class="p">:</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2368,7 +2475,7 @@ This environment uses bubblewrap to execute commands in a sandboxed environment.
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">wrapper_args</span><span class="p">:</span> <span class="n">list</span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="dataclasses.field">field</span></span><span class="p">(</span><span class="n"><span title="dataclasses.field(default_factory)">default_factory</span></span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;--unshare-user-try&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/bin&#39;</span><span class="p">,</span> <span class="s1">&#39;/bin&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib64&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib64&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/etc&#39;</span><span class="p">,</span> <span class="s1">&#39;/etc&#39;</span><span class="p">,</span> <span class="s1">&#39;--tmpfs&#39;</span><span class="p">,</span> <span class="s1">&#39;/tmp&#39;</span><span class="p">,</span> <span class="s1">&#39;--proc&#39;</span><span class="p">,</span> <span class="s1">&#39;/proc&#39;</span><span class="p">,</span> <span class="s1">&#39;--dev&#39;</span><span class="p">,</span> <span class="s1">&#39;/dev&#39;</span><span class="p">,</span> <span class="s1">&#39;--new-session&#39;</span><span class="p">,</span> <span class="s1">&#39;--setenv&#39;</span><span class="p">,</span> <span class="s1">&#39;PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr/local/bin:/usr/sbin:/usr/bin:/bin&#39;</span><span class="p">])</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">wrapper_args</span><span class="p">:</span> <span class="n">list</span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;--unshare-user-try&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/bin&#39;</span><span class="p">,</span> <span class="s1">&#39;/bin&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib64&#39;</span><span class="p">,</span> <span class="s1">&#39;/lib64&#39;</span><span class="p">,</span> <span class="s1">&#39;--ro-bind&#39;</span><span class="p">,</span> <span class="s1">&#39;/etc&#39;</span><span class="p">,</span> <span class="s1">&#39;/etc&#39;</span><span class="p">,</span> <span class="s1">&#39;--tmpfs&#39;</span><span class="p">,</span> <span class="s1">&#39;/tmp&#39;</span><span class="p">,</span> <span class="s1">&#39;--proc&#39;</span><span class="p">,</span> <span class="s1">&#39;/proc&#39;</span><span class="p">,</span> <span class="s1">&#39;--dev&#39;</span><span class="p">,</span> <span class="s1">&#39;/dev&#39;</span><span class="p">,</span> <span class="s1">&#39;--new-session&#39;</span><span class="p">,</span> <span class="s1">&#39;--setenv&#39;</span><span class="p">,</span> <span class="s1">&#39;PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr/local/bin:/usr/sbin:/usr/bin:/bin&#39;</span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2413,8 +2520,7 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
 
                   <details class="quote">
                     <summary>Source code in <code>src/minisweagent/environments/extra/bubblewrap.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">69</span>
-<span class="normal">70</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
@@ -2422,7 +2528,8 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
 <span class="normal">75</span>
 <span class="normal">76</span>
 <span class="normal">77</span>
-<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">78</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">BubblewrapEnvironmentConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This class executes bash commands in a bubblewrap environment and a separate working</span>
@@ -2518,7 +2625,7 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
 
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">execute</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="n">str</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">execute</span><span class="p">(</span><span class="n">action</span><span class="p">:</span> <span class="n">dict</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2527,8 +2634,7 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/environments/extra/bubblewrap.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 80</span>
-<span class="normal"> 81</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 81</span>
 <span class="normal"> 82</span>
 <span class="normal"> 83</span>
 <span class="normal"> 84</span>
@@ -2548,8 +2654,25 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
-<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute a command in the bubblewrap environment and return the result as a dict.&quot;&quot;&quot;</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">cwd</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cwd</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
 
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">executable</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wrapper_args</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;--bind&quot;</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="s2">&quot;--chdir&quot;</span><span class="p">,</span> <span class="n">cwd</span><span class="p">]</span>
@@ -2560,16 +2683,30 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
 
     <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;bash&quot;</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">])</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="n">cmd</span><span class="p">,</span>
-        <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
-        <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span>
-        <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">,</span>
-        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
-        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s2">&quot;returncode&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="n">cmd</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
+            <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span>
+            <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s2">&quot;returncode&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="s2">&quot;exception_info&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">raw_output</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">raw_output</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">raw_output</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_output</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="n">raw_output</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">raw_output</span><span class="p">,</span>
+            <span class="s2">&quot;returncode&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;exception_info&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;An error occurred while executing the command: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;extra&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;exception_type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;exception&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)},</span>
+        <span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_check_finished</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2591,9 +2728,9 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/environments/extra/bubblewrap.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">working_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -2610,16 +2747,54 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
 
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_template_vars</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_template_vars</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
             <details class="quote">
               <summary>Source code in <code>src/minisweagent/environments/extra/bubblewrap.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> <span class="o">|</span> <span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span> <span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()</span><span class="o">.</span><span class="n">_asdict</span><span class="p">(),</span> <span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment.serialize" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">serialize</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">serialize</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">dict</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+            <details class="quote">
+              <summary>Source code in <code>src/minisweagent/environments/extra/bubblewrap.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;info&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;environment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;environment_type&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

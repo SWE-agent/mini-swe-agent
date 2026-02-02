@@ -25,6 +25,10 @@
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
+         <loc>https://mini-swe-agent.com/latest/v2_migration/</loc>
+         <lastmod>2026-02-02</lastmod>
+    </url>
+    <url>
          <loc>https://mini-swe-agent.com/latest/advanced/control_flow/</loc>
          <lastmod>2026-02-02</lastmod>
     </url>
@@ -38,6 +42,10 @@
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/advanced/global_configuration/</loc>
+         <lastmod>2026-02-02</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/advanced/v2_migration/</loc>
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
@@ -69,10 +77,6 @@
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
-         <loc>https://mini-swe-agent.com/latest/reference/agents/textual/</loc>
-         <lastmod>2026-02-02</lastmod>
-    </url>
-    <url>
          <loc>https://mini-swe-agent.com/latest/reference/environments/bubblewrap/</loc>
          <lastmod>2026-02-02</lastmod>
     </url>
@@ -93,7 +97,7 @@
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
-         <loc>https://mini-swe-agent.com/latest/reference/models/anthropic/</loc>
+         <loc>https://mini-swe-agent.com/latest/reference/environments/swerex_modal/</loc>
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
@@ -105,11 +109,15 @@
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
-         <loc>https://mini-swe-agent.com/latest/reference/models/litellm_response/</loc>
+         <loc>https://mini-swe-agent.com/latest/reference/models/litellm_response_toolcall/</loc>
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
          <loc>https://mini-swe-agent.com/latest/reference/models/openrouter/</loc>
+         <lastmod>2026-02-02</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/reference/models/overview/</loc>
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
@@ -137,10 +145,6 @@
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
-         <loc>https://mini-swe-agent.com/latest/reference/run/github_issue/</loc>
-         <lastmod>2026-02-02</lastmod>
-    </url>
-    <url>
          <loc>https://mini-swe-agent.com/latest/reference/run/hello_world/</loc>
          <lastmod>2026-02-02</lastmod>
     </url>
@@ -165,6 +169,10 @@
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
+         <loc>https://mini-swe-agent.com/latest/usage/config/</loc>
+         <lastmod>2026-02-02</lastmod>
+    </url>
+    <url>
          <loc>https://mini-swe-agent.com/latest/usage/inspector/</loc>
          <lastmod>2026-02-02</lastmod>
     </url>
@@ -173,7 +181,11 @@
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>
-         <loc>https://mini-swe-agent.com/latest/usage/mini_v/</loc>
+         <loc>https://mini-swe-agent.com/latest/usage/output_files/</loc>
+         <lastmod>2026-02-02</lastmod>
+    </url>
+    <url>
+         <loc>https://mini-swe-agent.com/latest/usage/python_bindings/</loc>
          <lastmod>2026-02-02</lastmod>
     </url>
     <url>

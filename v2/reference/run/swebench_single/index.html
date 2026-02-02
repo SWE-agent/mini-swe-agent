@@ -120,6 +120,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -409,6 +428,8 @@
       
         
       
+        
+      
     
     
       
@@ -488,6 +509,8 @@
       
         
       
+        
+      
     
     
       
@@ -547,11 +570,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/mini_v/" class="md-nav__link">
+      <a href="../../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -594,6 +617,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -741,12 +785,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -764,7 +802,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -774,7 +812,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -820,6 +858,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -848,32 +1007,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/control_flow/" class="md-nav__link">
+      <a href="../../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -1020,8 +1158,6 @@
       
         
       
-        
-      
     
     
       
@@ -1086,27 +1222,6 @@
   
   <span class="md-ellipsis">
     InteractiveAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
   </span>
   
 
@@ -1187,6 +1302,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../models/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../models/litellm/" class="md-nav__link">
         
   
@@ -1208,32 +1344,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/litellm_response/" class="md-nav__link">
+      <a href="../../models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../models/anthropic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
+    LitellmResponseModel
   </span>
   
 
@@ -1544,8 +1659,6 @@
       
         
       
-        
-      
     
     
       
@@ -1689,27 +1802,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../swebench/" class="md-nav__link">
         
   
@@ -1777,7 +1869,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.swebench_single" class="md-nav__link">
+  <a href="#minisweagent.run.benchmarks.swebench_single" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;swebench_single
     </span>
@@ -1787,7 +1879,25 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.swebench_single.app" class="md-nav__link">
+  <a href="#minisweagent.run.benchmarks.swebench_single.DEFAULT_OUTPUT_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_OUTPUT_FILE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.run.benchmarks.swebench_single.DEFAULT_CONFIG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_CONFIG_FILE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.run.benchmarks.swebench_single.app" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;app
     </span>
@@ -1796,16 +1906,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_OUTPUT
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.swebench_single.main" class="md-nav__link">
+  <a href="#minisweagent.run.benchmarks.swebench_single.main" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
     </span>
@@ -1909,7 +2010,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.swebench_single" class="md-nav__link">
+  <a href="#minisweagent.run.benchmarks.swebench_single" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;swebench_single
     </span>
@@ -1919,7 +2020,25 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.swebench_single.app" class="md-nav__link">
+  <a href="#minisweagent.run.benchmarks.swebench_single.DEFAULT_OUTPUT_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_OUTPUT_FILE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.run.benchmarks.swebench_single.DEFAULT_CONFIG_FILE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_CONFIG_FILE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.run.benchmarks.swebench_single.app" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;app
     </span>
@@ -1928,16 +2047,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DEFAULT_OUTPUT
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.swebench_single.main" class="md-nav__link">
+  <a href="#minisweagent.run.benchmarks.swebench_single.main" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;main
     </span>
@@ -1978,7 +2088,7 @@
 <div class="admonition note">
 <p class="admonition-title">SWE-bench Single run script</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/extra/swebench_single.py">Read on GitHub</a></li>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/benchmarks/swebench_single.py">Read on GitHub</a></li>
 </ul>
 </div>
 
@@ -1987,8 +2097,8 @@
 
 
 
-<h2 id="minisweagent.run.extra.swebench_single" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.run.extra.swebench_single</span>
+<h2 id="minisweagent.run.benchmarks.swebench_single" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.run.benchmarks.swebench_single</span>
 
 
 </h2>
@@ -2016,7 +2126,49 @@
 
 
 
-<h3 id="minisweagent.run.extra.swebench_single.app" class="doc doc-heading">
+<h3 id="minisweagent.run.benchmarks.swebench_single.DEFAULT_OUTPUT_FILE" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">DEFAULT_OUTPUT_FILE</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">DEFAULT_OUTPUT_FILE</span> <span class="o">=</span> <span class="n"><span title="minisweagent.global_config_dir">global_config_dir</span></span> <span class="o">/</span> <span class="s1">&#39;last_swebench_single_run.traj.json&#39;</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="minisweagent.run.benchmarks.swebench_single.DEFAULT_CONFIG_FILE" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">DEFAULT_CONFIG_FILE</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n"><span title="minisweagent.config.builtin_config_dir">builtin_config_dir</span></span> <span class="o">/</span> <span class="s1">&#39;benchmarks&#39;</span> <span class="o">/</span> <span class="s1">&#39;swebench.yaml&#39;</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="minisweagent.run.benchmarks.swebench_single.app" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">app</span>
 
 
@@ -2033,38 +2185,17 @@
 
 </div>
 
-<div class="doc doc-object doc-attribute">
-
-
-
-<h3 id="minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">DEFAULT_OUTPUT</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
-  </span>
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">DEFAULT_OUTPUT</span> <span class="o">=</span> <span class="n"><span title="minisweagent.global_config_dir">global_config_dir</span></span> <span class="o">/</span> <span class="s1">&#39;last_swebench_single_run.traj.json&#39;</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-    </div>
-
-</div>
-
 
 
 <div class="doc doc-object doc-function">
 
 
-<h3 id="minisweagent.run.extra.swebench_single.main" class="doc doc-heading">
+<h3 id="minisweagent.run.benchmarks.swebench_single.main" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">main</span>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">main</span><span class="p">(</span><span class="n">subset</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="s1">&#39;lite&#39;</span><span class="p">,</span> <span class="s1">&#39;--subset&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;SWEBench subset to use or path to a dataset&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Data selection&#39;</span><span class="p">),</span> <span class="n">split</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="s1">&#39;dev&#39;</span><span class="p">,</span> <span class="s1">&#39;--split&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;Dataset split&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Data selection&#39;</span><span class="p">),</span> <span class="n">instance_spec</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--instance&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;SWE-Bench instance ID or index&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Data selection&#39;</span><span class="p">),</span> <span class="n">model_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--model&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;Model to use&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Basic&#39;</span><span class="p">),</span> <span class="n">model_class</span><span class="p">:</span> <span class="n">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;--model-class&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">&quot;Model class to use (e.g., &#39;anthropic&#39; or &#39;minisweagent.models.anthropic.AnthropicModel&#39;)&quot;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Advanced&#39;</span><span class="p">),</span> <span class="n">config_path</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="n"><span title="minisweagent.config.builtin_config_dir">builtin_config_dir</span></span> <span class="o">/</span> <span class="s1">&#39;extra&#39;</span> <span class="o">/</span> <span class="s1">&#39;swebench.yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;Path to a config file&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Basic&#39;</span><span class="p">),</span> <span class="n">environment_class</span><span class="p">:</span> <span class="n">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;--environment-class&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Advanced&#39;</span><span class="p">),</span> <span class="n">exit_immediately</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;--exit-immediately&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;Exit immediately when the agent wants to finish instead of prompting.&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Basic&#39;</span><span class="p">),</span> <span class="n">output</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="n"><a class="autorefs autorefs-internal" title="minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT" href="#minisweagent.run.extra.swebench_single.DEFAULT_OUTPUT">DEFAULT_OUTPUT</a></span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;Output trajectory file&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Basic&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">main</span><span class="p">(</span><span class="n">subset</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="s1">&#39;lite&#39;</span><span class="p">,</span> <span class="s1">&#39;--subset&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;SWEBench subset to use or path to a dataset&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Data selection&#39;</span><span class="p">),</span> <span class="n">split</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="s1">&#39;dev&#39;</span><span class="p">,</span> <span class="s1">&#39;--split&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;Dataset split&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Data selection&#39;</span><span class="p">),</span> <span class="n">instance_spec</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--instance&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;SWE-Bench instance ID or index&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Data selection&#39;</span><span class="p">),</span> <span class="n">model_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--model&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;Model to use&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Basic&#39;</span><span class="p">),</span> <span class="n">model_class</span><span class="p">:</span> <span class="n">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;--model-class&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">&quot;Model class to use (e.g., &#39;anthropic&#39; or &#39;minisweagent.models.anthropic.AnthropicModel&#39;)&quot;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Advanced&#39;</span><span class="p">),</span> <span class="n">config_spec</span><span class="p">:</span> <span class="n">list</span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">([</span><span class="n">str</span><span class="p">(</span><span class="n"><a class="autorefs autorefs-internal" title="minisweagent.run.benchmarks.swebench_single.DEFAULT_CONFIG_FILE" href="#minisweagent.run.benchmarks.swebench_single.DEFAULT_CONFIG_FILE">DEFAULT_CONFIG_FILE</a></span><span class="p">)],</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="n"><span title="minisweagent.run.benchmarks.swebench_single._CONFIG_SPEC_HELP_TEXT">_CONFIG_SPEC_HELP_TEXT</span></span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Basic&#39;</span><span class="p">),</span> <span class="n">environment_class</span><span class="p">:</span> <span class="n">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;--environment-class&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Advanced&#39;</span><span class="p">),</span> <span class="n">exit_immediately</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;--exit-immediately&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;Exit immediately when the agent wants to finish instead of prompting.&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Basic&#39;</span><span class="p">),</span> <span class="n">output</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span><span class="n"><a class="autorefs autorefs-internal" title="minisweagent.run.benchmarks.swebench_single.DEFAULT_OUTPUT_FILE" href="#minisweagent.run.benchmarks.swebench_single.DEFAULT_OUTPUT_FILE">DEFAULT_OUTPUT_FILE</a></span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s1">&#39;Output trajectory file&#39;</span><span class="p">,</span> <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s1">&#39;Basic&#39;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2072,23 +2203,8 @@
         <p>Run on a single SWE-Bench instance.</p>
 
             <details class="quote">
-              <summary>Source code in <code>src/minisweagent/run/extra/swebench_single.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
+              <summary>Source code in <code>src/minisweagent/run/benchmarks/swebench_single.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span>
 <span class="normal">45</span>
@@ -2121,17 +2237,27 @@
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
-<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;lite&quot;</span><span class="p">,</span> <span class="s2">&quot;--subset&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;SWEBench subset to use or path to a dataset&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Data selection&quot;</span><span class="p">),</span>
     <span class="n">split</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="s2">&quot;--split&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Dataset split&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Data selection&quot;</span><span class="p">),</span>
     <span class="n">instance_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--instance&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;SWE-Bench instance ID or index&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Data selection&quot;</span><span class="p">),</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;--model&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Model to use&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
     <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--model-class&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Model class to use (e.g., &#39;anthropic&#39; or &#39;minisweagent.models.anthropic.AnthropicModel&#39;)&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Advanced&quot;</span><span class="p">),</span>
-    <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span> <span class="n">builtin_config_dir</span> <span class="o">/</span> <span class="s2">&quot;extra&quot;</span> <span class="o">/</span> <span class="s2">&quot;swebench.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to a config file&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
+    <span class="n">config_spec</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE</span><span class="p">)],</span> <span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--config&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">_CONFIG_SPEC_HELP_TEXT</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
     <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--environment-class&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Advanced&quot;</span><span class="p">),</span>
     <span class="n">exit_immediately</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;--exit-immediately&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Exit immediately when the agent wants to finish instead of prompting.&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
-    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_OUTPUT</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output trajectory file&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_OUTPUT_FILE</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output trajectory file&quot;</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">&quot;Basic&quot;</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># fmt: on</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run on a single SWE-Bench instance.&quot;&quot;&quot;</span>
@@ -2145,31 +2271,26 @@
         <span class="n">instance_spec</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">instances</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="nb">int</span><span class="p">(</span><span class="n">instance_spec</span><span class="p">)]</span>
     <span class="n">instance</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">instances</span><span class="p">[</span><span class="n">instance_spec</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
 
-    <span class="n">config_path</span> <span class="o">=</span> <span class="n">get_config_path</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading agent config from &#39;</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">config_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Building agent config from specs: </span><span class="si">{</span><span class="n">config_spec</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_config_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">config_spec</span><span class="p">]</span>
+    <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;agent&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;yolo&quot;</span><span class="p">}})</span>
     <span class="k">if</span> <span class="n">environment_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;environment&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;environment_class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">environment_class</span>
+        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;environment&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;environment_class&quot;</span><span class="p">:</span> <span class="n">environment_class</span><span class="p">}})</span>
     <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;model_class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_class</span>
+        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;model_class&quot;</span><span class="p">:</span> <span class="n">model_class</span><span class="p">}})</span>
+    <span class="k">if</span> <span class="n">model_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">}})</span>
     <span class="k">if</span> <span class="n">exit_immediately</span><span class="p">:</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="p">{})[</span><span class="s2">&quot;confirm_exit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;agent&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;confirm_exit&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}})</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="o">*</span><span class="n">configs</span><span class="p">)</span>
+
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_sb_environment</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">InteractiveAgent</span><span class="p">(</span>
-        <span class="n">get_model</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="p">{})),</span>
+        <span class="n">get_model</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="p">{})),</span>
         <span class="n">env</span><span class="p">,</span>
-        <span class="o">**</span><span class="p">({</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;yolo&quot;</span><span class="p">}</span> <span class="o">|</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="p">{})),</span>
+        <span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent&quot;</span><span class="p">,</span> <span class="p">{}),</span>
     <span class="p">)</span>
-
-    <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">extra_info</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="s2">&quot;problem_statement&quot;</span><span class="p">])</span>  <span class="c1"># type: ignore[arg-type]</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing instance </span><span class="si">{</span><span class="n">instance_spec</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-        <span class="n">extra_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;traceback&quot;</span><span class="p">:</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()}</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">save_traj</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">exit_status</span><span class="o">=</span><span class="n">exit_status</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">extra_info</span><span class="o">=</span><span class="n">extra_info</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
+    <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="s2">&quot;problem_statement&quot;</span><span class="p">])</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

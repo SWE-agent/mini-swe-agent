@@ -122,6 +122,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -411,6 +430,8 @@
       
         
       
+        
+      
     
     
       
@@ -490,6 +511,8 @@
       
         
       
+        
+      
     
     
       
@@ -549,11 +572,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/mini_v/" class="md-nav__link">
+      <a href="../../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -596,6 +619,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -743,12 +787,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -766,7 +804,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -776,7 +814,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -822,6 +860,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -850,32 +1009,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/control_flow/" class="md-nav__link">
+      <a href="../../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -1022,8 +1160,6 @@
       
         
       
-        
-      
     
     
       
@@ -1088,27 +1224,6 @@
   
   <span class="md-ellipsis">
     InteractiveAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
   </span>
   
 
@@ -1189,6 +1304,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../models/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../models/litellm/" class="md-nav__link">
         
   
@@ -1210,32 +1346,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/litellm_response/" class="md-nav__link">
+      <a href="../../models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../models/anthropic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
+    LitellmResponseModel
   </span>
   
 
@@ -1546,8 +1661,6 @@
       
         
       
-        
-      
     
     
       
@@ -1695,7 +1808,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;config
     </span>
@@ -1705,7 +1818,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.app" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.app" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;app
     </span>
@@ -1714,7 +1827,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.console" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.console" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;console
     </span>
@@ -1723,7 +1836,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.configure_if_first_time" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.configure_if_first_time" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;configure_if_first_time
     </span>
@@ -1732,7 +1845,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.setup" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.setup" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;setup
     </span>
@@ -1741,7 +1854,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.set" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.set" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;set
     </span>
@@ -1750,7 +1863,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.unset" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.unset" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;unset
     </span>
@@ -1759,7 +1872,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.edit" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.edit" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;edit
     </span>
@@ -1793,27 +1906,6 @@
   
   <span class="md-ellipsis">
     Inspector
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
   </span>
   
 
@@ -1947,7 +2039,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;config
     </span>
@@ -1957,7 +2049,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.app" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.app" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;app
     </span>
@@ -1966,7 +2058,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.console" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.console" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;console
     </span>
@@ -1975,7 +2067,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.configure_if_first_time" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.configure_if_first_time" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;configure_if_first_time
     </span>
@@ -1984,7 +2076,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.setup" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.setup" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;setup
     </span>
@@ -1993,7 +2085,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.set" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.set" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;set
     </span>
@@ -2002,7 +2094,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.unset" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.unset" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;unset
     </span>
@@ -2011,7 +2103,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.run.extra.config.edit" class="md-nav__link">
+  <a href="#minisweagent.run.utilities.config.edit" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;edit
     </span>
@@ -2052,11 +2144,13 @@
 <div class="admonition note">
 <p class="admonition-title">Global Config Manager</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/extra/config.py">Read on GitHub</a></li>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/utilities/config.py">Read on GitHub</a></li>
 </ul>
 <details class="note">
 <summary>Full source code</summary>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;Utility to manage the global config file.</span>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;Utility to manage the global config file.</span>
 
 <span class="sd">You can also directly edit the `.env` file in the config directory.</span>
 
@@ -2180,8 +2274,8 @@
 
 
 
-<h2 id="minisweagent.run.extra.config" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.run.extra.config</span>
+<h2 id="minisweagent.run.utilities.config" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.run.utilities.config</span>
 
 
 </h2>
@@ -2211,7 +2305,7 @@
 
 
 
-<h3 id="minisweagent.run.extra.config.app" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.config.app" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">app</span>
 
 
@@ -2232,7 +2326,7 @@
 
 
 
-<h3 id="minisweagent.run.extra.config.console" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.config.console" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">console</span>
 
 
@@ -2254,7 +2348,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="minisweagent.run.extra.config.configure_if_first_time" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.config.configure_if_first_time" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">configure_if_first_time</span>
 
 
@@ -2265,12 +2359,12 @@
     <div class="doc doc-contents ">
 
             <details class="quote">
-              <summary>Source code in <code>src/minisweagent/run/extra/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
+              <summary>Source code in <code>src/minisweagent/run/utilities/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
 <span class="normal">52</span>
-<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_if_first_time</span><span class="p">():</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">configure_if_first_time</span><span class="p">():</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_CONFIGURED&quot;</span><span class="p">):</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
         <span class="n">setup</span><span class="p">()</span>
@@ -2284,7 +2378,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="minisweagent.run.extra.config.setup" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.config.setup" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">setup</span>
 
 
@@ -2297,10 +2391,8 @@
         <p>Setup the global config file.</p>
 
             <details class="quote">
-              <summary>Source code in <code>src/minisweagent/run/extra/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
+              <summary>Source code in <code>src/minisweagent/run/utilities/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
 <span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
@@ -2324,7 +2416,9 @@
 <span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
-<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup the global config file.&quot;&quot;&quot;</span>
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">_SETUP_HELP</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">global_config_file</span><span class="o">=</span><span class="n">global_config_file</span><span class="p">))</span>
@@ -2360,7 +2454,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="minisweagent.run.extra.config.set" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.config.set" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">set</span>
 
 
@@ -2373,10 +2467,8 @@
         <p>Set a key in the global config file.</p>
 
             <details class="quote">
-              <summary>Source code in <code>src/minisweagent/run/extra/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
+              <summary>Source code in <code>src/minisweagent/run/utilities/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">87</span>
 <span class="normal">88</span>
 <span class="normal">89</span>
 <span class="normal">90</span>
@@ -2384,7 +2476,9 @@
 <span class="normal">92</span>
 <span class="normal">93</span>
 <span class="normal">94</span>
-<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span>
     <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Argument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The key to set&quot;</span><span class="p">),</span>
     <span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Argument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The value to set&quot;</span><span class="p">),</span>
@@ -2404,7 +2498,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="minisweagent.run.extra.config.unset" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.config.unset" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">unset</span>
 
 
@@ -2417,13 +2511,13 @@
         <p>Unset a key in the global config file.</p>
 
             <details class="quote">
-              <summary>Source code in <code>src/minisweagent/run/extra/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
+              <summary>Source code in <code>src/minisweagent/run/utilities/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
-<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">unset</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Argument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The key to unset&quot;</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Unset a key in the global config file.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2438,7 +2532,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h3 id="minisweagent.run.extra.config.edit" class="doc doc-heading">
+<h3 id="minisweagent.run.utilities.config.edit" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">edit</span>
 
 
@@ -2451,12 +2545,12 @@
         <p>Edit the global config file.</p>
 
             <details class="quote">
-              <summary>Source code in <code>src/minisweagent/run/extra/config.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
+              <summary>Source code in <code>src/minisweagent/run/utilities/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">edit</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Edit the global config file.&quot;&quot;&quot;</span>
     <span class="n">editor</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EDITOR&quot;</span><span class="p">,</span> <span class="s2">&quot;nano&quot;</span><span class="p">)</span>

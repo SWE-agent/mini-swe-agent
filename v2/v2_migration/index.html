@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/">
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/v2_migration/">
       
       
-        <link rel="prev" href="../contributing/">
+        <link rel="prev" href="../advanced/environments/">
       
       
-        <link rel="next" href="agents/default/">
+        <link rel="next" href="../faq/">
       
       
       <link rel="icon" href="../assets/mini_square.svg">
@@ -22,7 +22,7 @@
     
     
       
-        <title>API Reference - mini-SWE-agent documentation</title>
+        <title>v2 migration guide - mini-SWE-agent documentation</title>
       
     
     
@@ -115,7 +115,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-reference" class="md-skip">
+        <a href="#whats-the-objective-of-these-changes" class="md-skip">
           Skip to content
         </a>
       
@@ -173,7 +173,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              API Reference
+              v2 migration guide
             
           </span>
         </div>
@@ -282,10 +282,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href=".." class="md-tabs__link">
           
   
@@ -302,13 +304,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../reference/" class="md-tabs__link">
           
   
     
@@ -409,6 +409,8 @@
       
   
   
+    
+  
   
   
     
@@ -435,14 +437,17 @@
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
         
           
           
@@ -458,13 +463,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             Getting Started
@@ -872,8 +877,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -893,11 +900,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" checked>
         
           
           <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
@@ -911,7 +918,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_6">
             <span class="md-nav__icon md-icon"></span>
             Python bindings & more
@@ -1006,10 +1013,28 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../v2_migration/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    v2 migration guide
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1018,6 +1043,222 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#whats-the-objective-of-these-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's the objective of these changes?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-do-i-need-to-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      What do I need to change?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#did-the-mini-cli-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      Did the mini CLI change?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-need-to-update-my-custom-yaml-configs" class="md-nav__link">
+    <span class="md-ellipsis">
+      How do I need to update my custom .yaml configs?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-has-the-trajectory-trajjson-format-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      How has the trajectory (.traj.json) format changed?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How has the trajectory (.traj.json) format changed?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#message-structure-now-includes-extra-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message structure now includes extra field
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-format-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code block format changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#completion-signal-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Completion signal changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajectory-format-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trajectory format version
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-the-biggest-internal-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      What are the biggest internal changes?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tell-me-more-about-the-responsibility-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tell me more about the responsibility changes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-can-i-use-tool-calling" class="md-nav__link">
+    <span class="md-ellipsis">
+      How can I use tool calling?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-hierarchy-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exception hierarchy changes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Import changes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Import changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exception-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exception imports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-script-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run script imports
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agentrun-return-value-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agent.run() return value changed
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#misc-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Misc changes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Misc changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#removed-rotating-api-keys-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed rotating API keys support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1084,8 +1325,6 @@
       
   
   
-    
-  
   
   
     
@@ -1106,22 +1345,19 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../reference/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1132,13 +1368,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             API Reference
@@ -1198,7 +1434,7 @@
   
   
     <li class="md-nav__item">
-      <a href="agents/default/" class="md-nav__link">
+      <a href="../reference/agents/default/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1219,7 +1455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="agents/interactive/" class="md-nav__link">
+      <a href="../reference/agents/interactive/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1304,7 +1540,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/overview/" class="md-nav__link">
+      <a href="../reference/models/overview/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1325,7 +1561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/litellm/" class="md-nav__link">
+      <a href="../reference/models/litellm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1346,7 +1582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/litellm_response_toolcall/" class="md-nav__link">
+      <a href="../reference/models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1367,7 +1603,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/openrouter/" class="md-nav__link">
+      <a href="../reference/models/openrouter/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1388,7 +1624,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/requesty/" class="md-nav__link">
+      <a href="../reference/models/requesty/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1409,7 +1645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/test_models/" class="md-nav__link">
+      <a href="../reference/models/test_models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1430,7 +1666,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/extra/" class="md-nav__link">
+      <a href="../reference/models/extra/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1451,7 +1687,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/utils/" class="md-nav__link">
+      <a href="../reference/models/utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1530,7 +1766,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/local/" class="md-nav__link">
+      <a href="../reference/environments/local/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1551,7 +1787,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/docker/" class="md-nav__link">
+      <a href="../reference/environments/docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1572,7 +1808,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/singularity/" class="md-nav__link">
+      <a href="../reference/environments/singularity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1593,7 +1829,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/swerex_docker/" class="md-nav__link">
+      <a href="../reference/environments/swerex_docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1614,7 +1850,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/bubblewrap/" class="md-nav__link">
+      <a href="../reference/environments/bubblewrap/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1697,7 +1933,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/hello_world/" class="md-nav__link">
+      <a href="../reference/run/hello_world/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1718,7 +1954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/mini/" class="md-nav__link">
+      <a href="../reference/run/mini/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1739,7 +1975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/mini_extra/" class="md-nav__link">
+      <a href="../reference/run/mini_extra/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1760,7 +1996,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/config/" class="md-nav__link">
+      <a href="../reference/run/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1781,7 +2017,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/inspector/" class="md-nav__link">
+      <a href="../reference/run/inspector/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1802,7 +2038,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/swebench/" class="md-nav__link">
+      <a href="../reference/run/swebench/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1823,7 +2059,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/swebench_single/" class="md-nav__link">
+      <a href="../reference/run/swebench_single/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1909,8 +2145,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1919,11 +2153,200 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sections" class="md-nav__link">
+  <a href="#whats-the-objective-of-these-changes" class="md-nav__link">
     <span class="md-ellipsis">
-      Sections
+      What's the objective of these changes?
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-do-i-need-to-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      What do I need to change?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#did-the-mini-cli-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      Did the mini CLI change?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-need-to-update-my-custom-yaml-configs" class="md-nav__link">
+    <span class="md-ellipsis">
+      How do I need to update my custom .yaml configs?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-has-the-trajectory-trajjson-format-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      How has the trajectory (.traj.json) format changed?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How has the trajectory (.traj.json) format changed?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#message-structure-now-includes-extra-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message structure now includes extra field
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-format-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code block format changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#completion-signal-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Completion signal changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trajectory-format-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trajectory format version
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-the-biggest-internal-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      What are the biggest internal changes?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tell-me-more-about-the-responsibility-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tell me more about the responsibility changes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-can-i-use-tool-calling" class="md-nav__link">
+    <span class="md-ellipsis">
+      How can I use tool calling?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-hierarchy-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exception hierarchy changes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Import changes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Import changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exception-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exception imports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-script-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run script imports
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agentrun-return-value-changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Agent.run() return value changed
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#misc-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Misc changes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Misc changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#removed-rotating-api-keys-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed rotating API keys support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed files
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1943,7 +2366,7 @@
                   
 
   
-    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/index.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/v2_migration.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1951,40 +2374,180 @@
   
 
 
-<h1 id="api-reference">API Reference</h1>
-<p>This section provides detailed documentation for all classes and modules in mini-SWE-agent.</p>
-<div class="admonition tip">
-<p class="admonition-title">Understanding the agent</p>
-<p>Before diving into the API reference, we recommend reading the <a href="../advanced/control_flow/">control flow documentation</a> to understand how the agent works.</p>
-</div>
-<h2 id="sections">Sections</h2>
-<ul>
-<li><strong><a href="agents/default/">Agents</a></strong> - Agent implementations and control flow</li>
-<li><strong><a href="models/overview/">Models</a></strong> - Language model interfaces</li>
-<li><strong><a href="environments/local/">Environments</a></strong> - Command execution environments</li>
-<li><strong><a href="run/mini/">Run Scripts</a></strong> - Entry points and CLI interfaces</li>
-</ul>
-<div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">bug_report</span>
-        <span class="nav-card-title">Something broken/unclear?</span>
-      </div>
-      <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
+  <h1>v2 migration guide</h1>
 
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
-    </div>
-  </a>
-</div>
+<h2 id="whats-the-objective-of-these-changes">What's the objective of these changes?</h2>
+<p><code>mini</code> v2.0 will be even more flexible &amp; performant while staying just as simple as before.</p>
+<p>In particular:</p>
+<ul>
+<li>support for <strong>tool calls</strong></li>
+<li>support for <strong>multimodal input</strong></li>
+</ul>
+<h2 id="what-do-i-need-to-change">What do I need to change?</h2>
+<blockquote>
+<p>I only use the mini CLI with the default configs</p>
+</blockquote>
+<p>no changes needed</p>
+<blockquote>
+<p>I use custom configs</p>
+</blockquote>
+<p>You might need to rename/move some config keys unless you only changed the system and instance prompt. See below.</p>
+<blockquote>
+<p>I need to parse &amp; analyze trajectories</p>
+</blockquote>
+<p>Some of the extra information fields (timestamps, extra cost information, raw outputs, etc.) have moved, see below.</p>
+<blockquote>
+<p>I used the python bindings/built custom subclasses</p>
+</blockquote>
+<p>You will need to refactor. Please read the sections below. We're fairly confident that an agent can refactor your code based on the instructions below.</p>
+<h2 id="did-the-mini-cli-change">Did the mini CLI change?</h2>
+<p>No. If you use the CLI with the default configs, nothing needs to change.</p>
+<h2 id="how-do-i-need-to-update-my-custom-yaml-configs">How do I need to update my custom <code>.yaml</code> configs?</h2>
+<p>If you only changed <code>system_template</code> and <code>instance_template</code>, no changes needed.</p>
+<p>Otherwise, you need to move some config keys to different sections:</p>
+<p><strong>Move from <code>agent:</code> to <code>model:</code>:</strong>
+- <code>observation_template</code> (how to format command output, previously called <code>action_observation_template</code>)
+- <code>format_error_template</code> (message when model output format is wrong)
+- <code>action_regex</code> (regex to extract command from model output)</p>
+<p><strong>Removed config keys:</strong>
+- <code>timeout_template</code> (timeout handling is now simpler)</p>
+<p><strong>New config structure:</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">agent</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="w">  </span><span class="nt">instance_template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="w">  </span><span class="nt">step_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">cost_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.</span>
+<span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cwd</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">  </span><span class="c1"># timeout in seconds</span>
+<span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="w">  </span><span class="nt">observation_template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span><span class="w">         </span><span class="c1"># moved here (previously action_observation_template)</span>
+<span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span><span class="w">        </span><span class="c1"># moved here</span>
+<span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span><span class="w">                 </span><span class="c1"># moved here</span>
+</code></pre></div></p>
+<p><strong>CLI now supports multiple configs and key-value overrides:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Merge multiple config files</span>
+mini<span class="w"> </span>-c<span class="w"> </span>mini.yaml<span class="w"> </span>-c<span class="w"> </span>model.model_kwargs.temperature<span class="o">=</span><span class="m">0</span>.5
+
+<span class="c1"># Set nested config values</span>
+mini<span class="w"> </span>-c<span class="w"> </span>swebench.yaml<span class="w"> </span>-c<span class="w"> </span>agent.step_limit<span class="o">=</span><span class="m">100</span>
+</code></pre></div></p>
+<h2 id="how-has-the-trajectory-trajjson-format-changed">How has the trajectory (<code>.traj.json</code>) format changed?</h2>
+<h3 id="message-structure-now-includes-extra-field">Message structure now includes <code>extra</code> field</h3>
+<ul>
+<li>All extra metadata (costs, timestamps, raw data) is now in <code>extra</code> rather than top-level message fields</li>
+<li>Model output messages include <code>extra.actions</code> (list of parsed actions) and <code>extra.response</code> (raw API response)</li>
+<li>Environment observation messages include <code>extra</code> with raw output, returncode, timestamps</li>
+</ul>
+<h3 id="code-block-format-changed">Code block format changed</h3>
+<p>The default action regex changed from <code>```bash</code> to <code>```mswea_bash_command</code> to avoid conflicts with bash examples in prompts.</p>
+<h3 id="completion-signal-changed">Completion signal changed</h3>
+<p>Changed from <code>echo MINI_SWE_AGENT_FINAL_OUTPUT</code> to <code>echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT</code> for clarity.</p>
+<h3 id="trajectory-format-version">Trajectory format version</h3>
+<p>The trajectory format version changed from <code>mini-swe-agent-1.0</code> to <code>mini-swe-agent-1.1</code>.</p>
+<h2 id="what-are-the-biggest-internal-changes">What are the biggest internal changes?</h2>
+<ol>
+<li>
+<p><strong>v2.0 moves responsibilities from Agent to Model classes.</strong> Models now parse actions and format observations. This enables supporting both tool calls and text-based parsing by switching model classes (e.g., <code>LitellmToolcallModel</code> vs <code>LitellmModel</code>). The Agent class barely needs to know what a "message" is anymore.</p>
+</li>
+<li>
+<p><strong>Models are now fully stateless.</strong> Cost tracking moved to Agent, enabling cleaner separation of concerns where models focus purely on LLM interaction.</p>
+</li>
+<li>
+<p><strong>New <code>get_template_vars()</code> and <code>serialize()</code> protocol.</strong> All classes (Agent, Model, Environment) implement these methods instead of requiring specific attributes. This enables custom architectures like multi-agent systems while standardizing data access.</p>
+</li>
+<li>
+<p><strong>Multimodal support.</strong> All models now support multimodal input via special tags in content strings that get expanded to structured content (images, etc).</p>
+</li>
+<li>
+<p><strong>Tool call support.</strong> New <code>LitellmToolcallModel</code> uses native tool calling APIs instead of regex parsing.</p>
+</li>
+<li>
+<p><strong>Config merging.</strong> The CLI can now merge multiple config files and accept key-value overrides directly.</p>
+</li>
+</ol>
+<h2 id="tell-me-more-about-the-responsibility-changes">Tell me more about the responsibility changes</h2>
+<p><strong>What changed:</strong></p>
+<ul>
+<li>Models parse actions from LLM output (internally) and format observations (via <code>format_observation_messages()</code>)</li>
+<li>Environments execute actions and return raw output dicts (via <code>execute()</code>)</li>
+<li>Agent coordinates by calling model and environment, then appending returned messages to <code>self.messages</code></li>
+<li>Cost tracking is now in Agent rather than Model</li>
+</ul>
+<p><strong>Why:</strong></p>
+<ul>
+<li>Enables different action handling strategies (tool calls vs text parsing) by swapping model classes</li>
+<li>Makes models stateless and focused on LLM interaction only</li>
+<li>Agent becomes a simpler coordinator that doesn't need to know message structure details</li>
+</ul>
+<h2 id="how-can-i-use-tool-calling">How can I use tool calling?</h2>
+<p>v2.0 adds native tool calling support as an alternative to text-based action parsing.</p>
+<p><strong>What's the difference?</strong>
+- Text-based (default): Model outputs bash commands in markdown code blocks, regex extracts them
+- Tool calling: Model uses native tool calling API to invoke a "bash" tool function</p>
+<p><strong>How to use it:</strong></p>
+<p>Tool calling is now the default. The CLI uses <code>mini.yaml</code> and <code>swebench.yaml</code> which are configured for tool calling.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Default (tool calling)</span>
+mini
+python<span class="w"> </span>-m<span class="w"> </span>minisweagent.run.benchmarks.swebench
+
+<span class="c1"># Use text-based parsing (legacy)</span>
+mini<span class="w"> </span>-c<span class="w"> </span>mini_textbased.yaml
+python<span class="w"> </span>-m<span class="w"> </span>minisweagent.run.benchmarks.swebench<span class="w"> </span>--config<span class="w"> </span>swebench_backticks.yaml
+</code></pre></div>
+<p><strong>For custom configs:</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span><span class="w">  </span><span class="c1"># or full path: minisweagent.models.litellm_model.LitellmModel</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic/claude-sonnet-4-5-20250929</span>
+<span class="w">  </span><span class="c1"># ... rest of model config</span>
+</code></pre></div></p>
+<p>The <code>LitellmModel</code> class handles tool calling automatically and works with any model that supports OpenAI-style tool calling (Claude, GPT-4, etc.).</p>
+<h2 id="exception-hierarchy-changes">Exception hierarchy changes</h2>
+<p>All agent flow control exceptions now inherit from <code>InterruptAgentFlow</code>:
+<div class="highlight"><pre><span></span><code><span class="n">InterruptAgentFlow</span> <span class="p">(</span><span class="n">base</span> <span class="k">class</span><span class="w"> </span><span class="nc">for</span> <span class="nb">all</span> <span class="n">flow</span> <span class="n">interruptions</span><span class="p">)</span>
+<span class="err">├──</span> <span class="n">Submitted</span> <span class="p">(</span><span class="n">task</span> <span class="n">completed</span><span class="p">)</span>
+<span class="err">├──</span> <span class="n">LimitsExceeded</span> <span class="p">(</span><span class="n">cost</span><span class="o">/</span><span class="n">step</span> <span class="n">limit</span> <span class="n">reached</span><span class="p">)</span>
+<span class="err">├──</span> <span class="n">FormatError</span> <span class="p">(</span><span class="n">invalid</span> <span class="n">model</span> <span class="n">output</span> <span class="nb">format</span><span class="p">)</span>
+<span class="err">├──</span> <span class="ne">TimeoutError</span> <span class="p">(</span><span class="n">execution</span> <span class="n">timeout</span><span class="p">)</span>
+<span class="err">└──</span> <span class="n">UserInterruption</span> <span class="p">(</span><span class="n">user</span> <span class="n">cancelled</span><span class="p">)</span>
+</code></pre></div></p>
+<p>All these exceptions can carry messages that get added to the trajectory. They moved from <code>minisweagent.agents.default</code> to <code>minisweagent.exceptions</code>.</p>
+<h2 id="import-changes">Import changes</h2>
+<h3 id="exception-imports">Exception imports</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Old</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submitted</span><span class="p">,</span> <span class="n">FormatError</span>
+
+<span class="c1"># New</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submitted</span><span class="p">,</span> <span class="n">FormatError</span>
+</code></pre></div>
+<h3 id="run-script-imports">Run script imports</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Old</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.inspector</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">inspector_main</span>
+
+<span class="c1"># New</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.run.utilities.inspector</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">inspector_main</span>
+</code></pre></div>
+<h2 id="agentrun-return-value-changed">Agent.run() return value changed</h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Old (v1)</span>
+<span class="n">submission</span><span class="p">,</span> <span class="n">exit_status</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>  <span class="c1"># Returns tuple[str, str]</span>
+
+<span class="c1"># New (v2)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>  <span class="c1"># Returns dict with exit info</span>
+<span class="n">submission</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;submission&quot;</span><span class="p">]</span>
+<span class="n">exit_status</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;exit_status&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p>The <code>run()</code> method now returns the <code>extra</code> dict from the final exit message, containing <code>exit_status</code> and <code>submission</code> keys. To get the full trajectory data, use <code>agent.save(path)</code> or <code>agent.serialize()</code>.</p>
+<h2 id="misc-changes">Misc changes</h2>
+<h3 id="removed-rotating-api-keys-support">Removed rotating API keys support</h3>
+<p>The <code>ANTHROPIC_API_KEYS</code> environment variable (with <code>::</code> separator for key rotation) is no longer supported. Simply use <code>ANTHROPIC_API_KEY</code> with a single key. Key rotation is no longer necessary.</p>
+<h3 id="removed-files">Removed files</h3>
+<ul>
+<li><code>src/minisweagent/models/utils/key_per_thread.py</code> (key rotation utility)</li>
+<li><code>src/minisweagent/run/utils/save.py</code> (saving logic moved to Agent.save())</li>
+<li><code>src/minisweagent/config/extra/swebench_roulette.yaml</code></li>
+<li><code>src/minisweagent/models/utils/openai_response_api.py</code> (formerly <code>openai_utils.py</code>)</li>
+</ul>
 
 
 
@@ -2052,7 +2615,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../contributing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contributing">
+          <a href="../advanced/environments/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Environments">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2062,20 +2625,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Contributing
+                Environments
               </div>
             </div>
           </a>
         
         
           
-          <a href="agents/default/" class="md-footer__link md-footer__link--next" aria-label="Next: DefaultAgent">
+          <a href="../faq/" class="md-footer__link md-footer__link--next" aria-label="Next: FAQ">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                DefaultAgent
+                FAQ
               </div>
             </div>
             <div class="md-footer__button md-icon">

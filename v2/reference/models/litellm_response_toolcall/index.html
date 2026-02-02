@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/models/litellm_response/">
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/models/litellm_response_toolcall/">
       
       
         <link rel="prev" href="../litellm/">
       
       
-        <link rel="next" href="../anthropic/">
+        <link rel="next" href="../openrouter/">
       
       
       <link rel="icon" href="../../../assets/mini_square.svg">
@@ -22,7 +22,7 @@
     
     
       
-        <title>LitellmResponseAPIModel - mini-SWE-agent documentation</title>
+        <title>LitellmResponseModel - mini-SWE-agent documentation</title>
       
     
     
@@ -115,12 +115,31 @@
     <div data-md-component="skip">
       
         
-        <a href="#litellm-response-api-model" class="md-skip">
+        <a href="#litellm-response-model" class="md-skip">
           Skip to content
         </a>
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
       
     </div>
     
@@ -154,7 +173,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              LitellmResponseAPIModel
+              LitellmResponseModel
             
           </span>
         </div>
@@ -411,6 +430,8 @@
       
         
       
+        
+      
     
     
       
@@ -490,6 +511,8 @@
       
         
       
+        
+      
     
     
       
@@ -549,11 +572,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/mini_v/" class="md-nav__link">
+      <a href="../../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -596,6 +619,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -743,12 +787,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -766,7 +804,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -776,7 +814,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -822,6 +860,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -850,32 +1009,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/control_flow/" class="md-nav__link">
+      <a href="../../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -1022,8 +1160,6 @@
       
         
       
-        
-      
     
     
       
@@ -1088,27 +1224,6 @@
   
   <span class="md-ellipsis">
     InteractiveAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
   </span>
   
 
@@ -1191,6 +1306,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../litellm/" class="md-nav__link">
         
   
@@ -1225,7 +1361,7 @@
           
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
+    LitellmResponseModel
   </span>
   
 
@@ -1236,7 +1372,7 @@
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
+    LitellmResponseModel
   </span>
   
 
@@ -1267,17 +1403,17 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;litellm_response_api_model
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;litellm_response_model
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" litellm_response_api_model">
+    <nav class="md-nav" aria-label=" litellm_response_model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model.logger" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model.logger" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;logger
     </span>
@@ -1286,28 +1422,37 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model.LitellmResponseModelConfig" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseAPIModelConfig
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseModelConfig
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model.LitellmResponseModel" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseAPIModel
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseModel
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" LitellmResponseAPIModel">
+    <nav class="md-nav" aria-label=" LitellmResponseModel">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel.query" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model.LitellmResponseModel.query" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;query
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_response_model.LitellmResponseModel.format_observation_messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;format_observation_messages
     </span>
   </a>
   
@@ -1327,27 +1472,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../anthropic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1652,8 +1776,6 @@
       
         
       
-        
-      
     
     
       
@@ -1797,27 +1919,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../run/github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../run/swebench/" class="md-nav__link">
         
   
@@ -1944,17 +2045,17 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;litellm_response_api_model
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;litellm_response_model
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" litellm_response_api_model">
+    <nav class="md-nav" aria-label=" litellm_response_model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model.logger" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model.logger" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;logger
     </span>
@@ -1963,28 +2064,37 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model.LitellmResponseModelConfig" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseAPIModelConfig
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseModelConfig
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model.LitellmResponseModel" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseAPIModel
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;LitellmResponseModel
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" LitellmResponseAPIModel">
+    <nav class="md-nav" aria-label=" LitellmResponseModel">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel.query" class="md-nav__link">
+  <a href="#minisweagent.models.litellm_response_model.LitellmResponseModel.query" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;query
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minisweagent.models.litellm_response_model.LitellmResponseModel.format_observation_messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;format_observation_messages
     </span>
   </a>
   
@@ -2016,7 +2126,7 @@
                   
 
   
-    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/models/litellm_response.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/models/litellm_response_toolcall.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2024,120 +2134,117 @@
   
 
 
-<h1 id="litellm-response-api-model">Litellm Response API Model</h1>
+<h1 id="litellm-response-model">Litellm Response Model</h1>
 <div class="admonition note">
 <p class="admonition-title">LiteLLM Response API Model class</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_response_api_model.py">Read on GitHub</a></li>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_response_model.py">Read on GitHub</a></li>
 </ul>
 <details class="note">
 <summary>Full source code</summary>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">litellm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tenacity</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">before_sleep_log</span><span class="p">,</span>
-    <span class="n">retry</span><span class="p">,</span>
-    <span class="n">retry_if_not_exception_type</span><span class="p">,</span>
-    <span class="n">stop_after_attempt</span><span class="p">,</span>
-    <span class="n">wait_exponential</span><span class="p">,</span>
-<span class="p">)</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">GLOBAL_MODEL_STATS</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.litellm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LitellmModel</span><span class="p">,</span> <span class="n">LitellmModelConfig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.openai_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">coerce_responses_text</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.actions_toolcall_response</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BASH_TOOL_RESPONSE_API</span><span class="p">,</span>
+    <span class="n">format_toolcall_observation_messages</span><span class="p">,</span>
+    <span class="n">parse_toolcall_actions_response</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.retry</span><span class="w"> </span><span class="kn">import</span> <span class="n">retry</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;litellm_response_api_model&quot;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;litellm_response_model&quot;</span><span class="p">)</span>
 
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">LitellmResponseAPIModelConfig</span><span class="p">(</span><span class="n">LitellmModelConfig</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LitellmResponseModelConfig</span><span class="p">(</span><span class="n">LitellmModelConfig</span><span class="p">):</span>
     <span class="k">pass</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">LitellmResponseAPIModel</span><span class="p">(</span><span class="n">LitellmModel</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LitellmResponseModel</span><span class="p">(</span><span class="n">LitellmModel</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">LitellmResponseModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="nd">@retry</span><span class="p">(</span>
-        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">stop</span><span class="o">=</span><span class="n">stop_after_attempt</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
-        <span class="n">wait</span><span class="o">=</span><span class="n">wait_exponential</span><span class="p">(</span><span class="n">multiplier</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
-        <span class="n">before_sleep</span><span class="o">=</span><span class="n">before_sleep_log</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">),</span>
-        <span class="n">retry</span><span class="o">=</span><span class="n">retry_if_not_exception_type</span><span class="p">(</span>
-            <span class="p">(</span>
-                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">UnsupportedParamsError</span><span class="p">,</span>
-                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">,</span>
-                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">PermissionDeniedError</span><span class="p">,</span>
-                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ContextWindowExceededError</span><span class="p">,</span>
-                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">APIError</span><span class="p">,</span>
-                <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">AuthenticationError</span><span class="p">,</span>
-                <span class="ne">KeyboardInterrupt</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_messages_for_api</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Flatten response objects into their output items for stateless API calls.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;response&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">msg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;extra&quot;</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">msg</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;extra&quot;</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">result</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Remove &#39;timestamp&#39; field added by agent - not supported by OpenAI responses API</span>
-            <span class="n">clean_messages</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">],</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]}</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">]</span>
-            <span class="n">resp</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">responses</span><span class="p">(</span>
+            <span class="k">return</span> <span class="n">litellm</span><span class="o">.</span><span class="n">responses</span><span class="p">(</span>
                 <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
-                <span class="nb">input</span><span class="o">=</span><span class="n">clean_messages</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">clean_messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:],</span>
-                <span class="n">previous_response_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span><span class="p">,</span>
+                <span class="nb">input</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+                <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">BASH_TOOL_RESPONSE_API</span><span class="p">],</span>
                 <span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_kwargs</span> <span class="o">|</span> <span class="n">kwargs</span><span class="p">),</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">resp</span>
         <span class="k">except</span> <span class="n">litellm</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">AuthenticationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">e</span><span class="o">.</span><span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot; You can permanently set your API key with `mini-extra config set KEY VALUE`.&quot;</span>
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">coerce_responses_text</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Error calculating cost for model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. &quot;</span>
-                <span class="s2">&quot;Please check the &#39;Updating the model registry&#39; section in the documentation. &quot;</span>
-                <span class="s2">&quot;http://bit.ly/4p31bi4 Still stuck? Please open a github issue for help!&quot;</span>
-            <span class="p">)</span>
-            <span class="k">raise</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">cost</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">GLOBAL_MODEL_STATS</span>
-
-        <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+        <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="n">retry</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">abort_exceptions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">abort_exceptions</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">attempt</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_messages_for_api</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">cost_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost_output</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">])</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;model_dump&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="n">message</span><span class="p">[</span><span class="s2">&quot;extra&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;actions&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_actions</span><span class="p">(</span><span class="n">response</span><span class="p">),</span>
+            <span class="o">**</span><span class="n">cost_output</span><span class="p">,</span>
+            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
         <span class="p">}</span>
+        <span class="k">return</span> <span class="n">message</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">parse_toolcall_actions_response</span><span class="p">(</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="p">[]),</span> <span class="n">format_error_template</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">format_error_template</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_observation_messages</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">template_vars</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Format execution outputs into tool result messages.&quot;&quot;&quot;</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extra&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;actions&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">return</span> <span class="n">format_toolcall_observation_messages</span><span class="p">(</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">,</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span>
+            <span class="n">observation_template</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">observation_template</span><span class="p">,</span>
+            <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span>
+            <span class="n">multimodal_regex</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">multimodal_regex</span><span class="p">,</span>
+        <span class="p">)</span>
 </code></pre></div>
 </details>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">When to use this model</p>
 <ul>
-<li>Use this model class when you want to use OpenAI's <a href="https://platform.openai.com/docs/api-reference/responses">Responses API</a> (previously called the Chat Completions API with streaming enabled).</li>
+<li>Use this model class when you want to use OpenAI's <a href="https://platform.openai.com/docs/api-reference/responses">Responses API</a> with native tool calling.</li>
 <li>This is particularly useful for models like GPT-5 that benefit from the extended thinking/reasoning capabilities provided by the Responses API.</li>
+<li>This model maintains conversation state across turns using <code>previous_response_id</code>.</li>
 </ul>
 </div>
 <h2 id="usage">Usage</h2>
 <p>To use the Response API model, specify <code>model_class: "litellm_response"</code> in your agent config:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;litellm_response&quot;</span>
-<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;openai/gpt-5.1&quot;</span>
+<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;openai/gpt-5.2&quot;</span>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">reasoning</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;medium&quot;</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">verbosity</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;medium&quot;</span>
+<span class="w">      </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;high&quot;</span>
 </code></pre></div>
 <p>Or via command line:</p>
-<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;openai/gpt-5-mini&quot;</span><span class="w"> </span>--model-class<span class="w"> </span>litellm_response
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;openai/gpt-5.2&quot;</span><span class="w"> </span>--model-class<span class="w"> </span>litellm_response
 </code></pre></div>
 
 
@@ -2145,8 +2252,8 @@
 
 
 
-<h2 id="minisweagent.models.litellm_response_api_model" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.models.litellm_response_api_model</span>
+<h2 id="minisweagent.models.litellm_response_model" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.models.litellm_response_model</span>
 
 
 </h2>
@@ -2172,7 +2279,7 @@
 
 
 
-<h3 id="minisweagent.models.litellm_response_api_model.logger" class="doc doc-heading">
+<h3 id="minisweagent.models.litellm_response_model.logger" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">logger</span>
 
 
@@ -2181,7 +2288,7 @@
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="s1">&#39;litellm_response_api_model&#39;</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="s1">&#39;litellm_response_model&#39;</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2194,17 +2301,12 @@
 
 
 
-<h3 id="minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">LitellmResponseAPIModelConfig</span>
+<h3 id="minisweagent.models.litellm_response_model.LitellmResponseModelConfig" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">LitellmResponseModelConfig</span>
 
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">LitellmResponseAPIModelConfig</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="n">str</span><span class="p">,</span> <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">=</span> <span class="n">dict</span><span class="p">(),</span> <span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">|</span> <span class="n">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span><span class="s1">&#39;LITELLM_MODEL_REGISTRY_PATH&#39;</span><span class="p">),</span> <span class="n">set_cache_control</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;default_end&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cost_tracking</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore_errors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span><span class="s1">&#39;MSWEA_COST_TRACKING&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">))</span>
-</code></pre></div>
+
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
@@ -2241,12 +2343,12 @@
 
 
 
-<h3 id="minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">LitellmResponseAPIModel</span>
+<h3 id="minisweagent.models.litellm_response_model.LitellmResponseModel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">LitellmResponseModel</span>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">LitellmResponseAPIModel</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig" href="#minisweagent.models.litellm_response_api_model.LitellmResponseAPIModelConfig">LitellmResponseAPIModelConfig</a></span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">LitellmResponseModel</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="minisweagent.models.litellm_response_model.LitellmResponseModelConfig" href="#minisweagent.models.litellm_response_model.LitellmResponseModelConfig">LitellmResponseModelConfig</a></span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2260,12 +2362,10 @@
 
 
                   <details class="quote">
-                    <summary>Source code in <code>src/minisweagent/models/litellm_response_api_model.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">LitellmResponseAPIModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                    <summary>Source code in <code>src/minisweagent/models/litellm_response_model.py</code></summary>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">LitellmResponseModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_previous_response_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -2284,7 +2384,7 @@
 <div class="doc doc-object doc-function">
 
 
-<h4 id="minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel.query" class="doc doc-heading">
+<h4 id="minisweagent.models.litellm_response_model.LitellmResponseModel.query" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">query</span>
 
 
@@ -2295,14 +2395,56 @@
     <div class="doc doc-contents ">
 
             <details class="quote">
-              <summary>Source code in <code>src/minisweagent/models/litellm_response_api_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
+              <summary>Source code in <code>src/minisweagent/models/litellm_response_model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="n">retry</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">abort_exceptions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">abort_exceptions</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">attempt</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_messages_for_api</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">cost_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost_output</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">])</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;model_dump&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="n">message</span><span class="p">[</span><span class="s2">&quot;extra&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;actions&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_actions</span><span class="p">(</span><span class="n">response</span><span class="p">),</span>
+        <span class="o">**</span><span class="n">cost_output</span><span class="p">,</span>
+        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">message</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="minisweagent.models.litellm_response_model.LitellmResponseModel.format_observation_messages" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">format_observation_messages</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">format_observation_messages</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">dict</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">list</span><span class="p">[</span><span class="n">dict</span><span class="p">],</span> <span class="n">template_vars</span><span class="p">:</span> <span class="n">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">list</span><span class="p">[</span><span class="n">dict</span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Format execution outputs into tool result messages.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/minisweagent/models/litellm_response_model.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">69</span>
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
@@ -2313,28 +2455,18 @@
 <span class="normal">77</span>
 <span class="normal">78</span>
 <span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">coerce_responses_text</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Error calculating cost for model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="s2">&quot;Please check the &#39;Updating the model registry&#39; section in the documentation. &quot;</span>
-            <span class="s2">&quot;http://bit.ly/4p31bi4 Still stuck? Please open a github issue for help!&quot;</span>
-        <span class="p">)</span>
-        <span class="k">raise</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">cost</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">GLOBAL_MODEL_STATS</span>
-
-    <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
-    <span class="p">}</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">format_observation_messages</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">template_vars</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format execution outputs into tool result messages.&quot;&quot;&quot;</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extra&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;actions&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="k">return</span> <span class="n">format_toolcall_observation_messages</span><span class="p">(</span>
+        <span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">,</span>
+        <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span>
+        <span class="n">observation_template</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">observation_template</span><span class="p">,</span>
+        <span class="n">template_vars</span><span class="o">=</span><span class="n">template_vars</span><span class="p">,</span>
+        <span class="n">multimodal_regex</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">multimodal_regex</span><span class="p">,</span>
+    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2461,13 +2593,13 @@
         
         
           
-          <a href="../anthropic/" class="md-footer__link md-footer__link--next" aria-label="Next: AnthropicModel">
+          <a href="../openrouter/" class="md-footer__link md-footer__link--next" aria-label="Next: OpenRouterModel">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                AnthropicModel
+                OpenRouterModel
               </div>
             </div>
             <div class="md-footer__button md-icon">

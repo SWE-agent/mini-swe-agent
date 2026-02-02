@@ -8,13 +8,9 @@
       
       
       
-        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/models/anthropic/">
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/environments/swerex_modal/">
       
       
-        <link rel="prev" href="../litellm_response/">
-      
-      
-        <link rel="next" href="../openrouter/">
       
       
       <link rel="icon" href="../../../assets/mini_square.svg">
@@ -22,7 +18,7 @@
     
     
       
-        <title>AnthropicModel - mini-SWE-agent documentation</title>
+        <title>SWE-ReX Modal - mini-SWE-agent documentation</title>
       
     
     
@@ -115,12 +111,31 @@
     <div data-md-component="skip">
       
         
-        <a href="#anthropic" class="md-skip">
+        <a href="#swe-rex-modal" class="md-skip">
           Skip to content
         </a>
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
       
     </div>
     
@@ -154,7 +169,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              AnthropicModel
+              SWE-ReX Modal
             
           </span>
         </div>
@@ -283,12 +298,10 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../../" class="md-tabs__link">
           
   
@@ -411,6 +424,8 @@
       
         
       
+        
+      
     
     
       
@@ -490,6 +505,8 @@
       
         
       
+        
+      
     
     
       
@@ -549,11 +566,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/mini_v/" class="md-nav__link">
+      <a href="../../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -596,6 +613,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -743,12 +781,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -766,7 +798,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -776,7 +808,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -822,6 +854,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -850,32 +1003,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../advanced/control_flow/" class="md-nav__link">
+      <a href="../../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../advanced/cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -946,8 +1078,6 @@
       
   
   
-    
-  
   
   
     
@@ -968,17 +1098,14 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           
@@ -994,13 +1121,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             API Reference
@@ -1017,8 +1144,6 @@
   
     
     
-      
-        
       
         
       
@@ -1097,27 +1222,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1130,10 +1234,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -1159,11 +1261,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
         
           
           <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
@@ -1177,7 +1279,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             Models
@@ -1191,7 +1293,28 @@
   
   
     <li class="md-nav__item">
-      <a href="../litellm/" class="md-nav__link">
+      <a href="../../models/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../models/litellm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1212,139 +1335,15 @@
   
   
     <li class="md-nav__item">
-      <a href="../litellm_response/" class="md-nav__link">
+      <a href="../../models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
+    LitellmResponseModel
   </span>
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    AnthropicModel
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
-  </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;anthropic
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" anthropic">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic.AnthropicModelConfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AnthropicModelConfig
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" AnthropicModelConfig">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic.AnthropicModelConfig.set_cache_control" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;set_cache_control
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic.AnthropicModel" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AnthropicModel
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" AnthropicModel">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic.AnthropicModel.query" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;query
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1357,7 +1356,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../openrouter/" class="md-nav__link">
+      <a href="../../models/openrouter/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1378,7 +1377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../requesty/" class="md-nav__link">
+      <a href="../../models/requesty/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1399,7 +1398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../test_models/" class="md-nav__link">
+      <a href="../../models/test_models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1420,7 +1419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../extra/" class="md-nav__link">
+      <a href="../../models/extra/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1441,7 +1440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../utils/" class="md-nav__link">
+      <a href="../../models/utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1520,7 +1519,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/local/" class="md-nav__link">
+      <a href="../local/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1541,7 +1540,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/docker/" class="md-nav__link">
+      <a href="../docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1562,7 +1561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/singularity/" class="md-nav__link">
+      <a href="../singularity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1583,7 +1582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/swerex_docker/" class="md-nav__link">
+      <a href="../swerex_docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1604,7 +1603,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environments/bubblewrap/" class="md-nav__link">
+      <a href="../bubblewrap/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1634,8 +1633,6 @@
   
     
     
-      
-        
       
         
       
@@ -1794,27 +1791,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../run/github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../run/swebench/" class="md-nav__link">
         
   
@@ -1932,65 +1908,20 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;anthropic
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" anthropic">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic.AnthropicModelConfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AnthropicModelConfig
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" AnthropicModelConfig">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic.AnthropicModelConfig.set_cache_control" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;set_cache_control
+      Setup
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic.AnthropicModel" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AnthropicModel
+      Usage
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label=" AnthropicModel">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minisweagent.models.anthropic.AnthropicModel.query" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;query
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2010,7 +1941,7 @@
                   
 
   
-    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/models/anthropic.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/environments/swerex_modal.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2018,259 +1949,38 @@
   
 
 
-<h1 id="anthropic">Anthropic</h1>
+<h1 id="swe-rex-modal">SWE-ReX Modal</h1>
 <div class="admonition note">
-<p class="admonition-title">Anthropic Model class</p>
+<p class="admonition-title">SWE-ReX Modal Environment class</p>
 <ul>
-<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/anthropic.py">Read on GitHub</a></li>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/environments/extra/swerex_modal.py">Read on GitHub</a></li>
+<li>Requires <a href="https://modal.com">Modal</a> account and authentication</li>
 </ul>
-<details class="note">
-<summary>Full source code</summary>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.litellm_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LitellmModel</span><span class="p">,</span> <span class="n">LitellmModelConfig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.cache_control</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_cache_control</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.key_per_thread</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_key_per_thread</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">AnthropicModelConfig</span><span class="p">(</span><span class="n">LitellmModelConfig</span><span class="p">):</span>
-    <span class="n">set_cache_control</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;default_end&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;default_end&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set explicit cache control markers, for example for Anthropic models&quot;&quot;&quot;</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">AnthropicModel</span><span class="p">(</span><span class="n">LitellmModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class is now only a thin wrapper around the LitellmModel class.</span>
-<span class="sd">    It is largely kept for backwards compatibility.</span>
-<span class="sd">    It will not be selected by `get_model` and `get_model_class` unless explicitly specified.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">AnthropicModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="n">api_key</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1"># Legacy only</span>
-        <span class="k">if</span> <span class="n">rotating_keys</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEYS&quot;</span><span class="p">):</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;ANTHROPIC_API_KEYS is deprecated and will be removed in the future. &quot;</span>
-                <span class="s2">&quot;Simply use the ANTHROPIC_API_KEY environment variable instead. &quot;</span>
-                <span class="s2">&quot;Key rotation is no longer required.&quot;</span>
-            <span class="p">)</span>
-            <span class="n">api_key</span> <span class="o">=</span> <span class="n">get_key_per_thread</span><span class="p">(</span><span class="n">rotating_keys</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">))</span>
-        <span class="n">messages</span> <span class="o">=</span> <span class="n">set_cache_control</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;default_end&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre></div>
-</details>
 </div>
-
-
-<div class="doc doc-object doc-module">
-
-
-
-<h2 id="minisweagent.models.anthropic" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">minisweagent.models.anthropic</span>
-
-
-</h2>
-
-    <div class="doc doc-contents first">
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h3 id="minisweagent.models.anthropic.AnthropicModelConfig" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AnthropicModelConfig</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">AnthropicModelConfig</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="n">str</span><span class="p">,</span> <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]</span> <span class="o">=</span> <span class="n">dict</span><span class="p">(),</span> <span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">|</span> <span class="n">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span><span class="s1">&#39;LITELLM_MODEL_REGISTRY_PATH&#39;</span><span class="p">),</span> <span class="n">set_cache_control</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;default_end&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cost_tracking</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore_errors&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span><span class="s1">&#39;MSWEA_COST_TRACKING&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">))</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="minisweagent.models.litellm_model.LitellmModelConfig" href="../litellm/#minisweagent.models.litellm_model.LitellmModelConfig">LitellmModelConfig</a></code></p>
-
-
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="minisweagent.models.anthropic.AnthropicModelConfig.set_cache_control" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">set_cache_control</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
-      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
-  </span>
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">set_cache_control</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;default_end&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s1">&#39;default_end&#39;</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Set explicit cache control markers, for example for Anthropic models</p>
-    </div>
-
-</div>
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h3 id="minisweagent.models.anthropic.AnthropicModel" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AnthropicModel</span>
-
-
-</h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">AnthropicModel</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="n">type</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="minisweagent.models.anthropic.AnthropicModelConfig" href="#minisweagent.models.anthropic.AnthropicModelConfig">AnthropicModelConfig</a></span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="minisweagent.models.litellm_model.LitellmModel" href="../litellm/#minisweagent.models.litellm_model.LitellmModel">LitellmModel</a></code></p>
-
-
-        <p>This class is now only a thin wrapper around the LitellmModel class.
-It is largely kept for backwards compatibility.
-It will not be selected by <code>get_model</code> and <code>get_model_class</code> unless explicitly specified.</p>
-
-
-
-
-
-
-                  <details class="quote">
-                    <summary>Source code in <code>src/minisweagent/models/anthropic.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">config_class</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">AnthropicModelConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-                  </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="minisweagent.models.anthropic.AnthropicModel.query" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">query</span>
-
-
-</h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">query</span><span class="p">(</span><span class="n">messages</span><span class="p">:</span> <span class="n">list</span><span class="p">[</span><span class="n">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dict</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-            <details class="quote">
-              <summary>Source code in <code>src/minisweagent/models/anthropic.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="n">api_key</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1"># Legacy only</span>
-    <span class="k">if</span> <span class="n">rotating_keys</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ANTHROPIC_API_KEYS&quot;</span><span class="p">):</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;ANTHROPIC_API_KEYS is deprecated and will be removed in the future. &quot;</span>
-            <span class="s2">&quot;Simply use the ANTHROPIC_API_KEY environment variable instead. &quot;</span>
-            <span class="s2">&quot;Key rotation is no longer required.&quot;</span>
-        <span class="p">)</span>
-        <span class="n">api_key</span> <span class="o">=</span> <span class="n">get_key_per_thread</span><span class="p">(</span><span class="n">rotating_keys</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">))</span>
-    <span class="n">messages</span> <span class="o">=</span> <span class="n">set_cache_control</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;default_end&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-
-
-
-  </div>
-
-    </div>
-
-</div><div class="grid cards">
+<p>This environment executes commands in <a href="https://modal.com">Modal</a> sandboxes using <a href="https://github.com/swe-agent/swe-rex">SWE-ReX</a>.</p>
+<h2 id="setup">Setup</h2>
+<ol>
+<li>
+<p>Install the full dependencies:
+   <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;mini-swe-agent[full]&quot;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Set up Modal authentication:
+   <div class="highlight"><pre><span></span><code>modal<span class="w"> </span>setup
+</code></pre></div></p>
+</li>
+</ol>
+<h2 id="usage">Usage</h2>
+<p>Evaluate GPT-5 mini on SWE-bench using Modal:
+<div class="highlight"><pre><span></span><code>mini-extra swebench \
+    --config src/minisweagent/config/extra/swebench_modal.yaml \
+    --subset verified \
+    --split test \
+    --workers 100 \
+    -o ./results/gpt5-mini-modal
+</code></pre></div></p>
+<div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
@@ -2353,44 +2063,6 @@ It will not be selected by <code>get_model</code> and <code>get_model_class</cod
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../litellm_response/" class="md-footer__link md-footer__link--prev" aria-label="Previous: LitellmResponseAPIModel">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                LitellmResponseAPIModel
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../openrouter/" class="md-footer__link md-footer__link--next" aria-label="Next: OpenRouterModel">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                OpenRouterModel
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">

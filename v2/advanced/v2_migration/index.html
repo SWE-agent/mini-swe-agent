@@ -8,28 +8,24 @@
       
       
       
-        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/">
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/advanced/v2_migration/">
       
       
-        <link rel="prev" href="../contributing/">
       
       
-        <link rel="next" href="agents/default/">
-      
-      
-      <link rel="icon" href="../assets/mini_square.svg">
+      <link rel="icon" href="../../assets/mini_square.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
-        <title>API Reference - mini-SWE-agent documentation</title>
+        <title>v2.0 Migration Guide - mini-SWE-agent documentation</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -54,23 +50,23 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../assets/custom.css">
+      <link rel="stylesheet" href="../../assets/custom.css">
     
-      <link rel="stylesheet" href="../assets/gif-controls.css">
+      <link rel="stylesheet" href="../../assets/gif-controls.css">
     
-      <link rel="stylesheet" href="../assets/mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/mkdocstrings.css">
     
-      <link rel="stylesheet" href="../assets/image_theme.css">
+      <link rel="stylesheet" href="../../assets/image_theme.css">
     
-      <link rel="stylesheet" href="../assets/bubbles.css">
+      <link rel="stylesheet" href="../../assets/bubbles.css">
     
-      <link rel="stylesheet" href="../assets/navigation_cards.css">
+      <link rel="stylesheet" href="../../assets/navigation_cards.css">
     
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -87,7 +83,7 @@
     
     
     
-   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
     html.glightbox-open { overflow: initial; height: 100%; }
     .gslide-title { margin-top: 0px; user-select: text; }
     .gslide-desc { color: #666; user-select: text; }
@@ -96,7 +92,7 @@
     .gdesc-inner { font-size: 0.75rem; }
     body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
     body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
-    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -115,7 +111,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-reference" class="md-skip">
+        <a href="#v20-migration-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -154,9 +150,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
       
-  <img src="../assets/mini_square.svg" alt="logo">
+  <img src="../../assets/mini_square.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -173,7 +169,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              API Reference
+              v2.0 Migration Guide
             
           </span>
         </div>
@@ -286,7 +282,7 @@
     
     
       <li class="md-tabs__item">
-        <a href=".." class="md-tabs__link">
+        <a href="../.." class="md-tabs__link">
           
   
     
@@ -302,13 +298,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
           
   
     
@@ -383,9 +377,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
       
-  <img src="../assets/mini_square.svg" alt="logo">
+  <img src="../../assets/mini_square.svg" alt="logo">
 
     </a>
     mini-SWE-agent documentation
@@ -447,7 +441,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href=".." class="md-nav__link ">
+            <a href="../.." class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -480,7 +474,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/" class="md-nav__link">
+      <a href="../../quickstart/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -551,7 +545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/mini/" class="md-nav__link">
+      <a href="../../usage/mini/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -572,7 +566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/config/" class="md-nav__link">
+      <a href="../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -593,7 +587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/swebench/" class="md-nav__link">
+      <a href="../../usage/swebench/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -614,7 +608,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/inspector/" class="md-nav__link">
+      <a href="../../usage/inspector/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -635,7 +629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/output_files/" class="md-nav__link">
+      <a href="../../usage/output_files/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -710,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/quickstart/" class="md-nav__link">
+      <a href="../../models/quickstart/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -731,7 +725,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/local_models/" class="md-nav__link">
+      <a href="../../models/local_models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -752,7 +746,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/troubleshooting/" class="md-nav__link">
+      <a href="../../models/troubleshooting/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -825,7 +819,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/global_configuration/" class="md-nav__link">
+      <a href="../global_configuration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -846,7 +840,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/yaml_configuration/" class="md-nav__link">
+      <a href="../yaml_configuration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -925,7 +919,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/python_bindings/" class="md-nav__link">
+      <a href="../../usage/python_bindings/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -946,7 +940,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/control_flow/" class="md-nav__link">
+      <a href="../control_flow/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -967,7 +961,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/cookbook/" class="md-nav__link">
+      <a href="../cookbook/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -988,7 +982,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/environments/" class="md-nav__link">
+      <a href="../environments/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1009,7 +1003,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../v2_migration/" class="md-nav__link">
+      <a href="../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1038,7 +1032,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1059,7 +1053,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1084,8 +1078,6 @@
       
   
   
-    
-  
   
   
     
@@ -1106,22 +1098,19 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1132,13 +1121,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             API Reference
@@ -1198,7 +1187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="agents/default/" class="md-nav__link">
+      <a href="../../reference/agents/default/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1219,7 +1208,7 @@
   
   
     <li class="md-nav__item">
-      <a href="agents/interactive/" class="md-nav__link">
+      <a href="../../reference/agents/interactive/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1304,7 +1293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/overview/" class="md-nav__link">
+      <a href="../../reference/models/overview/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1325,7 +1314,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/litellm/" class="md-nav__link">
+      <a href="../../reference/models/litellm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1346,7 +1335,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/litellm_response_toolcall/" class="md-nav__link">
+      <a href="../../reference/models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1367,7 +1356,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/openrouter/" class="md-nav__link">
+      <a href="../../reference/models/openrouter/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1388,7 +1377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/requesty/" class="md-nav__link">
+      <a href="../../reference/models/requesty/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1409,7 +1398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/test_models/" class="md-nav__link">
+      <a href="../../reference/models/test_models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1430,7 +1419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/extra/" class="md-nav__link">
+      <a href="../../reference/models/extra/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1451,7 +1440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/utils/" class="md-nav__link">
+      <a href="../../reference/models/utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1530,7 +1519,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/local/" class="md-nav__link">
+      <a href="../../reference/environments/local/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1551,7 +1540,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/docker/" class="md-nav__link">
+      <a href="../../reference/environments/docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1572,7 +1561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/singularity/" class="md-nav__link">
+      <a href="../../reference/environments/singularity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1593,7 +1582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/swerex_docker/" class="md-nav__link">
+      <a href="../../reference/environments/swerex_docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1614,7 +1603,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/bubblewrap/" class="md-nav__link">
+      <a href="../../reference/environments/bubblewrap/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1697,7 +1686,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/hello_world/" class="md-nav__link">
+      <a href="../../reference/run/hello_world/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1718,7 +1707,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/mini/" class="md-nav__link">
+      <a href="../../reference/run/mini/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1739,7 +1728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/mini_extra/" class="md-nav__link">
+      <a href="../../reference/run/mini_extra/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1760,7 +1749,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/config/" class="md-nav__link">
+      <a href="../../reference/run/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1781,7 +1770,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/inspector/" class="md-nav__link">
+      <a href="../../reference/run/inspector/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1802,7 +1791,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/swebench/" class="md-nav__link">
+      <a href="../../reference/run/swebench/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1823,7 +1812,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/swebench_single/" class="md-nav__link">
+      <a href="../../reference/run/swebench_single/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1919,9 +1908,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sections" class="md-nav__link">
+  <a href="#whats-changing" class="md-nav__link">
     <span class="md-ellipsis">
-      Sections
+      What's changing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Timeline
     </span>
   </a>
   
@@ -1943,7 +1941,7 @@
                   
 
   
-    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/index.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/advanced/v2_migration.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1951,40 +1949,20 @@
   
 
 
-<h1 id="api-reference">API Reference</h1>
-<p>This section provides detailed documentation for all classes and modules in mini-SWE-agent.</p>
-<div class="admonition tip">
-<p class="admonition-title">Understanding the agent</p>
-<p>Before diving into the API reference, we recommend reading the <a href="../advanced/control_flow/">control flow documentation</a> to understand how the agent works.</p>
+<h1 id="v20-migration-guide">v2.0 Migration Guide</h1>
+<div class="admonition danger">
+<p class="admonition-title">Breaking Changes Ahead</p>
+<p><strong>mini-swe-agent v2.0 is coming soon.</strong></p>
+<p>It will be even more flexible, extensible and performant.
+However, <strong>breaking changes</strong> were necessary.</p>
+<p>To stay with the current major version for now, you can pin your dependency:</p>
+<div class="highlight"><pre><span></span><code>mini-swe-agent~=1.0
+</code></pre></div>
 </div>
-<h2 id="sections">Sections</h2>
-<ul>
-<li><strong><a href="agents/default/">Agents</a></strong> - Agent implementations and control flow</li>
-<li><strong><a href="models/overview/">Models</a></strong> - Language model interfaces</li>
-<li><strong><a href="environments/local/">Environments</a></strong> - Command execution environments</li>
-<li><strong><a href="run/mini/">Run Scripts</a></strong> - Entry points and CLI interfaces</li>
-</ul>
-<div class="grid cards">
-  <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">bug_report</span>
-        <span class="nav-card-title">Something broken/unclear?</span>
-      </div>
-      <p class="nav-card-description">Open an issue on GitHub!</p>
-    </div>
-  </a>
-
-  <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">help</span>
-        <span class="nav-card-title">Open-ended discussions</span>
-      </div>
-      <p class="nav-card-description">Join our Slack!</p>
-    </div>
-  </a>
-</div>
+<h2 id="whats-changing">What's changing</h2>
+<p>This page will be updated with detailed migration instructions as v2.0 approaches release.</p>
+<h2 id="timeline">Timeline</h2>
+<p>Stay tuned for announcements about the v2.0 release date.</p>
 
 
 
@@ -2048,44 +2026,6 @@
         <footer class="md-footer">
   
     
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../contributing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contributing">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Contributing
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="agents/default/" class="md-footer__link md-footer__link--next" aria-label="Next: DefaultAgent">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                DefaultAgent
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -2109,14 +2049,14 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
-        <script src="../assets/js/sh-annotation.js"></script>
+        <script src="../../assets/js/sh-annotation.js"></script>
       
-        <script src="../assets/js/gif-controls.js"></script>
+        <script src="../../assets/js/gif-controls.js"></script>
       
     
   <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});

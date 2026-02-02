@@ -8,28 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/">
+        <link rel="canonical" href="https://mini-swe-agent.com/latest/usage/config/">
       
       
-        <link rel="prev" href="../contributing/">
+        <link rel="prev" href="../mini/">
       
       
-        <link rel="next" href="agents/default/">
+        <link rel="next" href="../swebench/">
       
       
-      <link rel="icon" href="../assets/mini_square.svg">
+      <link rel="icon" href="../../assets/mini_square.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
-        <title>API Reference - mini-SWE-agent documentation</title>
+        <title>Config - mini-SWE-agent documentation</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -54,23 +54,23 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../assets/custom.css">
+      <link rel="stylesheet" href="../../assets/custom.css">
     
-      <link rel="stylesheet" href="../assets/gif-controls.css">
+      <link rel="stylesheet" href="../../assets/gif-controls.css">
     
-      <link rel="stylesheet" href="../assets/mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/mkdocstrings.css">
     
-      <link rel="stylesheet" href="../assets/image_theme.css">
+      <link rel="stylesheet" href="../../assets/image_theme.css">
     
-      <link rel="stylesheet" href="../assets/bubbles.css">
+      <link rel="stylesheet" href="../../assets/bubbles.css">
     
-      <link rel="stylesheet" href="../assets/navigation_cards.css">
+      <link rel="stylesheet" href="../../assets/navigation_cards.css">
     
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -87,7 +87,7 @@
     
     
     
-   <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
     html.glightbox-open { overflow: initial; height: 100%; }
     .gslide-title { margin-top: 0px; user-select: text; }
     .gslide-desc { color: #666; user-select: text; }
@@ -96,7 +96,7 @@
     .gdesc-inner { font-size: 0.75rem; }
     body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
     body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
-    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../assets/javascripts/glightbox.min.js"></script></head>
   
   
     
@@ -115,7 +115,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-reference" class="md-skip">
+        <a href="#mini-extra-config" class="md-skip">
           Skip to content
         </a>
       
@@ -154,9 +154,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-header__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
       
-  <img src="../assets/mini_square.svg" alt="logo">
+  <img src="../../assets/mini_square.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -173,7 +173,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              API Reference
+              Config
             
           </span>
         </div>
@@ -282,11 +282,13 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href=".." class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../.." class="md-tabs__link">
           
   
     
@@ -302,13 +304,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../reference/" class="md-tabs__link">
           
   
     
@@ -383,9 +383,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
+    <a href="../.." title="mini-SWE-agent documentation" class="md-nav__button md-logo" aria-label="mini-SWE-agent documentation" data-md-component="logo">
       
-  <img src="../assets/mini_square.svg" alt="logo">
+  <img src="../../assets/mini_square.svg" alt="logo">
 
     </a>
     mini-SWE-agent documentation
@@ -409,6 +409,8 @@
       
   
   
+    
+  
   
   
     
@@ -435,19 +437,22 @@
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href=".." class="md-nav__link ">
+            <a href="../.." class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -458,13 +463,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             Getting Started
@@ -480,7 +485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/" class="md-nav__link">
+      <a href="../../quickstart/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -498,8 +503,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -519,11 +526,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" checked>
         
           
           <label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex="0">
@@ -537,7 +544,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_3">
             <span class="md-nav__icon md-icon"></span>
             Command line usage
@@ -551,7 +558,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/mini/" class="md-nav__link">
+      <a href="../mini/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -569,10 +576,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../usage/config/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Config
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -581,6 +608,95 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set" class="md-nav__link">
+    <span class="md-ellipsis">
+      set
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unset" class="md-nav__link">
+    <span class="md-ellipsis">
+      unset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edit" class="md-nav__link">
+    <span class="md-ellipsis">
+      edit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration keys
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -593,7 +709,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/swebench/" class="md-nav__link">
+      <a href="../swebench/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -614,7 +730,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/inspector/" class="md-nav__link">
+      <a href="../inspector/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -635,7 +751,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/output_files/" class="md-nav__link">
+      <a href="../output_files/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -710,7 +826,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/quickstart/" class="md-nav__link">
+      <a href="../../models/quickstart/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -731,7 +847,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/local_models/" class="md-nav__link">
+      <a href="../../models/local_models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -752,7 +868,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/troubleshooting/" class="md-nav__link">
+      <a href="../../models/troubleshooting/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -825,7 +941,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/global_configuration/" class="md-nav__link">
+      <a href="../../advanced/global_configuration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -846,7 +962,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/yaml_configuration/" class="md-nav__link">
+      <a href="../../advanced/yaml_configuration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -925,7 +1041,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/python_bindings/" class="md-nav__link">
+      <a href="../python_bindings/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -946,7 +1062,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/control_flow/" class="md-nav__link">
+      <a href="../../advanced/control_flow/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -967,7 +1083,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/cookbook/" class="md-nav__link">
+      <a href="../../advanced/cookbook/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -988,7 +1104,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../advanced/environments/" class="md-nav__link">
+      <a href="../../advanced/environments/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1009,7 +1125,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../v2_migration/" class="md-nav__link">
+      <a href="../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1038,7 +1154,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1059,7 +1175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1084,8 +1200,6 @@
       
   
   
-    
-  
   
   
     
@@ -1106,22 +1220,19 @@
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1132,13 +1243,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             API Reference
@@ -1198,7 +1309,7 @@
   
   
     <li class="md-nav__item">
-      <a href="agents/default/" class="md-nav__link">
+      <a href="../../reference/agents/default/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1219,7 +1330,7 @@
   
   
     <li class="md-nav__item">
-      <a href="agents/interactive/" class="md-nav__link">
+      <a href="../../reference/agents/interactive/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1304,7 +1415,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/overview/" class="md-nav__link">
+      <a href="../../reference/models/overview/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1325,7 +1436,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/litellm/" class="md-nav__link">
+      <a href="../../reference/models/litellm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1346,7 +1457,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/litellm_response_toolcall/" class="md-nav__link">
+      <a href="../../reference/models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1367,7 +1478,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/openrouter/" class="md-nav__link">
+      <a href="../../reference/models/openrouter/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1388,7 +1499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/requesty/" class="md-nav__link">
+      <a href="../../reference/models/requesty/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1409,7 +1520,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/test_models/" class="md-nav__link">
+      <a href="../../reference/models/test_models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1430,7 +1541,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/extra/" class="md-nav__link">
+      <a href="../../reference/models/extra/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1451,7 +1562,7 @@
   
   
     <li class="md-nav__item">
-      <a href="models/utils/" class="md-nav__link">
+      <a href="../../reference/models/utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1530,7 +1641,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/local/" class="md-nav__link">
+      <a href="../../reference/environments/local/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1551,7 +1662,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/docker/" class="md-nav__link">
+      <a href="../../reference/environments/docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1572,7 +1683,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/singularity/" class="md-nav__link">
+      <a href="../../reference/environments/singularity/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1593,7 +1704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/swerex_docker/" class="md-nav__link">
+      <a href="../../reference/environments/swerex_docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1614,7 +1725,7 @@
   
   
     <li class="md-nav__item">
-      <a href="environments/bubblewrap/" class="md-nav__link">
+      <a href="../../reference/environments/bubblewrap/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1697,7 +1808,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/hello_world/" class="md-nav__link">
+      <a href="../../reference/run/hello_world/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1718,7 +1829,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/mini/" class="md-nav__link">
+      <a href="../../reference/run/mini/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1739,7 +1850,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/mini_extra/" class="md-nav__link">
+      <a href="../../reference/run/mini_extra/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1760,7 +1871,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/config/" class="md-nav__link">
+      <a href="../../reference/run/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1781,7 +1892,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/inspector/" class="md-nav__link">
+      <a href="../../reference/run/inspector/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1802,7 +1913,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/swebench/" class="md-nav__link">
+      <a href="../../reference/run/swebench/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1823,7 +1934,7 @@
   
   
     <li class="md-nav__item">
-      <a href="run/swebench_single/" class="md-nav__link">
+      <a href="../../reference/run/swebench_single/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1919,9 +2030,69 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sections" class="md-nav__link">
+  <a href="#commands" class="md-nav__link">
     <span class="md-ellipsis">
-      Sections
+      Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set" class="md-nav__link">
+    <span class="md-ellipsis">
+      set
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unset" class="md-nav__link">
+    <span class="md-ellipsis">
+      unset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edit" class="md-nav__link">
+    <span class="md-ellipsis">
+      edit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration keys
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation
     </span>
   </a>
   
@@ -1943,7 +2114,7 @@
                   
 
   
-    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/reference/index.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/SWE-agent/mini-SWE-agent/edit/main/docs/usage/config.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1951,19 +2122,166 @@
   
 
 
-<h1 id="api-reference">API Reference</h1>
-<p>This section provides detailed documentation for all classes and modules in mini-SWE-agent.</p>
-<div class="admonition tip">
-<p class="admonition-title">Understanding the agent</p>
-<p>Before diving into the API reference, we recommend reading the <a href="../advanced/control_flow/">control flow documentation</a> to understand how the agent works.</p>
-</div>
-<h2 id="sections">Sections</h2>
+<h1 id="mini-extra-config"><code>mini-extra config</code></h1>
+<div class="admonition abstract">
+<p class="admonition-title">Overview</p>
 <ul>
-<li><strong><a href="agents/default/">Agents</a></strong> - Agent implementations and control flow</li>
-<li><strong><a href="models/overview/">Models</a></strong> - Language model interfaces</li>
-<li><strong><a href="environments/local/">Environments</a></strong> - Command execution environments</li>
-<li><strong><a href="run/mini/">Run Scripts</a></strong> - Entry points and CLI interfaces</li>
+<li><code>mini-extra config</code> is a utility to manage the global configuration file.</li>
+<li>Quickly start the it with <code>mini-extra config</code> or <code>mini-e config</code>.</li>
 </ul>
+</div>
+<h2 id="commands">Commands</h2>
+<h3 id="setup"><code>setup</code></h3>
+<p>Interactive setup wizard that helps you configure your default model and API keys.</p>
+<div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span>setup
+</code></pre></div>
+<p>This will prompt you for:</p>
+<ol>
+<li>Your default model (e.g., <code>anthropic/claude-sonnet-4-5-20250929</code>)</li>
+<li>Your API key name and value (e.g., <code>ANTHROPIC_API_KEY</code>)</li>
+</ol>
+<h3 id="set"><code>set</code></h3>
+<p>Set a specific key in the global config file.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># example: set default model</span>
+mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>MSWEA_MODEL_NAME<span class="w"> </span>anthropic/claude-sonnet-4-5-20250929
+<span class="c1"># or interactively</span>
+mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span>
+</code></pre></div>
+<h3 id="unset"><code>unset</code></h3>
+<p>Remove a key from the global config file.</p>
+<div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>MSWEA_MODEL_NAME
+</code></pre></div>
+<h3 id="edit"><code>edit</code></h3>
+<p>Open the global config file in your default editor (uses <code>$EDITOR</code> or <code>nano</code>).</p>
+<div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span>edit
+</code></pre></div>
+<h2 id="configuration-keys">Configuration keys</h2>
+<p>For more configuration options, see <a href="../../advanced/global_configuration/">global configuration</a>.</p>
+<h2 id="implementation">Implementation</h2>
+<details class="note">
+<summary>Run script</summary>
+<ul>
+<li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/utilities/config.py">Read on GitHub</a></li>
+<li><a href="../../reference/run/config/">API reference</a></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;Utility to manage the global config file.</span>
+
+<span class="sd">You can also directly edit the `.env` file in the config directory.</span>
+
+<span class="sd">It is located at [bold green]{global_config_file}[/bold green].</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_key</span><span class="p">,</span> <span class="n">unset_key</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit</span><span class="w"> </span><span class="kn">import</span> <span class="n">prompt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Argument</span><span class="p">,</span> <span class="n">Typer</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">global_config_file</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Typer</span><span class="p">(</span>
+    <span class="n">help</span><span class="o">=</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">global_config_file</span><span class="o">=</span><span class="n">global_config_file</span><span class="p">),</span>  <span class="c1"># type: ignore</span>
+    <span class="n">no_args_is_help</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">rich_markup_mode</span><span class="o">=</span><span class="s2">&quot;rich&quot;</span><span class="p">,</span>
+    <span class="n">add_completion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="n">_SETUP_HELP</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;To get started, we need to set up your global config file.</span>
+
+<span class="s2">You can edit it manually or use the [bold green]mini-extra config set[/bold green] or [bold green]mini-extra config edit[/bold green] commands.</span>
+
+<span class="s2">This setup will ask you for your model and an API key.</span>
+
+<span class="s2">Here&#39;s a few popular models and the required API keys:</span>
+
+<span class="s2">[bold green]anthropic/claude-sonnet-4-5-20250929[/bold green] ([bold green]ANTHROPIC_API_KEY[/bold green])</span>
+<span class="s2">[bold green]openai/gpt-5[/bold green] or [bold green]openai/gpt-5-mini[/bold green] ([bold green]OPENAI_API_KEY[/bold green])</span>
+<span class="s2">[bold green]gemini/gemini-3-pro-preview[/bold green] ([bold green]GEMINI_API_KEY[/bold green])</span>
+
+<span class="s2">[bold]Note: Please always include the provider (e.g., &quot;openai/&quot;) in the model name.[/bold]</span>
+
+<span class="s2">[bold yellow]You can leave any setting blank to skip it.[/bold yellow]</span>
+
+<span class="s2">More information at https://mini-swe-agent.com/latest/quickstart/</span>
+<span class="s2">To find the best model, check the leaderboard at https://swebench.com/</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">configure_if_first_time</span><span class="p">():</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_CONFIGURED&quot;</span><span class="p">):</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
+        <span class="n">setup</span><span class="p">()</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Rule</span><span class="p">())</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup the global config file.&quot;&quot;&quot;</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">_SETUP_HELP</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">global_config_file</span><span class="o">=</span><span class="n">global_config_file</span><span class="p">))</span>
+    <span class="n">default_model</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span>
+        <span class="s2">&quot;Enter your default model (e.g., anthropic/claude-sonnet-4-5-20250929): &quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MSWEA_MODEL_NAME&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">default_model</span><span class="p">:</span>
+        <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">&quot;MSWEA_MODEL_NAME&quot;</span><span class="p">,</span> <span class="n">default_model</span><span class="p">)</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+        <span class="s2">&quot;[bold yellow]If you already have your API keys set as environment variables, you can ignore the next question.[/bold yellow]&quot;</span>
+    <span class="p">)</span>
+    <span class="n">key_name</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span><span class="s2">&quot;Enter your API key name (e.g., ANTHROPIC_API_KEY): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">key_value</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">key_name</span><span class="p">:</span>
+        <span class="n">key_value</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span><span class="s2">&quot;Enter your API key value (e.g., sk-1234567890): &quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">key_name</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">key_value</span><span class="p">:</span>
+            <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="n">key_name</span><span class="p">,</span> <span class="n">key_value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">key_value</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+            <span class="s2">&quot;[bold red]API key setup not completed.[/bold red] Totally fine if you have your keys as environment variables.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="s2">&quot;MSWEA_CONFIGURED&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold yellow]Config finished.[/bold yellow] If you want to revisit it, run [bold green]mini-extra config setup[/bold green].&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span>
+    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Argument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The key to set&quot;</span><span class="p">),</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Argument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The value to set&quot;</span><span class="p">),</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set a key in the global config file.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span><span class="s2">&quot;Enter the key to set: &quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Enter the value for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: &quot;</span><span class="p">)</span>
+    <span class="n">set_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">unset</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Argument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The key to unset&quot;</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unset a key in the global config file.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span><span class="s2">&quot;Enter the key to unset: &quot;</span><span class="p">)</span>
+    <span class="n">unset_key</span><span class="p">(</span><span class="n">global_config_file</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">edit</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Edit the global config file.&quot;&quot;&quot;</span>
+    <span class="n">editor</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;EDITOR&quot;</span><span class="p">,</span> <span class="s2">&quot;nano&quot;</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">editor</span><span class="p">,</span> <span class="n">global_config_file</span><span class="p">])</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">()</span>
+</code></pre></div>
+</details>
 <div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
     <div class="nav-card">
@@ -2052,7 +2370,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../contributing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contributing">
+          <a href="../mini/" class="md-footer__link md-footer__link--prev" aria-label="Previous: &lt;code&gt;mini&lt;/code&gt;">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2062,20 +2380,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Contributing
+                <code>mini</code>
               </div>
             </div>
           </a>
         
         
           
-          <a href="agents/default/" class="md-footer__link md-footer__link--next" aria-label="Next: DefaultAgent">
+          <a href="../swebench/" class="md-footer__link md-footer__link--next" aria-label="Next: SWE-bench">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                DefaultAgent
+                SWE-bench
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2109,14 +2427,14 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.top", "content.action.edit", "navigation.footer", "content.code.copy", "content.footnote.tooltips", "header.autohide", "announce.dismiss", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
-        <script src="../assets/js/sh-annotation.js"></script>
+        <script src="../../assets/js/sh-annotation.js"></script>
       
-        <script src="../assets/js/gif-controls.js"></script>
+        <script src="../../assets/js/gif-controls.js"></script>
       
     
   <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});

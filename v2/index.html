@@ -120,6 +120,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -411,6 +430,8 @@
       
         
       
+        
+      
     
     
       
@@ -493,6 +514,8 @@
       
         
       
+        
+      
     
     
       
@@ -552,11 +575,11 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/mini_v/" class="md-nav__link">
+      <a href="usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -599,6 +622,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -746,12 +790,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -769,7 +807,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -779,7 +817,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -825,6 +863,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="advanced/control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="advanced/cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -853,32 +1012,11 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/control_flow/" class="md-nav__link">
+      <a href="v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="advanced/cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -1020,8 +1158,6 @@
       
         
       
-        
-      
     
     
       
@@ -1086,27 +1222,6 @@
   
   <span class="md-ellipsis">
     InteractiveAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="reference/agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
   </span>
   
 
@@ -1187,6 +1302,27 @@
   
   
     <li class="md-nav__item">
+      <a href="reference/models/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="reference/models/litellm/" class="md-nav__link">
         
   
@@ -1208,32 +1344,11 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/models/litellm_response/" class="md-nav__link">
+      <a href="reference/models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="reference/models/anthropic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
+    LitellmResponseModel
   </span>
   
 
@@ -1542,8 +1657,6 @@
       
         
       
-        
-      
     
     
       
@@ -1671,27 +1784,6 @@
   
   <span class="md-ellipsis">
     Inspector
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="reference/run/github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
   </span>
   
 
@@ -1887,6 +1979,14 @@
 
 <h1 style="margin-bottom: 1ex;">The 100 line AI agent that's actually useful</h1>
 
+</div>
+
+<div class="admonition warning">
+<p class="admonition-title">This is mini-swe-agent v2</p>
+<p>For the previous version, check out the <a href="https://mini-swe-agent.com/v1/">v1 documentation</a> or the <a href="https://github.com/SWE-agent/mini-swe-agent/tree/v1">v1 branch</a>.</p>
+</div>
+<div align="center">
+
 <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ">
     <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white" alt="Slack">
 </a>
@@ -1979,10 +2079,10 @@ You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bas
 <table>
 <tr>
 <td width="50%">
-<a href="usage/mini"><strong>Simple UI</strong></a> (<code>mini</code>)
+<a href="usage/mini"><strong>CLI</strong></a> (<code>mini</code>)
 </td>
 <td>
-<a href="usage/mini_v"><strong>Visual UI</strong></a> (<code>mini -v</code>)
+<a href="usage/swebench/"><strong>Batch inference</strong></a>
 </td>
 </tr>
 <tr>
@@ -1994,29 +2094,22 @@ You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bas
   </div>
 </td>
 <td>
-  <div class="gif-container" data-glightbox-disabled>
-    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini2.png?raw=true"
-         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini2.gif?raw=true"
-         alt="miniv" data-glightbox="false" />
-  </div>
-</td>
-</tr>
-<tr>
-<td>
-<a href="usage/swebench/"><strong>Batch inference</strong></a>
-</td>
-<td>
-<a href="usage/inspector/"><strong>Trajectory browser</strong></a>
-</td>
-</tr>
-<tr>
-<td>
 <div class="gif-container" data-glightbox-disabled>
   <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/swebench.png?raw=true"
        data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/swebench.gif?raw=true"
        alt="swebench" data-glightbox="false" />
 </div>
 </td>
+</tr>
+<tr>
+<td>
+<a href="usage/inspector/"><strong>Trajectory browser</strong></a>
+</td>
+<td>
+<a href="advanced/cookbook/"><strong>Python bindings</strong></a>
+</td>
+</tr>
+<tr>
 <td>
 <div class="gif-container" data-glightbox-disabled>
   <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true"
@@ -2024,16 +2117,6 @@ You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bas
        alt="inspector" data-glightbox="false" />
 </div>
 </td>
-</tr>
-<tr>
-<td>
-<a href="advanced/cookbook/"><strong>Python bindings</strong></a>
-</td>
-<td>
-<a href="https://mini-swe-agent.com"><strong>More in the docs</strong></a>
-</td>
-</tr>
-<tr>
 <td>
 <pre><code class="language-python">agent = DefaultAgent(
     LitellmModel(model_name=...),
@@ -2041,18 +2124,13 @@ You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bas
 )
 agent.run("Write a sudoku game")</code></pre>
 </td>
-<td>
-<ul>
-<li><a href="quickstart">Quick start</a></li>
-<li><a href="usage/mini"><code>mini</code></a></li>
-<li><a href="faq">FAQ</a></li>
-<li><a href="advanced/global_configuration">Global configuration</a></li>
-<li><a href="advanced/yaml_configuration">Yaml configuration</a></li>
-</ul>
-</td>
 </tr>
 </table>
 
+<div class="admonition info">
+<p class="admonition-title">Upgrading to v2?</p>
+<p>Check out our <a href="v2_migration/">v2 migration guide</a> for all the changes and how to update your code.</p>
+</div>
 <h2 id="continue-reading">Continue reading:</h2>
 <div class="grid cards">
   <a href="quickstart/" class="nav-card-link">
@@ -2072,16 +2150,6 @@ agent.run("Write a sudoku game")</code></pre>
         <span class="nav-card-title">Usage: Simple UI</span>
       </div>
       <p class="nav-card-description">Learn to use the <code>mini</code> command</p>
-    </div>
-  </a>
-
-  <a href="usage/mini_v/" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">visibility</span>
-        <span class="nav-card-title">Usage: Visual UI</span>
-      </div>
-      <p class="nav-card-description">Try the visual interface with <code>mini -v</code></p>
     </div>
   </a>
 
@@ -2118,6 +2186,7 @@ agent.run("Write a sudoku game")</code></pre>
 
 <h2 id="news">📣 News</h2>
 <ul>
+<li><a href="https://minimal-agent.com/">New tutorial on building minimal AI agents</a></li>
 <li>Nov 19: <a href="https://x.com/KLieret/status/1991164693839270372">Gemini 3 Pro reaches 74% on SWE-bench verified with mini-swe-agent!</a></li>
 <li>Aug 19: <a href="https://www.swebench.com/SWE-bench/blog/2025/08/19/mini-roulette/">New blogpost: Randomly switching between GPT-5 and Sonnet 4 boosts performance</a></li>
 </ul>

@@ -122,6 +122,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="advanced/v2_migration/">
+  <strong>⚠️ v2.0 ahead!</strong> Beware of breaking changes.
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -413,6 +432,8 @@
       
         
       
+        
+      
     
     
       
@@ -495,6 +516,8 @@
       
         
       
+        
+      
     
     
       
@@ -554,11 +577,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../usage/mini_v/" class="md-nav__link">
+      <a href="../../usage/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    <code>mini -v</code>
+    Config
   </span>
   
 
@@ -601,6 +624,27 @@
   
   <span class="md-ellipsis">
     Inspector
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/output_files/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Output files
   </span>
   
 
@@ -750,12 +794,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
       
@@ -773,7 +811,7 @@
             
   
   <span class="md-ellipsis">
-    Guides & tutorials
+    Configuration
   </span>
   
 
@@ -783,7 +821,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
-            Guides & tutorials
+            Configuration
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -920,6 +958,127 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_6" id="__nav_1_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Python bindings & more
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            Python bindings & more
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/python_bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Python bindings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control_flow/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understanding the agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Subclassing and more
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
               
                 
   
@@ -948,32 +1107,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../control_flow/" class="md-nav__link">
+      <a href="../../v2_migration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Control flow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cookbook/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Python bindings
+    v2 migration guide
   </span>
   
 
@@ -1115,8 +1253,6 @@
       
         
       
-        
-      
     
     
       
@@ -1181,27 +1317,6 @@
   
   <span class="md-ellipsis">
     InteractiveAgent
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/agents/textual/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    TextualAgent
   </span>
   
 
@@ -1282,6 +1397,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/models/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/models/litellm/" class="md-nav__link">
         
   
@@ -1303,32 +1439,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/models/litellm_response/" class="md-nav__link">
+      <a href="../../reference/models/litellm_response_toolcall/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    LitellmResponseAPIModel
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/models/anthropic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    AnthropicModel
+    LitellmResponseModel
   </span>
   
 
@@ -1637,8 +1752,6 @@
       
         
       
-        
-      
     
     
       
@@ -1766,27 +1879,6 @@
   
   <span class="md-ellipsis">
     Inspector
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/run/github_issue/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    GitHub Issue
   </span>
   
 
@@ -2019,12 +2111,12 @@ Environment variables take precedence over variables set in the <code>.env</code
 <div class="highlight"><pre><span></span><code>mini-extra config set KEY VALUE
 # e.g.,
 mini-extra config set MSWEA_MODEL_NAME &quot;anthropic/claude-sonnet-4-5-20250929&quot;
-mini-extra config set MSWEA_MODEL_API_KEY &quot;sk-...&quot;
+mini-extra config set ANTHROPIC_API_KEY &quot;sk-...&quot;
 </code></pre></div>
 <p>or to unset a key:</p>
 <div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>KEY
 <span class="c1"># e.g.,</span>
-mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>MSWEA_MODEL_API_KEY
+mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb">unset</span><span class="w"> </span>ANTHROPIC_API_KEY
 </code></pre></div>
 <p>You can also edit the <code>.env</code> file directly and we provide a helper function for that:</p>
 <div class="highlight"><pre><span></span><code>mini-extra<span class="w"> </span>config<span class="w"> </span>edit
@@ -2042,10 +2134,6 @@ setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">&quot;va
 <div class="highlight"><pre><span></span><code><span class="c1"># Default model name</span>
 <span class="c1"># (default: not set)</span>
 <span class="nv">MSWEA_MODEL_NAME</span><span class="o">=</span><span class="s2">&quot;anthropic/claude-sonnet-4-5-20250929&quot;</span>
-
-<span class="c1"># Default API key</span>
-<span class="c1"># (default: not set)</span>
-<span class="nv">MSWEA_MODEL_API_KEY</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span>
 </code></pre></div>
 <p>To ignore errors from cost tracking checks (for example for free models), set:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># CAREFUL: This can lead to unmanaged spending!</span>
@@ -2076,17 +2164,9 @@ setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">&quot;va
 <span class="c1"># (default: package_dir / &quot;config&quot; / &quot;mini.yaml&quot;)</span>
 <span class="nv">MSWEA_MINI_CONFIG_PATH</span><span class="o">=</span><span class="s2">&quot;/path/to/your/own/config&quot;</span>
 
-<span class="c1"># Config path for GitHub issue script</span>
-<span class="c1"># (default: package_dir / &quot;config&quot; / &quot;github_issue.yaml&quot;)</span>
-<span class="nv">MSWEA_GITHUB_CONFIG_PATH</span><span class="o">=</span><span class="s2">&quot;/path/to/your/github/config.yaml&quot;</span>
-
 <span class="c1"># Custom style path for trajectory inspector</span>
-<span class="c1"># (default: package_dir / &quot;config&quot; / &quot;mini.tcss&quot;)</span>
+<span class="c1"># (default: package_dir / &quot;config&quot; / &quot;inspector.tcss&quot;)</span>
 <span class="nv">MSWEA_INSPECTOR_STYLE_PATH</span><span class="o">=</span><span class="s2">&quot;/path/to/your/inspector/style.tcss&quot;</span>
-
-<span class="c1"># Custom style path for mini textual interface</span>
-<span class="c1"># (default: package_dir / &quot;config&quot; / &quot;mini.tcss&quot;)</span>
-<span class="nv">MSWEA_MINI_STYLE_PATH</span><span class="o">=</span><span class="s2">&quot;/path/to/your/mini/style.tcss&quot;</span>
 </code></pre></div>
 <h3 id="settings-for-environments">Settings for environments</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Path/name to the singularity/apptainer executable</span>
@@ -2105,10 +2185,6 @@ setx<span class="w"> </span>KEY<span class="w"> </span><span class="s2">&quot;va
 <div class="highlight"><pre><span></span><code><span class="c1"># Default run script entry point for the main CLI</span>
 <span class="c1"># (default: &quot;minisweagent.run.mini&quot;)</span>
 <span class="nv">MSWEA_DEFAULT_RUN</span><span class="o">=</span><span class="s2">&quot;minisweagent.run.mini&quot;</span>
-
-<span class="c1"># Set to true to use visual mode by default for the main CLI</span>
-<span class="c1"># (default: false)</span>
-<span class="nv">MSWEA_VISUAL_MODE_DEFAULT</span><span class="o">=</span><span class="s2">&quot;false&quot;</span>
 </code></pre></div>
 <div class="grid cards">
   <a href="https://github.com/SWE-agent/SWE-agent/issues/new" class="nav-card-link">
