@@ -5,10 +5,6 @@
 
 </div>
 
-!!! warning "This is mini-swe-agent v2"
-
-    For the previous version, check out the [v1 documentation](https://mini-swe-agent.com/v1/) or the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
-
 <div align="center">
 
 <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ">
@@ -22,6 +18,11 @@
 </a>
 
 </div>
+
+!!! warning "This is mini-swe-agent v2"
+
+    For the previous version, check out the [v1 documentation](https://mini-swe-agent.com/v1/) or the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
+
 In 2024, [SWE-bench](https://swebench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the coding agent revolution.
 
 We now ask: **What if the agent was 100x smaller, and still worked nearly as well?**
