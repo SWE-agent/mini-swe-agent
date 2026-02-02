@@ -142,7 +142,7 @@ plugins:
               - "!^model_post_init"
 repo_url: https://github.com/SWE-agent/mini-SWE-agent
 repo_name: SWE-agent/mini-SWE-agent
-edit_uri: edit/main/docs/
+edit_uri: edit/v1/docs/
 extra_javascript:
   - assets/js/sh-annotation.js
   - assets/js/gif-controls.js
