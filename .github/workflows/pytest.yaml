@@ -65,7 +65,12 @@ jobs:
         run: |
             uv pip install --python ${Python_ROOT_DIR} -e '.[full]'
       - name: Run pytest
-        run: pytest -v --cov --cov-branch --cov-report=xml -n auto
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          # PORTKEY_API_KEY: ${{ secrets.PORTKEY_API_KEY }}
+          REQUESTY_API_KEY: ${{ secrets.REQUESTY_API_KEY }}
+        run: pytest -v --cov --cov-branch --cov-report=xml -n auto --run-fire
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
