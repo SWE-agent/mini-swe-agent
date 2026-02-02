@@ -1,5 +1,19 @@
 /* Trajectory Inspector Styles */
 
+#main {
+    height: 1fr;
+    overflow: hidden;
+}
+
+VerticalScroll {
+    height: 1fr;
+}
+
+#content {
+    height: auto;
+    padding: 1;
+}
+
 .message-container {
     height: auto;
     margin-bottom: 1;
@@ -14,12 +28,9 @@
 }
 
 .message-content {
+    height: auto;
     padding: 1;
     background: $surface;
-}
-
-#content {
-    padding: 1;
 }
 
 Header {
