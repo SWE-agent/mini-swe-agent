@@ -1317,16 +1317,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#internal-architecture-changes" class="md-nav__link">
+  <a href="#architecture-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Internal architecture changes
+        Architecture changes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Internal architecture changes">
+    <nav class="md-nav" aria-label="Architecture changes">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protocol-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol changes
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#exception-changes" class="md-nav__link">
@@ -2562,16 +2573,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#internal-architecture-changes" class="md-nav__link">
+  <a href="#architecture-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Internal architecture changes
+        Architecture changes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Internal architecture changes">
+    <nav class="md-nav" aria-label="Architecture changes">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#protocol-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol changes
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#exception-changes" class="md-nav__link">
@@ -2659,7 +2681,7 @@ See the <a href="https://mini-swe-agent.com/v1/">v1 documentation</a> or the <a 
 <p>If you only changed <code>system_template</code> and <code>instance_template</code>, no changes needed.</p>
 <p><strong>Move from <code>agent</code> to <code>model</code>:</strong></p>
 <ul>
-<li><code>observation_template</code> (previously <code>action_observation_template</code>)</li>
+<li><code>observation_template</code> (renamed from <code>action_observation_template</code>)</li>
 <li><code>format_error_template</code></li>
 <li><code>action_regex</code> (only for text-based parsing)</li>
 </ul>
@@ -2735,34 +2757,126 @@ However, if you use the <a href="https://platform.openai.com/docs/api-reference/
 <li>Disadvantage: If you parse trajectories, you might need to adapt to the message structure of the model you use.</li>
 </ul>
 <h2 id="removed-renamed">Removed &amp; renamed</h2>
+<p><strong>Removed features:</strong></p>
 <ul>
-<li><strong>Visual mode</strong>: The <code>-v</code> flag for the alternate <code>mini</code> CLI is no longer supported. That was a tough decision to make, but in the end the visual mode didn't see the adoption we wanted and is significantly more complex to maintain than the default interface.</li>
+<li><strong>"Visual" UI</strong>: The <code>-v</code> flag for the alternate, textual based <code>mini -v</code> CLI is no longer supported. This was a tough decision to make, but in the end the visual mode didn't see the adoption we wanted and is significantly more complex to maintain than the default interface.</li>
 <li><strong>Rotating API keys</strong>: <code>ANTHROPIC_API_KEYS</code> with <code>::</code> separator no longer supported. Use single <code>ANTHROPIC_API_KEY</code>.</li>
+<li><strong><code>github_issue</code> run script</strong>: The dedicated <code>github_issue.py</code> run script was removed. Use the <code>mini</code> CLI instead.</li>
+<li><strong><code>MSWEA_MODEL_API_KEY</code> environment variable</strong>: No longer used to override API keys.</li>
 </ul>
-<h2 id="internal-architecture-changes">Internal architecture changes</h2>
+<p><strong>Removed model classes:</strong></p>
+<ul>
+<li><strong><code>anthropic</code> model class</strong>: Removed. Use <code>litellm</code> model class for Anthropic models (cache control is auto-enabled for Anthropic models).</li>
+</ul>
+<p><strong>Renamed model classes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>v1 name</th>
+<th>v2 name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>litellm_response_api</code></td>
+<td><code>litellm_response</code></td>
+</tr>
+<tr>
+<td><code>portkey_response_api</code></td>
+<td><code>portkey_response</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>New model classes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>litellm_textbased</code></td>
+<td>Text-based parsing (regex) instead of tool calls</td>
+</tr>
+<tr>
+<td><code>openrouter_textbased</code></td>
+<td>Text-based parsing for OpenRouter</td>
+</tr>
+<tr>
+<td><code>openrouter_response</code></td>
+<td>OpenRouter with response API</td>
+</tr>
+</tbody>
+</table>
+<p><strong>New environment:</strong></p>
+<ul>
+<li><strong><code>swerex_modal</code></strong>: Run environments on Modal (requires <code>pip install mini-swe-agent[modal]</code>)</li>
+</ul>
+<h2 id="architecture-changes">Architecture changes</h2>
 <ol>
 <li>
 <p><strong>Responsibility shift</strong>: Models now parse actions and format observations. This enables switching between tool calls and text parsing by changing model classes. The Agent class is now a simpler coordinator.</p>
 </li>
 <li>
-<p><strong>Stateless models</strong>: Cost tracking moved to Agent, models focus purely on LLM interaction.</p>
+<p><strong>Stateless models</strong>: Cost tracking moved to Agent. The <code>cost</code> and <code>n_calls</code> attributes were removed from the Model protocol.</p>
+</li>
+<li>
+<p><strong>Pydantic configs</strong>: <code>AgentConfig</code> (and other configs) changed from <code>dataclass</code> to Pydantic <code>BaseModel</code>. This requires <code>pydantic &gt;= 2.0</code>.</p>
 </li>
 <li>
 <p><strong>New protocol methods</strong>: All classes implement <code>get_template_vars()</code> and <code>serialize()</code> instead of requiring specific attributes.</p>
 </li>
-<li>
-<p><strong>Config merging</strong>: CLI can merge multiple config files and accept key-value overrides.</p>
-</li>
 </ol>
+<h3 id="protocol-changes">Protocol changes</h3>
+<p>If you want to write a custom Model, Environment or Agent compatible with <code>mini-swe-agent</code>, you don't need to subclass anything.
+Rather, mini-swe-agent fully uses duck typing with <a href="https://typing.python.org/en/latest/spec/protocol.html">protocols</a>
+(tl;dr: as long as you implement the required methods, you can use any class as a Model, Environment or Agent).
+Config options like <code>--config-class</code> also take full import classes, so you can put your classes wherever you want.</p>
+<p><strong>Model protocol:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Removed attributes</span>
+<span class="n">cost</span><span class="p">:</span> <span class="nb">float</span>      <span class="c1"># moved to Agent</span>
+<span class="n">n_calls</span><span class="p">:</span> <span class="nb">int</span>     <span class="c1"># moved to Agent</span>
+
+<span class="c1"># New methods</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_observation_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">template_vars</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
+<p><strong>Environment protocol:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Changed signature</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span> <span class="o">...</span>  <span class="c1"># was: (command: str) -&gt; dict[str, str]</span>
+
+<span class="c1"># New method</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
+<p><strong>Agent protocol:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Removed attributes (you don't need to implement these anymore, but you can)</span>
+<span class="n">model</span><span class="p">:</span> <span class="n">Model</span>
+<span class="n">env</span><span class="p">:</span> <span class="n">Environment</span>
+<span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+
+<span class="c1"># Changed return type</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># was: tuple[str, str]</span>
+
+<span class="c1"># New method</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_dicts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
 <h3 id="exception-changes">Exception changes</h3>
 <p>All flow control exceptions now inherit from <code>InterruptAgentFlow</code> and moved to <code>minisweagent.exceptions</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">InterruptAgentFlow</span> <span class="p">(</span><span class="n">base</span><span class="p">)</span>
 <span class="err">├──</span> <span class="n">Submitted</span> <span class="p">(</span><span class="n">task</span> <span class="n">completed</span><span class="p">)</span>
 <span class="err">├──</span> <span class="n">LimitsExceeded</span> <span class="p">(</span><span class="n">cost</span><span class="o">/</span><span class="n">step</span> <span class="n">limit</span><span class="p">)</span>
 <span class="err">├──</span> <span class="n">FormatError</span> <span class="p">(</span><span class="n">invalid</span> <span class="n">model</span> <span class="n">output</span><span class="p">)</span>
-<span class="err">├──</span> <span class="ne">TimeoutError</span> <span class="p">(</span><span class="n">execution</span> <span class="n">timeout</span><span class="p">)</span>
-<span class="err">└──</span> <span class="n">UserInterruption</span> <span class="p">(</span><span class="n">user</span> <span class="n">cancelled</span><span class="p">)</span>
+<span class="err">└──</span> <span class="n">UserInterruption</span> <span class="p">(</span><span class="n">user</span> <span class="n">cancelled</span><span class="p">)</span>  <span class="c1"># new</span>
 </code></pre></div>
+<p><strong>Removed exception classes:</strong></p>
+<ul>
+<li><code>NonTerminatingException</code> - use <code>InterruptAgentFlow</code> base class</li>
+<li><code>TerminatingException</code> - use <code>InterruptAgentFlow</code> base class</li>
+<li><code>ExecutionTimeoutError</code> - removed (no longer used)</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Old</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">Submitted</span><span class="p">,</span> <span class="n">FormatError</span>
 

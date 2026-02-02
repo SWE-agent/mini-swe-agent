@@ -1816,17 +1816,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.exceptions.TimeoutError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TimeoutError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#minisweagent.exceptions.UserInterruption" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3087,17 +3076,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#minisweagent.exceptions.TimeoutError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TimeoutError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#minisweagent.exceptions.UserInterruption" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4346,64 +4324,6 @@ You can pass additional dictionaries with extra data to be (recursively) merged 
 
 
         <p>Raised when the LM's output is not in the expected format.</p>
-
-
-
-
-
-
-
-
-                  <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/minisweagent/exceptions.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">messages</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="n">messages</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</code></pre></div></td></tr></tbody></table></div>
-                  </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="minisweagent.exceptions.TimeoutError" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">minisweagent.exceptions.TimeoutError</span>
-
-
-</h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">TimeoutError</span><span class="p">(</span><span class="o">*</span><span class="n">messages</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">)</span>
-</code></pre></div>
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="            minisweagent.exceptions.InterruptAgentFlow" href="#minisweagent.exceptions.InterruptAgentFlow">InterruptAgentFlow</a></code></p>
-
-
-
-        <p>Raised when something timed out.</p>
 
 
 
