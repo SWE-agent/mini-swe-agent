@@ -1501,8 +1501,6 @@
       
         
       
-        
-      
     
     
     
@@ -1667,34 +1665,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../litellm_toolcall/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LitellmToolcallModel
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../litellm_response_toolcall/" class="md-nav__link">
         
   
@@ -1702,7 +1672,7 @@
   <span class="md-ellipsis">
     
   
-    LitellmResponseToolcallModel
+    LitellmResponseModel
   
 
     
@@ -2486,19 +2456,19 @@
 <td><a href="../litellm/"><code>LitellmModel</code></a></td>
 <td><code>litellm</code></td>
 <td><code>/completion</code></td>
-<td>❌</td>
+<td>✅</td>
 <td>Default model using <a href="https://docs.litellm.ai/docs/providers">LiteLLM</a> for broad provider support (OpenAI, Anthropic, 100+ providers)</td>
 </tr>
 <tr>
-<td><a href="../litellm_toolcall/"><code>LitellmToolcallModel</code></a></td>
-<td><code>litellm_toolcall</code></td>
+<td><a href="../litellm/"><code>LitellmTextbasedModel</code></a></td>
+<td><code>litellm_textbased</code></td>
 <td><code>/completion</code></td>
-<td>✅</td>
-<td>LiteLLM with native tool calling</td>
+<td>❌</td>
+<td>LiteLLM with text-based actions (no native tool calling)</td>
 </tr>
 <tr>
-<td><a href="../litellm_response_toolcall/"><code>LitellmResponseToolcallModel</code></a></td>
-<td><code>litellm_response_toolcall</code></td>
+<td><a href="../litellm_response_toolcall/"><code>LitellmResponseModel</code></a></td>
+<td><code>litellm_response</code></td>
 <td><code>/response</code></td>
 <td>✅</td>
 <td>LiteLLM with <a href="https://platform.openai.com/docs/api-reference/responses">OpenAI Responses API</a> and native tool calling</td>
@@ -2507,19 +2477,19 @@
 <td><a href="../openrouter/"><code>OpenRouterModel</code></a></td>
 <td><code>openrouter</code></td>
 <td><code>/completion</code></td>
-<td>❌</td>
+<td>✅</td>
 <td><a href="https://openrouter.ai/">OpenRouter</a> API integration</td>
 </tr>
 <tr>
-<td><a href="../openrouter/"><code>OpenRouterToolcallModel</code></a></td>
-<td><code>openrouter_toolcall</code></td>
+<td><a href="../openrouter/"><code>OpenRouterTextbasedModel</code></a></td>
+<td><code>openrouter_textbased</code></td>
 <td><code>/completion</code></td>
-<td>✅</td>
-<td>OpenRouter with native tool calling</td>
+<td>❌</td>
+<td>OpenRouter with text-based actions</td>
 </tr>
 <tr>
-<td><a href="../openrouter/"><code>OpenRouterResponseAPIToolcallModel</code></a></td>
-<td><code>openrouter_response_toolcall</code></td>
+<td><a href="../openrouter/"><code>OpenRouterResponseModel</code></a></td>
+<td><code>openrouter_response</code></td>
 <td><code>/response</code></td>
 <td>✅</td>
 <td>OpenRouter Responses API with native tool calling</td>
@@ -2528,21 +2498,21 @@
 <td><a href="../portkey/"><code>PortkeyModel</code></a></td>
 <td><code>portkey</code></td>
 <td><code>/completion</code></td>
-<td>❌</td>
+<td>✅</td>
 <td><a href="https://portkey.ai/">Portkey</a> AI gateway integration</td>
 </tr>
 <tr>
 <td><a href="../portkey_response/"><code>PortkeyResponseAPIModel</code></a></td>
 <td><code>portkey_response</code></td>
 <td><code>/response</code></td>
-<td>❌</td>
+<td>✅</td>
 <td>Portkey with Responses API support</td>
 </tr>
 <tr>
 <td><a href="../requesty/"><code>RequestyModel</code></a></td>
 <td><code>requesty</code></td>
 <td><code>/completion</code></td>
-<td>❌</td>
+<td>✅</td>
 <td><a href="https://requesty.ai/">Requesty</a> API integration</td>
 </tr>
 <tr>

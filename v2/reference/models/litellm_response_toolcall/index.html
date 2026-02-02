@@ -8,7 +8,7 @@
         <link rel="canonical" href="https://mini-swe-agent.com/latest/reference/models/litellm_response_toolcall/">
       
       
-        <link rel="prev" href="../litellm_toolcall/">
+        <link rel="prev" href="../litellm/">
       
       
         <link rel="next" href="../openrouter/">
@@ -22,7 +22,7 @@
     
     
       
-        <title>LitellmResponseToolcallModel - mini-SWE-agent documentation</title>
+        <title>LitellmResponseModel - mini-SWE-agent documentation</title>
       
     
     
@@ -115,7 +115,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#litellm-response-toolcall-model" class="md-skip">
+        <a href="#litellm-response-model" class="md-skip">
           Skip to content
         </a>
       
@@ -173,7 +173,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              LitellmResponseToolcallModel
+              LitellmResponseModel
             
           </span>
         </div>
@@ -1501,8 +1501,6 @@
       
         
       
-        
-      
     
     
     
@@ -1606,34 +1604,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../litellm_toolcall/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LitellmToolcallModel
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -1653,7 +1623,7 @@
   <span class="md-ellipsis">
     
   
-    LitellmResponseToolcallModel
+    LitellmResponseModel
   
 
     
@@ -1671,7 +1641,7 @@
   <span class="md-ellipsis">
     
   
-    LitellmResponseToolcallModel
+    LitellmResponseModel
   
 
     
@@ -2624,9 +2594,9 @@
   
 
 
-<h1 id="litellm-response-toolcall-model">Litellm Response Toolcall Model</h1>
+<h1 id="litellm-response-model">Litellm Response Model</h1>
 <div class="admonition note">
-<p class="admonition-title">LiteLLM Response API Toolcall Model class</p>
+<p class="admonition-title">LiteLLM Response API Model class</p>
 <ul>
 <li><a href="https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_response_model.py">Read on GitHub</a></li>
 </ul>
@@ -2724,9 +2694,9 @@
 </ul>
 </div>
 <h2 id="usage">Usage</h2>
-<p>To use the Response API toolcall model, specify <code>model_class: "litellm_response_toolcall"</code> in your agent config:</p>
+<p>To use the Response API model, specify <code>model_class: "litellm_response"</code> in your agent config:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"litellm_response_toolcall"</span>
+<span class="w">  </span><span class="nt">model_class</span><span class="p">:</span><span class="w"> </span><span class="s">"litellm_response"</span>
 <span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"openai/gpt-5.2"</span>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -2734,7 +2704,7 @@
 <span class="w">      </span><span class="nt">effort</span><span class="p">:</span><span class="w"> </span><span class="s">"high"</span>
 </code></pre></div>
 <p>Or via command line:</p>
-<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"openai/gpt-5.2"</span><span class="w"> </span>--model-class<span class="w"> </span>litellm_response_toolcall
+<div class="highlight"><pre><span></span><code>mini<span class="w"> </span>-m<span class="w"> </span><span class="s2">"openai/gpt-5.2"</span><span class="w"> </span>--model-class<span class="w"> </span>litellm_response
 </code></pre></div>
 
 
@@ -3088,7 +3058,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer">
         
           
-          <a href="../litellm_toolcall/" class="md-footer__link md-footer__link--prev" aria-label="Previous: LitellmToolcallModel">
+          <a href="../litellm/" class="md-footer__link md-footer__link--prev" aria-label="Previous: LitellmModel">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -3098,7 +3068,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                LitellmToolcallModel
+                LitellmModel
               </div>
             </div>
           </a>

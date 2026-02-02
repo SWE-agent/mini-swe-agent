@@ -1592,8 +1592,6 @@
       
         
       
-        
-      
     
     
     
@@ -1700,34 +1698,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/models/litellm_toolcall/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LitellmToolcallModel
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/models/litellm_response_toolcall/" class="md-nav__link">
         
   
@@ -1735,7 +1705,7 @@
   <span class="md-ellipsis">
     
   
-    LitellmResponseToolcallModel
+    LitellmResponseModel
   
 
     
@@ -4231,13 +4201,10 @@ This will almost always default to <code>litellm</code> (with Anthropic models b
 </div>
 <ul>
 <li>
-<p><strong><code>litellm</code></strong> (<a href="../../reference/models/litellm/"><code>LitellmModel</code></a>) - <strong>Default and recommended</strong>. Supports most models through <a href="https://github.com/BerriAI/litellm">litellm</a>. Works with OpenAI, Anthropic, Google, and many other providers.</p>
+<p><strong><code>litellm</code></strong> (<a href="../../reference/models/litellm/"><code>LitellmModel</code></a>) - <strong>Default and recommended</strong>. Supports most models through <a href="https://github.com/BerriAI/litellm">litellm</a>. Works with OpenAI, Anthropic, Google, and many other providers. Anthropic models automatically get cache control settings when the model name contains "anthropic", "claude", "sonnet", or "opus".</p>
 </li>
 <li>
-<p><strong><code>litellm_response_toolcall</code></strong> (<a href="../../reference/models/litellm_response_toolcall/"><code>LitellmResponseToolcallModel</code></a>) - Specialized version of <code>LitellmModel</code> that uses OpenAI's Responses API with native tool calling. Useful for models like GPT-5 and required for models like GPT-5-codex. Maintains conversation state across turns.</p>
-</li>
-<li>
-<p><strong><code>anthropic</code></strong> (<a href="../reference/models/anthropic.md"><code>AnthropicModel</code></a>) - Wrapper around <code>LitellmModel</code> for Anthropic models that adds cache breakpoint handling. Will be used by default if no <code>model_class</code> is specified and the model name contains "anthropic", "claude", etc.</p>
+<p><strong><code>litellm_response</code></strong> (<a href="../../reference/models/litellm_response_toolcall/"><code>LitellmResponseModel</code></a>) - Specialized version of <code>LitellmModel</code> that uses OpenAI's Responses API with native tool calling. Useful for models like GPT-5 and required for models like GPT-5-codex. Maintains conversation state across turns.</p>
 </li>
 <li>
 <p><strong><code>openrouter</code></strong> (<a href="../../reference/models/openrouter/"><code>OpenRouterModel</code></a>) - Direct integration with <a href="https://openrouter.ai/">OpenRouter</a> API for accessing various models through a single endpoint.</p>
