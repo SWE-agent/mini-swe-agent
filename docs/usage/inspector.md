@@ -37,6 +37,7 @@ mini-e i <path_to_directory>
 - `k`/`UP`: Scroll up
 - `H`: Previous trajectory
 - `L`: Next trajectory
+- `e`: Open current step in [jless](https://jless.io/)
 
 ### FAQ
 

@@ -7,6 +7,8 @@ More information about the usage: [bold green] https://mini-swe-agent.com/latest
 
 import json
 import os
+import subprocess
+import tempfile
 from pathlib import Path
 
 import typer
@@ -44,10 +46,11 @@ class TrajectoryInspector(App):
         Binding("left,h", "previous_step", "Step--"),
         Binding("0", "first_step", "Step=0"),
         Binding("$", "last_step", "Step=-1"),
-        Binding("j,down", "scroll_down", "Scroll down"),
-        Binding("k,up", "scroll_up", "Scroll up"),
-        Binding("L", "next_trajectory", "Next trajectory"),
-        Binding("H", "previous_trajectory", "Previous trajectory"),
+        Binding("j,down", "scroll_down", "↓"),
+        Binding("k,up", "scroll_up", "↑"),
+        Binding("L", "next_trajectory", "Traj++"),
+        Binding("H", "previous_trajectory", "Traj--"),
+        Binding("e", "open_in_jless", "Jless"),
         Binding("q", "quit", "Quit"),
     ]
 
@@ -199,6 +202,18 @@ class TrajectoryInspector(App):
     def action_scroll_up(self) -> None:
         vs = self.query_one(VerticalScroll)
         vs.scroll_to(y=vs.scroll_target_y - 15)
+
+    def action_open_in_jless(self) -> None:
+        """Open the current step's messages in jless."""
+        if not self.steps:
+            self.notify("No messages to display", severity="warning")
+            return
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            json.dump(self.steps[self.i_step], f, indent=2)
+            temp_path = f.name
+        with self.suspend():
+            subprocess.run(["jless", temp_path])
+        Path(temp_path).unlink()
 
 
 @app.command(help=__doc__)
