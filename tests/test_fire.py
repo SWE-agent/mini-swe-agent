@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Fire tests: Real API integration tests that cost money.
 
 ################################################################################
@@ -64,23 +65,29 @@ def run_mini_command(extra_options: list[str]) -> subprocess.CompletedProcess:
 # =============================================================================
 
 
-def test_litellm_default():
-    """Test with default litellm model class."""
-    result = run_mini_command(["--model", "openai/gpt-5-mini"])
+def test_litellm_textbased():
+    """Test with litellm_textbased model class."""
+    result = run_mini_command(
+        ["--model", "openai/gpt-5-mini", "--model-class", "litellm_textbased", "-c", "mini_textbased"]
+    )
     assert result.returncode == 0
 
 
 def test_litellm_toolcall():
     """Test with litellm_toolcall model class."""
-    result = run_mini_command(["--model", "openai/gpt-5.2", "--model-class", "litellm_toolcall", "-c", "mini_toolcall"])
+    result = run_mini_command(["--model", "openai/gpt-5.2"])
+    assert result.returncode == 0
+
+
+def test_litellm_toolcall_explicit():
+    """Test with litellm_toolcall model class."""
+    result = run_mini_command(["--model", "openai/gpt-5.2", "--model-class", "litellm", "-c", "mini"])
     assert result.returncode == 0
 
 
 def test_litellm_response_toolcall():
     """Test with litellm_response_toolcall model class (OpenAI Responses API)."""
-    result = run_mini_command(
-        ["--model", "openai/gpt-5.2", "--model-class", "litellm_response_toolcall", "-c", "mini_toolcall"]
-    )
+    result = run_mini_command(["--model", "openai/gpt-5.2", "--model-class", "litellm_response"])
     assert result.returncode == 0
 
 
@@ -89,25 +96,23 @@ def test_litellm_response_toolcall():
 # =============================================================================
 
 
-def test_openrouter_default():
-    """Test with default openrouter model class."""
-    result = run_mini_command(["--model", "anthropic/claude-sonnet-4", "--model-class", "openrouter"])
+def test_openrouter_textbased():
+    """Test with openrouter_textbased model class."""
+    result = run_mini_command(
+        ["--model", "anthropic/claude-sonnet-4", "--model-class", "openrouter_textbased", "-c", "mini_textbased"]
+    )
     assert result.returncode == 0
 
 
 def test_openrouter_toolcall():
     """Test with openrouter_toolcall model class."""
-    result = run_mini_command(
-        ["--model", "anthropic/claude-sonnet-4", "--model-class", "openrouter_toolcall", "-c", "mini_toolcall"]
-    )
+    result = run_mini_command(["--model", "anthropic/claude-sonnet-4", "--model-class", "openrouter"])
     assert result.returncode == 0
 
 
 def test_openrouter_response_toolcall():
     """Test with openrouter_response_toolcall model class (OpenAI Responses API via OpenRouter)."""
-    result = run_mini_command(
-        ["--model", "openai/gpt-5.2", "--model-class", "openrouter_response_toolcall", "-c", "mini_toolcall"]
-    )
+    result = run_mini_command(["--model", "openai/gpt-5.2", "--model-class", "openrouter_response"])
     assert result.returncode == 0
 
 
@@ -118,13 +123,13 @@ def test_openrouter_response_toolcall():
 
 def test_portkey_default():
     """Test with default portkey model class."""
-    result = run_mini_command(["--model", "openai/gpt-5-mini", "--model-class", "portkey"])
+    result = run_mini_command(["--model", "@openai/gpt-5-mini", "--model-class", "portkey"])
     assert result.returncode == 0
 
 
 def test_portkey_response():
     """Test with portkey_response model class (OpenAI Responses API via Portkey)."""
-    result = run_mini_command(["--model", "openai/gpt-5.2", "--model-class", "portkey_response", "-c", "mini_toolcall"])
+    result = run_mini_command(["--model", "@openai/gpt-5.2", "--model-class", "portkey_response"])
     assert result.returncode == 0
 
 
