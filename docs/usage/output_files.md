@@ -8,7 +8,7 @@
 
 !!! warning "v2.0 format changes"
 
-    The output format changed in v2.0 (`trajectory_format: mini-swe-agent-1.1`). See the [v2 migration guide](../v2_migration.md) for more information.
+    The output format changed in v2.0 (`trajectory_format: mini-swe-agent-1.1`). See the [v2 migration guide](../advanced/v2_migration.md) for more information.
 
 !!! tip "Viewing trajectory files"
 

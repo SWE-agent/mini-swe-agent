@@ -80,7 +80,7 @@ nav:
       - "Understanding the agent": advanced/control_flow.md
       - "Subclassing and more": advanced/cookbook.md
       - "Environments": advanced/environments.md
-      - "v2 migration guide": v2_migration.md
+      - "v2 migration guide": advanced/v2_migration.md
     - "FAQ": faq.md
     - "Contributing": contributing.md
   - API Reference:

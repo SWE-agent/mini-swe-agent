@@ -156,7 +156,7 @@ agent.run("Write a sudoku game")</code></pre>
 
 !!! info "Upgrading to v2?"
 
-    Check out our [v2 migration guide](v2_migration.md) for all the changes and how to update your code.
+    Check out our [v2 migration guide](advanced/v2_migration.md) for all the changes and how to update your code.
 
 ## Continue reading:
 
