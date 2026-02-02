@@ -142,11 +142,13 @@ class LitellmModel:
             id=last_chunk.id if last_chunk else "stream-response",
             created=last_chunk.created if last_chunk else 0,
             model=last_chunk.model if last_chunk else self.config.model_name,
-            choices=[Choices(
-                index=0,
-                finish_reason="stop",
-                message=Message(role="assistant", content=content),
-            )],
+            choices=[
+                Choices(
+                    index=0,
+                    finish_reason="stop",
+                    message=Message(role="assistant", content=content),
+                )
+            ],
             # Use backend-provided usage if available, otherwise use estimates
             usage=usage_obj
             or Usage(
@@ -193,15 +195,13 @@ class LitellmModel:
                     model=self.config.model_name,
                     messages=messages,
                     stream=True,
-                    **(self.config.model_kwargs | kwargs | stream_kwargs)
+                    **(self.config.model_kwargs | kwargs | stream_kwargs),
                 )
                 response = self._reconstruct_response_from_stream(stream_response)
                 usage = self._usage_from_response(response)
                 if not self._usage_is_valid(usage):
                     return litellm.completion(
-                        model=self.config.model_name,
-                        messages=messages,
-                        **(self.config.model_kwargs | kwargs)
+                        model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
                     )
                 return response
             else:
