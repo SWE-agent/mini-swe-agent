@@ -26,8 +26,6 @@
 
 ::: minisweagent.exceptions.FormatError
 
-::: minisweagent.exceptions.TimeoutError
-
 ::: minisweagent.exceptions.UserInterruption
 
 {% include-markdown "../../_footer.md" %}

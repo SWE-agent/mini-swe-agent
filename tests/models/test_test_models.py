@@ -4,7 +4,7 @@ import time
 import pytest
 
 import minisweagent.models
-from minisweagent.exceptions import FormatError, TimeoutError
+from minisweagent.exceptions import FormatError
 from minisweagent.models.test_models import (
     DeterministicModel,
     DeterministicModelConfig,
@@ -106,10 +106,6 @@ def test_raise_exception():
     model = DeterministicModel(outputs=[make_output("", [{"raise": FormatError()}])])
     with pytest.raises(FormatError):
         model.query([{"role": "user", "content": "test"}])
-
-    model2 = DeterministicModel(outputs=[make_output("", [{"raise": TimeoutError()}])])
-    with pytest.raises(TimeoutError):
-        model2.query([{"role": "user", "content": "test"}])
 
 
 def test_toolcall_model_basic(reset_global_stats):
