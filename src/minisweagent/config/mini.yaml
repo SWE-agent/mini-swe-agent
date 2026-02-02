@@ -98,7 +98,7 @@ agent:
     ```bash
     anything
     ```
-  step_limit: 0.
+  step_limit: 0
   cost_limit: 3.
   mode: confirm
 environment:

@@ -101,7 +101,7 @@ agent:
     ```mswea_bash_command
     anything
     ```
-  step_limit: 0.
+  step_limit: 0
   cost_limit: 0.
 environment:
   env:
