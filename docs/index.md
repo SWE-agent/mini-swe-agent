@@ -5,9 +5,9 @@
 
 </div>
 
-!!! warning "v2.0 ahead! Beware of breaking changes."
+!!! note "This is mini-swe-agent v2"
 
-    See the [migration guide](advanced/v2_migration.md) for details.
+    For the previous version, check out the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
 
 <div align="center">
 
@@ -214,6 +214,7 @@ agent.run("Write a sudoku game")</code></pre>
 
 ## 📣 News
 
+* [New tutorial on building minimal AI agents](https://minimal-agent.com/)
 * Nov 19: [Gemini 3 Pro reaches 74% on SWE-bench verified with mini-swe-agent!](https://x.com/KLieret/status/1991164693839270372)
 * Aug 19: [New blogpost: Randomly switching between GPT-5 and Sonnet 4 boosts performance](https://www.swebench.com/SWE-bench/blog/2025/08/19/mini-roulette/)
 

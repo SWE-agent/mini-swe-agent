@@ -12,6 +12,9 @@
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ)
 [![PyPI - Version](https://img.shields.io/pypi/v/mini-swe-agent?style=for-the-badge&logo=python&logoColor=white&labelColor=black&color=deeppink)](https://pypi.org/project/mini-swe-agent/)
 
+> [!NOTE]
+> This is **mini-swe-agent v2**. For the previous version, check out the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
+
 In 2024, we built [SWE-bench](https://github.com/swe-bench/SWE-bench) & [SWE-agent](https://github.com/swe-agent/swe-agent) and helped kickstart the coding agent revolution.
 
 We now ask: **What if our agent was 100x smaller, and still worked nearly as well?**
