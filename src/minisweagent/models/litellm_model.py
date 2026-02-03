@@ -15,6 +15,7 @@ from minisweagent.models.utils.actions_toolcall import (
     format_toolcall_observation_messages,
     parse_toolcall_actions,
 )
+from minisweagent.exceptions import FormatError
 from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
@@ -84,8 +85,24 @@ class LitellmModel:
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = response.choices[0].message.model_dump()
+        try:
+            actions = self._parse_actions(response)
+        except FormatError as e:
+            # Preserve raw assistant response for debugging (appears in live + final trajectories)
+            debug_message = {
+                "role": "assistant",
+                "content": message.get("content"),
+                "tool_calls": message.get("tool_calls"),
+                "extra": {
+                    "parse_error": True,
+                    "response": response.model_dump(),
+                    **cost_output,
+                    "timestamp": time.time(),
+                },
+            }
+            raise FormatError(debug_message, *e.messages) from e
         message["extra"] = {
-            "actions": self._parse_actions(response),
+            "actions": actions,
             "response": response.model_dump(),
             **cost_output,
             "timestamp": time.time(),
