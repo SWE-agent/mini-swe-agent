@@ -7,14 +7,13 @@
         Use pip to install `mini` in your current environment:
 
         ```bash
-        pip install mini-swe-agent
+        pip install --pre mini-swe-agent
         ```
 
         And try our command line interface
 
         ```bash
-        mini  # simple UI
-        mini -v  # visual UI
+        mini  # CLI
         mini-extra  # extra utilities
         ```
 
@@ -26,18 +25,16 @@
         Quickly install + run:
 
         ```bash
-        uvx mini-swe-agent  # simple UI
-        uvx mini-swe-agent -v  # visual UI
-        uvx --from mini-swe-agent mini-extra  # extra utilities
+        uvx --prerelease=allow mini-swe-agent  # CLI
+        uvx --prerelease=allow --from mini-swe-agent mini-extra  # extra utilities
         ```
 
         Permanently install
 
         ```bash
-        uv tool install mini-swe-agent
+        uv tool install --prerelease=allow mini-swe-agent
         # then
-        mini  # simple UI
-        mini -v  # visual UI
+        mini  # CLI
         mini-extra  # extra utilities
         ```
 
@@ -49,21 +46,18 @@
         Quick install + run:
 
         ```bash
-        # Simple UI
-        pipx run mini-swe-agent
-        # Textual UI
-        pipx run mini-swe-agent -v
+        # CLI
+        pipx run --pip-args='--pre' mini-swe-agent
         # Extra utilities
-        pipx run --spec mini-swe-agent mini-extra
+        pipx run --pip-args='--pre' --spec mini-swe-agent mini-extra
         ```
 
         or for a persistent installation (recommended):
 
         ```bash
-        pipx install mini-swe-agent
+        pipx install --pip-args='--pre' mini-swe-agent
         # then
-        mini  # simple UI
-        mini -v  # visual UI
+        mini  # CLI
         mini-extra  # extra utilities
         ```
 
@@ -82,8 +76,7 @@
         Then run:
 
         ```bash
-        mini  # simple UI
-        mini -v  # visual UI
+        mini  # CLI
         mini-extra  # extra utilities
         ```
 
@@ -111,6 +104,10 @@
 !!! note "Changelog"
 
     Please see the [github release notes](https://github.com/SWE-agent/mini-swe-agent/releases) for recent changes.
+
+!!! info "Upgrading to v2?"
+
+    Check out our [v2 migration guide](advanced/v2_migration.md) for all the changes and how to update your code.
 
 !!! example "Example Prompts"
 

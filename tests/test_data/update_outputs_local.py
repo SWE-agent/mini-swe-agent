@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from minisweagent.models.test_models import DeterministicModel
-from minisweagent.run.mini import DEFAULT_CONFIG, main
+from minisweagent.run.mini import DEFAULT_CONFIG_FILE, main
 
 
 def update_trajectory():
@@ -20,7 +20,7 @@ def update_trajectory():
 
     with patch("minisweagent.run.mini.get_model") as mock_get_model:
         mock_get_model.return_value = DeterministicModel(outputs=model_responses)
-        main(model_name="tardis", config_spec=DEFAULT_CONFIG, output=traj_path, task=task, yolo=True, model_class=None)
+        main(model_name="tardis", config_spec=DEFAULT_CONFIG_FILE, output=traj_path, task=task, yolo=True, model_class=None)
 
 if __name__ == "__main__":
     update_trajectory()

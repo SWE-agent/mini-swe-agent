@@ -1,8 +1,23 @@
+import re
 from unittest.mock import patch
 
-from minisweagent.models.test_models import DeterministicModel
-from minisweagent.run.mini import DEFAULT_CONFIG, main
-from tests.run.test_github_issue import assert_observations_match
+from minisweagent.models.test_models import DeterministicModel, make_output
+from minisweagent.run.mini import DEFAULT_CONFIG_FILE, main
+from tests.conftest import assert_observations_match
+
+
+def _make_model_from_fixture(text_outputs: list[str], cost_per_call: float = 1.0, **kwargs) -> DeterministicModel:
+    """Create a DeterministicModel from trajectory fixture data (raw text outputs)."""
+
+    def parse_command(text: str) -> list[dict]:
+        match = re.search(r"```mswea_bash_command\s*\n(.*?)\n```", text, re.DOTALL)
+        return [{"command": match.group(1)}] if match else []
+
+    return DeterministicModel(
+        outputs=[make_output(text, parse_command(text), cost=cost_per_call) for text in text_outputs],
+        cost_per_call=cost_per_call,
+        **kwargs,
+    )
 
 
 def test_local_end_to_end(local_test_data):
@@ -14,16 +29,17 @@ def test_local_end_to_end(local_test_data):
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
         patch("minisweagent.models.litellm_model.LitellmModel") as mock_model_class,
-        patch("minisweagent.agents.interactive.prompt_session.prompt", return_value=""),  # No new task
+        patch("minisweagent.agents.interactive._prompt_session.prompt", side_effect=lambda *a, **kw: ""),
+        patch("minisweagent.agents.interactive._multiline_prompt_session.prompt", side_effect=lambda *a, **kw: ""),
+        patch("builtins.input", return_value=""),  # For LimitsExceeded handling
     ):
-        mock_model_class.return_value = DeterministicModel(outputs=model_responses)
+        mock_model_class.return_value = _make_model_from_fixture(model_responses)
         agent = main(
             model_name="tardis",
-            config_spec=DEFAULT_CONFIG,
+            config_spec=[str(DEFAULT_CONFIG_FILE)],
             yolo=True,
             task="Blah blah blah",
             output=None,
-            visual=False,
             cost_limit=10,
             model_class=None,
         )  # type: ignore
@@ -38,6 +54,4 @@ def test_local_end_to_end(local_test_data):
 
     assert_observations_match(expected_observations, messages)
 
-    assert agent.model.n_calls == len(model_responses), (
-        f"Expected {len(model_responses)} steps, got {agent.model.n_calls}"
-    )
+    assert agent.n_calls == len(model_responses), f"Expected {len(model_responses)} steps, got {agent.n_calls}"

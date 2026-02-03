@@ -1,10 +1,22 @@
 import json
+import re
 import threading
 from pathlib import Path
 
 import pytest
 
 from minisweagent.models import GLOBAL_MODEL_STATS
+
+
+def pytest_addoption(parser):
+    """Add custom command line options."""
+    parser.addoption(
+        "--run-fire",
+        action="store_true",
+        default=False,
+        help="Run fire tests (real API calls that cost money)",
+    )
+
 
 # Global lock for tests that modify global state - this works across threads
 _global_stats_lock = threading.Lock()
@@ -48,6 +60,43 @@ def get_test_data(trajectory_name: str) -> dict[str, list[str]]:
             expected_observations.append(message["content"])
 
     return {"model_responses": model_responses, "expected_observations": expected_observations}
+
+
+def normalize_outputs(s: str) -> str:
+    """Strip leading/trailing whitespace and normalize internal whitespace"""
+    # Remove everything between <args> and </args>, because this contains docker container ids
+    s = re.sub(r"<args>(.*?)</args>", "", s, flags=re.DOTALL)
+    # Replace all lines that have root in them because they tend to appear with times
+    s = "\n".join(l for l in s.split("\n") if "root root" not in l)
+    return "\n".join(line.rstrip() for line in s.strip().split("\n"))
+
+
+def assert_observations_match(expected_observations: list[str], messages: list[dict]) -> None:
+    """Compare expected observations with actual observations from agent messages
+
+    Args:
+        expected_observations: List of expected observation strings
+        messages: Agent conversation messages (list of message dicts with 'role' and 'content')
+    """
+    # Extract actual observations from agent messages
+    # User/exit messages (observations) are at indices 3, 5, 7, etc.
+    actual_observations = []
+    for i in range(len(expected_observations)):
+        user_message_index = 3 + (i * 2)
+        assert messages[user_message_index]["role"] in ("user", "exit")
+        actual_observations.append(messages[user_message_index]["content"])
+
+    assert len(actual_observations) == len(expected_observations), (
+        f"Expected {len(expected_observations)} observations, got {len(actual_observations)}"
+    )
+
+    for i, (expected_observation, actual_observation) in enumerate(zip(expected_observations, actual_observations)):
+        normalized_actual = normalize_outputs(actual_observation)
+        normalized_expected = normalize_outputs(expected_observation)
+
+        assert normalized_actual == normalized_expected, (
+            f"Step {i + 1} observation mismatch:\nExpected: {repr(normalized_expected)}\nActual: {repr(normalized_actual)}"
+        )
 
 
 @pytest.fixture

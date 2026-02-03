@@ -8,7 +8,7 @@ def test_swerex_docker_basic_execution():
     """Test basic command execution in SwerexDockerEnvironment."""
     env = SwerexDockerEnvironment(image="python:3.11")
 
-    result = env.execute("echo 'hello world'")
+    result = env.execute({"command": "echo 'hello world'"})
 
     assert isinstance(result, dict)
     assert "output" in result
@@ -22,7 +22,7 @@ def test_swerex_docker_command_failure():
     """Test that command failures are properly captured in SwerexDockerEnvironment."""
     env = SwerexDockerEnvironment(image="python:3.11")
 
-    result = env.execute("exit 1")
+    result = env.execute({"command": "exit 1"})
 
     assert isinstance(result, dict)
     assert "output" in result

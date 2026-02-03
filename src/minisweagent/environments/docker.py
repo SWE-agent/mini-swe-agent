@@ -1,11 +1,15 @@
 import logging
 import os
+import platform
 import shlex
 import subprocess
 import uuid
 from typing import Any
 
 from pydantic import BaseModel
+
+from minisweagent.exceptions import Submitted
+from minisweagent.utils.serialize import recursive_merge
 
 
 class DockerEnvironmentConfig(BaseModel):
@@ -31,6 +35,11 @@ class DockerEnvironmentConfig(BaseModel):
     """Max duration to keep container running. Uses the same format as the sleep command."""
     pull_timeout: int = 120
     """Timeout in seconds for pulling images."""
+    interpreter: list[str] = ["bash", "-lc"]
+    """Interpreter to use to execute commands. Default is ["bash", "-lc"].
+    The actual command will be appended as argument to this. Override this to e.g., modify shell flags
+    (e.g., to remove the `-l` flag to disable login shell) or to use python instead of bash to interpret commands.
+    """
 
 
 class DockerEnvironment:
@@ -49,8 +58,18 @@ class DockerEnvironment:
         self.config = config_class(**kwargs)
         self._start_container()
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return self.config.model_dump()
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), kwargs)
+
+    def serialize(self) -> dict:
+        return {
+            "info": {
+                "config": {
+                    "environment": self.config.model_dump(mode="json"),
+                    "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                }
+            }
+        }
 
     def _start_container(self):
         """Start the Docker container and return the container ID."""
@@ -79,8 +98,9 @@ class DockerEnvironment:
         self.logger.info(f"Started container {container_name} with ID {result.stdout.strip()}")
         self.container_id = result.stdout.strip()
 
-    def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
+    def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the Docker container and return the result as a dict."""
+        command = action.get("command", "")
         cwd = cwd or self.config.cwd
         assert self.container_id, "Container not started"
 
@@ -90,18 +110,45 @@ class DockerEnvironment:
                 cmd.extend(["-e", f"{key}={value}"])
         for key, value in self.config.env.items():
             cmd.extend(["-e", f"{key}={value}"])
-        cmd.extend([self.container_id, "bash", "-lc", command])
+        cmd.extend([self.container_id, *self.config.interpreter, command])
 
-        result = subprocess.run(
-            cmd,
-            text=True,
-            timeout=timeout or self.config.timeout,
-            encoding="utf-8",
-            errors="replace",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
-        return {"output": result.stdout, "returncode": result.returncode}
+        try:
+            result = subprocess.run(
+                cmd,
+                text=True,
+                timeout=timeout or self.config.timeout,
+                encoding="utf-8",
+                errors="replace",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+            output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
+        except Exception as e:
+            raw_output = getattr(e, "output", None)
+            raw_output = (
+                raw_output.decode("utf-8", errors="replace") if isinstance(raw_output, bytes) else (raw_output or "")
+            )
+            output = {
+                "output": raw_output,
+                "returncode": -1,
+                "exception_info": f"An error occurred while executing the command: {e}",
+                "extra": {"exception_type": type(e).__name__, "exception": str(e)},
+            }
+        self._check_finished(output)
+        return output
+
+    def _check_finished(self, output: dict):
+        """Raises Submitted if the output indicates task completion."""
+        lines = output.get("output", "").lstrip().splitlines(keepends=True)
+        if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" and output["returncode"] == 0:
+            submission = "".join(lines[1:])
+            raise Submitted(
+                {
+                    "role": "exit",
+                    "content": submission,
+                    "extra": {"exit_status": "Submitted", "submission": submission},
+                }
+            )
 
     def cleanup(self):
         """Stop and remove the Docker container."""

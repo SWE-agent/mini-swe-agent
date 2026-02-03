@@ -1,3 +1,4 @@
+import json
 import os
 from unittest.mock import MagicMock, patch
 
@@ -5,6 +6,7 @@ import pytest
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
+from minisweagent.models.utils.actions_toolcall import BASH_TOOL
 
 
 def test_portkey_model_missing_api_key():
@@ -33,8 +35,6 @@ def test_portkey_model_initialization():
             model = PortkeyModel(model_name="gpt-4o")
 
             assert model.config.model_name == "gpt-4o"
-            assert model.cost == 0.0
-            assert model.n_calls == 0
 
             # Verify Portkey was called with correct parameters
             mock_portkey_class.assert_called_once_with(api_key="test-key", virtual_key="test-virtual")
@@ -47,8 +47,19 @@ def test_portkey_model_query():
     mock_response = MagicMock()
     mock_choice = MagicMock()
     mock_message = MagicMock()
+    mock_tool_call = MagicMock()
 
-    mock_message.content = "Hello! How can I help you?"
+    # Response uses tool_calls
+    mock_tool_call.id = "call_123"
+    mock_tool_call.function.name = "bash"
+    mock_tool_call.function.arguments = json.dumps({"command": "echo 'Hello!'"})
+    mock_message.tool_calls = [mock_tool_call]
+    mock_message.content = None
+    mock_message.model_dump.return_value = {
+        "role": "assistant",
+        "content": None,
+        "tool_calls": [{"id": "call_123", "function": {"name": "bash", "arguments": '{"command": "echo \'Hello!\'"}'}}],
+    }
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
     mock_response.model_dump.return_value = {"test": "response"}
@@ -66,14 +77,14 @@ def test_portkey_model_query():
                 messages = [{"role": "user", "content": "Hello!"}]
                 result = model.query(messages)
 
-                assert result["content"] == "Hello! How can I help you?"
+                assert result["extra"]["actions"] == [{"command": "echo 'Hello!'", "tool_call_id": "call_123"}]
                 assert result["extra"]["response"] == {"test": "response"}
                 assert result["extra"]["cost"] == 0.01
-                assert model.n_calls == 1
-                assert model.cost == 0.01
 
-                # Verify the API was called correctly
-                mock_client.chat.completions.create.assert_called_once_with(model="gpt-4o", messages=messages)
+                # Verify the API was called correctly with tools
+                mock_client.chat.completions.create.assert_called_once_with(
+                    model="gpt-4o", messages=messages, tools=[BASH_TOOL]
+                )
                 # Verify cost calculation was called
                 mock_cost.assert_called_once_with(mock_response.model_copy(), model=None)
 
@@ -92,8 +103,6 @@ def test_portkey_model_get_template_vars():
 
             assert template_vars["model_name"] == "gpt-4o"
             assert template_vars["model_kwargs"] == {"temperature": 0.7}
-            assert template_vars["n_model_calls"] == 0
-            assert template_vars["model_cost"] == 0.0
 
 
 def test_portkey_model_cost_tracking_ignore_errors():
@@ -103,8 +112,19 @@ def test_portkey_model_cost_tracking_ignore_errors():
     mock_response = MagicMock()
     mock_choice = MagicMock()
     mock_message = MagicMock()
+    mock_tool_call = MagicMock()
 
-    mock_message.content = "Test response"
+    # Response uses tool_calls
+    mock_tool_call.id = "call_456"
+    mock_tool_call.function.name = "bash"
+    mock_tool_call.function.arguments = json.dumps({"command": "echo test"})
+    mock_message.tool_calls = [mock_tool_call]
+    mock_message.content = None
+    mock_message.model_dump.return_value = {
+        "role": "assistant",
+        "content": None,
+        "tool_calls": [{"id": "call_456", "function": {"name": "bash", "arguments": '{"command": "echo test"}'}}],
+    }
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
     mock_response.model_dump.return_value = {"test": "response"}
@@ -125,10 +145,8 @@ def test_portkey_model_cost_tracking_ignore_errors():
                 messages = [{"role": "user", "content": "test"}]
                 result = model.query(messages)
 
-                assert result["content"] == "Test response"
+                assert result["extra"]["actions"] == [{"command": "echo test", "tool_call_id": "call_456"}]
                 assert result["extra"]["cost"] == 0.0
-                assert model.cost == 0.0
-                assert model.n_calls == 1
                 assert GLOBAL_MODEL_STATS.cost == initial_cost
 
 
@@ -140,8 +158,13 @@ def test_portkey_model_cost_validation_error():
     mock_choice = MagicMock()
     mock_message = MagicMock()
     mock_usage = MagicMock()
+    mock_tool_call = MagicMock()
 
-    mock_message.content = "Test response"
+    mock_tool_call.id = "call_789"
+    mock_tool_call.function.name = "bash"
+    mock_tool_call.function.arguments = json.dumps({"command": "echo test"})
+    mock_message.tool_calls = [mock_tool_call]
+    mock_message.content = None
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
     mock_response.model_dump.return_value = {"test": "response"}

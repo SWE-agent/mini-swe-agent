@@ -28,7 +28,7 @@ class GlobalModelStats:
             self._cost += cost
             self._n_calls += 1
         if 0 < self.cost_limit < self._cost or 0 < self.call_limit < self._n_calls + 1:
-            raise RuntimeError(f"Global cost/call limit exceeded: ${self._cost:.4f} / {self._n_calls + 1}")
+            raise RuntimeError(f"Global cost/call limit exceeded: ${self._cost:.4f} / {self._n_calls}")
 
     @property
     def cost(self) -> float:
@@ -51,9 +51,6 @@ def get_model(input_model_name: str | None = None, config: dict | None = None) -
     config["model_name"] = resolved_model_name
 
     model_class = get_model_class(resolved_model_name, config.pop("model_class", ""))
-
-    if (from_env := os.getenv("MSWEA_MODEL_API_KEY")) and not str(type(model_class)).endswith("DeterministicModel"):
-        config.setdefault("model_kwargs", {})["api_key"] = from_env
 
     if (
         any(s in resolved_model_name.lower() for s in ["anthropic", "sonnet", "opus", "claude"])
@@ -79,12 +76,14 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
 
 
 _MODEL_CLASS_MAPPING = {
-    "anthropic": "minisweagent.models.anthropic.AnthropicModel",
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
-    "litellm_response": "minisweagent.models.litellm_response_api_model.LitellmResponseAPIModel",
+    "litellm_textbased": "minisweagent.models.litellm_textbased_model.LitellmTextbasedModel",
+    "litellm_response": "minisweagent.models.litellm_response_model.LitellmResponseModel",
     "openrouter": "minisweagent.models.openrouter_model.OpenRouterModel",
+    "openrouter_textbased": "minisweagent.models.openrouter_textbased_model.OpenRouterTextbasedModel",
+    "openrouter_response": "minisweagent.models.openrouter_response_model.OpenRouterResponseModel",
     "portkey": "minisweagent.models.portkey_model.PortkeyModel",
-    "portkey_response": "minisweagent.models.portkey_response_api_model.PortkeyResponseAPIModel",
+    "portkey_response": "minisweagent.models.portkey_response_model.PortkeyResponseAPIModel",
     "requesty": "minisweagent.models.requesty_model.RequestyModel",
     "deterministic": "minisweagent.models.test_models.DeterministicModel",
 }

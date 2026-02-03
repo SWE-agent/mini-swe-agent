@@ -2,12 +2,7 @@
 
 !!! abstract "Overview"
 
-    * `mini` is a REPL-style interactive command line interface for using mini-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).
-    * Compared to [`mini -v`](mini_v.md), `mini` is more lightweight and does not require threading.
-
-!!! tip "Feedback wanted!"
-    Give feedback on the `mini` and `mini -v` interfaces at [this github issue](https://github.com/swe-agent/mini-swe-agent/issues/161)
-    or in our [Slack channel](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ).
+    * `mini` is a REPL-style interactive command line interface for using mini-SWE-agent in the local environment (as opposed to workflows that require sandboxing or large scale batch processing).
 
 <figure markdown="span">
   <div class="gif-container gif-container-styled" data-glightbox-disabled>

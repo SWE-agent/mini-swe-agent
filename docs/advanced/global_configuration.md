@@ -30,7 +30,7 @@ or to update specific settings:
 mini-extra config set KEY VALUE
 # e.g.,
 mini-extra config set MSWEA_MODEL_NAME "anthropic/claude-sonnet-4-5-20250929"
-mini-extra config set MSWEA_MODEL_API_KEY "sk-..."
+mini-extra config set ANTHROPIC_API_KEY "sk-..."
 ```
 
 or to unset a key:
@@ -38,7 +38,7 @@ or to unset a key:
 ```bash
 mini-extra config unset KEY
 # e.g.,
-mini-extra config unset MSWEA_MODEL_API_KEY
+mini-extra config unset ANTHROPIC_API_KEY
 ```
 
 You can also edit the `.env` file directly and we provide a helper function for that:
@@ -65,10 +65,6 @@ setx KEY "value"
 # Default model name
 # (default: not set)
 MSWEA_MODEL_NAME="anthropic/claude-sonnet-4-5-20250929"
-
-# Default API key
-# (default: not set)
-MSWEA_MODEL_API_KEY="sk-..."
 ```
 
 To ignore errors from cost tracking checks (for example for free models), set:
@@ -111,17 +107,9 @@ MSWEA_CONFIG_DIR="/path/to/your/own/config/dir"
 # (default: package_dir / "config" / "mini.yaml")
 MSWEA_MINI_CONFIG_PATH="/path/to/your/own/config"
 
-# Config path for GitHub issue script
-# (default: package_dir / "config" / "github_issue.yaml")
-MSWEA_GITHUB_CONFIG_PATH="/path/to/your/github/config.yaml"
-
 # Custom style path for trajectory inspector
-# (default: package_dir / "config" / "mini.tcss")
+# (default: package_dir / "config" / "inspector.tcss")
 MSWEA_INSPECTOR_STYLE_PATH="/path/to/your/inspector/style.tcss"
-
-# Custom style path for mini textual interface
-# (default: package_dir / "config" / "mini.tcss")
-MSWEA_MINI_STYLE_PATH="/path/to/your/mini/style.tcss"
 ```
 
 ### Settings for environments
@@ -146,10 +134,6 @@ MSWEA_BUBBLEWRAP_EXECUTABLE="bwrap"
 # Default run script entry point for the main CLI
 # (default: "minisweagent.run.mini")
 MSWEA_DEFAULT_RUN="minisweagent.run.mini"
-
-# Set to true to use visual mode by default for the main CLI
-# (default: false)
-MSWEA_VISUAL_MODE_DEFAULT="false"
 ```
 
 {% include-markdown "_footer.md" %}

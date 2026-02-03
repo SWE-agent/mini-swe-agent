@@ -99,7 +99,7 @@
 
 ## Minutia
 
-??? question "Why is not needed a running shell session such a big deal?"
+??? question "Why is not needing a running shell session such a big deal?"
     <a name="why-no-shell-session"></a>
 
     Most agents so far kept a running shell session. Every action from the agent was executed in this session.
