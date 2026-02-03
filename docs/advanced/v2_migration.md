@@ -140,7 +140,7 @@ In other words: the exact message structure depends on the model you use.
 
 **Removed model classes:**
 
-- **`anthropic` model class**: Removed. Use `litellm` model class for Anthropic models (cache control is auto-enabled for Anthropic models).
+- **`anthropic` model class**: Removed. Use `litellm` model class for Anthropic models (make sure that cache control is enabled).
 
 **Renamed model classes:**
 
