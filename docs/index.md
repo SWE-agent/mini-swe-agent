@@ -21,7 +21,7 @@
 
 !!! warning "This is mini-swe-agent v2"
 
-    For the previous version, check out the [v1 documentation](https://mini-swe-agent.com/v1/) or the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
+    Read the [migration guide](https://mini-swe-agent.com/latest/advanced/v2_migration/). For the previous version, check out the [v1 documentation](https://mini-swe-agent.com/v1/) or the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
 
 In 2024, [SWE-bench](https://swebench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the coding agent revolution.
 
