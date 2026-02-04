@@ -10,21 +10,9 @@
 8. Use `dataclass` for keeping track config
 9. Do not catch exceptions unless explicitly told to.
 10. Write concise, short, minimal code.
-11. In most cases, avoid initializing variables just to pass them to a function. Instead just pass the expression to the function directly.
-12. Not every exception has to be caught. Exceptions are a good way to show problems to a user.
-13. This repository rewards minimal code. Try to be as concise as possible.
-14. Do NOT warn about print messages in tests, print statements in tests are OK!
-
-Here's an example for rule 11:
-
-```python
-# bad
-a = func()
-Class(a)
-
-# good
-Class(func())
-```
+11. Not every exception has to be caught. Exceptions are a good way to show problems to a user.
+12. This repository rewards minimal code. Try to be as concise as possible.
+13. Do NOT warn about print messages in tests, print statements in tests are OK!
 
 ## Test style
 
