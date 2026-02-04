@@ -19,6 +19,7 @@ environment:
   environment_class: swerex_modal
   cwd: "/testbed"
   timeout: 60
+  interpreter: ["bash", "-c"]
   env:
     PAGER: cat
     MANPAGER: cat
