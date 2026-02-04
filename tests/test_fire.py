@@ -61,7 +61,7 @@ def run_mini_command(extra_options: list[str]) -> subprocess.CompletedProcess:
         *extra_options,
     ]
     env = os.environ.copy()
-    env["MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT"] = "3"
+    env["MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT"] = "8"
     return subprocess.run(cmd, timeout=120, env=env)
 
 
