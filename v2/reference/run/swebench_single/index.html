@@ -2778,7 +2778,8 @@
 <span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
-<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"lite"</span><span class="p">,</span> <span class="s2">"--subset"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"SWEBench subset to use or path to a dataset"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">split</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"dev"</span><span class="p">,</span> <span class="s2">"--split"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Dataset split"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
@@ -2813,6 +2814,7 @@
         <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"model_name"</span><span class="p">:</span> <span class="n">model_name</span><span class="p">}})</span>
     <span class="k">if</span> <span class="n">exit_immediately</span><span class="p">:</span>
         <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"confirm_exit"</span><span class="p">:</span> <span class="kc">False</span><span class="p">}})</span>
+    <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"output_path"</span><span class="p">:</span> <span class="n">output</span><span class="p">}})</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="o">*</span><span class="n">configs</span><span class="p">)</span>
 
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_sb_environment</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>

@@ -3206,6 +3206,7 @@ For example, you could use</p>
         <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"model_name"</span><span class="p">:</span> <span class="n">model_name</span><span class="p">}})</span>
     <span class="k">if</span> <span class="n">exit_immediately</span><span class="p">:</span>
         <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"confirm_exit"</span><span class="p">:</span> <span class="kc">False</span><span class="p">}})</span>
+    <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"output_path"</span><span class="p">:</span> <span class="n">output</span><span class="p">}})</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="o">*</span><span class="n">configs</span><span class="p">)</span>
 
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_sb_environment</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
