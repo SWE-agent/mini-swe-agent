@@ -74,6 +74,7 @@ def main(
         configs.append({"model": {"model_name": model_name}})
     if exit_immediately:
         configs.append({"agent": {"confirm_exit": False}})
+    configs.append({"agent": {"output_path": output}})
     config = recursive_merge(*configs)
 
     env = get_sb_environment(config, instance)
