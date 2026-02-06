@@ -143,6 +143,14 @@ model:
   model_kwargs:
     drop_params: true
   format_error_template: |
+    Format error:
+
+    <error>
+    {{error}}
+    </error>
+
+    Here is general guidance on how to format your response:
+
     Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
 
     Please format your action in triple backticks as shown in <response_example>.

@@ -143,8 +143,15 @@ model:
     }
     {%- endif -%}
   format_error_template: |
+    Tool call error:
+
+    <error>
     {{error}}
-    Tool call error. Every response needs to use the 'bash' tool at least once to execute commands.
+    </error>
+
+    Here is general guidance on how to submit correct toolcalls:
+
+    Every response needs to use the 'bash' tool at least once to execute commands.
 
     Call the bash tool with your command as the argument:
     - Tool: bash
