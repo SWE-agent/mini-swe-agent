@@ -11,9 +11,10 @@ import typer
 from rich.console import Console
 
 from minisweagent import global_config_dir
-from minisweagent.agents.interactive import InteractiveAgent, _multiline_prompt
+from minisweagent.agents import get_agent
+from minisweagent.agents.interactive import _multiline_prompt
 from minisweagent.config import builtin_config_dir, get_config_from_spec
-from minisweagent.environments.local import LocalEnvironment
+from minisweagent.environments import get_environment
 from minisweagent.models import get_model
 from minisweagent.run.utilities.config import configure_if_first_time
 from minisweagent.utils.serialize import UNSET, recursive_merge
@@ -53,7 +54,8 @@ app = typer.Typer(rich_markup_mode="rich")
 @app.command(help=_HELP_TEXT)
 def main(
     model_name: str | None = typer.Option(None, "-m", "--model", help="Model to use",),
-    model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')", rich_help_panel="Advanced"),
+    model_class: str | None = typer.Option(None, "--model-class", help="Model class to use (e.g., 'litellm' or 'minisweagent.models.litellm_model.LitellmModel')", rich_help_panel="Advanced"),
+    agent_class: str | None = typer.Option(None, "--agent-class", help="Agent class to use (e.g., 'interactive' or 'minisweagent.agents.interactive.InteractiveAgent')", rich_help_panel="Advanced"),
     task: str | None = typer.Option(None, "-t", "--task", help="Task/problem statement", show_default=False),
     yolo: bool = typer.Option(False, "-y", "--yolo", help="Run without confirmation"),
     cost_limit: float | None = typer.Option(None, "-l", "--cost-limit", help="Cost limit. Set to 0 to disable."),
@@ -69,6 +71,7 @@ def main(
     configs = [get_config_from_spec(spec) for spec in config_spec]
     configs.append({
         "agent": {
+            "agent_class": agent_class or UNSET,
             "mode": "yolo" if yolo else UNSET,
             "cost_limit": cost_limit or UNSET,
             "confirm_exit": False if exit_immediately else UNSET,
@@ -87,8 +90,8 @@ def main(
         console.print("[bold green]Got that, thanks![/bold green]")
 
     model = get_model(config=config.get("model", {}))
-    env = LocalEnvironment(**config.get("environment", {}))
-    agent = InteractiveAgent(model, env, **config.get("agent", {}))
+    env = get_environment(config.get("environment", {}), default_type="local")
+    agent = get_agent(model, env, config.get("agent", {}), default_type="interactive")
     agent.run(task)  # type: ignore[arg-type]
     if output:
         console.print(f"Saved trajectory to [bold green]'{output}'[/bold green]")
