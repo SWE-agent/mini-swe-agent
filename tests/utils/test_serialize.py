@@ -136,3 +136,14 @@ def test_unset_values_skipped():
         {"a": {"x": 1, "y": 2}},
         {"a": {"y": UNSET, "z": 3}, "b": UNSET, "c": 4},
     ) == {"a": {"x": 1, "y": 2, "z": 3}, "c": 4}
+
+
+def test_nested_dict_with_only_unset():
+    """Test that nested dicts containing only UNSET values are filtered out."""
+    # This is the bug case from mini.py where task=None resulted in {"run": {"task": UNSET}}
+    assert recursive_merge({"run": {"task": UNSET}}) == {"run": {}}
+    assert recursive_merge({"a": 1}, {"run": {"task": UNSET}}) == {"a": 1, "run": {}}
+    # Deeply nested UNSET values should also be filtered
+    assert recursive_merge({"a": {"b": {"c": UNSET}}}) == {"a": {"b": {}}}
+    # Mixed: some UNSET, some real values
+    assert recursive_merge({"run": {"task": UNSET, "other": "value"}}) == {"run": {"other": "value"}}

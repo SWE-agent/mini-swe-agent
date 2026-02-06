@@ -21,6 +21,9 @@ def recursive_merge(*dictionaries: dict | None) -> dict:
                 continue
             if key in result and isinstance(result[key], dict) and isinstance(value, dict):
                 result[key] = recursive_merge(result[key], value)
+            elif isinstance(value, dict):
+                # Recursively merge dict values to filter out nested UNSET values
+                result[key] = recursive_merge(value)
             else:
                 result[key] = value
     return result
