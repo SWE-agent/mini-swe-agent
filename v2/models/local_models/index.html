@@ -2711,7 +2711,15 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 <span class="w">    </span><span class="no">}</span>
 <span class="w">    </span><span class="no">{%- endif -%}</span>
 <span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">Tool call error. Every response needs to use the 'bash' tool at least once to execute commands.</span>
+<span class="w">    </span><span class="no">Tool call error:</span>
+
+<span class="w">    </span><span class="no">&lt;error&gt;</span>
+<span class="w">    </span><span class="no">{{error}}</span>
+<span class="w">    </span><span class="no">&lt;/error&gt;</span>
+
+<span class="w">    </span><span class="no">Here is general guidance on how to submit correct toolcalls:</span>
+
+<span class="w">    </span><span class="no">Every response needs to use the 'bash' tool at least once to execute commands.</span>
 
 <span class="w">    </span><span class="no">Call the bash tool with your command as the argument:</span>
 <span class="w">    </span><span class="no">- Tool: bash</span>

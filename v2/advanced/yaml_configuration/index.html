@@ -2747,7 +2747,15 @@
 <span class="w">    </span><span class="no">}</span>
 <span class="w">    </span><span class="no">{%- endif -%}</span>
 <span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">Tool call error. Every response needs to use the 'bash' tool at least once to execute commands.</span>
+<span class="w">    </span><span class="no">Tool call error:</span>
+
+<span class="w">    </span><span class="no">&lt;error&gt;</span>
+<span class="w">    </span><span class="no">{{error}}</span>
+<span class="w">    </span><span class="no">&lt;/error&gt;</span>
+
+<span class="w">    </span><span class="no">Here is general guidance on how to submit correct toolcalls:</span>
+
+<span class="w">    </span><span class="no">Every response needs to use the 'bash' tool at least once to execute commands.</span>
 
 <span class="w">    </span><span class="no">Call the bash tool with your command as the argument:</span>
 <span class="w">    </span><span class="no">- Tool: bash</span>
@@ -3031,6 +3039,14 @@ You can customize this behavior by setting the <code>action_regex</code> field t
 <span class="w">    </span><span class="no">{%- endif -%}</span>
 <span class="w">  </span><span class="nt">action_regex</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;mswea_bash_command&gt;(.*?)&lt;/mswea_bash_command&gt;</span>
 <span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">Format error:</span>
+
+<span class="w">    </span><span class="no">&lt;error&gt;</span>
+<span class="w">    </span><span class="no">{{error}}</span>
+<span class="w">    </span><span class="no">&lt;/error&gt;</span>
+
+<span class="w">    </span><span class="no">Here is general guidance on how to format your response:</span>
+
 <span class="w">    </span><span class="no">Please always provide EXACTLY ONE action in the `&lt;mswea_bash_command&gt;` block, found {{actions|length}} actions.</span>
 
 <span class="w">    </span><span class="no">Please format your action in a `&lt;mswea_bash_command&gt;` block as shown in &lt;response_example&gt;.</span>
