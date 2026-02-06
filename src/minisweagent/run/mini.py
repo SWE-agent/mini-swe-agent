@@ -71,6 +71,9 @@ def main(
     console.print(f"Building agent config from specs: [bold green]{config_spec}[/bold green]")
     configs = [get_config_from_spec(spec) for spec in config_spec]
     configs.append({
+        "run": {
+            "task": task or UNSET,
+        },
         "agent": {
             "agent_class": agent_class or UNSET,
             "mode": "yolo" if yolo else UNSET,
@@ -82,20 +85,23 @@ def main(
             "model_class": model_class or UNSET,
             "model_name": model_name or UNSET,
         },
+        "environment": {
+            "environment_class": env_class or UNSET,
+        },
     })
     config = recursive_merge(*configs)
 
-    if not task:
+    if (run_task := config.get("run", {}).get("task")) is UNSET:
         console.print("[bold yellow]What do you want to do?")
-        task = _multiline_prompt()
+        run_task = _multiline_prompt()
         console.print("[bold green]Got that, thanks![/bold green]")
 
     model = get_model(config=config.get("model", {}))
     env = get_environment(config.get("environment", {}), default_type="local")
     agent = get_agent(model, env, config.get("agent", {}), default_type="interactive")
-    agent.run(task)  # type: ignore[arg-type]
-    if output:
-        console.print(f"Saved trajectory to [bold green]'{output}'[/bold green]")
+    agent.run(run_task)
+    if (output_path := config.get("agent", {}).get("output_path")):
+        console.print(f"Saved trajectory to [bold green]'{output_path}'[/bold green]")
     return agent
 
 
