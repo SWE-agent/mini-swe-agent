@@ -163,6 +163,7 @@ def test_singularity_environment_timeout():
     assert "timed out" in result["exception_info"]
     assert result["extra"]["exception_type"] == "TimeoutExpired"
 
+
 @pytest.mark.slow
 @pytest.mark.skipif(not is_singularity_available(), reason="Singularity not available")
 def test_singularity_environment_writable_sandbox():
