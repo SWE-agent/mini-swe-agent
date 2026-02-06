@@ -19,22 +19,22 @@ def test_configure_if_first_time_called():
     """Test that configure_if_first_time is called when running mini main."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time") as mock_configure,
-        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
-        mock_env.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
         mock_get_config.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
 
         # Setup mock agent instance
         mock_agent = Mock()
         mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
-        mock_interactive_agent_class.return_value = mock_agent
+        mock_get_agent.return_value = mock_agent
 
         # Call main function
         main(
@@ -44,6 +44,8 @@ def test_configure_if_first_time_called():
             yolo=False,
             output=None,
             model_class=None,
+            agent_class=None,
+            env_class=None,
         )
 
         # Verify configure_if_first_time was called
@@ -51,25 +53,25 @@ def test_configure_if_first_time_called():
 
 
 def test_mini_command_calls_run_interactive():
-    """Test that mini command creates InteractiveAgent."""
+    """Test that mini command creates agent via get_agent."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
-        mock_env.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
         mock_get_config.return_value = {"agent": {"system_template": "test", "mode": "confirm"}, "env": {}, "model": {}}
 
         # Setup mock agent instance
         mock_agent = Mock()
         mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
-        mock_interactive_agent_class.return_value = mock_agent
+        mock_get_agent.return_value = mock_agent
 
         # Call main function with task provided (so prompt is not called)
         main(
@@ -79,11 +81,13 @@ def test_mini_command_calls_run_interactive():
             yolo=False,
             output=None,
             model_class=None,
+            agent_class=None,
+            env_class=None,
         )
 
-        # Verify InteractiveAgent was instantiated
-        mock_interactive_agent_class.assert_called_once()
-        args, kwargs = mock_interactive_agent_class.call_args
+        # Verify get_agent was called
+        mock_get_agent.assert_called_once()
+        args, kwargs = mock_get_agent.call_args
         assert args[0] == mock_model  # model
         assert args[1] == mock_environment  # env
         # Verify agent.run was called with the task
@@ -95,9 +99,9 @@ def test_mini_calls_prompt_when_no_task_provided():
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
         patch("minisweagent.run.mini._multiline_prompt") as mock_prompt,
-        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
@@ -105,13 +109,13 @@ def test_mini_calls_prompt_when_no_task_provided():
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
-        mock_env.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
         mock_get_config.return_value = {"agent": {"system_template": "test", "mode": "confirm"}, "env": {}, "model": {}}
 
         # Setup mock agent instance
         mock_agent = Mock()
         mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
-        mock_interactive_agent_class.return_value = mock_agent
+        mock_get_agent.return_value = mock_agent
 
         # Call main function without task
         main(
@@ -121,13 +125,15 @@ def test_mini_calls_prompt_when_no_task_provided():
             yolo=False,
             output=None,
             model_class=None,
+            agent_class=None,
+            env_class=None,
         )
 
         # Verify prompt was called
         mock_prompt.assert_called_once()
 
-        # Verify InteractiveAgent was instantiated
-        mock_interactive_agent_class.assert_called_once()
+        # Verify get_agent was called
+        mock_get_agent.assert_called_once()
         # Verify agent.run was called with the task from prompt
         mock_agent.run.assert_called_once_with("User provided task")
 
@@ -136,16 +142,16 @@ def test_mini_with_explicit_model():
     """Test that mini works with explicitly provided model."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
-        mock_env.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
         mock_get_config.return_value = {
             "agent": {"system_template": "test", "mode": "yolo"},
             "env": {},
@@ -155,7 +161,7 @@ def test_mini_with_explicit_model():
         # Setup mock agent instance
         mock_agent = Mock()
         mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
-        mock_interactive_agent_class.return_value = mock_agent
+        mock_get_agent.return_value = mock_agent
 
         # Call main function with explicit model
         main(
@@ -165,13 +171,15 @@ def test_mini_with_explicit_model():
             yolo=True,
             output=None,
             model_class=None,
+            agent_class=None,
+            env_class=None,
         )
 
         # Verify get_model was called (model name is merged into config)
         mock_get_model.assert_called_once()
 
-        # Verify InteractiveAgent was instantiated
-        mock_interactive_agent_class.assert_called_once()
+        # Verify get_agent was called
+        mock_get_agent.assert_called_once()
         # Verify agent.run was called
         mock_agent.run.assert_called_once_with("Test task with explicit model")
 
@@ -180,22 +188,22 @@ def test_yolo_mode_sets_correct_agent_config():
     """Test that yolo mode sets the correct agent configuration."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
-        mock_env.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
         mock_get_config.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
 
         # Setup mock agent instance
         mock_agent = Mock()
         mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
-        mock_interactive_agent_class.return_value = mock_agent
+        mock_get_agent.return_value = mock_agent
 
         # Call main function with yolo=True
         main(
@@ -205,13 +213,15 @@ def test_yolo_mode_sets_correct_agent_config():
             yolo=True,
             output=None,
             model_class=None,
+            agent_class=None,
+            env_class=None,
         )
 
-        # Verify InteractiveAgent was called with yolo mode
-        mock_interactive_agent_class.assert_called_once()
-        args, kwargs = mock_interactive_agent_class.call_args
-        # The agent_config should contain the mode as a keyword argument
-        assert kwargs.get("mode") == "yolo"
+        # Verify get_agent was called with yolo mode in config
+        mock_get_agent.assert_called_once()
+        args, kwargs = mock_get_agent.call_args
+        # The config (third positional arg) should contain the mode
+        assert args[2].get("mode") == "yolo"
         # Verify agent.run was called
         mock_agent.run.assert_called_once_with("Test yolo task")
 
@@ -220,22 +230,22 @@ def test_confirm_mode_sets_correct_agent_config():
     """Test that when yolo=False, no explicit mode is set (defaults to None)."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
-        mock_env.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
         mock_get_config.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
 
         # Setup mock agent instance
         mock_agent = Mock()
         mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
-        mock_interactive_agent_class.return_value = mock_agent
+        mock_get_agent.return_value = mock_agent
 
         # Call main function with yolo=False (default)
         main(
@@ -245,13 +255,15 @@ def test_confirm_mode_sets_correct_agent_config():
             yolo=False,
             output=None,
             model_class=None,
+            agent_class=None,
+            env_class=None,
         )
 
-        # Verify InteractiveAgent was called with no explicit mode (defaults to None)
-        mock_interactive_agent_class.assert_called_once()
-        args, kwargs = mock_interactive_agent_class.call_args
-        # The agent_config should not contain mode when yolo=False (defaults to None)
-        assert kwargs.get("mode") is None
+        # Verify get_agent was called with no explicit mode (defaults to None)
+        mock_get_agent.assert_called_once()
+        args, kwargs = mock_get_agent.call_args
+        # The config (third positional arg) should not contain mode when yolo=False
+        assert args[2].get("mode") is None
         # Verify agent.run was called
         mock_agent.run.assert_called_once_with("Test confirm task")
 
@@ -411,23 +423,23 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
     """Test that --exit-immediately flag sets confirm_exit to False in agent config."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
-        mock_env.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
         mock_get_config.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
 
         # Create mock agent with config
         mock_agent = Mock()
         mock_agent.config.confirm_exit = False
         mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
-        mock_interactive_agent_class.return_value = mock_agent
+        mock_get_agent.return_value = mock_agent
 
         # Call main function with --exit-immediately flag
         agent = main(
@@ -438,6 +450,8 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
             output=None,
             exit_immediately=True,  # This should set confirm_exit=False
             model_class=None,
+            agent_class=None,
+            env_class=None,
         )
 
         # Verify the agent's config has confirm_exit set to False
@@ -448,23 +462,23 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
     """Test that when --exit-immediately flag is not used, confirm_exit defaults to True."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
-        mock_env.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
         mock_get_config.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
 
         # Create mock agent with config
         mock_agent = Mock()
         mock_agent.config.confirm_exit = True
         mock_agent.run.return_value = {"exit_status": "Success", "submission": "Result"}
-        mock_interactive_agent_class.return_value = mock_agent
+        mock_get_agent.return_value = mock_agent
 
         # Call main function without --exit-immediately flag (defaults to False)
         agent = main(
@@ -474,6 +488,8 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
             yolo=False,
             output=None,
             model_class=None,
+            agent_class=None,
+            env_class=None,
         )
 
         # Verify the agent's config has confirm_exit set to True
@@ -486,32 +502,32 @@ def test_exit_immediately_flag_with_typer_runner():
 
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini.InteractiveAgent") as mock_interactive_agent_class,
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
     ):
         # Setup mocks
         mock_model = Mock()
         mock_get_model.return_value = mock_model
         mock_environment = Mock()
-        mock_env.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
         mock_get_config.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
 
         # Setup mock agent instance
         mock_agent = Mock()
         mock_agent.run.return_value = {"exit_status": "Success", "result": "Result"}
         mock_agent.messages = []
-        mock_interactive_agent_class.return_value = mock_agent
+        mock_get_agent.return_value = mock_agent
 
         runner = CliRunner()
         result = runner.invoke(app, ["--task", "Test task", "--exit-immediately", "--model", "test-model"])
 
         assert result.exit_code == 0
-        mock_interactive_agent_class.assert_called_once()
-        args, kwargs = mock_interactive_agent_class.call_args
-        # The agent_config should contain confirm_exit as a keyword argument
-        assert kwargs.get("confirm_exit") is False
+        mock_get_agent.assert_called_once()
+        args, kwargs = mock_get_agent.call_args
+        # The config (third positional arg) should contain confirm_exit
+        assert args[2].get("confirm_exit") is False
 
 
 def test_output_file_is_created(tmp_path):
@@ -528,7 +544,7 @@ def test_output_file_is_created(tmp_path):
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
         patch("minisweagent.run.mini.get_model") as mock_get_model,
-        patch("minisweagent.run.mini.LocalEnvironment") as mock_env_class,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
         patch("minisweagent.agents.interactive._prompt_session.prompt", return_value=""),
         patch("minisweagent.agents.interactive._multiline_prompt_session.prompt", return_value=""),
     ):
@@ -580,7 +596,7 @@ def test_output_file_is_created(tmp_path):
         mock_environment.serialize.return_value = {
             "info": {"config": {"environment": {}, "environment_type": "MockEnvironment"}}
         }
-        mock_env_class.return_value = mock_environment
+        mock_get_env.return_value = mock_environment
 
         runner = CliRunner()
         result = runner.invoke(
