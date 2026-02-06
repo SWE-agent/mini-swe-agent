@@ -1,4 +1,4 @@
-from minisweagent.utils.serialize import UNSET, recursive_merge
+from minisweagent.utils.serialize import UNSET, recursive_merge, to_jsonable
 
 
 def test_empty_input():
@@ -136,3 +136,57 @@ def test_unset_values_skipped():
         {"a": {"x": 1, "y": 2}},
         {"a": {"y": UNSET, "z": 3}, "b": UNSET, "c": 4},
     ) == {"a": {"x": 1, "y": 2, "z": 3}, "c": 4}
+
+
+def test_to_jsonable_basic_types():
+    """Test that JSON-native types pass through unchanged."""
+    assert to_jsonable(None) is None
+    assert to_jsonable("value") == "value"
+    assert to_jsonable(7) == 7
+    assert to_jsonable(3.5) == 3.5
+    assert to_jsonable(True) is True
+
+
+def test_to_jsonable_bytes_and_collections():
+    """Test conversion of bytes and collection types."""
+    assert to_jsonable(b"hello") == "hello"
+    assert to_jsonable(bytearray(b"world")) == "world"
+    assert to_jsonable({1: "a", "b": 2}) == {"1": "a", "b": 2}
+    assert to_jsonable([1, 2, 3]) == [1, 2, 3]
+    assert to_jsonable((1, 2)) == [1, 2]
+    assert to_jsonable({3, 4}) in ([3, 4], [4, 3])
+
+
+def test_to_jsonable_model_dump():
+    """Test that objects with model_dump are serialized via model_dump."""
+
+    class DummyModel:
+        def model_dump(self):
+            return {"key": "value", "nested": {"num": 1}}
+
+    assert to_jsonable(DummyModel()) == {"key": "value", "nested": {"num": 1}}
+
+
+def test_to_jsonable_dict_fallback():
+    """Test fallback to __dict__ when model_dump fails."""
+
+    class Dummy:
+        def __init__(self):
+            self.value = 42
+
+        def model_dump(self):
+            raise RuntimeError("boom")
+
+    assert to_jsonable(Dummy()) == {"value": 42}
+
+
+def test_to_jsonable_string_fallback():
+    """Test fallback to string for objects without __dict__."""
+
+    class SlotOnly:
+        __slots__ = ()
+
+        def __str__(self) -> str:
+            return "slot-only"
+
+    assert to_jsonable(SlotOnly()) == "slot-only"

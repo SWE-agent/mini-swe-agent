@@ -24,3 +24,26 @@ def recursive_merge(*dictionaries: dict | None) -> dict:
             else:
                 result[key] = value
     return result
+
+
+def to_jsonable(value: Any) -> Any:
+    """Convert values to something JSON-serializable for logging."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, (bytes, bytearray)):
+        return value.decode("utf-8", errors="replace")
+    if isinstance(value, dict):
+        return {str(k): to_jsonable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [to_jsonable(v) for v in value]
+    if hasattr(value, "model_dump"):
+        try:
+            return to_jsonable(value.model_dump())
+        except Exception:
+            pass
+    if hasattr(value, "__dict__"):
+        try:
+            return to_jsonable(vars(value))
+        except Exception:
+            pass
+    return str(value)

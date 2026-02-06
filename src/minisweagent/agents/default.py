@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 from minisweagent import Environment, Model, __version__
 from minisweagent.exceptions import InterruptAgentFlow, LimitsExceeded
-from minisweagent.utils.serialize import recursive_merge
+from minisweagent.utils.serialize import recursive_merge, to_jsonable
 
 
 class AgentConfig(BaseModel):
@@ -151,5 +151,5 @@ class DefaultAgent:
         data = self.serialize(*extra_dicts)
         if path:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(json.dumps(data, indent=2))
+            path.write_text(json.dumps(to_jsonable(data), indent=2))
         return data
