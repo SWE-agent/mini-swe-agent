@@ -28,6 +28,10 @@ class SingularityEnvironmentConfig(BaseModel):
     """Path to the singularity executable."""
     sandbox_build_retries: int = 3
     """Number of retries for building the sandbox if an error occurs."""
+    global_args: list[str] = ["--quiet"]
+    """Global arguments passed before the subcommand (e.g., --quiet, --debug)."""
+    exec_args: list[str] = ["--contain", "--cleanenv", "--fakeroot"]
+    """Arguments passed to `singularity exec`."""
 
 
 class SingularityEnvironment:
@@ -76,10 +80,7 @@ class SingularityEnvironment:
     def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in a Singularity container and return the result as a dict."""
         command = action.get("command", "")
-        cmd = [self.config.executable, "exec"]
-
-        # Do not inherit directories and env vars from host
-        cmd.extend(["--contain", "--cleanenv"])
+        cmd = [self.config.executable, *self.config.global_args, "exec", *self.config.exec_args]
 
         work_dir = cwd or self.config.cwd
         if work_dir and work_dir != "/":

@@ -27,6 +27,8 @@ def test_singularity_environment_config_defaults():
     assert config.forward_env == []
     assert config.timeout == 30
     assert config.executable == "singularity"
+    assert config.global_args == ["--quiet"]
+    assert config.exec_args == ["--contain", "--cleanenv", "--fakeroot"]
 
 
 @pytest.mark.slow
@@ -160,3 +162,18 @@ def test_singularity_environment_timeout():
     assert result["returncode"] == -1
     assert "timed out" in result["exception_info"]
     assert result["extra"]["exception_type"] == "TimeoutExpired"
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(not is_singularity_available(), reason="Singularity not available")
+def test_singularity_environment_writable_sandbox():
+    """Test that the sandbox is writable"""
+    env = SingularityEnvironment(image="docker://python:3.11-slim")
+
+    result = env.execute({"command": "echo 'test content' > /tmp/test_file.txt && cat /tmp/test_file.txt"})
+    assert result["returncode"] == 0
+    assert "test content" in result["output"]
+
+    result = env.execute({"command": "touch /usr/testfile && ls /usr/testfile"})
+    assert result["returncode"] == 0
+    assert "/usr/testfile" in result["output"]
