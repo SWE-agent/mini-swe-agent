@@ -142,6 +142,14 @@ model:
   model_kwargs:
     drop_params: true
   format_error_template: |
+    Format error:
+
+    <error>
+    {{error}}
+    </error>
+
+    Here is general guidance on how to format your response:
+
     Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
     If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
     without any other command.

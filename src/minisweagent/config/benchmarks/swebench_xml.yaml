@@ -201,6 +201,14 @@ model:
     {%- endif -%}
   action_regex: <mswea_bash_command>(.*?)</mswea_bash_command>
   format_error_template: |
+    Format error:
+
+    <error>
+    {{error}}
+    </error>
+
+    Here is general guidance on how to format your response:
+
     Please always provide EXACTLY ONE action in the `<mswea_bash_command>` block, found {{actions|length}} actions.
 
     Please format your action in a `<mswea_bash_command>` block as shown in <response_example>.
