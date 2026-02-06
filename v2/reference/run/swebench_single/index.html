@@ -2637,7 +2637,7 @@
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">app</span> <span class="o">=</span> <span class="n"><span title="typer.Typer">Typer</span></span><span class="p">(</span><span class="n"><span title="typer.Typer(add_completion)">add_completion</span></span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">app</span> <span class="o">=</span> <span class="n"><span title="typer.Typer">Typer</span></span><span class="p">(</span><span class="n"><span title="typer.Typer(rich_markup_mode)">rich_markup_mode</span></span><span class="o">=</span><span class="s1">'rich'</span><span class="p">,</span> <span class="n"><span title="typer.Typer(add_completion)">add_completion</span></span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2690,6 +2690,30 @@
         <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')"</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">,</span>
     <span class="p">),</span>
+    <span class="n">agent_class</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"--agent-class"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Agent class to use (e.g., 'interactive' or 'minisweagent.agents.interactive.InteractiveAgent')"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">environment_class</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"--environment-class"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Environment class to use (e.g., 'docker' or 'minisweagent.environments.docker.DockerEnvironment')"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">yolo</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">"-y"</span><span class="p">,</span>
+        <span class="s2">"--yolo"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Run without confirmation"</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">cost_limit</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"-l"</span><span class="p">,</span>
+        <span class="s2">"--cost-limit"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Cost limit. Set to 0 to disable."</span><span class="p">,</span>
+    <span class="p">),</span>
     <span class="n">config_spec</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
         <span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">(</span><span class="n"><a class="autorefs autorefs-internal" title="            DEFAULT_CONFIG_FILE
 
@@ -2702,18 +2726,13 @@
         <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="n"><span title="minisweagent.run.benchmarks.swebench_single._CONFIG_SPEC_HELP_TEXT">_CONFIG_SPEC_HELP_TEXT</span></span><span class="p">,</span>
         <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">,</span>
     <span class="p">),</span>
-    <span class="n">environment_class</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
-        <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">"--environment-class"</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">,</span>
-    <span class="p">),</span>
     <span class="n">exit_immediately</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
         <span class="kc">False</span><span class="p">,</span>
         <span class="s2">"--exit-immediately"</span><span class="p">,</span>
         <span class="n"><span title="typer.Option(help)">help</span></span><span class="o">=</span><span class="s2">"Exit immediately when the agent wants to finish instead of prompting."</span><span class="p">,</span>
-        <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">,</span>
+        <span class="n"><span title="typer.Option(rich_help_panel)">rich_help_panel</span></span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">,</span>
     <span class="p">),</span>
-    <span class="n">output</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="typer.Option">Option</span></span><span class="p">(</span>
         <span class="n"><a class="autorefs autorefs-internal" title="            DEFAULT_OUTPUT_FILE
 
 
@@ -2779,17 +2798,30 @@
 <span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"lite"</span><span class="p">,</span> <span class="s2">"--subset"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"SWEBench subset to use or path to a dataset"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">split</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"dev"</span><span class="p">,</span> <span class="s2">"--split"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Dataset split"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">instance_spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"-i"</span><span class="p">,</span> <span class="s2">"--instance"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"SWE-Bench instance ID or index"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Data selection"</span><span class="p">),</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--model"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model to use"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
     <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--model-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'anthropic' or 'minisweagent.models.anthropic.AnthropicModel')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
+    <span class="n">agent_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--agent-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Agent class to use (e.g., 'interactive' or 'minisweagent.agents.interactive.InteractiveAgent')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
+    <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--environment-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Environment class to use (e.g., 'docker' or 'minisweagent.environments.docker.DockerEnvironment')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
+    <span class="n">yolo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"-y"</span><span class="p">,</span> <span class="s2">"--yolo"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Run without confirmation"</span><span class="p">),</span>
+    <span class="n">cost_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-l"</span><span class="p">,</span> <span class="s2">"--cost-limit"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Cost limit. Set to 0 to disable."</span><span class="p">),</span>
     <span class="n">config_spec</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE</span><span class="p">)],</span> <span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--config"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">_CONFIG_SPEC_HELP_TEXT</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
-    <span class="n">environment_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--environment-class"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
-    <span class="n">exit_immediately</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"--exit-immediately"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Exit immediately when the agent wants to finish instead of prompting."</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
-    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_OUTPUT_FILE</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"--output"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Output trajectory file"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
+    <span class="n">exit_immediately</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"--exit-immediately"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Exit immediately when the agent wants to finish instead of prompting."</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">DEFAULT_OUTPUT_FILE</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"--output"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Output trajectory file"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Basic"</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># fmt: on</span>
 <span class="w">    </span><span class="sd">"""Run on a single SWE-Bench instance."""</span>
@@ -2805,23 +2837,30 @@
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Building agent config from specs: </span><span class="si">{</span><span class="n">config_spec</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_config_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">config_spec</span><span class="p">]</span>
-    <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"yolo"</span><span class="p">}})</span>
-    <span class="k">if</span> <span class="n">environment_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"environment"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"environment_class"</span><span class="p">:</span> <span class="n">environment_class</span><span class="p">}})</span>
-    <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"model_class"</span><span class="p">:</span> <span class="n">model_class</span><span class="p">}})</span>
-    <span class="k">if</span> <span class="n">model_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"model_name"</span><span class="p">:</span> <span class="n">model_name</span><span class="p">}})</span>
-    <span class="k">if</span> <span class="n">exit_immediately</span><span class="p">:</span>
-        <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"confirm_exit"</span><span class="p">:</span> <span class="kc">False</span><span class="p">}})</span>
-    <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"output_path"</span><span class="p">:</span> <span class="n">output</span><span class="p">}})</span>
+    <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"agent_class"</span><span class="p">:</span> <span class="n">agent_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+            <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"yolo"</span> <span class="k">if</span> <span class="n">yolo</span> <span class="k">else</span> <span class="n">UNSET</span><span class="p">,</span>
+            <span class="s2">"cost_limit"</span><span class="p">:</span> <span class="n">cost_limit</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+            <span class="s2">"confirm_exit"</span><span class="p">:</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">exit_immediately</span> <span class="k">else</span> <span class="n">UNSET</span><span class="p">,</span>
+            <span class="s2">"output_path"</span><span class="p">:</span> <span class="n">output</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"model"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"model_class"</span><span class="p">:</span> <span class="n">model_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+            <span class="s2">"model_name"</span><span class="p">:</span> <span class="n">model_name</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"environment"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"environment_class"</span><span class="p">:</span> <span class="n">environment_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">})</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="o">*</span><span class="n">configs</span><span class="p">)</span>
 
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_sb_environment</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
-    <span class="n">agent</span> <span class="o">=</span> <span class="n">InteractiveAgent</span><span class="p">(</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">get_agent</span><span class="p">(</span>
         <span class="n">get_model</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{})),</span>
         <span class="n">env</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{}),</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{}),</span>
+        <span class="n">default_type</span><span class="o">=</span><span class="s2">"interactive"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="s2">"problem_statement"</span><span class="p">])</span>
 </code></pre></div></td></tr></tbody></table></div>
