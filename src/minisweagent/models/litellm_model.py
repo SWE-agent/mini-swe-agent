@@ -9,6 +9,7 @@ from typing import Any, Literal
 import litellm
 from pydantic import BaseModel
 
+from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
@@ -85,11 +86,17 @@ class LitellmModel:
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         message = response.choices[0].message.model_dump()
         message["extra"] = {
-            "actions": self._parse_actions(response),
             "response": response.model_dump(),
             **cost_output,
             "timestamp": time.time(),
         }
+        # Parse actions separately to catch FormatError and include the response message
+        try:
+            message["extra"]["actions"] = self._parse_actions(response)
+        except FormatError as e:
+            # Add the response message before the error message so LLM can see what it did wrong
+            e.messages = (message,) + e.messages
+            raise
         return message
 
     def _calculate_cost(self, response) -> dict[str, float]:
