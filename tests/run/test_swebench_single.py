@@ -49,6 +49,10 @@ def test_swebench_single_end_to_end(github_test_data, tmp_path):
             environment_class="docker",
             exit_immediately=False,
             output=output_path,
+            model_class=None,
+            agent_class=None,
+            yolo=False,
+            cost_limit=None,
         )
 
         # Verify model was called with correct parameters
@@ -84,6 +88,10 @@ def test_swebench_single_end_to_end_exit_immediately(github_test_data, tmp_path)
             environment_class="docker",
             exit_immediately=True,
             output=output_path,
+            model_class=None,
+            agent_class=None,
+            yolo=False,
+            cost_limit=None,
         )
 
         # Verify model was called with correct parameters

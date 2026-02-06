@@ -45,7 +45,7 @@ def test_configure_if_first_time_called():
             output=None,
             model_class=None,
             agent_class=None,
-            env_class=None,
+            environment_class=None,
         )
 
         # Verify configure_if_first_time was called
@@ -82,7 +82,7 @@ def test_mini_command_calls_run_interactive():
             output=None,
             model_class=None,
             agent_class=None,
-            env_class=None,
+            environment_class=None,
         )
 
         # Verify get_agent was called
@@ -126,7 +126,7 @@ def test_mini_calls_prompt_when_no_task_provided():
             output=None,
             model_class=None,
             agent_class=None,
-            env_class=None,
+            environment_class=None,
         )
 
         # Verify prompt was called
@@ -172,7 +172,7 @@ def test_mini_with_explicit_model():
             output=None,
             model_class=None,
             agent_class=None,
-            env_class=None,
+            environment_class=None,
         )
 
         # Verify get_model was called (model name is merged into config)
@@ -214,7 +214,7 @@ def test_yolo_mode_sets_correct_agent_config():
             output=None,
             model_class=None,
             agent_class=None,
-            env_class=None,
+            environment_class=None,
         )
 
         # Verify get_agent was called with yolo mode in config
@@ -256,7 +256,7 @@ def test_confirm_mode_sets_correct_agent_config():
             output=None,
             model_class=None,
             agent_class=None,
-            env_class=None,
+            environment_class=None,
         )
 
         # Verify get_agent was called with no explicit mode (defaults to None)
@@ -451,7 +451,7 @@ def test_exit_immediately_flag_sets_confirm_exit_false():
             exit_immediately=True,  # This should set confirm_exit=False
             model_class=None,
             agent_class=None,
-            env_class=None,
+            environment_class=None,
         )
 
         # Verify the agent's config has confirm_exit set to False
@@ -489,7 +489,7 @@ def test_no_exit_immediately_flag_sets_confirm_exit_true():
             output=None,
             model_class=None,
             agent_class=None,
-            env_class=None,
+            environment_class=None,
         )
 
         # Verify the agent's config has confirm_exit set to True
