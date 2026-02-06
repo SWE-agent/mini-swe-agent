@@ -2768,6 +2768,9 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Building agent config from specs: [bold green]</span><span class="si">{</span><span class="n">config_spec</span><span class="si">}</span><span class="s2">[/bold green]"</span><span class="p">)</span>
     <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_config_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">config_spec</span><span class="p">]</span>
     <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">"run"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"task"</span><span class="p">:</span> <span class="n">task</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+        <span class="p">},</span>
         <span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">"agent_class"</span><span class="p">:</span> <span class="n">agent_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
             <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"yolo"</span> <span class="k">if</span> <span class="n">yolo</span> <span class="k">else</span> <span class="n">UNSET</span><span class="p">,</span>
@@ -2779,20 +2782,23 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
             <span class="s2">"model_class"</span><span class="p">:</span> <span class="n">model_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
             <span class="s2">"model_name"</span><span class="p">:</span> <span class="n">model_name</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
         <span class="p">},</span>
+        <span class="s2">"environment"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"environment_class"</span><span class="p">:</span> <span class="n">env_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">})</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="o">*</span><span class="n">configs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">run_task</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task"</span><span class="p">)):</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">"[bold yellow]What do you want to do?"</span><span class="p">)</span>
-        <span class="n">task</span> <span class="o">=</span> <span class="n">_multiline_prompt</span><span class="p">()</span>
+        <span class="n">run_task</span> <span class="o">=</span> <span class="n">_multiline_prompt</span><span class="p">()</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">"[bold green]Got that, thanks![/bold green]"</span><span class="p">)</span>
 
     <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{}))</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment"</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">default_type</span><span class="o">=</span><span class="s2">"local"</span><span class="p">)</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">get_agent</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">default_type</span><span class="o">=</span><span class="s2">"interactive"</span><span class="p">)</span>
-    <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
-    <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to [bold green]'</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">'[/bold green]"</span><span class="p">)</span>
+    <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">run_task</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">output_path</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_path"</span><span class="p">)):</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to [bold green]'</span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">'[/bold green]"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">agent</span>
 
 

@@ -2641,6 +2641,9 @@
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Building agent config from specs: [bold green]</span><span class="si">{</span><span class="n">config_spec</span><span class="si">}</span><span class="s2">[/bold green]"</span><span class="p">)</span>
     <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_config_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">config_spec</span><span class="p">]</span>
     <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">"run"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"task"</span><span class="p">:</span> <span class="n">task</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+        <span class="p">},</span>
         <span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">"agent_class"</span><span class="p">:</span> <span class="n">agent_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
             <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"yolo"</span> <span class="k">if</span> <span class="n">yolo</span> <span class="k">else</span> <span class="n">UNSET</span><span class="p">,</span>
@@ -2652,20 +2655,23 @@
             <span class="s2">"model_class"</span><span class="p">:</span> <span class="n">model_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
             <span class="s2">"model_name"</span><span class="p">:</span> <span class="n">model_name</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
         <span class="p">},</span>
+        <span class="s2">"environment"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"environment_class"</span><span class="p">:</span> <span class="n">env_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">})</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="o">*</span><span class="n">configs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">run_task</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task"</span><span class="p">)):</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">"[bold yellow]What do you want to do?"</span><span class="p">)</span>
-        <span class="n">task</span> <span class="o">=</span> <span class="n">_multiline_prompt</span><span class="p">()</span>
+        <span class="n">run_task</span> <span class="o">=</span> <span class="n">_multiline_prompt</span><span class="p">()</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">"[bold green]Got that, thanks![/bold green]"</span><span class="p">)</span>
 
     <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{}))</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment"</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">default_type</span><span class="o">=</span><span class="s2">"local"</span><span class="p">)</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">get_agent</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">default_type</span><span class="o">=</span><span class="s2">"interactive"</span><span class="p">)</span>
-    <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
-    <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to [bold green]'</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">'[/bold green]"</span><span class="p">)</span>
+    <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">run_task</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">output_path</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_path"</span><span class="p">)):</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to [bold green]'</span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">'[/bold green]"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">agent</span>
 
 
@@ -2890,52 +2896,58 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/mini.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="n">_HELP_TEXT</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--model"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model to use"</span><span class="p">,),</span>
     <span class="n">model_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"--model-class"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model class to use (e.g., 'litellm' or 'minisweagent.models.litellm_model.LitellmModel')"</span><span class="p">,</span> <span class="n">rich_help_panel</span><span class="o">=</span><span class="s2">"Advanced"</span><span class="p">),</span>
@@ -2955,6 +2967,9 @@
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Building agent config from specs: [bold green]</span><span class="si">{</span><span class="n">config_spec</span><span class="si">}</span><span class="s2">[/bold green]"</span><span class="p">)</span>
     <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_config_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">config_spec</span><span class="p">]</span>
     <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">"run"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"task"</span><span class="p">:</span> <span class="n">task</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+        <span class="p">},</span>
         <span class="s2">"agent"</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">"agent_class"</span><span class="p">:</span> <span class="n">agent_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
             <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"yolo"</span> <span class="k">if</span> <span class="n">yolo</span> <span class="k">else</span> <span class="n">UNSET</span><span class="p">,</span>
@@ -2966,20 +2981,23 @@
             <span class="s2">"model_class"</span><span class="p">:</span> <span class="n">model_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
             <span class="s2">"model_name"</span><span class="p">:</span> <span class="n">model_name</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
         <span class="p">},</span>
+        <span class="s2">"environment"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"environment_class"</span><span class="p">:</span> <span class="n">env_class</span> <span class="ow">or</span> <span class="n">UNSET</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">})</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="o">*</span><span class="n">configs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">task</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">run_task</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"task"</span><span class="p">)):</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">"[bold yellow]What do you want to do?"</span><span class="p">)</span>
-        <span class="n">task</span> <span class="o">=</span> <span class="n">_multiline_prompt</span><span class="p">()</span>
+        <span class="n">run_task</span> <span class="o">=</span> <span class="n">_multiline_prompt</span><span class="p">()</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">"[bold green]Got that, thanks![/bold green]"</span><span class="p">)</span>
 
     <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"model"</span><span class="p">,</span> <span class="p">{}))</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"environment"</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">default_type</span><span class="o">=</span><span class="s2">"local"</span><span class="p">)</span>
     <span class="n">agent</span> <span class="o">=</span> <span class="n">get_agent</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">default_type</span><span class="o">=</span><span class="s2">"interactive"</span><span class="p">)</span>
-    <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
-    <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to [bold green]'</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">'[/bold green]"</span><span class="p">)</span>
+    <span class="n">agent</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">run_task</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">output_path</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"agent"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"output_path"</span><span class="p">)):</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved trajectory to [bold green]'</span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">'[/bold green]"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">agent</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
