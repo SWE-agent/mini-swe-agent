@@ -16,10 +16,13 @@ def parse_regex_actions(content: str, *, action_regex: str, format_error_templat
     """Parse actions from text content using regex. Raises FormatError if not exactly one action."""
     actions = [a.strip() for a in re.findall(action_regex, content, re.DOTALL)]
     if len(actions) != 1:
+        error_msg = f"Expected exactly 1 action, found {len(actions)}."
         raise FormatError(
             {
                 "role": "user",
-                "content": Template(format_error_template, undefined=StrictUndefined).render(actions=actions),
+                "content": Template(format_error_template, undefined=StrictUndefined).render(
+                    actions=actions, error=error_msg
+                ),
                 "extra": {
                     "interrupt_type": "FormatError",
                     "n_actions": len(actions),
