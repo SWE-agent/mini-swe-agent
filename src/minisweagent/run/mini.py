@@ -91,7 +91,7 @@ def main(
     })
     config = recursive_merge(*configs)
 
-    if not (run_task := config.get("run", {}).get("task")):
+    if (run_task := config.get("run", {}).get("task", UNSET)) is UNSET:
         console.print("[bold yellow]What do you want to do?")
         run_task = _multiline_prompt()
         console.print("[bold green]Got that, thanks![/bold green]")
