@@ -2692,7 +2692,7 @@ For example, you could use</p>
 <span class="w">    </span><span class="no">For each response:</span>
 
 <span class="w">    </span><span class="no">1. Include a THOUGHT section explaining your reasoning and what you're trying to accomplish</span>
-<span class="w">    </span><span class="no">2. Provide exactly ONE bash command to execute</span>
+<span class="w">    </span><span class="no">2. Provide one or more bash tool calls to execute</span>
 
 <span class="w">    </span><span class="no">## Important Boundaries</span>
 
@@ -2724,15 +2724,15 @@ For example, you could use</p>
 <span class="w">    </span><span class="no">**CRITICAL REQUIREMENTS:**</span>
 
 <span class="w">    </span><span class="no">- Your response SHOULD include reasoning text explaining what you're doing</span>
-<span class="w">    </span><span class="no">- Your response MUST include AT LEAST ONE bash tool call</span>
+<span class="w">    </span><span class="no">- Your response MUST include AT LEAST ONE bash tool call. You can make MULTIPLE tool calls in a single response when the commands are independent (e.g., searching multiple files, reading different parts of the codebase).</span>
 <span class="w">    </span><span class="no">- Directory or environment variable changes are not persistent. Every action is executed in a new subshell.</span>
 <span class="w">    </span><span class="no">- However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir &amp;&amp; ...` or write/load environment variables from files</span>
 
 <span class="w">    </span><span class="no">Example of a CORRECT response:</span>
 <span class="w">    </span><span class="no">&lt;example_response&gt;</span>
-<span class="w">    </span><span class="no">I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.</span>
+<span class="w">    </span><span class="no">I need to understand the Builder-related code. Let me find relevant files and check the project structure.</span>
 
-<span class="w">    </span><span class="no">[Makes bash tool call with {"command": "ls -la"} as arguments]</span>
+<span class="w">    </span><span class="no">[Makes multiple bash tool calls: {"command": "ls -la"}, {"command": "find src -name '*.java' | grep -i builder"}, {"command": "cat README.md | head -50"}]</span>
 <span class="w">    </span><span class="no">&lt;/example_response&gt;</span>
 
 <span class="w">    </span><span class="no">## Environment Details</span>
@@ -2792,27 +2792,38 @@ For example, you could use</p>
 <span class="w">    </span><span class="nt">PAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
 <span class="w">    </span><span class="nt">MANPAGER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
 <span class="w">    </span><span class="nt">LESS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-R</span>
-<span class="w">    </span><span class="nt">PIP_PROGRESS_BAR</span><span class="p">:</span><span class="w"> </span><span class="s">'off'</span>
-<span class="w">    </span><span class="nt">TQDM_DISABLE</span><span class="p">:</span><span class="w"> </span><span class="s">'1'</span>
+<span class="w">    </span><span class="nt">PIP_PROGRESS_BAR</span><span class="p">:</span><span class="w"> </span><span class="s">"off"</span>
+<span class="w">    </span><span class="nt">TQDM_DISABLE</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span>
 <span class="w">  </span><span class="nt">environment_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker</span>
 
 <span class="nt">model</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">observation_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">{%- if output.output | length &lt; 10000 -%}</span>
-<span class="w">    </span><span class="no">{</span>
-<span class="w">      </span><span class="no">"returncode": {{ output.returncode }},</span>
-<span class="w">      </span><span class="no">"output": {{ output.output | tojson }}</span>
-<span class="w">      </span><span class="no">{%- if output.exception_info %}, "exception_info": {{ output.exception_info | tojson }}{% endif %}</span>
-<span class="w">    </span><span class="no">}</span>
+<span class="w">    </span><span class="no">{% if output.exception_info -%}</span>
+<span class="w">    </span><span class="no">&lt;exception&gt;{{output.exception_info}}&lt;/exception&gt;</span>
+<span class="w">    </span><span class="no">{% endif -%}</span>
+<span class="w">    </span><span class="no">&lt;returncode&gt;{{output.returncode}}&lt;/returncode&gt;</span>
+<span class="w">    </span><span class="no">{% if output.output | length &lt; 10000 -%}</span>
+<span class="w">    </span><span class="no">&lt;output&gt;</span>
+<span class="w">    </span><span class="no">{{ output.output -}}</span>
+<span class="w">    </span><span class="no">&lt;/output&gt;</span>
 <span class="w">    </span><span class="no">{%- else -%}</span>
-<span class="w">    </span><span class="no">{</span>
-<span class="w">      </span><span class="no">"returncode": {{ output.returncode }},</span>
-<span class="w">      </span><span class="no">"output_head": {{ output.output[:5000] | tojson }},</span>
-<span class="w">      </span><span class="no">"output_tail": {{ output.output[-5000:] | tojson }},</span>
-<span class="w">      </span><span class="no">"elided_chars": {{ output.output | length - 10000 }},</span>
-<span class="w">      </span><span class="no">"warning": "Output too long."</span>
-<span class="w">      </span><span class="no">{%- if output.exception_info %}, "exception_info": {{ output.exception_info | tojson }}{% endif %}</span>
-<span class="w">    </span><span class="no">}</span>
+<span class="w">    </span><span class="no">&lt;warning&gt;</span>
+<span class="w">    </span><span class="no">The output of your last command was too long.</span>
+<span class="w">    </span><span class="no">Please try a different command that produces less output.</span>
+<span class="w">    </span><span class="no">If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.</span>
+<span class="w">    </span><span class="no">If you're using grep or find and it produced too much output, you can use a more selective search pattern.</span>
+<span class="w">    </span><span class="no">If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.</span>
+<span class="w">    </span><span class="no">&lt;/warning&gt;</span>
+<span class="w">    </span><span class="no">{%- set elided_chars = output.output | length - 10000 -%}</span>
+<span class="w">    </span><span class="no">&lt;output_head&gt;</span>
+<span class="w">    </span><span class="no">{{ output.output[:5000] }}</span>
+<span class="w">    </span><span class="no">&lt;/output_head&gt;</span>
+<span class="w">    </span><span class="no">&lt;elided_chars&gt;</span>
+<span class="w">    </span><span class="no">{{ elided_chars }} characters elided</span>
+<span class="w">    </span><span class="no">&lt;/elided_chars&gt;</span>
+<span class="w">    </span><span class="no">&lt;output_tail&gt;</span>
+<span class="w">    </span><span class="no">{{ output.output[-5000:] }}</span>
+<span class="w">    </span><span class="no">&lt;/output_tail&gt;</span>
 <span class="w">    </span><span class="no">{%- endif -%}</span>
 <span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">Tool call error:</span>
@@ -2835,6 +2846,7 @@ For example, you could use</p>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">parallel_tool_calls</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 </details>
 <details class="note">
