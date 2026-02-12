@@ -53,6 +53,9 @@ class InteractiveAgent(DefaultAgent):
         super().__init__(*args, config_class=config_class, **kwargs)
         self.cost_last_confirmed = 0.0
 
+    def _interrupt(self, content: str, *, itype: str = "UserInterruption") -> NoReturn:
+        raise UserInterruption({"role": "user", "content": content, "extra": {"interrupt_type": itype}})
+
     def add_messages(self, *messages: dict) -> list[dict]:
         # Extend supermethod to print messages
         for msg in messages:
@@ -107,13 +110,7 @@ class InteractiveAgent(DefaultAgent):
             ).strip()
             if not interruption_message or interruption_message in self._MODE_COMMANDS_MAPPING:
                 interruption_message = "Temporary interruption caught."
-            raise UserInterruption(
-                {
-                    "role": "user",
-                    "content": f"Interrupted by user: {interruption_message}",
-                    "extra": {"interrupt_type": "UserInterruption"},
-                }
-            )
+            self._interrupt(f"Interrupted by user: {interruption_message}")
 
     def execute_actions(self, message: dict) -> list[dict]:
         # Override to handle user confirmation and confirm_exit, with try/finally to preserve partial outputs
@@ -140,17 +137,17 @@ class InteractiveAgent(DefaultAgent):
         if self.config.confirm_exit:
             message = (
                 "[bold yellow]Agent wants to finish.[/bold yellow] "
-                "[bold green]Type new task[/bold green] or [red][bold]Esc, then enter[/bold] to quit.[/red]\n"
+                "[bold green]Type new task[/bold green] or [bold]Enter[/bold] to quit "
+                "([bold]/h[/bold] for commands)\n"
                 "[bold yellow]>[/bold yellow] "
             )
-            if new_task := self._prompt_and_handle_slash_commands(message, _multiline=True).strip():
-                raise UserInterruption(
-                    {
-                        "role": "user",
-                        "content": f"The user added a new task: {new_task}",
-                        "extra": {"interrupt_type": "UserNewTask"},
-                    }
-                )
+            user_input = self._prompt_and_handle_slash_commands(message).strip()
+            if user_input == "/u":  # directly continue
+                self._interrupt("Switched to human mode.")
+            elif user_input in self._MODE_COMMANDS_MAPPING:  # ask again
+                return self._check_for_new_task_or_submit(e)
+            elif user_input:
+                self._interrupt(f"The user added a new task: {user_input}", itype="UserNewTask")
         raise e
 
     def _should_ask_confirmation(self, action: str) -> bool:
@@ -170,20 +167,11 @@ class InteractiveAgent(DefaultAgent):
             case "" | "/y":
                 pass  # confirmed, do nothing
             case "/u":  # Skip execution action and get back to query
-                raise UserInterruption(
-                    {
-                        "role": "user",
-                        "content": "Commands not executed. Switching to human mode",
-                        "extra": {"interrupt_type": "UserRejection"},
-                    }
-                )
+                self._interrupt("Commands not executed. Switching to human mode", itype="UserRejection")
             case _:
-                raise UserInterruption(
-                    {
-                        "role": "user",
-                        "content": f"Commands not executed. The user rejected your commands with the following message: {user_input}",
-                        "extra": {"interrupt_type": "UserRejection"},
-                    }
+                self._interrupt(
+                    f"Commands not executed. The user rejected your commands with the following message: {user_input}",
+                    itype="UserRejection",
                 )
 
     def _prompt_and_handle_slash_commands(self, prompt: str, *, _multiline: bool = False) -> str:
