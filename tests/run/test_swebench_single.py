@@ -23,7 +23,7 @@ def _make_model_from_fixture(text_outputs: list[str], cost_per_call: float = 1.0
 
 
 @pytest.mark.slow
-def test_swebench_single_end_to_end(github_test_data, tmp_path):
+def test_swebench_single_end_to_end(github_test_data, tmp_path, container_executable):
     """Test the swebench_single script using the _test subset with deterministic model.
     This mostly tests that no exception occurs.
     """
@@ -61,7 +61,7 @@ def test_swebench_single_end_to_end(github_test_data, tmp_path):
 
 
 @pytest.mark.slow
-def test_swebench_single_end_to_end_exit_immediately(github_test_data, tmp_path):
+def test_swebench_single_end_to_end_exit_immediately(github_test_data, tmp_path, container_executable):
     """Test the swebench_single script using the _test subset with deterministic model.
     This mostly tests that no exception occurs.
     This test uses the --exit-immediately flag to exit immediately when the agent wants to finish instead of prompting.

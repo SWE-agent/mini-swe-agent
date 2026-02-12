@@ -32,7 +32,7 @@ def _make_model_from_fixture(text_outputs: list[str], cost_per_call: float = 1.0
 
 @pytest.mark.slow
 @pytest.mark.parametrize("workers", [1, 2])
-def test_swebench_end_to_end(github_test_data, tmp_path, workers):
+def test_swebench_end_to_end(github_test_data, tmp_path, workers, container_executable):
     """Test the complete SWEBench flow using the _test subset with deterministic model"""
 
     model_responses = github_test_data["model_responses"]
@@ -345,7 +345,7 @@ def test_redo_existing_false_skips_existing(github_test_data, tmp_path):
 
 
 @pytest.mark.slow
-def test_redo_existing_true_overwrites_existing(github_test_data, tmp_path):
+def test_redo_existing_true_overwrites_existing(github_test_data, tmp_path, container_executable):
     """Test that redo_existing=True processes instances even if they already have results"""
     model_responses = github_test_data["model_responses"]
 
@@ -431,7 +431,7 @@ class ExceptionModel:
 
 @pytest.mark.slow
 @pytest.mark.parametrize("workers", [1, 2])
-def test_exception_handling_in_agent_run(tmp_path, workers):
+def test_exception_handling_in_agent_run(tmp_path, workers, container_executable):
     """Test that exceptions during agent.run() are properly handled and recorded"""
     with patch("minisweagent.run.benchmarks.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = ExceptionModel(RuntimeError, "Agent processing failed")
@@ -474,7 +474,7 @@ def test_exception_handling_in_agent_run(tmp_path, workers):
 
 @pytest.mark.slow
 @pytest.mark.parametrize("workers", [1, 2])
-def test_different_exception_types(tmp_path, workers):
+def test_different_exception_types(tmp_path, workers, container_executable):
     """Test that different exception types are properly recorded"""
     with patch("minisweagent.run.benchmarks.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = ExceptionModel(ValueError, "Invalid input provided")
@@ -505,7 +505,7 @@ def test_different_exception_types(tmp_path, workers):
 
 
 @pytest.mark.slow
-def test_exception_handling_with_progress_manager(tmp_path):
+def test_exception_handling_with_progress_manager(tmp_path, container_executable):
     """Test that progress manager receives exception notifications in multithreaded mode"""
     with patch("minisweagent.run.benchmarks.swebench.get_model") as mock_get_model:
         mock_get_model.return_value = ExceptionModel(ConnectionError, "Network timeout")
