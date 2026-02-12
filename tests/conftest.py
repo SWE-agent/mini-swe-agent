@@ -1,5 +1,6 @@
 import json
 import re
+import subprocess
 import threading
 from pathlib import Path
 
@@ -37,6 +38,30 @@ def reset_global_stats():
         # Reset at end to clean up
         GLOBAL_MODEL_STATS._cost = 0.0  # noqa: protected-access
         GLOBAL_MODEL_STATS._n_calls = 0  # noqa: protected-access
+
+
+def _get_container_executable() -> str | None:
+    """Return 'docker' or 'podman', whichever is available and running."""
+    for exe in ("docker", "podman"):
+        try:
+            subprocess.run([exe, "version"], capture_output=True, check=True, timeout=5)
+            return exe
+        except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+            continue
+    return None
+
+
+@pytest.fixture
+def container_executable(monkeypatch):
+    """Provide the available container executable, skip if neither docker nor podman is available.
+
+    Sets MSWEA_DOCKER_EXECUTABLE so DockerEnvironment uses the right executable.
+    """
+    exe = _get_container_executable()
+    if exe is None:
+        pytest.skip("Neither docker nor podman is available")
+    monkeypatch.setenv("MSWEA_DOCKER_EXECUTABLE", exe)
+    return exe
 
 
 def get_test_data(trajectory_name: str) -> dict[str, list[str]]:
