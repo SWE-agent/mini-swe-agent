@@ -2875,6 +2875,9 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">config_class</span><span class="o">=</span><span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cost_last_confirmed</span> <span class="o">=</span> <span class="mf">0.0</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_interrupt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">itype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"UserInterruption"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UserInterruption</span><span class="p">({</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span> <span class="s2">"extra"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"interrupt_type"</span><span class="p">:</span> <span class="n">itype</span><span class="p">}})</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">add_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">messages</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
         <span class="c1"># Extend supermethod to print messages</span>
         <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">:</span>
@@ -2929,13 +2932,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
             <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">interruption_message</span> <span class="ow">or</span> <span class="n">interruption_message</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">:</span>
                 <span class="n">interruption_message</span> <span class="o">=</span> <span class="s2">"Temporary interruption caught."</span>
-            <span class="k">raise</span> <span class="n">UserInterruption</span><span class="p">(</span>
-                <span class="p">{</span>
-                    <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
-                    <span class="s2">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Interrupted by user: </span><span class="si">{</span><span class="n">interruption_message</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
-                    <span class="s2">"extra"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"interrupt_type"</span><span class="p">:</span> <span class="s2">"UserInterruption"</span><span class="p">},</span>
-                <span class="p">}</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_interrupt</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Interrupted by user: </span><span class="si">{</span><span class="n">interruption_message</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">execute_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
         <span class="c1"># Override to handle user confirmation and confirm_exit, with try/finally to preserve partial outputs</span>
@@ -2962,17 +2959,17 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">confirm_exit</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="s2">"[bold yellow]Agent wants to finish.[/bold yellow] "</span>
-                <span class="s2">"[bold green]Type new task[/bold green] or [red][bold]Esc, then enter[/bold] to quit.[/red]</span><span class="se">\n</span><span class="s2">"</span>
+                <span class="s2">"[bold green]Type new task[/bold green] or [bold]Enter[/bold] to quit "</span>
+                <span class="s2">"([bold]/h[/bold] for commands)</span><span class="se">\n</span><span class="s2">"</span>
                 <span class="s2">"[bold yellow]&gt;[/bold yellow] "</span>
             <span class="p">)</span>
-            <span class="k">if</span> <span class="n">new_task</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_slash_commands</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">_multiline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="n">UserInterruption</span><span class="p">(</span>
-                    <span class="p">{</span>
-                        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
-                        <span class="s2">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"The user added a new task: </span><span class="si">{</span><span class="n">new_task</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
-                        <span class="s2">"extra"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"interrupt_type"</span><span class="p">:</span> <span class="s2">"UserNewTask"</span><span class="p">},</span>
-                    <span class="p">}</span>
-                <span class="p">)</span>
+            <span class="n">user_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_slash_commands</span><span class="p">(</span><span class="n">message</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s2">"/u"</span><span class="p">:</span>  <span class="c1"># directly continue</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_interrupt</span><span class="p">(</span><span class="s2">"Switched to human mode."</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">user_input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MODE_COMMANDS_MAPPING</span><span class="p">:</span>  <span class="c1"># ask again</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_for_new_task_or_submit</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">user_input</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_interrupt</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The user added a new task: </span><span class="si">{</span><span class="n">user_input</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">itype</span><span class="o">=</span><span class="s2">"UserNewTask"</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_should_ask_confirmation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -2992,20 +2989,11 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
             <span class="k">case</span> <span class="s2">""</span> <span class="o">|</span> <span class="s2">"/y"</span><span class="p">:</span>
                 <span class="k">pass</span>  <span class="c1"># confirmed, do nothing</span>
             <span class="k">case</span> <span class="s2">"/u"</span><span class="p">:</span>  <span class="c1"># Skip execution action and get back to query</span>
-                <span class="k">raise</span> <span class="n">UserInterruption</span><span class="p">(</span>
-                    <span class="p">{</span>
-                        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
-                        <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"Commands not executed. Switching to human mode"</span><span class="p">,</span>
-                        <span class="s2">"extra"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"interrupt_type"</span><span class="p">:</span> <span class="s2">"UserRejection"</span><span class="p">},</span>
-                    <span class="p">}</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_interrupt</span><span class="p">(</span><span class="s2">"Commands not executed. Switching to human mode"</span><span class="p">,</span> <span class="n">itype</span><span class="o">=</span><span class="s2">"UserRejection"</span><span class="p">)</span>
             <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">UserInterruption</span><span class="p">(</span>
-                    <span class="p">{</span>
-                        <span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span>
-                        <span class="s2">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Commands not executed. The user rejected your commands with the following message: </span><span class="si">{</span><span class="n">user_input</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
-                        <span class="s2">"extra"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"interrupt_type"</span><span class="p">:</span> <span class="s2">"UserRejection"</span><span class="p">},</span>
-                    <span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_interrupt</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Commands not executed. The user rejected your commands with the following message: </span><span class="si">{</span><span class="n">user_input</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                    <span class="n">itype</span><span class="o">=</span><span class="s2">"UserRejection"</span><span class="p">,</span>
                 <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_prompt_and_handle_slash_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">_multiline</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
