@@ -154,12 +154,10 @@ class InteractiveAgent(DefaultAgent):
         return self.config.mode == "confirm" and not any(re.match(r, action) for r in self.config.whitelist_actions)
 
     def _ask_confirmation_or_interrupt(self, commands: list[str]) -> None:
-        commands_needing_confirmation = [c for c in commands if self._should_ask_confirmation(c)]
-        if not commands_needing_confirmation:
+        if not any(self._should_ask_confirmation(c) for c in commands):
             return
-        n = len(commands_needing_confirmation)
         prompt = (
-            f"[bold yellow]Execute {n} action(s)?[/] [green][bold]Enter[/] to confirm[/], "
+            f"[bold yellow]Execute {len(commands)} action(s)?[/] [green][bold]Enter[/] to confirm[/], "
             "[red]type [bold]comment[/] to reject[/], or [blue][bold]/h[/] to show available commands[/]\n"
             "[bold yellow]>[/bold yellow] "
         )
