@@ -1152,3 +1152,51 @@ def test_confirm_exit_config_field_can_be_set(model_factory):
         },
     )
     assert agent_without_confirm.config.confirm_exit is False
+
+
+def test_submission_help_then_human_mode(model_factory):
+    """Test: agent submits → /h shows help and reprompts → /u switches to human → echo 'test' → see 'test'."""
+    factory, config = model_factory
+    with mock_prompts(
+        [
+            "/h",  # At submission prompt: show help, reprompt
+            "/u",  # At submission prompt: switch to human mode
+            "echo 'test'",  # In human mode: run command
+            "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'",  # Submit from human mode
+            "",  # Confirm exit
+        ]
+    ):
+        with patch("minisweagent.agents.interactive.console.print") as mock_print:
+            agent = InteractiveAgent(
+                model=factory(
+                    [("Finishing", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'initial'"}])],
+                ),
+                env=LocalEnvironment(),
+                **{**config, "mode": "yolo"},
+            )
+            info = agent.run("Solve the issue")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "done\n"
+    assert agent.config.mode == "human"
+    assert agent.n_calls == 1
+    # Help was shown
+    assert any("/y" in str(c) for c in mock_print.call_args_list)
+    # echo 'test' output is visible in the conversation
+    assert any("test" in get_text(msg) for msg in agent.messages)
+
+
+def test_submission_enter_quits(model_factory):
+    """Test: agent submits → Enter → quit for real."""
+    factory, config = model_factory
+    with mock_prompts([""]):  # At submission prompt: Enter to quit
+        agent = InteractiveAgent(
+            model=factory(
+                [("Finishing", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'"}])],
+            ),
+            env=LocalEnvironment(),
+            **{**config, "mode": "yolo"},
+        )
+        info = agent.run("Solve the issue")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "completed\n"
+    assert agent.n_calls == 1
