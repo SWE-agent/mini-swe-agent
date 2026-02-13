@@ -2433,21 +2433,16 @@
 <p>Read the <a href="https://mini-swe-agent.com/latest/advanced/v2_migration/">migration guide</a>. For the previous version, check out the <a href="https://mini-swe-agent.com/v1/">v1 documentation</a> or the <a href="https://github.com/SWE-agent/mini-swe-agent/tree/v1">v1 branch</a>.</p>
 </div>
 <p>In 2024, <a href="https://swebench.com">SWE-bench</a> &amp; <a href="https://swe-agent.com">SWE-agent</a> helped kickstart the coding agent revolution.</p>
-<p>We now ask: <strong>What if the agent was 100x smaller, and still worked nearly as well?</strong></p>
-<p>The <code>mini</code> agent is for</p>
+<p>We now ask: <strong>What if our agent was 100x simpler, and still worked nearly as well?</strong></p>
+<p><code>mini</code> is</p>
 <ul>
-<li><strong>Researchers</strong> who want to <strong><a href="https://swe-bench.com">benchmark</a>, <a href="https://swesmith.com/">fine-tune</a> or RL</strong> without assumptions, bloat, or surprises</li>
-<li><strong>Developers</strong> who like to <strong>own, understand, and modify</strong> their tools</li>
-<li><strong>Engineers</strong> who want something <strong>trivial to sandbox &amp; to deploy anywhere</strong></li>
-</ul>
-<p>Here's some details:</p>
-<ul>
+<li><strong>Widely adopted</strong>: Used by Meta, NVIDIA, Essential AI, IBM, Nebius, Anyscale, Princeton University, Stanford University, and many more.</li>
 <li><strong>Minimal</strong>: Just <a href="https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py">100 lines of python</a> (+100 total for <a href="https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/environments/local.py">env</a>,
 <a href="https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py">model</a>, <a href="https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py">script</a>) — no fancy dependencies!</li>
-<li><strong>Performant:</strong> Scores &gt;74% on the <a href="https://www.swebench.com/">SWE-bench verified benchmark</a> benchmark; starts faster than Claude Code</li>
-<li><strong>Deployable:</strong> In addition to local envs, you can use <strong>docker</strong>, <strong>podman</strong>, <strong>singularity</strong>, <strong>apptainer</strong>, and more</li>
-<li><strong>Cutting edge:</strong> Built by the Princeton &amp; Stanford team behind <a href="https://swebench.com">SWE-bench</a> and <a href="https://swe-agent.com">SWE-agent</a>.</li>
-<li><strong>Widely adopted:</strong> In use by Meta, NVIDIA, Essential AI, Anyscale, and others</li>
+<li><strong>Performant:</strong> Scores &gt;74% on the <a href="https://www.swebench.com/">SWE-bench verified benchmark</a>; starts much faster than Claude Code</li>
+<li><strong>Deployable:</strong> In addition to local environments, you can use <strong>docker</strong>, <strong>podman</strong>, <strong>singularity</strong>, <strong>apptainer</strong>, and more</li>
+<li><strong>Compatible:</strong> Supports all models via <strong>litellm</strong>, <strong>openrouter</strong>, <strong>portkey</strong>, and more.</li>
+<li>Built by the Princeton &amp; Stanford team behind <a href="https://swebench.com">SWE-bench</a>, <a href="https://swe-agent.com">SWE-agent</a>, and more</li>
 <li><strong>Tested:</strong> <a href="https://codecov.io/gh/SWE-agent/mini-swe-agent"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/swe-agent/mini-swe-agent?style=flat-square"></a></li>
 </ul>
 <details class="note">
@@ -2490,7 +2485,8 @@ You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bas
 </details>
 <details class="note">
 <summary>Should I use mini-SWE-agent or swe-agent?</summary>
-<p>You should use <code>mini-swe-agent</code> if</p>
+<p>You should consider <code>mini-swe-agent</code> your default choice.
+In particular, you should use <code>mini-swe-agent</code> if</p>
 <ul>
 <li>You want a quick command line tool that works locally</li>
 <li>You want an agent with a very simple control flow</li>
@@ -2499,9 +2495,8 @@ You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bas
 </ul>
 <p>You should use <code>swe-agent</code> if</p>
 <ul>
-<li>You need specific tools or want to experiment with different tools</li>
+<li>You want to experiment with different sets of tools, each with their own interface</li>
 <li>You want to experiment with different history processors</li>
-<li>You want very powerful yaml configuration without touching code</li>
 </ul>
 <p>What you get with both</p>
 <ul>
@@ -2509,7 +2504,6 @@ You can see the result on the <a href="https://www.swebench.com/">SWE-bench (bas
 <li>A trajectory browser</li>
 </ul>
 </details>
-
 <table>
 <tbody><tr>
 <td width="50%">
