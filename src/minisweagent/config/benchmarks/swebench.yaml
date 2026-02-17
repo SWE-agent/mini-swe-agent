@@ -40,9 +40,9 @@ agent:
     You are operating in an environment where
 
     1. You issue at least one command
-    3. The system executes the command(s) in a subshell
-    4. You see the result(s)
-    5. You write your next command(s)
+    2. The system executes the command(s) in a subshell
+    3. You see the result(s)
+    4. You write your next command(s)
 
     Each response should include:
 
