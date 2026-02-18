@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/mini_square.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -2915,6 +2915,7 @@ For example, you could use</p>
     <span class="s2">"multilingual"</span><span class="p">:</span> <span class="s2">"swe-bench/SWE-Bench_Multilingual"</span><span class="p">,</span>
     <span class="s2">"smith"</span><span class="p">:</span> <span class="s2">"SWE-bench/SWE-smith"</span><span class="p">,</span>
     <span class="s2">"_test"</span><span class="p">:</span> <span class="s2">"klieret/swe-bench-dummy-test-dataset"</span><span class="p">,</span>
+    <span class="s2">"rebench"</span><span class="p">:</span> <span class="s2">"nebius/SWE-rebench"</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">(</span><span class="n">rich_markup_mode</span><span class="o">=</span><span class="s2">"rich"</span><span class="p">,</span> <span class="n">add_completion</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -2937,7 +2938,7 @@ For example, you could use</p>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_swebench_docker_image_name</span><span class="p">(</span><span class="n">instance</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Get the image name for a SWEBench instance."""</span>
-    <span class="n">image_name</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"image_name"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">image_name</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"image_name"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">instance</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"docker_image"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">image_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Docker doesn't allow double underscore, so we replace them with a magic token</span>
         <span class="n">iid</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"instance_id"</span><span class="p">]</span>
@@ -2952,8 +2953,9 @@ For example, you could use</p>
     <span class="n">image_name</span> <span class="o">=</span> <span class="n">get_swebench_docker_image_name</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"docker"</span><span class="p">,</span> <span class="s2">"swerex_modal"</span><span class="p">]:</span>
         <span class="n">env_config</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span> <span class="o">=</span> <span class="n">image_name</span>
-    <span class="k">elif</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"singularity"</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">env_config</span><span class="p">[</span><span class="s2">"environment_class"</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"singularity"</span><span class="p">,</span> <span class="s2">"contree"</span><span class="p">]:</span>
         <span class="n">env_config</span><span class="p">[</span><span class="s2">"image"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"docker://"</span> <span class="o">+</span> <span class="n">image_name</span>
+
     <span class="n">env</span> <span class="o">=</span> <span class="n">get_environment</span><span class="p">(</span><span class="n">env_config</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">startup_command</span> <span class="o">:=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"env_startup_command"</span><span class="p">):</span>
         <span class="n">startup_command</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">startup_command</span><span class="p">,</span> <span class="n">undefined</span><span class="o">=</span><span class="n">StrictUndefined</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">instance</span><span class="p">)</span>
@@ -3004,7 +3006,7 @@ For example, you could use</p>
     <span class="n">task</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">"problem_statement"</span><span class="p">]</span>
 
     <span class="n">progress_manager</span><span class="o">.</span><span class="n">on_instance_start</span><span class="p">(</span><span class="n">instance_id</span><span class="p">)</span>
-    <span class="n">progress_manager</span><span class="o">.</span><span class="n">update_instance_status</span><span class="p">(</span><span class="n">instance_id</span><span class="p">,</span> <span class="s2">"Pulling/starting docker"</span><span class="p">)</span>
+    <span class="n">progress_manager</span><span class="o">.</span><span class="n">update_instance_status</span><span class="p">(</span><span class="n">instance_id</span><span class="p">,</span> <span class="s2">"Pulling/starting environment"</span><span class="p">)</span>
 
     <span class="n">agent</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">exit_status</span> <span class="o">=</span> <span class="kc">None</span>
