@@ -96,13 +96,8 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     image_name = get_swebench_docker_image_name(instance)
     if env_config["environment_class"] in ["docker", "swerex_modal"]:
         env_config["image"] = image_name
-    elif env_config["environment_class"] == "singularity":
+    elif env_config["environment_class"] in ["singularity", "contree"]:
         env_config["image"] = "docker://" + image_name
-    elif env_config["environment_class"] == "contree":
-        from minisweagent.environments.extra.contree import ContreeEnvironment
-
-        env_config["image"] = "docker://" + image_name
-        env_config["image_tag"] = ContreeEnvironment.get_tag_by_image_url(image_name)
 
     env = get_environment(env_config)
     if startup_command := config.get("run", {}).get("env_startup_command"):

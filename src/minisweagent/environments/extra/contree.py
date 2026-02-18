@@ -1,15 +1,16 @@
 import logging
 import platform
 import shlex
-from dataclasses import asdict, field, is_dataclass, replace
+from dataclasses import asdict, is_dataclass, replace
 from numbers import Number
 from typing import Any, TypedDict
+from urllib.parse import urlparse
 
 from contree_sdk import ContreeSync
 from contree_sdk.config import ContreeConfig
 from contree_sdk.sdk.exceptions import NotFoundError
 from contree_sdk.sdk.objects.image import ContreeImageSync
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from minisweagent import Environment
 from minisweagent.exceptions import Submitted
@@ -28,14 +29,15 @@ class ContreeEnvironmentConfig(BaseModel):
     """Working directory in which to execute commands."""
     cwd_auto_create: bool = True
     """Create cwd before running any commands."""
-    env: dict[str, str] = field(default_factory=dict)
+    env: dict[str, str] = Field(default_factory=dict)
     """Environment variables to set in the container."""
-    forward_env: list[str] = field(default_factory=list)
+    forward_env: list[str] = Field(default_factory=list)
     """Environment variables to forward to the container.
     Variables are only forwarded if they are set in the host environment.
     In case of conflict with `env`, the `env` variables take precedence.
     """
-    interpreter: list[str] | None = field(default=lambda: ["bash", "-c"])
+    interpreter: list[str] | None = Field(default=lambda: ["bash", "-c"])
+    """"""
     timeout: int = 30
     """Timeout for executing commands in the container."""
 
@@ -47,9 +49,10 @@ class ExecutionResult(TypedDict):
 
 class ContreeEnvironment(Environment):
     def __init__(self, *, config_class: type[ContreeEnvironmentConfig] = ContreeEnvironmentConfig, **kwargs):
-        """This class executes bash commands in a Contree container using contree-sdk"""
-        self.config: ContreeEnvironmentConfig = config_class(**kwargs)
+        """This class executes bash commands in a [ConTree](https://contree.dev) container
+        using [contree-sdk](https://github.com/nebius/contree-sdk)"""
 
+        self.config: ContreeEnvironmentConfig = config_class(**kwargs)
         self.logger = logging.getLogger("minisweagent.environment")
 
         if isinstance(self.config.contree_config, dict):
@@ -64,7 +67,7 @@ class ContreeEnvironment(Environment):
             )
 
     def _pull_image(self) -> ContreeImageSync:
-        image_tag = self.config.image_tag or None
+        image_tag = self.config.image_tag or ContreeEnvironment.get_tag_by_image_url(self.config.image)
         if image_tag:
             try:
                 self.logger.info(f"Pulling image by tag: {image_tag}")
@@ -152,9 +155,13 @@ class ContreeEnvironment(Environment):
 
     @staticmethod
     def get_tag_by_image_url(url: str) -> str:
+        url_parsed = urlparse(url)
+        url = url_parsed.path
         if ":" not in url:
             url += ":latest"
         domain, url_path = url.split("/", 1)
         if "." in domain and ("docker" in domain or "io" in domain):
             return url_path or domain
-        return domain + "/" + url_path
+        if domain:
+            return f"{domain}/{url_path}"
+        return url_path
