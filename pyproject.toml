@@ -52,6 +52,8 @@ full = [
     "mini-swe-agent[dev]",
     "swe-rex>=1.4.0",
     "mini-swe-agent[modal]",
+    "mini-swe-agent[contree]",
+
 ]
 
 modal = [
@@ -74,6 +76,10 @@ dev = [
     "mkdocs-redirects",
     "portkey-ai",
     "swe-rex",
+]
+
+contree = [
+    "contree-sdk>=0.1.0",
 ]
 
 [project.urls]
