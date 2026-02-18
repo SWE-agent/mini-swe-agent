@@ -154,7 +154,7 @@ def process_instance(
     task = instance["problem_statement"]
 
     progress_manager.on_instance_start(instance_id)
-    progress_manager.update_instance_status(instance_id, "Pulling/starting docker")
+    progress_manager.update_instance_status(instance_id, "Pulling/starting environment")
 
     agent = None
     exit_status = None

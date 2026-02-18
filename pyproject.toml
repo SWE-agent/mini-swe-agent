@@ -77,7 +77,7 @@ dev = [
 ]
 
 contree = [
-    "contree-sdk",
+    "contree-sdk>=0.1.0",
 ]
 
 [project.urls]

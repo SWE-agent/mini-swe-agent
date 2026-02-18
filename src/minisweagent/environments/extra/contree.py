@@ -1,15 +1,24 @@
 import logging
-from dataclasses import asdict, dataclass, field, replace
+import platform
+import shlex
+from dataclasses import asdict, field, is_dataclass, replace
+from numbers import Number
 from typing import Any, TypedDict
 
 from contree_sdk import ContreeSync
 from contree_sdk.config import ContreeConfig
 from contree_sdk.sdk.exceptions import NotFoundError
 from contree_sdk.sdk.objects.image import ContreeImageSync
+from pydantic import BaseModel
+
+from minisweagent import Environment
+from minisweagent.exceptions import Submitted
+from minisweagent.utils.serialize import recursive_merge
+
+logger = logging.getLogger(__name__)
 
 
-@dataclass
-class ContreeEnvironmentConfig:
+class ContreeEnvironmentConfig(BaseModel):
     contree_config: ContreeConfig | dict[str, Any]
 
     image: str
@@ -26,6 +35,7 @@ class ContreeEnvironmentConfig:
     Variables are only forwarded if they are set in the host environment.
     In case of conflict with `env`, the `env` variables take precedence.
     """
+    interpreter: list[str] | None = field(default=lambda: ["bash", "-c"])
     timeout: int = 30
     """Timeout for executing commands in the container."""
 
@@ -35,7 +45,7 @@ class ExecutionResult(TypedDict):
     returncode: int
 
 
-class ContreeEnvironment:
+class ContreeEnvironment(Environment):
     def __init__(self, *, config_class: type[ContreeEnvironmentConfig] = ContreeEnvironmentConfig, **kwargs):
         """This class executes bash commands in a Contree container using contree-sdk"""
         self.config: ContreeEnvironmentConfig = config_class(**kwargs)
@@ -49,7 +59,7 @@ class ContreeEnvironment:
         self.session = self._pull_image().session()
         if self.config.cwd_auto_create:
             self.execute(
-                command=f"mkdir -p {self.config.cwd}",
+                action={"command": f"mkdir -p {self.config.cwd}"},
                 cwd="/",
             )
 
@@ -69,22 +79,76 @@ class ContreeEnvironment:
         self.logger.info(f"Pulling image: {self.config.image}")
         return self.client.images.pull(self.config.image, new_tag=image_tag)
 
-    def execute(self, command: str, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
+    def _shell_command(self, command: str) -> str:
+        shell_cmd = " ".join(self.config.interpreter)
+        return f"{shell_cmd} {shlex.quote(command)}"
+
+    def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the environment and return the raw output."""
+        command = action.get("command")
         self.session.run(
-            shell=command,
+            shell=self._shell_command(command),
             cwd=cwd or self.config.cwd,
             timeout=timeout or self.config.timeout,
             disposable=False,
         ).wait()
 
-        return {
-            "output": self.session.stdout + self.session.stderr,
-            "returncode": self.session.exit_code,
-        }
+        cwd = cwd or self.config.cwd
+        try:
+            self.session.run(
+                shell=self._shell_command(command),
+                cwd=cwd or self.config.cwd,
+                timeout=timeout or self.config.timeout,
+                disposable=False,
+            ).wait()
+            output = {
+                "output": self.session.stdout + self.session.stderr,
+                "returncode": self.session.exit_code,
+                "exception_info": "",
+            }
+        except Exception as e:
+            raw_output = getattr(e, "output", None)
+            raw_output = (
+                raw_output.decode("utf-8", errors="replace") if isinstance(raw_output, bytes) else (raw_output or "")
+            )
+            extras = {}
+            if is_dataclass(e):
+                extras = {k: str(v) if not isinstance(v, Number) else v for k, v in asdict(e).items()}
 
-    def get_template_vars(self) -> dict[str, Any]:
-        return asdict(self.config)
+            output = {
+                "output": raw_output,
+                "returncode": -1,
+                "exception_info": f"An error occurred while executing the command: {e}",
+                "extra": {"exception_type": type(e).__name__, "exception": str(e), **extras},
+            }
+        self._check_finished(output)
+        return output
+
+    def _check_finished(self, output: dict):
+        """Raises Submitted if the output indicates task completion."""
+        lines = output.get("output", "").lstrip().splitlines(keepends=True)
+        if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" and output["returncode"] == 0:
+            submission = "".join(lines[1:])
+            raise Submitted(
+                {
+                    "role": "exit",
+                    "content": submission,
+                    "extra": {"exit_status": "Submitted", "submission": submission},
+                }
+            )
+
+    def get_template_vars(self, **kwargs) -> dict[str, Any]:
+        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), kwargs)
+
+    def serialize(self) -> dict:
+        return {
+            "info": {
+                "config": {
+                    "environment": self.config.model_dump(mode="json"),
+                    "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
+                }
+            }
+        }
 
     @staticmethod
     def get_tag_by_image_url(url: str) -> str:
