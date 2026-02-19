@@ -48,6 +48,7 @@ To find the best model, check the leaderboard at https://swebench.com/
 
 
 def prompt(*args, **kwargs):
+    # Defer import to avoid slow import module
     from prompt_toolkit.shortcuts.prompt import prompt as _prompt
 
     return _prompt(*args, **kwargs)
