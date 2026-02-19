@@ -34,7 +34,8 @@ def parse_toolcall_actions(tool_calls: list, *, format_error_template: str) -> l
             {
                 "role": "user",
                 "content": Template(format_error_template, undefined=StrictUndefined).render(
-                    error="No tool calls found in the response. Every response MUST include at least one tool call."
+                    error="No tool calls found in the response. Every response MUST include at least one tool call.",
+                    actions=[],
                 ),
                 "extra": {"interrupt_type": "FormatError"},
             }
@@ -56,7 +57,7 @@ def parse_toolcall_actions(tool_calls: list, *, format_error_template: str) -> l
                 {
                     "role": "user",
                     "content": Template(format_error_template, undefined=StrictUndefined).render(
-                        error=error_msg.strip()
+                        actions=[], error=error_msg.strip()
                     ),
                     "extra": {"interrupt_type": "FormatError"},
                 }
