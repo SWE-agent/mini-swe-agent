@@ -2717,7 +2717,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">global_config_dir</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="n">_multiline_prompt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.utils.prompt_user</span><span class="w"> </span><span class="kn">import</span> <span class="n">_multiline_prompt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">builtin_config_dir</span><span class="p">,</span> <span class="n">get_config_from_spec</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.environments</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_environment</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model</span>
@@ -2831,21 +2831,15 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">NoReturn</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.formatted_text</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTML</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.history</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileHistory</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptSession</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent</span><span class="w"> </span><span class="kn">import</span> <span class="n">global_config_dir</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span><span class="p">,</span> <span class="n">DefaultAgent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.utils.prompt_user</span><span class="w"> </span><span class="kn">import</span> <span class="n">_multiline_prompt</span><span class="p">,</span> <span class="n">prompt_session</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">LimitsExceeded</span><span class="p">,</span> <span class="n">Submitted</span><span class="p">,</span> <span class="n">UserInterruption</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.content_string</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_content_string</span>
 
 <span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">_history</span> <span class="o">=</span> <span class="n">FileHistory</span><span class="p">(</span><span class="n">global_config_dir</span> <span class="o">/</span> <span class="s2">"interactive_history.txt"</span><span class="p">)</span>
-<span class="n">_prompt_session</span> <span class="o">=</span> <span class="n">PromptSession</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">_history</span><span class="p">)</span>
-<span class="n">_multiline_prompt_session</span> <span class="o">=</span> <span class="n">PromptSession</span><span class="p">(</span><span class="n">history</span><span class="o">=</span><span class="n">_history</span><span class="p">,</span> <span class="n">multiline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">InteractiveAgentConfig</span><span class="p">(</span><span class="n">AgentConfig</span><span class="p">):</span>
@@ -2855,17 +2849,6 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="w">    </span><span class="sd">"""Never confirm actions that match these regular expressions."""</span>
     <span class="n">confirm_exit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="w">    </span><span class="sd">"""If the agent wants to finish, do we ask for confirmation from user?"""</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_multiline_prompt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">_multiline_prompt_session</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span>
-        <span class="s2">""</span><span class="p">,</span>
-        <span class="n">bottom_toolbar</span><span class="o">=</span><span class="n">HTML</span><span class="p">(</span>
-            <span class="s2">"Submit message: &lt;b fg='yellow' bg='black'&gt;Esc, then Enter&lt;/b&gt; | "</span>
-            <span class="s2">"Navigate history: &lt;b fg='yellow' bg='black'&gt;Arrow Up/Down&lt;/b&gt; | "</span>
-            <span class="s2">"Search history: &lt;b fg='yellow' bg='black'&gt;Ctrl+R&lt;/b&gt;"</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">InteractiveAgent</span><span class="p">(</span><span class="n">DefaultAgent</span><span class="p">):</span>
@@ -2999,7 +2982,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">_multiline</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_multiline_prompt</span><span class="p">()</span>
-        <span class="n">user_input</span> <span class="o">=</span> <span class="n">_prompt_session</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+        <span class="n">user_input</span> <span class="o">=</span> <span class="n">prompt_session</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s2">"/m"</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt_and_handle_slash_commands</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">_multiline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s2">"/h"</span><span class="p">:</span>

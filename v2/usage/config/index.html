@@ -2637,7 +2637,6 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_key</span><span class="p">,</span> <span class="n">unset_key</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit</span><span class="w"> </span><span class="kn">import</span> <span class="n">prompt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Argument</span><span class="p">,</span> <span class="n">Typer</span>
@@ -2672,6 +2671,13 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 <span class="s2">More information at https://mini-swe-agent.com/latest/quickstart/</span>
 <span class="s2">To find the best model, check the leaderboard at https://swebench.com/</span>
 <span class="s2">"""</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">prompt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># Defer import to avoid slow import module</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">prompt_toolkit.shortcuts.prompt</span><span class="w"> </span><span class="kn">import</span> <span class="n">prompt</span> <span class="k">as</span> <span class="n">_prompt</span>
+
+    <span class="k">return</span> <span class="n">_prompt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">configure_if_first_time</span><span class="p">():</span>
