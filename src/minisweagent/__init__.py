@@ -11,7 +11,6 @@ This file provides:
 __version__ = "2.2.0"
 
 import os
-import time
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -35,7 +34,6 @@ if not os.getenv("MSWEA_SILENT_STARTUP"):
         f"Loading global config from [bold green]'{global_config_file}'[/bold green]",
     )
 dotenv.load_dotenv(dotenv_path=global_config_file)
-print(time.time())
 
 
 # === Protocols ===
