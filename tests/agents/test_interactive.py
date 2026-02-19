@@ -28,8 +28,8 @@ def mock_prompts(side_effect):
         def se(*args, **kwargs):
             return next(it)
 
-    with patch("minisweagent.agents.interactive._prompt_session.prompt", side_effect=se):
-        with patch("minisweagent.agents.interactive._multiline_prompt_session.prompt", side_effect=se):
+    with patch("minisweagent.agents.utils.prompt_user.prompt_session.prompt", side_effect=se):
+        with patch("minisweagent.agents.utils.prompt_user._multiline_prompt_session.prompt", side_effect=se):
             yield
 
 
