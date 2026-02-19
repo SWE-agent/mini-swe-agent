@@ -9,7 +9,7 @@ prompt_session = PromptSession(history=_history)
 _multiline_prompt_session = PromptSession(history=_history, multiline=True)
 
 
-def multiline_prompt() -> str:
+def _multiline_prompt() -> str:
     return _multiline_prompt_session.prompt(
         "",
         bottom_toolbar=HTML(

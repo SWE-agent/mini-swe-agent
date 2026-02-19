@@ -13,7 +13,7 @@ from rich.console import Console
 from rich.rule import Rule
 
 from minisweagent.agents.default import AgentConfig, DefaultAgent
-from minisweagent.agents.utils.prompt_user import multiline_prompt, prompt_session
+from minisweagent.agents.utils.prompt_user import _multiline_prompt, prompt_session
 from minisweagent.exceptions import LimitsExceeded, Submitted, UserInterruption
 from minisweagent.models.utils.content_string import get_content_string
 
@@ -159,7 +159,7 @@ class InteractiveAgent(DefaultAgent):
         """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""
         console.print(prompt, end="")
         if _multiline:
-            return multiline_prompt()
+            return _multiline_prompt()
         user_input = prompt_session.prompt("")
         if user_input == "/m":
             return self._prompt_and_handle_slash_commands(prompt, _multiline=True)
