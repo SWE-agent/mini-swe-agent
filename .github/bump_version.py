@@ -2,6 +2,7 @@
 """Bump the mini-swe-agent version in __init__.py."""
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -27,6 +28,15 @@ def main() -> None:
     updated = text[: match.start(1)] + new + text[match.end(1) :]
     INIT_FILE.write_text(updated)
     print(f"Updated {INIT_FILE.relative_to(Path.cwd())}: {current} -> {new}")
+
+    # Commit the changes
+    try:
+        subprocess.run(["git", "add", str(INIT_FILE)], check=True)
+        subprocess.run(["git", "commit", "-m", "Bump version"], check=True)
+        print("Changes committed with message 'Bump version'")
+    except subprocess.CalledProcessError as e:
+        print(f"Error committing changes: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
