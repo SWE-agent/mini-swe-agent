@@ -52,6 +52,7 @@ def parse_toolcall_actions_response(output: list, *, format_error_template: str)
     if not tool_calls:
         error_text = Template(format_error_template, undefined=StrictUndefined).render(
             error="No tool calls found in the response. Every response MUST include at least one tool call.",
+            actions=[],
         )
         raise FormatError(_format_error_message(error_text))
     actions = []
@@ -67,7 +68,9 @@ def parse_toolcall_actions_response(output: list, *, format_error_template: str)
         if "command" not in args:
             error_msg += "Missing 'command' argument in bash tool call."
         if error_msg:
-            error_text = Template(format_error_template, undefined=StrictUndefined).render(error=error_msg.strip())
+            error_text = Template(format_error_template, undefined=StrictUndefined).render(
+                error=error_msg.strip(), actions=[]
+            )
             raise FormatError(_format_error_message(error_text))
         actions.append({"command": args["command"], "tool_call_id": tool_call.get("call_id") or tool_call.get("id")})
     return actions
