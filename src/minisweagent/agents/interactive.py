@@ -9,21 +9,15 @@ There are three modes:
 import re
 from typing import Literal, NoReturn
 
-from prompt_toolkit.formatted_text import HTML
-from prompt_toolkit.history import FileHistory
-from prompt_toolkit.shortcuts import PromptSession
 from rich.console import Console
 from rich.rule import Rule
 
-from minisweagent import global_config_dir
 from minisweagent.agents.default import AgentConfig, DefaultAgent
+from minisweagent.agents.utils.prompt_user import multiline_prompt, prompt_session
 from minisweagent.exceptions import LimitsExceeded, Submitted, UserInterruption
 from minisweagent.models.utils.content_string import get_content_string
 
 console = Console(highlight=False)
-_history = FileHistory(global_config_dir / "interactive_history.txt")
-_prompt_session = PromptSession(history=_history)
-_multiline_prompt_session = PromptSession(history=_history, multiline=True)
 
 
 class InteractiveAgentConfig(AgentConfig):
@@ -33,17 +27,6 @@ class InteractiveAgentConfig(AgentConfig):
     """Never confirm actions that match these regular expressions."""
     confirm_exit: bool = True
     """If the agent wants to finish, do we ask for confirmation from user?"""
-
-
-def _multiline_prompt() -> str:
-    return _multiline_prompt_session.prompt(
-        "",
-        bottom_toolbar=HTML(
-            "Submit message: <b fg='yellow' bg='black'>Esc, then Enter</b> | "
-            "Navigate history: <b fg='yellow' bg='black'>Arrow Up/Down</b> | "
-            "Search history: <b fg='yellow' bg='black'>Ctrl+R</b>"
-        ),
-    )
 
 
 class InteractiveAgent(DefaultAgent):
@@ -176,8 +159,8 @@ class InteractiveAgent(DefaultAgent):
         """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""
         console.print(prompt, end="")
         if _multiline:
-            return _multiline_prompt()
-        user_input = _prompt_session.prompt("")
+            return multiline_prompt()
+        user_input = prompt_session.prompt("")
         if user_input == "/m":
             return self._prompt_and_handle_slash_commands(prompt, _multiline=True)
         if user_input == "/h":

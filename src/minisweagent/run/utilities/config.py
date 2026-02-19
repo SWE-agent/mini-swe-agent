@@ -11,7 +11,6 @@ import os
 import subprocess
 
 from dotenv import set_key, unset_key
-from prompt_toolkit import prompt
 from rich.console import Console
 from rich.rule import Rule
 from typer import Argument, Typer
@@ -46,6 +45,12 @@ Here's a few popular models and the required API keys:
 More information at https://mini-swe-agent.com/latest/quickstart/
 To find the best model, check the leaderboard at https://swebench.com/
 """
+
+
+def prompt(*args, **kwargs):
+    from prompt_toolkit.shortcuts.prompt import prompt as _prompt
+
+    return _prompt(*args, **kwargs)
 
 
 def configure_if_first_time():
