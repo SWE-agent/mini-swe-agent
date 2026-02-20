@@ -36,8 +36,8 @@ class ContreeEnvironmentConfig(BaseModel):
     Variables are only forwarded if they are set in the host environment.
     In case of conflict with `env`, the `env` variables take precedence.
     """
-    interpreter: list[str] | None = Field(default=lambda: ["bash", "-c"])
-    """"""
+    interpreter: list[str] = Field(default_factory=lambda: ["bash", "-c"])
+    """Interpreter to execute commands"""
     timeout: int = 30
     """Timeout for executing commands in the container."""
 
@@ -156,10 +156,15 @@ class ContreeEnvironment(Environment):
     @staticmethod
     def get_tag_by_image_url(url: str) -> str:
         url_parsed = urlparse(url)
-        url = url_parsed.path
+        if url_parsed.netloc:
+            url = url_parsed.path
+
         if ":" not in url:
             url += ":latest"
-        domain, url_path = url.split("/", 1)
+        parts = url.split("/", 1)
+        if len(parts) == 1:
+            return parts[0]
+        domain, url_path = parts
         if "." in domain and ("docker" in domain or "io" in domain):
             return url_path or domain
         if domain:
