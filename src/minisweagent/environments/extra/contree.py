@@ -37,7 +37,7 @@ class ContreeEnvironmentConfig(BaseModel):
     In case of conflict with `env`, the `env` variables take precedence.
     """
     interpreter: list[str] = Field(default_factory=lambda: ["bash", "-c"])
-    """"""
+    """Interpreter to execute commands"""
     timeout: int = 30
     """Timeout for executing commands in the container."""
 
