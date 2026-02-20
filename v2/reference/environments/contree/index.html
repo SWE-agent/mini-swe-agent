@@ -2713,8 +2713,8 @@
 <span class="sd">    Variables are only forwarded if they are set in the host environment.</span>
 <span class="sd">    In case of conflict with `env`, the `env` variables take precedence.</span>
 <span class="sd">    """</span>
-    <span class="n">interpreter</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">"bash"</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">])</span>
-<span class="w">    </span><span class="sd">""""""</span>
+    <span class="n">interpreter</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">"bash"</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">])</span>
+<span class="w">    </span><span class="sd">"""Interpreter to execute commands"""</span>
     <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="w">    </span><span class="sd">"""Timeout for executing commands in the container."""</span>
 
@@ -2833,10 +2833,15 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_tag_by_image_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">url_parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">url_parsed</span><span class="o">.</span><span class="n">path</span>
+        <span class="k">if</span> <span class="n">url_parsed</span><span class="o">.</span><span class="n">netloc</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">url_parsed</span><span class="o">.</span><span class="n">path</span>
+
         <span class="k">if</span> <span class="s2">":"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">+=</span> <span class="s2">":latest"</span>
-        <span class="n">domain</span><span class="p">,</span> <span class="n">url_path</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">domain</span><span class="p">,</span> <span class="n">url_path</span> <span class="o">=</span> <span class="n">parts</span>
         <span class="k">if</span> <span class="s2">"."</span> <span class="ow">in</span> <span class="n">domain</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">"docker"</span> <span class="ow">in</span> <span class="n">domain</span> <span class="ow">or</span> <span class="s2">"io"</span> <span class="ow">in</span> <span class="n">domain</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">url_path</span> <span class="ow">or</span> <span class="n">domain</span>
         <span class="k">if</span> <span class="n">domain</span><span class="p">:</span>
@@ -3120,12 +3125,14 @@ In case of conflict with <code>env</code>, the <code>env</code> variables take p
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">interpreter</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span>
-    <span class="n"><span title="pydantic.Field(default)">default</span></span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">"bash"</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">]</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">interpreter</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="pydantic.Field">Field</span></span><span class="p">(</span>
+    <span class="n"><span title="pydantic.Field(default_factory)">default_factory</span></span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">"bash"</span><span class="p">,</span> <span class="s2">"-c"</span><span class="p">]</span>
 <span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
+
+        <p>Interpreter to execute commands</p>
 
     </div>
 
@@ -3633,13 +3640,23 @@ using <a href="https://github.com/nebius/contree-sdk">contree-sdk</a></p>
 <span class="normal">164</span>
 <span class="normal">165</span>
 <span class="normal">166</span>
-<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_tag_by_image_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">url_parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">url_parsed</span><span class="o">.</span><span class="n">path</span>
+    <span class="k">if</span> <span class="n">url_parsed</span><span class="o">.</span><span class="n">netloc</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">url_parsed</span><span class="o">.</span><span class="n">path</span>
+
     <span class="k">if</span> <span class="s2">":"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">+=</span> <span class="s2">":latest"</span>
-    <span class="n">domain</span><span class="p">,</span> <span class="n">url_path</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">domain</span><span class="p">,</span> <span class="n">url_path</span> <span class="o">=</span> <span class="n">parts</span>
     <span class="k">if</span> <span class="s2">"."</span> <span class="ow">in</span> <span class="n">domain</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">"docker"</span> <span class="ow">in</span> <span class="n">domain</span> <span class="ow">or</span> <span class="s2">"io"</span> <span class="ow">in</span> <span class="n">domain</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">url_path</span> <span class="ow">or</span> <span class="n">domain</span>
     <span class="k">if</span> <span class="n">domain</span><span class="p">:</span>
