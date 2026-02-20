@@ -73,10 +73,12 @@ If this is not enough, our model class should be simple to modify:
     ```
 
 The other part that you most likely need to figure out are costs.
-There are two ways to do this with `litellm`:
+There are several ways to deal with this (this focuses on using the `litellm` based classes):
 
-1. You set up a litellm proxy server (which gives you a lot of control over all the LM calls)
-2. You update the model registry (next section)
+1. You ignore costs
+2. You set up a litellm proxy server (which gives you a lot of control over all the LM calls)
+3. You override the model name used for cost calculation to a model that is supported by litellm
+4. You update the model registry (next section)
 
 ### Cost tracking
 
@@ -99,7 +101,21 @@ export MSWEA_COST_TRACKING="ignore_errors"
 
 However, note that this is a global setting, and will affect all models!
 
-However, the best way to handle the cost issue is to add a model registry to litellm to include your local model.
+#### Overriding the model name for cost calculation
+
+If you use a locally deployed model and want to use the cost from some known commercial deployment, ou can override the model name used for cost calculation without changing the model name used for the API call:
+
+```yaml
+model:
+  model_name: "hosted_vllm/my-local-model"
+  litellm_cost_model_name_override: "dashscope/qwen-plus"
+  ...
+...
+```
+
+#### Model registry
+
+The best way to handle the cost issue for truly custom models is to add a model registry to litellm to include your local model.
 
 LiteLLM gets its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
 
