@@ -920,34 +920,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Cost tracking">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#overriding-the-model-name-for-cost-calculation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overriding the model name for cost calculation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#model-registry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Model registry
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -2511,34 +2483,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Cost tracking">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#overriding-the-model-name-for-cost-calculation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overriding the model name for cost calculation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#model-registry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Model registry
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -2854,9 +2798,6 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
 <span class="w">    </span><span class="sd">"""Template used to render the observation after executing an action."""</span>
     <span class="n">multimodal_regex</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
 <span class="w">    </span><span class="sd">"""Regex to extract multimodal content. Empty string disables multimodal processing."""</span>
-    <span class="n">litellm_cost_model_name_override</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
-<span class="w">    </span><span class="sd">"""Override the model name used for litellm cost calculation. This can be useful if you use a custom provider that has a different naming scheme</span>
-<span class="sd">    than the litellm model name that is used for cost tracking."""</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">LitellmModel</span><span class="p">:</span>
@@ -2908,9 +2849,7 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span>
-                <span class="n">response</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">litellm_cost_model_name_override</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span>
-            <span class="p">)</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="n">litellm</span><span class="o">.</span><span class="n">cost_calculator</span><span class="o">.</span><span class="n">completion_cost</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cost</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Cost must be &gt; 0.0, got </span><span class="si">{</span><span class="n">cost</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -2964,11 +2903,9 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
 </code></pre></div>
 </details>
 <p>The other part that you most likely need to figure out are costs.
-There are several ways to deal with this (this focuses on using the <code>litellm</code> based classes):</p>
+There are two ways to do this with <code>litellm</code>:</p>
 <ol>
-<li>You ignore costs</li>
 <li>You set up a litellm proxy server (which gives you a lot of control over all the LM calls)</li>
-<li>You override the model name used for cost calculation to a model that is supported by litellm</li>
 <li>You update the model registry (next section)</li>
 </ol>
 <h3 id="cost-tracking">Cost tracking</h3>
@@ -2983,16 +2920,7 @@ There are several ways to deal with this (this focuses on using the <code>litell
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">MSWEA_COST_TRACKING</span><span class="o">=</span><span class="s2">"ignore_errors"</span>
 </code></pre></div>
 <p>However, note that this is a global setting, and will affect all models!</p>
-<h4 id="overriding-the-model-name-for-cost-calculation">Overriding the model name for cost calculation</h4>
-<p>If you use a locally deployed model and want to use the cost from some known commercial deployment, ou can override the model name used for cost calculation without changing the model name used for the API call:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">"hosted_vllm/my-local-model"</span>
-<span class="w">  </span><span class="nt">litellm_cost_model_name_override</span><span class="p">:</span><span class="w"> </span><span class="s">"dashscope/qwen-plus"</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
-<span class="nn">...</span>
-</code></pre></div>
-<h4 id="model-registry">Model registry</h4>
-<p>The best way to handle the cost issue for truly custom models is to add a model registry to litellm to include your local model.</p>
+<p>However, the best way to handle the cost issue is to add a model registry to litellm to include your local model.</p>
 <p>LiteLLM gets its cost and model metadata from <a href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json">this file</a>. You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.</p>
 <p>The model registry JSON file should follow LiteLLM's format:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
