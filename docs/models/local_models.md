@@ -128,6 +128,11 @@ The model registry JSON file should follow LiteLLM's format:
 
     Model names are case sensitive. Please make sure you have an exact match.
 
+!!! warning "Model provider"
+
+    If you use the `custom_llm_provider` or have a provider prefixed to the model name (e.g., `openai/...`),
+    then this must also match `litellm_provider` in the config!
+
 There are two ways of setting the path to the model registry:
 
 1. Set `LITELLM_MODEL_REGISTRY_PATH` (e.g., `mini-extra config set LITELLM_MODEL_REGISTRY_PATH /path/to/model_registry.json`)
