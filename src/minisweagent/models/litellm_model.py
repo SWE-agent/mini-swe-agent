@@ -43,6 +43,9 @@ class LitellmModelConfig(BaseModel):
     """Template used to render the observation after executing an action."""
     multimodal_regex: str = ""
     """Regex to extract multimodal content. Empty string disables multimodal processing."""
+    litellm_cost_model_name_override: str = ""
+    """Override the model name used for litellm cost calculation. This can be useful if you use a custom provider that has a different naming scheme
+    than the litellm model name that is used for cost tracking."""
 
 
 class LitellmModel:
@@ -94,7 +97,9 @@ class LitellmModel:
 
     def _calculate_cost(self, response) -> dict[str, float]:
         try:
-            cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
+            cost = litellm.cost_calculator.completion_cost(
+                response, model=self.config.litellm_cost_model_name_override or self.config.model_name
+            )
             if cost <= 0.0:
                 raise ValueError(f"Cost must be > 0.0, got {cost}")
         except Exception as e:
