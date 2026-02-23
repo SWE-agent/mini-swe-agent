@@ -10,12 +10,18 @@ It is located at [bold green]{global_config_file}[/bold green].
 import os
 import subprocess
 
+import dotenv
 from dotenv import set_key, unset_key
 from rich.console import Console
 from rich.rule import Rule
 from typer import Argument, Typer
 
 from minisweagent import global_config_file
+
+
+def _reload_config():
+    dotenv.load_dotenv(dotenv_path=global_config_file, override=True)
+
 
 app = Typer(
     help=__doc__.format(global_config_file=global_config_file),  # type: ignore
@@ -85,6 +91,7 @@ def setup():
             "[bold red]API key setup not completed.[/bold red] Totally fine if you have your keys as environment variables."
         )
     set_key(global_config_file, "MSWEA_CONFIGURED", "true")
+    _reload_config()
     console.print(
         "\n[bold yellow]Config finished.[/bold yellow] If you want to revisit it, run [bold green]mini-extra config setup[/bold green]."
     )
@@ -101,6 +108,7 @@ def set(
     if value is None:
         value = prompt(f"Enter the value for {key}: ")
     set_key(global_config_file, key, value)
+    _reload_config()
 
 
 @app.command()
@@ -109,6 +117,7 @@ def unset(key: str | None = Argument(None, help="The key to unset")):
     if key is None:
         key = prompt("Enter the key to unset: ")
     unset_key(global_config_file, key)
+    _reload_config()
 
 
 @app.command()
@@ -116,6 +125,7 @@ def edit():
     """Edit the global config file."""
     editor = os.getenv("EDITOR", "nano")
     subprocess.run([editor, global_config_file])
+    _reload_config()
 
 
 if __name__ == "__main__":
