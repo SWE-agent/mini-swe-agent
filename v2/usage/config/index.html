@@ -2636,8 +2636,7 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">dotenv</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_key</span><span class="p">,</span> <span class="n">unset_key</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span><span class="p">,</span> <span class="n">set_key</span><span class="p">,</span> <span class="n">unset_key</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.rule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rule</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Argument</span><span class="p">,</span> <span class="n">Typer</span>
@@ -2646,7 +2645,7 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_reload_config</span><span class="p">():</span>
-    <span class="n">dotenv</span><span class="o">.</span><span class="n">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="n">global_config_file</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="n">global_config_file</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">Typer</span><span class="p">(</span>
