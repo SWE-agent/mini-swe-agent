@@ -2443,7 +2443,7 @@
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>Use pip to install <code>mini</code> in your current environment:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>mini-swe-agent
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>mini-swe-agent
 </code></pre></div>
 <p>And try our command line interface</p>
 <div class="highlight"><pre><span></span><code>mini<span class="w">  </span><span class="c1"># CLI</span>
@@ -2454,11 +2454,11 @@ mini-extra<span class="w">  </span><span class="c1"># extra utilities</span>
 <p>Use <code>uv</code>/<code>uvx</code> (<a href="https://docs.astral.sh/uv/getting-started/installation/">installation</a>) to directly run the <code>mini</code> CLI.
 Use this if you're only interested in the CLI but don't need python bindings (<code>mini</code> will be installed in an anonymous virtual environment).</p>
 <p>Quickly install + run:</p>
-<div class="highlight"><pre><span></span><code>uvx<span class="w"> </span>--prerelease<span class="o">=</span>allow<span class="w"> </span>mini-swe-agent<span class="w">  </span><span class="c1"># CLI</span>
-uvx<span class="w"> </span>--prerelease<span class="o">=</span>allow<span class="w"> </span>--from<span class="w"> </span>mini-swe-agent<span class="w"> </span>mini-extra<span class="w">  </span><span class="c1"># extra utilities</span>
+<div class="highlight"><pre><span></span><code>uvx<span class="w"> </span>mini-swe-agent<span class="w">  </span><span class="c1"># CLI</span>
+uvx<span class="w"> </span>--from<span class="w"> </span>mini-swe-agent<span class="w"> </span>mini-extra<span class="w">  </span><span class="c1"># extra utilities</span>
 </code></pre></div>
 <p>Permanently install</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--prerelease<span class="o">=</span>allow<span class="w"> </span>mini-swe-agent
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>mini-swe-agent
 <span class="c1"># then</span>
 mini<span class="w">  </span><span class="c1"># CLI</span>
 mini-extra<span class="w">  </span><span class="c1"># extra utilities</span>
@@ -2469,12 +2469,12 @@ mini-extra<span class="w">  </span><span class="c1"># extra utilities</span>
 Use this if you're only interested in the CLI but don't need python bindings (<code>mini</code> will be installed in an anonymous virtual environment).</p>
 <p>Quick install + run:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># CLI</span>
-pipx<span class="w"> </span>run<span class="w"> </span>--pip-args<span class="o">=</span><span class="s1">'--pre'</span><span class="w"> </span>mini-swe-agent
+pipx<span class="w"> </span>run<span class="w"> </span>mini-swe-agent
 <span class="c1"># Extra utilities</span>
-pipx<span class="w"> </span>run<span class="w"> </span>--pip-args<span class="o">=</span><span class="s1">'--pre'</span><span class="w"> </span>--spec<span class="w"> </span>mini-swe-agent<span class="w"> </span>mini-extra
+pipx<span class="w"> </span>run<span class="w"> </span>--spec<span class="w"> </span>mini-swe-agent<span class="w"> </span>mini-extra
 </code></pre></div>
 <p>or for a persistent installation (recommended):</p>
-<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>--pip-args<span class="o">=</span><span class="s1">'--pre'</span><span class="w"> </span>mini-swe-agent
+<div class="highlight"><pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>mini-swe-agent
 <span class="c1"># then</span>
 mini<span class="w">  </span><span class="c1"># CLI</span>
 mini-extra<span class="w">  </span><span class="c1"># extra utilities</span>
