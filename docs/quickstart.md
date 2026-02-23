@@ -7,7 +7,7 @@
         Use pip to install `mini` in your current environment:
 
         ```bash
-        pip install --pre mini-swe-agent
+        pip install mini-swe-agent
         ```
 
         And try our command line interface
@@ -25,14 +25,14 @@
         Quickly install + run:
 
         ```bash
-        uvx --prerelease=allow mini-swe-agent  # CLI
-        uvx --prerelease=allow --from mini-swe-agent mini-extra  # extra utilities
+        uvx mini-swe-agent  # CLI
+        uvx --from mini-swe-agent mini-extra  # extra utilities
         ```
 
         Permanently install
 
         ```bash
-        uv tool install --prerelease=allow mini-swe-agent
+        uv tool install mini-swe-agent
         # then
         mini  # CLI
         mini-extra  # extra utilities
@@ -47,15 +47,15 @@
 
         ```bash
         # CLI
-        pipx run --pip-args='--pre' mini-swe-agent
+        pipx run mini-swe-agent
         # Extra utilities
-        pipx run --pip-args='--pre' --spec mini-swe-agent mini-extra
+        pipx run --spec mini-swe-agent mini-extra
         ```
 
         or for a persistent installation (recommended):
 
         ```bash
-        pipx install --pip-args='--pre' mini-swe-agent
+        pipx install mini-swe-agent
         # then
         mini  # CLI
         mini-extra  # extra utilities
