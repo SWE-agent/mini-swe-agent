@@ -8,6 +8,7 @@ from typing import Any, Literal
 import litellm
 from pydantic import BaseModel
 
+from minisweagent import __version__
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
@@ -67,7 +68,10 @@ class PortkeyResponseAPIModel:
         if virtual_key:
             client_kwargs["virtual_key"] = virtual_key
 
-        self.client = Portkey(**client_kwargs)
+        self.client = Portkey(
+            **client_kwargs,
+            extra_headers={"User-Agent": f"mini-swe-agent/{__version__}"},
+        )
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         return self.client.responses.create(

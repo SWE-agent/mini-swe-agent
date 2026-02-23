@@ -24,6 +24,22 @@ def _mock_litellm_response(tool_calls):
 class TestLitellmModel:
     @patch("minisweagent.models.litellm_model.litellm.completion")
     @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    def test_query_sets_user_agent_header(self, mock_cost, mock_completion):
+        tool_call = MagicMock()
+        tool_call.function.name = "bash"
+        tool_call.function.arguments = '{"command": "echo test"}'
+        tool_call.id = "call_1"
+        mock_completion.return_value = _mock_litellm_response([tool_call])
+        mock_cost.return_value = 0.001
+
+        model = LitellmModel(model_name="gpt-4")
+        model.query([{"role": "user", "content": "test"}])
+
+        extra_headers = mock_completion.call_args.kwargs["extra_headers"]
+        assert extra_headers["User-Agent"].startswith("mini-swe-agent/")
+
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
     def test_query_includes_bash_tool(self, mock_cost, mock_completion):
         tool_call = MagicMock()
         tool_call.function.name = "bash"

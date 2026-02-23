@@ -9,6 +9,7 @@ from typing import Any, Literal
 import litellm
 from pydantic import BaseModel
 
+from minisweagent import __version__
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
@@ -62,11 +63,14 @@ class LitellmModel:
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
+            extra_headers = {"User-Agent": f"mini-swe-agent/{__version__}"}
+            extra_headers.update((self.config.model_kwargs | kwargs).get("extra_headers", {}))
             return litellm.completion(
                 model=self.config.model_name,
                 messages=messages,
                 tools=[BASH_TOOL],
                 **(self.config.model_kwargs | kwargs),
+                extra_headers=extra_headers,
             )
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."

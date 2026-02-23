@@ -7,6 +7,7 @@ from typing import Any, Literal
 import requests
 from pydantic import BaseModel
 
+from minisweagent import __version__
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
@@ -69,6 +70,7 @@ class RequestyModel:
             "Content-Type": "application/json",
             "HTTP-Referer": "https://github.com/SWE-agent/mini-swe-agent",
             "X-Title": "mini-swe-agent",
+            "User-Agent": f"mini-swe-agent/{__version__}",
         }
 
         payload = {

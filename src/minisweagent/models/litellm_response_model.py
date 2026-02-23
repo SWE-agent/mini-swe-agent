@@ -4,6 +4,7 @@ from collections.abc import Callable
 
 import litellm
 
+from minisweagent import __version__
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.actions_toolcall_response import (
@@ -37,11 +38,14 @@ class LitellmResponseModel(LitellmModel):
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
+            extra_headers = {"User-Agent": f"mini-swe-agent/{__version__}"}
+            extra_headers.update((self.config.model_kwargs | kwargs).get("extra_headers", {}))
             return litellm.responses(
                 model=self.config.model_name,
                 input=messages,
                 tools=[BASH_TOOL_RESPONSE_API],
                 **(self.config.model_kwargs | kwargs),
+                extra_headers=extra_headers,
             )
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."

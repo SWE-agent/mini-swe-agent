@@ -7,6 +7,7 @@ from typing import Any, Literal
 import requests
 from pydantic import BaseModel
 
+from minisweagent import __version__
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
@@ -63,6 +64,7 @@ class OpenRouterModel:
         headers = {
             "Authorization": f"Bearer {self._api_key}",
             "Content-Type": "application/json",
+            "User-Agent": f"mini-swe-agent/{__version__}",
         }
 
         payload = {

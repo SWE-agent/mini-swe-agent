@@ -4,6 +4,7 @@ import time
 
 import requests
 
+from minisweagent import __version__
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.openrouter_model import (
     OpenRouterAPIError,
@@ -43,6 +44,7 @@ class OpenRouterResponseModel(OpenRouterModel):
         headers = {
             "Authorization": f"Bearer {self._api_key}",
             "Content-Type": "application/json",
+            "User-Agent": f"mini-swe-agent/{__version__}",
         }
         payload = {
             "model": self.config.model_name,

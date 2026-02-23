@@ -1,5 +1,6 @@
 import litellm
 
+from minisweagent import __version__
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
 
@@ -19,8 +20,13 @@ class LitellmTextbasedModel(LitellmModel):
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
+            extra_headers = {"User-Agent": f"mini-swe-agent/{__version__}"}
+            extra_headers.update((self.config.model_kwargs | kwargs).get("extra_headers", {}))
             return litellm.completion(
-                model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
+                model=self.config.model_name,
+                messages=messages,
+                **(self.config.model_kwargs | kwargs),
+                extra_headers=extra_headers,
             )
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."

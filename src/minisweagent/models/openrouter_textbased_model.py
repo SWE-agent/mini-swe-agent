@@ -3,6 +3,7 @@ import logging
 
 import requests
 
+from minisweagent import __version__
 from minisweagent.models.openrouter_model import (
     OpenRouterAPIError,
     OpenRouterAuthenticationError,
@@ -33,6 +34,7 @@ class OpenRouterTextbasedModel(OpenRouterModel):
         headers = {
             "Authorization": f"Bearer {self._api_key}",
             "Content-Type": "application/json",
+            "User-Agent": f"mini-swe-agent/{__version__}",
         }
 
         payload = {

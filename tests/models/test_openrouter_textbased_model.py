@@ -158,6 +158,22 @@ def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
             assert GLOBAL_MODEL_STATS.cost == initial_cost
 
 
+def test_openrouter_model_sets_user_agent_header(mock_response):
+    """Test that User-Agent header is set correctly."""
+    with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
+        model = OpenRouterTextbasedModel(model_name="anthropic/claude-3.5-sonnet")
+
+        with patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 200
+            mock_post.return_value.json.return_value = mock_response
+            mock_post.return_value.raise_for_status.return_value = None
+
+            model.query([{"role": "user", "content": "test"}])
+
+            headers = mock_post.call_args[1]["headers"]
+            assert headers["User-Agent"].startswith("mini-swe-agent/")
+
+
 def test_openrouter_model_config():
     """Test OpenRouter model configuration."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
