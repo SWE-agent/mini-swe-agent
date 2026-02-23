@@ -10,8 +10,7 @@ It is located at [bold green]{global_config_file}[/bold green].
 import os
 import subprocess
 
-import dotenv
-from dotenv import set_key, unset_key
+from dotenv import load_dotenv, set_key, unset_key
 from rich.console import Console
 from rich.rule import Rule
 from typer import Argument, Typer
@@ -20,7 +19,7 @@ from minisweagent import global_config_file
 
 
 def _reload_config():
-    dotenv.load_dotenv(dotenv_path=global_config_file, override=True)
+    load_dotenv(dotenv_path=global_config_file, override=True)
 
 
 app = Typer(
