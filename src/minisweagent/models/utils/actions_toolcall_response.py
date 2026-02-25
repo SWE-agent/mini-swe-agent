@@ -62,10 +62,10 @@ def parse_toolcall_actions_response(output: list, *, format_error_template: str)
         try:
             args = json.loads(tool_call.get("arguments", "{}"))
         except Exception as e:
-            error_msg = f"Error parsing tool call arguments: {e}. "
+            error_msg = f"Error parsing tool call arguments: {e}."
         if tool_call.get("name") != "bash":
             error_msg += f"Unknown tool '{tool_call.get('name')}'."
-        if "command" not in args:
+        if not isinstance(args, dict) or "command" not in args:
             error_msg += "Missing 'command' argument in bash tool call."
         if error_msg:
             error_text = Template(format_error_template, undefined=StrictUndefined).render(
