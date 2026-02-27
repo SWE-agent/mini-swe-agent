@@ -2853,7 +2853,8 @@ mini-e<span class="w"> </span>i<span class="w"> </span>&lt;path_to_directory&gt;
 <span class="normal">286</span>
 <span class="normal">287</span>
 <span class="normal">288</span>
-<span class="normal">289</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="normal">289</span>
+<span class="normal">290</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
 <span class="sd">"""</span>
 <span class="sd">Simple trajectory inspector for browsing agent conversation trajectories.</span>
 
@@ -3058,7 +3059,8 @@ mini-e<span class="w"> </span>i<span class="w"> </span>&lt;path_to_directory&gt;
             <span class="n">container</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">message_container</span><span class="p">)</span>
             <span class="n">role</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"role"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"unknown"</span>
             <span class="n">message_container</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">Static</span><span class="p">(</span><span class="n">role</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">classes</span><span class="o">=</span><span class="s2">"message-header"</span><span class="p">))</span>
-            <span class="n">message_container</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">Static</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">content_str</span><span class="p">,</span> <span class="n">no_wrap</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">classes</span><span class="o">=</span><span class="s2">"message-content"</span><span class="p">))</span>
+            <span class="n">clean_str</span> <span class="o">=</span> <span class="n">content_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\x00</span><span class="s2">"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">message_container</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="n">Static</span><span class="p">(</span><span class="n">Text</span><span class="o">.</span><span class="n">from_ansi</span><span class="p">(</span><span class="n">clean_str</span><span class="p">,</span> <span class="n">no_wrap</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">classes</span><span class="o">=</span><span class="s2">"message-content"</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">"Trajectory </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">i_trajectory</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_trajectories</span><span class="si">}</span><span class="s2"> - "</span>
