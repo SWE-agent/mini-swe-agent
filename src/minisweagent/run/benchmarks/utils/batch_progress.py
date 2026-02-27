@@ -129,7 +129,7 @@ class RunBatchProgressManager:
             self._task_progress_bar.update(
                 self._spinner_tasks[instance_id],
                 status=_shorten_str(message, 30),
-                instance_id=_shorten_str(instance_id, 25, shorten_left=True),
+                instance_id=_shorten_str(instance_id, 35, shorten_left=True),
             )
         self._update_total_costs()
 
