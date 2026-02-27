@@ -203,7 +203,8 @@ class TrajectoryInspector(App):
             container.mount(message_container)
             role = message.get("role") or message.get("type") or "unknown"
             message_container.mount(Static(role.upper(), classes="message-header"))
-            message_container.mount(Static(Text(content_str, no_wrap=False), classes="message-content"))
+            clean_str = content_str.replace("\x00", "")
+            message_container.mount(Static(Text.from_ansi(clean_str, no_wrap=False), classes="message-content"))
 
         self.title = (
             f"Trajectory {self.i_trajectory + 1}/{self.n_trajectories} - "

@@ -369,6 +369,46 @@ def test_trajectory_inspector_binding_labels():
     assert bindings["scroll_up"] == "↑"
 
 
+@pytest.fixture
+def sample_ansi_trajectory():
+    """Sample trajectory with ANSI escape codes and null bytes in tool output (e.g. from TUI programs)."""
+    return {
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Run the program."},
+            {
+                "role": "assistant",
+                "content": None,
+                "tool_calls": [{"id": "1", "function": {"name": "bash", "arguments": '{"command": "./executable"}'}}],
+                "extra": {"actions": [{"command": "./executable", "tool_call_id": "1"}]},
+            },
+            {
+                "role": "tool",
+                "tool_call_id": "1",
+                "content": "<returncode>0</returncode>\n<output>\n\x1b[?1049h\x1b[?7l\x1b[?1000h\x00\r\x1b[2K\x1b[39m\x1b[47m\xe2\x94\x80 Score \xe2\x94\x80\x1b[0m\nDone\n</output>",
+            },
+        ],
+    }
+
+
+@pytest.mark.slow
+async def test_trajectory_inspector_ansi_content(sample_ansi_trajectory):
+    """Test that ANSI escape codes and null bytes in tool output don't break rendering."""
+    with tempfile.TemporaryDirectory() as temp_dir:
+        traj_file = Path(temp_dir) / "ansi.traj.json"
+        traj_file.write_text(json.dumps(sample_ansi_trajectory))
+        app = TrajectoryInspector([traj_file])
+        async with app.run_test() as pilot:
+            await pilot.pause(0.1)
+            # Navigate to step with ANSI content
+            await pilot.press("l")
+            await pilot.pause(0.1)
+            content = get_screen_text(app)
+            assert "Done" in content
+            assert "\x1b" not in content
+            assert "\x00" not in content
+
+
 @patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_single_file(mock_run, temp_trajectory_files):
     """Test main function with a single trajectory file."""
