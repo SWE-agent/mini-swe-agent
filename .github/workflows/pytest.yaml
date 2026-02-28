@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - v1
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -19,6 +20,7 @@ on:
   pull_request:
     branches:
       - main
+      - v1
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -36,7 +38,7 @@ jobs:
         shell: bash -l {0}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'

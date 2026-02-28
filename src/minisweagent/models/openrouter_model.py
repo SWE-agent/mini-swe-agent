@@ -25,6 +25,8 @@ class OpenRouterModelConfig:
     model_kwargs: dict[str, Any] = field(default_factory=dict)
     set_cache_control: Literal["default_end"] | None = None
     """Set explicit cache control markers, for example for Anthropic models"""
+    cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
+    """Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""
 
 
 class OpenRouterAPIError(Exception):
@@ -54,6 +56,7 @@ class OpenRouterModel:
         self._api_key = os.getenv("OPENROUTER_API_KEY", "")
 
     @retry(
+        reraise=True,
         stop=stop_after_attempt(int(os.getenv("MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT", "10"))),
         wait=wait_exponential(multiplier=1, min=4, max=60),
         before_sleep=before_sleep_log(logger, logging.WARNING),
@@ -95,18 +98,17 @@ class OpenRouterModel:
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         if self.config.set_cache_control:
             messages = set_cache_control(messages, mode=self.config.set_cache_control)
-        response = self._query(messages, **kwargs)
+        response = self._query([{"role": msg["role"], "content": msg["content"]} for msg in messages], **kwargs)
 
-        # Extract cost from usage information
         usage = response.get("usage", {})
         cost = usage.get("cost", 0.0)
-        assert cost >= 0.0, f"Cost is negative: {cost}"
-
-        # If total_cost is not available, raise an error
-        if cost == 0.0:
-            raise OpenRouterAPIError(
-                f"No cost information available from OpenRouter API for model {self.config.model_name}. "
-                "Cost tracking is required but not provided by the API response."
+        if cost <= 0.0 and self.config.cost_tracking != "ignore_errors":
+            raise RuntimeError(
+                f"No valid cost information available from OpenRouter API for model {self.config.model_name}: "
+                f"Usage {usage}, cost {cost}. Cost must be > 0.0. Set cost_tracking: 'ignore_errors' in your config file or "
+                "export MSWEA_COST_TRACKING='ignore_errors' to ignore cost tracking errors "
+                "(for example for free/local models), more information at https://klieret.short.gy/mini-local-models "
+                "for more details. Still stuck? Please open a github issue at https://github.com/SWE-agent/mini-swe-agent/issues/new/choose!"
             )
 
         self.n_calls += 1

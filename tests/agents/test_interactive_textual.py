@@ -267,9 +267,17 @@ async def test_log_message_filtering():
     app.notify = Mock()
 
     async with app.run_test() as pilot:
+        # Wait for UI to be ready before starting the agent thread
+        await pilot.pause(0.2)
+
         # Start the agent with the task
         threading.Thread(target=lambda: app.agent.run("Log test"), daemon=True).start()
-        await pilot.pause(0.2)
+
+        # Wait for notify to be called (with timeout)
+        for _ in range(50):  # 5 sec timeout
+            await pilot.pause(0.1)
+            if app.notify.call_count > 0:
+                break
 
         # Verify warning was emitted and handled (note the extra space in the actual format)
         app.notify.assert_any_call("[WARNING]  Test warning message", severity="warning")
@@ -390,9 +398,13 @@ async def test_whitelist_actions_bypass_confirmation():
     )
 
     async with app.run_test() as pilot:
-        # Start the agent with the task
+        await pilot.pause(0.2)  # Wait for UI to be ready
         threading.Thread(target=lambda: app.agent.run("Whitelist test"), daemon=True).start()
-        await pilot.pause(0.2)
+
+        for _ in range(10):
+            await pilot.pause(0.1)
+            if "echo 'safe'" in get_screen_text(app):
+                break
 
         # Should execute without confirmation because echo is whitelisted
         assert app.agent_state != "AWAITING_INPUT"

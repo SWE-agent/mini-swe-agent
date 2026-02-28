@@ -84,7 +84,7 @@ def main(
     if model_class is not None:
         config.setdefault("model", {})["model_class"] = model_class
     model = get_model(model_name, config.get("model", {}))
-    env = LocalEnvironment(**config.get("env", {}))
+    env = LocalEnvironment(**config.get("environment", {}))
 
     # Both visual flag and the MSWEA_VISUAL_MODE_DEFAULT flip the mode, so it's essentially a XOR
     agent_class = InteractiveAgent
@@ -100,8 +100,7 @@ def main(
         exit_status, result = type(e).__name__, str(e)
         extra_info = {"traceback": traceback.format_exc()}
     finally:
-        if output:
-            save_traj(agent, output, exit_status=exit_status, result=result, extra_info=extra_info)  # type: ignore[arg-type]
+        save_traj(agent, output, exit_status=exit_status, result=result, extra_info=extra_info)  # type: ignore[arg-type]
     return agent
 
 
