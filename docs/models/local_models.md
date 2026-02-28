@@ -13,8 +13,14 @@
 
 ## Using litellm
 
-Currently, all models are supported via [`litellm`](https://www.litellm.ai/)
-(but if you have specific needs, we're open to add more specific model classes in the [`models`](https://github.com/SWE-agent/mini-swe-agent/tree/main/src/minisweagent/models) submodule).
+Currently, models are supported via [`litellm`](https://www.litellm.ai/) by default.
+
+There are typically two steps to using local models:
+
+1. Editing the agent config file to add settings like `custom_llm_provider` and `api_base`.
+2. Either ignoring errors from cost tracking or updating the model registry to include your local model.
+
+### Setting API base/provider
 
 If you use local models, you most likely need to add some extra keywords to the `litellm` call.
 This is done with the `model_kwargs` dictionary which is directly passed to `litellm.completion`.
@@ -72,9 +78,30 @@ There are two ways to do this with `litellm`:
 1. You set up a litellm proxy server (which gives you a lot of control over all the LM calls)
 2. You update the model registry (next section)
 
-### Updating the model registry
+### Cost tracking
 
-LiteLLM get its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
+If you run with the above, you will most likely get an error about missing cost information.
+
+If you do not need cost tracking, you can ignore these errors, ideally by editing your agent config file to add:
+
+```yaml
+model:
+  cost_tracking: "ignore_errors"
+  ...
+...
+```
+
+Alternatively, you can set the global setting:
+
+```bash
+export MSWEA_COST_TRACKING="ignore_errors"
+```
+
+However, note that this is a global setting, and will affect all models!
+
+However, the best way to handle the cost issue is to add a model registry to litellm to include your local model.
+
+LiteLLM gets its cost and model metadata from [this file](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json). You can override or add data from this file if it's outdated or missing your desired model by including a custom registry file.
 
 The model registry JSON file should follow LiteLLM's format:
 
@@ -115,9 +142,50 @@ model:
 
 ## Concrete examples
 
-!!! success "Help us fill this section!"
+### Generating SWE-bench trajectories with vLLM
 
-    We welcome concrete examples of how to use local models per pull request into this guide.
-    Please add your example here.
+This example shows how to generate SWE-bench trajectories using [vLLM](https://docs.vllm.ai/en/latest/) as the local inference engine.
+
+First, launch a vLLM server with your chosen model. For example:
+
+```bash
+vllm serve ricdomolm/mini-coder-1.7b &
+```
+
+By default, the server will be available at `http://localhost:8000`.
+
+Second, edit the mini-swe-agent SWE-bench config file located in `src/minisweagent/config/extra/swebench.yaml` to include your local vLLM model:
+
+```yaml
+model:
+  model_name: "hosted_vllm/ricdomolm/mini-coder-1.7b"  # or hosted_vllm/path/to/local/model
+  model_kwargs:
+    api_base: "http://localhost:8000/v1"  # adjust if using a non-default port/address
+```
+
+If you need a custom registry, as detailed above, create a `registry.json` file:
+
+```bash
+cat > registry.json <<'EOF'
+{
+  "ricdomolm/mini-coder-1.7b": {
+    "max_tokens": 40960,
+    "input_cost_per_token": 0.0,
+    "output_cost_per_token": 0.0,
+    "litellm_provider": "hosted_vllm",
+    "mode": "chat"
+  }
+}
+EOF
+```
+
+Now you’re ready to generate trajectories! Let's solve the `django__django-11099` instance of SWE-bench Verified:
+
+```bash
+LITELLM_MODEL_REGISTRY_PATH=registry.json mini-extra swebench \
+    --output test/ --subset verified --split test --filter '^(django__django-11099)$'
+```
+
+You should now see the generated trajectory in the `test/` directory.
 
 --8<-- "docs/_footer.md"

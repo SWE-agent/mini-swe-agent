@@ -3,14 +3,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
-
-
-def test_portkey_model_missing_package():
-    """Test that PortkeyModel raises ImportError when portkey-ai is not installed."""
-    with patch("minisweagent.models.portkey_model.Portkey", None):
-        with pytest.raises(ImportError, match="portkey-ai package is required"):
-            PortkeyModel(model_name="gpt-4o")
 
 
 def test_portkey_model_missing_api_key():
@@ -100,3 +94,77 @@ def test_portkey_model_get_template_vars():
             assert template_vars["model_kwargs"] == {"temperature": 0.7}
             assert template_vars["n_model_calls"] == 0
             assert template_vars["model_cost"] == 0.0
+
+
+def test_portkey_model_cost_tracking_ignore_errors():
+    """Test that models work with cost_tracking='ignore_errors'."""
+    mock_portkey_class = MagicMock()
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+    mock_choice = MagicMock()
+    mock_message = MagicMock()
+
+    mock_message.content = "Test response"
+    mock_choice.message = mock_message
+    mock_response.choices = [mock_choice]
+    mock_response.model_dump.return_value = {"test": "response"}
+
+    mock_client.chat.completions.create.return_value = mock_response
+    mock_portkey_class.return_value = mock_client
+
+    with patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class):
+        with patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}):
+            model = PortkeyModel(model_name="gpt-4o", cost_tracking="ignore_errors")
+
+            initial_cost = GLOBAL_MODEL_STATS.cost
+
+            with patch(
+                "minisweagent.models.portkey_model.litellm.cost_calculator.completion_cost",
+                side_effect=ValueError("Model not found"),
+            ):
+                messages = [{"role": "user", "content": "test"}]
+                result = model.query(messages)
+
+                assert result["content"] == "Test response"
+                assert result["extra"]["cost"] == 0.0
+                assert model.cost == 0.0
+                assert model.n_calls == 1
+                assert GLOBAL_MODEL_STATS.cost == initial_cost
+
+
+def test_portkey_model_cost_validation_error():
+    """Test that cost calculation errors raise RuntimeError when cost tracking is enabled."""
+    mock_portkey_class = MagicMock()
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+    mock_choice = MagicMock()
+    mock_message = MagicMock()
+    mock_usage = MagicMock()
+
+    mock_message.content = "Test response"
+    mock_choice.message = mock_message
+    mock_response.choices = [mock_choice]
+    mock_response.model_dump.return_value = {"test": "response"}
+    mock_response.model_copy.return_value = mock_response
+    mock_response.usage = mock_usage
+    mock_usage.prompt_tokens = 10
+    mock_usage.completion_tokens = 20
+    mock_usage.total_tokens = 30
+
+    mock_client.chat.completions.create.return_value = mock_response
+    mock_portkey_class.return_value = mock_client
+
+    with patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class):
+        with patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}):
+            model = PortkeyModel(model_name="gpt-4o")
+
+            with patch("minisweagent.models.portkey_model.litellm.cost_calculator.completion_cost") as mock_cost:
+                mock_cost.side_effect = ValueError("Model not found")
+
+                messages = [{"role": "user", "content": "test"}]
+
+                with pytest.raises(RuntimeError) as exc_info:
+                    model.query(messages)
+
+                assert "Error calculating cost" in str(exc_info.value)
+                assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)

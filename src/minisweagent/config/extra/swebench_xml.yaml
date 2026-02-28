@@ -9,9 +9,7 @@ agent:
     <format_example>
     THOUGHT: Your reasoning and analysis here
 
-    ```bash
-    your_command_here
-    ```
+    <bash_code>your_command_here</bash_code>
     </format_example>
 
     Failure to follow these rules will cause your response to be rejected.
@@ -57,22 +55,13 @@ agent:
     1. A **THOUGHT** section where you explain your reasoning and plan
     2. A single bash code block with your command
 
-    Format your responses like this:
+    Format your responses like included within the <format_example> block:
 
     <format_example>
     THOUGHT: Here I explain my reasoning process, analysis of the current situation,
     and what I'm trying to accomplish with the command below.
 
-    ```bash
-    your_command_here
-    ```
-    </format_example>
-
-    Commands must be specified in a single bash code block:
-
-    ```bash
-    your_command_here
-    ```
+    <bash_code>your_command_here </bash_code></format_example>
 
     **CRITICAL REQUIREMENTS:**
     - Your response SHOULD include a THOUGHT section explaining your reasoning
@@ -84,38 +73,35 @@ agent:
     - However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
 
     Example of a CORRECT response:
+
     <example_response>
     THOUGHT: I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
 
-    ```bash
-    ls -la
-    ```
+    <bash_code>ls -la</bash_code>
     </example_response>
 
     Example of an INCORRECT response:
+
     <example_response>
     THOUGHT: I need to examine the codebase and then look at a specific file. I'll run multiple commands to do this.
 
-    ```bash
-    ls -la
-    ```
+    <bash_code>ls -la</bash_code>
 
     Now I'll read the file:
 
-    ```bash
-    cat file.txt
-    ```
+    <bash_code>cat file.txt</bash_code>
     </example_response>
 
     If you need to run multiple commands, either:
+
     1. Combine them in one block using && or ||
-    ```bash
-    command1 && command2 || echo "Error occurred"
-    ```
+
+    <bash_code>command1 && command2 || echo "Error occurred"</bash_code>
 
     2. Wait for the first command to complete, see its output, then issue the next command in your following response.
 
     ## Environment Details
+
     - You have a full Linux shell environment
     - Always use non-interactive flags (-y, -f) for commands
     - Avoid interactive tools like vi, nano, or any that require user input
@@ -124,47 +110,47 @@ agent:
     ## Useful Command Examples
 
     ### Create a new file:
-    ```bash
-    cat <<'EOF' > newfile.py
+
+    <bash_code>cat <<'EOF' > newfile.py
     import numpy as np
     hello = "world"
     print(hello)
-    EOF
-    ```
+    EOF</bash_code>
 
     ### Edit files with sed:
-    ```bash
-    # Replace all occurrences
-    sed -i 's/old_string/new_string/g' filename.py
 
-    # Replace only first occurrence
-    sed -i 's/old_string/new_string/' filename.py
+    Replace all occurrences
 
-    # Replace first occurrence on line 1
-    sed -i '1s/old_string/new_string/' filename.py
+    <bash_code>sed -i 's/old_string/new_string/g' filename.py</bash_code>
 
-    # Replace all occurrences in lines 1-10
-    sed -i '1,10s/old_string/new_string/g' filename.py
-    ```
+    Replace only first occurrence
+
+    <bash_code>sed -i 's/old_string/new_string/' filename.py</bash_code>
+
+    Replace first occurrence on line 1
+
+    <bash_code>sed -i '1s/old_string/new_string/' filename.py</bash_code>
+
+    Replace all occurrences in lines 1-10
+
+    <bash_code>sed -i '1,10s/old_string/new_string/g' filename.py</bash_code>
 
     ### View file content:
-    ```bash
-    # View specific lines with numbers
-    nl -ba filename.py | sed -n '10,20p'
-    ```
 
-    ### Any other command you want to run
-    ```bash
-    anything
-    ```
+    View specific lines with numbers
+
+    <bash_code> nl -ba filename.py | sed -n '10,20p'</bash_code>
+
+    Any other command you want to run
+
+    <bash_code>anything</bash_code>
 
     ## Submission
+
     When you've completed your work (reading, editing, testing), and cannot make further progress
     issue exactly the following command:
 
-    ```bash
-    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached
-    ```
+    <bash_code>echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && git add -A && git diff --cached</bash_code>
 
     This command will submit your work.
     You cannot continue working (reading, editing, testing) in any way on this task after submitting.
@@ -195,22 +181,21 @@ agent:
     </output_tail>
     {%- endif -%}
   format_error_template: |
-    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
+    Please always provide EXACTLY ONE action in the `<bash_code>` block, found {{actions|length}} actions.
 
-    Please format your action in triple backticks as shown in <response_example>.
+    Please format your action in a `<bash_code>` block as shown in <response_example>.
 
     <response_example>
     Here are some thoughts about why you want to perform the action.
 
-    ```bash
-    <action>
-    ```
+    <bash_code>ls -la</bash_code>
     </response_example>
 
     If you have completed your assignment, please consult the first message about how to
     submit your solution (you will not be able to continue working on this task after that).
   step_limit: 250
   cost_limit: 3.
+  action_regex: <bash_code>(.*?)</bash_code>
 
 environment:
   cwd: "/testbed"
@@ -224,10 +209,7 @@ environment:
   environment_class: docker
 
 model:
-  model_name: "roulette"
-  model_class: "minisweagent.models.extra.roulette.RouletteModel"
+  model_name: "minimax/minimax-m2"
+  model_class: openrouter
   model_kwargs:
-    - model_name: "anthropic/claude-sonnet-4-5-20250929"
-      model_kwargs:
-        temperature: 0.
-    - model_name: "gpt-5"
+    temperature: 0.0

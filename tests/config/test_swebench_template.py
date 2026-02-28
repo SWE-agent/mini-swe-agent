@@ -138,3 +138,41 @@ def test_action_observation_template_just_under_10000_chars():
     assert "<output_tail>" not in result
     assert "<warning>" not in result
     assert "Y" * 8000 in result
+
+
+def test_timeout_template_long_output():
+    """Test that long timeout output (> 10000 chars) is truncated with head/tail format"""
+    from minisweagent.agents.default import AgentConfig
+
+    template_str = AgentConfig.timeout_template
+    template = Template(template_str, undefined=StrictUndefined)
+
+    # Create mock action and long output (like recursive grep warnings)
+    action = {"action": "grep -R pattern ."}
+    long_output = "START_" + "A" * 8000 + "B" * 3000 + "_END"  # > 10000 characters
+
+    # Render the template
+    result = template.render(action=action, output=long_output)
+
+    # Should contain truncation elements for long output
+    assert "<warning>" in result
+    assert "has been truncated" in result
+    assert "<output_head>" in result
+    assert "<elided_chars>" in result
+    assert "characters elided" in result
+    assert "<output_tail>" in result
+
+    # Verify the head contains first part of output
+    assert "START_" in result
+    assert "AAAA" in result
+
+    # Verify the tail contains last part of output
+    assert "_END" in result
+    assert "BBBB" in result
+
+    # Should still contain basic timeout message
+    assert "<command>grep -R pattern .</command>" in result
+    assert "timed out" in result
+
+    # Result should be bounded (not grow with input size)
+    assert len(result) < 15000
