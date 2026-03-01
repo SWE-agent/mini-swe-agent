@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from minisweagent.run.utilities.config import app, configure_if_first_time, edit, set, setup, unset
+from minisweagent.run.utilities.config import _SETUP_HELP, app, configure_if_first_time, edit, set, setup, unset
 
 
 @pytest.fixture(autouse=True)
@@ -112,6 +112,11 @@ class TestConfigSetup:
             mock_print.assert_any_call(
                 "[bold red]API key setup not completed.[/bold red] Totally fine if you have your keys as environment variables."
             )
+
+    def test_setup_help_mentions_bedrock_token(self):
+        """Test that setup help includes the Bedrock bearer token flow."""
+        assert "AWS_BEARER_TOKEN_BEDROCK" in _SETUP_HELP
+        assert "bedrock/us-east-1/" in _SETUP_HELP
 
 
 class TestConfigSet:

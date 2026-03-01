@@ -26,6 +26,7 @@ There are several ways to set your API keys:
     ALEPHALPHA_API_KEY
     ANTHROPIC_API_KEY
     ANYSCALE_API_KEY
+    AWS_BEARER_TOKEN_BEDROCK
     AZURE_AI_API_KEY
     AZURE_API_KEY
     AZURE_OPENAI_API_KEY
@@ -73,6 +74,7 @@ There are several ways to set your API keys:
     ```
 
     In addition, Portkey models use the `PORTKEY_API_KEY` environment variable.
+    For Bedrock API-key auth, use `AWS_BEARER_TOKEN_BEDROCK`. Standard AWS credentials also work if your environment already provides them.
 
 ## Selecting a model
 
@@ -98,6 +100,7 @@ There are several ways to set your API keys:
     openai/gpt-5-mini
     gemini/gemini-2.5-pro
     deepseek/deepseek-chat
+    bedrock/us-east-1/anthropic.claude-3-5-sonnet-20240620-v1:0
     ```
 
     ??? note "List of all supported models"
@@ -110,6 +113,16 @@ There are several ways to set your API keys:
         ```
 
 To find the corresponding API key, check the previous section.
+
+!!! note "AWS Bedrock"
+
+    Bedrock models work with the default `litellm` backend, so you do not need to set `model_class`.
+    Set `AWS_BEARER_TOKEN_BEDROCK` (or standard AWS credentials) and use a Bedrock model name:
+
+    ```bash
+    export AWS_BEARER_TOKEN_BEDROCK=<your-bedrock-token>
+    mini --model "bedrock/us-east-1/anthropic.claude-3-5-sonnet-20240620-v1:0"
+    ```
 
 ## Extra model settings
 
@@ -308,4 +321,3 @@ On top, there's a few more exotic model classes that you can use:
 As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the mini-SWE-agent package).
 
 --8<-- "docs/_footer.md"
-

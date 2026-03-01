@@ -36,6 +36,7 @@ dependencies = [
     "jinja2",
     "pydantic >= 2.0",  # v2 required for safe mutable default arguments
     "litellm >= 1.75.5",  # want to have gpt-5 support
+    "boto3>=1.39.0",  # required for Bedrock API-key auth
     "tenacity",
     "rich",
     "python-dotenv",
@@ -58,7 +59,6 @@ full = [
 
 modal = [
     "modal",
-    "boto3",
 ]
 
 dev = [

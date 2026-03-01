@@ -10,6 +10,12 @@ from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_textbased_model import LitellmTextbasedModel
 
 
+def _missing_module_error(module_name: str) -> ModuleNotFoundError:
+    exc = ModuleNotFoundError(f"No module named '{module_name}'")
+    exc.name = module_name
+    return exc
+
+
 def test_authentication_error_enhanced_message():
     """Test that AuthenticationError gets enhanced with config set instruction."""
     model = LitellmTextbasedModel(model_name="gpt-4")
@@ -124,3 +130,17 @@ def test_litellm_model_cost_validation_zero_cost():
 
             assert "Cost must be > 0.0, got 0.0" in str(exc_info.value)
             assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)
+
+
+def test_bedrock_missing_boto3_gets_actionable_error():
+    model = LitellmTextbasedModel(model_name="bedrock/us-east-1/test-model")
+
+    with patch("minisweagent.models.litellm_textbased_model.litellm.completion") as mock_completion:
+        mock_completion.side_effect = _missing_module_error("boto3")
+
+        with pytest.raises(RuntimeError) as exc_info:
+            model.query([{"role": "user", "content": "test"}])
+
+    message = str(exc_info.value)
+    assert "Bedrock models require the AWS SDK" in message
+    assert "AWS_BEARER_TOKEN_BEDROCK" in message

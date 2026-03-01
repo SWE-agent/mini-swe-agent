@@ -42,6 +42,7 @@ Here's a few popular models and the required API keys:
 [bold green]anthropic/claude-sonnet-4-5-20250929[/bold green] ([bold green]ANTHROPIC_API_KEY[/bold green])
 [bold green]openai/gpt-5[/bold green] or [bold green]openai/gpt-5-mini[/bold green] ([bold green]OPENAI_API_KEY[/bold green])
 [bold green]gemini/gemini-3-pro-preview[/bold green] ([bold green]GEMINI_API_KEY[/bold green])
+[bold green]bedrock/us-east-1/anthropic.claude-3-5-sonnet-20240620-v1:0[/bold green] ([bold green]AWS_BEARER_TOKEN_BEDROCK[/bold green])
 
 [bold]Note: Please always include the provider (e.g., "openai/") in the model name.[/bold]
 

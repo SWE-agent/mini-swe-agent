@@ -21,6 +21,12 @@ def _mock_litellm_response(tool_calls):
     return mock_response
 
 
+def _missing_module_error(module_name: str) -> ModuleNotFoundError:
+    exc = ModuleNotFoundError(f"No module named '{module_name}'")
+    exc.name = module_name
+    return exc
+
+
 class TestLitellmModel:
     @patch("minisweagent.models.litellm_model.litellm.completion")
     @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
@@ -76,3 +82,24 @@ class TestLitellmModel:
         model = LitellmModel(model_name="gpt-4")
         result = model.format_observation_messages({"extra": {}}, [])
         assert result == []
+
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    def test_bedrock_missing_boto3_gets_actionable_error(self, mock_completion):
+        mock_completion.side_effect = _missing_module_error("boto3")
+        model = LitellmModel(model_name="bedrock/us-east-1/test-model")
+
+        with pytest.raises(RuntimeError) as exc_info:
+            model.query([{"role": "user", "content": "test"}])
+
+        message = str(exc_info.value)
+        assert "Bedrock models require the AWS SDK" in message
+        assert "AWS_BEARER_TOKEN_BEDROCK" in message
+
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    def test_non_bedrock_missing_boto3_reraises_module_not_found(self, mock_completion):
+        mock_completion.side_effect = _missing_module_error("boto3")
+        model = LitellmModel(model_name="openai/gpt-4")
+
+        with patch.dict("os.environ", {"MSWEA_MODEL_RETRY_STOP_AFTER_ATTEMPT": "1"}):
+            with pytest.raises(ModuleNotFoundError):
+                model.query([{"role": "user", "content": "test"}])
