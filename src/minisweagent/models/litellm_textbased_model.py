@@ -22,6 +22,9 @@ class LitellmTextbasedModel(LitellmModel):
             return litellm.completion(
                 model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
             )
+        except ModuleNotFoundError as e:
+            self._handle_missing_bedrock_dependency(e)
+            raise
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e

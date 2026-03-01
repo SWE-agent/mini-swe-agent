@@ -23,6 +23,10 @@ from minisweagent.models.utils.retry import retry
 logger = logging.getLogger("litellm_model")
 
 
+class _BedrockDependencyError(RuntimeError):
+    """Raised when Bedrock support is unavailable because AWS SDK dependencies are missing."""
+
+
 class LitellmModelConfig(BaseModel):
     model_name: str
     """Model name. Highly recommended to include the provider in the model name, e.g., `anthropic/claude-sonnet-4-5-20250929`."""
@@ -52,6 +56,7 @@ class LitellmModel:
         litellm.exceptions.PermissionDeniedError,
         litellm.exceptions.ContextWindowExceededError,
         litellm.exceptions.AuthenticationError,
+        _BedrockDependencyError,
         KeyboardInterrupt,
     ]
 
@@ -59,6 +64,18 @@ class LitellmModel:
         self.config = config_class(**kwargs)
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
+
+    def _handle_missing_bedrock_dependency(self, exc: ModuleNotFoundError) -> None:
+        if not self.config.model_name.lower().startswith("bedrock/"):
+            return
+        if getattr(exc, "name", None) not in {"boto3", "botocore"}:
+            return
+        msg = (
+            "Bedrock models require the AWS SDK (`boto3` / `botocore`). Please upgrade or reinstall "
+            "`mini-swe-agent` so the default install includes these packages, then set "
+            "`AWS_BEARER_TOKEN_BEDROCK` (or standard AWS credentials)."
+        )
+        raise _BedrockDependencyError(msg) from exc
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
@@ -68,6 +85,9 @@ class LitellmModel:
                 tools=[BASH_TOOL],
                 **(self.config.model_kwargs | kwargs),
             )
+        except ModuleNotFoundError as e:
+            self._handle_missing_bedrock_dependency(e)
+            raise
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e

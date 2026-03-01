@@ -43,6 +43,9 @@ class LitellmResponseModel(LitellmModel):
                 tools=[BASH_TOOL_RESPONSE_API],
                 **(self.config.model_kwargs | kwargs),
             )
+        except ModuleNotFoundError as e:
+            self._handle_missing_bedrock_dependency(e)
+            raise
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
