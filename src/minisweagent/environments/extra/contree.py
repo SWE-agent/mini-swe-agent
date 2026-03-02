@@ -4,13 +4,11 @@ import shlex
 from dataclasses import asdict, is_dataclass, replace
 from numbers import Number
 from typing import Any, TypedDict
-from urllib.parse import urlparse
 
 from contree_sdk import ContreeSync
 from contree_sdk.config import ContreeConfig
-from contree_sdk.sdk.exceptions import NotFoundError
 from contree_sdk.sdk.objects.image import ContreeImageSync
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from minisweagent import Environment
 from minisweagent.exceptions import Submitted
@@ -29,17 +27,21 @@ class ContreeEnvironmentConfig(BaseModel):
     """Working directory in which to execute commands."""
     cwd_auto_create: bool = True
     """Create cwd before running any commands."""
-    env: dict[str, str] = Field(default_factory=dict)
+    env: dict[str, str] = {}
     """Environment variables to set in the container."""
-    forward_env: list[str] = Field(default_factory=list)
+    forward_env: list[str] = []
     """Environment variables to forward to the container.
     Variables are only forwarded if they are set in the host environment.
     In case of conflict with `env`, the `env` variables take precedence.
     """
-    interpreter: list[str] = Field(default_factory=lambda: ["bash", "-c"])
+    interpreter: list[str] = ["bash", "-c"]
     """Interpreter to execute commands"""
-    timeout: int = 30
+    timeout: int = 100
     """Timeout for executing commands in the container."""
+    import_username: str | None = None
+    """Username that will be used if image needs to be imported."""
+    import_password: str | None = None
+    """Password that will be used if image needs to be imported."""
 
 
 class ExecutionResult(TypedDict):
@@ -67,20 +69,12 @@ class ContreeEnvironment(Environment):
             )
 
     def _pull_image(self) -> ContreeImageSync:
-        image_tag = self.config.image_tag or ContreeEnvironment.get_tag_by_image_url(self.config.image)
-        if image_tag:
-            try:
-                self.logger.info(f"Pulling image by tag: {image_tag}")
-                image = self.client.images.pull(image_tag)
-                self.logger.info(f"Pulled image by tag: {image_tag}")
-                return image
-            except NotFoundError:
-                self.logger.warning(
-                    f"Failed to pull image by tag: {image_tag}, starting to import from: {self.config.image}"
-                )
-
-        self.logger.info(f"Pulling image: {self.config.image}")
-        return self.client.images.pull(self.config.image, new_tag=image_tag)
+        return self.client.images.oci(
+            self.config.image,
+            tag=self.config.image_tag,
+            username=self.config.import_username,
+            password=self.config.import_password,
+        )
 
     def _shell_command(self, command: str) -> str:
         shell_cmd = " ".join(self.config.interpreter)
@@ -152,21 +146,3 @@ class ContreeEnvironment(Environment):
                 }
             }
         }
-
-    @staticmethod
-    def get_tag_by_image_url(url: str) -> str:
-        url_parsed = urlparse(url)
-        if url_parsed.netloc:
-            url = url_parsed.path
-
-        if ":" not in url:
-            url += ":latest"
-        parts = url.split("/", 1)
-        if len(parts) == 1:
-            return parts[0]
-        domain, url_path = parts
-        if "." in domain and ("docker" in domain or "io" in domain):
-            return url_path or domain
-        if domain:
-            return f"{domain}/{url_path}"
-        return url_path

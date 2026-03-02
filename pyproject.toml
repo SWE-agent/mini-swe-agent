@@ -53,7 +53,6 @@ full = [
     "swe-rex>=1.4.0",
     "mini-swe-agent[modal]",
     "mini-swe-agent[contree]",
-
 ]
 
 modal = [
@@ -79,7 +78,7 @@ dev = [
 ]
 
 contree = [
-    "contree-sdk>=0.1.0",
+    "contree-sdk>=0.2.0",
 ]
 
 [project.urls]
