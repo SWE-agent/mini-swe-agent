@@ -63,23 +63,28 @@ class SwerexModalEnvironment:
     def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the environment and return the raw output."""
         command = action.get("command", "") if isinstance(action, dict) else action
-        output = asyncio.run(
-            self.deployment.runtime.execute(
-                RexCommand(
-                    command=command,
-                    shell=True,
-                    check=False,
-                    cwd=cwd or self.config.cwd,
-                    timeout=timeout or self.config.timeout,
-                    merge_output_streams=True,
-                    env=self.config.env if self.config.env else None,
+        try:
+            result = asyncio.run(
+                self.deployment.runtime.execute(
+                    RexCommand(
+                        command=command,
+                        shell=True,
+                        check=False,
+                        cwd=cwd or self.config.cwd,
+                        timeout=timeout or self.config.timeout,
+                        merge_output_streams=True,
+                        env=self.config.env if self.config.env else None,
+                    )
                 )
             )
-        )
-        output = {
-            "output": output.stdout,
-            "returncode": output.exit_code,
-        }
+            output = {"output": result.stdout, "returncode": result.exit_code, "exception_info": ""}
+        except Exception as e:
+            output = {
+                "output": str(e) if str(e) else "",
+                "returncode": -1,
+                "exception_info": f"An error occurred while executing the command: {e}",
+                "extra": {"exception_type": type(e).__name__, "exception": str(e)},
+            }
         self._check_finished(output)
         return output
 
