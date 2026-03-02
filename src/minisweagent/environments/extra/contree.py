@@ -10,7 +10,7 @@ from contree_sdk import ContreeSync
 from contree_sdk.config import ContreeConfig
 from contree_sdk.sdk.exceptions import NotFoundError
 from contree_sdk.sdk.objects.image import ContreeImageSync
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from minisweagent import Environment
 from minisweagent.exceptions import Submitted
@@ -29,14 +29,14 @@ class ContreeEnvironmentConfig(BaseModel):
     """Working directory in which to execute commands."""
     cwd_auto_create: bool = True
     """Create cwd before running any commands."""
-    env: dict[str, str] = Field(default_factory=dict)
+    env: dict[str, str] = {}
     """Environment variables to set in the container."""
-    forward_env: list[str] = Field(default_factory=list)
+    forward_env: list[str] = []
     """Environment variables to forward to the container.
     Variables are only forwarded if they are set in the host environment.
     In case of conflict with `env`, the `env` variables take precedence.
     """
-    interpreter: list[str] = Field(default_factory=lambda: ["bash", "-c"])
+    interpreter: list[str] = ["bash", "-c"]
     """Interpreter to execute commands"""
     timeout: int = 30
     """Timeout for executing commands in the container."""
