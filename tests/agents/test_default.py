@@ -423,3 +423,13 @@ def test_empty_actions_handling(model_factory):
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "done\n"
     assert agent.n_calls == 2
+
+
+def test_hello_world_printed_before_task(model_factory, capsys):
+    """Test that 'hello world' is printed before each task starts."""
+    factory, config = model_factory
+    outputs = [("Done", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'ok'"}])]
+    for _ in range(2):
+        DefaultAgent(model=factory(outputs), env=LocalEnvironment(), **config).run("task")
+    captured = capsys.readouterr()
+    assert captured.out.count("hello world\n") == 2
