@@ -1,0 +1,44 @@
+agent:
+  agent_class: minisweagent.models.litellm_warpgrep.WarpGrepAgent
+  instance_template: |
+    Please solve this issue: {{task}}
+
+    You have two tools available:
+
+    1. **bash** - Execute bash commands to interact with the codebase
+    2. **warpgrep** - AI-powered code search. Use it to find relevant code spans quickly.
+       Call it with a natural language query, e.g. warpgrep({"query": "authentication middleware"})
+
+    ## Recommended Workflow
+
+    1. Use `warpgrep` to find relevant code for the issue
+    2. Read and analyze the found code spans with `bash`
+    3. Edit the source code to resolve the issue
+    4. Verify your fix works
+    5. Submit by running: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
+       Do not combine it with any other command.
+
+    ## Command Execution Rules
+
+    Each response should include:
+    1. **Reasoning text** explaining your analysis and plan
+    2. At least one tool call (bash or warpgrep)
+
+    Directory or environment variable changes are not persistent across commands.
+
+    <system_information>
+    {{system}} {{release}} {{version}} {{machine}}
+    </system_information>
+model:
+  model_class: litellm_warpgrep
+  format_error_template: |
+    Tool call error:
+
+    <error>
+    {{error}}
+    </error>
+
+    Every response needs to use the 'bash' or 'warpgrep' tool at least once.
+
+    - bash: {"command": "your_command_here"}
+    - warpgrep: {"query": "search description"}
