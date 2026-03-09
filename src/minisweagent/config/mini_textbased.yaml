@@ -22,7 +22,7 @@ agent:
 
     ## Recommended Workflow
 
-    This workflows should be done step-by-step so that you can iterate on your changes and any possible problems.
+    This workflow should be done step-by-step so that you can iterate on your changes and any possible problems.
 
     1. Analyze the codebase by finding and reading relevant files
     2. Create a script to reproduce the issue
