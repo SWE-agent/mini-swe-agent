@@ -83,8 +83,8 @@ contree = [
 
 [project.urls]
 Documentation = "https://mini-swe-agent.com/latest/"
-Repository = "https://github.com/SWE-agent/mini-SWE-agent"
-"Bug Tracker" = "https://github.com/SWE-agent/mini-SWE-agent/issues"
+Repository = "https://github.com/SWE-agent/mini-swe-agent"
+"Bug Tracker" = "https://github.com/SWE-agent/mini-swe-agent/issues"
 
 [project.scripts]
 mini = "minisweagent.run.mini:app"
