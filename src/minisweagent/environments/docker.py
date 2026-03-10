@@ -74,6 +74,8 @@ class DockerEnvironment:
     def _start_container(self):
         """Start the Docker container and return the container ID."""
         container_name = f"minisweagent-{uuid.uuid4().hex[:8]}"
+        if self.config.executable == "podman":
+            self.config.run_args = ["--userns=keep-id", "--security-opt", "label=disable"] + self.config.run_args
         cmd = [
             self.config.executable,
             "run",

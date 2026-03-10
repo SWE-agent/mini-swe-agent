@@ -119,7 +119,7 @@ MSWEA_INSPECTOR_STYLE_PATH="/path/to/your/inspector/style.tcss"
 # (default: "singularity")
 MSWEA_SINGULARITY_EXECUTABLE="singularity"
 
-# Path/name to the docker executable
+# Path/name to the container executable such as docker or podman
 # (default: "docker")
 MSWEA_DOCKER_EXECUTABLE="docker"
 
