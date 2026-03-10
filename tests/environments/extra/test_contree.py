@@ -7,22 +7,29 @@ from contree_sdk.config import ContreeConfig
 
 from minisweagent.environments.extra.contree import (
     ContreeEnvironment,
-    ContreeEnvironmentConfig,
 )
 from minisweagent.exceptions import Submitted
 
 
 def _make_env(**kwargs) -> ContreeEnvironment:
-    """Create a ContreeEnvironment with mocked __init__ (no ConTree infra)."""
-    with patch.object(ContreeEnvironment, "__init__", lambda self, **kw: None):
-        env = ContreeEnvironment()
-        env.config = ContreeEnvironmentConfig(
-            contree_config=ContreeConfig(base_url="http://fake", token="fake-token"),
+    """Create a ContreeEnvironment with mocked ConTree infra (no real API calls)."""
+    mock_session = MagicMock()
+    mock_session.run.return_value = mock_session
+
+    with (
+        patch("minisweagent.environments.extra.contree.ContreeSync"),
+        patch.object(ContreeEnvironment, "_pull_image") as mock_pull,
+    ):
+        mock_pull.return_value.session.return_value = mock_session
+        env = ContreeEnvironment(
+            contree_config={"base_url": "http://fake", "token": "fake-token"},
             image="python:3.11",
+            cwd_auto_create=False,
             **kwargs,
         )
-        env.session = MagicMock()
-        return env
+
+    env.session = mock_session
+    return env
 
 
 def _setup_session(env: ContreeEnvironment, stdout: str = "", stderr: str = "", exit_code: int = 0):
@@ -46,6 +53,7 @@ def test_execute_passes_correct_args_to_sdk():
     assert call_kwargs["timeout"] == 42
     assert call_kwargs["disposable"] is False
     assert call_kwargs["env"] is None
+    assert isinstance(env.config.contree_config, ContreeConfig)
     assert result["output"] == "hello\n"
     assert result["returncode"] == 0
     assert result["exception_info"] == ""
