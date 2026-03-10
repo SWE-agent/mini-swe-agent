@@ -5,6 +5,7 @@
 
 import concurrent.futures
 import json
+import os
 import random
 import re
 import threading
@@ -48,6 +49,10 @@ Examples:
 [bold green]-c swebench.yaml -c agent.max_iterations=50[/bold green]
 """
 
+DEFAULT_IMAGE_REGISTRY = os.environ.get("DEFAULT_IMAGE_REGISTRY", "docker.io")
+DEFAULT_IMAGE_REPOSITORY_PREFIX = os.environ.get("DEFAULT_IMAGE_REPOSITORY_PREFIX", "swebench/")
+DEFAULT_IMAGE_REPOSITORY_TAG = os.environ.get("DEFAULT_IMAGE_REPOSITORY_TAG", ":latest")
+
 DEFAULT_CONFIG_FILE = builtin_config_dir / "benchmarks" / "swebench.yaml"
 
 DATASET_MAPPING = {
@@ -86,7 +91,7 @@ def get_swebench_docker_image_name(instance: dict) -> str:
         # Docker doesn't allow double underscore, so we replace them with a magic token
         iid = instance["instance_id"]
         id_docker_compatible = iid.replace("__", "_1776_")
-        image_name = f"docker.io/swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
+        image_name = f"{DEFAULT_IMAGE_REGISTRY}/{DEFAULT_IMAGE_REPOSITORY_PREFIX}sweb.eval.x86_64.{id_docker_compatible}{DEFAULT_IMAGE_REPOSITORY_TAG}".lower()
     return image_name
 
 

@@ -127,6 +127,22 @@ MSWEA_DOCKER_EXECUTABLE="docker"
 # (default: "bwrap")
 MSWEA_BUBBLEWRAP_EXECUTABLE="bwrap"
 ```
+### Settings for container image
+
+```bash
+# Set the image registry. It accepts both docker.io and any user provided options such as quay.io
+# (default: "docker.io")
+DEFAULT_IMAGE_REGISTRY="docker.io"
+
+# Set the image repository.
+# (default: "swebench/")
+DEFAULT_IMAGE_REPOSITORY_PREFIX="swebench/"
+
+
+# Set the image tag.
+# (default: ":latest")
+DEFAULT_IMAGE_REPOSITORY_TAG=":latest"
+```
 
 ## Default run files
 
