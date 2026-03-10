@@ -1,9 +1,10 @@
 import logging
+import os
 import platform
 import shlex
-from dataclasses import asdict, is_dataclass, replace
+from dataclasses import asdict, is_dataclass
 from numbers import Number
-from typing import Any, TypedDict
+from typing import Any, NotRequired, TypedDict
 
 from contree_sdk import ContreeSync
 from contree_sdk.config import ContreeConfig
@@ -47,6 +48,8 @@ class ContreeEnvironmentConfig(BaseModel):
 class ExecutionResult(TypedDict):
     output: str
     returncode: int
+    exception_info: str
+    extra: NotRequired[dict[str, Any]]
 
 
 class ContreeEnvironment(Environment):
@@ -58,7 +61,7 @@ class ContreeEnvironment(Environment):
         self.logger = logging.getLogger("minisweagent.environment")
 
         if isinstance(self.config.contree_config, dict):
-            self.config = replace(self.config, contree_config=ContreeConfig(**self.config.contree_config))
+            self.config = self.config.model_copy(update={"contree_config": ContreeConfig(**self.config.contree_config)})
 
         self.client = ContreeSync(config=self.config.contree_config)
         self.session = self._pull_image().session()
@@ -80,23 +83,20 @@ class ContreeEnvironment(Environment):
         shell_cmd = " ".join(self.config.interpreter)
         return f"{shell_cmd} {shlex.quote(command)}"
 
-    def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
+    def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> ExecutionResult:
         """Execute a command in the environment and return the raw output."""
         command = action.get("command")
-        self.session.run(
-            shell=self._shell_command(command),
-            cwd=cwd or self.config.cwd,
-            timeout=timeout or self.config.timeout,
-            disposable=False,
-        ).wait()
 
-        cwd = cwd or self.config.cwd
+        env = {k: v for k in self.config.forward_env if (v := os.getenv(k)) is not None}
+        env.update(self.config.env)
+
         try:
             self.session.run(
                 shell=self._shell_command(command),
                 cwd=cwd or self.config.cwd,
                 timeout=timeout or self.config.timeout,
                 disposable=False,
+                env=env or None,
             ).wait()
             output = {
                 "output": self.session.stdout + self.session.stderr,
