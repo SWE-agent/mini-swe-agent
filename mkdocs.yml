@@ -94,6 +94,8 @@ nav:
       - "LitellmResponseModel": "reference/models/litellm_response_toolcall.md"
       - "OpenRouterModel": "reference/models/openrouter.md"
       - "RequestyModel": "reference/models/requesty.md"
+      - "PortkeyModel": "reference/models/portkey.md"
+      - "PortkeyResponse": "reference/models/portkey_response.md"
       - "DeterministicModel": "reference/models/test_models.md"
       - "Extra Models": "reference/models/extra.md"
       - "Model Utilities": "reference/models/utils.md"
@@ -103,6 +105,8 @@ nav:
       - "SingularityEnvironment": "reference/environments/singularity.md"
       - "SwerexDockerEnvironment": "reference/environments/swerex_docker.md"
       - "BubblewrapEnvironment": "reference/environments/bubblewrap.md"
+      - "ContreeEnvironment": "reference/environments/contree.md"
+      - "SwerexModalEnvironment": "reference/environments/swerex_modal.md"
     - Run Scripts:
       - "Hello World": "reference/run/hello_world.md"
       - "mini": "reference/run/mini.md"
