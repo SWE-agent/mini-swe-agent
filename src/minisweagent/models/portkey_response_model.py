@@ -52,7 +52,12 @@ class PortkeyResponseAPIModel:
     def __init__(self, **kwargs):
         self.config = PortkeyResponseAPIModelConfig(**kwargs)
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
-            litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
+            try:
+                litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
+            except (OSError, json.JSONDecodeError) as e:
+                raise ValueError(
+                    f"Failed to load litellm model registry from {self.config.litellm_model_registry}: {e}"
+                ) from e
 
         self._api_key = os.getenv("PORTKEY_API_KEY")
         if not self._api_key:

@@ -309,6 +309,48 @@ def test_remove_from_preds_file_no_file(tmp_path):
     assert not output_path.exists()
 
 
+def test_update_preds_file_corrupted_json(tmp_path, caplog):
+    """Test update_preds_file with corrupted JSON file"""
+    import logging
+
+    output_path = tmp_path / "preds.json"
+
+    # Create corrupted JSON file
+    output_path.write_text("{invalid json content")
+
+    # Should log warning and create new file
+    with caplog.at_level(logging.WARNING):
+        update_preds_file(output_path, "test__instance", "test_model", "test_result")
+
+    # Should have warning about corrupted file
+    assert "Corrupted preds.json" in caplog.text
+
+    # File should now have valid content
+    result = json.loads(output_path.read_text())
+    assert "test__instance" in result
+
+
+def test_remove_from_preds_file_corrupted_json(tmp_path, caplog):
+    """Test remove_from_preds_file with corrupted JSON file"""
+    import logging
+
+    output_path = tmp_path / "preds.json"
+
+    # Create corrupted JSON file
+    output_path.write_text("{invalid json content")
+
+    # Should log warning and return gracefully
+    with caplog.at_level(logging.WARNING):
+        remove_from_preds_file(output_path, "any_instance")
+
+    # Should have warning about corrupted file
+    assert "Corrupted preds.json" in caplog.text
+
+    # File should still be corrupted (we couldn't fix it)
+    # Check that file still contains the corrupted content (write_text adds a newline)
+    assert output_path.read_text().startswith("{invalid json content")
+
+
 @pytest.mark.slow
 def test_redo_existing_false_skips_existing(github_test_data, tmp_path):
     """Test that redo_existing=False skips instances that already have results"""
