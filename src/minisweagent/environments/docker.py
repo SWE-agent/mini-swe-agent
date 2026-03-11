@@ -153,8 +153,23 @@ class DockerEnvironment:
     def cleanup(self):
         """Stop and remove the Docker container."""
         if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set
-            cmd = f"(timeout 60 {self.config.executable} stop {self.container_id} || {self.config.executable} rm -f {self.container_id}) >/dev/null 2>&1 &"
-            subprocess.Popen(cmd, shell=True)
+            # Try to stop the container gracefully, then remove it
+            # Use subprocess list to avoid shell injection
+            stop_cmd = ["timeout", "60", self.config.executable, "stop", self.container_id]
+            rm_cmd = [self.config.executable, "rm", "-f", self.container_id]
+
+            # Run stop command in background, ignore output
+            subprocess.Popen(
+                stop_cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            # If stop fails/times out, rm -f will clean up anyway
+            subprocess.Popen(
+                rm_cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
 
     def __del__(self):
         """Cleanup container when object is destroyed."""
