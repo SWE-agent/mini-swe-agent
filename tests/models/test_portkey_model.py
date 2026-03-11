@@ -208,6 +208,11 @@ def test_portkey_model_total_tokens_none():
     mock_tool_call.function.arguments = json.dumps({"command": "echo test"})
     mock_message.tool_calls = [mock_tool_call]
     mock_message.content = None
+    mock_message.model_dump.return_value = {
+        "role": "assistant",
+        "content": None,
+        "tool_calls": [{"id": "call_999", "function": {"name": "bash", "arguments": '{"command": "echo test"}'}}],
+    }
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
     mock_response.model_dump.return_value = {"test": "response"}
