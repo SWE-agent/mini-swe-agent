@@ -191,3 +191,47 @@ def test_portkey_model_cost_validation_error():
 
                 assert "Error calculating cost" in str(exc_info.value)
                 assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)
+
+
+def test_portkey_model_total_tokens_none():
+    """Test that None total_tokens is handled gracefully in cost calculation."""
+    mock_portkey_class = MagicMock()
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+    mock_choice = MagicMock()
+    mock_message = MagicMock()
+    mock_usage = MagicMock()
+    mock_tool_call = MagicMock()
+
+    mock_tool_call.id = "call_999"
+    mock_tool_call.function.name = "bash"
+    mock_tool_call.function.arguments = json.dumps({"command": "echo test"})
+    mock_message.tool_calls = [mock_tool_call]
+    mock_message.content = None
+    mock_choice.message = mock_message
+    mock_response.choices = [mock_choice]
+    mock_response.model_dump.return_value = {"test": "response"}
+    mock_response.model_copy.return_value = mock_response
+    mock_response.usage = mock_usage
+    mock_usage.prompt_tokens = 10
+    mock_usage.completion_tokens = 20
+    # Simulate the bug: total_tokens is None
+    mock_usage.total_tokens = None
+
+    mock_client.chat.completions.create.return_value = mock_response
+    mock_portkey_class.return_value = mock_client
+
+    with patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class):
+        with patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}):
+            with patch("minisweagent.models.portkey_model.litellm.cost_calculator.completion_cost") as mock_cost:
+                mock_cost.return_value = 0.01
+
+                model = PortkeyModel(model_name="gpt-4o")
+                messages = [{"role": "user", "content": "test"}]
+
+                # This should not raise a TypeError
+                result = model.query(messages)
+
+                # Verify the result is still correct
+                assert result["extra"]["actions"] == [{"command": "echo test", "tool_call_id": "call_999"}]
+                assert result["extra"]["cost"] == 0.01
