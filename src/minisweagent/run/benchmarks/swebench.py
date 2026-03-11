@@ -113,7 +113,11 @@ def update_preds_file(output_path: Path, instance_id: str, model_name: str, resu
     with _OUTPUT_FILE_LOCK:
         output_data = {}
         if output_path.exists():
-            output_data = json.loads(output_path.read_text())
+            try:
+                output_data = json.loads(output_path.read_text())
+            except json.JSONDecodeError:
+                logger.warning(f"Corrupted preds.json at {output_path}, starting with empty dict")
+                output_data = {}
         output_data[instance_id] = {
             "model_name_or_path": model_name,
             "instance_id": instance_id,
@@ -127,7 +131,11 @@ def remove_from_preds_file(output_path: Path, instance_id: str):
     if not output_path.exists():
         return
     with _OUTPUT_FILE_LOCK:
-        output_data = json.loads(output_path.read_text())
+        try:
+            output_data = json.loads(output_path.read_text())
+        except json.JSONDecodeError:
+            logger.warning(f"Corrupted preds.json at {output_path}, cannot remove instance")
+            return
         if instance_id in output_data:
             del output_data[instance_id]
             output_path.write_text(json.dumps(output_data, indent=2))
@@ -241,9 +249,12 @@ def main(
 
     instances = filter_instances(instances, filter_spec=filter_spec, slice_spec=slice_spec, shuffle=shuffle)
     if not redo_existing and (output_path / "preds.json").exists():
-        existing_instances = list(json.loads((output_path / "preds.json").read_text()).keys())
-        logger.info(f"Skipping {len(existing_instances)} existing instances")
-        instances = [instance for instance in instances if instance["instance_id"] not in existing_instances]
+        try:
+            existing_instances = list(json.loads((output_path / "preds.json").read_text()).keys())
+            logger.info(f"Skipping {len(existing_instances)} existing instances")
+            instances = [instance for instance in instances if instance["instance_id"] not in existing_instances]
+        except json.JSONDecodeError:
+            logger.warning(f"Corrupted preds.json at {output_path / 'preds.json'}, running on all instances")
     logger.info(f"Running on {len(instances)} instances...")
 
     logger.info(f"Building agent config from specs: {config_spec}")
