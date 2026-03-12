@@ -171,6 +171,7 @@ class PortkeyModel:
             logger.warning(
                 f"Total tokens are None for model {self.config.model_name}. Setting to sum of prompt and completion tokens. Full response: {response_for_cost_calc.model_dump()}"
             )
+
             # Defense: prompt_tokens and completion_tokens are guaranteed to be non-None here
             # because they were set to 0 above if they were None. But we use get_token() to
             # be extra safe in case of unexpected API responses.
