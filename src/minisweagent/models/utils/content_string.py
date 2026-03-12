@@ -31,10 +31,13 @@ def _format_observation(content: str) -> str | None:
 
 def get_content_string(message: dict) -> str:
     """Extract text content from any message format for display.
+    Should support both OpenAI and Anthropic message formats.
 
     Handles:
     - Traditional chat: {"content": "text"}
     - Multimodal chat: {"content": [{"type": "text", "text": "..."}]}
+    - Anthropic tool use: {"content": [{"type": "tool_use", "input": {...}}]}
+    - Anthropic tool result: {"content": [{"type": "tool_result", "content": "..."}]}
     - Observation messages: {"content": "{\"returncode\": 0, \"output\": \"...\"}"}
     - Traditional tool calls: {"tool_calls": [{"function": {"name": "...", "arguments": "..."}}]}
     - Responses API: {"output": [{"type": "message", "content": [...]}]}
@@ -46,7 +49,17 @@ def get_content_string(message: dict) -> str:
     if isinstance(content, str):
         texts.append(_format_observation(content))
     elif isinstance(content, list):
-        texts.append("\n".join(item.get("text", "") for item in content if isinstance(item, dict)))
+        for item in content:
+            if not isinstance(item, dict):
+                continue
+            if item.get("type") == "tool_use":
+                texts.append(_format_tool_call(json.dumps(item.get("input", {}))))
+            elif item.get("type") == "tool_result":
+                rc = item.get("content", "")
+                if isinstance(rc, str):
+                    texts.append(_format_observation(rc))
+            elif text := item.get("text"):
+                texts.append(text)
 
     # Handle traditional tool_calls format (OpenAI/LiteLLM style)
     if tool_calls := message.get("tool_calls"):
