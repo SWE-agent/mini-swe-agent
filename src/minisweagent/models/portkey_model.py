@@ -171,7 +171,13 @@ class PortkeyModel:
             logger.warning(
                 f"Total tokens are None for model {self.config.model_name}. Setting to sum of prompt and completion tokens. Full response: {response_for_cost_calc.model_dump()}"
             )
-            total_tokens = prompt_tokens + completion_tokens
+            # Defense: prompt_tokens and completion_tokens are guaranteed to be non-None here
+            # because they were set to 0 above if they were None. But we use get_token() to
+            # be extra safe in case of unexpected API responses.
+            def get_token(val):
+                return val if val is not None else 0
+
+            total_tokens = get_token(prompt_tokens) + get_token(completion_tokens)
         if total_tokens - prompt_tokens - completion_tokens != 0:
             # This is most likely related to how portkey treats cached tokens: It doesn't count them towards the prompt tokens (?)
             logger.warning(
