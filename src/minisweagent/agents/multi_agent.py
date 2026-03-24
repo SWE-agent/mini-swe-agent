@@ -117,14 +117,8 @@ class MultiAgentOrchestrator:
         return self.save(submission=submission, exit_status=exit_status)
 
     def serialize(self, submission: str = "", exit_status: str = "") -> dict:
-        total_cost = sum(
-            a.get("info", {}).get("model_stats", {}).get("instance_cost", 0.0)
-            for a in self._agent_data
-        )
-        total_calls = sum(
-            a.get("info", {}).get("model_stats", {}).get("api_calls", 0)
-            for a in self._agent_data
-        )
+        total_cost = sum(a.get("info", {}).get("model_stats", {}).get("instance_cost", 0.0) for a in self._agent_data)
+        total_calls = sum(a.get("info", {}).get("model_stats", {}).get("api_calls", 0) for a in self._agent_data)
         n_reviewer_iterations = sum(1 for a in self._agent_data if a.get("role") == "reviewer")
         messages = [message for agent in self._agent_data for message in agent.get("messages", [])]
         return {
