@@ -102,7 +102,7 @@ class E2BTemplateManager:
         from e2b import Template
 
         template_name = self._image_to_template_name(docker_image)
-        if not Template.exists(template_name, api_key=self.config.api_key):
+        if not Template.exists(template_name, api_key=self.config.api_key) or self.config.skip_cache:
             self.logger.info(
                 "E2B template %s not found. Starting build (up to %d seconds)...",
                 template_name,
