@@ -52,11 +52,9 @@ class E2BEnvironmentConfig(BaseModel):
     build_timeout: int = 1800
     """Timeout for template builds in seconds (default 30 min to handle large images)."""
 
-    # E2B authentication (can also be set via E2B_API_KEY / E2B_ACCESS_TOKEN env vars)
+    # E2B authentication (can also be set via the E2B_API_KEY env var)
     api_key: str | None = None
     """E2B API key. Falls back to the E2B_API_KEY environment variable."""
-    access_token: str | None = None
-    """E2B access token. Falls back to the E2B_ACCESS_TOKEN environment variable."""
 
     # Private registry credentials (passed to Template().from_image())
     registry_username: str | None = None
@@ -140,7 +138,6 @@ class E2BTemplateManager:
                 skip_cache=self.config.skip_cache,
                 tags=self.config.tags or None,
                 api_key=self.config.api_key,
-                access_token=self.config.access_token,
             )
 
         executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
@@ -183,7 +180,6 @@ class E2BEnvironment:
             template=template_name,
             timeout=self.config.sandbox_timeout,
             api_key=self.config.api_key,
-            access_token=self.config.access_token,
         )
         self.logger.info("E2B sandbox ready (id: %s)", self.sandbox.sandbox_id)
         _active_sandboxes.add(self)
@@ -239,7 +235,7 @@ class E2BEnvironment:
                 "config": {
                     "environment": self.config.model_dump(
                         mode="json",
-                        exclude={"api_key", "access_token", "registry_password"},
+                        exclude={"api_key", "registry_password"},
                     ),
                     "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
                 }

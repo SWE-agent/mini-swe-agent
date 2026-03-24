@@ -52,7 +52,6 @@ class TestE2BEnvironmentConfig:
         assert cfg.tags == []
         assert cfg.build_timeout == 1800
         assert cfg.api_key is None
-        assert cfg.access_token is None
         assert cfg.registry_username is None
         assert cfg.registry_password is None
 
@@ -187,14 +186,12 @@ class TestE2BEnvironmentSerialize:
     def test_serialize_excludes_credentials(self):
         env = _make_env()
         env.config.api_key = "secret-key"
-        env.config.access_token = "secret-token"
         env.config.registry_password = "secret-pass"
 
         result = env.serialize()
         env_cfg = result["info"]["config"]["environment"]
 
         assert "api_key" not in env_cfg
-        assert "access_token" not in env_cfg
         assert "registry_password" not in env_cfg
 
 
