@@ -2,11 +2,25 @@
 
 from __future__ import annotations
 
+import atexit
 import concurrent.futures
 import hashlib
 import logging
 import re
 from typing import Any
+
+# Module-level registry of live sandboxes for best-effort cleanup on exit
+# (covers Ctrl+C and unhandled exceptions where __del__ may not be called).
+_active_sandboxes: set[E2BEnvironment] = set()
+
+
+def _cleanup_all_sandboxes() -> None:
+    """Kill all sandboxes that are still alive at interpreter shutdown."""
+    for env in list(_active_sandboxes):
+        env.stop()
+
+
+atexit.register(_cleanup_all_sandboxes)
 
 from pydantic import BaseModel, Field
 
@@ -172,6 +186,7 @@ class E2BEnvironment:
             access_token=self.config.access_token,
         )
         self.logger.info("E2B sandbox ready (id: %s)", self.sandbox.sandbox_id)
+        _active_sandboxes.add(self)
 
     def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the sandbox and return the output."""
@@ -232,6 +247,7 @@ class E2BEnvironment:
         }
 
     def stop(self) -> None:
+        _active_sandboxes.discard(self)
         sandbox = getattr(self, "sandbox", None)
         if sandbox is not None:
             try:

@@ -219,3 +219,34 @@ class TestE2BEnvironmentStop:
         env = _make_env()
         env.sandbox.kill.side_effect = RuntimeError("already dead")
         env.stop()  # should not raise
+
+
+# ---------------------------------------------------------------------------
+# atexit cleanup registry
+# ---------------------------------------------------------------------------
+
+
+class TestAtexitCleanup:
+    def test_stop_removes_from_active_sandboxes(self):
+        from minisweagent.environments.extra import e2b as e2b_mod
+
+        env = _make_env()
+        e2b_mod._active_sandboxes.add(env)
+        assert env in e2b_mod._active_sandboxes
+
+        env.stop()
+        assert env not in e2b_mod._active_sandboxes
+
+    def test_cleanup_all_sandboxes_kills_all(self):
+        from minisweagent.environments.extra import e2b as e2b_mod
+
+        env1 = _make_env()
+        env2 = _make_env()
+        e2b_mod._active_sandboxes.update([env1, env2])
+
+        e2b_mod._cleanup_all_sandboxes()
+
+        env1.sandbox.kill.assert_called_once()
+        env2.sandbox.kill.assert_called_once()
+        assert env1 not in e2b_mod._active_sandboxes
+        assert env2 not in e2b_mod._active_sandboxes
