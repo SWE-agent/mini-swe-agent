@@ -190,6 +190,7 @@ class E2BEnvironment:
         try:
             result = self.sandbox.commands.run(
                 command,
+                user="root",
                 cwd=cwd or self.config.cwd,
                 timeout=timeout or self.config.timeout,
                 envs=self.config.env or None,
