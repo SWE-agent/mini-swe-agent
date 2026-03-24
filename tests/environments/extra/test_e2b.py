@@ -1,6 +1,5 @@
 """Tests for the E2B cloud sandbox environment."""
 
-import sys
 from types import ModuleType
 from unittest.mock import MagicMock, patch
 
@@ -12,7 +11,6 @@ from minisweagent.environments.extra.e2b import (
     E2BTemplateManager,
 )
 from minisweagent.exceptions import Submitted
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -100,7 +98,6 @@ class TestImageToTemplateName:
 
 
 import re  # noqa: E402 (needed after class definitions above for clarity)
-
 
 # ---------------------------------------------------------------------------
 # E2BEnvironment.execute
