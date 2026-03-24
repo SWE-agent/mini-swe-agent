@@ -32,6 +32,8 @@ class SingularityEnvironmentConfig(BaseModel):
     """Global arguments passed before the subcommand (e.g., --quiet, --debug)."""
     exec_args: list[str] = ["--contain", "--cleanenv", "--fakeroot"]
     """Arguments passed to `singularity exec`."""
+    submission_signals: dict[str, str] = {"COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT": "Submitted"}
+    """Maps submission signal strings to their exit_status values."""
 
 
 class SingularityEnvironment:
@@ -121,13 +123,17 @@ class SingularityEnvironment:
     def _check_finished(self, output: dict):
         """Raises Submitted if the output indicates task completion."""
         lines = output.get("output", "").lstrip().splitlines(keepends=True)
-        if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" and output["returncode"] == 0:
+        if not lines or output["returncode"] != 0:
+            return
+        signal = lines[0].strip()
+        if signal in self.config.submission_signals:
             submission = "".join(lines[1:])
+            exit_status = self.config.submission_signals[signal]
             raise Submitted(
                 {
                     "role": "exit",
                     "content": submission,
-                    "extra": {"exit_status": "Submitted", "submission": submission},
+                    "extra": {"exit_status": exit_status, "submission": submission},
                 }
             )
 

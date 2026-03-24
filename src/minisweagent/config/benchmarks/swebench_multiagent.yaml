@@ -1,0 +1,275 @@
+orchestrator:
+  max_review_iterations: 1
+
+# Shared Docker environment used by both agents.
+# submission_signals covers all exit signals across both roles.
+environment:
+  environment_class: docker
+  cwd: "/testbed"
+  timeout: 60
+  interpreter: ["bash", "-c"]
+  env:
+    PAGER: cat
+    MANPAGER: cat
+    LESS: -R
+    PIP_PROGRESS_BAR: "off"
+    TQDM_DISABLE: "1"
+  submission_signals:
+    COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT: Submitted
+    REVIEWER_APPROVED: ReviewerApproved
+    REVIEWER_COMPLETE: ReviewerComplete
+
+# ── Main agent ────────────────────────────────────────────────────────────────
+
+main_model:
+  model_name: "anthropic/claude-sonnet-4-5-20250929"
+  model_kwargs:
+    drop_params: true
+    temperature: 0.0
+    parallel_tool_calls: true
+
+main_agent:
+  agent_class: default
+  system_template: |
+    You are a helpful assistant that can interact with a computer shell to solve programming tasks.
+  instance_template: |
+    <pr_description>
+    Consider the following PR description:
+    {{task}}
+    </pr_description>
+
+    <instructions>
+    # Task Instructions
+
+    ## Overview
+
+    You're a software engineer interacting continuously with a computer by submitting commands.
+    Your task is to make changes to non-test files in /testbed to fix the issue described above
+    in a way that is general and consistent with the codebase.
+
+    ## Important Boundaries
+
+    - MODIFY: Regular source code files in /testbed
+    - DO NOT MODIFY: Tests, configuration files (pyproject.toml, setup.cfg, etc.)
+
+    ## Recommended Workflow
+
+    1. Analyze the codebase by finding and reading relevant files
+    2. Create a script to reproduce the issue
+    3. Edit the source code to resolve the issue
+    4. Verify your fix works by running your script again
+    5. Test edge cases to ensure your fix is robust
+
+    ## Command Execution Rules
+
+    - Issue at least one command per response
+    - Each command runs in a new subshell; directory/env changes are not persistent
+    - Prefix commands with `MY_ENV_VAR=value cd /path && ...` when needed
+    - Always use non-interactive flags (-y, -f)
+    - Avoid interactive tools (vi, nano, etc.)
+
+    ## Shared Context
+
+    Before submitting, append any factual discoveries about the codebase to
+    /testbed/__CLAUDE.md__ (file locations, test commands, observed behaviors).
+    Do NOT include your fix reasoning or solution approach.
+
+    Example:
+    ```bash
+    cat >> /testbed/__CLAUDE.md__ << 'EOF'
+    ## Codebase Facts
+    - Relevant source: /testbed/src/foo/bar.py
+    - Tests: pytest tests/test_bar.py
+    - Reproducer: python /testbed/reproduce.py
+    EOF
+    ```
+
+    ## Submission
+
+    When done, submit your changes as a git patch. Follow these steps with SEPARATE commands:
+
+    Step 1: Create the patch (source files only — no tests, scripts, or configs):
+    ```bash
+    git diff -- path/to/file1 path/to/file2 > /testbed/patch.txt
+    ```
+
+    Step 2: Verify the patch has `--- a/` and `+++ b/` headers:
+    ```bash
+    cat /testbed/patch.txt
+    ```
+
+    Step 3: Append factual context to __CLAUDE.md__, then submit:
+    ```bash
+    echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && cat /testbed/patch.txt
+    ```
+
+    <CRITICAL>
+    - patch.txt must contain ONLY changes to source files you modified to fix the issue.
+    - The submit command must be run ALONE (not combined with other commands via &&).
+    - You CANNOT continue working after submitting.
+    </CRITICAL>
+
+    <system_information>
+    {{system}} {{release}} {{version}} {{machine}}
+    </system_information>
+    </instructions>
+  step_limit: 250
+  cost_limit: 3.0
+
+# ── Reviewer agent ────────────────────────────────────────────────────────────
+
+reviewer_model:
+  model_name: "anthropic/claude-sonnet-4-5-20250929"
+  model_kwargs:
+    drop_params: true
+    temperature: 0.0
+    parallel_tool_calls: true
+
+reviewer_agent:
+  agent_class: reviewer
+  system_template: |
+    You are an independent code reviewer. A previous agent has attempted a fix for a software
+    engineering task. You have no access to their reasoning — approach this entirely fresh.
+
+    Your role is to verify correctness and fix any issues you find.
+  instance_template: |
+    <pr_description>
+    Consider the following PR description:
+    {{task}}
+    </pr_description>
+
+    <instructions>
+    # Reviewer Instructions
+
+    A previous agent has already attempted a fix. You do NOT have access to their reasoning.
+    Your job is to independently verify whether the fix is correct and complete.
+
+    ## Step 1 — Orient yourself
+
+    Read shared context and discover what changed:
+    ```bash
+    cat /testbed/__CLAUDE.md__ 2>/dev/null || echo "(no context yet)"
+    git -C /testbed log --oneline -5
+    git -C /testbed diff HEAD
+    ```
+
+    ## Step 2 — Verify independently
+
+    - Read the changed source files carefully
+    - Write NEW scripts or tests to probe edge cases (do NOT modify existing tests)
+    - Run the existing test suite
+    - Reason about correctness from first principles, not from the previous agent's approach
+
+    ## Step 3 — Fix if needed
+
+    If you find issues, fix them. You may revert the previous agent's changes entirely
+    and start over if the approach is fundamentally wrong:
+    ```bash
+    git -C /testbed checkout -- path/to/file  # revert a specific file
+    git -C /testbed checkout -- .             # revert everything
+    ```
+
+    ## Important Boundaries
+
+    - MODIFY: Regular source code files in /testbed
+    - DO NOT MODIFY: Tests, configuration files (pyproject.toml, setup.cfg, etc.)
+
+    ## Command Execution Rules
+
+    - Issue at least one command per response
+    - Each command runs in a new subshell; directory/env changes are not persistent
+    - Prefix commands with `MY_ENV_VAR=value cd /path && ...` when needed
+    - Always use non-interactive flags (-y, -f)
+
+    ## Shared Context
+
+    Before submitting, append your factual discoveries to /testbed/__CLAUDE.md__:
+    ```bash
+    cat >> /testbed/__CLAUDE.md__ << 'EOF'
+    ## Reviewer Findings
+    - (factual observations only, no fix reasoning)
+    EOF
+    ```
+
+    ## Submission
+
+    Produce a patch covering ALL source changes in the repo (both prior agent's and yours),
+    source files only. Follow these steps with SEPARATE commands:
+
+    Step 1: Create the patch:
+    ```bash
+    git -C /testbed diff -- path/to/file1 path/to/file2 > /testbed/patch.txt
+    ```
+
+    Step 2: Verify the patch:
+    ```bash
+    cat /testbed/patch.txt
+    ```
+
+    Step 3: Append factual context to __CLAUDE.md__, then submit ONE of:
+
+    If the solution is correct (no changes needed):
+    ```bash
+    echo REVIEWER_APPROVED && cat /testbed/patch.txt
+    ```
+
+    If you made fixes:
+    ```bash
+    echo REVIEWER_COMPLETE && cat /testbed/patch.txt
+    ```
+
+    <CRITICAL>
+    - patch.txt must contain ONLY changes to source files (no tests, scripts, configs).
+    - The submit command must be run ALONE.
+    - You CANNOT continue working after submitting.
+    </CRITICAL>
+
+    <system_information>
+    {{system}} {{release}} {{version}} {{machine}}
+    </system_information>
+    </instructions>
+  step_limit: 150
+  cost_limit: 2.0
+
+# Shared model observation/format templates (same as swebench.yaml)
+model:
+  observation_template: |
+    {% if output.exception_info -%}
+    <exception>{{output.exception_info}}</exception>
+    {% endif -%}
+    <returncode>{{output.returncode}}</returncode>
+    {% if output.output | length < 10000 -%}
+    <output>
+    {{ output.output -}}
+    </output>
+    {%- else -%}
+    <warning>
+    The output of your last command was too long.
+    Please try a different command that produces less output.
+    </warning>
+    {%- set elided_chars = output.output | length - 10000 -%}
+    <output_head>
+    {{ output.output[:5000] }}
+    </output_head>
+    <elided_chars>
+    {{ elided_chars }} characters elided
+    </elided_chars>
+    <output_tail>
+    {{ output.output[-5000:] }}
+    </output_tail>
+    {%- endif -%}
+  format_error_template: |
+    Tool call error:
+
+    <error>
+    {{error}}
+    </error>
+
+    Every response needs to use the 'bash' tool at least once.
+    Call the bash tool with your command as the argument:
+    - Tool: bash
+    - Arguments: {"command": "your_command_here"}
+
+    Consult the first message for submission instructions.
+  model_kwargs:
+    drop_params: true

@@ -160,6 +160,8 @@ class TrajectoryInspector(App):
                 self.messages = data
             elif isinstance(data, dict) and "messages" in data:
                 self.messages = data["messages"]
+            elif isinstance(data, dict) and "agents" in data:
+                self.messages = [message for agent in data["agents"] for message in agent.get("messages", [])]
             else:
                 raise ValueError("Unrecognized trajectory format")
 

@@ -91,6 +91,7 @@ mini = "minisweagent.run.mini:app"
 mini-swe-agent = "minisweagent.run.mini:app"
 mini-extra = "minisweagent.run.utilities.mini_extra:main"
 mini-e= "minisweagent.run.utilities.mini_extra:main"
+mini-multiagent = "minisweagent.run.benchmarks.swebench_multiagent:app"
 
 [tool.setuptools]
 include-package-data = true
