@@ -1,0 +1,67 @@
+{
+    "total_instances": 23,
+    "submitted_instances": 10,
+    "completed_instances": 10,
+    "pending_instances": 0,
+    "failed_instances": 0,
+    "resolved_instances": 8,
+    "unresolved_instances": 2,
+    "error_instances": 0,
+    "completed_ids": [
+        "marshmallow-code__marshmallow-1343",
+        "marshmallow-code__marshmallow-1359",
+        "pvlib__pvlib-python-1072",
+        "pvlib__pvlib-python-1606",
+        "pvlib__pvlib-python-1707",
+        "sqlfluff__sqlfluff-1517",
+        "sqlfluff__sqlfluff-1625",
+        "sqlfluff__sqlfluff-1733",
+        "sqlfluff__sqlfluff-1763",
+        "sqlfluff__sqlfluff-2419"
+    ],
+    "incomplete_ids": [
+        "pvlib__pvlib-python-1154",
+        "pvlib__pvlib-python-1854",
+        "pydicom__pydicom-1139",
+        "pydicom__pydicom-1256",
+        "pydicom__pydicom-1413",
+        "pydicom__pydicom-1694",
+        "pydicom__pydicom-901",
+        "pylint-dev__astroid-1196",
+        "pylint-dev__astroid-1268",
+        "pylint-dev__astroid-1333",
+        "pylint-dev__astroid-1866",
+        "pylint-dev__astroid-1978",
+        "pyvista__pyvista-4315"
+    ],
+    "submitted_ids": [
+        "marshmallow-code__marshmallow-1343",
+        "marshmallow-code__marshmallow-1359",
+        "pvlib__pvlib-python-1072",
+        "pvlib__pvlib-python-1606",
+        "pvlib__pvlib-python-1707",
+        "sqlfluff__sqlfluff-1517",
+        "sqlfluff__sqlfluff-1625",
+        "sqlfluff__sqlfluff-1733",
+        "sqlfluff__sqlfluff-1763",
+        "sqlfluff__sqlfluff-2419"
+    ],
+    "error_ids": [],
+    "schema_version": 2,
+    "resolved_ids": [
+        "marshmallow-code__marshmallow-1343",
+        "pvlib__pvlib-python-1072",
+        "pvlib__pvlib-python-1606",
+        "pvlib__pvlib-python-1707",
+        "sqlfluff__sqlfluff-1625",
+        "sqlfluff__sqlfluff-1733",
+        "sqlfluff__sqlfluff-1763",
+        "sqlfluff__sqlfluff-2419"
+    ],
+    "unresolved_ids": [
+        "marshmallow-code__marshmallow-1359",
+        "sqlfluff__sqlfluff-1517"
+    ],
+    "pending_ids": [],
+    "failed_ids": []
+}
