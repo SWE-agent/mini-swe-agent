@@ -35,7 +35,7 @@ dependencies = [
     "requests",
     "jinja2",
     "pydantic >= 2.0",  # v2 required for safe mutable default arguments
-    "litellm >= 1.75.5",  # want to have gpt-5 support
+    "litellm >= 1.75.5, <= 1.82.6", # Litellm 182.8 is compromised
     "tenacity",
     "rich",
     "python-dotenv",
