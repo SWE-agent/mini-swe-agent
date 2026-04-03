@@ -62,6 +62,64 @@ class TestLitellmModel:
         with pytest.raises(FormatError):
             model.query([{"role": "user", "content": "test"}])
 
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    def test_query_merges_tool_calls_across_multiple_choices(self, mock_cost, mock_completion):
+        text_choice = MagicMock()
+        text_choice.message.model_dump.return_value = {
+            "role": "assistant",
+            "content": "Let me start by analyzing the codebase to find the relevant files.",
+            "tool_calls": None,
+        }
+
+        tool_choice = MagicMock()
+        tool_choice.message.model_dump.return_value = {
+            "role": "assistant",
+            "content": None,
+            "tool_calls": [
+                {
+                    "id": "call_multi",
+                    "function": {"name": "bash", "arguments": '{"command":"find . -name \\"TargetFile.java\\""}'},
+                }
+            ],
+        }
+
+        mock_response = MagicMock()
+        mock_response.choices = [text_choice, tool_choice]
+        mock_response.model_dump.return_value = {}
+        mock_completion.return_value = mock_response
+        mock_cost.return_value = 0.001
+
+        model = LitellmModel(model_name="github_copilot/claude-sonnet-4.6")
+        result = model.query([{"role": "user", "content": "test"}])
+
+        assert result["content"] == "Let me start by analyzing the codebase to find the relevant files."
+        assert result["extra"]["actions"] == [{"command": 'find . -name "TargetFile.java"', "tool_call_id": "call_multi"}]
+
+    def test_parse_actions_accepts_dict_tool_calls(self):
+        model = LitellmModel(model_name="github_copilot/claude-sonnet-4.6")
+        response = MagicMock()
+        response.choices = [
+            MagicMock(
+                message=MagicMock(
+                    model_dump=MagicMock(
+                        return_value={
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {
+                                    "id": "call_dict",
+                                    "function": {"name": "bash", "arguments": '{"command":"pwd"}'},
+                                }
+                            ],
+                        }
+                    )
+                )
+            )
+        ]
+
+        assert model._parse_actions(response) == [{"command": "pwd", "tool_call_id": "call_dict"}]
+
     def test_format_observation_messages(self):
         model = LitellmModel(model_name="gpt-4", observation_template="{{ output.output }}")
         message = {"extra": {"actions": [{"command": "echo test", "tool_call_id": "call_1"}]}}

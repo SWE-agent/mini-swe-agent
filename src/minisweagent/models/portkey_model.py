@@ -12,6 +12,7 @@ from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
     format_toolcall_observation_messages,
+    merge_choice_messages,
     parse_toolcall_actions,
 )
 from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
@@ -106,7 +107,7 @@ class PortkeyModel:
                 response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
-        message = response.choices[0].message.model_dump()
+        message = merge_choice_messages(response.choices)
         message["extra"] = {
             "actions": self._parse_actions(response),
             "response": response.model_dump(),
@@ -117,7 +118,7 @@ class PortkeyModel:
 
     def _parse_actions(self, response) -> list[dict]:
         """Parse tool calls from the response. Raises FormatError if unknown tool."""
-        tool_calls = response.choices[0].message.tool_calls or []
+        tool_calls = merge_choice_messages(response.choices).get("tool_calls") or []
         return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
 
     def format_message(self, **kwargs) -> dict:
