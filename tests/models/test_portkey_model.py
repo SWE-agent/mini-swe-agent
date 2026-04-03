@@ -210,7 +210,9 @@ def test_portkey_model_query_merges_tool_calls_across_multiple_choices():
     tool_choice.message.model_dump.return_value = {
         "role": "assistant",
         "content": None,
-        "tool_calls": [{"id": "call_multi", "function": {"name": "bash", "arguments": json.dumps({"command": "ls -la"})}}],
+        "tool_calls": [
+            {"id": "call_multi", "function": {"name": "bash", "arguments": json.dumps({"command": "ls -la"})}}
+        ],
     }
 
     mock_response.choices = [text_choice, tool_choice]

@@ -94,7 +94,9 @@ class TestLitellmModel:
         result = model.query([{"role": "user", "content": "test"}])
 
         assert result["content"] == "Let me start by analyzing the codebase to find the relevant files."
-        assert result["extra"]["actions"] == [{"command": 'find . -name "TargetFile.java"', "tool_call_id": "call_multi"}]
+        assert result["extra"]["actions"] == [
+            {"command": 'find . -name "TargetFile.java"', "tool_call_id": "call_multi"}
+        ]
 
     def test_parse_actions_accepts_dict_tool_calls(self):
         model = LitellmModel(model_name="github_copilot/claude-sonnet-4.6")
