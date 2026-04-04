@@ -20,3 +20,7 @@ class UserInterruption(InterruptAgentFlow):
 
 class FormatError(InterruptAgentFlow):
     """Raised when the LM's output is not in the expected format."""
+
+
+class ContainerNotRunning(InterruptAgentFlow):
+    """Raised when the Docker container is no longer running (e.g., after container_timeout expires)."""
