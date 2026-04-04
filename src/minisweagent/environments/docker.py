@@ -8,8 +8,10 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from minisweagent.exceptions import Submitted
+from minisweagent.exceptions import ContainerNotRunning, Submitted
 from minisweagent.utils.serialize import recursive_merge
+
+_CONTAINER_DEAD_MARKERS = ("No such container", "is not running", "no such container")
 
 
 class DockerEnvironmentConfig(BaseModel):
@@ -123,11 +125,31 @@ class DockerEnvironment:
                 stderr=subprocess.STDOUT,
             )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
+            if result.returncode != 0 and any(marker in result.stdout for marker in _CONTAINER_DEAD_MARKERS):
+                raise ContainerNotRunning(
+                    {
+                        "role": "exit",
+                        "content": result.stdout,
+                        "extra": {"exit_status": "ContainerNotRunning", "submission": ""},
+                    }
+                )
+        except ContainerNotRunning:
+            raise
         except Exception as e:
             raw_output = getattr(e, "output", None)
             raw_output = (
                 raw_output.decode("utf-8", errors="replace") if isinstance(raw_output, bytes) else (raw_output or "")
             )
+            if any(marker in str(e) for marker in _CONTAINER_DEAD_MARKERS) or any(
+                marker in raw_output for marker in _CONTAINER_DEAD_MARKERS
+            ):
+                raise ContainerNotRunning(
+                    {
+                        "role": "exit",
+                        "content": raw_output or str(e),
+                        "extra": {"exit_status": "ContainerNotRunning", "submission": ""},
+                    }
+                )
             output = {
                 "output": raw_output,
                 "returncode": -1,

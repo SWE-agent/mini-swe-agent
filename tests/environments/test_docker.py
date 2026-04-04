@@ -1,10 +1,11 @@
 import os
 import subprocess
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from minisweagent.environments.docker import DockerEnvironment, DockerEnvironmentConfig
+from minisweagent.exceptions import ContainerNotRunning
 
 
 def is_docker_available():
@@ -228,3 +229,86 @@ def test_docker_environment_custom_container_timeout(executable):
             )
     finally:
         env.cleanup()
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize("executable", environment_params)
+def test_docker_environment_raises_container_not_running_after_timeout(executable):
+    """Test that ContainerNotRunning is raised when executing after container_timeout expires.
+
+    Regression test for https://github.com/SWE-agent/mini-swe-agent/issues/803.
+    Previously, the agent would silently continue making API calls after the container died.
+    """
+    import time
+
+    env = DockerEnvironment(image="python:3.11", executable=executable, container_timeout="3s")
+
+    try:
+        # Container should work initially
+        result = env.execute({"command": "echo 'alive'"})
+        assert result["returncode"] == 0
+
+        # Wait for container to die
+        time.sleep(5)
+
+        # Executing after container death should raise ContainerNotRunning
+        with pytest.raises(ContainerNotRunning) as exc_info:
+            env.execute({"command": "echo 'should fail'"})
+
+        # Verify the exception contains proper exit info
+        assert len(exc_info.value.messages) == 1
+        msg = exc_info.value.messages[0]
+        assert msg["role"] == "exit"
+        assert msg["extra"]["exit_status"] == "ContainerNotRunning"
+        assert msg["extra"]["submission"] == ""
+    finally:
+        env.cleanup()
+
+
+def test_docker_environment_detects_dead_container_from_returncode():
+    """Unit test: ContainerNotRunning raised when subprocess output contains dead-container markers."""
+    mock_result = MagicMock()
+    mock_result.stdout = "Error response from daemon: No such container: abc123\n"
+    mock_result.returncode = 1
+
+    with patch("minisweagent.environments.docker.subprocess") as mock_subprocess:
+        # Mock the container start
+        mock_start = MagicMock()
+        mock_start.stdout = "fake_container_id\n"
+        mock_subprocess.run.side_effect = [mock_start, mock_result]
+        mock_subprocess.PIPE = subprocess.PIPE
+        mock_subprocess.STDOUT = subprocess.STDOUT
+
+        env = DockerEnvironment(image="python:3.11")
+
+        with pytest.raises(ContainerNotRunning) as exc_info:
+            env.execute({"command": "echo test"})
+
+        msg = exc_info.value.messages[0]
+        assert msg["role"] == "exit"
+        assert msg["extra"]["exit_status"] == "ContainerNotRunning"
+
+
+def test_docker_environment_detects_dead_container_from_exception():
+    """Unit test: ContainerNotRunning raised when subprocess raises with dead-container message."""
+    with patch("minisweagent.environments.docker.subprocess") as mock_subprocess:
+        # Mock the container start
+        mock_start = MagicMock()
+        mock_start.stdout = "fake_container_id\n"
+        mock_subprocess.PIPE = subprocess.PIPE
+        mock_subprocess.STDOUT = subprocess.STDOUT
+
+        # First call starts container, second call raises with "is not running"
+        mock_subprocess.run.side_effect = [
+            mock_start,
+            Exception("Error: container fake_container_id is not running"),
+        ]
+
+        env = DockerEnvironment(image="python:3.11")
+
+        with pytest.raises(ContainerNotRunning) as exc_info:
+            env.execute({"command": "echo test"})
+
+        msg = exc_info.value.messages[0]
+        assert msg["role"] == "exit"
+        assert msg["extra"]["exit_status"] == "ContainerNotRunning"
