@@ -93,9 +93,9 @@ There are several ways to set your API keys:
     Here's a few examples of popular models:
 
     ```
-    anthropic/claude-sonnet-4-5-20250929
-    openai/gpt-5
-    openai/gpt-5-mini
+    anthropic/claude-opus-4-6-20260205
+    openai/gpt-5.4
+    openai/gpt-5.4-mini
     gemini/gemini-2.5-pro
     deepseek/deepseek-chat
     ```
