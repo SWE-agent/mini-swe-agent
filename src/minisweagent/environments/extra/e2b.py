@@ -114,6 +114,14 @@ class E2BTemplateManager:
             self.logger.debug("E2B template %s already exists.", template_name)
         return template_name
 
+    def rebuild(self, docker_image: str) -> str:
+        """Force-rebuild the E2B template for *docker_image*."""
+        template_name = self._image_to_template_name(docker_image)
+        self.logger.info("Rebuilding E2B template %s...", template_name)
+        self._build_template(docker_image, template_name)
+        self.logger.info("E2B template %s rebuilt successfully.", template_name)
+        return template_name
+
     def _build_template(self, docker_image: str, template_name: str) -> None:
         """Build an E2B template from *docker_image*.
 
@@ -170,17 +178,31 @@ class E2BEnvironment:
 
     def __init__(self, **kwargs: Any) -> None:
         from e2b import Sandbox
+        from e2b.exceptions import SandboxException
 
         self.logger = logging.getLogger("minisweagent.environment.e2b")
         self.config = E2BEnvironmentConfig(**kwargs)
         manager = E2BTemplateManager(self.config)
         template_name = manager.get_or_build(self.config.image)
         self.logger.info("Creating E2B sandbox (template: %s)...", template_name)
-        self.sandbox = Sandbox.create(
-            template=template_name,
-            timeout=self.config.sandbox_timeout,
-            api_key=self.config.api_key,
-        )
+        try:
+            self.sandbox = Sandbox.create(
+                template=template_name,
+                timeout=self.config.sandbox_timeout,
+                api_key=self.config.api_key,
+                metadata={"user": "junyeoplee2"}, # TEMP. DO NOT MERGE
+            )
+        except SandboxException as e:
+            if "404" not in str(e):
+                raise
+            self.logger.warning("Template %s not found (stale cache). Rebuilding...", template_name)
+            manager.rebuild(self.config.image)
+            self.sandbox = Sandbox.create(
+                template=template_name,
+                timeout=self.config.sandbox_timeout,
+                api_key=self.config.api_key,
+                metadata={"user": "junyeoplee2"}, # TEMP. DO NOT MERGE
+            )
         self.logger.info("E2B sandbox ready (id: %s)", self.sandbox.sandbox_id)
         _active_sandboxes.add(self)
 
