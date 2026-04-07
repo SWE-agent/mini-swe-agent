@@ -127,8 +127,6 @@
 
     Tip: Please always include the provider in the model name, e.g., `anthropic/claude-...`.
 
-!!! success "Which model to use?"
+!!! success "Model selection"
 
-    We recommend using `anthropic/claude-sonnet-4-5-20250929` for most tasks.
-    For openai models, we recommend using `openai/gpt-5` or `openai/gpt-5-mini`.
-    You can check scores of different models at our [SWE-bench (bash-only)](https://swebench.com) leaderboard.
+    Model availability changes quickly. Check current options in your provider docs and the [SWE-bench (bash-only)](https://swebench.com) leaderboard.

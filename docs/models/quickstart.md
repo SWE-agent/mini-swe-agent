@@ -88,26 +88,9 @@ There are several ways to set your API keys:
 * You can also set your model in a config file (key `model_name` under `model`).
 * If you want to use local models, please check this [guide](local_models.md).
 
-!!! note "Popular models"
+??? note "List of all supported models"
 
-    Here's a few examples of popular models:
-
-    ```
-    anthropic/claude-sonnet-4-5-20250929
-    openai/gpt-5
-    openai/gpt-5-mini
-    gemini/gemini-2.5-pro
-    deepseek/deepseek-chat
-    ```
-
-    ??? note "List of all supported models"
-
-        Here's a list of all model names supported by `litellm` as of Aug 29th 2025.
-        For even more recent models, check the [`model_prices_and_context_window.json` file from litellm](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json).
-
-        ```
-        --8<-- "docs/data/all_models.txt"
-        ```
+    Model availability changes quickly. Check the current [`model_prices_and_context_window.json` file from litellm](https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json).
 
 To find the corresponding API key, check the previous section.
 
