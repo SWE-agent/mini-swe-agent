@@ -190,7 +190,7 @@ class E2BEnvironment:
                 template=template_name,
                 timeout=self.config.sandbox_timeout,
                 api_key=self.config.api_key,
-                metadata={"user": "junyeoplee2"}, # TEMP. DO NOT MERGE
+                metadata={"user": "junyeoplee2"},  # TEMP. DO NOT MERGE
             )
         except SandboxException as e:
             if "404" not in str(e):
@@ -201,7 +201,7 @@ class E2BEnvironment:
                 template=template_name,
                 timeout=self.config.sandbox_timeout,
                 api_key=self.config.api_key,
-                metadata={"user": "junyeoplee2"}, # TEMP. DO NOT MERGE
+                metadata={"user": "junyeoplee2"},  # TEMP. DO NOT MERGE
             )
         self.logger.info("E2B sandbox ready (id: %s)", self.sandbox.sandbox_id)
         _active_sandboxes.add(self)
