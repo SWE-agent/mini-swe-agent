@@ -156,6 +156,7 @@ def process_instance(
     result = None
     extra_info = {}
 
+    env = None
     try:
         env = get_sb_environment(config, instance)
         agent = ProgressTrackingAgent(
@@ -189,6 +190,8 @@ def process_instance(
             logger.info(f"Saved trajectory to '{traj_path}'")
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
         progress_manager.on_instance_end(instance_id, exit_status)
+        if env is not None and hasattr(env, "stop"):
+            env.stop()
 
 
 def filter_instances(
