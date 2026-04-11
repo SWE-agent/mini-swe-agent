@@ -1,0 +1,55 @@
+{
+    "django__django-13033": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_order_by_self_referential_fk (ordering.tests.OrderingTests)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_default_ordering (ordering.tests.OrderingTests)",
+                    "F expressions can be used in Meta.ordering.",
+                    "test_default_ordering_override (ordering.tests.OrderingTests)",
+                    "test_extra_ordering (ordering.tests.OrderingTests)",
+                    "test_extra_ordering_quoting (ordering.tests.OrderingTests)",
+                    "test_extra_ordering_with_table_name (ordering.tests.OrderingTests)",
+                    "test_no_reordering_after_slicing (ordering.tests.OrderingTests)",
+                    "test_order_by_constant_value (ordering.tests.OrderingTests)",
+                    "test_order_by_constant_value_without_output_field (ordering.tests.OrderingTests)",
+                    "test_order_by_f_expression (ordering.tests.OrderingTests)",
+                    "test_order_by_f_expression_duplicates (ordering.tests.OrderingTests)",
+                    "test_order_by_fk_attname (ordering.tests.OrderingTests)",
+                    "test_order_by_nulls_first (ordering.tests.OrderingTests)",
+                    "test_order_by_nulls_first_and_last (ordering.tests.OrderingTests)",
+                    "test_order_by_nulls_last (ordering.tests.OrderingTests)",
+                    "test_order_by_override (ordering.tests.OrderingTests)",
+                    "test_order_by_pk (ordering.tests.OrderingTests)",
+                    "test_order_by_ptr_field_with_default_ordering_by_expression (ordering.tests.OrderingTests)",
+                    "test_orders_nulls_first_on_filtered_subquery (ordering.tests.OrderingTests)",
+                    "test_random_ordering (ordering.tests.OrderingTests)",
+                    "test_related_ordering_duplicate_table_reference (ordering.tests.OrderingTests)",
+                    "test_reverse_meta_ordering_pure (ordering.tests.OrderingTests)",
+                    "test_reverse_ordering_pure (ordering.tests.OrderingTests)",
+                    "test_reversed_ordering (ordering.tests.OrderingTests)",
+                    "test_stop_slicing (ordering.tests.OrderingTests)",
+                    "test_stop_start_slicing (ordering.tests.OrderingTests)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

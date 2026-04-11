@@ -1,0 +1,19 @@
+diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py
+index e4ddc8f017..32aa8c59d8 100644
+--- a/django/contrib/admin/utils.py
++++ b/django/contrib/admin/utils.py
+@@ -398,6 +398,14 @@ def display_for_field(value, field, empty_value_display):
+         return formats.number_format(value)
+     elif isinstance(field, models.FileField) and value:
+         return format_html('<a href="{}">{}</a>', value.url, value)
++    elif isinstance(field, models.JSONField):
++        # Use the form field's prepare_value method to handle JSON serialization
++        # and InvalidJSONInput objects
++        form_field = field.formfield()
++        if form_field is not None:
++            return form_field.prepare_value(value)
++        # Fall back to default behavior if form_field is None
++        return display_for_value(value, empty_value_display)
+     else:
+         return display_for_value(value, empty_value_display)
+ 

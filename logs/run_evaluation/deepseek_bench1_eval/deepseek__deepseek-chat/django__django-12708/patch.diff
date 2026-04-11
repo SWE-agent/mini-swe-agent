@@ -1,0 +1,15 @@
+diff --git a/django/db/backends/base/schema.py b/django/db/backends/base/schema.py
+index 61f88401ab..526e5436b0 100644
+--- a/django/db/backends/base/schema.py
++++ b/django/db/backends/base/schema.py
+@@ -403,6 +403,10 @@ class BaseDatabaseSchemaEditor:
+         meta_constraint_names = {constraint.name for constraint in model._meta.constraints}
+         meta_index_names = {constraint.name for constraint in model._meta.indexes}
+         columns = [model._meta.get_field(field).column for field in fields]
++        # When looking for an index (not unique), we need to exclude unique constraints
++        # because unique constraints also have index=True in the database
++        if constraint_kwargs.get("index") and not constraint_kwargs.get("unique"):
++            constraint_kwargs["unique"] = False
+         constraint_names = self._constraint_names(
+             model, columns, exclude=meta_constraint_names | meta_index_names,
+             **constraint_kwargs

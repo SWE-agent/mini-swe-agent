@@ -1,0 +1,520 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
++ locale-gen
+Generating locales (this might take a while)...
+  en_US.UTF-8... done
+Generation complete.
++ export LANG=en_US.UTF-8
++ LANG=en_US.UTF-8
++ export LANGUAGE=en_US:en
++ LANGUAGE=en_US:en
++ export LC_ALL=en_US.UTF-8
++ LC_ALL=en_US.UTF-8
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   django/db/models/fields/__init__.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit fee75d2aed4e58ada6567c464cfd22e89dc65f4a
+Author: Katie McLaughlin <katie@glasnt.com>
+Date:   Mon Sep 9 18:02:33 2019 +1000
+
+    Fixed #30767 -- Improved references to deployment documentation.
+    
+    * Increased tocdepth to expose more complexity of topics.
+    * Ensured deployment checklist is linked on main doc page.
+
+diff --git a/docs/howto/deployment/index.txt b/docs/howto/deployment/index.txt
+index 1b2f497922..bbf53181b4 100644
+--- a/docs/howto/deployment/index.txt
++++ b/docs/howto/deployment/index.txt
+@@ -15,8 +15,10 @@ site to use asynchronous Python features, and asynchronous Django features as
+ they are developed.
+ 
+ .. toctree::
+-   :maxdepth: 1
++   :maxdepth: 2
+ 
+    wsgi/index
+    asgi/index
++   ../static-files/deployment
++   ../error-reporting
+    checklist
+diff --git a/docs/index.txt b/docs/index.txt
+index 6d6f5528c4..64a45c876d 100644
+--- a/docs/index.txt
++++ b/docs/index.txt
+@@ -228,7 +228,8 @@ testing of Django applications:
+   :doc:`WSGI servers <howto/deployment/wsgi/index>` |
+   :doc:`ASGI servers <howto/deployment/asgi/index>` |
+   :doc:`Deploying static files <howto/static-files/deployment>` |
+-  :doc:`Tracking code errors by email <howto/error-reporting>`
++  :doc:`Tracking code errors by email <howto/error-reporting>` |
++  :doc:`Deployment checklist <howto/deployment/checklist>`
+ 
+ The admin
+ =========
++ git -c core.fileMode=false diff fee75d2aed4e58ada6567c464cfd22e89dc65f4a
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 9ce46e3f73..122031e0b7 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -202,6 +202,7 @@ class Field(RegisterLookupMixin):
+         return [
+             *self._check_field_name(),
+             *self._check_choices(),
++            *self._check_max_length_vs_choices(),
+             *self._check_db_index(),
+             *self._check_null_allowed_for_primary_keys(),
+             *self._check_backend_specific_checks(**kwargs),
+@@ -291,6 +292,48 @@ class Field(RegisterLookupMixin):
+             )
+         ]
+ 
++    def _check_max_length_vs_choices(self):
++        """
++        Check that max_length is large enough to fit the longest value in choices.
++        """
++        if not self.choices or self.max_length is None:
++            return []
++        
++        # Helper to extract choice values
++        def get_choice_values(choices):
++            values = []
++            for item in choices:
++                if isinstance(item, (list, tuple)) and len(item) == 2:
++                    # Check if it's a group
++                    group_name, group_items = item
++                    if isinstance(group_items, (list, tuple)):
++                        # It's a group
++                        for value, _ in group_items:
++                            values.append(value)
++                    else:
++                        # It's a simple choice
++                        value, _ = item
++                        values.append(value)
++            return values
++        
++        choice_values = get_choice_values(self.choices)
++        if not choice_values:
++            return []
++        
++        # Find the longest choice value when converted to string
++        max_choice_length = max(len(str(value)) for value in choice_values)
++        
++        if max_choice_length > self.max_length:
++            return [
++                checks.Error(
++                    "'max_length' is {} but the longest choice value has length {}.".format(
++                        self.max_length, max_choice_length
++                    ),
++                    obj=self,
++                    id='fields.E122',
++                )
++            ]
++        return []
+     def _check_db_index(self):
+         if self.db_index not in (None, True, False):
+             return [
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+Requirement already satisfied: pytz in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.0) (2024.2)
+Requirement already satisfied: sqlparse in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.0) (0.4.4)
+Requirement already satisfied: asgiref in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.0) (3.4.1)
+Requirement already satisfied: typing-extensions in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from asgiref->Django==3.0) (4.1.1)
+Installing collected packages: Django
+  Attempting uninstall: Django
+    Found existing installation: Django 3.0
+    Uninstalling Django-3.0:
+      Successfully uninstalled Django-3.0
+  Running setup.py develop for Django
+Successfully installed Django-3.0
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
++ git checkout fee75d2aed4e58ada6567c464cfd22e89dc65f4a tests/invalid_models_tests/test_ordinary_fields.py
+Updated 0 paths from 9044ec218d
++ git apply -v -
+Checking patch tests/invalid_models_tests/test_ordinary_fields.py...
+Applied patch tests/invalid_models_tests/test_ordinary_fields.py cleanly.
++ : '>>>>> Start Test Output'
++ ./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 invalid_models_tests.test_ordinary_fields
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_max_length_warning (invalid_models_tests.test_ordinary_fields.TextFieldTests) ... skipped 'Database has feature(s) supports_index_on_text_field'
+test_max_length_warning (invalid_models_tests.test_ordinary_fields.AutoFieldTests) ... ok
+test_primary_key (invalid_models_tests.test_ordinary_fields.AutoFieldTests) ... ok
+test_valid_case (invalid_models_tests.test_ordinary_fields.AutoFieldTests) ... ok
+test_str_default_value (invalid_models_tests.test_ordinary_fields.BinaryFieldTests) ... ok
+test_valid_default_value (invalid_models_tests.test_ordinary_fields.BinaryFieldTests) ... ok
+test_bad_db_index_value (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_bad_max_length_value (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_bad_validators (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_choices_containing_lazy (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_choices_containing_non_pairs (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_choices_in_max_length (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... test_choices_named_group (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_choices_named_group_bad_structure (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_choices_named_group_lazy (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_choices_named_group_non_pairs (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ERROR
+test_iterable_of_iterable_choices (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_lazy_choices (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_missing_max_length (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_negative_max_length (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_non_iterable_choices (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_non_iterable_choices_two_letters (invalid_models_tests.test_ordinary_fields.CharFieldTests)
+Two letters isn't a valid choice pair. ... ok
+test_str_max_length_type (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_str_max_length_value (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_too_long_char_field_under_mysql (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... skipped 'Test valid only for MySQL'
+test_valid_field (invalid_models_tests.test_ordinary_fields.CharFieldTests) ... ok
+test_auto_now_and_auto_now_add_raise_error (invalid_models_tests.test_ordinary_fields.DateFieldTests) ... ok
+test_fix_default_value (invalid_models_tests.test_ordinary_fields.DateFieldTests) ... ok
+test_fix_default_value_tz (invalid_models_tests.test_ordinary_fields.DateFieldTests) ... ok
+test_fix_default_value (invalid_models_tests.test_ordinary_fields.DateTimeFieldTests) ... ok
+test_fix_default_value_tz (invalid_models_tests.test_ordinary_fields.DateTimeFieldTests) ... ok
+test_bad_values_of_max_digits_and_decimal_places (invalid_models_tests.test_ordinary_fields.DecimalFieldTests) ... ok
+test_decimal_places_greater_than_max_digits (invalid_models_tests.test_ordinary_fields.DecimalFieldTests) ... ok
+test_negative_max_digits_and_decimal_places (invalid_models_tests.test_ordinary_fields.DecimalFieldTests) ... ok
+test_required_attributes (invalid_models_tests.test_ordinary_fields.DecimalFieldTests) ... ok
+test_valid_field (invalid_models_tests.test_ordinary_fields.DecimalFieldTests) ... ok
+test_primary_key (invalid_models_tests.test_ordinary_fields.FileFieldTests) ... ok
+test_upload_to_callable_not_checked (invalid_models_tests.test_ordinary_fields.FileFieldTests) ... ok
+test_upload_to_starts_with_slash (invalid_models_tests.test_ordinary_fields.FileFieldTests) ... ok
+test_valid_case (invalid_models_tests.test_ordinary_fields.FileFieldTests) ... ok
+test_valid_default_case (invalid_models_tests.test_ordinary_fields.FileFieldTests) ... ok
+test_forbidden_files_and_folders (invalid_models_tests.test_ordinary_fields.FilePathFieldTests) ... ok
+test_non_nullable_blank (invalid_models_tests.test_ordinary_fields.GenericIPAddressFieldTests) ... ok
+test_pillow_installed (invalid_models_tests.test_ordinary_fields.ImageFieldTests) ... ok
+test_max_length_warning (invalid_models_tests.test_ordinary_fields.IntegerFieldTests) ... ok
+test_fix_default_value (invalid_models_tests.test_ordinary_fields.TimeFieldTests) ... ok
+test_fix_default_value_tz (invalid_models_tests.test_ordinary_fields.TimeFieldTests) ... Testing against Django installed in '/testbed/django'
+Importing application invalid_models_tests
+Skipping setup of unused database(s): other.
+Operations to perform:
+  Synchronize unmigrated apps: auth, contenttypes, invalid_models_tests, messages, sessions, staticfiles
+  Apply all migrations: admin, sites
+Synchronizing apps without migrations:
+  Creating tables...
+    Creating table django_content_type
+    Creating table auth_permission
+    Creating table auth_group
+    Creating table auth_user
+    Creating table django_session
+    Running deferred SQL...
+Running migrations:
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+System check identified no issues (0 silenced).
+ok
+
+======================================================================
+ERROR: test_choices_named_group_non_pairs (invalid_models_tests.test_ordinary_fields.CharFieldTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/invalid_models_tests/test_ordinary_fields.py", line 266, in test_choices_named_group_non_pairs
+    self.assertEqual(field.check(), [
+  File "/testbed/django/db/models/fields/__init__.py", line 999, in check
+    *super().check(**kwargs),
+  File "/testbed/django/db/models/fields/__init__.py", line 205, in check
+    *self._check_max_length_vs_choices(),
+  File "/testbed/django/db/models/fields/__init__.py", line 319, in _check_max_length_vs_choices
+    choice_values = get_choice_values(self.choices)
+  File "/testbed/django/db/models/fields/__init__.py", line 311, in get_choice_values
+    for value, _ in group_items:
+ValueError: too many values to unpack (expected 2)
+
+======================================================================
+FAIL: test_choices_in_max_length (invalid_models_tests.test_ordinary_fields.CharFieldTests) [field]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/invalid_models_tests/test_ordinary_fields.py", line 329, in test_choices_in_max_length
+    id='fields.E009',
+AssertionError: Lists differ: [<Err[30 chars]' is 2 but the longest choice value has length[78 chars]22'>] != [<Err[30 chars]' is too small to fit the longest value in 'ch[97 chars]09'>]
+
+First differing element 0:
+<Erro[29 chars]' is 2 but the longest choice value has length[77 chars]122'>
+<Erro[29 chars]' is too small to fit the longest value in 'ch[96 chars]009'>
+
+Diff is 702 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_choices_in_max_length (invalid_models_tests.test_ordinary_fields.CharFieldTests) [group]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/invalid_models_tests/test_ordinary_fields.py", line 329, in test_choices_in_max_length
+    id='fields.E009',
+AssertionError: Lists differ: [<Err[30 chars]' is 2 but the longest choice value has length[78 chars]22'>] != [<Err[30 chars]' is too small to fit the longest value in 'ch[97 chars]09'>]
+
+First differing element 0:
+<Erro[29 chars]' is 2 but the longest choice value has length[77 chars]122'>
+<Erro[29 chars]' is too small to fit the longest value in 'ch[96 chars]009'>
+
+Diff is 702 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 47 tests in 0.022s
+
+FAILED (failures=2, errors=1, skipped=2)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
++ : '>>>>> End Test Output'
++ git checkout fee75d2aed4e58ada6567c464cfd22e89dc65f4a tests/invalid_models_tests/test_ordinary_fields.py
+Updated 1 path from 9044ec218d

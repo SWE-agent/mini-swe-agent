@@ -1,0 +1,23 @@
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index 4648daf395..f1ca4bfea1 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1077,10 +1077,17 @@ class Query(BaseExpression):
+         elif isinstance(value, (list, tuple)):
+             # The items of the iterable may be expressions and therefore need
+             # to be resolved independently.
+-            return type(value)(
++            resolved_items = (
+                 self.resolve_lookup_value(sub_value, can_reuse, allow_joins)
+                 for sub_value in value
+             )
++            # Handle named tuples specially
++            if hasattr(value, '_fields'):
++                # Named tuples don't accept an iterator, need to unpack
++                return type(value)(*resolved_items)
++            else:
++                # Regular tuples and lists accept an iterator
++                return type(value)(resolved_items)
+         return value
+ 
+     def solve_lookup_type(self, lookup):

@@ -1,0 +1,12 @@
+diff --git a/django/contrib/syndication/views.py b/django/contrib/syndication/views.py
+index 68ffb0bfe0..b37fb588a4 100644
+--- a/django/contrib/syndication/views.py
++++ b/django/contrib/syndication/views.py
+@@ -209,6 +209,7 @@ class Feed:
+                 enclosures=enclosures,
+                 pubdate=pubdate,
+                 updateddate=updateddate,
++                comments=self._get_dynamic_attr('item_comments', item),
+                 author_name=author_name,
+                 author_email=author_email,
+                 author_link=author_link,

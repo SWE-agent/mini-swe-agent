@@ -1,0 +1,46 @@
+diff --git a/src/sqlfluff/core/parser/grammar/delimited.py b/src/sqlfluff/core/parser/grammar/delimited.py
+index 39a350373..ccb5d608f 100644
+--- a/src/sqlfluff/core/parser/grammar/delimited.py
++++ b/src/sqlfluff/core/parser/grammar/delimited.py
+@@ -141,7 +141,7 @@ class Delimited(OneOf):
+                         )
+                     # No match, or an incomplete match: Not allowed
+                     if not match or not match.is_complete():
+-                        return MatchResult.from_unmatched(mutated_segments)
++                        return MatchResult.from_unmatched(segments)
+ 
+                     # We have a complete match!
+ 
+@@ -170,7 +170,7 @@ class Delimited(OneOf):
+                             self.min_delimiters
+                             and len(delimiters) < self.min_delimiters
+                         ):
+-                            return MatchResult.from_unmatched(mutated_segments)
++                            return MatchResult.from_unmatched(segments)
+                         else:
+                             return MatchResult(
+                                 matched_segments.matched_segments,
+@@ -186,7 +186,7 @@ class Delimited(OneOf):
+                 else:
+                     # Zero length section between delimiters, or zero code
+                     # elements if appropriate. Return unmatched.
+-                    return MatchResult.from_unmatched(mutated_segments)
++                    return MatchResult.from_unmatched(segments)
+             else:
+                 # No match for a delimiter looking forward, this means we're
+                 # at the end. In this case we look for a potential partial match
+@@ -196,7 +196,7 @@ class Delimited(OneOf):
+                 # First check we're had enough delimiters, because if we haven't then
+                 # there's no sense to try matching
+                 if self.min_delimiters and len(delimiters) < self.min_delimiters:
+-                    return MatchResult.from_unmatched(mutated_segments)
++                    return MatchResult.from_unmatched(segments)
+ 
+                 # We use the whitespace padded match to hoover up whitespace if enabled,
+                 # and default to the longest matcher. We don't care which one matches.
+@@ -248,4 +248,4 @@ class Delimited(OneOf):
+                     if self.allow_trailing:
+                         return MatchResult(matched_segments.matched_segments, seg_buff)
+                     else:
+-                        return MatchResult.from_unmatched(mutated_segments)
++                        return MatchResult.from_unmatched(segments)

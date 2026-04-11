@@ -1,0 +1,41 @@
+{
+    "pylint-dev__astroid-1978": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "tests/unittest_raw_building.py::test_build_module_getattr_catch_output"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_attach_dummy_node",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_build_class",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_build_from_import",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_build_function",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_build_function_args",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_build_function_deepinspect_deprecation",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_build_function_defaults",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_build_function_kwonlyargs",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_build_function_posonlyargs",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_build_module",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_io_is__io",
+                    "tests/unittest_raw_building.py::RawBuildingTC::test_module_object_with_broken_getattr"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

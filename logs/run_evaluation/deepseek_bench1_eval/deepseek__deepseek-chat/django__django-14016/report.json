@@ -1,0 +1,43 @@
+{
+    "django__django-14016": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "test_combine_and_empty (queries.test_q.QTests)",
+                    "test_combine_or_empty (queries.test_q.QTests)"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_combine_and_both_empty (queries.test_q.QTests)",
+                    "test_combine_not_q_object (queries.test_q.QTests)",
+                    "test_combine_or_both_empty (queries.test_q.QTests)",
+                    "test_deconstruct (queries.test_q.QTests)",
+                    "test_deconstruct_and (queries.test_q.QTests)",
+                    "test_deconstruct_multiple_kwargs (queries.test_q.QTests)",
+                    "test_deconstruct_negated (queries.test_q.QTests)",
+                    "test_deconstruct_nested (queries.test_q.QTests)",
+                    "test_deconstruct_or (queries.test_q.QTests)",
+                    "test_reconstruct (queries.test_q.QTests)",
+                    "test_reconstruct_and (queries.test_q.QTests)",
+                    "test_reconstruct_negated (queries.test_q.QTests)",
+                    "test_reconstruct_or (queries.test_q.QTests)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

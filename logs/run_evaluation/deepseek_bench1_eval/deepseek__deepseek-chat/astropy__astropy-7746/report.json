@@ -1,0 +1,85 @@
+{
+    "astropy__astropy-7746": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "astropy/wcs/tests/test_wcs.py::test_zero_size_input"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "astropy/wcs/tests/test_wcs.py::TestMaps::test_consistency",
+                    "astropy/wcs/tests/test_wcs.py::TestMaps::test_maps",
+                    "astropy/wcs/tests/test_wcs.py::TestSpectra::test_consistency",
+                    "astropy/wcs/tests/test_wcs.py::TestSpectra::test_spectra",
+                    "astropy/wcs/tests/test_wcs.py::test_fixes",
+                    "astropy/wcs/tests/test_wcs.py::test_outside_sky",
+                    "astropy/wcs/tests/test_wcs.py::test_pix2world",
+                    "astropy/wcs/tests/test_wcs.py::test_load_fits_path",
+                    "astropy/wcs/tests/test_wcs.py::test_dict_init",
+                    "astropy/wcs/tests/test_wcs.py::test_extra_kwarg",
+                    "astropy/wcs/tests/test_wcs.py::test_3d_shapes",
+                    "astropy/wcs/tests/test_wcs.py::test_preserve_shape",
+                    "astropy/wcs/tests/test_wcs.py::test_broadcasting",
+                    "astropy/wcs/tests/test_wcs.py::test_shape_mismatch",
+                    "astropy/wcs/tests/test_wcs.py::test_invalid_shape",
+                    "astropy/wcs/tests/test_wcs.py::test_warning_about_defunct_keywords",
+                    "astropy/wcs/tests/test_wcs.py::test_warning_about_defunct_keywords_exception",
+                    "astropy/wcs/tests/test_wcs.py::test_to_header_string",
+                    "astropy/wcs/tests/test_wcs.py::test_to_fits",
+                    "astropy/wcs/tests/test_wcs.py::test_to_header_warning",
+                    "astropy/wcs/tests/test_wcs.py::test_no_comments_in_header",
+                    "astropy/wcs/tests/test_wcs.py::test_find_all_wcs_crash",
+                    "astropy/wcs/tests/test_wcs.py::test_validate",
+                    "astropy/wcs/tests/test_wcs.py::test_validate_with_2_wcses",
+                    "astropy/wcs/tests/test_wcs.py::test_crpix_maps_to_crval",
+                    "astropy/wcs/tests/test_wcs.py::test_all_world2pix",
+                    "astropy/wcs/tests/test_wcs.py::test_scamp_sip_distortion_parameters",
+                    "astropy/wcs/tests/test_wcs.py::test_fixes2",
+                    "astropy/wcs/tests/test_wcs.py::test_unit_normalization",
+                    "astropy/wcs/tests/test_wcs.py::test_footprint_to_file",
+                    "astropy/wcs/tests/test_wcs.py::test_validate_faulty_wcs",
+                    "astropy/wcs/tests/test_wcs.py::test_error_message",
+                    "astropy/wcs/tests/test_wcs.py::test_out_of_bounds",
+                    "astropy/wcs/tests/test_wcs.py::test_calc_footprint_1",
+                    "astropy/wcs/tests/test_wcs.py::test_calc_footprint_2",
+                    "astropy/wcs/tests/test_wcs.py::test_calc_footprint_3",
+                    "astropy/wcs/tests/test_wcs.py::test_sip",
+                    "astropy/wcs/tests/test_wcs.py::test_printwcs",
+                    "astropy/wcs/tests/test_wcs.py::test_invalid_spherical",
+                    "astropy/wcs/tests/test_wcs.py::test_no_iteration",
+                    "astropy/wcs/tests/test_wcs.py::test_sip_tpv_agreement",
+                    "astropy/wcs/tests/test_wcs.py::test_tpv_copy",
+                    "astropy/wcs/tests/test_wcs.py::test_hst_wcs",
+                    "astropy/wcs/tests/test_wcs.py::test_list_naxis",
+                    "astropy/wcs/tests/test_wcs.py::test_sip_broken",
+                    "astropy/wcs/tests/test_wcs.py::test_no_truncate_crval",
+                    "astropy/wcs/tests/test_wcs.py::test_no_truncate_crval_try2",
+                    "astropy/wcs/tests/test_wcs.py::test_no_truncate_crval_p17",
+                    "astropy/wcs/tests/test_wcs.py::test_no_truncate_using_compare",
+                    "astropy/wcs/tests/test_wcs.py::test_passing_ImageHDU",
+                    "astropy/wcs/tests/test_wcs.py::test_inconsistent_sip",
+                    "astropy/wcs/tests/test_wcs.py::test_bounds_check",
+                    "astropy/wcs/tests/test_wcs.py::test_naxis",
+                    "astropy/wcs/tests/test_wcs.py::test_sip_with_altkey",
+                    "astropy/wcs/tests/test_wcs.py::test_to_fits_1",
+                    "astropy/wcs/tests/test_wcs.py::test_keyedsip"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

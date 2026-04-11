@@ -1,0 +1,92 @@
+{
+    "django__django-15400": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "test_add (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_radd (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "test_bool (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_bytes (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_class (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_cmp (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_contains (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_copy_class (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_copy_class_no_evaluation (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_copy_list (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_copy_list_no_evaluation (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_deepcopy_class (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_deepcopy_class_no_evaluation (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_deepcopy_list (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_deepcopy_list_no_evaluation (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_delattr (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_delitem (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_dir (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_getattr (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_getitem (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_gt (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_hash (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_iter (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_len (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_lt (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_pickle (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_setattr (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_setattr2 (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_setitem (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_text (utils_tests.test_lazyobject.LazyObjectTestCase)",
+                    "test_bool (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_bytes (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_class (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_cmp (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_contains (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_copy_class (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_copy_class_no_evaluation (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_copy_list (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_copy_list_no_evaluation (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_deepcopy_class (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_deepcopy_class_no_evaluation (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_deepcopy_list (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_deepcopy_list_no_evaluation (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_delattr (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_delitem (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_dict (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_dir (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_getattr (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_getitem (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_gt (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_hash (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_iter (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_len (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_list_set (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_lt (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_none (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_pickle (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_repr (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_setattr (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_setattr2 (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_setitem (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_text (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "test_trace (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)",
+                    "Test in a fairly synthetic setting."
+                ]
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

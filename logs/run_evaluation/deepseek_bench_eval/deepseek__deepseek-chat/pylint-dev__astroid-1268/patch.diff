@@ -1,0 +1,15 @@
+diff --git a/astroid/nodes/as_string.py b/astroid/nodes/as_string.py
+index 427ccc15..ab5c8cd7 100644
+--- a/astroid/nodes/as_string.py
++++ b/astroid/nodes/as_string.py
+@@ -637,6 +637,10 @@ class AsStringVisitor:
+     def visit_uninferable(self, node):
+         return str(node)
+ 
++    def visit_unknown(self, node):
++        """Return an Unknown node as string."""
++        return str(node.name)
++
+     def visit_property(self, node):
+         return node.function.accept(self)
+ 

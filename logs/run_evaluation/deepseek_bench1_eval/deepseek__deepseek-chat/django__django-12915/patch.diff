@@ -1,0 +1,28 @@
+diff --git a/django/contrib/staticfiles/handlers.py b/django/contrib/staticfiles/handlers.py
+index 711d8864ad..44b62f9f97 100644
+--- a/django/contrib/staticfiles/handlers.py
++++ b/django/contrib/staticfiles/handlers.py
+@@ -1,5 +1,7 @@
+ from urllib.parse import urlparse
+ from urllib.request import url2pathname
++from asgiref.sync import sync_to_async
++
+ 
+ from django.conf import settings
+ from django.contrib.staticfiles import utils
+@@ -53,6 +55,15 @@ class StaticFilesHandlerMixin:
+             return response_for_exception(request, e)
+ 
+ 
++    async def get_response_async(self, request):
++        """
++        Asynchronous version of get_response.
++        """
++        try:
++            return await sync_to_async(self.serve)(request)
++        except Http404 as e:
++            return await sync_to_async(response_for_exception)(request, e)
++
+ class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):
+     """
+     WSGI middleware that intercepts calls to the static files directory, as

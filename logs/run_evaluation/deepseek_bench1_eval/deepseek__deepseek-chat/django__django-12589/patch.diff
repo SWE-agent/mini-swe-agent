@@ -1,0 +1,17 @@
+diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py
+index 84960d77e1..e6b479bc89 100644
+--- a/django/db/models/expressions.py
++++ b/django/db/models/expressions.py
+@@ -1055,7 +1055,11 @@ class Subquery(Expression):
+         external_cols = self.query.get_external_cols()
+         if any(col.possibly_multivalued for col in external_cols):
+             return [self]
+-        return external_cols
++        # Always return [self] for GROUP BY to avoid ambiguous column references
++        # when the subquery output column name matches other table columns.
++        # This fixes issue where GROUP BY would use external_cols (columns
++        # referenced by the subquery) instead of the subquery itself.
++        return [self]
+ 
+ 
+ class Exists(Subquery):

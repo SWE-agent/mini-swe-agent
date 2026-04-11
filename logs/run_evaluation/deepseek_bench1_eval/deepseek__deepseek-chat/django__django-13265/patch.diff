@@ -1,0 +1,55 @@
+diff --git a/django/db/migrations/autodetector.py b/django/db/migrations/autodetector.py
+index 89e2dceeaf..9670e21363 100644
+--- a/django/db/migrations/autodetector.py
++++ b/django/db/migrations/autodetector.py
+@@ -618,15 +618,24 @@ class MigrationAutodetector:
+                 for name in sorted(related_fields)
+             ]
+             related_dependencies.append((app_label, model_name, None, True))
++            
++            # When order_with_respect_to is set, defer indexes with _order
++            # until after AlterOrderWithRespectTo
++            deferred_indexes = []
+             for index in indexes:
+-                self.add_operation(
+-                    app_label,
+-                    operations.AddIndex(
+-                        model_name=model_name,
+-                        index=index,
+-                    ),
+-                    dependencies=related_dependencies,
+-                )
++                if order_with_respect_to and "_order" in index.fields:
++                    # Defer this index
++                    deferred_indexes.append(index)
++                else:
++                    # Add index now
++                    self.add_operation(
++                        app_label,
++                        operations.AddIndex(
++                            model_name=model_name,
++                            index=index,
++                        ),
++                        dependencies=related_dependencies,
++                    )
+             for constraint in constraints:
+                 self.add_operation(
+                     app_label,
+@@ -666,6 +675,17 @@ class MigrationAutodetector:
+                         (app_label, model_name, None, True),
+                     ]
+                 )
++                
++                # Add deferred indexes with _order after AlterOrderWithRespectTo
++                for index in deferred_indexes:
++                    self.add_operation(
++                        app_label,
++                        operations.AddIndex(
++                            model_name=model_name,
++                            index=index,
++                        ),
++                        dependencies=related_dependencies,
++                    )
+ 
+             # Fix relationships if the model changed from a proxy model to a
+             # concrete model.

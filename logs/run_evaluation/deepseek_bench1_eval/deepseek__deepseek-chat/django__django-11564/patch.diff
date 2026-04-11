@@ -1,0 +1,96 @@
+diff --git a/django/core/files/storage.py b/django/core/files/storage.py
+index 4c27fce605..b57b175afa 100644
+--- a/django/core/files/storage.py
++++ b/django/core/files/storage.py
+@@ -332,7 +332,23 @@ class FileSystemStorage(Storage):
+         url = filepath_to_uri(name)
+         if url is not None:
+             url = url.lstrip('/')
+-        return urljoin(self.base_url, url)
++        url = urljoin(self.base_url, url)
++        # Prepend script prefix for consistency with Django's URL handling
++        # Only prepend for relative URLs
++        if url.startswith('/') and not url.startswith('//'):
++            from django.urls import get_script_prefix
++            script_prefix = get_script_prefix()
++            if script_prefix != '/':
++                # Only prepend if not already at root
++                # Remove leading slash to make it relative to script prefix
++                if url.startswith(script_prefix):
++                    # Already has the prefix
++                    pass
++                else:
++                    # Remove leading slash and join with script prefix
++                    relative_url = url[1:] if url.startswith('/') else url
++                    url = urljoin(script_prefix, relative_url)
++        return url
+ 
+     def _datetime_from_timestamp(self, ts):
+         """
+diff --git a/django/templatetags/static.py b/django/templatetags/static.py
+index 39712aaba0..31f4e3ea7d 100644
+--- a/django/templatetags/static.py
++++ b/django/templatetags/static.py
+@@ -48,12 +48,21 @@ class PrefixNode(template.Node):
+ 
+     def render(self, context):
+         prefix = self.handle_simple(self.name)
++        # Prepend script prefix for consistency with Django's URL handling
++        from django.urls import get_script_prefix
++        script_prefix = get_script_prefix()
++        if script_prefix != '/':
++            # Only prepend if not already at root
++            # Check if prefix already starts with script prefix
++            if not prefix.startswith(script_prefix):
++                # Remove leading slash to make it relative to script prefix
++                from urllib.parse import urljoin
++                relative_prefix = prefix[1:] if prefix.startswith('/') else prefix
++                prefix = urljoin(script_prefix, relative_prefix)
+         if self.varname is None:
+             return prefix
+         context[self.varname] = prefix
+         return ''
+-
+-
+ @register.tag
+ def get_static_prefix(parser, token):
+     """
+@@ -100,7 +109,19 @@ class StaticNode(template.Node):
+ 
+     def url(self, context):
+         path = self.path.resolve(context)
+-        return self.handle_simple(path)
++        url = self.handle_simple(path)
++        # Prepend script prefix for consistency with Django's URL handling
++        from django.urls import get_script_prefix
++        script_prefix = get_script_prefix()
++        if script_prefix != '/':
++            # Only prepend if not already at root
++            # Check if URL already starts with script prefix
++            if not url.startswith(script_prefix):
++                # Remove leading slash to make it relative to script prefix
++                from urllib.parse import urljoin
++                relative_url = url[1:] if url.startswith('/') else url
++                url = urljoin(script_prefix, relative_url)
++        return url
+ 
+     def render(self, context):
+         url = self.url(context)
+@@ -164,4 +185,16 @@ def static(path):
+     Given a relative path to a static asset, return the absolute path to the
+     asset.
+     """
+-    return StaticNode.handle_simple(path)
++    url = StaticNode.handle_simple(path)
++    # Prepend script prefix for consistency with Django's URL handling
++    from django.urls import get_script_prefix
++    script_prefix = get_script_prefix()
++    if script_prefix != '/':
++        # Only prepend if not already at root
++        # Check if URL already starts with script prefix
++        if not url.startswith(script_prefix):
++            # Remove leading slash to make it relative to script prefix
++            from urllib.parse import urljoin
++            relative_url = url[1:] if url.startswith('/') else url
++            url = urljoin(script_prefix, relative_url)
++    return url

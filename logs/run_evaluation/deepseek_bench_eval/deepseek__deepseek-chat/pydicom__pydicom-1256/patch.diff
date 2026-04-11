@@ -1,0 +1,13 @@
+diff --git a/pydicom/jsonrep.py b/pydicom/jsonrep.py
+index c6ef519c3..adcba36cb 100644
+--- a/pydicom/jsonrep.py
++++ b/pydicom/jsonrep.py
+@@ -227,7 +227,7 @@ class JsonDataElementConverter:
+                     elem = DataElement.from_json(
+                         self.dataset_class, key, vr,
+                         val[value_key], value_key
+-                    )
++                    , self.bulk_data_element_handler)
+                 ds.add(elem)
+         return ds
+ 

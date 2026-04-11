@@ -1,0 +1,47 @@
+{
+    "django__django-13768": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "test_send_robust_fail (dispatch.tests.DispatcherTests)"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_receiver_signal_list (dispatch.tests.ReceiverTestCase)",
+                    "test_receiver_single_signal (dispatch.tests.ReceiverTestCase)",
+                    "test_cached_garbaged_collected (dispatch.tests.DispatcherTests)",
+                    "test_cannot_connect_no_kwargs (dispatch.tests.DispatcherTests)",
+                    "test_cannot_connect_non_callable (dispatch.tests.DispatcherTests)",
+                    "test_disconnection (dispatch.tests.DispatcherTests)",
+                    "test_garbage_collected (dispatch.tests.DispatcherTests)",
+                    "test_has_listeners (dispatch.tests.DispatcherTests)",
+                    "test_multiple_registration (dispatch.tests.DispatcherTests)",
+                    "test_send (dispatch.tests.DispatcherTests)",
+                    "test_send_connected_no_sender (dispatch.tests.DispatcherTests)",
+                    "test_send_different_no_sender (dispatch.tests.DispatcherTests)",
+                    "test_send_no_receivers (dispatch.tests.DispatcherTests)",
+                    "test_send_robust_ignored_sender (dispatch.tests.DispatcherTests)",
+                    "test_send_robust_no_receivers (dispatch.tests.DispatcherTests)",
+                    "test_send_robust_success (dispatch.tests.DispatcherTests)",
+                    "test_uid_registration (dispatch.tests.DispatcherTests)",
+                    "test_values_returned_by_disconnection (dispatch.tests.DispatcherTests)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

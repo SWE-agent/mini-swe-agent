@@ -1,0 +1,54 @@
+diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py
+index 8642e1f151..1eafcc29a3 100644
+--- a/django/db/models/expressions.py
++++ b/django/db/models/expressions.py
+@@ -969,6 +969,11 @@ class ExpressionWrapper(SQLiteNumericMixin, Expression):
+     def get_source_expressions(self):
+         return [self.expression]
+ 
++
++    @property
++    def empty_result_set_value(self):
++        # Propagate empty_result_set_value from wrapped expression
++        return getattr(self.expression, 'empty_result_set_value', NotImplemented)
+     def get_group_by_cols(self, alias=None):
+         if isinstance(self.expression, Expression):
+             expression = self.expression.copy()
+@@ -979,7 +984,17 @@ class ExpressionWrapper(SQLiteNumericMixin, Expression):
+         return super().get_group_by_cols()
+ 
+     def as_sql(self, compiler, connection):
+-        return compiler.compile(self.expression)
++        sql, params = compiler.compile(self.expression)
++        # If the compiled SQL is empty, we need to handle it.
++        # This can happen with WhereNode that matches everything (e.g., ~Q(pk__in=[])).
++        # In this case, we should raise EmptyResultSet so get_select can handle it
++        # with the appropriate empty_result_set_value.
++        if not sql:
++            # Check if the expression has an empty_result_set_value attribute
++            empty_result_set_value = getattr(self.expression, 'empty_result_set_value', NotImplemented)
++            if empty_result_set_value is not NotImplemented:
++                raise EmptyResultSet
++        return sql, params
+ 
+     def __repr__(self):
+         return "{}({})".format(self.__class__.__name__, self.expression)
+diff --git a/django/db/models/sql/where.py b/django/db/models/sql/where.py
+index 50ff13be75..8b669aff0a 100644
+--- a/django/db/models/sql/where.py
++++ b/django/db/models/sql/where.py
+@@ -29,6 +29,14 @@ class WhereNode(tree.Node):
+     resolved = False
+     conditional = True
+ 
++    @property
++    def empty_result_set_value(self):
++        # When used as an expression in SELECT clause, what value should
++        # an empty WhereNode produce?
++        # - Non-negated empty: always FALSE (0)
++        # - Negated empty: always TRUE (1)
++        return 1 if self.negated else 0
++
+     def split_having(self, negated=False):
+         """
+         Return two possibly None nodes: one for those parts of self that

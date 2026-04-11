@@ -1,0 +1,24 @@
+diff --git a/django/views/debug.py b/django/views/debug.py
+index e6b7d4d821..6edad556a2 100644
+--- a/django/views/debug.py
++++ b/django/views/debug.py
+@@ -90,6 +90,11 @@ class SafeExceptionReporterFilter:
+                 cleansed = self.cleansed_substitute
+             elif isinstance(value, dict):
+                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}
++            elif isinstance(value, (list, tuple, set)):
++                # Handle lists, tuples, and sets recursively
++                # Note: sets can't contain unhashable types like dicts,
++                # but we handle them for completeness
++                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)
+             else:
+                 cleansed = value
+         except TypeError:
+@@ -100,7 +105,6 @@ class SafeExceptionReporterFilter:
+             cleansed = CallableSettingWrapper(cleansed)
+ 
+         return cleansed
+-
+     def get_safe_settings(self):
+         """
+         Return a dictionary of the settings module with values of sensitive

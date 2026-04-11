@@ -1,0 +1,904 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
++ locale-gen
+Generating locales (this might take a while)...
+  en_US.UTF-8... done
+Generation complete.
++ export LANG=en_US.UTF-8
++ LANG=en_US.UTF-8
++ export LANGUAGE=en_US:en
++ LANGUAGE=en_US:en
++ export LC_ALL=en_US.UTF-8
++ LC_ALL=en_US.UTF-8
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   django/core/exceptions.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit 16218c20606d8cd89c5393970c83da04598a3e04
+Author: Florian Demmer <fdemmer@gmail.com>
+Date:   Wed Jul 29 10:33:20 2020 +0200
+
+    Fixed #27395 -- Added sitemap 'alternates' generation.
+    
+    Updated the sitemap generator and default template to optionally
+    include link elements with hreflang attribute to alternate language
+    URLs.
+
+diff --git a/AUTHORS b/AUTHORS
+index d7f47d63d7..204a5c45eb 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -305,6 +305,7 @@ answer newbie questions, and generally made Django that much better:
+     Flávio Juvenal da Silva Junior <flavio@vinta.com.br>
+     flavio.curella@gmail.com
+     Florian Apolloner <florian@apolloner.eu>
++    Florian Demmer <fdemmer@gmail.com>
+     Florian Moussous <florian.moussous@gmail.com>
+     Fran Hrženjak <fran.hrzenjak@gmail.com>
+     Francisco Albarran Cristobal <pahko.xd@gmail.com>
+diff --git a/django/contrib/sitemaps/__init__.py b/django/contrib/sitemaps/__init__.py
+index 54720324a2..b13507a11e 100644
+--- a/django/contrib/sitemaps/__init__.py
++++ b/django/contrib/sitemaps/__init__.py
+@@ -60,32 +60,71 @@ class Sitemap:
+     # with which the sitemap was requested.
+     protocol = None
+ 
+-    def __get(self, name, obj, default=None):
++    # Enables generating URLs for all languages.
++    i18n = False
++
++    # Override list of languages to use.
++    languages = None
++
++    # Enables generating alternate/hreflang links.
++    alternates = False
++
++    # Add an alternate/hreflang link with value 'x-default'.
++    x_default = False
++
++    def _get(self, name, item, default=None):
+         try:
+             attr = getattr(self, name)
+         except AttributeError:
+             return default
+         if callable(attr):
+-            return attr(obj)
++            if self.i18n:
++                # Split the (item, lang_code) tuples again for the location,
++                # priority, lastmod and changefreq method calls.
++                item, lang_code = item
++            return attr(item)
+         return attr
+ 
+-    def items(self):
+-        return []
+-
+-    def location(self, obj):
+-        return obj.get_absolute_url()
++    def _languages(self):
++        if self.languages is not None:
++            return self.languages
++        return [lang_code for lang_code, _ in settings.LANGUAGES]
++
++    def _items(self):
++        if self.i18n:
++            # Create (item, lang_code) tuples for all items and languages.
++            # This is necessary to paginate with all languages already considered.
++            items = [
++                (item, lang_code)
++                for lang_code in self._languages()
++                for item in self.items()
++            ]
++            return items
++        return self.items()
++
++    def _location(self, item, force_lang_code=None):
++        if self.i18n:
++            obj, lang_code = item
++            # Activate language from item-tuple or forced one before calling location.
++            with translation.override(force_lang_code or lang_code):
++                return self._get('location', item)
++        return self._get('location', item)
+ 
+     @property
+     def paginator(self):
+-        return paginator.Paginator(self.items(), self.limit)
++        return paginator.Paginator(self._items(), self.limit)
+ 
+-    def get_urls(self, page=1, site=None, protocol=None):
++    def items(self):
++        return []
++
++    def location(self, item):
++        return item.get_absolute_url()
++
++    def get_protocol(self, protocol=None):
+         # Determine protocol
+-        if self.protocol is not None:
+-            protocol = self.protocol
+-        if protocol is None:
+-            protocol = 'http'
++        return self.protocol or protocol or 'http'
+ 
++    def get_domain(self, site=None):
+         # Determine domain
+         if site is None:
+             if django_apps.is_installed('django.contrib.sites'):
+@@ -99,43 +138,61 @@ class Sitemap:
+                     "To use sitemaps, either enable the sites framework or pass "
+                     "a Site/RequestSite object in your view."
+                 )
+-        domain = site.domain
+-
+-        if getattr(self, 'i18n', False):
+-            urls = []
+-            current_lang_code = translation.get_language()
+-            for lang_code, lang_name in settings.LANGUAGES:
+-                translation.activate(lang_code)
+-                urls += self._urls(page, protocol, domain)
+-            translation.activate(current_lang_code)
+-        else:
+-            urls = self._urls(page, protocol, domain)
++        return site.domain
+ 
+-        return urls
++    def get_urls(self, page=1, site=None, protocol=None):
++        protocol = self.get_protocol(protocol)
++        domain = self.get_domain(site)
++        return self._urls(page, protocol, domain)
+ 
+     def _urls(self, page, protocol, domain):
+         urls = []
+         latest_lastmod = None
+         all_items_lastmod = True  # track if all items have a lastmod
+-        for item in self.paginator.page(page).object_list:
+-            loc = "%s://%s%s" % (protocol, domain, self.__get('location', item))
+-            priority = self.__get('priority', item)
+-            lastmod = self.__get('lastmod', item)
++
++        paginator_page = self.paginator.page(page)
++        for item in paginator_page.object_list:
++            loc = f'{protocol}://{domain}{self._location(item)}'
++            priority = self._get('priority', item)
++            lastmod = self._get('lastmod', item)
++
+             if all_items_lastmod:
+                 all_items_lastmod = lastmod is not None
+                 if (all_items_lastmod and
+                         (latest_lastmod is None or lastmod > latest_lastmod)):
+                     latest_lastmod = lastmod
++
+             url_info = {
+                 'item': item,
+                 'location': loc,
+                 'lastmod': lastmod,
+-                'changefreq': self.__get('changefreq', item),
++                'changefreq': self._get('changefreq', item),
+                 'priority': str(priority if priority is not None else ''),
+             }
++
++            if self.i18n and self.alternates:
++                alternates = []
++                for lang_code in self._languages():
++                    loc = f'{protocol}://{domain}{self._location(item, lang_code)}'
++                    alternates.append({
++                        'location': loc,
++                        'lang_code': lang_code,
++                    })
++                if self.x_default:
++                    lang_code = settings.LANGUAGE_CODE
++                    loc = f'{protocol}://{domain}{self._location(item, lang_code)}'
++                    loc = loc.replace(f'/{lang_code}/', '/', 1)
++                    alternates.append({
++                        'location': loc,
++                        'lang_code': 'x-default',
++                    })
++                url_info['alternates'] = alternates
++
+             urls.append(url_info)
++
+         if all_items_lastmod and latest_lastmod:
+             self.latest_lastmod = latest_lastmod
++
+         return urls
+ 
+ 
+@@ -146,9 +203,9 @@ class GenericSitemap(Sitemap):
+     def __init__(self, info_dict, priority=None, changefreq=None, protocol=None):
+         self.queryset = info_dict['queryset']
+         self.date_field = info_dict.get('date_field')
+-        self.priority = priority
+-        self.changefreq = changefreq
+-        self.protocol = protocol
++        self.priority = self.priority or priority
++        self.changefreq = self.changefreq or changefreq
++        self.protocol = self.protocol or protocol
+ 
+     def items(self):
+         # Make sure to return a clone; we don't want premature evaluation.
+diff --git a/django/contrib/sitemaps/templates/sitemap.xml b/django/contrib/sitemaps/templates/sitemap.xml
+index b13b830b9c..67b166ac36 100644
+--- a/django/contrib/sitemaps/templates/sitemap.xml
++++ b/django/contrib/sitemaps/templates/sitemap.xml
+@@ -7,7 +7,10 @@
+     {% if url.lastmod %}<lastmod>{{ url.lastmod|date:"Y-m-d" }}</lastmod>{% endif %}
+     {% if url.changefreq %}<changefreq>{{ url.changefreq }}</changefreq>{% endif %}
+     {% if url.priority %}<priority>{{ url.priority }}</priority>{% endif %}
+-   </url>
++    {% for alternate in url.alternates %}
++    <xhtml:link rel="alternate" hreflang="{{ alternate.lang_code }}" href="{{ alternate.location }}"/>
++    {% endfor %}
++  </url>
+ {% endfor %}
+ {% endspaceless %}
+ </urlset>
+diff --git a/docs/ref/contrib/sitemaps.txt b/docs/ref/contrib/sitemaps.txt
+index 8f89f6f899..936567411e 100644
+--- a/docs/ref/contrib/sitemaps.txt
++++ b/docs/ref/contrib/sitemaps.txt
+@@ -252,6 +252,40 @@ Note:
+         be generated using all of your :setting:`LANGUAGES`. The default is
+         ``False``.
+ 
++    .. attribute:: Sitemap.languages
++
++        .. versionadded:: 3.2
++
++        **Optional.**
++
++        A :term:`sequence` of :term:`language codes<language code>` to use for
++        generating alternate links when :attr:`~Sitemap.i18n` is enabled.
++        Defaults to :setting:`LANGUAGES`.
++
++    .. attribute:: Sitemap.alternates
++
++        .. versionadded:: 3.2
++
++        **Optional.**
++
++        A boolean attribute. When used in conjunction with
++        :attr:`~Sitemap.i18n` generated URLs will each have a list of alternate
++        links pointing to other language versions using the `hreflang
++        attribute`_. The default is ``False``.
++
++        .. _hreflang attribute: https://support.google.com/webmasters/answer/189077
++
++    .. attribute:: Sitemap.x_default
++
++        .. versionadded:: 3.2
++
++        **Optional.**
++
++        A boolean attribute. When ``True`` the alternate links generated by
++        :attr:`~Sitemap.alternates` will contain a ``hreflang="x-default"``
++        fallback entry with a value of :setting:`LANGUAGE_CODE`. The default is
++        ``False``.
++
+ Shortcuts
+ =========
+ 
+@@ -438,12 +472,22 @@ The variable ``urlset`` is a list of URLs that should appear in the
+ sitemap. Each URL exposes attributes as defined in the
+ :class:`~django.contrib.sitemaps.Sitemap` class:
+ 
++- ``alternates``
+ - ``changefreq``
+ - ``item``
+ - ``lastmod``
+ - ``location``
+ - ``priority``
+ 
++The ``alternates`` attribute is available when :attr:`~Sitemap.i18n` and
++:attr:`~Sitemap.alternates` are enabled. It is a list of other language
++versions, including the optional :attr:`~Sitemap.x_default` fallback, for each
++URL. Each alternate is a dictionary with ``location`` and ``lang_code`` keys.
++
++.. versionchanged:: 3.2
++
++    The ``alternates`` attribute was added.
++
+ The ``item`` attribute has been added for each URL to allow more flexible
+ customization of the templates, such as `Google news sitemaps`_. Assuming
+ Sitemap's :attr:`~Sitemap.items()` would return a list of items with
+diff --git a/docs/releases/3.2.txt b/docs/releases/3.2.txt
+index fe4b309cb5..10468ac655 100644
+--- a/docs/releases/3.2.txt
++++ b/docs/releases/3.2.txt
+@@ -125,7 +125,11 @@ Minor features
+ :mod:`django.contrib.sitemaps`
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+-* ...
++* The new :class:`~django.contrib.sitemaps.Sitemap` attributes
++  :attr:`~django.contrib.sitemaps.Sitemap.alternates`,
++  :attr:`~django.contrib.sitemaps.Sitemap.languages` and
++  :attr:`~django.contrib.sitemaps.Sitemap.x_default` allow
++  generating sitemap *alternates* to localized versions of your pages.
+ 
+ :mod:`django.contrib.sites`
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+diff --git a/tests/sitemaps_tests/test_http.py b/tests/sitemaps_tests/test_http.py
+index 3d4e1d84dc..3281774cc5 100644
+--- a/tests/sitemaps_tests/test_http.py
++++ b/tests/sitemaps_tests/test_http.py
+@@ -253,8 +253,10 @@ class HTTPSitemapTests(SitemapTestsBase):
+         self.assertEqual(response.status_code, 200)
+ 
+     @override_settings(LANGUAGES=(('en', 'English'), ('pt', 'Portuguese')))
+-    def test_simple_i18nsitemap_index(self):
+-        "A simple i18n sitemap index can be rendered"
++    def test_simple_i18n_sitemap_index(self):
++        """
++        A simple i18n sitemap index can be rendered.
++        """
+         response = self.client.get('/simple/i18n.xml')
+         expected_content = """<?xml version="1.0" encoding="UTF-8"?>
+ <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+@@ -263,6 +265,80 @@ class HTTPSitemapTests(SitemapTestsBase):
+ """.format(self.base_url, self.i18n_model.pk)
+         self.assertXMLEqual(response.content.decode(), expected_content)
+ 
++    @override_settings(LANGUAGES=(('en', 'English'), ('pt', 'Portuguese')))
++    def test_alternate_i18n_sitemap_index(self):
++        """
++        A i18n sitemap with alternate/hreflang links can be rendered.
++        """
++        response = self.client.get('/alternates/i18n.xml')
++        url, pk = self.base_url, self.i18n_model.pk
++        expected_urls = f"""
++<url><loc>{url}/en/i18n/testmodel/{pk}/</loc><changefreq>never</changefreq><priority>0.5</priority>
++<xhtml:link rel="alternate" hreflang="en" href="{url}/en/i18n/testmodel/{pk}/"/>
++<xhtml:link rel="alternate" hreflang="pt" href="{url}/pt/i18n/testmodel/{pk}/"/>
++</url>
++<url><loc>{url}/pt/i18n/testmodel/{pk}/</loc><changefreq>never</changefreq><priority>0.5</priority>
++<xhtml:link rel="alternate" hreflang="en" href="{url}/en/i18n/testmodel/{pk}/"/>
++<xhtml:link rel="alternate" hreflang="pt" href="{url}/pt/i18n/testmodel/{pk}/"/>
++</url>
++""".replace('\n', '')
++        expected_content = f"""<?xml version="1.0" encoding="UTF-8"?>
++<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
++{expected_urls}
++</urlset>
++"""
++        self.assertXMLEqual(response.content.decode(), expected_content)
++
++    @override_settings(LANGUAGES=(('en', 'English'), ('pt', 'Portuguese'), ('es', 'Spanish')))
++    def test_alternate_i18n_sitemap_limited(self):
++        """
++        A i18n sitemap index with limited languages can be rendered.
++        """
++        response = self.client.get('/limited/i18n.xml')
++        url, pk = self.base_url, self.i18n_model.pk
++        expected_urls = f"""
++<url><loc>{url}/en/i18n/testmodel/{pk}/</loc><changefreq>never</changefreq><priority>0.5</priority>
++<xhtml:link rel="alternate" hreflang="en" href="{url}/en/i18n/testmodel/{pk}/"/>
++<xhtml:link rel="alternate" hreflang="es" href="{url}/es/i18n/testmodel/{pk}/"/>
++</url>
++<url><loc>{url}/es/i18n/testmodel/{pk}/</loc><changefreq>never</changefreq><priority>0.5</priority>
++<xhtml:link rel="alternate" hreflang="en" href="{url}/en/i18n/testmodel/{pk}/"/>
++<xhtml:link rel="alternate" hreflang="es" href="{url}/es/i18n/testmodel/{pk}/"/>
++</url>
++""".replace('\n', '')
++        expected_content = f"""<?xml version="1.0" encoding="UTF-8"?>
++<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
++{expected_urls}
++</urlset>
++"""
++        self.assertXMLEqual(response.content.decode(), expected_content)
++
++    @override_settings(LANGUAGES=(('en', 'English'), ('pt', 'Portuguese')))
++    def test_alternate_i18n_sitemap_xdefault(self):
++        """
++        A i18n sitemap index with x-default can be rendered.
++        """
++        response = self.client.get('/x-default/i18n.xml')
++        url, pk = self.base_url, self.i18n_model.pk
++        expected_urls = f"""
++<url><loc>{url}/en/i18n/testmodel/{pk}/</loc><changefreq>never</changefreq><priority>0.5</priority>
++<xhtml:link rel="alternate" hreflang="en" href="{url}/en/i18n/testmodel/{pk}/"/>
++<xhtml:link rel="alternate" hreflang="pt" href="{url}/pt/i18n/testmodel/{pk}/"/>
++<xhtml:link rel="alternate" hreflang="x-default" href="{url}/i18n/testmodel/{pk}/"/>
++</url>
++<url><loc>{url}/pt/i18n/testmodel/{pk}/</loc><changefreq>never</changefreq><priority>0.5</priority>
++<xhtml:link rel="alternate" hreflang="en" href="{url}/en/i18n/testmodel/{pk}/"/>
++<xhtml:link rel="alternate" hreflang="pt" href="{url}/pt/i18n/testmodel/{pk}/"/>
++<xhtml:link rel="alternate" hreflang="x-default" href="{url}/i18n/testmodel/{pk}/"/>
++</url>
++""".replace('\n', '')
++        expected_content = f"""<?xml version="1.0" encoding="UTF-8"?>
++<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
++{expected_urls}
++</urlset>
++"""
++        self.assertXMLEqual(response.content.decode(), expected_content)
++
+     def test_sitemap_without_entries(self):
+         response = self.client.get('/sitemap-without-entries/sitemap.xml')
+         expected_content = """<?xml version="1.0" encoding="UTF-8"?>
+diff --git a/tests/sitemaps_tests/urls/http.py b/tests/sitemaps_tests/urls/http.py
+index 495f60fb1a..e4cba4c42f 100644
+--- a/tests/sitemaps_tests/urls/http.py
++++ b/tests/sitemaps_tests/urls/http.py
+@@ -34,6 +34,18 @@ class SimpleI18nSitemap(Sitemap):
+         return I18nTestModel.objects.order_by('pk').all()
+ 
+ 
++class AlternatesI18nSitemap(SimpleI18nSitemap):
++    alternates = True
++
++
++class LimitedI18nSitemap(AlternatesI18nSitemap):
++    languages = ['en', 'es']
++
++
++class XDefaultI18nSitemap(AlternatesI18nSitemap):
++    x_default = True
++
++
+ class EmptySitemap(Sitemap):
+     changefreq = "never"
+     priority = 0.5
+@@ -77,8 +89,20 @@ simple_sitemaps = {
+     'simple': SimpleSitemap,
+ }
+ 
+-simple_i18nsitemaps = {
+-    'simple': SimpleI18nSitemap,
++simple_i18n_sitemaps = {
++    'i18n': SimpleI18nSitemap,
++}
++
++alternates_i18n_sitemaps = {
++    'i18n-alternates': AlternatesI18nSitemap,
++}
++
++limited_i18n_sitemaps = {
++    'i18n-limited': LimitedI18nSitemap,
++}
++
++xdefault_i18n_sitemaps = {
++    'i18n-xdefault': XDefaultI18nSitemap,
+ }
+ 
+ simple_sitemaps_not_callable = {
+@@ -97,7 +121,7 @@ fixed_lastmod_sitemaps = {
+     'fixed-lastmod': FixedLastmodSitemap,
+ }
+ 
+-fixed_lastmod__mixed_sitemaps = {
++fixed_lastmod_mixed_sitemaps = {
+     'fixed-lastmod-mixed': FixedLastmodMixedSitemap,
+ }
+ 
+@@ -151,7 +175,19 @@ urlpatterns = [
+         name='django.contrib.sitemaps.views.sitemap'),
+     path(
+         'simple/i18n.xml', views.sitemap,
+-        {'sitemaps': simple_i18nsitemaps},
++        {'sitemaps': simple_i18n_sitemaps},
++        name='django.contrib.sitemaps.views.sitemap'),
++    path(
++        'alternates/i18n.xml', views.sitemap,
++        {'sitemaps': alternates_i18n_sitemaps},
++        name='django.contrib.sitemaps.views.sitemap'),
++    path(
++        'limited/i18n.xml', views.sitemap,
++        {'sitemaps': limited_i18n_sitemaps},
++        name='django.contrib.sitemaps.views.sitemap'),
++    path(
++        'x-default/i18n.xml', views.sitemap,
++        {'sitemaps': xdefault_i18n_sitemaps},
+         name='django.contrib.sitemaps.views.sitemap'),
+     path(
+         'simple/custom-sitemap.xml', views.sitemap,
+@@ -167,7 +203,7 @@ urlpatterns = [
+         name='django.contrib.sitemaps.views.sitemap'),
+     path(
+         'lastmod-mixed/sitemap.xml', views.sitemap,
+-        {'sitemaps': fixed_lastmod__mixed_sitemaps},
++        {'sitemaps': fixed_lastmod_mixed_sitemaps},
+         name='django.contrib.sitemaps.views.sitemap'),
+     path(
+         'lastmod/date-sitemap.xml', views.sitemap,
++ git -c core.fileMode=false diff 16218c20606d8cd89c5393970c83da04598a3e04
+diff --git a/django/core/exceptions.py b/django/core/exceptions.py
+index dc084b8692..a50a50668d 100644
+--- a/django/core/exceptions.py
++++ b/django/core/exceptions.py
+@@ -179,6 +179,81 @@ class ValidationError(Exception):
+             return repr(dict(self))
+         return repr(list(self))
+ 
++    def __eq__(self, other):
++        """
++        Return True if `other` is a ValidationError with the same errors.
++        
++        Comparison is order-independent for lists and dictionaries.
++        """
++        if not isinstance(other, ValidationError):
++            return NotImplemented
++        
++        # Check if both have the same structure type
++        self_has_dict = hasattr(self, 'error_dict')
++        other_has_dict = hasattr(other, 'error_dict')
++        self_has_message = hasattr(self, 'message')
++        other_has_message = hasattr(other, 'message')
++        
++        # If structure types don't match, they're not equal
++        if self_has_dict != other_has_dict or self_has_message != other_has_message:
++            return False
++        
++        # Both have error_dict (dictionary of field errors)
++        if self_has_dict:
++            # Compare field sets
++            if set(self.error_dict.keys()) != set(other.error_dict.keys()):
++                return False
++            
++            # Compare errors for each field
++            for field in self.error_dict:
++                self_errors = self.error_dict[field]
++                other_errors = other.error_dict[field]
++                
++                # Quick length check
++                if len(self_errors) != len(other_errors):
++                    return False
++                
++                # For order-independent comparison, check if each error in self_errors
++                # has a matching error in other_errors
++                matched = [False] * len(other_errors)
++                for self_err in self_errors:
++                    found = False
++                    for i, other_err in enumerate(other_errors):
++                        if not matched[i] and self_err == other_err:
++                            matched[i] = True
++                            found = True
++                            break
++                    if not found:
++                        return False
++            
++            return True
++        
++        # Both have message (simple ValidationError with message, code, params)
++        elif self_has_message:
++            return (self.message == other.message and 
++                    self.code == other.code and 
++                    self.params == other.params)
++        
++        # Both are list ValidationErrors (have error_list but no message)
++        else:
++            # Quick length check
++            if len(self.error_list) != len(other.error_list):
++                return False
++            
++            # For order-independent comparison
++            matched = [False] * len(other.error_list)
++            for self_err in self.error_list:
++                found = False
++                for i, other_err in enumerate(other.error_list):
++                    if not matched[i] and self_err == other_err:
++                        matched[i] = True
++                        found = True
++                        break
++                if not found:
++                    return False
++            
++            return True
++
+     def __repr__(self):
+         return 'ValidationError(%s)' % self
+ 
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+Requirement already satisfied: asgiref>=3.2.10 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.2) (3.4.1)
+Requirement already satisfied: pytz in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.2) (2024.2)
+Requirement already satisfied: sqlparse>=0.2.2 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.2) (0.4.4)
+Requirement already satisfied: typing-extensions in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from asgiref>=3.2.10->Django==3.2) (4.1.1)
+Installing collected packages: Django
+  Attempting uninstall: Django
+    Found existing installation: Django 3.2
+    Uninstalling Django-3.2:
+      Successfully uninstalled Django-3.2
+  Running setup.py develop for Django
+Successfully installed Django-3.2
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
++ git checkout 16218c20606d8cd89c5393970c83da04598a3e04 tests/test_exceptions/test_validation_error.py
+Updated 0 paths from c1b968f621
++ git apply -v -
+Checking patch tests/test_exceptions/test_validation_error.py...
+Applied patch tests/test_exceptions/test_validation_error.py cleanly.
++ : '>>>>> Start Test Output'
++ ./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 test_exceptions.test_validation_error
+test_eq (test_exceptions.test_validation_error.TestValidationError) ... ok
+test_eq_nested (test_exceptions.test_validation_error.TestValidationError) ... ok
+test_hash (test_exceptions.test_validation_error.TestValidationError) ... ERROR
+test_hash_nested (test_exceptions.test_validation_error.TestValidationError) ... ERROR
+test_messages_concatenates_error_dict_values (test_exceptions.test_validation_error.TestValidationError) ... ok
+
+======================================================================
+ERROR: test_hash (test_exceptions.test_validation_error.TestValidationError)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/test_exceptions/test_validation_error.py", line 164, in test_hash
+    self.assertEqual(hash(error1), hash(ValidationError('message')))
+TypeError: unhashable type: 'ValidationError'
+
+======================================================================
+ERROR: test_hash_nested (test_exceptions.test_validation_error.TestValidationError)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/test_exceptions/test_validation_error.py", line 266, in test_hash_nested
+    self.assertEqual(hash(error), hash(ValidationError(dict(error_dict))))
+TypeError: unhashable type: 'ValidationError'
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+FAILED (errors=2)
+Testing against Django installed in '/testbed/django'
+Importing application test_exceptions
+Skipping setup of unused database(s): default, other.
+System check identified no issues (0 silenced).
++ : '>>>>> End Test Output'
++ git checkout 16218c20606d8cd89c5393970c83da04598a3e04 tests/test_exceptions/test_validation_error.py
+Updated 1 path from c1b968f621

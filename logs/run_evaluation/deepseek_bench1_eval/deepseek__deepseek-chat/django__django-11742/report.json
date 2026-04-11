@@ -1,0 +1,74 @@
+{
+    "django__django-11742": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "test_choices_in_max_length (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_choices_named_group (invalid_models_tests.test_ordinary_fields.CharFieldTests)"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_non_nullable_blank (invalid_models_tests.test_ordinary_fields.GenericIPAddressFieldTests)",
+                    "test_forbidden_files_and_folders (invalid_models_tests.test_ordinary_fields.FilePathFieldTests)",
+                    "test_max_length_warning (invalid_models_tests.test_ordinary_fields.IntegerFieldTests)",
+                    "test_primary_key (invalid_models_tests.test_ordinary_fields.FileFieldTests)",
+                    "test_upload_to_callable_not_checked (invalid_models_tests.test_ordinary_fields.FileFieldTests)",
+                    "test_upload_to_starts_with_slash (invalid_models_tests.test_ordinary_fields.FileFieldTests)",
+                    "test_valid_case (invalid_models_tests.test_ordinary_fields.FileFieldTests)",
+                    "test_valid_default_case (invalid_models_tests.test_ordinary_fields.FileFieldTests)",
+                    "test_str_default_value (invalid_models_tests.test_ordinary_fields.BinaryFieldTests)",
+                    "test_valid_default_value (invalid_models_tests.test_ordinary_fields.BinaryFieldTests)",
+                    "test_max_length_warning (invalid_models_tests.test_ordinary_fields.AutoFieldTests)",
+                    "test_primary_key (invalid_models_tests.test_ordinary_fields.AutoFieldTests)",
+                    "test_valid_case (invalid_models_tests.test_ordinary_fields.AutoFieldTests)",
+                    "test_fix_default_value (invalid_models_tests.test_ordinary_fields.DateTimeFieldTests)",
+                    "test_fix_default_value_tz (invalid_models_tests.test_ordinary_fields.DateTimeFieldTests)",
+                    "test_auto_now_and_auto_now_add_raise_error (invalid_models_tests.test_ordinary_fields.DateFieldTests)",
+                    "test_fix_default_value (invalid_models_tests.test_ordinary_fields.DateFieldTests)",
+                    "test_fix_default_value_tz (invalid_models_tests.test_ordinary_fields.DateFieldTests)",
+                    "test_fix_default_value (invalid_models_tests.test_ordinary_fields.TimeFieldTests)",
+                    "test_fix_default_value_tz (invalid_models_tests.test_ordinary_fields.TimeFieldTests)",
+                    "test_bad_values_of_max_digits_and_decimal_places (invalid_models_tests.test_ordinary_fields.DecimalFieldTests)",
+                    "test_decimal_places_greater_than_max_digits (invalid_models_tests.test_ordinary_fields.DecimalFieldTests)",
+                    "test_negative_max_digits_and_decimal_places (invalid_models_tests.test_ordinary_fields.DecimalFieldTests)",
+                    "test_required_attributes (invalid_models_tests.test_ordinary_fields.DecimalFieldTests)",
+                    "test_valid_field (invalid_models_tests.test_ordinary_fields.DecimalFieldTests)",
+                    "test_bad_db_index_value (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_bad_max_length_value (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_bad_validators (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_choices_containing_lazy (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_choices_containing_non_pairs (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_choices_named_group_bad_structure (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_choices_named_group_lazy (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_iterable_of_iterable_choices (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_lazy_choices (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_missing_max_length (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_negative_max_length (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_non_iterable_choices (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "Two letters isn't a valid choice pair.",
+                    "test_str_max_length_type (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_str_max_length_value (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_valid_field (invalid_models_tests.test_ordinary_fields.CharFieldTests)",
+                    "test_pillow_installed (invalid_models_tests.test_ordinary_fields.ImageFieldTests)"
+                ],
+                "failure": [
+                    "test_choices_named_group_non_pairs (invalid_models_tests.test_ordinary_fields.CharFieldTests)"
+                ]
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

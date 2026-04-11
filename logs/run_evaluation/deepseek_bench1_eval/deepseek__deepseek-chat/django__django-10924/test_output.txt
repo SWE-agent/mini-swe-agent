@@ -1,0 +1,698 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
++ locale-gen
+Generating locales (this might take a while)...
+  en_US.UTF-8... done
+Generation complete.
++ export LANG=en_US.UTF-8
++ LANG=en_US.UTF-8
++ export LANGUAGE=en_US:en
++ LANGUAGE=en_US:en
++ export LC_ALL=en_US.UTF-8
++ LC_ALL=en_US.UTF-8
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   django/db/models/fields/__init__.py
+	modified:   django/forms/fields.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit bceadd2788dc2dad53eba0caae172bd8522fd483
+Author: can <cansarigol@derinbilgi.com.tr>
+Date:   Wed May 1 16:39:02 2019 +0300
+
+    Fixed #30396 -- Added system checks for uniqueness of indexes and constraints names.
+    
+    Co-Authored-By: Mariusz Felisiak <felisiak.mariusz@gmail.com>
+
+diff --git a/AUTHORS b/AUTHORS
+index 6983965cd1..e9c027167c 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -152,6 +152,7 @@ answer newbie questions, and generally made Django that much better:
+     Cameron Curry
+     Cameron Knight (ckknight)
+     Can Burak Çilingir <canburak@cs.bilgi.edu.tr>
++    Can Sarıgöl <ertugrulsarigol@gmail.com>
+     Carl Meyer <carl@oddbird.net>
+     Carles Pina i Estany <carles@pina.cat>
+     Carlos Eduardo de Paula <carlosedp@gmail.com>
+diff --git a/django/core/checks/model_checks.py b/django/core/checks/model_checks.py
+index 6c6ac2c7f4..5c2266ca1d 100644
+--- a/django/core/checks/model_checks.py
++++ b/django/core/checks/model_checks.py
+@@ -10,6 +10,8 @@ from django.core.checks import Error, Tags, register
+ @register(Tags.models)
+ def check_all_models(app_configs=None, **kwargs):
+     db_table_models = defaultdict(list)
++    indexes = defaultdict(list)
++    constraints = defaultdict(list)
+     errors = []
+     if app_configs is None:
+         models = apps.get_models()
+@@ -29,6 +31,10 @@ def check_all_models(app_configs=None, **kwargs):
+             )
+         else:
+             errors.extend(model.check(**kwargs))
++        for model_index in model._meta.indexes:
++            indexes[model_index.name].append(model._meta.label)
++        for model_constraint in model._meta.constraints:
++            constraints[model_constraint.name].append(model._meta.label)
+     for db_table, model_labels in db_table_models.items():
+         if len(model_labels) != 1:
+             errors.append(
+@@ -39,6 +45,32 @@ def check_all_models(app_configs=None, **kwargs):
+                     id='models.E028',
+                 )
+             )
++    for index_name, model_labels in indexes.items():
++        if len(model_labels) > 1:
++            model_labels = set(model_labels)
++            errors.append(
++                Error(
++                    "index name '%s' is not unique %s %s." % (
++                        index_name,
++                        'for model' if len(model_labels) == 1 else 'amongst models:',
++                        ', '.join(sorted(model_labels)),
++                    ),
++                    id='models.E029' if len(model_labels) == 1 else 'models.E030',
++                ),
++            )
++    for constraint_name, model_labels in constraints.items():
++        if len(model_labels) > 1:
++            model_labels = set(model_labels)
++            errors.append(
++                Error(
++                    "constraint name '%s' is not unique %s %s." % (
++                        constraint_name,
++                        'for model' if len(model_labels) == 1 else 'amongst models:',
++                        ', '.join(sorted(model_labels)),
++                    ),
++                    id='models.E031' if len(model_labels) == 1 else 'models.E032',
++                ),
++            )
+     return errors
+ 
+ 
+diff --git a/docs/ref/checks.txt b/docs/ref/checks.txt
+index 973ccebe90..a15eb558fe 100644
+--- a/docs/ref/checks.txt
++++ b/docs/ref/checks.txt
+@@ -306,6 +306,13 @@ Models
+ * **models.W027**: ``<database>`` does not support check constraints.
+ * **models.E028**: ``db_table`` ``<db_table>`` is used by multiple models:
+   ``<model list>``.
++* **models.E029**: index name ``<index>`` is not unique for model ``<model>``.
++* **models.E030**: index name ``<index>`` is not unique amongst models:
++  ``<model list>``.
++* **models.E031**: constraint name ``<constraint>`` is not unique for model
++  ``<model>``.
++* **models.E032**: constraint name ``<constraint>`` is not unique amongst
++  models: ``<model list>``.
+ 
+ Security
+ --------
+diff --git a/tests/check_framework/test_model_checks.py b/tests/check_framework/test_model_checks.py
+index 2e55ad637d..0cbc0aff44 100644
+--- a/tests/check_framework/test_model_checks.py
++++ b/tests/check_framework/test_model_checks.py
+@@ -1,7 +1,7 @@
+ from django.core import checks
+ from django.core.checks import Error
+ from django.db import models
+-from django.test import SimpleTestCase
++from django.test import SimpleTestCase, TestCase, skipUnlessDBFeature
+ from django.test.utils import (
+     isolate_apps, modify_settings, override_system_checks,
+ )
+@@ -73,3 +73,166 @@ class DuplicateDBTableTests(SimpleTestCase):
+ 
+         self.assertEqual(Model._meta.db_table, ProxyModel._meta.db_table)
+         self.assertEqual(checks.run_checks(app_configs=self.apps.get_app_configs()), [])
++
++
++@isolate_apps('check_framework', attr_name='apps')
++@override_system_checks([checks.model_checks.check_all_models])
++class IndexNameTests(SimpleTestCase):
++    def test_collision_in_same_model(self):
++        index = models.Index(fields=['id'], name='foo')
++
++        class Model(models.Model):
++            class Meta:
++                indexes = [index, index]
++
++        self.assertEqual(checks.run_checks(app_configs=self.apps.get_app_configs()), [
++            Error(
++                "index name 'foo' is not unique for model check_framework.Model.",
++                id='models.E029',
++            ),
++        ])
++
++    def test_collision_in_different_models(self):
++        index = models.Index(fields=['id'], name='foo')
++
++        class Model1(models.Model):
++            class Meta:
++                indexes = [index]
++
++        class Model2(models.Model):
++            class Meta:
++                indexes = [index]
++
++        self.assertEqual(checks.run_checks(app_configs=self.apps.get_app_configs()), [
++            Error(
++                "index name 'foo' is not unique amongst models: "
++                "check_framework.Model1, check_framework.Model2.",
++                id='models.E030',
++            ),
++        ])
++
++    def test_collision_abstract_model(self):
++        class AbstractModel(models.Model):
++            class Meta:
++                indexes = [models.Index(fields=['id'], name='foo')]
++                abstract = True
++
++        class Model1(AbstractModel):
++            pass
++
++        class Model2(AbstractModel):
++            pass
++
++        self.assertEqual(checks.run_checks(app_configs=self.apps.get_app_configs()), [
++            Error(
++                "index name 'foo' is not unique amongst models: "
++                "check_framework.Model1, check_framework.Model2.",
++                id='models.E030',
++            ),
++        ])
++
++    @modify_settings(INSTALLED_APPS={'append': 'basic'})
++    @isolate_apps('basic', 'check_framework', kwarg_name='apps')
++    def test_collision_across_apps(self, apps):
++        index = models.Index(fields=['id'], name='foo')
++
++        class Model1(models.Model):
++            class Meta:
++                app_label = 'basic'
++                indexes = [index]
++
++        class Model2(models.Model):
++            class Meta:
++                app_label = 'check_framework'
++                indexes = [index]
++
++        self.assertEqual(checks.run_checks(app_configs=apps.get_app_configs()), [
++            Error(
++                "index name 'foo' is not unique amongst models: basic.Model1, "
++                "check_framework.Model2.",
++                id='models.E030',
++            ),
++        ])
++
++
++@isolate_apps('check_framework', attr_name='apps')
++@override_system_checks([checks.model_checks.check_all_models])
++@skipUnlessDBFeature('supports_table_check_constraints')
++class ConstraintNameTests(TestCase):
++    def test_collision_in_same_model(self):
++        class Model(models.Model):
++            class Meta:
++                constraints = [
++                    models.CheckConstraint(check=models.Q(id__gt=0), name='foo'),
++                    models.CheckConstraint(check=models.Q(id__lt=100), name='foo'),
++                ]
++
++        self.assertEqual(checks.run_checks(app_configs=self.apps.get_app_configs()), [
++            Error(
++                "constraint name 'foo' is not unique for model "
++                "check_framework.Model.",
++                id='models.E031',
++            ),
++        ])
++
++    def test_collision_in_different_models(self):
++        constraint = models.CheckConstraint(check=models.Q(id__gt=0), name='foo')
++
++        class Model1(models.Model):
++            class Meta:
++                constraints = [constraint]
++
++        class Model2(models.Model):
++            class Meta:
++                constraints = [constraint]
++
++        self.assertEqual(checks.run_checks(app_configs=self.apps.get_app_configs()), [
++            Error(
++                "constraint name 'foo' is not unique amongst models: "
++                "check_framework.Model1, check_framework.Model2.",
++                id='models.E032',
++            ),
++        ])
++
++    def test_collision_abstract_model(self):
++        class AbstractModel(models.Model):
++            class Meta:
++                constraints = [models.CheckConstraint(check=models.Q(id__gt=0), name='foo')]
++                abstract = True
++
++        class Model1(AbstractModel):
++            pass
++
++        class Model2(AbstractModel):
++            pass
++
++        self.assertEqual(checks.run_checks(app_configs=self.apps.get_app_configs()), [
++            Error(
++                "constraint name 'foo' is not unique amongst models: "
++                "check_framework.Model1, check_framework.Model2.",
++                id='models.E032',
++            ),
++        ])
++
++    @modify_settings(INSTALLED_APPS={'append': 'basic'})
++    @isolate_apps('basic', 'check_framework', kwarg_name='apps')
++    def test_collision_across_apps(self, apps):
++        constraint = models.CheckConstraint(check=models.Q(id__gt=0), name='foo')
++
++        class Model1(models.Model):
++            class Meta:
++                app_label = 'basic'
++                constraints = [constraint]
++
++        class Model2(models.Model):
++            class Meta:
++                app_label = 'check_framework'
++                constraints = [constraint]
++
++        self.assertEqual(checks.run_checks(app_configs=apps.get_app_configs()), [
++            Error(
++                "constraint name 'foo' is not unique amongst models: "
++                "basic.Model1, check_framework.Model2.",
++                id='models.E032',
++            ),
++        ])
++ git -c core.fileMode=false diff bceadd2788dc2dad53eba0caae172bd8522fd483
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 0c64748ccd..0f241875e4 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -1663,11 +1663,20 @@ class FilePathField(Field):
+ 
+     def __init__(self, verbose_name=None, name=None, path='', match=None,
+                  recursive=False, allow_files=True, allow_folders=False, **kwargs):
+-        self.path, self.match, self.recursive = path, match, recursive
++        self._path = path
++        self._path_callable = callable(path)
++        self.match, self.recursive = match, recursive
+         self.allow_files, self.allow_folders = allow_files, allow_folders
+         kwargs.setdefault('max_length', 100)
+         super().__init__(verbose_name, name, **kwargs)
+ 
++    @property
++    def path(self):
++        if self._path_callable:
++            return self._path()
++        return self._path
++
++
+     def check(self, **kwargs):
+         return [
+             *super().check(**kwargs),
+@@ -1687,8 +1696,8 @@ class FilePathField(Field):
+ 
+     def deconstruct(self):
+         name, path, args, kwargs = super().deconstruct()
+-        if self.path != '':
+-            kwargs['path'] = self.path
++        if self._path != '':
++            kwargs['path'] = self._path
+         if self.match is not None:
+             kwargs['match'] = self.match
+         if self.recursive is not False:
+diff --git a/django/forms/fields.py b/django/forms/fields.py
+index a977256525..6a50afe0fc 100644
+--- a/django/forms/fields.py
++++ b/django/forms/fields.py
+@@ -1078,7 +1078,9 @@ class MultiValueField(Field):
+ class FilePathField(ChoiceField):
+     def __init__(self, path, *, match=None, recursive=False, allow_files=True,
+                  allow_folders=False, **kwargs):
+-        self.path, self.match, self.recursive = path, match, recursive
++        self._path = path
++        self._path_callable = callable(path)
++        self.match, self.recursive = match, recursive
+         self.allow_files, self.allow_folders = allow_files, allow_folders
+         super().__init__(choices=(), **kwargs)
+ 
+@@ -1096,14 +1098,14 @@ class FilePathField(ChoiceField):
+                     for f in sorted(files):
+                         if self.match is None or self.match_re.search(f):
+                             f = os.path.join(root, f)
+-                            self.choices.append((f, f.replace(path, "", 1)))
++                            self.choices.append((f, f.replace(self.path, "", 1)))
+                 if self.allow_folders:
+                     for f in sorted(dirs):
+                         if f == '__pycache__':
+                             continue
+                         if self.match is None or self.match_re.search(f):
+                             f = os.path.join(root, f)
+-                            self.choices.append((f, f.replace(path, "", 1)))
++                            self.choices.append((f, f.replace(self.path, "", 1)))
+         else:
+             choices = []
+             for f in os.scandir(self.path):
+@@ -1118,6 +1120,13 @@ class FilePathField(ChoiceField):
+ 
+         self.widget.choices = self.choices
+ 
++    @property
++    def path(self):
++        if self._path_callable:
++            return self._path()
++        return self._path
++
++
+ 
+ class SplitDateTimeField(MultiValueField):
+     widget = SplitDateTimeWidget
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+Requirement already satisfied: pytz in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.0.dev20190502071320) (2024.2)
+Requirement already satisfied: sqlparse in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.0.dev20190502071320) (0.4.4)
+Installing collected packages: Django
+  Attempting uninstall: Django
+    Found existing installation: Django 3.0.dev20190502071320
+    Uninstalling Django-3.0.dev20190502071320:
+      Successfully uninstalled Django-3.0.dev20190502071320
+  Running setup.py develop for Django
+Successfully installed Django-3.0.dev20190502071320
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
++ git checkout bceadd2788dc2dad53eba0caae172bd8522fd483
+Note: switching to 'bceadd2788dc2dad53eba0caae172bd8522fd483'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at bceadd2788 Fixed #30396 -- Added system checks for uniqueness of indexes and constraints names.
+M	django/db/models/fields/__init__.py
+M	django/forms/fields.py
++ git apply -v -
+Checking patch tests/model_fields/test_filepathfield.py...
+Applied patch tests/model_fields/test_filepathfield.py cleanly.
++ : '>>>>> Start Test Output'
++ ./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 model_fields.test_filepathfield
+test_callable_path (model_fields.test_filepathfield.FilePathFieldTests) ... ERROR
+test_path (model_fields.test_filepathfield.FilePathFieldTests) ... Testing against Django installed in '/testbed/django'
+Importing application model_fields
+Skipping setup of unused database(s): default, other.
+System check identified no issues (0 silenced).
+ok
+
+======================================================================
+ERROR: test_callable_path (model_fields.test_filepathfield.FilePathFieldTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/model_fields/test_filepathfield.py", line 21, in test_callable_path
+    self.assertEqual(field.path(), path)
+TypeError: 'str' object is not callable
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+FAILED (errors=1)
++ : '>>>>> End Test Output'
++ git checkout bceadd2788dc2dad53eba0caae172bd8522fd483
+HEAD is now at bceadd2788 Fixed #30396 -- Added system checks for uniqueness of indexes and constraints names.
+M	django/db/models/fields/__init__.py
+M	django/forms/fields.py

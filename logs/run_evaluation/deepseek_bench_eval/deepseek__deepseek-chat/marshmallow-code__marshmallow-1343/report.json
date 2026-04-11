@@ -1,0 +1,53 @@
+{
+    "marshmallow-code__marshmallow-1343": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_wrong_nested_type_with_validates_method"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "tests/test_marshalling.py::test_missing_is_falsy",
+                    "tests/test_marshalling.py::TestMarshaller::test_prefix",
+                    "tests/test_marshalling.py::TestMarshaller::test_marshalling_generator",
+                    "tests/test_marshalling.py::TestMarshaller::test_default_to_missing",
+                    "tests/test_marshalling.py::TestMarshaller::test_serialize_fields_with_load_only_param",
+                    "tests/test_marshalling.py::TestMarshaller::test_missing_data_are_skipped",
+                    "tests/test_marshalling.py::TestMarshaller::test_serialize_with_load_only_doesnt_validate",
+                    "tests/test_marshalling.py::TestMarshaller::test_serialize_fields_with_dump_to_param",
+                    "tests/test_marshalling.py::TestMarshaller::test_serialize_fields_with_dump_to_and_prefix_params",
+                    "tests/test_marshalling.py::TestMarshaller::test_stores_indices_of_errors_when_many_equals_true",
+                    "tests/test_marshalling.py::TestMarshaller::test_doesnt_store_errors_when_index_errors_equals_false",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_extra_data_is_ignored",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_stores_errors",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_stores_indices_of_errors_when_many_equals_true",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_doesnt_store_errors_when_index_errors_equals_false",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_deserialize",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_extra_fields",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_many",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_stores_errors",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_fields_with_attribute_param",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_fields_with_load_from_param",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_fields_with_dump_only_param",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_wrong_type_root_data",
+                    "tests/test_marshalling.py::TestUnmarshaller::test_deserialize_wrong_type_nested_data"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

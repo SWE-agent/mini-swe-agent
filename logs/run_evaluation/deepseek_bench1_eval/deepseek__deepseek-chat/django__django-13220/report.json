@@ -1,0 +1,34 @@
+{
+    "django__django-13220": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_eq (test_exceptions.test_validation_error.TestValidationError)",
+                    "test_eq_nested (test_exceptions.test_validation_error.TestValidationError)"
+                ],
+                "failure": [
+                    "test_hash (test_exceptions.test_validation_error.TestValidationError)",
+                    "test_hash_nested (test_exceptions.test_validation_error.TestValidationError)"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_messages_concatenates_error_dict_values (test_exceptions.test_validation_error.TestValidationError)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

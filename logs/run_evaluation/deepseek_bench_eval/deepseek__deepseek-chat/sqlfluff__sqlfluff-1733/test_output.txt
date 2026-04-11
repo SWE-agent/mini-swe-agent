@@ -1,0 +1,694 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   src/sqlfluff/rules/L003.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit a1579a16b1d8913d9d7c7d12add374a290bcc78c
+Author: wangxiaolei <fatelei@gmail.com>
+Date:   Sun Oct 24 23:59:39 2021 +0800
+
+    MySQL: Add drop index support (#1738)
+    
+    * feat: support hive left semi join
+    
+    * fix: fix sql style for left semi join
+    
+    * fix: fix mysql drop index lint
+    
+    * feat: enhance mysql drop index
+    
+    Co-authored-by: Barry Pollard <barry@tunetheweb.com>
+
+diff --git a/src/sqlfluff/dialects/dialect_mysql.py b/src/sqlfluff/dialects/dialect_mysql.py
+index 0b36227a5..5fca2dc6d 100644
+--- a/src/sqlfluff/dialects/dialect_mysql.py
++++ b/src/sqlfluff/dialects/dialect_mysql.py
+@@ -90,6 +90,14 @@ mysql_dialect.sets("reserved_keywords").update(
+         "COLUMN_NAME",
+         "CURSOR_NAME",
+         "STACKED",
++        "ALGORITHM",
++        "LOCK",
++        "DEFAULT",
++        "INPLACE",
++        "COPY",
++        "NONE",
++        "SHARED",
++        "EXCLUSIVE",
+     ]
+ )
+ 
+@@ -1238,3 +1246,35 @@ class CursorFetchSegment(BaseSegment):
+             Ref("LocalVariableNameSegment"),
+         ),
+     )
++
++
++@mysql_dialect.segment(replace=True)
++class DropIndexStatementSegment(BaseSegment):
++    """A `DROP INDEX` statement.
++
++    https://dev.mysql.com/doc/refman/8.0/en/drop-index.html
++    """
++
++    type = "drop_statement"
++    # DROP INDEX <Index name> ON <table_name>
++    # [ALGORITHM [=] {DEFAULT | INPLACE | COPY} | LOCK [=] {DEFAULT | NONE | SHARED | EXCLUSIVE}]
++    match_grammar = Sequence(
++        "DROP",
++        "INDEX",
++        Ref("IndexReferenceSegment"),
++        "ON",
++        Ref("TableReferenceSegment"),
++        OneOf(
++            Sequence(
++                "ALGORITHM",
++                Ref("EqualsSegment", optional=True),
++                OneOf("DEFAULT", "INPLACE", "COPY"),
++            ),
++            Sequence(
++                "LOCK",
++                Ref("EqualsSegment", optional=True),
++                OneOf("DEFAULT", "NONE", "SHARED", "EXCLUSIVE"),
++            ),
++            optional=True,
++        ),
++    )
+diff --git a/test/fixtures/dialects/mysql/drop_index.sql b/test/fixtures/dialects/mysql/drop_index.sql
+new file mode 100644
+index 000000000..8a378f19c
+--- /dev/null
++++ b/test/fixtures/dialects/mysql/drop_index.sql
+@@ -0,0 +1 @@
++DROP INDEX `test` ON `table`.`foo`;
+diff --git a/test/fixtures/dialects/mysql/drop_index.yml b/test/fixtures/dialects/mysql/drop_index.yml
+new file mode 100644
+index 000000000..c76054bce
+--- /dev/null
++++ b/test/fixtures/dialects/mysql/drop_index.yml
+@@ -0,0 +1,19 @@
++# YML test files are auto-generated from SQL files and should not be edited by
++# hand. To help enforce this, the "hash" field in the file must match a hash
++# computed by SQLFluff when running the tests. Please run
++# `python test/generate_parse_fixture_yml.py`  to generate them after adding or
++# altering SQL files.
++_hash: a97599331eec33c5b460bb5b6d5fd00757e6a25308bfb51585a8bfa1df451cae
++file:
++  statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++      - identifier: '`table`'
++      - dot: .
++      - identifier: '`foo`'
++  statement_terminator: ;
+diff --git a/test/fixtures/dialects/mysql/drop_index_with_algorithm.sql b/test/fixtures/dialects/mysql/drop_index_with_algorithm.sql
+new file mode 100644
+index 000000000..27ac8d875
+--- /dev/null
++++ b/test/fixtures/dialects/mysql/drop_index_with_algorithm.sql
+@@ -0,0 +1,6 @@
++DROP INDEX `test` ON `table`.`foo` ALGORITHM = DEFAULT;
++DROP INDEX `test` ON `table`.`foo` ALGORITHM = INPLACE;
++DROP INDEX `test` ON `table`.`foo` ALGORITHM = COPY;
++DROP INDEX `test` ON `table`.`foo` ALGORITHM DEFAULT;
++DROP INDEX `test` ON `table`.`foo` ALGORITHM INPLACE;
++DROP INDEX `test` ON `table`.`foo` ALGORITHM COPY;
+diff --git a/test/fixtures/dialects/mysql/drop_index_with_algorithm.yml b/test/fixtures/dialects/mysql/drop_index_with_algorithm.yml
+new file mode 100644
+index 000000000..27400dcd9
+--- /dev/null
++++ b/test/fixtures/dialects/mysql/drop_index_with_algorithm.yml
+@@ -0,0 +1,94 @@
++# YML test files are auto-generated from SQL files and should not be edited by
++# hand. To help enforce this, the "hash" field in the file must match a hash
++# computed by SQLFluff when running the tests. Please run
++# `python test/generate_parse_fixture_yml.py`  to generate them after adding or
++# altering SQL files.
++_hash: 07ea295cec15946a4cee7c6235e4bc18834da861690d5781b8a00e7bb5f9f4db
++file:
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++      - identifier: '`table`'
++      - dot: .
++      - identifier: '`foo`'
++    - keyword: ALGORITHM
++    - comparison_operator: '='
++    - keyword: DEFAULT
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++      - identifier: '`table`'
++      - dot: .
++      - identifier: '`foo`'
++    - keyword: ALGORITHM
++    - comparison_operator: '='
++    - keyword: INPLACE
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++      - identifier: '`table`'
++      - dot: .
++      - identifier: '`foo`'
++    - keyword: ALGORITHM
++    - comparison_operator: '='
++    - keyword: COPY
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++      - identifier: '`table`'
++      - dot: .
++      - identifier: '`foo`'
++    - keyword: ALGORITHM
++    - keyword: DEFAULT
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++      - identifier: '`table`'
++      - dot: .
++      - identifier: '`foo`'
++    - keyword: ALGORITHM
++    - keyword: INPLACE
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++      - identifier: '`table`'
++      - dot: .
++      - identifier: '`foo`'
++    - keyword: ALGORITHM
++    - keyword: COPY
++- statement_terminator: ;
+diff --git a/test/fixtures/dialects/mysql/drop_index_with_lock.sql b/test/fixtures/dialects/mysql/drop_index_with_lock.sql
+new file mode 100644
+index 000000000..c3e214f26
+--- /dev/null
++++ b/test/fixtures/dialects/mysql/drop_index_with_lock.sql
+@@ -0,0 +1,8 @@
++DROP INDEX `test` ON `table` LOCK = DEFAULT;
++DROP INDEX `test` ON `table` LOCK = NONE;
++DROP INDEX `test` ON `table` LOCK = SHARED;
++DROP INDEX `test` ON `table` LOCK = EXCLUSIVE;
++DROP INDEX `test` ON `table` LOCK DEFAULT;
++DROP INDEX `test` ON `table` LOCK NONE;
++DROP INDEX `test` ON `table` LOCK SHARED;
++DROP INDEX `test` ON `table` LOCK EXCLUSIVE;
+diff --git a/test/fixtures/dialects/mysql/drop_index_with_lock.yml b/test/fixtures/dialects/mysql/drop_index_with_lock.yml
+new file mode 100644
+index 000000000..da466109d
+--- /dev/null
++++ b/test/fixtures/dialects/mysql/drop_index_with_lock.yml
+@@ -0,0 +1,107 @@
++# YML test files are auto-generated from SQL files and should not be edited by
++# hand. To help enforce this, the "hash" field in the file must match a hash
++# computed by SQLFluff when running the tests. Please run
++# `python test/generate_parse_fixture_yml.py`  to generate them after adding or
++# altering SQL files.
++_hash: fbef98f38df25bcc26611bb0ddd260b27ffaed6baf51ec8fb10e2061839d9fa0
++file:
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++        identifier: '`table`'
++    - keyword: LOCK
++    - comparison_operator: '='
++    - keyword: DEFAULT
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++        identifier: '`table`'
++    - keyword: LOCK
++    - comparison_operator: '='
++    - keyword: NONE
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++        identifier: '`table`'
++    - keyword: LOCK
++    - comparison_operator: '='
++    - keyword: SHARED
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++        identifier: '`table`'
++    - keyword: LOCK
++    - comparison_operator: '='
++    - keyword: EXCLUSIVE
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++        identifier: '`table`'
++    - keyword: LOCK
++    - keyword: DEFAULT
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++        identifier: '`table`'
++    - keyword: LOCK
++    - keyword: NONE
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++        identifier: '`table`'
++    - keyword: LOCK
++    - keyword: SHARED
++- statement_terminator: ;
++- statement:
++    drop_statement:
++    - keyword: DROP
++    - keyword: INDEX
++    - index_reference:
++        identifier: '`test`'
++    - keyword: 'ON'
++    - table_reference:
++        identifier: '`table`'
++    - keyword: LOCK
++    - keyword: EXCLUSIVE
++- statement_terminator: ;
++ git -c core.fileMode=false diff a1579a16b1d8913d9d7c7d12add374a290bcc78c
+diff --git a/src/sqlfluff/rules/L003.py b/src/sqlfluff/rules/L003.py
+index 83ff13feb..33dcdb278 100644
+--- a/src/sqlfluff/rules/L003.py
++++ b/src/sqlfluff/rules/L003.py
+@@ -703,7 +703,7 @@ class Rule_L003(BaseRule):
+                                 WhitespaceSegment(
+                                     # Make the minimum indent for it to be ok.
+                                     raw=self._make_indent(
+-                                        num=comp_indent_num - this_indent_num,
++                                        num=comp_indent_num + indent_diff - this_indent_num,
+                                         indent_unit=self.indent_unit,
+                                         tab_space_size=self.tab_space_size,
+                                     ),
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Requirement already satisfied: click>=7.1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (8.1.7)
+Requirement already satisfied: colorama>=0.3 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (0.4.6)
+Requirement already satisfied: configparser in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (7.1.0)
+Requirement already satisfied: oyaml in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (1.0)
+Requirement already satisfied: Jinja2 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (3.1.4)
+Requirement already satisfied: diff-cover>=2.5.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (9.2.0)
+Requirement already satisfied: pathspec in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (0.12.1)
+Requirement already satisfied: appdirs in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (1.4.4)
+Requirement already satisfied: cached-property in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (2.0.1)
+Requirement already satisfied: typing_extensions in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (4.12.2)
+Requirement already satisfied: pytest in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (8.3.3)
+Requirement already satisfied: toml in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (0.10.2)
+Requirement already satisfied: tblib in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (3.0.0)
+Requirement already satisfied: Pygments<3.0.0,>=2.9.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from diff-cover>=2.5.0->sqlfluff==0.7.1) (2.18.0)
+Requirement already satisfied: chardet>=3.0.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from diff-cover>=2.5.0->sqlfluff==0.7.1) (5.2.0)
+Requirement already satisfied: pluggy<2,>=0.13.1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from diff-cover>=2.5.0->sqlfluff==0.7.1) (1.5.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from Jinja2->sqlfluff==0.7.1) (3.0.2)
+Requirement already satisfied: pyyaml in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from oyaml->sqlfluff==0.7.1) (6.0.2)
+Requirement already satisfied: iniconfig in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->sqlfluff==0.7.1) (2.0.0)
+Requirement already satisfied: packaging in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->sqlfluff==0.7.1) (24.2)
+Requirement already satisfied: exceptiongroup>=1.0.0rc8 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->sqlfluff==0.7.1) (1.2.2)
+Requirement already satisfied: tomli>=1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->sqlfluff==0.7.1) (2.1.0)
+Installing collected packages: sqlfluff
+  Attempting uninstall: sqlfluff
+    Found existing installation: sqlfluff 0.7.1
+    Uninstalling sqlfluff-0.7.1:
+      Successfully uninstalled sqlfluff-0.7.1
+  DEPRECATION: Legacy editable install of sqlfluff==0.7.1 from file:///testbed (setup.py develop) is deprecated. pip 25.0 will enforce this behaviour change. A possible replacement is to add a pyproject.toml or enable --use-pep517, and use setuptools >= 64. If the resulting installation is not behaving as expected, try using --config-settings editable_mode=compat. Please consult the setuptools documentation for more information. Discussion can be found at https://github.com/pypa/pip/issues/11457
+  Running setup.py develop for sqlfluff
+Successfully installed sqlfluff
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable.It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
++ git checkout a1579a16b1d8913d9d7c7d12add374a290bcc78c test/rules/std_L016_L36_combo.py
+Updated 0 paths from c81db2b35
++ git apply -v -
+Checking patch test/rules/std_L003_L036_L039_combo_test.py...
+Checking patch test/rules/std_L016_L36_combo.py => test/rules/std_L016_L36_combo_test.py...
+Applied patch test/rules/std_L003_L036_L039_combo_test.py cleanly.
+Applied patch test/rules/std_L016_L36_combo.py => test/rules/std_L016_L36_combo_test.py cleanly.
++ : '>>>>> Start Test Output'
++ pytest -rA test/rules/std_L003_L036_L039_combo_test.py test/rules/std_L016_L36_combo_test.py
+============================= test session starts ==============================
+platform linux -- Python 3.9.20, pytest-8.3.3, pluggy-1.5.0
+rootdir: /testbed
+configfile: pytest.ini
+plugins: sugar-1.0.0, hypothesis-6.119.3, cov-6.0.0
+collected 4 items
+
+test/rules/std_L003_L036_L039_combo_test.py .                            [ 25%]
+test/rules/std_L016_L36_combo_test.py ...                                [100%]
+
+=============================== warnings summary ===============================
+src/sqlfluff/__init__.py:9
+  /testbed/src/sqlfluff/__init__.py:9: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+    import pkg_resources
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+__________________ test__rules__std_L016_L036_long_line_fix2 ___________________
+------------------------------ Captured log call -------------------------------
+WARNING  sqlfluff.linter:linter.py:286 One fix for L016 not applied, it would re-cause the same error.
+=========================== short test summary info ============================
+PASSED test/rules/std_L003_L036_L039_combo_test.py::test__rules__std_L003_L036_L039
+PASSED test/rules/std_L016_L36_combo_test.py::test__rules__std_L016_L036_long_line_lint
+PASSED test/rules/std_L016_L36_combo_test.py::test__rules__std_L016_L036_long_line_fix
+PASSED test/rules/std_L016_L36_combo_test.py::test__rules__std_L016_L036_long_line_fix2
+========================= 4 passed, 1 warning in 0.47s =========================
++ : '>>>>> End Test Output'
++ git checkout a1579a16b1d8913d9d7c7d12add374a290bcc78c test/rules/std_L016_L36_combo.py
+Updated 1 path from c81db2b35

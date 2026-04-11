@@ -1,0 +1,36 @@
+{
+    "django__django-13448": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "test_migrate_test_setting_false (backends.base.test_creation.TestDbCreationTests)"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_custom_test_name (backends.base.test_creation.TestDbSignatureTests)",
+                    "test_custom_test_name_with_test_prefix (backends.base.test_creation.TestDbSignatureTests)",
+                    "test_default_name (backends.base.test_creation.TestDbSignatureTests)",
+                    "test_migrate_test_setting_true (backends.base.test_creation.TestDbCreationTests)",
+                    "test_circular_reference (backends.base.test_creation.TestDeserializeDbFromString)",
+                    "test_circular_reference_with_natural_key (backends.base.test_creation.TestDeserializeDbFromString)",
+                    "test_self_reference (backends.base.test_creation.TestDeserializeDbFromString)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

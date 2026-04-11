@@ -1,0 +1,556 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
++ locale-gen
+Generating locales (this might take a while)...
+  en_US.UTF-8... done
+Generation complete.
++ export LANG=en_US.UTF-8
++ LANG=en_US.UTF-8
++ export LANGUAGE=en_US:en
++ LANGUAGE=en_US:en
++ export LC_ALL=en_US.UTF-8
++ LC_ALL=en_US.UTF-8
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   django/db/models/sql/compiler.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit 142ab6846ac09d6d401e26fc8b6b988a583ac0f5
+Author: gowthamk63 <gowthamk63@gmail.com>
+Date:   Wed Mar 11 15:14:50 2020 -0400
+
+    Fixed #31123 -- Added --include-stale-apps option to the remove_stale_contenttypes management command.
+    
+    Co-Authored-By: Javier Buzzi <buzzi.javier@gmail.com>
+
+diff --git a/django/contrib/contenttypes/management/commands/remove_stale_contenttypes.py b/django/contrib/contenttypes/management/commands/remove_stale_contenttypes.py
+index 4d282d524e..b1f966b032 100644
+--- a/django/contrib/contenttypes/management/commands/remove_stale_contenttypes.py
++++ b/django/contrib/contenttypes/management/commands/remove_stale_contenttypes.py
+@@ -1,11 +1,11 @@
++import itertools
++
+ from django.apps import apps
+ from django.contrib.contenttypes.models import ContentType
+ from django.core.management import BaseCommand
+ from django.db import DEFAULT_DB_ALIAS, router
+ from django.db.models.deletion import Collector
+ 
+-from ...management import get_contenttypes_and_models
+-
+ 
+ class Command(BaseCommand):
+ 
+@@ -18,18 +18,32 @@ class Command(BaseCommand):
+             '--database', default=DEFAULT_DB_ALIAS,
+             help='Nominates the database to use. Defaults to the "default" database.',
+         )
++        parser.add_argument(
++            '--include-stale-apps', action='store_true', default=False,
++            help=(
++                "Deletes stale content types including ones from previously "
++                "installed apps that have been removed from INSTALLED_APPS."
++            ),
++        )
+ 
+     def handle(self, **options):
+         db = options['database']
++        include_stale_apps = options['include_stale_apps']
+         interactive = options['interactive']
+         verbosity = options['verbosity']
+ 
+-        for app_config in apps.get_app_configs():
+-            content_types, app_models = get_contenttypes_and_models(app_config, db, ContentType)
+-            to_remove = [
+-                ct for (model_name, ct) in content_types.items()
+-                if model_name not in app_models
+-            ]
++        if not router.allow_migrate_model(db, ContentType):
++            return
++        ContentType.objects.clear_cache()
++
++        apps_content_types = itertools.groupby(
++            ContentType.objects.using(db).order_by('app_label', 'model'),
++            lambda obj: obj.app_label,
++        )
++        for app_label, content_types in apps_content_types:
++            if not include_stale_apps and app_label not in apps.app_configs:
++                continue
++            to_remove = [ct for ct in content_types if ct.model_class() is None]
+             # Confirm that the content type is stale before deletion.
+             using = router.db_for_write(ContentType)
+             if to_remove:
+diff --git a/docs/ref/django-admin.txt b/docs/ref/django-admin.txt
+index a5ef671e26..56358b4ef8 100644
+--- a/docs/ref/django-admin.txt
++++ b/docs/ref/django-admin.txt
+@@ -1651,6 +1651,13 @@ the deletion.
+ 
+ Specifies the database to use. Defaults to ``default``.
+ 
++.. django-admin-option:: --include-stale-apps
++
++.. versionadded:: 3.1
++
++Deletes stale content types including ones from previously installed apps that
++have been removed from :setting:`INSTALLED_APPS`. Defaults to ``False``.
++
+ ``django.contrib.gis``
+ ----------------------
+ 
+diff --git a/docs/releases/3.1.txt b/docs/releases/3.1.txt
+index efc57e8d01..77a71bbc43 100644
+--- a/docs/releases/3.1.txt
++++ b/docs/releases/3.1.txt
+@@ -99,7 +99,9 @@ Minor features
+ :mod:`django.contrib.contenttypes`
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+-* ...
++* The new :option:`remove_stale_contenttypes --include-stale-apps` option
++  allows removing stale content types from previously installed apps that have
++  been removed from :setting:`INSTALLED_APPS`.
+ 
+ :mod:`django.contrib.gis`
+ ~~~~~~~~~~~~~~~~~~~~~~~~~
+diff --git a/tests/contenttypes_tests/test_management.py b/tests/contenttypes_tests/test_management.py
+index 3e375518c9..65842aa09e 100644
+--- a/tests/contenttypes_tests/test_management.py
++++ b/tests/contenttypes_tests/test_management.py
+@@ -10,10 +10,15 @@ from django.test.utils import captured_stdout
+ from .models import ModelWithNullFKToSite, Post
+ 
+ 
+-@modify_settings(INSTALLED_APPS={'append': ['no_models']})
++@modify_settings(INSTALLED_APPS={'append': ['empty_models', 'no_models']})
+ class RemoveStaleContentTypesTests(TestCase):
+     # Speed up tests by avoiding retrieving ContentTypes for all test apps.
+-    available_apps = ['contenttypes_tests', 'no_models', 'django.contrib.contenttypes']
++    available_apps = [
++        'contenttypes_tests',
++        'empty_models',
++        'no_models',
++        'django.contrib.contenttypes',
++    ]
+ 
+     def setUp(self):
+         self.before_count = ContentType.objects.count()
+@@ -65,9 +70,34 @@ class RemoveStaleContentTypesTests(TestCase):
+             contenttypes_management.create_contenttypes(self.app_config, interactive=False, verbosity=0, apps=apps)
+         self.assertEqual(ContentType.objects.count(), self.before_count + 1)
+ 
+-    def test_contenttypes_removed_in_apps_without_models(self):
+-        ContentType.objects.create(app_label='no_models', model='Fake')
++    @modify_settings(INSTALLED_APPS={'remove': ['empty_models']})
++    def test_contenttypes_removed_in_installed_apps_without_models(self):
++        ContentType.objects.create(app_label='empty_models', model='Fake 1')
++        ContentType.objects.create(app_label='no_models', model='Fake 2')
+         with mock.patch('builtins.input', return_value='yes'), captured_stdout() as stdout:
+             call_command('remove_stale_contenttypes', verbosity=2)
+-        self.assertIn("Deleting stale content type 'no_models | Fake'", stdout.getvalue())
++        self.assertNotIn(
++            "Deleting stale content type 'empty_models | Fake 1'",
++            stdout.getvalue(),
++        )
++        self.assertIn(
++            "Deleting stale content type 'no_models | Fake 2'",
++            stdout.getvalue(),
++        )
++        self.assertEqual(ContentType.objects.count(), self.before_count + 1)
++
++    @modify_settings(INSTALLED_APPS={'remove': ['empty_models']})
++    def test_contenttypes_removed_for_apps_not_in_installed_apps(self):
++        ContentType.objects.create(app_label='empty_models', model='Fake 1')
++        ContentType.objects.create(app_label='no_models', model='Fake 2')
++        with mock.patch('builtins.input', return_value='yes'), captured_stdout() as stdout:
++            call_command('remove_stale_contenttypes', include_stale_apps=True, verbosity=2)
++        self.assertIn(
++            "Deleting stale content type 'empty_models | Fake 1'",
++            stdout.getvalue(),
++        )
++        self.assertIn(
++            "Deleting stale content type 'no_models | Fake 2'",
++            stdout.getvalue(),
++        )
+         self.assertEqual(ContentType.objects.count(), self.before_count)
++ git -c core.fileMode=false diff 142ab6846ac09d6d401e26fc8b6b988a583ac0f5
+diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py
+index 92213a4e67..74103f1e99 100644
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -711,7 +711,7 @@ class SQLCompiler:
+         # If we get to this point and the field is a relation to another model,
+         # append the default ordering for that model unless the attribute name
+         # of the field is specified.
+-        if field.is_relation and opts.ordering and getattr(field, 'attname', None) != name:
++        if field.is_relation and opts.ordering and getattr(field, 'attname', None) != name and not (field.primary_key and name == "pk"):
+             # Firstly, avoid infinite loops.
+             already_seen = already_seen or set()
+             join_tuple = tuple(getattr(self.query.alias_map[j], 'join_cols', None) for j in joins)
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+Requirement already satisfied: asgiref>=3.2 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.1) (3.4.1)
+Requirement already satisfied: pytz in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.1) (2024.2)
+Requirement already satisfied: sqlparse>=0.2.2 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.1) (0.4.4)
+Requirement already satisfied: typing-extensions in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from asgiref>=3.2->Django==3.1) (4.1.1)
+Installing collected packages: Django
+  Attempting uninstall: Django
+    Found existing installation: Django 3.1
+    Uninstalling Django-3.1:
+      Successfully uninstalled Django-3.1
+  Running setup.py develop for Django
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+Successfully installed Django-3.1
++ git checkout 142ab6846ac09d6d401e26fc8b6b988a583ac0f5 tests/model_inheritance/models.py tests/model_inheritance/tests.py
+Updated 0 paths from d12a79a5db
++ git apply -v -
+Checking patch tests/model_inheritance/models.py...
+Checking patch tests/model_inheritance/tests.py...
+Applied patch tests/model_inheritance/models.py cleanly.
+Applied patch tests/model_inheritance/tests.py cleanly.
++ : '>>>>> Start Test Output'
++ ./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 model_inheritance.models model_inheritance.tests
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_unique (model_inheritance.tests.InheritanceUniqueTests) ... ok
+test_unique_together (model_inheritance.tests.InheritanceUniqueTests) ... ok
+test_exclude_inherited_on_null (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_filter_inherited_model (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_filter_inherited_on_null (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_filter_on_parent_returns_object_of_parent_type (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_inherited_does_not_exist_exception (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_inherited_multiple_objects_returned_exception (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_parent_cache_reuse (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_parent_child_one_to_one_link (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_parent_child_one_to_one_link_on_nonrelated_objects (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_parent_fields_available_for_filtering_in_child_model (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_related_objects_for_inherited_models (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_select_related_defer (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_select_related_works_on_parent_model_fields (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_update_inherited_model (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_update_query_counts (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_update_works_on_parent_and_child_models_at_once (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_values_works_on_parent_model_fields (model_inheritance.tests.ModelInheritanceDataTests) ... ok
+test_abstract (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_abstract_parent_link (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_create_child_no_update (model_inheritance.tests.ModelInheritanceTests)
+Creating a child with non-abstract parents only issues INSERTs. ... ok
+test_custompk_m2m (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_eq (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_inherited_ordering_pk_desc (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_init_subclass (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_meta_fields_and_ordering (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_mixin_init (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_model_with_distinct_accessors (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_model_with_distinct_related_query_name (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_reverse_relation_for_different_hierarchy_tree (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_set_name (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_update_parent_filtering (model_inheritance.tests.ModelInheritanceTests) ... ok
+test_abstract_fk_related_name (model_inheritance.tests.InheritanceSameModelNameTests) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 0.040s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Testing against Django installed in '/testbed/django'
+Importing application model_inheritance
+Skipping setup of unused database(s): other.
+Operations to perform:
+  Synchronize unmigrated apps: auth, contenttypes, messages, model_inheritance, sessions, staticfiles
+  Apply all migrations: admin, sites
+Synchronizing apps without migrations:
+  Creating tables...
+    Creating table django_content_type
+    Creating table auth_permission
+    Creating table auth_group
+    Creating table auth_user
+    Creating table django_session
+    Creating table model_inheritance_worker
+    Creating table model_inheritance_student
+    Creating table model_inheritance_post
+    Creating table model_inheritance_comment
+    Creating table model_inheritance_link
+    Creating table model_inheritance_chef
+    Creating table model_inheritance_place
+    Creating table my_restaurant
+    Creating table model_inheritance_italianrestaurant
+    Creating table model_inheritance_supplier
+    Creating table model_inheritance_parkinglot
+    Creating table model_inheritance_title
+    Creating table model_inheritance_mixinmodel
+    Creating table model_inheritance_base
+    Creating table model_inheritance_subbase
+    Creating table model_inheritance_grandparent
+    Creating table model_inheritance_parent
+    Creating table model_inheritance_child
+    Creating table model_inheritance_grandchild
+    Running deferred SQL...
+Running migrations:
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+System check identified no issues (0 silenced).
++ : '>>>>> End Test Output'
++ git checkout 142ab6846ac09d6d401e26fc8b6b988a583ac0f5 tests/model_inheritance/models.py tests/model_inheritance/tests.py
+Updated 2 paths from d12a79a5db

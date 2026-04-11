@@ -1,0 +1,65 @@
+{
+    "django__django-13964": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_save_fk_after_parent_with_non_numeric_pk_set_on_child (many_to_one.tests.ManyToOneTests)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_add (many_to_one.tests.ManyToOneTests)",
+                    "test_add_after_prefetch (many_to_one.tests.ManyToOneTests)",
+                    "test_add_remove_set_by_pk_raises (many_to_one.tests.ManyToOneTests)",
+                    "test_add_then_remove_after_prefetch (many_to_one.tests.ManyToOneTests)",
+                    "test_assign (many_to_one.tests.ManyToOneTests)",
+                    "test_assign_fk_id_none (many_to_one.tests.ManyToOneTests)",
+                    "test_assign_fk_id_value (many_to_one.tests.ManyToOneTests)",
+                    "test_cached_foreign_key_with_to_field_not_cleared_by_save (many_to_one.tests.ManyToOneTests)",
+                    "Model.save() invalidates stale ForeignKey relations after a primary key",
+                    "test_clear_after_prefetch (many_to_one.tests.ManyToOneTests)",
+                    "test_create (many_to_one.tests.ManyToOneTests)",
+                    "test_create_relation_with_gettext_lazy (many_to_one.tests.ManyToOneTests)",
+                    "test_deepcopy_and_circular_references (many_to_one.tests.ManyToOneTests)",
+                    "test_delete (many_to_one.tests.ManyToOneTests)",
+                    "test_explicit_fk (many_to_one.tests.ManyToOneTests)",
+                    "test_fk_assignment_and_related_object_cache (many_to_one.tests.ManyToOneTests)",
+                    "test_fk_instantiation_outside_model (many_to_one.tests.ManyToOneTests)",
+                    "test_fk_to_bigautofield (many_to_one.tests.ManyToOneTests)",
+                    "test_fk_to_smallautofield (many_to_one.tests.ManyToOneTests)",
+                    "test_get (many_to_one.tests.ManyToOneTests)",
+                    "test_hasattr_related_object (many_to_one.tests.ManyToOneTests)",
+                    "test_manager_class_caching (many_to_one.tests.ManyToOneTests)",
+                    "test_multiple_foreignkeys (many_to_one.tests.ManyToOneTests)",
+                    "test_related_object (many_to_one.tests.ManyToOneTests)",
+                    "test_relation_unsaved (many_to_one.tests.ManyToOneTests)",
+                    "test_remove_after_prefetch (many_to_one.tests.ManyToOneTests)",
+                    "test_reverse_assignment_deprecation (many_to_one.tests.ManyToOneTests)",
+                    "test_reverse_foreign_key_instance_to_field_caching (many_to_one.tests.ManyToOneTests)",
+                    "test_reverse_selects (many_to_one.tests.ManyToOneTests)",
+                    "test_save_nullable_fk_after_parent (many_to_one.tests.ManyToOneTests)",
+                    "test_save_nullable_fk_after_parent_with_to_field (many_to_one.tests.ManyToOneTests)",
+                    "test_select_related (many_to_one.tests.ManyToOneTests)",
+                    "test_selects (many_to_one.tests.ManyToOneTests)",
+                    "test_set (many_to_one.tests.ManyToOneTests)",
+                    "test_set_after_prefetch (many_to_one.tests.ManyToOneTests)",
+                    "test_values_list_exception (many_to_one.tests.ManyToOneTests)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

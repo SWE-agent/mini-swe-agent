@@ -1,0 +1,33 @@
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index ce18098fd2..add40269dd 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1124,15 +1124,22 @@ class Query(BaseExpression):
+ 
+     def check_filterable(self, expression):
+         """Raise an error if expression cannot be used in a WHERE clause."""
+-        if not getattr(expression, 'filterable', True):
+-            raise NotSupportedError(
+-                expression.__class__.__name__ + ' is disallowed in the filter '
+-                'clause.'
+-            )
++        # Get the class
++        cls = type(expression)
++        
++        # Check if filterable is a class attribute and is a boolean
++        if hasattr(cls, 'filterable'):
++            filterable_attr = cls.filterable
++            # Check if it's a boolean (not a descriptor or other type)
++            if isinstance(filterable_attr, bool) and not filterable_attr:
++                raise NotSupportedError(
++                    expression.__class__.__name__ + ' is disallowed in the filter '
++                    'clause.'
++                )
++        
+         if hasattr(expression, 'get_source_expressions'):
+             for expr in expression.get_source_expressions():
+                 self.check_filterable(expr)
+-
+     def build_lookup(self, lookups, lhs, rhs):
+         """
+         Try to extract transforms and lookup from given lhs.

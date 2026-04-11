@@ -1,0 +1,37 @@
+{
+    "django__django-11049": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_invalid_string (model_fields.test_durationfield.TestValidation)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_dumping (model_fields.test_durationfield.TestSerialization)",
+                    "test_loading (model_fields.test_durationfield.TestSerialization)",
+                    "test_formfield (model_fields.test_durationfield.TestFormField)",
+                    "test_exact (model_fields.test_durationfield.TestQuerying)",
+                    "test_gt (model_fields.test_durationfield.TestQuerying)",
+                    "test_create_empty (model_fields.test_durationfield.TestSaveLoad)",
+                    "test_fractional_seconds (model_fields.test_durationfield.TestSaveLoad)",
+                    "test_simple_roundtrip (model_fields.test_durationfield.TestSaveLoad)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

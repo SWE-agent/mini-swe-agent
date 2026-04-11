@@ -1,0 +1,440 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   astroid/nodes/as_string.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit f3557616f2e1cbd6e0b7c880d92db7f29baaac6e
+Author: SWE-bench <setup@swebench.config>
+Date:   Tue May 6 23:32:57 2025 +0000
+
+    SWE-bench
++ git -c core.fileMode=false diff ce5cbce5ba11cdc2f8139ade66feea1e181a7944
+diff --git a/astroid/nodes/as_string.py b/astroid/nodes/as_string.py
+index 427ccc15..ab5c8cd7 100644
+--- a/astroid/nodes/as_string.py
++++ b/astroid/nodes/as_string.py
+@@ -637,6 +637,10 @@ class AsStringVisitor:
+     def visit_uninferable(self, node):
+         return str(node)
+ 
++    def visit_unknown(self, node):
++        """Return an Unknown node as string."""
++        return str(node.name)
++
+     def visit_property(self, node):
+         return node.function.accept(self)
+ 
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Requirement already satisfied: lazy_object_proxy>=1.4.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from astroid==2.9.0.dev0) (1.11.0)
+Requirement already satisfied: wrapt<1.14,>=1.11 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from astroid==2.9.0.dev0) (1.13.3)
+Requirement already satisfied: setuptools>=20.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from astroid==2.9.0.dev0) (78.1.1)
+Requirement already satisfied: typing-extensions>=3.10 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from astroid==2.9.0.dev0) (4.13.2)
+Installing collected packages: astroid
+  Attempting uninstall: astroid
+    Found existing installation: astroid 2.9.0.dev0
+    Uninstalling astroid-2.9.0.dev0:
+      Successfully uninstalled astroid-2.9.0.dev0
+  DEPRECATION: Legacy editable install of astroid==2.9.0.dev0 from file:///testbed (setup.py develop) is deprecated. pip 25.3 will enforce this behaviour change. A possible replacement is to add a pyproject.toml or enable --use-pep517, and use setuptools >= 64. If the resulting installation is not behaving as expected, try using --config-settings editable_mode=compat. Please consult the setuptools documentation for more information. Discussion can be found at https://github.com/pypa/pip/issues/11457
+  Running setup.py develop for astroid
+Successfully installed astroid
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
++ git checkout ce5cbce5ba11cdc2f8139ade66feea1e181a7944 tests/unittest_nodes.py
+Updated 0 paths from 7a455f71
++ git apply -v -
+Checking patch tests/unittest_nodes.py...
+Applied patch tests/unittest_nodes.py cleanly.
++ : '>>>>> Start Test Output'
++ pytest -rA tests/unittest_nodes.py
+============================= test session starts ==============================
+platform linux -- Python 3.9.21, pytest-8.3.5, pluggy-1.5.0
+rootdir: /testbed
+configfile: setup.cfg
+collected 97 items
+
+tests/unittest_nodes.py ....F........................................... [ 49%]
+....s........................................ssss                        [100%]
+
+=================================== FAILURES ===================================
+_____________________ AsStringTest.test_as_string_unknown ______________________
+
+    @staticmethod
+    def test_as_string_unknown() -> None:
+>       assert nodes.Unknown().as_string() == "Unknown.Unknown()"
+E       AssertionError: assert 'Unknown' == 'Unknown.Unknown()'
+E         
+E         - Unknown.Unknown()
+E         + Unknown
+
+tests/unittest_nodes.py:311: AssertionError
+=============================== warnings summary ===============================
+astroid/interpreter/_import/util.py:6
+  /testbed/astroid/interpreter/_import/util.py:6: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+    import pkg_resources
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/unittest_nodes.py::AsStringTest::test_3k_annotations_and_metaclass
+PASSED tests/unittest_nodes.py::AsStringTest::test_3k_as_string
+PASSED tests/unittest_nodes.py::AsStringTest::test_as_string
+PASSED tests/unittest_nodes.py::AsStringTest::test_as_string_for_list_containing_uninferable
+PASSED tests/unittest_nodes.py::AsStringTest::test_class_def
+PASSED tests/unittest_nodes.py::AsStringTest::test_ellipsis
+PASSED tests/unittest_nodes.py::AsStringTest::test_f_strings
+PASSED tests/unittest_nodes.py::AsStringTest::test_frozenset_as_string
+PASSED tests/unittest_nodes.py::AsStringTest::test_func_signature_issue_185
+PASSED tests/unittest_nodes.py::AsStringTest::test_int_attribute
+PASSED tests/unittest_nodes.py::AsStringTest::test_module2_as_string
+PASSED tests/unittest_nodes.py::AsStringTest::test_module_as_string
+PASSED tests/unittest_nodes.py::AsStringTest::test_operator_precedence
+PASSED tests/unittest_nodes.py::AsStringTest::test_slice_and_subscripts
+PASSED tests/unittest_nodes.py::AsStringTest::test_slices
+PASSED tests/unittest_nodes.py::AsStringTest::test_tuple_as_string
+PASSED tests/unittest_nodes.py::AsStringTest::test_varargs_kwargs_as_string
+PASSED tests/unittest_nodes.py::IfNodeTest::test_block_range
+PASSED tests/unittest_nodes.py::IfNodeTest::test_if_elif_else_node
+PASSED tests/unittest_nodes.py::IfNodeTest::test_if_sys_guard
+PASSED tests/unittest_nodes.py::IfNodeTest::test_if_typing_guard
+PASSED tests/unittest_nodes.py::TryExceptNodeTest::test_block_range
+PASSED tests/unittest_nodes.py::TryFinallyNodeTest::test_block_range
+PASSED tests/unittest_nodes.py::TryExceptFinallyNodeTest::test_block_range
+PASSED tests/unittest_nodes.py::ImportNodeTest::test_absolute_import
+PASSED tests/unittest_nodes.py::ImportNodeTest::test_as_string
+PASSED tests/unittest_nodes.py::ImportNodeTest::test_bad_import_inference
+PASSED tests/unittest_nodes.py::ImportNodeTest::test_conditional
+PASSED tests/unittest_nodes.py::ImportNodeTest::test_conditional_import
+PASSED tests/unittest_nodes.py::ImportNodeTest::test_from_self_resolve
+PASSED tests/unittest_nodes.py::ImportNodeTest::test_import_self_resolve
+PASSED tests/unittest_nodes.py::ImportNodeTest::test_more_absolute_import
+PASSED tests/unittest_nodes.py::ImportNodeTest::test_real_name
+PASSED tests/unittest_nodes.py::CmpNodeTest::test_as_string
+PASSED tests/unittest_nodes.py::ConstNodeTest::test_bool
+PASSED tests/unittest_nodes.py::ConstNodeTest::test_complex
+PASSED tests/unittest_nodes.py::ConstNodeTest::test_copy
+PASSED tests/unittest_nodes.py::ConstNodeTest::test_float
+PASSED tests/unittest_nodes.py::ConstNodeTest::test_int
+PASSED tests/unittest_nodes.py::ConstNodeTest::test_none
+PASSED tests/unittest_nodes.py::ConstNodeTest::test_str
+PASSED tests/unittest_nodes.py::ConstNodeTest::test_str_kind
+PASSED tests/unittest_nodes.py::ConstNodeTest::test_unicode
+PASSED tests/unittest_nodes.py::NameNodeTest::test_assign_to_true
+PASSED tests/unittest_nodes.py::TestNamedExprNode::test_frame
+PASSED tests/unittest_nodes.py::TestNamedExprNode::test_scope
+PASSED tests/unittest_nodes.py::AnnAssignNodeTest::test_as_string
+PASSED tests/unittest_nodes.py::AnnAssignNodeTest::test_complex
+PASSED tests/unittest_nodes.py::AnnAssignNodeTest::test_primitive
+PASSED tests/unittest_nodes.py::AnnAssignNodeTest::test_primitive_without_initial_value
+PASSED tests/unittest_nodes.py::ArgumentsNodeTC::test_kwoargs
+PASSED tests/unittest_nodes.py::ArgumentsNodeTC::test_positional_only
+PASSED tests/unittest_nodes.py::UnboundMethodNodeTest::test_no_super_getattr
+PASSED tests/unittest_nodes.py::BoundMethodNodeTest::test_is_property
+PASSED tests/unittest_nodes.py::AliasesTest::test_aliases
+PASSED tests/unittest_nodes.py::Python35AsyncTest::test_async_await_keywords
+PASSED tests/unittest_nodes.py::Python35AsyncTest::test_asyncfor_as_string
+PASSED tests/unittest_nodes.py::Python35AsyncTest::test_asyncwith_as_string
+PASSED tests/unittest_nodes.py::Python35AsyncTest::test_await_as_string
+PASSED tests/unittest_nodes.py::Python35AsyncTest::test_decorated_async_def_as_string
+PASSED tests/unittest_nodes.py::ContextTest::test_list_del
+PASSED tests/unittest_nodes.py::ContextTest::test_list_load
+PASSED tests/unittest_nodes.py::ContextTest::test_list_store
+PASSED tests/unittest_nodes.py::ContextTest::test_starred_load
+PASSED tests/unittest_nodes.py::ContextTest::test_starred_store
+PASSED tests/unittest_nodes.py::ContextTest::test_subscript_del
+PASSED tests/unittest_nodes.py::ContextTest::test_subscript_load
+PASSED tests/unittest_nodes.py::ContextTest::test_subscript_store
+PASSED tests/unittest_nodes.py::ContextTest::test_tuple_load
+PASSED tests/unittest_nodes.py::ContextTest::test_tuple_store
+PASSED tests/unittest_nodes.py::test_unknown
+PASSED tests/unittest_nodes.py::test_type_comments_with
+PASSED tests/unittest_nodes.py::test_type_comments_for
+PASSED tests/unittest_nodes.py::test_type_coments_assign
+PASSED tests/unittest_nodes.py::test_type_comments_invalid_expression
+PASSED tests/unittest_nodes.py::test_type_comments_invalid_function_comments
+PASSED tests/unittest_nodes.py::test_type_comments_function
+PASSED tests/unittest_nodes.py::test_type_comments_arguments
+PASSED tests/unittest_nodes.py::test_type_comments_posonly_arguments
+PASSED tests/unittest_nodes.py::test_correct_function_type_comment_parent
+PASSED tests/unittest_nodes.py::test_is_generator_for_yield_assignments
+PASSED tests/unittest_nodes.py::test_f_string_correct_line_numbering
+PASSED tests/unittest_nodes.py::test_assignment_expression
+PASSED tests/unittest_nodes.py::test_assignment_expression_in_functiondef
+PASSED tests/unittest_nodes.py::test_get_doc
+PASSED tests/unittest_nodes.py::test_parse_fstring_debug_mode
+PASSED tests/unittest_nodes.py::test_parse_type_comments_with_proper_parent
+PASSED tests/unittest_nodes.py::test_const_itered
+PASSED tests/unittest_nodes.py::test_is_generator_for_yield_in_while
+PASSED tests/unittest_nodes.py::test_is_generator_for_yield_in_if
+PASSED tests/unittest_nodes.py::test_is_generator_for_yield_in_aug_assign
+SKIPPED [1] tests/unittest_nodes.py:862: FIXME  http://bugs.python.org/issue10445 (no line number on function args)
+SKIPPED [1] tests/unittest_nodes.py:1672: pattern matching was added in PY310
+SKIPPED [1] tests/unittest_nodes.py:1727: pattern matching was added in PY310
+SKIPPED [1] tests/unittest_nodes.py:1781: pattern matching was added in PY310
+SKIPPED [1] tests/unittest_nodes.py:1831: pattern matching was added in PY310
+FAILED tests/unittest_nodes.py::AsStringTest::test_as_string_unknown - Assert...
+============== 1 failed, 91 passed, 5 skipped, 1 warning in 1.49s ==============
++ : '>>>>> End Test Output'
++ git checkout ce5cbce5ba11cdc2f8139ade66feea1e181a7944 tests/unittest_nodes.py
+Updated 1 path from 7a455f71

@@ -1,0 +1,37 @@
+{
+    "django__django-13660": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_command_option_inline_function_call (shell.tests.ShellCommandTestCase)",
+                    "test_stdin_read_inline_function_call (shell.tests.ShellCommandTestCase)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_command_option (shell.tests.ShellCommandTestCase)",
+                    "test_shell_with_bpython_not_installed (shell.tests.ShellCommandTestCase)",
+                    "test_shell_with_ipython_not_installed (shell.tests.ShellCommandTestCase)",
+                    "test_stdin_read (shell.tests.ShellCommandTestCase)"
+                ],
+                "failure": [
+                    "test_command_option_globals (shell.tests.ShellCommandTestCase)",
+                    "test_stdin_read_globals (shell.tests.ShellCommandTestCase)"
+                ]
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

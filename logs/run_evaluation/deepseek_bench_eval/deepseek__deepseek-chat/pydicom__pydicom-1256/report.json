@@ -1,0 +1,51 @@
+{
+    "pydicom__pydicom-1256": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "pydicom/tests/test_json.py::TestBinary::test_bulk_data_reader_is_called_within_SQ"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "pydicom/tests/test_json.py::TestPersonName::test_json_pn_from_file",
+                    "pydicom/tests/test_json.py::TestPersonName::test_pn_components_to_json",
+                    "pydicom/tests/test_json.py::TestPersonName::test_pn_components_from_json",
+                    "pydicom/tests/test_json.py::TestPersonName::test_empty_value",
+                    "pydicom/tests/test_json.py::TestPersonName::test_multi_value_to_json",
+                    "pydicom/tests/test_json.py::TestPersonName::test_dataelem_from_json",
+                    "pydicom/tests/test_json.py::TestAT::test_to_json",
+                    "pydicom/tests/test_json.py::TestAT::test_from_json",
+                    "pydicom/tests/test_json.py::TestAT::test_invalid_value_in_json",
+                    "pydicom/tests/test_json.py::TestAT::test_invalid_tag_in_json",
+                    "pydicom/tests/test_json.py::TestDataSetToJson::test_json_from_dicom_file",
+                    "pydicom/tests/test_json.py::TestDataSetToJson::test_roundtrip",
+                    "pydicom/tests/test_json.py::TestDataSetToJson::test_dataset_dumphandler",
+                    "pydicom/tests/test_json.py::TestDataSetToJson::test_dataelement_dumphandler",
+                    "pydicom/tests/test_json.py::TestDataSetToJson::test_sort_order",
+                    "pydicom/tests/test_json.py::TestSequence::test_nested_sequences",
+                    "pydicom/tests/test_json.py::TestBinary::test_inline_binary",
+                    "pydicom/tests/test_json.py::TestBinary::test_invalid_inline_binary",
+                    "pydicom/tests/test_json.py::TestBinary::test_valid_bulkdata_uri",
+                    "pydicom/tests/test_json.py::TestBinary::test_invalid_bulkdata_uri",
+                    "pydicom/tests/test_json.py::TestBinary::test_bulk_data_reader_is_called",
+                    "pydicom/tests/test_json.py::TestBinary::test_bulk_data_reader_is_called_2"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

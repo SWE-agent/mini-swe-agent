@@ -1,0 +1,45 @@
+diff --git a/django/utils/http.py b/django/utils/http.py
+index 572cfb4347..4425c97460 100644
+--- a/django/utils/http.py
++++ b/django/utils/http.py
+@@ -176,10 +176,37 @@ def parse_http_date(date):
+     try:
+         year = int(m.group('year'))
+         if year < 100:
+-            if year < 70:
+-                year += 2000
++            # Get current year in UTC
++            current_year = datetime.datetime.utcnow().year
++            current_century = (current_year // 100) * 100
++            candidate1 = current_century + year
++            diff1 = candidate1 - current_year
++            
++            # Try previous century
++            candidate2 = candidate1 - 100
++            diff2 = candidate2 - current_year
++            
++            # Try next century
++            candidate3 = candidate1 + 100
++            diff3 = candidate3 - current_year
++            
++            # Collect candidates that are not more than 50 years in the future
++            valid_candidates = []
++            for candidate, diff in [(candidate1, diff1), (candidate2, diff2), (candidate3, diff3)]:
++                if diff <= 50:  # Not more than 50 years in the future
++                    # Prefer future years by using negative diff for past years
++                    # This way, when sorting by score, future years come first
++                    score = abs(diff) if diff >= 0 else abs(diff) + 0.5
++                    valid_candidates.append((candidate, score))
++            
++            if valid_candidates:
++                # Choose the candidate with smallest score
++                valid_candidates.sort(key=lambda x: x[1])
++                year = valid_candidates[0][0]
+             else:
+-                year += 1900
++                # All candidates are more than 50 years in the future
++                # Choose the most recent one (largest year, which is candidate3)
++                year = candidate3
+         month = MONTHS.index(m.group('mon').lower()) + 1
+         day = int(m.group('day'))
+         hour = int(m.group('hour'))

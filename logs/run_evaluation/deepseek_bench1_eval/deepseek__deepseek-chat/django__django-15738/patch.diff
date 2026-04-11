@@ -1,0 +1,79 @@
+diff --git a/django/db/backends/base/schema.py b/django/db/backends/base/schema.py
+index 03f0f11507..a99a544f41 100644
+--- a/django/db/backends/base/schema.py
++++ b/django/db/backends/base/schema.py
+@@ -1,5 +1,6 @@
+ import logging
+ import operator
++from django.core.exceptions import FieldDoesNotExist
+ from datetime import datetime
+ 
+ from django.db.backends.ddl_references import (
+@@ -517,7 +518,7 @@ class BaseDatabaseSchemaEditor:
+         if sql:
+             self.execute(sql)
+ 
+-    def alter_unique_together(self, model, old_unique_together, new_unique_together):
++    def alter_unique_together(self, model, old_unique_together, new_unique_together, old_model=None):
+         """
+         Deal with a model changing its unique_together. The input
+         unique_togethers must be doubly-nested, not the single-nested
+@@ -526,9 +527,10 @@ class BaseDatabaseSchemaEditor:
+         olds = {tuple(fields) for fields in old_unique_together}
+         news = {tuple(fields) for fields in new_unique_together}
+         # Deleted uniques
++        delete_model = old_model if old_model is not None else model
+         for fields in olds.difference(news):
+             self._delete_composed_index(
+-                model,
++                delete_model,
+                 fields,
+                 {"unique": True, "primary_key": False},
+                 self.sql_delete_unique,
+@@ -538,7 +540,7 @@ class BaseDatabaseSchemaEditor:
+             fields = [model._meta.get_field(field) for field in field_names]
+             self.execute(self._create_unique_sql(model, fields))
+ 
+-    def alter_index_together(self, model, old_index_together, new_index_together):
++    def alter_index_together(self, model, old_index_together, new_index_together, old_model=None):
+         """
+         Deal with a model changing its index_together. The input
+         index_togethers must be doubly-nested, not the single-nested
+@@ -547,9 +549,10 @@ class BaseDatabaseSchemaEditor:
+         olds = {tuple(fields) for fields in old_index_together}
+         news = {tuple(fields) for fields in new_index_together}
+         # Deleted indexes
++        delete_model = old_model if old_model is not None else model
+         for fields in olds.difference(news):
+             self._delete_composed_index(
+-                model,
++                delete_model,
+                 fields,
+                 {"index": True, "unique": False},
+                 self.sql_delete_index,
+@@ -564,7 +567,12 @@ class BaseDatabaseSchemaEditor:
+             constraint.name for constraint in model._meta.constraints
+         }
+         meta_index_names = {constraint.name for constraint in model._meta.indexes}
+-        columns = [model._meta.get_field(field).column for field in fields]
++        try:
++            columns = [model._meta.get_field(field).column for field in fields]
++        except FieldDoesNotExist:
++            # Field has been renamed or removed, constraint should have been
++            # handled already or doesn't exist
++            return
+         constraint_names = self._constraint_names(
+             model,
+             columns,
+diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py
+index 75a3b8b030..61119a388c 100644
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -566,6 +566,7 @@ class AlterTogetherOptionOperation(ModelOptionOperation):
+                 new_model,
+                 getattr(old_model._meta, self.option_name, set()),
+                 getattr(new_model._meta, self.option_name, set()),
++                old_model=old_model,
+             )
+ 
+     def database_backwards(self, app_label, schema_editor, from_state, to_state):

@@ -1,0 +1,13 @@
+diff --git a/django/core/management/templates.py b/django/core/management/templates.py
+index 8dc6068286..54d1326731 100644
+--- a/django/core/management/templates.py
++++ b/django/core/management/templates.py
+@@ -74,7 +74,7 @@ class TemplateCommand(BaseCommand):
+                 raise CommandError(e)
+         else:
+             if app_or_project == 'app':
+-                self.validate_name(os.path.basename(target), 'directory')
++                self.validate_name(os.path.basename(os.path.normpath(target)), 'directory')
+             top_dir = os.path.abspath(os.path.expanduser(target))
+             if not os.path.exists(top_dir):
+                 raise CommandError("Destination directory '%s' does not "

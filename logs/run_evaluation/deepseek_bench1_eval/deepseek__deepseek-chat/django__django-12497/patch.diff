@@ -1,0 +1,35 @@
+diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py
+index 8ddbb5ba68..536b3dd601 100644
+--- a/django/db/models/fields/related.py
++++ b/django/db/models/fields/related.py
+@@ -1309,7 +1309,7 @@ class ManyToManyField(RelatedField):
+                              "through_fields keyword argument.") % (self, from_model_name),
+                             hint=(
+                                 'If you want to create a recursive relationship, '
+-                                'use ForeignKey("%s", symmetrical=False, through="%s").'
++                                'use ManyToManyField("%s", through="%s").'
+                             ) % (
+                                 RECURSIVE_RELATIONSHIP_CONSTANT,
+                                 relationship_model_name,
+@@ -1329,7 +1329,7 @@ class ManyToManyField(RelatedField):
+                             "through_fields keyword argument." % (self, to_model_name),
+                             hint=(
+                                 'If you want to create a recursive relationship, '
+-                                'use ForeignKey("%s", symmetrical=False, through="%s").'
++                                'use ManyToManyField("%s", through="%s").'
+                             ) % (
+                                 RECURSIVE_RELATIONSHIP_CONSTANT,
+                                 relationship_model_name,
+diff --git a/tests/invalid_models_tests/test_relative_fields.py b/tests/invalid_models_tests/test_relative_fields.py
+index 24f27168c2..6ff5a2fa41 100644
+--- a/tests/invalid_models_tests/test_relative_fields.py
++++ b/tests/invalid_models_tests/test_relative_fields.py
+@@ -152,7 +152,7 @@ class RelativeFieldTests(SimpleTestCase):
+                 "keyword argument.",
+                 hint=(
+                     'If you want to create a recursive relationship, use '
+-                    'ForeignKey("self", symmetrical=False, through="AmbiguousRelationship").'
++                    'ManyToManyField("self", through="AmbiguousRelationship").'
+                 ),
+                 obj=field,
+                 id='fields.E335',

@@ -1,0 +1,36 @@
+{
+    "django__django-15202": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "test_urlfield_clean_invalid (forms_tests.field_tests.test_urlfield.URLFieldTest)",
+                    "test_urlfield_clean_not_required (forms_tests.field_tests.test_urlfield.URLFieldTest)"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_urlfield_clean (forms_tests.field_tests.test_urlfield.URLFieldTest)",
+                    "test_urlfield_clean_required (forms_tests.field_tests.test_urlfield.URLFieldTest)",
+                    "test_urlfield_strip_on_none_value (forms_tests.field_tests.test_urlfield.URLFieldTest)",
+                    "test_urlfield_unable_to_set_strip_kwarg (forms_tests.field_tests.test_urlfield.URLFieldTest)",
+                    "test_urlfield_widget (forms_tests.field_tests.test_urlfield.URLFieldTest)",
+                    "test_urlfield_widget_max_min_length (forms_tests.field_tests.test_urlfield.URLFieldTest)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

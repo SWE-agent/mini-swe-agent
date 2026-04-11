@@ -1,0 +1,540 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
++ locale-gen
+Generating locales (this might take a while)...
+  en_US.UTF-8... done
+Generation complete.
++ export LANG=en_US.UTF-8
++ LANG=en_US.UTF-8
++ export LANGUAGE=en_US:en
++ LANGUAGE=en_US:en
++ export LC_ALL=en_US.UTF-8
++ LC_ALL=en_US.UTF-8
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   django/views/debug.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit d51c50d836c5cf8db5566da17963f871be554615
+Author: 007 <007gzs@gmail.com>
+Date:   Mon Apr 13 19:04:26 2020 +0800
+
+    Fixed #31462 -- Allowed overriding autocomplete/raw_id_fields/filter widgets for ManyToManyFields with formfield_overrides.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+index 69a5fbf389..2099d14861 100644
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -249,17 +249,25 @@ class BaseModelAdmin(metaclass=forms.MediaDefiningClass):
+             return None
+         db = kwargs.get('using')
+ 
+-        autocomplete_fields = self.get_autocomplete_fields(request)
+-        if db_field.name in autocomplete_fields:
+-            kwargs['widget'] = AutocompleteSelectMultiple(db_field.remote_field, self.admin_site, using=db)
+-        elif db_field.name in self.raw_id_fields:
+-            kwargs['widget'] = widgets.ManyToManyRawIdWidget(db_field.remote_field, self.admin_site, using=db)
+-        elif db_field.name in [*self.filter_vertical, *self.filter_horizontal]:
+-            kwargs['widget'] = widgets.FilteredSelectMultiple(
+-                db_field.verbose_name,
+-                db_field.name in self.filter_vertical
+-            )
+-
++        if 'widget' not in kwargs:
++            autocomplete_fields = self.get_autocomplete_fields(request)
++            if db_field.name in autocomplete_fields:
++                kwargs['widget'] = AutocompleteSelectMultiple(
++                    db_field.remote_field,
++                    self.admin_site,
++                    using=db,
++                )
++            elif db_field.name in self.raw_id_fields:
++                kwargs['widget'] = widgets.ManyToManyRawIdWidget(
++                    db_field.remote_field,
++                    self.admin_site,
++                    using=db,
++                )
++            elif db_field.name in [*self.filter_vertical, *self.filter_horizontal]:
++                kwargs['widget'] = widgets.FilteredSelectMultiple(
++                    db_field.verbose_name,
++                    db_field.name in self.filter_vertical
++                )
+         if 'queryset' not in kwargs:
+             queryset = self.get_field_queryset(db, db_field, request)
+             if queryset is not None:
+diff --git a/tests/admin_widgets/tests.py b/tests/admin_widgets/tests.py
+index 719d0d8095..b255d2188a 100644
+--- a/tests/admin_widgets/tests.py
++++ b/tests/admin_widgets/tests.py
+@@ -14,7 +14,9 @@ from django.contrib.admin.tests import AdminSeleniumTestCase
+ from django.contrib.auth.models import User
+ from django.core.files.storage import default_storage
+ from django.core.files.uploadedfile import SimpleUploadedFile
+-from django.db.models import CharField, DateField, DateTimeField, UUIDField
++from django.db.models import (
++    CharField, DateField, DateTimeField, ManyToManyField, UUIDField,
++)
+ from django.test import SimpleTestCase, TestCase, override_settings
+ from django.urls import reverse
+ from django.utils import translation
+@@ -138,6 +140,21 @@ class AdminFormfieldForDBFieldTests(SimpleTestCase):
+         self.assertEqual(f2.widget.attrs['maxlength'], '20')
+         self.assertEqual(f2.widget.attrs['size'], '10')
+ 
++    def test_formfield_overrides_m2m_filter_widget(self):
++        """
++        The autocomplete_fields, raw_id_fields, filter_vertical, and
++        filter_horizontal widgets for ManyToManyFields may be overridden by
++        specifying a widget in formfield_overrides.
++        """
++        class BandAdmin(admin.ModelAdmin):
++            filter_vertical = ['members']
++            formfield_overrides = {
++                ManyToManyField: {'widget': forms.CheckboxSelectMultiple},
++            }
++        ma = BandAdmin(Band, admin.site)
++        field = ma.formfield_for_dbfield(Band._meta.get_field('members'), request=None)
++        self.assertIsInstance(field.widget.widget, forms.CheckboxSelectMultiple)
++
+     def test_formfield_overrides_for_datetime_field(self):
+         """
+         Overriding the widget for DateTimeField doesn't overrides the default
++ git -c core.fileMode=false diff d51c50d836c5cf8db5566da17963f871be554615
+diff --git a/django/views/debug.py b/django/views/debug.py
+index e6b7d4d821..6edad556a2 100644
+--- a/django/views/debug.py
++++ b/django/views/debug.py
+@@ -90,6 +90,11 @@ class SafeExceptionReporterFilter:
+                 cleansed = self.cleansed_substitute
+             elif isinstance(value, dict):
+                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}
++            elif isinstance(value, (list, tuple, set)):
++                # Handle lists, tuples, and sets recursively
++                # Note: sets can't contain unhashable types like dicts,
++                # but we handle them for completeness
++                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)
+             else:
+                 cleansed = value
+         except TypeError:
+@@ -100,7 +105,6 @@ class SafeExceptionReporterFilter:
+             cleansed = CallableSettingWrapper(cleansed)
+ 
+         return cleansed
+-
+     def get_safe_settings(self):
+         """
+         Return a dictionary of the settings module with values of sensitive
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+Requirement already satisfied: asgiref>=3.2 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.1) (3.4.1)
+Requirement already satisfied: pytz in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.1) (2024.2)
+Requirement already satisfied: sqlparse>=0.2.2 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.1) (0.4.4)
+Requirement already satisfied: typing-extensions in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from asgiref>=3.2->Django==3.1) (4.1.1)
+Installing collected packages: Django
+  Attempting uninstall: Django
+    Found existing installation: Django 3.1
+    Uninstalling Django-3.1:
+      Successfully uninstalled Django-3.1
+  Running setup.py develop for Django
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+Successfully installed Django-3.1
++ git checkout d51c50d836c5cf8db5566da17963f871be554615 tests/view_tests/tests/test_debug.py
+Updated 0 paths from d731ef25e7
++ git apply -v -
+Checking patch tests/view_tests/tests/test_debug.py...
+Applied patch tests/view_tests/tests/test_debug.py cleanly.
++ : '>>>>> Start Test Output'
++ ./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 view_tests.tests.test_debug
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_repr (view_tests.tests.test_debug.CallableSettingWrapperTests) ... ok
+test_cleansed_substitute_override (view_tests.tests.test_debug.CustomExceptionReporterFilterTests) ... ok
+test_hidden_settings_override (view_tests.tests.test_debug.CustomExceptionReporterFilterTests) ... ok
+test_setting_allows_custom_subclass (view_tests.tests.test_debug.CustomExceptionReporterFilterTests) ... ok
+test_handle_db_exception (view_tests.tests.test_debug.DebugViewQueriesAllowedTests) ... ok
+test_400 (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_403 (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_403_template (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_404 (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_404_empty_path_not_in_urls (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_404_not_in_urls (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_classbased_technical_404 (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_default_urlconf_template (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_exception_reporter_from_request (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_exception_reporter_from_settings (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_files (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_no_template_source_loaders (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_non_l10ned_numeric_ids (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_regression_21530 (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_technical_404 (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_technical_404_converter_raise_404 (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_template_encoding (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_template_exceptions (view_tests.tests.test_debug.DebugViewTests) ... ok
+test_template_loader_postmortem (view_tests.tests.test_debug.DebugViewTests)
+Tests for not existing file ... ok
+test_sensitive_post_parameters_not_called (view_tests.tests.test_debug.DecoratorsTests) ... ok
+test_sensitive_variables_not_called (view_tests.tests.test_debug.DecoratorsTests) ... ok
+test_callable_settings (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_callable_settings_forbidding_to_set_attributes (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_cleanse_setting_basic (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_cleanse_setting_ignore_case (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_cleanse_setting_recurses_in_dictionary (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_cleanse_setting_recurses_in_list_tuples (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_custom_exception_reporter_filter (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_dict_setting_with_non_str_key (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_exception_report_uses_meta_filtering (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_multivalue_dict_key_error (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_non_sensitive_request (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_paranoid_request (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_request_meta_filtering (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_sensitive_function_arguments (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_sensitive_function_keyword_arguments (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_sensitive_method (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_sensitive_request (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_sensitive_settings (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_settings_with_sensitive_keys (view_tests.tests.test_debug.ExceptionReporterFilterTests) ... ok
+test_disallowed_host (view_tests.tests.test_debug.ExceptionReporterTests)
+An exception report can be generated even for a disallowed host. ... ok
+test_encoding_error (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_eol_support (view_tests.tests.test_debug.ExceptionReporterTests)
+The ExceptionReporter supports Unix, Windows and Macintosh EOL markers ... ok
+test_exception_fetching_user (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_ignore_traceback_evaluation_exceptions (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_local_variable_escaping (view_tests.tests.test_debug.ExceptionReporterTests)
+Safe strings in local variables are escaped. ... ok
+test_message_only (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_no_exception (view_tests.tests.test_debug.ExceptionReporterTests)
+An exception report can be generated for just a request ... ok
+test_no_request (view_tests.tests.test_debug.ExceptionReporterTests)
+An exception report can be generated without request ... ok
+test_non_utf8_values_handling (view_tests.tests.test_debug.ExceptionReporterTests)
+Non-UTF-8 exceptions/values should not make the output generation choke. ... ok
+test_reporting_frames_for_cyclic_reference (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_reporting_frames_source_not_match (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_reporting_frames_without_source (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_reporting_of_nested_exceptions (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_request_and_exception (view_tests.tests.test_debug.ExceptionReporterTests)
+A simple exception report can be generated ... ok
+test_request_and_message (view_tests.tests.test_debug.ExceptionReporterTests)
+A message can be provided in addition to a request ... ok
+test_request_with_items_key (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_template_encoding (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_too_large_values_handling (view_tests.tests.test_debug.ExceptionReporterTests)
+Large values should not create a large HTML. ... ok
+test_unfrozen_importlib (view_tests.tests.test_debug.ExceptionReporterTests) ... ok
+test_unprintable_values_handling (view_tests.tests.test_debug.ExceptionReporterTests)
+Unprintable values should not make the output generation choke. ... ok
+test_400 (view_tests.tests.test_debug.NonDjangoTemplatesDebugViewTests) ... ok
+test_403 (view_tests.tests.test_debug.NonDjangoTemplatesDebugViewTests) ... ok
+test_404 (view_tests.tests.test_debug.NonDjangoTemplatesDebugViewTests) ... ok
+test_template_not_found_error (view_tests.tests.test_debug.NonDjangoTemplatesDebugViewTests) ... ok
+test_custom_exception_reporter_filter (view_tests.tests.test_debug.NonHTMLResponseExceptionReporterFilter) ... ok
+test_non_html_response_encoding (view_tests.tests.test_debug.NonHTMLResponseExceptionReporterFilter) ... ok
+test_non_sensitive_request (view_tests.tests.test_debug.NonHTMLResponseExceptionReporterFilter) ... ok
+test_paranoid_request (view_tests.tests.test_debug.NonHTMLResponseExceptionReporterFilter) ... ok
+test_sensitive_request (view_tests.tests.test_debug.NonHTMLResponseExceptionReporterFilter) ... ok
+test_disallowed_host (view_tests.tests.test_debug.PlainTextReportTests)
+An exception report can be generated even for a disallowed host. ... ok
+test_message_only (view_tests.tests.test_debug.PlainTextReportTests) ... ok
+test_no_exception (view_tests.tests.test_debug.PlainTextReportTests)
+An exception report can be generated for just a request ... ok
+test_no_request (view_tests.tests.test_debug.PlainTextReportTests)
+An exception report can be generated without request ... ok
+test_request_and_exception (view_tests.tests.test_debug.PlainTextReportTests)
+A simple exception report can be generated ... ok
+test_request_and_message (view_tests.tests.test_debug.PlainTextReportTests)
+A message can be provided in addition to a request ... ok
+test_request_with_items_key (view_tests.tests.test_debug.PlainTextReportTests) ... ok
+test_template_exception (view_tests.tests.test_debug.PlainTextReportTests) ... ok
+
+----------------------------------------------------------------------
+Ran 83 tests in 1.968s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Testing against Django installed in '/testbed/django'
+Importing application view_tests
+Skipping setup of unused database(s): other.
+Operations to perform:
+  Synchronize unmigrated apps: auth, contenttypes, messages, sessions, staticfiles, view_tests
+  Apply all migrations: admin, sites
+Synchronizing apps without migrations:
+  Creating tables...
+    Creating table django_content_type
+    Creating table auth_permission
+    Creating table auth_group
+    Creating table auth_user
+    Creating table django_session
+    Creating table view_tests_author
+    Creating table view_tests_article
+    Creating table view_tests_urlarticle
+    Creating table view_tests_datearticle
+    Running deferred SQL...
+Running migrations:
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+System check identified no issues (0 silenced).
++ : '>>>>> End Test Output'
++ git checkout d51c50d836c5cf8db5566da17963f871be554615 tests/view_tests/tests/test_debug.py
+Updated 1 path from d731ef25e7

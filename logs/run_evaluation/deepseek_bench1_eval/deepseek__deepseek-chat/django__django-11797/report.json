@@ -1,0 +1,67 @@
+{
+    "django__django-11797": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_exact_query_rhs_with_selected_columns (lookup.tests.LookupTests)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_chain_date_time_lookups (lookup.tests.LookupTests)",
+                    "test_count (lookup.tests.LookupTests)",
+                    "test_custom_field_none_rhs (lookup.tests.LookupTests)",
+                    "Lookup.can_use_none_as_rhs=True allows None as a lookup value.",
+                    "test_error_messages (lookup.tests.LookupTests)",
+                    "test_escaping (lookup.tests.LookupTests)",
+                    "test_exact_exists (lookup.tests.LookupTests)",
+                    "Transforms are used for __exact=None.",
+                    "test_exact_sliced_queryset_limit_one (lookup.tests.LookupTests)",
+                    "test_exact_sliced_queryset_limit_one_offset (lookup.tests.LookupTests)",
+                    "test_exact_sliced_queryset_not_limited_to_one (lookup.tests.LookupTests)",
+                    "test_exclude (lookup.tests.LookupTests)",
+                    "test_exists (lookup.tests.LookupTests)",
+                    "test_get_next_previous_by (lookup.tests.LookupTests)",
+                    "test_in (lookup.tests.LookupTests)",
+                    "test_in_bulk (lookup.tests.LookupTests)",
+                    "test_in_bulk_lots_of_ids (lookup.tests.LookupTests)",
+                    "test_in_bulk_non_unique_field (lookup.tests.LookupTests)",
+                    "test_in_bulk_with_field (lookup.tests.LookupTests)",
+                    "test_in_different_database (lookup.tests.LookupTests)",
+                    "test_in_keeps_value_ordering (lookup.tests.LookupTests)",
+                    "test_iterator (lookup.tests.LookupTests)",
+                    "test_lookup_collision (lookup.tests.LookupTests)",
+                    "test_lookup_date_as_str (lookup.tests.LookupTests)",
+                    "test_lookup_int_as_str (lookup.tests.LookupTests)",
+                    "test_nested_outerref_lhs (lookup.tests.LookupTests)",
+                    "test_none (lookup.tests.LookupTests)",
+                    "test_nonfield_lookups (lookup.tests.LookupTests)",
+                    "test_pattern_lookups_with_substr (lookup.tests.LookupTests)",
+                    "test_regex (lookup.tests.LookupTests)",
+                    "test_regex_backreferencing (lookup.tests.LookupTests)",
+                    "test_regex_non_ascii (lookup.tests.LookupTests)",
+                    "test_regex_non_string (lookup.tests.LookupTests)",
+                    "test_regex_null (lookup.tests.LookupTests)",
+                    "test_relation_nested_lookup_error (lookup.tests.LookupTests)",
+                    "test_unsupported_lookups (lookup.tests.LookupTests)",
+                    "test_values (lookup.tests.LookupTests)",
+                    "test_values_list (lookup.tests.LookupTests)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

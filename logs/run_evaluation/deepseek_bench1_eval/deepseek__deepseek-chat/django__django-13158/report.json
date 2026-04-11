@@ -1,0 +1,58 @@
+{
+    "django__django-13158": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_union_none (queries.test_qs_combinators.QuerySetSetOperationTests)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_combining_multiple_models (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_count_difference (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_count_intersection (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_count_union (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_count_union_empty_result (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_difference_with_empty_qs (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_difference_with_values (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_intersection_with_empty_qs (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_intersection_with_values (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_limits (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_order_by_same_type (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_order_raises_on_non_selected_column (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_ordering (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_ordering_by_alias (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_ordering_by_f_expression (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_ordering_by_f_expression_and_alias (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_qs_with_subcompound_qs (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_simple_difference (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_simple_intersection (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_simple_union (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_union_distinct (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_union_with_empty_qs (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_union_with_extra_and_values_list (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_union_with_two_annotated_values_list (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_union_with_values (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_union_with_values_list_and_order (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_union_with_values_list_on_annotated_and_unannotated (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_unsupported_operations_on_combined_qs (queries.test_qs_combinators.QuerySetSetOperationTests)",
+                    "test_unsupported_ordering_slicing_raises_db_error (queries.test_qs_combinators.QuerySetSetOperationTests)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

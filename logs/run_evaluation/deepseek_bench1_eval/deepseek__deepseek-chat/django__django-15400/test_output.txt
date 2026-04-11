@@ -1,0 +1,765 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   django/utils/functional.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit 4c76ffc2d6c77c850b4bef8d9acc197d11c47937
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Sat Jan 22 17:21:57 2022 +0100
+
+    Fixed #29490 -- Added support for object-based Media CSS and JS paths.
+
+diff --git a/django/forms/widgets.py b/django/forms/widgets.py
+index 8c5122ad1d..208464b60a 100644
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -101,7 +101,9 @@ class Media:
+ 
+     def render_js(self):
+         return [
+-            format_html('<script src="{}"></script>', self.absolute_path(path))
++            path.__html__()
++            if hasattr(path, "__html__")
++            else format_html('<script src="{}"></script>', self.absolute_path(path))
+             for path in self._js
+         ]
+ 
+@@ -111,7 +113,9 @@ class Media:
+         media = sorted(self._css)
+         return chain.from_iterable(
+             [
+-                format_html(
++                path.__html__()
++                if hasattr(path, "__html__")
++                else format_html(
+                     '<link href="{}" media="{}" rel="stylesheet">',
+                     self.absolute_path(path),
+                     medium,
+diff --git a/docs/releases/4.1.txt b/docs/releases/4.1.txt
+index 02d51ed2a5..4b62cf09cf 100644
+--- a/docs/releases/4.1.txt
++++ b/docs/releases/4.1.txt
+@@ -192,6 +192,11 @@ Forms
+ * The new ``edit_only`` argument for :func:`.modelformset_factory` and
+   :func:`.inlineformset_factory` allows preventing new objects creation.
+ 
++* The ``js`` and ``css`` class attributes of :doc:`Media </topics/forms/media>`
++  now allow using hashable objects, not only path strings, as long as those
++  objects implement the ``__html__()`` method (typically when decorated with
++  the :func:`~django.utils.html.html_safe` decorator).
++
+ Generic Views
+ ~~~~~~~~~~~~~
+ 
+diff --git a/docs/topics/forms/media.txt b/docs/topics/forms/media.txt
+index 6ca7c66fde..7e5a04e3d9 100644
+--- a/docs/topics/forms/media.txt
++++ b/docs/topics/forms/media.txt
+@@ -206,7 +206,10 @@ return values for dynamic ``media`` properties.
+ Paths in asset definitions
+ ==========================
+ 
+-Paths used to specify assets can be either relative or absolute. If a
++Paths as strings
++----------------
++
++String paths used to specify assets can be either relative or absolute. If a
+ path starts with ``/``, ``http://`` or ``https://``, it will be
+ interpreted as an absolute path, and left as-is. All other paths will
+ be prepended with the value of the appropriate prefix. If the
+@@ -254,6 +257,28 @@ Or if :mod:`~django.contrib.staticfiles` is configured using the
+     <script src="https://static.example.com/animations.27e20196a850.js"></script>
+     <script src="http://othersite.com/actions.js"></script>
+ 
++Paths as objects
++----------------
++
++.. versionadded:: 4.1
++
++Asset paths may also be given as hashable objects implementing an
++``__html__()`` method. The ``__html__()`` method is typically added using the
++:func:`~django.utils.html.html_safe` decorator. The object is responsible for
++outputting the complete HTML ``<script>`` or ``<link>`` tag content::
++
++    >>> from django import forms
++    >>> from django.utils.html import html_safe
++    >>>
++    >>> @html_safe
++    >>> class JSPath:
++    ...     def __str__(self):
++    ...         return '<script src="https://example.org/asset.js" rel="stylesheet">'
++
++    >>> class SomeWidget(forms.TextInput):
++    ...     class Media:
++    ...         js = (JSPath(),)
++
+ ``Media`` objects
+ =================
+ 
+diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/test_media.py
+index 4338321af8..171b70e508 100644
+--- a/tests/forms_tests/tests/test_media.py
++++ b/tests/forms_tests/tests/test_media.py
+@@ -1,6 +1,8 @@
+ from django.forms import CharField, Form, Media, MultiWidget, TextInput
+ from django.template import Context, Template
++from django.templatetags.static import static
+ from django.test import SimpleTestCase, override_settings
++from django.utils.html import format_html, html_safe
+ 
+ 
+ @override_settings(
+@@ -710,3 +712,160 @@ class FormsMediaTestCase(SimpleTestCase):
+         merged = media + empty_media
+         self.assertEqual(merged._css_lists, [{"screen": ["a.css"]}])
+         self.assertEqual(merged._js_lists, [["a"]])
++
++
++@html_safe
++class Asset:
++    def __init__(self, path):
++        self.path = path
++
++    def __eq__(self, other):
++        return (self.__class__ == other.__class__ and self.path == other.path) or (
++            other.__class__ == str and self.path == other
++        )
++
++    def __hash__(self):
++        return hash(self.path)
++
++    def __str__(self):
++        return self.absolute_path(self.path)
++
++    def absolute_path(self, path):
++        """
++        Given a relative or absolute path to a static asset, return an absolute
++        path. An absolute path will be returned unchanged while a relative path
++        will be passed to django.templatetags.static.static().
++        """
++        if path.startswith(("http://", "https://", "/")):
++            return path
++        return static(path)
++
++    def __repr__(self):
++        return f"{self.path!r}"
++
++
++class CSS(Asset):
++    def __init__(self, path, medium):
++        super().__init__(path)
++        self.medium = medium
++
++    def __str__(self):
++        path = super().__str__()
++        return format_html(
++            '<link href="{}" media="{}" rel="stylesheet">',
++            self.absolute_path(path),
++            self.medium,
++        )
++
++
++class JS(Asset):
++    def __init__(self, path, integrity=None):
++        super().__init__(path)
++        self.integrity = integrity or ""
++
++    def __str__(self, integrity=None):
++        path = super().__str__()
++        template = '<script src="{}"%s></script>' % (
++            ' integrity="{}"' if self.integrity else "{}"
++        )
++        return format_html(template, self.absolute_path(path), self.integrity)
++
++
++@override_settings(
++    STATIC_URL="http://media.example.com/static/",
++)
++class FormsMediaObjectTestCase(SimpleTestCase):
++    """Media handling when media are objects instead of raw strings."""
++
++    def test_construction(self):
++        m = Media(
++            css={"all": (CSS("path/to/css1", "all"), CSS("/path/to/css2", "all"))},
++            js=(
++                JS("/path/to/js1"),
++                JS("http://media.other.com/path/to/js2"),
++                JS(
++                    "https://secure.other.com/path/to/js3",
++                    integrity="9d947b87fdeb25030d56d01f7aa75800",
++                ),
++            ),
++        )
++        self.assertEqual(
++            str(m),
++            '<link href="http://media.example.com/static/path/to/css1" media="all" '
++            'rel="stylesheet">\n'
++            '<link href="/path/to/css2" media="all" rel="stylesheet">\n'
++            '<script src="/path/to/js1"></script>\n'
++            '<script src="http://media.other.com/path/to/js2"></script>\n'
++            '<script src="https://secure.other.com/path/to/js3" '
++            'integrity="9d947b87fdeb25030d56d01f7aa75800"></script>',
++        )
++        self.assertEqual(
++            repr(m),
++            "Media(css={'all': ['path/to/css1', '/path/to/css2']}, "
++            "js=['/path/to/js1', 'http://media.other.com/path/to/js2', "
++            "'https://secure.other.com/path/to/js3'])",
++        )
++
++    def test_simplest_class(self):
++        @html_safe
++        class SimpleJS:
++            """The simplest possible asset class."""
++
++            def __str__(self):
++                return '<script src="https://example.org/asset.js" rel="stylesheet">'
++
++        m = Media(js=(SimpleJS(),))
++        self.assertEqual(
++            str(m),
++            '<script src="https://example.org/asset.js" rel="stylesheet">',
++        )
++
++    def test_combine_media(self):
++        class MyWidget1(TextInput):
++            class Media:
++                css = {"all": (CSS("path/to/css1", "all"), "/path/to/css2")}
++                js = (
++                    "/path/to/js1",
++                    "http://media.other.com/path/to/js2",
++                    "https://secure.other.com/path/to/js3",
++                    JS("/path/to/js4", integrity="9d947b87fdeb25030d56d01f7aa75800"),
++                )
++
++        class MyWidget2(TextInput):
++            class Media:
++                css = {"all": (CSS("/path/to/css2", "all"), "/path/to/css3")}
++                js = (JS("/path/to/js1"), "/path/to/js4")
++
++        w1 = MyWidget1()
++        w2 = MyWidget2()
++        self.assertEqual(
++            str(w1.media + w2.media),
++            '<link href="http://media.example.com/static/path/to/css1" media="all" '
++            'rel="stylesheet">\n'
++            '<link href="/path/to/css2" media="all" rel="stylesheet">\n'
++            '<link href="/path/to/css3" media="all" rel="stylesheet">\n'
++            '<script src="/path/to/js1"></script>\n'
++            '<script src="http://media.other.com/path/to/js2"></script>\n'
++            '<script src="https://secure.other.com/path/to/js3"></script>\n'
++            '<script src="/path/to/js4" integrity="9d947b87fdeb25030d56d01f7aa75800">'
++            "</script>",
++        )
++
++    def test_media_deduplication(self):
++        # The deduplication doesn't only happen at the point of merging two or
++        # more media objects.
++        media = Media(
++            css={
++                "all": (
++                    CSS("/path/to/css1", "all"),
++                    CSS("/path/to/css1", "all"),
++                    "/path/to/css1",
++                )
++            },
++            js=(JS("/path/to/js1"), JS("/path/to/js1"), "/path/to/js1"),
++        )
++        self.assertEqual(
++            str(media),
++            '<link href="/path/to/css1" media="all" rel="stylesheet">\n'
++            '<script src="/path/to/js1"></script>',
++        )
++ git -c core.fileMode=false diff 4c76ffc2d6c77c850b4bef8d9acc197d11c47937
+diff --git a/django/utils/functional.py b/django/utils/functional.py
+index 9e1be0fe0f..51610c4223 100644
+--- a/django/utils/functional.py
++++ b/django/utils/functional.py
+@@ -373,6 +373,100 @@ class LazyObject:
+     __len__ = new_method_proxy(len)
+     __contains__ = new_method_proxy(operator.contains)
+ 
++    # Arithmetic operators
++    __add__ = new_method_proxy(operator.add)
++    __sub__ = new_method_proxy(operator.sub)
++    __mul__ = new_method_proxy(operator.mul)
++    __truediv__ = new_method_proxy(operator.truediv)
++    __floordiv__ = new_method_proxy(operator.floordiv)
++    __mod__ = new_method_proxy(operator.mod)
++    __pow__ = new_method_proxy(operator.pow)
++    __and__ = new_method_proxy(operator.and_)
++    __or__ = new_method_proxy(operator.or_)
++    __xor__ = new_method_proxy(operator.xor)
++    __lshift__ = new_method_proxy(operator.lshift)
++    __rshift__ = new_method_proxy(operator.rshift)
++    __matmul__ = new_method_proxy(operator.matmul)
++    
++    # Unary operators
++    __neg__ = new_method_proxy(operator.neg)
++    __pos__ = new_method_proxy(operator.pos)
++    __abs__ = new_method_proxy(operator.abs)
++    __invert__ = new_method_proxy(operator.invert)
++    
++    # Additional comparison operators
++    __le__ = new_method_proxy(operator.le)
++    __ge__ = new_method_proxy(operator.ge)
++    
++    # Callable support
++    __call__ = new_method_proxy(operator.call)
++
++
++    # Reversed arithmetic operators
++    def __radd__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other + self._wrapped
++    
++    def __rsub__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other - self._wrapped
++    
++    def __rmul__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other * self._wrapped
++    
++    def __rtruediv__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other / self._wrapped
++    
++    def __rfloordiv__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other // self._wrapped
++    
++    def __rmod__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other % self._wrapped
++    
++    def __rpow__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other ** self._wrapped
++    
++    def __rand__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other & self._wrapped
++    
++    def __ror__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other | self._wrapped
++    
++    def __rxor__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other ^ self._wrapped
++    
++    def __rlshift__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other << self._wrapped
++    
++    def __rrshift__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other >> self._wrapped
++    
++    def __rmatmul__(self, other):
++        if self._wrapped is empty:
++            self._setup()
++        return other @ self._wrapped
+ 
+ def unpickle_lazyobject(wrapped):
+     """
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build editable did not run successfully.
+  │ exit code: 1
+  ╰─> [80 lines of output]
+      /tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+      !!
+      
+              ********************************************************************************
+              Please consider removing the following classifiers in favor of a SPDX license expression:
+      
+              License :: OSI Approved :: BSD License
+      
+              See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+              ********************************************************************************
+      
+      !!
+        self._finalize_license_expression()
+      Traceback (most recent call last):
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/expand.py", line 71, in __getattr__
+          return next(
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/expand.py", line 72, in <genexpr>
+          ast.literal_eval(value)
+        File "/opt/miniconda3/envs/testbed/lib/python3.9/ast.py", line 105, in literal_eval
+          return _convert(node_or_string)
+        File "/opt/miniconda3/envs/testbed/lib/python3.9/ast.py", line 104, in _convert
+          return _convert_signed_num(node)
+        File "/opt/miniconda3/envs/testbed/lib/python3.9/ast.py", line 78, in _convert_signed_num
+          return _convert_num(node)
+        File "/opt/miniconda3/envs/testbed/lib/python3.9/ast.py", line 69, in _convert_num
+          _raise_malformed_node(node)
+        File "/opt/miniconda3/envs/testbed/lib/python3.9/ast.py", line 66, in _raise_malformed_node
+          raise ValueError(f'malformed node or string: {node!r}')
+      ValueError: malformed node or string: <ast.Call object at 0x72a29e257280>
+      
+      The above exception was the direct cause of the following exception:
+      
+      Traceback (most recent call last):
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/expand.py", line 185, in read_attr
+          value = getattr(StaticModule(module_name, spec), attr_name)
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/expand.py", line 77, in __getattr__
+          raise AttributeError(f"{self.name} has no attribute {attr}") from e
+      AttributeError: django has no attribute __version__
+      
+      During handling of the above exception, another exception occurred:
+      
+      Traceback (most recent call last):
+        File "/opt/miniconda3/envs/testbed/lib/python3.9/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 353, in <module>
+          main()
+        File "/opt/miniconda3/envs/testbed/lib/python3.9/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 335, in main
+          json_out['return_val'] = hook(**hook_input['kwargs'])
+        File "/opt/miniconda3/envs/testbed/lib/python3.9/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 132, in get_requires_for_build_editable
+          return hook(config_settings)
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/build_meta.py", line 481, in get_requires_for_build_editable
+          return self.get_requires_for_build_wheel(config_settings)
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
+          return self._get_build_requires(config_settings, requirements=[])
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
+          self.run_setup()
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/build_meta.py", line 520, in run_setup
+          super().run_setup(setup_script=setup_script)
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())
+        File "<string>", line 31, in <module>
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/__init__.py", line 117, in setup
+          return distutils.core.setup(**attrs)  # type: ignore[return-value]
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/_distutils/core.py", line 160, in setup
+          dist.parse_config_files()
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/dist.py", line 758, in parse_config_files
+          setupcfg.parse_configuration(
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/setupcfg.py", line 189, in parse_configuration
+          meta.parse()
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/setupcfg.py", line 504, in parse
+          section_parser_method(section_options)
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/setupcfg.py", line 479, in parse_section
+          self[name] = value
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/setupcfg.py", line 296, in __setitem__
+          parsed = self.parsers.get(option_name, lambda x: x)(value)
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/setupcfg.py", line 602, in _parse_version
+          return expand.version(self._parse_attr(value, self.package_dir, self.root_dir))
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/setupcfg.py", line 421, in _parse_attr
+          return expand.read_attr(attr_desc, package_dir, root_dir)
+        File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/expand.py", line 191, in read_attr
+          return getattr(module, attr_name)
+      AttributeError: module 'django' has no attribute '__version__'
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+error: subprocess-exited-with-error
+
+× Getting requirements to build editable did not run successfully.
+│ exit code: 1
+╰─> See above for output.
+
+note: This error originates from a subprocess, and is likely not a problem with pip.
++ git checkout 4c76ffc2d6c77c850b4bef8d9acc197d11c47937 tests/utils_tests/test_lazyobject.py
+Updated 0 paths from 943f449e39
++ git apply -v -
+Checking patch tests/utils_tests/test_lazyobject.py...
+Applied patch tests/utils_tests/test_lazyobject.py cleanly.
++ : '>>>>> Start Test Output'
++ ./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 utils_tests.test_lazyobject
+Traceback (most recent call last):
+  File "/testbed/./tests/runtests.py", line 16, in <module>
+    import django
+  File "/testbed/django/__init__.py", line 1, in <module>
+    from django.utils.version import get_version
+  File "/testbed/django/utils/version.py", line 7, in <module>
+    from django.utils.regex_helper import _lazy_re_compile
+  File "/testbed/django/utils/regex_helper.py", line 10, in <module>
+    from django.utils.functional import SimpleLazyObject
+  File "/testbed/django/utils/functional.py", line 272, in <module>
+    class LazyObject:
+  File "/testbed/django/utils/functional.py", line 402, in LazyObject
+    __call__ = new_method_proxy(operator.call)
+AttributeError: module 'operator' has no attribute 'call'
++ : '>>>>> End Test Output'
++ git checkout 4c76ffc2d6c77c850b4bef8d9acc197d11c47937 tests/utils_tests/test_lazyobject.py
+Updated 1 path from 943f449e39

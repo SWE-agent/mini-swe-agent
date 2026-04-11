@@ -1,0 +1,46 @@
+{
+    "django__django-15789": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_json_script_custom_encoder (utils_tests.test_html.TestUtilsHtml)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_conditional_escape (utils_tests.test_html.TestUtilsHtml)",
+                    "test_escape (utils_tests.test_html.TestUtilsHtml)",
+                    "test_escapejs (utils_tests.test_html.TestUtilsHtml)",
+                    "test_format_html (utils_tests.test_html.TestUtilsHtml)",
+                    "test_html_safe (utils_tests.test_html.TestUtilsHtml)",
+                    "test_html_safe_defines_html_error (utils_tests.test_html.TestUtilsHtml)",
+                    "test_html_safe_doesnt_define_str (utils_tests.test_html.TestUtilsHtml)",
+                    "test_html_safe_subclass (utils_tests.test_html.TestUtilsHtml)",
+                    "test_json_script (utils_tests.test_html.TestUtilsHtml)",
+                    "test_json_script_without_id (utils_tests.test_html.TestUtilsHtml)",
+                    "test_linebreaks (utils_tests.test_html.TestUtilsHtml)",
+                    "test_smart_urlquote (utils_tests.test_html.TestUtilsHtml)",
+                    "test_strip_spaces_between_tags (utils_tests.test_html.TestUtilsHtml)",
+                    "test_strip_tags (utils_tests.test_html.TestUtilsHtml)",
+                    "test_strip_tags_files (utils_tests.test_html.TestUtilsHtml)",
+                    "test_urlize (utils_tests.test_html.TestUtilsHtml)",
+                    "test_urlize_unchanged_inputs (utils_tests.test_html.TestUtilsHtml)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

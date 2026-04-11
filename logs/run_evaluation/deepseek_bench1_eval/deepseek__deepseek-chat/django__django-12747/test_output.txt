@@ -1,0 +1,767 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
++ locale-gen
+Generating locales (this might take a while)...
+  en_US.UTF-8... done
+Generation complete.
++ export LANG=en_US.UTF-8
++ LANG=en_US.UTF-8
++ export LANGUAGE=en_US:en
++ LANGUAGE=en_US:en
++ export LC_ALL=en_US.UTF-8
++ LC_ALL=en_US.UTF-8
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   django/db/models/deletion.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit c86201b6ed4f8256b0a0520c08aa674f623d4127
+Author: François Freitag <mail@franek.fr>
+Date:   Sat Apr 18 12:27:43 2020 +0200
+
+    Disabled management commands output with verbosity 0 in various tests.
+    
+    Instead of capturing the command output and discard it immediately,
+    tell the command not to log.
+
+diff --git a/tests/auth_tests/test_management.py b/tests/auth_tests/test_management.py
+index fa2fc93fd6..8b2d9775a2 100644
+--- a/tests/auth_tests/test_management.py
++++ b/tests/auth_tests/test_management.py
+@@ -990,7 +990,7 @@ class CreatesuperuserManagementCommandTestCase(TestCase):
+         'DJANGO_SUPERUSER_FIRST_NAME': 'ignored_first_name',
+     })
+     def test_environment_variable_non_interactive(self):
+-        call_command('createsuperuser', interactive=False, stdout=StringIO())
++        call_command('createsuperuser', interactive=False, verbosity=0)
+         user = User.objects.get(username='test_superuser')
+         self.assertEqual(user.email, 'joe@somewhere.org')
+         self.assertTrue(user.check_password('test_password'))
+@@ -1009,7 +1009,7 @@ class CreatesuperuserManagementCommandTestCase(TestCase):
+             interactive=False,
+             username='cmd_superuser',
+             email='cmd@somewhere.org',
+-            stdout=StringIO(),
++            verbosity=0,
+         )
+         user = User.objects.get(username='cmd_superuser')
+         self.assertEqual(user.email, 'cmd@somewhere.org')
+@@ -1030,7 +1030,7 @@ class CreatesuperuserManagementCommandTestCase(TestCase):
+                 username='cmd_superuser',
+                 email='cmd@somewhere.org',
+                 stdin=MockTTY(),
+-                stdout=StringIO(),
++                verbosity=0,
+             )
+             user = User.objects.get(username='cmd_superuser')
+             self.assertEqual(user.email, 'cmd@somewhere.org')
+diff --git a/tests/i18n/test_compilation.py b/tests/i18n/test_compilation.py
+index cda5592155..04958bcbb4 100644
+--- a/tests/i18n/test_compilation.py
++++ b/tests/i18n/test_compilation.py
+@@ -38,7 +38,7 @@ class PoFileTests(MessageCompilationTests):
+     def test_bom_rejection(self):
+         stderr = StringIO()
+         with self.assertRaisesMessage(CommandError, 'compilemessages generated one or more errors.'):
+-            call_command('compilemessages', locale=[self.LOCALE], stdout=StringIO(), stderr=stderr)
++            call_command('compilemessages', locale=[self.LOCALE], verbosity=0, stderr=stderr)
+         self.assertIn('file has a BOM (Byte Order Mark)', stderr.getvalue())
+         self.assertFalse(os.path.exists(self.MO_FILE))
+ 
+@@ -63,7 +63,7 @@ class PoFileContentsTests(MessageCompilationTests):
+     MO_FILE = 'locale/%s/LC_MESSAGES/django.mo' % LOCALE
+ 
+     def test_percent_symbol_in_po_file(self):
+-        call_command('compilemessages', locale=[self.LOCALE], stdout=StringIO())
++        call_command('compilemessages', locale=[self.LOCALE], verbosity=0)
+         self.assertTrue(os.path.exists(self.MO_FILE))
+ 
+ 
+@@ -80,13 +80,13 @@ class MultipleLocaleCompilationTests(MessageCompilationTests):
+ 
+     def test_one_locale(self):
+         with override_settings(LOCALE_PATHS=[os.path.join(self.test_dir, 'locale')]):
+-            call_command('compilemessages', locale=['hr'], stdout=StringIO())
++            call_command('compilemessages', locale=['hr'], verbosity=0)
+ 
+             self.assertTrue(os.path.exists(self.MO_FILE_HR))
+ 
+     def test_multiple_locales(self):
+         with override_settings(LOCALE_PATHS=[os.path.join(self.test_dir, 'locale')]):
+-            call_command('compilemessages', locale=['hr', 'fr'], stdout=StringIO())
++            call_command('compilemessages', locale=['hr', 'fr'], verbosity=0)
+ 
+             self.assertTrue(os.path.exists(self.MO_FILE_HR))
+             self.assertTrue(os.path.exists(self.MO_FILE_FR))
+@@ -110,26 +110,25 @@ class ExcludedLocaleCompilationTests(MessageCompilationTests):
+             execute_from_command_line(['django-admin', 'help', 'compilemessages'])
+ 
+     def test_one_locale_excluded(self):
+-        call_command('compilemessages', exclude=['it'], stdout=StringIO())
++        call_command('compilemessages', exclude=['it'], verbosity=0)
+         self.assertTrue(os.path.exists(self.MO_FILE % 'en'))
+         self.assertTrue(os.path.exists(self.MO_FILE % 'fr'))
+         self.assertFalse(os.path.exists(self.MO_FILE % 'it'))
+ 
+     def test_multiple_locales_excluded(self):
+-        call_command('compilemessages', exclude=['it', 'fr'], stdout=StringIO())
++        call_command('compilemessages', exclude=['it', 'fr'], verbosity=0)
+         self.assertTrue(os.path.exists(self.MO_FILE % 'en'))
+         self.assertFalse(os.path.exists(self.MO_FILE % 'fr'))
+         self.assertFalse(os.path.exists(self.MO_FILE % 'it'))
+ 
+     def test_one_locale_excluded_with_locale(self):
+-        call_command('compilemessages', locale=['en', 'fr'], exclude=['fr'], stdout=StringIO())
++        call_command('compilemessages', locale=['en', 'fr'], exclude=['fr'], verbosity=0)
+         self.assertTrue(os.path.exists(self.MO_FILE % 'en'))
+         self.assertFalse(os.path.exists(self.MO_FILE % 'fr'))
+         self.assertFalse(os.path.exists(self.MO_FILE % 'it'))
+ 
+     def test_multiple_locales_excluded_with_locale(self):
+-        call_command('compilemessages', locale=['en', 'fr', 'it'], exclude=['fr', 'it'],
+-                     stdout=StringIO())
++        call_command('compilemessages', locale=['en', 'fr', 'it'], exclude=['fr', 'it'], verbosity=0)
+         self.assertTrue(os.path.exists(self.MO_FILE % 'en'))
+         self.assertFalse(os.path.exists(self.MO_FILE % 'fr'))
+         self.assertFalse(os.path.exists(self.MO_FILE % 'it'))
+@@ -177,7 +176,7 @@ class CompilationErrorHandling(MessageCompilationTests):
+     def test_error_reported_by_msgfmt(self):
+         # po file contains wrong po formatting.
+         with self.assertRaises(CommandError):
+-            call_command('compilemessages', locale=['ja'], verbosity=0, stderr=StringIO())
++            call_command('compilemessages', locale=['ja'], verbosity=0)
+ 
+     def test_msgfmt_error_including_non_ascii(self):
+         # po file contains invalid msgstr content (triggers non-ascii error content).
+@@ -208,14 +207,14 @@ class FuzzyTranslationTest(ProjectAndAppTests):
+ 
+     def test_nofuzzy_compiling(self):
+         with override_settings(LOCALE_PATHS=[os.path.join(self.test_dir, 'locale')]):
+-            call_command('compilemessages', locale=[self.LOCALE], stdout=StringIO())
++            call_command('compilemessages', locale=[self.LOCALE], verbosity=0)
+             with translation.override(self.LOCALE):
+                 self.assertEqual(gettext('Lenin'), 'Ленин')
+                 self.assertEqual(gettext('Vodka'), 'Vodka')
+ 
+     def test_fuzzy_compiling(self):
+         with override_settings(LOCALE_PATHS=[os.path.join(self.test_dir, 'locale')]):
+-            call_command('compilemessages', locale=[self.LOCALE], fuzzy=True, stdout=StringIO())
++            call_command('compilemessages', locale=[self.LOCALE], fuzzy=True, verbosity=0)
+             with translation.override(self.LOCALE):
+                 self.assertEqual(gettext('Lenin'), 'Ленин')
+                 self.assertEqual(gettext('Vodka'), 'Водка')
+@@ -224,7 +223,7 @@ class FuzzyTranslationTest(ProjectAndAppTests):
+ class AppCompilationTest(ProjectAndAppTests):
+ 
+     def test_app_locale_compiled(self):
+-        call_command('compilemessages', locale=[self.LOCALE], stdout=StringIO())
++        call_command('compilemessages', locale=[self.LOCALE], verbosity=0)
+         self.assertTrue(os.path.exists(self.PROJECT_MO_FILE))
+         self.assertTrue(os.path.exists(self.APP_MO_FILE))
+ 
+@@ -234,5 +233,5 @@ class PathLibLocaleCompilationTests(MessageCompilationTests):
+ 
+     def test_locale_paths_pathlib(self):
+         with override_settings(LOCALE_PATHS=[Path(self.test_dir) / 'canned_locale']):
+-            call_command('compilemessages', locale=['fr'], stdout=StringIO())
++            call_command('compilemessages', locale=['fr'], verbosity=0)
+             self.assertTrue(os.path.exists('canned_locale/fr/LC_MESSAGES/django.mo'))
+diff --git a/tests/i18n/test_extraction.py b/tests/i18n/test_extraction.py
+index 5d6d00fcef..a6a0060910 100644
+--- a/tests/i18n/test_extraction.py
++++ b/tests/i18n/test_extraction.py
+@@ -715,26 +715,25 @@ class ExcludedLocaleExtractionTests(ExtractorTests):
+             execute_from_command_line(['django-admin', 'help', 'makemessages'])
+ 
+     def test_one_locale_excluded(self):
+-        management.call_command('makemessages', exclude=['it'], stdout=StringIO())
++        management.call_command('makemessages', exclude=['it'], verbosity=0)
+         self.assertRecentlyModified(self.PO_FILE % 'en')
+         self.assertRecentlyModified(self.PO_FILE % 'fr')
+         self.assertNotRecentlyModified(self.PO_FILE % 'it')
+ 
+     def test_multiple_locales_excluded(self):
+-        management.call_command('makemessages', exclude=['it', 'fr'], stdout=StringIO())
++        management.call_command('makemessages', exclude=['it', 'fr'], verbosity=0)
+         self.assertRecentlyModified(self.PO_FILE % 'en')
+         self.assertNotRecentlyModified(self.PO_FILE % 'fr')
+         self.assertNotRecentlyModified(self.PO_FILE % 'it')
+ 
+     def test_one_locale_excluded_with_locale(self):
+-        management.call_command('makemessages', locale=['en', 'fr'], exclude=['fr'], stdout=StringIO())
++        management.call_command('makemessages', locale=['en', 'fr'], exclude=['fr'], verbosity=0)
+         self.assertRecentlyModified(self.PO_FILE % 'en')
+         self.assertNotRecentlyModified(self.PO_FILE % 'fr')
+         self.assertNotRecentlyModified(self.PO_FILE % 'it')
+ 
+     def test_multiple_locales_excluded_with_locale(self):
+-        management.call_command('makemessages', locale=['en', 'fr', 'it'], exclude=['fr', 'it'],
+-                                stdout=StringIO())
++        management.call_command('makemessages', locale=['en', 'fr', 'it'], exclude=['fr', 'it'], verbosity=0)
+         self.assertRecentlyModified(self.PO_FILE % 'en')
+         self.assertNotRecentlyModified(self.PO_FILE % 'fr')
+         self.assertNotRecentlyModified(self.PO_FILE % 'it')
+diff --git a/tests/user_commands/tests.py b/tests/user_commands/tests.py
+index b1d00f278d..0a3b6ae77e 100644
+--- a/tests/user_commands/tests.py
++++ b/tests/user_commands/tests.py
+@@ -43,9 +43,8 @@ class CommandTests(SimpleTestCase):
+         self.assertIn("I don't feel like dancing Jive.\n", out.getvalue())
+ 
+     def test_language_preserved(self):
+-        out = StringIO()
+         with translation.override('fr'):
+-            management.call_command('dance', stdout=out)
++            management.call_command('dance', verbosity=0)
+             self.assertEqual(translation.get_language(), 'fr')
+ 
+     def test_explode(self):
+@@ -76,7 +75,7 @@ class CommandTests(SimpleTestCase):
+         """
+         current_locale = translation.get_language()
+         with translation.override('pl'):
+-            result = management.call_command('no_translations', stdout=StringIO())
++            result = management.call_command('no_translations')
+             self.assertIsNone(result)
+         self.assertEqual(translation.get_language(), current_locale)
+ 
+@@ -140,7 +139,7 @@ class CommandTests(SimpleTestCase):
+ 
+     def test_calling_a_command_with_no_app_labels_and_parameters_should_raise_a_command_error(self):
+         with self.assertRaises(CommandError):
+-            management.call_command('hal', stdout=StringIO())
++            management.call_command('hal')
+ 
+     def test_output_transaction(self):
+         output = management.call_command('transaction', stdout=StringIO(), no_color=True)
++ git -c core.fileMode=false diff c86201b6ed4f8256b0a0520c08aa674f623d4127
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index 16dff6a1cd..0fe639506b 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -237,6 +237,8 @@ class Collector:
+         may need to collect more objects to determine whether restricted ones
+         can be deleted.
+         """
++        if not objs:
++            return
+         if self.can_fast_delete(objs):
+             self.fast_deletes.append(objs)
+             return
+@@ -311,7 +313,8 @@ class Collector:
+             batches = self.get_del_batches(new_objs, related_fields)
+             for batch in batches:
+                 sub_objs = self.related_objects(related_model, related_fields, batch)
+-                self.fast_deletes.append(sub_objs)
++                if sub_objs:
++                    self.fast_deletes.append(sub_objs)
+         for field in model._meta.private_fields:
+             if hasattr(field, 'bulk_related_objects'):
+                 # It's something like generic foreign key.
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+Requirement already satisfied: asgiref>=3.2 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.1) (3.4.1)
+Requirement already satisfied: pytz in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.1) (2024.2)
+Requirement already satisfied: sqlparse>=0.2.2 in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from Django==3.1) (0.4.4)
+Requirement already satisfied: typing-extensions in /opt/miniconda3/envs/testbed/lib/python3.6/site-packages (from asgiref>=3.2->Django==3.1) (4.1.1)
+Installing collected packages: Django
+  Attempting uninstall: Django
+    Found existing installation: Django 3.1
+    Uninstalling Django-3.1:
+      Successfully uninstalled Django-3.1
+  Running setup.py develop for Django
+Successfully installed Django-3.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
++ git checkout c86201b6ed4f8256b0a0520c08aa674f623d4127 tests/delete/tests.py
+Updated 0 paths from 27448bbd64
++ git apply -v -
+Checking patch tests/delete/tests.py...
+Applied patch tests/delete/tests.py cleanly.
++ : '>>>>> Start Test Output'
++ ./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 delete.tests
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+test_bulk (delete.tests.DeletionTests) ... ok
+test_can_defer_constraint_checks (delete.tests.DeletionTests) ... ok
+test_cannot_defer_constraint_checks (delete.tests.DeletionTests) ... skipped 'Database has feature(s) can_defer_constraint_checks'
+test_delete_with_keeping_parents (delete.tests.DeletionTests) ... ok
+test_delete_with_keeping_parents_relationships (delete.tests.DeletionTests) ... ok
+test_deletion_order (delete.tests.DeletionTests) ... ok
+test_hidden_related (delete.tests.DeletionTests) ... ok
+test_instance_update (delete.tests.DeletionTests) ... ok
+test_large_delete (delete.tests.DeletionTests) ... ok
+test_large_delete_related (delete.tests.DeletionTests) ... ok
+test_m2m (delete.tests.DeletionTests) ... ok
+test_model_delete_returns_num_rows (delete.tests.DeletionTests) ... ok
+test_only_referenced_fields_selected (delete.tests.DeletionTests) ... ok
+test_proxied_model_duplicate_queries (delete.tests.DeletionTests) ... ok
+test_queryset_delete_returns_num_rows (delete.tests.DeletionTests) ... ok
+test_relational_post_delete_signals_happen_before_parent_object (delete.tests.DeletionTests) ... ok
+test_fast_delete_combined_relationships (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_fk (delete.tests.FastDeleteTests) ... FAIL
+test_fast_delete_inheritance (delete.tests.FastDeleteTests) ... FAIL
+test_fast_delete_instance_set_pk_none (delete.tests.FastDeleteTests) ... ok
+test_fast_delete_joined_qs (delete.tests.FastDeleteTests) ... FAIL
+test_fast_delete_large_batch (delete.tests.FastDeleteTests) ... FAIL
+test_fast_delete_m2m (delete.tests.FastDeleteTests) ... FAIL
+test_fast_delete_qs (delete.tests.FastDeleteTests) ... FAIL
+test_fast_delete_revm2m (delete.tests.FastDeleteTests) ... FAIL
+test_auto (delete.tests.OnDeleteTests) ... ok
+test_auto_nullable (delete.tests.OnDeleteTests) ... ok
+test_cascade (delete.tests.OnDeleteTests) ... ok
+test_cascade_from_child (delete.tests.OnDeleteTests) ... ok
+test_cascade_from_parent (delete.tests.OnDeleteTests) ... ok
+test_cascade_nullable (delete.tests.OnDeleteTests) ... ok
+test_do_nothing (delete.tests.OnDeleteTests) ... ok
+test_do_nothing_qscount (delete.tests.OnDeleteTests) ... ok
+test_inheritance_cascade_down (delete.tests.OnDeleteTests) ... ok
+test_inheritance_cascade_up (delete.tests.OnDeleteTests) ... ok
+test_non_callable (delete.tests.OnDeleteTests) ... ok
+test_o2o_setnull (delete.tests.OnDeleteTests) ... ok
+test_protect (delete.tests.OnDeleteTests) ... ok
+test_protect_multiple (delete.tests.OnDeleteTests) ... ok
+test_protect_path (delete.tests.OnDeleteTests) ... ok
+test_restrict (delete.tests.OnDeleteTests) ... ok
+test_restrict_gfk_no_fast_delete (delete.tests.OnDeleteTests) ... ok
+test_restrict_multiple (delete.tests.OnDeleteTests) ... ok
+test_restrict_path_cascade_direct (delete.tests.OnDeleteTests) ... ok
+test_restrict_path_cascade_indirect (delete.tests.OnDeleteTests) ... ok
+test_restrict_path_cascade_indirect_diamond (delete.tests.OnDeleteTests) ... ok
+test_setdefault (delete.tests.OnDeleteTests) ... ok
+test_setdefault_none (delete.tests.OnDeleteTests) ... ok
+test_setnull (delete.tests.OnDeleteTests) ... ok
+test_setnull_from_child (delete.tests.OnDeleteTests) ... ok
+test_setnull_from_parent (delete.tests.OnDeleteTests) ... ok
+test_setvalue (delete.tests.OnDeleteTests) ... ok
+
+======================================================================
+FAIL: test_fast_delete_fk (delete.tests.FastDeleteTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/delete/tests.py", line 616, in test_fast_delete_fk
+    self.assertNumQueries(2, a.delete)
+  File "/testbed/django/test/testcases.py", line 1062, in assertNumQueries
+    func(*args, **kwargs)
+  File "/testbed/django/test/testcases.py", line 87, in __exit__
+    '%d. %s' % (i, query['sql']) for i, query in enumerate(self.captured_queries, start=1)
+AssertionError: 3 != 2 : 3 queries executed, 2 expected
+Captured queries were:
+1. SELECT "delete_user"."id", "delete_user"."avatar_id" FROM "delete_user" WHERE "delete_user"."avatar_id" IN (1)
+2. DELETE FROM "delete_user" WHERE "delete_user"."avatar_id" IN (1)
+3. DELETE FROM "delete_avatar" WHERE "delete_avatar"."id" IN (1)
+
+======================================================================
+FAIL: test_fast_delete_inheritance (delete.tests.FastDeleteTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/delete/tests.py", line 671, in test_fast_delete_inheritance
+    self.assertNumQueries(2, p.delete)
+  File "/testbed/django/test/testcases.py", line 1062, in assertNumQueries
+    func(*args, **kwargs)
+  File "/testbed/django/test/testcases.py", line 87, in __exit__
+    '%d. %s' % (i, query['sql']) for i, query in enumerate(self.captured_queries, start=1)
+AssertionError: 3 != 2 : 3 queries executed, 2 expected
+Captured queries were:
+1. SELECT "delete_parent"."id", "delete_child"."parent_ptr_id" FROM "delete_child" INNER JOIN "delete_parent" ON ("delete_child"."parent_ptr_id" = "delete_parent"."id") WHERE "delete_child"."parent_ptr_id" IN (3)
+2. DELETE FROM "delete_child" WHERE "delete_child"."parent_ptr_id" IN (3)
+3. DELETE FROM "delete_parent" WHERE "delete_parent"."id" IN (3)
+
+======================================================================
+FAIL: test_fast_delete_joined_qs (delete.tests.FastDeleteTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/delete/tests.py", line 653, in test_fast_delete_joined_qs
+    self.assertNumQueries(1, User.objects.filter(avatar__desc='a').delete)
+  File "/testbed/django/test/testcases.py", line 1062, in assertNumQueries
+    func(*args, **kwargs)
+  File "/testbed/django/test/testcases.py", line 87, in __exit__
+    '%d. %s' % (i, query['sql']) for i, query in enumerate(self.captured_queries, start=1)
+AssertionError: 2 != 1 : 2 queries executed, 1 expected
+Captured queries were:
+1. SELECT "delete_user"."id", "delete_user"."avatar_id" FROM "delete_user" INNER JOIN "delete_avatar" ON ("delete_user"."avatar_id" = "delete_avatar"."id") WHERE "delete_avatar"."desc" = 'a'
+2. DELETE FROM "delete_user" WHERE "delete_user"."id" IN (SELECT U0."id" FROM "delete_user" U0 INNER JOIN "delete_avatar" U1 ON (U0."avatar_id" = U1."id") WHERE U1."desc" = 'a')
+
+======================================================================
+FAIL: test_fast_delete_large_batch (delete.tests.FastDeleteTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/delete/tests.py", line 679, in test_fast_delete_large_batch
+    self.assertNumQueries(1, User.objects.all().delete)
+  File "/testbed/django/test/testcases.py", line 1062, in assertNumQueries
+    func(*args, **kwargs)
+  File "/testbed/django/test/testcases.py", line 87, in __exit__
+    '%d. %s' % (i, query['sql']) for i, query in enumerate(self.captured_queries, start=1)
+AssertionError: 2 != 1 : 2 queries executed, 1 expected
+Captured queries were:
+1. SELECT "delete_user"."id", "delete_user"."avatar_id" FROM "delete_user"
+2. DELETE FROM "delete_user" WHERE "delete_user"."id" IN (SELECT U0."id" FROM "delete_user" U0)
+
+======================================================================
+FAIL: test_fast_delete_m2m (delete.tests.FastDeleteTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/delete/tests.py", line 625, in test_fast_delete_m2m
+    self.assertNumQueries(2, f.delete)
+  File "/testbed/django/test/testcases.py", line 1062, in assertNumQueries
+    func(*args, **kwargs)
+  File "/testbed/django/test/testcases.py", line 87, in __exit__
+    '%d. %s' % (i, query['sql']) for i, query in enumerate(self.captured_queries, start=1)
+AssertionError: 3 != 2 : 3 queries executed, 2 expected
+Captured queries were:
+1. SELECT "delete_m2mfrom_m2m"."id", "delete_m2mfrom_m2m"."m2mfrom_id", "delete_m2mfrom_m2m"."m2mto_id" FROM "delete_m2mfrom_m2m" WHERE "delete_m2mfrom_m2m"."m2mfrom_id" IN (1)
+2. DELETE FROM "delete_m2mfrom_m2m" WHERE "delete_m2mfrom_m2m"."m2mfrom_id" IN (1)
+3. DELETE FROM "delete_m2mfrom" WHERE "delete_m2mfrom"."id" IN (1)
+
+======================================================================
+FAIL: test_fast_delete_qs (delete.tests.FastDeleteTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/delete/tests.py", line 637, in test_fast_delete_qs
+    self.assertNumQueries(1, User.objects.filter(pk=u1.pk).delete)
+  File "/testbed/django/test/testcases.py", line 1062, in assertNumQueries
+    func(*args, **kwargs)
+  File "/testbed/django/test/testcases.py", line 87, in __exit__
+    '%d. %s' % (i, query['sql']) for i, query in enumerate(self.captured_queries, start=1)
+AssertionError: 2 != 1 : 2 queries executed, 1 expected
+Captured queries were:
+1. SELECT "delete_user"."id", "delete_user"."avatar_id" FROM "delete_user" WHERE "delete_user"."id" = 1
+2. DELETE FROM "delete_user" WHERE "delete_user"."id" = 1
+
+======================================================================
+FAIL: test_fast_delete_revm2m (delete.tests.FastDeleteTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/testbed/tests/delete/tests.py", line 632, in test_fast_delete_revm2m
+    self.assertNumQueries(2, f.delete)
+  File "/testbed/django/test/testcases.py", line 1062, in assertNumQueries
+    func(*args, **kwargs)
+  File "/testbed/django/test/testcases.py", line 87, in __exit__
+    '%d. %s' % (i, query['sql']) for i, query in enumerate(self.captured_queries, start=1)
+AssertionError: 3 != 2 : 3 queries executed, 2 expected
+Captured queries were:
+1. SELECT "delete_m2mfrom_m2m"."id", "delete_m2mfrom_m2m"."m2mfrom_id", "delete_m2mfrom_m2m"."m2mto_id" FROM "delete_m2mfrom_m2m" WHERE "delete_m2mfrom_m2m"."m2mfrom_id" IN (1)
+2. DELETE FROM "delete_m2mfrom_m2m" WHERE "delete_m2mfrom_m2m"."m2mfrom_id" IN (1)
+3. DELETE FROM "delete_m2mfrom" WHERE "delete_m2mfrom"."id" IN (1)
+
+----------------------------------------------------------------------
+Ran 53 tests in 0.610s
+
+FAILED (failures=7, skipped=1)
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Testing against Django installed in '/testbed/django'
+Importing application delete
+Skipping setup of unused database(s): other.
+Operations to perform:
+  Synchronize unmigrated apps: auth, contenttypes, delete, messages, sessions, staticfiles
+  Apply all migrations: admin, sites
+Synchronizing apps without migrations:
+  Creating tables...
+    Creating table django_content_type
+    Creating table auth_permission
+    Creating table auth_group
+    Creating table auth_user
+    Creating table django_session
+    Creating table delete_p
+    Creating table delete_r
+    Creating table delete_s
+    Creating table delete_t
+    Creating table delete_u
+    Creating table delete_rchild
+    Creating table delete_rchildchild
+    Creating table delete_a
+    Creating table delete_b
+    Creating table delete_m
+    Creating table delete_mr
+    Creating table delete_mrnull
+    Creating table delete_avatar
+    Creating table delete_user
+    Creating table delete_hiddenuser
+    Creating table delete_hiddenuserprofile
+    Creating table delete_m2mto
+    Creating table delete_m2mfrom
+    Creating table delete_parent
+    Creating table delete_child
+    Creating table delete_base
+    Creating table delete_reltobase
+    Creating table delete_origin
+    Creating table delete_referrer
+    Creating table delete_secondreferrer
+    Creating table delete_deletetop
+    Creating table delete_b1
+    Creating table delete_b2
+    Creating table delete_b3
+    Creating table delete_deletebottom
+    Creating table delete_genericb1
+    Creating table delete_genericb2
+    Creating table delete_genericdeletebottom
+    Creating table delete_genericdeletebottomparent
+    Running deferred SQL...
+Running migrations:
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying sites.0001_initial... OK
+  Applying sites.0002_alter_domain_unique... OK
+System check identified no issues (0 silenced).
++ : '>>>>> End Test Output'
++ git checkout c86201b6ed4f8256b0a0520c08aa674f623d4127 tests/delete/tests.py
+Updated 1 path from 27448bbd64

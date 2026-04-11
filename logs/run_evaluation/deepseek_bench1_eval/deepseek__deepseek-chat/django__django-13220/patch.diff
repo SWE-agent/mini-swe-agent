@@ -1,0 +1,86 @@
+diff --git a/django/core/exceptions.py b/django/core/exceptions.py
+index dc084b8692..a50a50668d 100644
+--- a/django/core/exceptions.py
++++ b/django/core/exceptions.py
+@@ -179,6 +179,81 @@ class ValidationError(Exception):
+             return repr(dict(self))
+         return repr(list(self))
+ 
++    def __eq__(self, other):
++        """
++        Return True if `other` is a ValidationError with the same errors.
++        
++        Comparison is order-independent for lists and dictionaries.
++        """
++        if not isinstance(other, ValidationError):
++            return NotImplemented
++        
++        # Check if both have the same structure type
++        self_has_dict = hasattr(self, 'error_dict')
++        other_has_dict = hasattr(other, 'error_dict')
++        self_has_message = hasattr(self, 'message')
++        other_has_message = hasattr(other, 'message')
++        
++        # If structure types don't match, they're not equal
++        if self_has_dict != other_has_dict or self_has_message != other_has_message:
++            return False
++        
++        # Both have error_dict (dictionary of field errors)
++        if self_has_dict:
++            # Compare field sets
++            if set(self.error_dict.keys()) != set(other.error_dict.keys()):
++                return False
++            
++            # Compare errors for each field
++            for field in self.error_dict:
++                self_errors = self.error_dict[field]
++                other_errors = other.error_dict[field]
++                
++                # Quick length check
++                if len(self_errors) != len(other_errors):
++                    return False
++                
++                # For order-independent comparison, check if each error in self_errors
++                # has a matching error in other_errors
++                matched = [False] * len(other_errors)
++                for self_err in self_errors:
++                    found = False
++                    for i, other_err in enumerate(other_errors):
++                        if not matched[i] and self_err == other_err:
++                            matched[i] = True
++                            found = True
++                            break
++                    if not found:
++                        return False
++            
++            return True
++        
++        # Both have message (simple ValidationError with message, code, params)
++        elif self_has_message:
++            return (self.message == other.message and 
++                    self.code == other.code and 
++                    self.params == other.params)
++        
++        # Both are list ValidationErrors (have error_list but no message)
++        else:
++            # Quick length check
++            if len(self.error_list) != len(other.error_list):
++                return False
++            
++            # For order-independent comparison
++            matched = [False] * len(other.error_list)
++            for self_err in self.error_list:
++                found = False
++                for i, other_err in enumerate(other.error_list):
++                    if not matched[i] and self_err == other_err:
++                        matched[i] = True
++                        found = True
++                        break
++                if not found:
++                    return False
++            
++            return True
++
+     def __repr__(self):
+         return 'ValidationError(%s)' % self
+ 

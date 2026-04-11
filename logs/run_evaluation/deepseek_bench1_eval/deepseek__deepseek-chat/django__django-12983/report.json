@@ -1,0 +1,44 @@
+{
+    "django__django-12983": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_slugify (utils_tests.test_text.TestUtilsText)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_compress_sequence (utils_tests.test_text.TestUtilsText)",
+                    "test_format_lazy (utils_tests.test_text.TestUtilsText)",
+                    "test_get_text_list (utils_tests.test_text.TestUtilsText)",
+                    "test_get_valid_filename (utils_tests.test_text.TestUtilsText)",
+                    "test_normalize_newlines (utils_tests.test_text.TestUtilsText)",
+                    "test_phone2numeric (utils_tests.test_text.TestUtilsText)",
+                    "test_smart_split (utils_tests.test_text.TestUtilsText)",
+                    "test_truncate_chars (utils_tests.test_text.TestUtilsText)",
+                    "test_truncate_chars_html (utils_tests.test_text.TestUtilsText)",
+                    "test_truncate_html_words (utils_tests.test_text.TestUtilsText)",
+                    "test_truncate_words (utils_tests.test_text.TestUtilsText)",
+                    "test_unescape_entities (utils_tests.test_text.TestUtilsText)",
+                    "test_unescape_entities_deprecated (utils_tests.test_text.TestUtilsText)",
+                    "test_unescape_string_literal (utils_tests.test_text.TestUtilsText)",
+                    "test_wrap (utils_tests.test_text.TestUtilsText)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

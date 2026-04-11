@@ -1,0 +1,1019 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   django/contrib/messages/storage/cookie.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit 7c4f3965098baad2396e24501e09237425a7bd6f
+Author: Claude Paroz <claude@2xlibre.net>
+Date:   Fri Jan 21 15:46:37 2022 +0100
+
+    Stopped including type="text/css" attributes for CSS link tags.
+
+diff --git a/django/contrib/admin/templates/admin/auth/user/change_password.html b/django/contrib/admin/templates/admin/auth/user/change_password.html
+index 730e4c5751..ed4285855e 100644
+--- a/django/contrib/admin/templates/admin/auth/user/change_password.html
++++ b/django/contrib/admin/templates/admin/auth/user/change_password.html
+@@ -2,7 +2,7 @@
+ {% load i18n static %}
+ {% load admin_urls %}
+ 
+-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
++{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
+ {% block bodyclass %}{{ block.super }} {{ opts.app_label }}-{{ opts.model_name }} change-form{% endblock %}
+ {% if not is_popup %}
+ {% block breadcrumbs %}
+diff --git a/django/contrib/admin/templates/admin/base.html b/django/contrib/admin/templates/admin/base.html
+index 36899bc0d1..8ea3cd567c 100644
+--- a/django/contrib/admin/templates/admin/base.html
++++ b/django/contrib/admin/templates/admin/base.html
+@@ -3,21 +3,21 @@
+ <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr,auto' }}">
+ <head>
+ <title>{% block title %}{% endblock %}</title>
+-<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
++<link rel="stylesheet" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+ {% block dark-mode-vars %}
+-  <link rel="stylesheet" type="text/css" href="{% static "admin/css/dark_mode.css" %}">
++  <link rel="stylesheet" href="{% static "admin/css/dark_mode.css" %}">
+ {% endblock %}
+ {% if not is_popup and is_nav_sidebar_enabled %}
+-  <link rel="stylesheet" type="text/css" href="{% static "admin/css/nav_sidebar.css" %}">
++  <link rel="stylesheet" href="{% static "admin/css/nav_sidebar.css" %}">
+   <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
+ {% endif %}
+ {% block extrastyle %}{% endblock %}
+-{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
++{% if LANGUAGE_BIDI %}<link rel="stylesheet" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+ {% block extrahead %}{% endblock %}
+ {% block responsive %}
+     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+-    <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+-    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
++    <link rel="stylesheet" href="{% static "admin/css/responsive.css" %}">
++    {% if LANGUAGE_BIDI %}<link rel="stylesheet" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+ {% endblock %}
+ {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+ </head>
+diff --git a/django/contrib/admin/templates/admin/change_form.html b/django/contrib/admin/templates/admin/change_form.html
+index 21b1c9bceb..33343846bf 100644
+--- a/django/contrib/admin/templates/admin/change_form.html
++++ b/django/contrib/admin/templates/admin/change_form.html
+@@ -6,7 +6,7 @@
+ {{ media }}
+ {% endblock %}
+ 
+-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
++{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
+ 
+ {% block coltype %}colM{% endblock %}
+ 
+diff --git a/django/contrib/admin/templates/admin/change_list.html b/django/contrib/admin/templates/admin/change_list.html
+index 15508a9a9f..12a495504f 100644
+--- a/django/contrib/admin/templates/admin/change_list.html
++++ b/django/contrib/admin/templates/admin/change_list.html
+@@ -3,9 +3,9 @@
+ 
+ {% block extrastyle %}
+   {{ block.super }}
+-  <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}">
++  <link rel="stylesheet" href="{% static "admin/css/changelists.css" %}">
+   {% if cl.formset %}
+-    <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">
++    <link rel="stylesheet" href="{% static "admin/css/forms.css" %}">
+   {% endif %}
+   {% if cl.formset or action_form %}
+     <script src="{% url 'admin:jsi18n' %}"></script>
+diff --git a/django/contrib/admin/templates/admin/index.html b/django/contrib/admin/templates/admin/index.html
+index b6e84b64ed..5674264093 100644
+--- a/django/contrib/admin/templates/admin/index.html
++++ b/django/contrib/admin/templates/admin/index.html
+@@ -1,7 +1,7 @@
+ {% extends "admin/base_site.html" %}
+ {% load i18n static %}
+ 
+-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
++{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
+ 
+ {% block coltype %}colMS{% endblock %}
+ 
+diff --git a/django/contrib/admin/templates/admin/login.html b/django/contrib/admin/templates/admin/login.html
+index 7a192a4bdf..aaa21fb450 100644
+--- a/django/contrib/admin/templates/admin/login.html
++++ b/django/contrib/admin/templates/admin/login.html
+@@ -1,7 +1,7 @@
+ {% extends "admin/base_site.html" %}
+ {% load i18n static %}
+ 
+-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}">
++{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/login.css" %}">
+ {{ form.media }}
+ {% endblock %}
+ 
+diff --git a/django/contrib/admin/templates/registration/password_change_form.html b/django/contrib/admin/templates/registration/password_change_form.html
+index 95c84f922d..c79020180b 100644
+--- a/django/contrib/admin/templates/registration/password_change_form.html
++++ b/django/contrib/admin/templates/registration/password_change_form.html
+@@ -1,6 +1,6 @@
+ {% extends "admin/base_site.html" %}
+ {% load i18n static %}
+-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
++{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
+ {% block userlinks %}{% url 'django-admindocs-docroot' as docsroot %}{% if docsroot %}<a href="{{ docsroot }}">{% translate 'Documentation' %}</a> / {% endif %} {% translate 'Change password' %} / <a href="{% url 'admin:logout' %}">{% translate 'Log out' %}</a>{% endblock %}
+ {% block breadcrumbs %}
+ <div class="breadcrumbs">
+diff --git a/django/contrib/admin/templates/registration/password_reset_confirm.html b/django/contrib/admin/templates/registration/password_reset_confirm.html
+index 373e703416..c93f9c4692 100644
+--- a/django/contrib/admin/templates/registration/password_reset_confirm.html
++++ b/django/contrib/admin/templates/registration/password_reset_confirm.html
+@@ -1,7 +1,7 @@
+ {% extends "admin/base_site.html" %}
+ {% load i18n static %}
+ 
+-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
++{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
+ {% block breadcrumbs %}
+ <div class="breadcrumbs">
+ <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+diff --git a/django/contrib/admin/templates/registration/password_reset_form.html b/django/contrib/admin/templates/registration/password_reset_form.html
+index 33785f7c14..380441501e 100644
+--- a/django/contrib/admin/templates/registration/password_reset_form.html
++++ b/django/contrib/admin/templates/registration/password_reset_form.html
+@@ -1,7 +1,7 @@
+ {% extends "admin/base_site.html" %}
+ {% load i18n static %}
+ 
+-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
++{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
+ {% block breadcrumbs %}
+ <div class="breadcrumbs">
+ <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+diff --git a/django/forms/widgets.py b/django/forms/widgets.py
+index cb8fb5e92a..05667f8e44 100644
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -90,7 +90,7 @@ class Media:
+         media = sorted(self._css)
+         return chain.from_iterable([
+             format_html(
+-                '<link href="{}" type="text/css" media="{}" rel="stylesheet">',
++                '<link href="{}" media="{}" rel="stylesheet">',
+                 self.absolute_path(path), medium
+             ) for path in self._css[medium]
+         ] for medium in media)
+diff --git a/django/views/templates/default_urlconf.html b/django/views/templates/default_urlconf.html
+index ce1084ec4e..c85b478831 100644
+--- a/django/views/templates/default_urlconf.html
++++ b/django/views/templates/default_urlconf.html
+@@ -6,7 +6,7 @@
+         <meta charset="utf-8">
+         <title>{% translate "The install worked successfully! Congratulations!" %}</title>
+         <meta name="viewport" content="width=device-width, initial-scale=1">
+-        <link rel="stylesheet" type="text/css" href="/static/admin/css/fonts.css">
++        <link rel="stylesheet" href="/static/admin/css/fonts.css">
+         <style>
+           html {
+             line-height: 1.15;
+diff --git a/docs/_theme/djangodocs/layout.html b/docs/_theme/djangodocs/layout.html
+index c8770173aa..487c2b4922 100644
+--- a/docs/_theme/djangodocs/layout.html
++++ b/docs/_theme/djangodocs/layout.html
+@@ -72,7 +72,7 @@
+ </script>
+ {% endif %}
+ {%- if include_console_assets -%}
+-<link rel="stylesheet" href="{{ pathto('_static/console-tabs.css', 1) }}" type="text/css" />
++<link rel="stylesheet" href="{{ pathto('_static/console-tabs.css', 1) }}">
+ {%- endif -%}
+ {% endblock %}
+ 
+diff --git a/docs/intro/tutorial06.txt b/docs/intro/tutorial06.txt
+index c3df546cae..f0087f8905 100644
+--- a/docs/intro/tutorial06.txt
++++ b/docs/intro/tutorial06.txt
+@@ -74,7 +74,7 @@ Next, add the following at the top of ``polls/templates/polls/index.html``:
+ 
+     {% load static %}
+ 
+-    <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
++    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+ 
+ The ``{% static %}`` template tag generates the absolute URL of static files.
+ 
+diff --git a/docs/ref/templates/builtins.txt b/docs/ref/templates/builtins.txt
+index 1fcfa1fa88..08c1ca47e2 100644
+--- a/docs/ref/templates/builtins.txt
++++ b/docs/ref/templates/builtins.txt
+@@ -2637,7 +2637,7 @@ It is also able to consume standard context variables, e.g. assuming a
+ ``user_stylesheet`` variable is passed to the template::
+ 
+     {% load static %}
+-    <link rel="stylesheet" href="{% static user_stylesheet %}" type="text/css" media="screen">
++    <link rel="stylesheet" href="{% static user_stylesheet %}" media="screen">
+ 
+ If you'd like to retrieve a static URL without displaying it, you can use a
+ slightly different call::
+diff --git a/docs/releases/4.1.txt b/docs/releases/4.1.txt
+index 8a531039ef..cf4eb07b35 100644
+--- a/docs/releases/4.1.txt
++++ b/docs/releases/4.1.txt
+@@ -366,6 +366,9 @@ Miscellaneous
+   :attr:`~django.contrib.admin.ModelAdmin.inlines` attributes now default to an
+   empty tuple rather than an empty list to discourage unintended mutation.
+ 
++* The ``type="text/css"`` attribute is no longer included in ``<link>`` tags
++  for CSS :doc:`form media </topics/forms/media>`.
++
+ .. _deprecated-features-4.1:
+ 
+ Features deprecated in 4.1
+diff --git a/docs/topics/forms/media.txt b/docs/topics/forms/media.txt
+index 34bc70dcc5..6ca7c66fde 100644
+--- a/docs/topics/forms/media.txt
++++ b/docs/topics/forms/media.txt
+@@ -71,7 +71,7 @@ can be retrieved through this property::
+ 
+     >>> w = CalendarWidget()
+     >>> print(w.media)
+-    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
+     <script src="http://static.example.com/animations.js"></script>
+     <script src="http://static.example.com/actions.js"></script>
+ 
+@@ -114,9 +114,14 @@ requirements::
+ 
+ If this last CSS definition were to be rendered, it would become the following HTML::
+ 
+-    <link href="http://static.example.com/pretty.css" type="text/css" media="screen" rel="stylesheet">
+-    <link href="http://static.example.com/lo_res.css" type="text/css" media="tv,projector" rel="stylesheet">
+-    <link href="http://static.example.com/newspaper.css" type="text/css" media="print" rel="stylesheet">
++    <link href="http://static.example.com/pretty.css" media="screen" rel="stylesheet">
++    <link href="http://static.example.com/lo_res.css" media="tv,projector" rel="stylesheet">
++    <link href="http://static.example.com/newspaper.css" media="print" rel="stylesheet">
++
++.. versionchanged:: 4.1
++
++    In older versions, the ``type="text/css"`` attribute is included in CSS
++    links.
+ 
+ ``js``
+ ------
+@@ -145,8 +150,8 @@ example above::
+ 
+     >>> w = FancyCalendarWidget()
+     >>> print(w.media)
+-    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
+-    <link href="http://static.example.com/fancy.css" type="text/css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/fancy.css" media="all" rel="stylesheet">
+     <script src="http://static.example.com/animations.js"></script>
+     <script src="http://static.example.com/actions.js"></script>
+     <script src="http://static.example.com/whizbang.js"></script>
+@@ -165,7 +170,7 @@ an ``extend=False`` declaration to the ``Media`` declaration::
+ 
+     >>> w = FancyCalendarWidget()
+     >>> print(w.media)
+-    <link href="http://static.example.com/fancy.css" type="text/css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/fancy.css" media="all" rel="stylesheet">
+     <script src="http://static.example.com/whizbang.js"></script>
+ 
+ If you require even more control over inheritance, define your assets using a
+@@ -228,7 +233,7 @@ was ``None``::
+ 
+     >>> w = CalendarWidget()
+     >>> print(w.media)
+-    <link href="/css/pretty.css" type="text/css" media="all" rel="stylesheet">
++    <link href="/css/pretty.css" media="all" rel="stylesheet">
+     <script src="http://uploads.example.com/animations.js"></script>
+     <script src="http://othersite.com/actions.js"></script>
+ 
+@@ -236,7 +241,7 @@ But if :setting:`STATIC_URL` is ``'http://static.example.com/'``::
+ 
+     >>> w = CalendarWidget()
+     >>> print(w.media)
+-    <link href="/css/pretty.css" type="text/css" media="all" rel="stylesheet">
++    <link href="/css/pretty.css" media="all" rel="stylesheet">
+     <script src="http://static.example.com/animations.js"></script>
+     <script src="http://othersite.com/actions.js"></script>
+ 
+@@ -245,7 +250,7 @@ Or if :mod:`~django.contrib.staticfiles` is configured using the
+ 
+     >>> w = CalendarWidget()
+     >>> print(w.media)
+-    <link href="/css/pretty.css" type="text/css" media="all" rel="stylesheet">
++    <link href="/css/pretty.css" media="all" rel="stylesheet">
+     <script src="https://static.example.com/animations.27e20196a850.js"></script>
+     <script src="http://othersite.com/actions.js"></script>
+ 
+@@ -268,12 +273,12 @@ operator to filter out a medium of interest. For example::
+ 
+     >>> w = CalendarWidget()
+     >>> print(w.media)
+-    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
+     <script src="http://static.example.com/animations.js"></script>
+     <script src="http://static.example.com/actions.js"></script>
+ 
+     >>> print(w.media['css'])
+-    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
+ 
+ When you use the subscript operator, the value that is returned is a
+ new ``Media`` object -- but one that only contains the media of interest.
+@@ -300,7 +305,7 @@ specified by both::
+     >>> w1 = CalendarWidget()
+     >>> w2 = OtherWidget()
+     >>> print(w1.media + w2.media)
+-    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
+     <script src="http://static.example.com/animations.js"></script>
+     <script src="http://static.example.com/actions.js"></script>
+     <script src="http://static.example.com/whizbang.js"></script>
+@@ -356,7 +361,7 @@ are part of the form::
+ 
+     >>> f = ContactForm()
+     >>> f.media
+-    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
+     <script src="http://static.example.com/animations.js"></script>
+     <script src="http://static.example.com/actions.js"></script>
+     <script src="http://static.example.com/whizbang.js"></script>
+@@ -375,8 +380,8 @@ CSS for form layout -- add a ``Media`` declaration to the form::
+ 
+     >>> f = ContactForm()
+     >>> f.media
+-    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
+-    <link href="http://static.example.com/layout.css" type="text/css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
++    <link href="http://static.example.com/layout.css" media="all" rel="stylesheet">
+     <script src="http://static.example.com/animations.js"></script>
+     <script src="http://static.example.com/actions.js"></script>
+     <script src="http://static.example.com/whizbang.js"></script>
+diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/test_media.py
+index 26f81a4602..d145560d9b 100644
+--- a/tests/forms_tests/tests/test_media.py
++++ b/tests/forms_tests/tests/test_media.py
+@@ -17,8 +17,8 @@ class FormsMediaTestCase(SimpleTestCase):
+         )
+         self.assertEqual(
+             str(m),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="https://secure.other.com/path/to/js3"></script>"""
+@@ -38,8 +38,8 @@ class FormsMediaTestCase(SimpleTestCase):
+         m3 = Media(Foo)
+         self.assertEqual(
+             str(m3),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="https://secure.other.com/path/to/js3"></script>"""
+@@ -70,8 +70,8 @@ class FormsMediaTestCase(SimpleTestCase):
+         w1 = MyWidget1()
+         self.assertEqual(
+             str(w1.media),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="https://secure.other.com/path/to/js3"></script>"""
+@@ -80,8 +80,8 @@ class FormsMediaTestCase(SimpleTestCase):
+         # Media objects can be interrogated by media type
+         self.assertEqual(
+             str(w1.media['css']),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">"""
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">"""
+         )
+ 
+         self.assertEqual(
+@@ -120,9 +120,9 @@ class FormsMediaTestCase(SimpleTestCase):
+         w3 = MyWidget3()
+         self.assertEqual(
+             str(w1.media + w2.media + w3.media),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
++<link href="/path/to/css3" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="/path/to/js4"></script>
+@@ -132,8 +132,8 @@ class FormsMediaTestCase(SimpleTestCase):
+         # media addition hasn't affected the original objects
+         self.assertEqual(
+             str(w1.media),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="https://secure.other.com/path/to/js3"></script>"""
+@@ -148,7 +148,7 @@ class FormsMediaTestCase(SimpleTestCase):
+                 js = ('/path/to/js1', '/path/to/js1')
+ 
+         w4 = MyWidget4()
+-        self.assertEqual(str(w4.media), """<link href="/path/to/css1" type="text/css" media="all" rel="stylesheet">
++        self.assertEqual(str(w4.media), """<link href="/path/to/css1" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>""")
+ 
+     def test_media_deduplication(self):
+@@ -159,7 +159,7 @@ class FormsMediaTestCase(SimpleTestCase):
+             css={'all': ('/path/to/css1', '/path/to/css1')},
+             js=('/path/to/js1', '/path/to/js1'),
+         )
+-        self.assertEqual(str(media), """<link href="/path/to/css1" type="text/css" media="all" rel="stylesheet">
++        self.assertEqual(str(media), """<link href="/path/to/css1" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>""")
+ 
+     def test_media_property(self):
+@@ -174,7 +174,7 @@ class FormsMediaTestCase(SimpleTestCase):
+             media = property(_media)
+ 
+         w4 = MyWidget4()
+-        self.assertEqual(str(w4.media), """<link href="/some/path" type="text/css" media="all" rel="stylesheet">
++        self.assertEqual(str(w4.media), """<link href="/some/path" media="all" rel="stylesheet">
+ <script src="/some/js"></script>""")
+ 
+         # Media properties can reference the media of their parents
+@@ -184,8 +184,8 @@ class FormsMediaTestCase(SimpleTestCase):
+             media = property(_media)
+ 
+         w5 = MyWidget5()
+-        self.assertEqual(str(w5.media), """<link href="/some/path" type="text/css" media="all" rel="stylesheet">
+-<link href="/other/path" type="text/css" media="all" rel="stylesheet">
++        self.assertEqual(str(w5.media), """<link href="/some/path" media="all" rel="stylesheet">
++<link href="/other/path" media="all" rel="stylesheet">
+ <script src="/some/js"></script>
+ <script src="/other/js"></script>""")
+ 
+@@ -207,9 +207,9 @@ class FormsMediaTestCase(SimpleTestCase):
+         w6 = MyWidget6()
+         self.assertEqual(
+             str(w6.media),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/other/path" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/other/path" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="/other/js"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+@@ -235,8 +235,8 @@ class FormsMediaTestCase(SimpleTestCase):
+         w7 = MyWidget7()
+         self.assertEqual(
+             str(w7.media),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="https://secure.other.com/path/to/js3"></script>"""
+@@ -253,9 +253,9 @@ class FormsMediaTestCase(SimpleTestCase):
+         w8 = MyWidget8()
+         self.assertEqual(
+             str(w8.media),
+-            """<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
+-<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="/path/to/css3" media="all" rel="stylesheet">
++<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="/path/to/js4"></script>
+@@ -287,8 +287,8 @@ class FormsMediaTestCase(SimpleTestCase):
+         w9 = MyWidget9()
+         self.assertEqual(
+             str(w9.media),
+-            """<link href="/some/path" type="text/css" media="all" rel="stylesheet">
+-<link href="/other/path" type="text/css" media="all" rel="stylesheet">
++            """<link href="/some/path" media="all" rel="stylesheet">
++<link href="/other/path" media="all" rel="stylesheet">
+ <script src="/some/js"></script>
+ <script src="/other/js"></script>"""
+         )
+@@ -303,8 +303,8 @@ class FormsMediaTestCase(SimpleTestCase):
+                 js = ('/path/to/js1', '/path/to/js4')
+ 
+         w10 = MyWidget10()
+-        self.assertEqual(str(w10.media), """<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
+-<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
++        self.assertEqual(str(w10.media), """<link href="/path/to/css3" media="all" rel="stylesheet">
++<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="/path/to/js4"></script>""")
+ 
+@@ -328,9 +328,9 @@ class FormsMediaTestCase(SimpleTestCase):
+         w11 = MyWidget11()
+         self.assertEqual(
+             str(w11.media),
+-            """<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
+-<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="/path/to/css3" media="all" rel="stylesheet">
++<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="/path/to/js4"></script>
+@@ -357,9 +357,9 @@ class FormsMediaTestCase(SimpleTestCase):
+         w12 = MyWidget12()
+         self.assertEqual(
+             str(w12.media),
+-            """<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
+-<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="/path/to/css3" media="all" rel="stylesheet">
++<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="/path/to/js4"></script>"""
+         )
+@@ -382,10 +382,10 @@ class FormsMediaTestCase(SimpleTestCase):
+         multimedia = MultimediaWidget()
+         self.assertEqual(
+             str(multimedia.media),
+-            """<link href="/file4" type="text/css" media="print" rel="stylesheet">
+-<link href="/file3" type="text/css" media="screen" rel="stylesheet">
+-<link href="/file1" type="text/css" media="screen, print" rel="stylesheet">
+-<link href="/file2" type="text/css" media="screen, print" rel="stylesheet">
++            """<link href="/file4" media="print" rel="stylesheet">
++<link href="/file3" media="screen" rel="stylesheet">
++<link href="/file1" media="screen, print" rel="stylesheet">
++<link href="/file2" media="screen, print" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="/path/to/js4"></script>"""
+         )
+@@ -426,9 +426,9 @@ class FormsMediaTestCase(SimpleTestCase):
+         mymulti = MyMultiWidget()
+         self.assertEqual(
+             str(mymulti.media),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
++<link href="/path/to/css3" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="/path/to/js4"></script>
+@@ -468,9 +468,9 @@ class FormsMediaTestCase(SimpleTestCase):
+         f1 = MyForm()
+         self.assertEqual(
+             str(f1.media),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
++<link href="/path/to/css3" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="/path/to/js4"></script>
+@@ -483,9 +483,9 @@ class FormsMediaTestCase(SimpleTestCase):
+         f2 = AnotherForm()
+         self.assertEqual(
+             str(f1.media + f2.media),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
++<link href="/path/to/css3" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="/path/to/js4"></script>
+@@ -505,10 +505,10 @@ class FormsMediaTestCase(SimpleTestCase):
+         f3 = FormWithMedia()
+         self.assertEqual(
+             str(f3.media),
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/some/form/css" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/some/form/css" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
++<link href="/path/to/css3" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="/some/form/javascript"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+@@ -524,10 +524,10 @@ class FormsMediaTestCase(SimpleTestCase):
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="/path/to/js4"></script>
+ <script src="https://secure.other.com/path/to/js3"></script>"""
+-            """<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/some/form/css" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">"""
++            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
++<link href="/some/form/css" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
++<link href="/path/to/css3" media="all" rel="stylesheet">"""
+         )
+ 
+     def test_html_safe(self):
+diff --git a/tests/model_forms/tests.py b/tests/model_forms/tests.py
+index 0307569c12..db36216d14 100644
+--- a/tests/model_forms/tests.py
++++ b/tests/model_forms/tests.py
+@@ -2485,8 +2485,8 @@ class OtherModelFormTests(TestCase):
+         f = ModelFormWithMedia()
+         self.assertHTMLEqual(
+             str(f.media),
+-            '''<link href="/some/form/css" type="text/css" media="all" rel="stylesheet">
+-<script src="/some/form/javascript"></script>'''
++            '<link href="/some/form/css" media="all" rel="stylesheet">'
++            '<script src="/some/form/javascript"></script>'
+         )
+ 
+     def test_choices_type(self):
+diff --git a/tests/staticfiles_tests/test_forms.py b/tests/staticfiles_tests/test_forms.py
+index 1fbcbe164c..fadbe6e1d5 100644
+--- a/tests/staticfiles_tests/test_forms.py
++++ b/tests/staticfiles_tests/test_forms.py
+@@ -29,8 +29,8 @@ class StaticFilesFormsMediaTestCase(SimpleTestCase):
+         )
+         self.assertEqual(
+             str(m),
+-            """<link href="https://example.com/assets/path/to/css1" type="text/css" media="all" rel="stylesheet">
+-<link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
++            """<link href="https://example.com/assets/path/to/css1" media="all" rel="stylesheet">
++<link href="/path/to/css2" media="all" rel="stylesheet">
+ <script src="/path/to/js1"></script>
+ <script src="http://media.other.com/path/to/js2"></script>
+ <script src="https://secure.other.com/path/to/js3"></script>
++ git -c core.fileMode=false diff 7c4f3965098baad2396e24501e09237425a7bd6f
+diff --git a/django/contrib/messages/storage/cookie.py b/django/contrib/messages/storage/cookie.py
+index 1d390c71dd..e48d4edb08 100644
+--- a/django/contrib/messages/storage/cookie.py
++++ b/django/contrib/messages/storage/cookie.py
+@@ -19,7 +19,7 @@ class MessageEncoder(json.JSONEncoder):
+             # Using 0/1 here instead of False/True to produce more compact json
+             is_safedata = 1 if isinstance(obj.message, SafeData) else 0
+             message = [self.message_key, is_safedata, obj.level, obj.message]
+-            if obj.extra_tags:
++            if obj.extra_tags is not None:
+                 message.append(obj.extra_tags)
+             return message
+         return super().default(obj)
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: asgiref>=3.4.1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from Django==4.1.dev20220122153814) (3.8.1)
+Requirement already satisfied: sqlparse>=0.2.2 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from Django==4.1.dev20220122153814) (0.5.1)
+Requirement already satisfied: typing-extensions>=4 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from asgiref>=3.4.1->Django==4.1.dev20220122153814) (4.12.2)
+Building wheels for collected packages: Django
+  Building editable for Django (pyproject.toml): started
+  Building editable for Django (pyproject.toml): finished with status 'done'
+  Created wheel for Django: filename=django-4.1.dev20220122153814-0.editable-py3-none-any.whl size=26984 sha256=83868887040397abbe84bdc15b7d026a99e3ed90cd82fe0d6c0c8fd21eeecdf5
+  Stored in directory: /tmp/pip-ephem-wheel-cache-guejczuy/wheels/7d/66/67/70d1ee2124ccf21d601c352e25cdca10f611f7c8b3f9ffb9e4
+Successfully built Django
+Installing collected packages: Django
+  Attempting uninstall: Django
+    Found existing installation: Django 4.1.dev20220122153814
+    Uninstalling Django-4.1.dev20220122153814:
+      Successfully uninstalled Django-4.1.dev20220122153814
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable.It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Successfully installed Django-4.1.dev20220122153814
++ git checkout 7c4f3965098baad2396e24501e09237425a7bd6f tests/messages_tests/test_cookie.py
+Updated 0 paths from 278ceb3d95
++ git apply -v -
+Checking patch tests/messages_tests/test_cookie.py...
+Applied patch tests/messages_tests/test_cookie.py cleanly.
++ : '>>>>> Start Test Output'
++ ./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 messages_tests.test_cookie
+test_add (messages_tests.test_cookie.CookieTests) ... ok
+test_add_lazy_translation (messages_tests.test_cookie.CookieTests) ... ok
+test_add_update (messages_tests.test_cookie.CookieTests) ... ok
+test_context_processor_message_levels (messages_tests.test_cookie.CookieTests) ... ok
+test_cookie_setings (messages_tests.test_cookie.CookieTests)
+CookieStorage honors SESSION_COOKIE_DOMAIN, SESSION_COOKIE_SECURE, and ... ok
+test_custom_tags (messages_tests.test_cookie.CookieTests) ... ok
+test_default_level (messages_tests.test_cookie.CookieTests) ... ok
+test_existing_add (messages_tests.test_cookie.CookieTests) ... ok
+test_existing_add_read_update (messages_tests.test_cookie.CookieTests) ... ok
+test_existing_read (messages_tests.test_cookie.CookieTests)
+Reading the existing storage doesn't cause the data to be lost. ... ok
+test_existing_read_add_update (messages_tests.test_cookie.CookieTests) ... ok
+test_extra_tags (messages_tests.test_cookie.CookieTests)
+A message's extra_tags attribute is correctly preserved when retrieved ... ok
+test_full_request_response_cycle (messages_tests.test_cookie.CookieTests)
+With the message middleware enabled, messages are properly stored and ... ok
+test_get (messages_tests.test_cookie.CookieTests) ... ok
+test_get_bad_cookie (messages_tests.test_cookie.CookieTests) ... ok
+test_high_level (messages_tests.test_cookie.CookieTests) ... ok
+test_json_encoder_decoder (messages_tests.test_cookie.CookieTests)
+A complex nested data structure containing Message ... ok
+test_level_tag (messages_tests.test_cookie.CookieTests) ... ok
+test_low_level (messages_tests.test_cookie.CookieTests) ... ok
+test_max_cookie_length (messages_tests.test_cookie.CookieTests)
+If the data exceeds what is allowed in a cookie, older messages are ... ok
+test_message_rfc6265 (messages_tests.test_cookie.CookieTests) ... ok
+test_middleware_disabled (messages_tests.test_cookie.CookieTests)
+When the middleware is disabled, an exception is raised when one ... ok
+test_middleware_disabled_fail_silently (messages_tests.test_cookie.CookieTests)
+When the middleware is disabled, an exception is not raised ... ok
+test_multiple_posts (messages_tests.test_cookie.CookieTests)
+Messages persist properly when multiple POSTs are made before a GET. ... ok
+test_no_update (messages_tests.test_cookie.CookieTests) ... ok
+test_repr (messages_tests.test_cookie.CookieTests) ... ok
+test_safedata (messages_tests.test_cookie.CookieTests)
+A message containing SafeData is keeping its safe status when ... ok
+test_settings_level (messages_tests.test_cookie.CookieTests) ... ok
+test_tags (messages_tests.test_cookie.CookieTests) ... ok
+test_with_template_response (messages_tests.test_cookie.CookieTests) ... ok
+
+----------------------------------------------------------------------
+Ran 30 tests in 0.068s
+
+OK
+Testing against Django installed in '/testbed/django'
+Importing application messages_tests
+Found 30 test(s).
+Skipping setup of unused database(s): default, other.
+System check identified no issues (0 silenced).
++ : '>>>>> End Test Output'
++ git checkout 7c4f3965098baad2396e24501e09237425a7bd6f tests/messages_tests/test_cookie.py
+Updated 1 path from 278ceb3d95

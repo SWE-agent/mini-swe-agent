@@ -1,0 +1,35 @@
+diff --git a/src/sqlfluff/rules/L031.py b/src/sqlfluff/rules/L031.py
+index 838c6ce5d..ab2e607d2 100644
+--- a/src/sqlfluff/rules/L031.py
++++ b/src/sqlfluff/rules/L031.py
+@@ -149,7 +149,7 @@ class Rule_L031(BaseRule):
+     def _lint_aliases_in_join(
+         self, base_table, from_expression_elements, column_reference_segments, segment
+     ):
+-        """Lint and fix all aliases in joins - except for self-joins."""
++        """Lint and fix all table aliases - except for self-joins."""
+         # A buffer to keep any violations.
+         violation_buff = []
+ 
+@@ -211,7 +211,7 @@ class Rule_L031(BaseRule):
+             violation_buff.append(
+                 LintResult(
+                     anchor=alias_info.alias_identifier_ref,
+-                    description="Avoid using aliases in join condition",
++                    description="Avoid using table aliases",
+                     fixes=fixes,
+                 )
+             )
+diff --git a/test/cli/commands_test.py b/test/cli/commands_test.py
+index 490cf3602..b2a95d391 100644
+--- a/test/cli/commands_test.py
++++ b/test/cli/commands_test.py
+@@ -49,7 +49,7 @@ def invoke_assert_code(
+ expected_output = """== [test/fixtures/linter/indentation_error_simple.sql] FAIL
+ L:   2 | P:   4 | L003 | Indentation not hanging or a multiple of 4 spaces
+ L:   5 | P:  10 | L010 | Keywords must be consistently upper case.
+-L:   5 | P:  13 | L031 | Avoid using aliases in join condition
++L:   5 | P:  13 | L031 | Avoid using table aliases
+ """
+ 
+ 

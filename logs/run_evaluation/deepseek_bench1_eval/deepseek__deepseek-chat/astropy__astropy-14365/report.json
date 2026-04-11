@@ -1,0 +1,37 @@
+{
+    "astropy__astropy-14365": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "astropy/io/ascii/tests/test_qdp.py::test_roundtrip[True]"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "astropy/io/ascii/tests/test_qdp.py::test_get_tables_from_qdp_file",
+                    "astropy/io/ascii/tests/test_qdp.py::test_roundtrip[False]",
+                    "astropy/io/ascii/tests/test_qdp.py::test_read_example",
+                    "astropy/io/ascii/tests/test_qdp.py::test_roundtrip_example",
+                    "astropy/io/ascii/tests/test_qdp.py::test_roundtrip_example_comma",
+                    "astropy/io/ascii/tests/test_qdp.py::test_read_write_simple",
+                    "astropy/io/ascii/tests/test_qdp.py::test_read_write_simple_specify_name",
+                    "astropy/io/ascii/tests/test_qdp.py::test_get_lines_from_qdp"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "django__django-12915": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_get_async_response (staticfiles_tests.test_handlers.TestASGIStaticFilesHandler)",
+                    "test_get_async_response_not_found (staticfiles_tests.test_handlers.TestASGIStaticFilesHandler)",
+                    "test_static_file_response (asgi.tests.ASGITest)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_disconnect (asgi.tests.ASGITest)",
+                    "test_file_response (asgi.tests.ASGITest)",
+                    "test_get_asgi_application (asgi.tests.ASGITest)",
+                    "test_get_query_string (asgi.tests.ASGITest)",
+                    "test_headers (asgi.tests.ASGITest)",
+                    "test_non_unicode_query_string (asgi.tests.ASGITest)",
+                    "test_request_lifecycle_signals_dispatched_with_thread_sensitive (asgi.tests.ASGITest)",
+                    "test_wrong_connection_type (asgi.tests.ASGITest)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

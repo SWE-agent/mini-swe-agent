@@ -1,0 +1,54 @@
+{
+    "pylint-dev__astroid-1196": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "tests/unittest_python3.py::Python3TC::test_unpacking_in_dict_getitem_uninferable",
+                    "tests/unittest_python3.py::Python3TC::test_unpacking_in_dict_getitem_with_ref"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "tests/unittest_python3.py::Python3TC::test_annotation_as_string",
+                    "tests/unittest_python3.py::Python3TC::test_annotation_support",
+                    "tests/unittest_python3.py::Python3TC::test_as_string",
+                    "tests/unittest_python3.py::Python3TC::test_async_comprehensions",
+                    "tests/unittest_python3.py::Python3TC::test_async_comprehensions_as_string",
+                    "tests/unittest_python3.py::Python3TC::test_async_comprehensions_outside_coroutine",
+                    "tests/unittest_python3.py::Python3TC::test_format_string",
+                    "tests/unittest_python3.py::Python3TC::test_kwonlyargs_annotations_supper",
+                    "tests/unittest_python3.py::Python3TC::test_metaclass_ancestors",
+                    "tests/unittest_python3.py::Python3TC::test_metaclass_error",
+                    "tests/unittest_python3.py::Python3TC::test_metaclass_imported",
+                    "tests/unittest_python3.py::Python3TC::test_metaclass_multiple_keywords",
+                    "tests/unittest_python3.py::Python3TC::test_metaclass_yes_leak",
+                    "tests/unittest_python3.py::Python3TC::test_nested_unpacking_in_dicts",
+                    "tests/unittest_python3.py::Python3TC::test_old_syntax_works",
+                    "tests/unittest_python3.py::Python3TC::test_parent_metaclass",
+                    "tests/unittest_python3.py::Python3TC::test_simple_metaclass",
+                    "tests/unittest_python3.py::Python3TC::test_starred_notation",
+                    "tests/unittest_python3.py::Python3TC::test_underscores_in_numeral_literal",
+                    "tests/unittest_python3.py::Python3TC::test_unpacking_in_dict_getitem",
+                    "tests/unittest_python3.py::Python3TC::test_unpacking_in_dicts",
+                    "tests/unittest_python3.py::Python3TC::test_yield_from",
+                    "tests/unittest_python3.py::Python3TC::test_yield_from_as_string",
+                    "tests/unittest_python3.py::Python3TC::test_yield_from_is_generator"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

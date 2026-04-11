@@ -170,7 +170,7 @@ model:
 
     If you have completed your assignment, please consult the first message about how to
     submit your solution (you will not be able to continue working on this task after that).
-  model_name: "anthropic/claude-sonnet-4-5-20250929"
+  model_name: "deepseek/deepseek-chat"
   model_kwargs:
     drop_params: true
     temperature: 0.0

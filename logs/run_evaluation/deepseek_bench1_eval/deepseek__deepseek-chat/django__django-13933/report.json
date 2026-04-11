@@ -1,0 +1,48 @@
+{
+    "django__django-13933": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test_modelchoicefield_value_placeholder (forms_tests.tests.test_error_messages.ModelChoiceFieldErrorMessagesTestCase)"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test_modelchoicefield (forms_tests.tests.test_error_messages.ModelChoiceFieldErrorMessagesTestCase)",
+                    "test_booleanfield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_charfield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_choicefield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_datefield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_datetimefield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_decimalfield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_emailfield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_error_messages_escaping (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_filefield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_floatfield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_generic_ipaddressfield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_integerfield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_multiplechoicefield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_regexfield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_splitdatetimefield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_subclassing_errorlist (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_timefield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)",
+                    "test_urlfield (forms_tests.tests.test_error_messages.FormsErrorMessagesTestCase)"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}
