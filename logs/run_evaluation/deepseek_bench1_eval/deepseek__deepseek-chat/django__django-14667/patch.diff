@@ -19,6 +19,6 @@ index 8837881579..005477ad75 100644
 +                self.deferred_loading = frozenset(all_fields), True
 +            else:
 +                self.deferred_loading = new_fields, False
- 
+
      def add_immediate_loading(self, field_names):
          """

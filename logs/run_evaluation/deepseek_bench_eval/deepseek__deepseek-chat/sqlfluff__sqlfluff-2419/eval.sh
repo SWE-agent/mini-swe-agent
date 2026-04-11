@@ -11,7 +11,7 @@ git -c core.fileMode=false diff f1dba0e1dd764ae72d67c3d5e1471cf14d3db030
 source /opt/miniconda3/bin/activate
 conda activate testbed
 python -m pip install -e .
-git checkout f1dba0e1dd764ae72d67c3d5e1471cf14d3db030 
+git checkout f1dba0e1dd764ae72d67c3d5e1471cf14d3db030
 git apply -v - <<'EOF_114329324912'
 diff --git a/test/rules/std_L060_test.py b/test/rules/std_L060_test.py
 new file mode 100644
@@ -35,4 +35,4 @@ EOF_114329324912
 : '>>>>> Start Test Output'
 pytest -rA test/rules/std_L060_test.py
 : '>>>>> End Test Output'
-git checkout f1dba0e1dd764ae72d67c3d5e1471cf14d3db030 
+git checkout f1dba0e1dd764ae72d67c3d5e1471cf14d3db030

@@ -5,7 +5,7 @@ index abdeba8ef..fde47d8f8 100644
 @@ -57,10 +57,20 @@ class RST(FixedWidth):
      data_class = SimpleRSTData
      header_class = SimpleRSTHeader
- 
+
 -    def __init__(self):
 -        super().__init__(delimiter_pad=None, bookend=False)
 +    def __init__(self, header_rows=None):
@@ -16,7 +16,7 @@ index abdeba8ef..fde47d8f8 100644
 +        # 3. Bottom position line (1 line)
 +        # So start_line = len(header_rows) + 2
 +        self.data.start_line = len(self.header.header_rows) + 2
- 
+
      def write(self, lines):
          lines = super().write(lines)
 -        lines = [lines[1]] + lines + [lines[1]]

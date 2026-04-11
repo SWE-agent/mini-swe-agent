@@ -9,5 +9,5 @@ index 1d98736..8214cb1 100644
 -    timedelta_hours = np.diff(poa_global.index).astype(float) / 1e9 / 60 / 60
 +    timedelta_hours = np.diff(poa_global.index).astype('timedelta64[ns]').astype(float) / 1e9 / 60 / 60
      timedelta_hours = np.append([timedelta_hours[0]], timedelta_hours)
- 
+
      tamb_array = temp_air + 273.15

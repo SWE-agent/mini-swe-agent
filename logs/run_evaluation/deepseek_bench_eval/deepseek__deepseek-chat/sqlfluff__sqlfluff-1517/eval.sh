@@ -19,12 +19,12 @@ diff --git a/test/dialects/ansi_test.py b/test/dialects/ansi_test.py
 @@ -3,7 +3,7 @@
  import pytest
  import logging
- 
+
 -from sqlfluff.core import FluffConfig, Linter
 +from sqlfluff.core import FluffConfig, Linter, SQLParseError
  from sqlfluff.core.parser import Lexer
- 
- 
+
+
 @@ -214,3 +214,29 @@ def test__dialect__ansi_parse_indented_joins(sql_string, indented_joins, meta_lo
          idx for idx, raw_seg in enumerate(parsed.tree.iter_raw_seg()) if raw_seg.is_meta
      )

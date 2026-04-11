@@ -163,7 +163,7 @@ index 9b1da3ee06..45d5234346 100644
 @@ -65,7 +65,7 @@ to_pretty_wkt = string_output(
  # Memory leak fixed in GDAL 1.5; still exists in 1.4.
  to_xml = string_output(lgdal.OSRExportToXML, [c_void_p, POINTER(c_char_p), c_char_p], offset=-2, decoding='utf-8')
- 
+
 -# String attribute retrival routines.
 +# String attribute retrieval routines.
  get_attr_value = const_string_output(std_call('OSRGetAttrValue'), [c_void_p, c_char_p, c_int], decoding='utf-8')
@@ -174,7 +174,7 @@ index ddfb7e0116..613983581c 100644
 --- a/django/core/files/uploadhandler.py
 +++ b/django/core/files/uploadhandler.py
 @@ -52,7 +52,7 @@ class SkipFile(UploadFileException):
- 
+
  class StopFutureHandlers(UploadFileException):
      """
 -    Upload handers that have handled a file and do not want future handlers to
@@ -202,7 +202,7 @@ index 274dc29d6d..f46da0e957 100644
 @@ -377,7 +377,7 @@ class AggregationTests(TestCase):
              {'c__max': 3}
          )
- 
+
 -    def test_conditional_aggreate(self):
 +    def test_conditional_aggregate(self):
          # Conditional aggregation of a grouped queryset.
@@ -230,7 +230,7 @@ index 42de5b6e92..fd4c1fb34c 100644
 @@ -122,7 +122,7 @@ class SelectTest(WidgetTest):
              ),
          )
- 
+
 -    def test_choices_constuctor(self):
 +    def test_choices_constructor(self):
          widget = Select(choices=[(1, 1), (2, 2), (3, 3)])
@@ -241,21 +241,21 @@ index 215f6f86c6..84dd250801 100644
 --- a/tests/m2m_intermediary/tests.py
 +++ b/tests/m2m_intermediary/tests.py
 @@ -6,7 +6,7 @@ from .models import Article, Reporter, Writer
- 
- 
+
+
  class M2MIntermediaryTests(TestCase):
 -    def test_intermeiary(self):
 +    def test_intermediary(self):
          r1 = Reporter.objects.create(first_name="John", last_name="Smith")
          r2 = Reporter.objects.create(first_name="Jane", last_name="Doe")
- 
+
 diff --git a/tests/migrations/test_commands.py b/tests/migrations/test_commands.py
 index 4132b96be0..64b5c9bfd0 100644
 --- a/tests/migrations/test_commands.py
 +++ b/tests/migrations/test_commands.py
 @@ -80,7 +80,7 @@ class MigrateTests(MigrationTestBase):
              call_command('migrate', app_label='unmigrated_app_syncdb')
- 
+
      @override_settings(MIGRATION_MODULES={'migrations': 'migrations.test_migrations_clashing_prefix'})
 -    def test_ambigious_prefix(self):
 +    def test_ambiguous_prefix(self):
@@ -268,13 +268,13 @@ index d0e4723fc7..4bee157ace 100644
 +++ b/tests/serializers/tests.py
 @@ -55,7 +55,7 @@ class SerializerRegistrationTests(SimpleTestCase):
              serializers.unregister_serializer("nonsense")
- 
+
      def test_builtin_serializers(self):
 -        "Requesting a list of serializer formats popuates the registry"
 +        "Requesting a list of serializer formats populates the registry"
          all_formats = set(serializers.get_serializer_formats())
          public_formats = set(serializers.get_public_serializer_formats())
- 
+
 diff --git a/tests/test_runner/tests.py b/tests/test_runner/tests.py
 index 3f4e257261..85e4e75720 100644
 --- a/tests/test_runner/tests.py
@@ -294,12 +294,12 @@ index 5c2266ca1d..faae5adb27 100644
 --- a/django/core/checks/model_checks.py
 +++ b/django/core/checks/model_checks.py
 @@ -5,11 +5,13 @@ from itertools import chain
- 
+
  from django.apps import apps
  from django.core.checks import Error, Tags, register
 +from django.db import connections, router
- 
- 
+
+
  @register(Tags.models)
  def check_all_models(app_configs=None, **kwargs):
 -    db_table_models = defaultdict(list)

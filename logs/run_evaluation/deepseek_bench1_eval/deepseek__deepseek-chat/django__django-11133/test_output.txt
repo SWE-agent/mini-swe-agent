@@ -183,7 +183,7 @@ index 6a84e193ba..3e2970d5a1 100644
 +            return bytes(value)
 +        # Handle non-string types.
          return str(value).encode(self.charset)
- 
+
      # These methods partially implement the file-like object interface.
 @@ -309,7 +318,7 @@ class HttpResponse(HttpResponseBase):
      @content.setter

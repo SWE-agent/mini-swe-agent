@@ -6,7 +6,7 @@ index 89e2dceeaf..9670e21363 100644
                  for name in sorted(related_fields)
              ]
              related_dependencies.append((app_label, model_name, None, True))
-+            
++
 +            # When order_with_respect_to is set, defer indexes with _order
 +            # until after AlterOrderWithRespectTo
 +            deferred_indexes = []
@@ -39,7 +39,7 @@ index 89e2dceeaf..9670e21363 100644
                          (app_label, model_name, None, True),
                      ]
                  )
-+                
++
 +                # Add deferred indexes with _order after AlterOrderWithRespectTo
 +                for index in deferred_indexes:
 +                    self.add_operation(
@@ -50,6 +50,6 @@ index 89e2dceeaf..9670e21363 100644
 +                        ),
 +                        dependencies=related_dependencies,
 +                    )
- 
+
              # Fix relationships if the model changed from a proxy model to a
              # concrete model.

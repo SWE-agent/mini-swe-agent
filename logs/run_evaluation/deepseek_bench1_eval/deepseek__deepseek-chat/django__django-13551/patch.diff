@@ -9,7 +9,7 @@ index 93e2d71af2..bf4b3270d3 100644
 +        3. The email field will change if the user changes their email address.
          Failing those things, settings.PASSWORD_RESET_TIMEOUT eventually
          invalidates the token.
- 
+
 @@ -94,7 +95,11 @@ class PasswordResetTokenGenerator:
          # Truncate microseconds so that tokens are consistent even if the
          # database doesn't support microseconds.
@@ -20,6 +20,6 @@ index 93e2d71af2..bf4b3270d3 100644
 +        email = getattr(user, email_field_name, '')
 +        email = str(email) if email is not None else ''
 +        return str(user.pk) + user.password + str(login_timestamp) + str(timestamp) + email
- 
+
      def _num_seconds(self, dt):
          return int((dt - datetime(2001, 1, 1)).total_seconds())

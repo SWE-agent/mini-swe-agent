@@ -161,7 +161,7 @@ index ce18098fd2..add40269dd 100644
 --- a/django/db/models/sql/query.py
 +++ b/django/db/models/sql/query.py
 @@ -1124,15 +1124,22 @@ class Query(BaseExpression):
- 
+
      def check_filterable(self, expression):
          """Raise an error if expression cannot be used in a WHERE clause."""
 -        if not getattr(expression, 'filterable', True):
@@ -171,7 +171,7 @@ index ce18098fd2..add40269dd 100644
 -            )
 +        # Get the class
 +        cls = type(expression)
-+        
++
 +        # Check if filterable is a class attribute and is a boolean
 +        if hasattr(cls, 'filterable'):
 +            filterable_attr = cls.filterable
@@ -181,7 +181,7 @@ index ce18098fd2..add40269dd 100644
 +                    expression.__class__.__name__ + ' is disallowed in the filter '
 +                    'clause.'
 +                )
-+        
++
          if hasattr(expression, 'get_source_expressions'):
              for expr in expression.get_source_expressions():
                  self.check_filterable(expr)

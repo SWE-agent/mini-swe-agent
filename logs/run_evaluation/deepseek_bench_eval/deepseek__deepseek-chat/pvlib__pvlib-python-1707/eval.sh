@@ -18,8 +18,8 @@ diff --git a/pvlib/tests/test_iam.py b/pvlib/tests/test_iam.py
 +++ b/pvlib/tests/test_iam.py
 @@ -51,6 +51,18 @@ def test_physical():
      assert_series_equal(iam, expected)
- 
- 
+
+
 +def test_physical_n1_L0():
 +    aoi = np.array([0, 22.5, 45, 67.5, 90, 100, np.nan])
 +    expected = np.array([1, 1, 1, 1, 0, 0, np.nan])

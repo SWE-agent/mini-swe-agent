@@ -9,7 +9,7 @@ index 503f7f56fd..e9799a2d7d 100644
 -from django.db import router
 +from django.db import router, DatabaseError
  from django.db.transaction import atomic
- 
+
  # The prefix to put on the default database name when creating
 @@ -115,7 +115,12 @@ class BaseDatabaseCreation:
                              queryset = model._default_manager.using(

@@ -19,5 +19,5 @@ index 4648daf395..f1ca4bfea1 100644
 +                # Regular tuples and lists accept an iterator
 +                return type(value)(resolved_items)
          return value
- 
+
      def solve_lookup_type(self, lookup):

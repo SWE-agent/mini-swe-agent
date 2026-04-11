@@ -22,7 +22,7 @@ diff --git a/tests/sessions_tests/tests.py b/tests/sessions_tests/tests.py
 +++ b/tests/sessions_tests/tests.py
 @@ -333,11 +333,16 @@ def test_default_hashing_algorith_legacy_decode(self):
              self.assertEqual(self.session._legacy_decode(encoded), data)
- 
+
      def test_decode_failure_logged_to_security(self):
 -        bad_encode = base64.b64encode(b'flaskdj:alkdjf').decode('ascii')
 -        with self.assertLogs('django.security.SuspiciousSession', 'WARNING') as cm:
@@ -39,7 +39,7 @@ diff --git a/tests/sessions_tests/tests.py b/tests/sessions_tests/tests.py
 +                    self.assertEqual(self.session.decode(encoded), {})
 +                # The failed decode is logged.
 +                self.assertIn('Session data corrupted', cm.output[0])
- 
+
      def test_actual_expiry(self):
          # this doesn't work with JSONSerializer (serializing timedelta)
 

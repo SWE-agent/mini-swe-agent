@@ -19,7 +19,7 @@ diff --git a/pydicom/tests/test_valuerep.py b/pydicom/tests/test_valuerep.py
 @@ -427,6 +427,62 @@ def test_hash(self):
          )
          assert hash(pn1) == hash(pn2)
- 
+
 +    def test_next(self):
 +        """Test that the next function works on it's own"""
 +        # Test getting the first character
@@ -61,7 +61,7 @@ diff --git a/pydicom/tests/test_valuerep.py b/pydicom/tests/test_valuerep.py
 +        """Test that iterators can be corretly constructed"""
 +        name_str = "John^Doe^^Dr"
 +        pn1 = PersonName(name_str)
-+        
++
 +        for i, c in enumerate(pn1):
 +            assert name_str[i] == c
 +
@@ -76,7 +76,7 @@ diff --git a/pydicom/tests/test_valuerep.py b/pydicom/tests/test_valuerep.py
 +        assert ("o" in pn1) == True
 +        assert ("x" in pn1) == False
 +
- 
+
  class TestDateTime:
      """Unit tests for DA, DT, TM conversion to datetime objects"""
 

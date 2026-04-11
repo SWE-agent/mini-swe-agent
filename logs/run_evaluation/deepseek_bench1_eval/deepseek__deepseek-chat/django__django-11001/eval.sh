@@ -23,7 +23,7 @@ diff --git a/tests/expressions/tests.py b/tests/expressions/tests.py
 @@ -384,6 +384,29 @@ def test_order_by_exists(self):
          )
          self.assertSequenceEqual(mustermanns_by_seniority, [self.max, mary])
- 
+
 +    def test_order_by_multiline_sql(self):
 +        raw_order_by = (
 +            RawSQL('''

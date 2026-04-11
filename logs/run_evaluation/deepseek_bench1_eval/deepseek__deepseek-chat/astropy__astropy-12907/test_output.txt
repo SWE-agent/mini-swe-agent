@@ -167,9 +167,9 @@ index a308e2729..45bea3608 100644
          cright = np.zeros((noutp, right.shape[1]))
 -        cright[-right.shape[0]:, -right.shape[1]:] = 1
 +        cright[-right.shape[0]:, -right.shape[1]:] = right
- 
+
      return np.hstack([cleft, cright])
- 
+
 diff --git a/pyproject.toml b/pyproject.toml
 index 3364d3074..02dddbe71 100644
 --- a/pyproject.toml
@@ -2418,15 +2418,15 @@ Platform: Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35
 
 Executable: /opt/miniconda3/envs/testbed/bin/python
 
-Full Python Version: 
-3.9.20 (main, Oct  3 2024, 07:27:41) 
+Full Python Version:
+3.9.20 (main, Oct  3 2024, 07:27:41)
 [GCC 11.2.0]
 
 encodings: sys: utf-8, locale: UTF-8, filesystem: utf-8
 byteorder: little
 float info: dig: 15, mant_dig: 15
 
-Package versions: 
+Package versions:
 Numpy: 1.25.2
 Scipy: not available
 Matplotlib: not available

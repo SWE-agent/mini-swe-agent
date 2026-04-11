@@ -9,4 +9,4 @@ index 6f26dff0e0..201e4832f2 100644
 +        self.query.subquery = True
          self.extra = extra
          super().__init__(output_field)
- 
+

@@ -19,7 +19,7 @@ diff --git a/tests/unittest_raw_building.py b/tests/unittest_raw_building.py
 @@ -8,8 +8,15 @@
  # For details: https://github.com/PyCQA/astroid/blob/main/LICENSE
  # Copyright (c) https://github.com/PyCQA/astroid/blob/main/CONTRIBUTORS.txt
- 
+
 +from __future__ import annotations
 +
 +import logging
@@ -29,13 +29,13 @@ diff --git a/tests/unittest_raw_building.py b/tests/unittest_raw_building.py
  import unittest
 +from typing import Any
 +from unittest import mock
- 
+
  import _io
  import pytest
 @@ -117,5 +124,45 @@ def test_module_object_with_broken_getattr(self) -> None:
          AstroidBuilder().inspect_build(fm_getattr, "test")
- 
- 
+
+
 +@pytest.mark.skipif(
 +    "posix" not in sys.builtin_module_names, reason="Platform doesn't support posix"
 +)

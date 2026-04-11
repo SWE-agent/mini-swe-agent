@@ -4,8 +4,8 @@ index d0bc97be80..488b7119ab 100644
 +++ b/django/utils/html.py
 @@ -59,15 +59,17 @@ _json_script_escapes = {
  }
- 
- 
+
+
 -def json_script(value, element_id=None):
 +def json_script(value, element_id=None, encoder=None):
      """
@@ -17,7 +17,7 @@ index d0bc97be80..488b7119ab 100644
 +    if encoder is None:
 +        from django.core.serializers.json import DjangoJSONEncoder
 +        encoder = DjangoJSONEncoder
- 
+
 -    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)
 +    json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)
      if element_id:

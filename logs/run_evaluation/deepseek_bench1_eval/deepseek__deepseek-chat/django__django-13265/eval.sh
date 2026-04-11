@@ -23,7 +23,7 @@ diff --git a/tests/migrations/test_autodetector.py b/tests/migrations/test_autod
 @@ -2151,6 +2151,115 @@ def test_add_model_order_with_respect_to(self):
          )
          self.assertNotIn("_order", [name for name, field in changes['testapp'][0].operations[0].fields])
- 
+
 +    def test_add_model_order_with_respect_to_index_foo_together(self):
 +        changes = self.get_changes([], [
 +            self.book,

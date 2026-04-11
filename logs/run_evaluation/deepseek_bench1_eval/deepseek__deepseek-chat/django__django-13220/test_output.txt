@@ -155,7 +155,7 @@ Author: Florian Demmer <fdemmer@gmail.com>
 Date:   Wed Jul 29 10:33:20 2020 +0200
 
     Fixed #27395 -- Added sitemap 'alternates' generation.
-    
+
     Updated the sitemap generator and default template to optionally
     include link elements with hreflang attribute to alternate language
     URLs.
@@ -179,7 +179,7 @@ index 54720324a2..b13507a11e 100644
 @@ -60,32 +60,71 @@ class Sitemap:
      # with which the sitemap was requested.
      protocol = None
- 
+
 -    def __get(self, name, obj, default=None):
 +    # Enables generating URLs for all languages.
 +    i18n = False
@@ -206,7 +206,7 @@ index 54720324a2..b13507a11e 100644
 +                item, lang_code = item
 +            return attr(item)
          return attr
- 
+
 -    def items(self):
 -        return []
 -
@@ -236,12 +236,12 @@ index 54720324a2..b13507a11e 100644
 +            with translation.override(force_lang_code or lang_code):
 +                return self._get('location', item)
 +        return self._get('location', item)
- 
+
      @property
      def paginator(self):
 -        return paginator.Paginator(self.items(), self.limit)
 +        return paginator.Paginator(self._items(), self.limit)
- 
+
 -    def get_urls(self, page=1, site=None, protocol=None):
 +    def items(self):
 +        return []
@@ -256,7 +256,7 @@ index 54720324a2..b13507a11e 100644
 -        if protocol is None:
 -            protocol = 'http'
 +        return self.protocol or protocol or 'http'
- 
+
 +    def get_domain(self, site=None):
          # Determine domain
          if site is None:
@@ -277,13 +277,13 @@ index 54720324a2..b13507a11e 100644
 -        else:
 -            urls = self._urls(page, protocol, domain)
 +        return site.domain
- 
+
 -        return urls
 +    def get_urls(self, page=1, site=None, protocol=None):
 +        protocol = self.get_protocol(protocol)
 +        domain = self.get_domain(site)
 +        return self._urls(page, protocol, domain)
- 
+
      def _urls(self, page, protocol, domain):
          urls = []
          latest_lastmod = None
@@ -338,8 +338,8 @@ index 54720324a2..b13507a11e 100644
              self.latest_lastmod = latest_lastmod
 +
          return urls
- 
- 
+
+
 @@ -146,9 +203,9 @@ class GenericSitemap(Sitemap):
      def __init__(self, info_dict, priority=None, changefreq=None, protocol=None):
          self.queryset = info_dict['queryset']
@@ -350,7 +350,7 @@ index 54720324a2..b13507a11e 100644
 +        self.priority = self.priority or priority
 +        self.changefreq = self.changefreq or changefreq
 +        self.protocol = self.protocol or protocol
- 
+
      def items(self):
          # Make sure to return a clone; we don't want premature evaluation.
 diff --git a/django/contrib/sitemaps/templates/sitemap.xml b/django/contrib/sitemaps/templates/sitemap.xml
@@ -376,7 +376,7 @@ index 8f89f6f899..936567411e 100644
 @@ -252,6 +252,40 @@ Note:
          be generated using all of your :setting:`LANGUAGES`. The default is
          ``False``.
- 
+
 +    .. attribute:: Sitemap.languages
 +
 +        .. versionadded:: 3.2
@@ -413,18 +413,18 @@ index 8f89f6f899..936567411e 100644
 +
  Shortcuts
  =========
- 
+
 @@ -438,12 +472,22 @@ The variable ``urlset`` is a list of URLs that should appear in the
  sitemap. Each URL exposes attributes as defined in the
  :class:`~django.contrib.sitemaps.Sitemap` class:
- 
+
 +- ``alternates``
  - ``changefreq``
  - ``item``
  - ``lastmod``
  - ``location``
  - ``priority``
- 
+
 +The ``alternates`` attribute is available when :attr:`~Sitemap.i18n` and
 +:attr:`~Sitemap.alternates` are enabled. It is a list of other language
 +versions, including the optional :attr:`~Sitemap.x_default` fallback, for each
@@ -444,14 +444,14 @@ index fe4b309cb5..10468ac655 100644
 @@ -125,7 +125,11 @@ Minor features
  :mod:`django.contrib.sitemaps`
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
 -* ...
 +* The new :class:`~django.contrib.sitemaps.Sitemap` attributes
 +  :attr:`~django.contrib.sitemaps.Sitemap.alternates`,
 +  :attr:`~django.contrib.sitemaps.Sitemap.languages` and
 +  :attr:`~django.contrib.sitemaps.Sitemap.x_default` allow
 +  generating sitemap *alternates* to localized versions of your pages.
- 
+
  :mod:`django.contrib.sites`
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 diff --git a/tests/sitemaps_tests/test_http.py b/tests/sitemaps_tests/test_http.py
@@ -460,7 +460,7 @@ index 3d4e1d84dc..3281774cc5 100644
 +++ b/tests/sitemaps_tests/test_http.py
 @@ -253,8 +253,10 @@ class HTTPSitemapTests(SitemapTestsBase):
          self.assertEqual(response.status_code, 200)
- 
+
      @override_settings(LANGUAGES=(('en', 'English'), ('pt', 'Portuguese')))
 -    def test_simple_i18nsitemap_index(self):
 -        "A simple i18n sitemap index can be rendered"
@@ -474,7 +474,7 @@ index 3d4e1d84dc..3281774cc5 100644
 @@ -263,6 +265,80 @@ class HTTPSitemapTests(SitemapTestsBase):
  """.format(self.base_url, self.i18n_model.pk)
          self.assertXMLEqual(response.content.decode(), expected_content)
- 
+
 +    @override_settings(LANGUAGES=(('en', 'English'), ('pt', 'Portuguese')))
 +    def test_alternate_i18n_sitemap_index(self):
 +        """
@@ -558,8 +558,8 @@ index 495f60fb1a..e4cba4c42f 100644
 +++ b/tests/sitemaps_tests/urls/http.py
 @@ -34,6 +34,18 @@ class SimpleI18nSitemap(Sitemap):
          return I18nTestModel.objects.order_by('pk').all()
- 
- 
+
+
 +class AlternatesI18nSitemap(SimpleI18nSitemap):
 +    alternates = True
 +
@@ -578,7 +578,7 @@ index 495f60fb1a..e4cba4c42f 100644
 @@ -77,8 +89,20 @@ simple_sitemaps = {
      'simple': SimpleSitemap,
  }
- 
+
 -simple_i18nsitemaps = {
 -    'simple': SimpleI18nSitemap,
 +simple_i18n_sitemaps = {
@@ -596,17 +596,17 @@ index 495f60fb1a..e4cba4c42f 100644
 +xdefault_i18n_sitemaps = {
 +    'i18n-xdefault': XDefaultI18nSitemap,
  }
- 
+
  simple_sitemaps_not_callable = {
 @@ -97,7 +121,7 @@ fixed_lastmod_sitemaps = {
      'fixed-lastmod': FixedLastmodSitemap,
  }
- 
+
 -fixed_lastmod__mixed_sitemaps = {
 +fixed_lastmod_mixed_sitemaps = {
      'fixed-lastmod-mixed': FixedLastmodMixedSitemap,
  }
- 
+
 @@ -151,7 +175,19 @@ urlpatterns = [
          name='django.contrib.sitemaps.views.sitemap'),
      path(
@@ -645,41 +645,41 @@ index dc084b8692..a50a50668d 100644
 @@ -179,6 +179,81 @@ class ValidationError(Exception):
              return repr(dict(self))
          return repr(list(self))
- 
+
 +    def __eq__(self, other):
 +        """
 +        Return True if `other` is a ValidationError with the same errors.
-+        
++
 +        Comparison is order-independent for lists and dictionaries.
 +        """
 +        if not isinstance(other, ValidationError):
 +            return NotImplemented
-+        
++
 +        # Check if both have the same structure type
 +        self_has_dict = hasattr(self, 'error_dict')
 +        other_has_dict = hasattr(other, 'error_dict')
 +        self_has_message = hasattr(self, 'message')
 +        other_has_message = hasattr(other, 'message')
-+        
++
 +        # If structure types don't match, they're not equal
 +        if self_has_dict != other_has_dict or self_has_message != other_has_message:
 +            return False
-+        
++
 +        # Both have error_dict (dictionary of field errors)
 +        if self_has_dict:
 +            # Compare field sets
 +            if set(self.error_dict.keys()) != set(other.error_dict.keys()):
 +                return False
-+            
++
 +            # Compare errors for each field
 +            for field in self.error_dict:
 +                self_errors = self.error_dict[field]
 +                other_errors = other.error_dict[field]
-+                
++
 +                # Quick length check
 +                if len(self_errors) != len(other_errors):
 +                    return False
-+                
++
 +                # For order-independent comparison, check if each error in self_errors
 +                # has a matching error in other_errors
 +                matched = [False] * len(other_errors)
@@ -692,21 +692,21 @@ index dc084b8692..a50a50668d 100644
 +                            break
 +                    if not found:
 +                        return False
-+            
++
 +            return True
-+        
++
 +        # Both have message (simple ValidationError with message, code, params)
 +        elif self_has_message:
-+            return (self.message == other.message and 
-+                    self.code == other.code and 
++            return (self.message == other.message and
++                    self.code == other.code and
 +                    self.params == other.params)
-+        
++
 +        # Both are list ValidationErrors (have error_list but no message)
 +        else:
 +            # Quick length check
 +            if len(self.error_list) != len(other.error_list):
 +                return False
-+            
++
 +            # For order-independent comparison
 +            matched = [False] * len(other.error_list)
 +            for self_err in self.error_list:
@@ -718,12 +718,12 @@ index dc084b8692..a50a50668d 100644
 +                        break
 +                if not found:
 +                    return False
-+            
++
 +            return True
 +
      def __repr__(self):
          return 'ValidationError(%s)' % self
- 
+
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3
 ++ . /opt/miniconda3/etc/profile.d/conda.sh

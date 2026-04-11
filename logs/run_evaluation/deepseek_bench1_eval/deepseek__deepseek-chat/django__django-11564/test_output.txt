@@ -156,7 +156,7 @@ Author: Mariusz Felisiak <felisiak.mariusz@gmail.com>
 Date:   Wed Sep 25 12:32:24 2019 +0200
 
     Fixed #30800 -- Fixed migrations crash when altering a field with custom db_type().
-    
+
     Regression in 1378d665a1c85897d951f2ca9618b848fdbba2e7.
 
 diff --git a/django/db/backends/postgresql/schema.py b/django/db/backends/postgresql/schema.py
@@ -172,7 +172,7 @@ index 9384c5e3b2..6a65d12415 100644
 +            field.get_internal_type(),
 +            field.db_type(self.connection),
 +        )
- 
+
      def _create_like_index_sql(self, model, field):
          """
 diff --git a/tests/schema/tests.py b/tests/schema/tests.py
@@ -182,7 +182,7 @@ index 4f3c2b361b..08a77000b2 100644
 @@ -875,6 +875,26 @@ class SchemaTests(TransactionTestCase):
              with self.assertRaisesMessage(DataError, msg):
                  editor.alter_field(Author, old_field, new_field, strict=True)
- 
+
 +    @unittest.skipUnless(connection.vendor == 'postgresql', 'PostgreSQL specific')
 +    def test_alter_field_with_custom_db_type(self):
 +        from django.contrib.postgres.fields import ArrayField
@@ -233,7 +233,7 @@ index 4c27fce605..b57b175afa 100644
 +                    relative_url = url[1:] if url.startswith('/') else url
 +                    url = urljoin(script_prefix, relative_url)
 +        return url
- 
+
      def _datetime_from_timestamp(self, ts):
          """
 diff --git a/django/templatetags/static.py b/django/templatetags/static.py
@@ -241,7 +241,7 @@ index 39712aaba0..31f4e3ea7d 100644
 --- a/django/templatetags/static.py
 +++ b/django/templatetags/static.py
 @@ -48,12 +48,21 @@ class PrefixNode(template.Node):
- 
+
      def render(self, context):
          prefix = self.handle_simple(self.name)
 +        # Prepend script prefix for consistency with Django's URL handling
@@ -265,7 +265,7 @@ index 39712aaba0..31f4e3ea7d 100644
  def get_static_prefix(parser, token):
      """
 @@ -100,7 +109,19 @@ class StaticNode(template.Node):
- 
+
      def url(self, context):
          path = self.path.resolve(context)
 -        return self.handle_simple(path)
@@ -282,7 +282,7 @@ index 39712aaba0..31f4e3ea7d 100644
 +                relative_url = url[1:] if url.startswith('/') else url
 +                url = urljoin(script_prefix, relative_url)
 +        return url
- 
+
      def render(self, context):
          url = self.url(context)
 @@ -164,4 +185,16 @@ def static(path):

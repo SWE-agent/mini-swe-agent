@@ -23,8 +23,8 @@ diff --git a/test/cli/commands_test.py b/test/cli/commands_test.py
 -L:   5 | P:  13 | L031 | Avoid using aliases in join condition
 +L:   5 | P:  13 | L031 | Avoid aliases in from clauses and join conditions.
  """
- 
- 
+
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

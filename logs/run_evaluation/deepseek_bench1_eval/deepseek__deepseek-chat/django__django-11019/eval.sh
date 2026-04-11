@@ -54,7 +54,7 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 +            "Media(css={'all': ['path/to/css1', '/path/to/css2']}, "
 +            "js=['/path/to/js1', 'http://media.other.com/path/to/js2', 'https://secure.other.com/path/to/js3'])"
          )
- 
+
          class Foo:
 @@ -125,8 +125,8 @@ class Media:
  <link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
@@ -65,12 +65,12 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 +<script type="text/javascript" src="/path/to/js4"></script>
 +<script type="text/javascript" src="https://secure.other.com/path/to/js3"></script>"""
          )
- 
+
          # media addition hasn't affected the original objects
 @@ -151,6 +151,17 @@ class Media:
          self.assertEqual(str(w4.media), """<link href="/path/to/css1" type="text/css" media="all" rel="stylesheet">
  <script type="text/javascript" src="/path/to/js1"></script>""")
- 
+
 +    def test_media_deduplication(self):
 +        # A deduplication test applied directly to a Media object, to confirm
 +        # that the deduplication doesn't only happen at the point of merging
@@ -99,7 +99,7 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 -<script type="text/javascript" src="/other/js"></script>"""
 +<script type="text/javascript" src="https://secure.other.com/path/to/js3"></script>"""
          )
- 
+
      def test_media_inheritance(self):
 @@ -247,8 +258,8 @@ class Media:
  <link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
@@ -110,7 +110,7 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 +<script type="text/javascript" src="/path/to/js4"></script>
 +<script type="text/javascript" src="https://secure.other.com/path/to/js3"></script>"""
          )
- 
+
      def test_media_inheritance_from_property(self):
 @@ -322,8 +333,8 @@ class Media:
  <link href="/path/to/css2" type="text/css" media="all" rel="stylesheet">
@@ -121,7 +121,7 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 +<script type="text/javascript" src="/path/to/js4"></script>
 +<script type="text/javascript" src="https://secure.other.com/path/to/js3"></script>"""
          )
- 
+
      def test_media_inheritance_single_type(self):
 @@ -420,8 +431,8 @@ def __init__(self, attrs=None):
  <link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
@@ -132,7 +132,7 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 +<script type="text/javascript" src="/path/to/js4"></script>
 +<script type="text/javascript" src="https://secure.other.com/path/to/js3"></script>"""
          )
- 
+
      def test_form_media(self):
 @@ -462,8 +473,8 @@ class MyForm(Form):
  <link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
@@ -143,7 +143,7 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 +<script type="text/javascript" src="/path/to/js4"></script>
 +<script type="text/javascript" src="https://secure.other.com/path/to/js3"></script>"""
          )
- 
+
          # Form media can be combined to produce a single media definition.
 @@ -477,8 +488,8 @@ class AnotherForm(Form):
  <link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
@@ -154,7 +154,7 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 +<script type="text/javascript" src="/path/to/js4"></script>
 +<script type="text/javascript" src="https://secure.other.com/path/to/js3"></script>"""
          )
- 
+
          # Forms can also define media, following the same rules as widgets.
 @@ -495,28 +506,28 @@ class Media:
          self.assertEqual(
@@ -172,7 +172,7 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 -<script type="text/javascript" src="/some/form/javascript"></script>"""
 +<script type="text/javascript" src="https://secure.other.com/path/to/js3"></script>"""
          )
- 
+
          # Media works in templates
          self.assertEqual(
              Template("{{ form.media.js }}{{ form.media.css }}").render(Context({'form': f3})),
@@ -190,10 +190,10 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 -<link href="/some/form/css" type="text/css" media="all" rel="stylesheet">"""
 +<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">"""
          )
- 
+
      def test_html_safe(self):
 @@ -526,19 +537,23 @@ def test_html_safe(self):
- 
+
      def test_merge(self):
          test_values = (
 -            (([1, 2], [3, 4]), [1, 2, 3, 4]),
@@ -214,13 +214,13 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 +        for lists, expected in test_values:
 +            with self.subTest(lists=lists):
 +                self.assertEqual(Media.merge(*lists), expected)
- 
+
      def test_merge_warning(self):
 -        msg = 'Detected duplicate Media files in an opposite order:\n1\n2'
 +        msg = 'Detected duplicate Media files in an opposite order: [1, 2], [2, 1]'
          with self.assertWarnsMessage(RuntimeWarning, msg):
              self.assertEqual(Media.merge([1, 2], [2, 1]), [1, 2])
- 
+
 @@ -546,28 +561,30 @@ def test_merge_js_three_way(self):
          """
          The relative order of scripts is preserved in a three-way merge.
@@ -251,7 +251,7 @@ diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/tes
 +        widget3 = Media(js=['b', 'c', 'f', 'k'])
 +        merged = widget1 + widget2 + widget3
 +        self.assertEqual(merged._js, ['a', 'b', 'c', 'f', 'g', 'h', 'k'])
- 
+
      def test_merge_css_three_way(self):
 -        widget1 = Media(css={'screen': ['a.css']})
 -        widget2 = Media(css={'screen': ['b.css']})

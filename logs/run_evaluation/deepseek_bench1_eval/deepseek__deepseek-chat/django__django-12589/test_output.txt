@@ -155,9 +155,9 @@ Author: Mariusz Felisiak <felisiak.mariusz@gmail.com>
 Date:   Tue Mar 24 20:52:05 2020 +0100
 
     Reverted "Pinned asgiref == 3.2.5 in test requirements."
-    
+
     This reverts commit aa21020218a2dcd29a03444ad2a77f03f085b04e.
-    
+
     Regression was fixed by
     https://github.com/django/asgiref/commit/e4367c571fd1833bda0b7ff0bd68d924916352da.
 
@@ -186,8 +186,8 @@ index 84960d77e1..e6b479bc89 100644
 +        # This fixes issue where GROUP BY would use external_cols (columns
 +        # referenced by the subquery) instead of the subquery itself.
 +        return [self]
- 
- 
+
+
  class Exists(Subquery):
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

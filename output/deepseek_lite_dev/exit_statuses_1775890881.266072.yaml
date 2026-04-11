@@ -9,13 +9,13 @@ instances_by_exit_status:
     - pvlib__pvlib-python-1072
     - pvlib__pvlib-python-1707
     - pvlib__pvlib-python-1854
-    - pylint-dev__astroid-1978
+    - pylint-dev__asteroid-1978
     - marshmallow-code__marshmallow-1343
     - pvlib__pvlib-python-1154
     - pvlib__pvlib-python-1606
-    - pylint-dev__astroid-1196
-    - pylint-dev__astroid-1268
-    - pylint-dev__astroid-1866
+    - pylint-dev__asteroid-1196
+    - pylint-dev__asteroid-1268
+    - pylint-dev__asteroid-1866
     - pydicom__pydicom-1694
     - pydicom__pydicom-901
     - pydicom__pydicom-1139

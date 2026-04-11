@@ -19,7 +19,7 @@ diff --git a/tests/admin_inlines/tests.py b/tests/admin_inlines/tests.py
 @@ -967,6 +967,55 @@ def test_extra_inlines_are_not_shown(self):
  class TestVerboseNameInlineForms(TestDataMixin, TestCase):
      factory = RequestFactory()
- 
+
 +    def test_verbose_name_inline(self):
 +        class NonVerboseProfileInline(TabularInline):
 +            model = Profile

@@ -19,7 +19,7 @@ diff --git a/tests/utils_tests/test_lazyobject.py b/tests/utils_tests/test_lazyo
 @@ -317,6 +317,17 @@ def test_repr(self):
          self.assertIsInstance(obj._wrapped, int)
          self.assertEqual(repr(obj), "<SimpleLazyObject: 42>")
- 
+
 +    def test_add(self):
 +        obj1 = self.lazy_wrap(1)
 +        self.assertEqual(obj1 + 1, 2)

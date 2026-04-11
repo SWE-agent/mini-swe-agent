@@ -22,13 +22,13 @@ diff --git a/pvlib/tests/test_pvsystem.py b/pvlib/tests/test_pvsystem.py
      assert pv_system.arrays == (array_one, array_two)
 -    with pytest.raises(TypeError):
 -        pvsystem.PVSystem(arrays=array_one)
- 
- 
+
+
  def test_PVSystem_get_aoi():
 @@ -2362,6 +2360,14 @@ def test_PVSystem_at_least_one_array():
          pvsystem.PVSystem(arrays=[])
- 
- 
+
+
 +def test_PVSystem_single_array():
 +    # GH 1831
 +    single_array = pvsystem.Array(pvsystem.FixedMount())

@@ -164,7 +164,7 @@ index c1c06d893..c46ae43cc 100644
 --- a/pydicom/filewriter.py
 +++ b/pydicom/filewriter.py
 @@ -272,7 +272,12 @@ def write_numbers(fp: DicomIO, elem: DataElement, struct_format: str) -> None:
- 
+
  def write_OBvalue(fp: DicomIO, elem: DataElement) -> None:
      """Write a data_element with VR of 'other byte' (OB)."""
 -    fp.write(cast(bytes, elem.value))
@@ -174,8 +174,8 @@ index c1c06d893..c46ae43cc 100644
 +        fp.write(b''.join(value))
 +    else:
 +        fp.write(cast(bytes, value))
- 
- 
+
+
  def write_OWvalue(fp: DicomIO, elem: DataElement) -> None:
 @@ -281,7 +286,12 @@ def write_OWvalue(fp: DicomIO, elem: DataElement) -> None:
      Note: This **does not currently do the byte swapping** for Endian state.
@@ -188,8 +188,8 @@ index c1c06d893..c46ae43cc 100644
 +        fp.write(b''.join(value))
 +    else:
 +        fp.write(cast(bytes, value))
- 
- 
+
+
  def write_UI(fp: DicomIO, elem: DataElement) -> None:
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

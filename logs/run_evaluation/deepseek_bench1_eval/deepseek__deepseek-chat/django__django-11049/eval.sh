@@ -27,8 +27,8 @@ diff --git a/tests/model_fields/test_durationfield.py b/tests/model_fields/test_
 -            "It must be in [DD] [HH:[MM:]]ss[.uuuuuu] format."
 +            "It must be in [DD] [[HH:]MM:]ss[.uuuuuu] format."
          )
- 
- 
+
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

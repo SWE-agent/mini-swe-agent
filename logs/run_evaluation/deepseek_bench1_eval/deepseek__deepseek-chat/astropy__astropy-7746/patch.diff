@@ -4,7 +4,7 @@ index d3a06f2b31..356be4ad6d 100644
 +++ b/astropy/wcs/wcs.py
 @@ -1219,6 +1219,18 @@ reduce these to 2 dimensions using the naxis kwarg.
                      "Coordinate arrays are not broadcastable to each other")
- 
+
              xy = np.hstack([x.reshape((x.size, 1)) for x in axes])
 +            # Handle empty input arrays
 +            if xy.shape[0] == 0:
@@ -18,7 +18,7 @@ index d3a06f2b31..356be4ad6d 100644
 +                    return [np.array([]).reshape(axes[0].shape)
 +                            for i in range(self.naxis)]
 +
- 
+
              if ra_dec_order and sky == 'input':
                  xy = self._denormalize_sky(xy)
 @@ -1235,6 +1247,15 @@ reduce these to 2 dimensions using the naxis kwarg.
@@ -33,7 +33,7 @@ index d3a06f2b31..356be4ad6d 100644
 +                    return np.array([]).reshape((0, 2))
 +                else:
 +                    return np.array([]).reshape((0, self.naxis))
-+            
++
              if ra_dec_order and sky == 'input':
                  xy = self._denormalize_sky(xy)
              result = func(xy, origin)

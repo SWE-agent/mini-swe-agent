@@ -37,13 +37,13 @@ diff --git a/tests/view_tests/tests/test_debug.py b/tests/view_tests/tests/test_
 @@ -237,6 +239,11 @@ def test_template_encoding(self):
              technical_404_response(mock.MagicMock(), mock.Mock())
              m.assert_called_once_with(encoding='utf-8')
- 
+
 +    def test_technical_404_converter_raise_404(self):
 +        with mock.patch.object(IntConverter, 'to_python', side_effect=Http404):
 +            response = self.client.get('/path-post/1/')
 +            self.assertContains(response, 'Page not found', status_code=404)
 +
- 
+
  class DebugViewQueriesAllowedTests(SimpleTestCase):
      # May need a query to initialize MySQL connection
 

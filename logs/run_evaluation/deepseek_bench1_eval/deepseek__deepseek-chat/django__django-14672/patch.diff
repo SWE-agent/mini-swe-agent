@@ -10,4 +10,4 @@ index ccc2223a5f..65950590e2 100644
 +            make_hashable(self.through_fields),
              self.db_constraint,
          )
- 
+

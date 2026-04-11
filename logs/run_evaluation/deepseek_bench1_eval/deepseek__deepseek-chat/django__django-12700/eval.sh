@@ -23,7 +23,7 @@ diff --git a/tests/view_tests/tests/test_debug.py b/tests/view_tests/tests/test_
 @@ -1249,6 +1249,41 @@ def test_cleanse_setting_recurses_in_dictionary(self):
              {'login': 'cooper', 'password': reporter_filter.cleansed_substitute},
          )
- 
+
 +    def test_cleanse_setting_recurses_in_list_tuples(self):
 +        reporter_filter = SafeExceptionReporterFilter()
 +        initial = [

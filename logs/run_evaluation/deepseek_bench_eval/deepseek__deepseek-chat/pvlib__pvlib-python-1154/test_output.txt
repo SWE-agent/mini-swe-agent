@@ -159,7 +159,7 @@ index 6580030..ecb2507 100644
 +        sqrt_hb_over_ghi = np.sqrt(HB / ghi)
 +    sqrt_hb_over_ghi = np.where(np.isnan(sqrt_hb_over_ghi) | np.isinf(sqrt_hb_over_ghi), 0, sqrt_hb_over_ghi)
 +    term3 = 1 + sqrt_hb_over_ghi * (tools.sind(0.5 * surface_tilt) ** 3)
- 
+
      sky_diffuse = dhi * (AI * Rb + term1 * term2 * term3)
      sky_diffuse = np.maximum(sky_diffuse, 0)
 + source /opt/miniconda3/bin/activate

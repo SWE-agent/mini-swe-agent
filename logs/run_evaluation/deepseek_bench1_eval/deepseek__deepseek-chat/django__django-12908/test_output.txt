@@ -161,7 +161,7 @@ index cac3ccabc4..d46bf65c97 100644
 --- a/tests/fixtures/tests.py
 +++ b/tests/fixtures/tests.py
 @@ -33,7 +33,6 @@ class TestCaseFixtureLoadingTests(TestCase):
- 
+
      def test_class_fixtures(self):
          "Test case has installed 3 fixture objects"
 -        self.assertEqual(Article.objects.count(), 3)
@@ -169,7 +169,7 @@ index cac3ccabc4..d46bf65c97 100644
              '<Article: Django conquers world!>',
              '<Article: Copyright is fine the way it is>',
 @@ -721,7 +720,6 @@ class FixtureLoadingTests(DumpDataAssertMixin, TestCase):
- 
+
          with mock.patch('django.core.management.commands.loaddata.sys.stdin', open(fixture_json)):
              management.call_command('loaddata', '--format=json', '-', verbosity=0)
 -            self.assertEqual(Article.objects.count(), 2)
@@ -177,7 +177,7 @@ index cac3ccabc4..d46bf65c97 100644
                  '<Article: Time to reform copyright>',
                  '<Article: Poker has no place on ESPN>',
 @@ -729,7 +727,6 @@ class FixtureLoadingTests(DumpDataAssertMixin, TestCase):
- 
+
          with mock.patch('django.core.management.commands.loaddata.sys.stdin', open(fixture_xml)):
              management.call_command('loaddata', '--format=xml', '-', verbosity=0)
 -            self.assertEqual(Article.objects.count(), 3)
@@ -205,7 +205,7 @@ index 56d833b9f9..78afed1b90 100644
 --- a/tests/fixtures_model_package/tests.py
 +++ b/tests/fixtures_model_package/tests.py
 @@ -10,7 +10,6 @@ class SampleTestCase(TestCase):
- 
+
      def test_class_fixtures(self):
          "Test cases can load fixture objects into models defined in packages"
 -        self.assertEqual(Article.objects.count(), 3)

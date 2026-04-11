@@ -155,7 +155,7 @@ Author: gowthamk63 <gowthamk63@gmail.com>
 Date:   Wed Mar 11 15:14:50 2020 -0400
 
     Fixed #31123 -- Added --include-stale-apps option to the remove_stale_contenttypes management command.
-    
+
     Co-Authored-By: Javier Buzzi <buzzi.javier@gmail.com>
 
 diff --git a/django/contrib/contenttypes/management/commands/remove_stale_contenttypes.py b/django/contrib/contenttypes/management/commands/remove_stale_contenttypes.py
@@ -170,12 +170,12 @@ index 4d282d524e..b1f966b032 100644
  from django.core.management import BaseCommand
  from django.db import DEFAULT_DB_ALIAS, router
  from django.db.models.deletion import Collector
- 
+
 -from ...management import get_contenttypes_and_models
 -
- 
+
  class Command(BaseCommand):
- 
+
 @@ -18,18 +18,32 @@ class Command(BaseCommand):
              '--database', default=DEFAULT_DB_ALIAS,
              help='Nominates the database to use. Defaults to the "default" database.',
@@ -187,13 +187,13 @@ index 4d282d524e..b1f966b032 100644
 +                "installed apps that have been removed from INSTALLED_APPS."
 +            ),
 +        )
- 
+
      def handle(self, **options):
          db = options['database']
 +        include_stale_apps = options['include_stale_apps']
          interactive = options['interactive']
          verbosity = options['verbosity']
- 
+
 -        for app_config in apps.get_app_configs():
 -            content_types, app_models = get_contenttypes_and_models(app_config, db, ContentType)
 -            to_remove = [
@@ -220,9 +220,9 @@ index a5ef671e26..56358b4ef8 100644
 --- a/docs/ref/django-admin.txt
 +++ b/docs/ref/django-admin.txt
 @@ -1651,6 +1651,13 @@ the deletion.
- 
+
  Specifies the database to use. Defaults to ``default``.
- 
+
 +.. django-admin-option:: --include-stale-apps
 +
 +.. versionadded:: 3.1
@@ -232,7 +232,7 @@ index a5ef671e26..56358b4ef8 100644
 +
  ``django.contrib.gis``
  ----------------------
- 
+
 diff --git a/docs/releases/3.1.txt b/docs/releases/3.1.txt
 index efc57e8d01..77a71bbc43 100644
 --- a/docs/releases/3.1.txt
@@ -240,12 +240,12 @@ index efc57e8d01..77a71bbc43 100644
 @@ -99,7 +99,9 @@ Minor features
  :mod:`django.contrib.contenttypes`
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
 -* ...
 +* The new :option:`remove_stale_contenttypes --include-stale-apps` option
 +  allows removing stale content types from previously installed apps that have
 +  been removed from :setting:`INSTALLED_APPS`.
- 
+
  :mod:`django.contrib.gis`
  ~~~~~~~~~~~~~~~~~~~~~~~~~
 diff --git a/tests/contenttypes_tests/test_management.py b/tests/contenttypes_tests/test_management.py
@@ -254,8 +254,8 @@ index 3e375518c9..65842aa09e 100644
 +++ b/tests/contenttypes_tests/test_management.py
 @@ -10,10 +10,15 @@ from django.test.utils import captured_stdout
  from .models import ModelWithNullFKToSite, Post
- 
- 
+
+
 -@modify_settings(INSTALLED_APPS={'append': ['no_models']})
 +@modify_settings(INSTALLED_APPS={'append': ['empty_models', 'no_models']})
  class RemoveStaleContentTypesTests(TestCase):
@@ -267,13 +267,13 @@ index 3e375518c9..65842aa09e 100644
 +        'no_models',
 +        'django.contrib.contenttypes',
 +    ]
- 
+
      def setUp(self):
          self.before_count = ContentType.objects.count()
 @@ -65,9 +70,34 @@ class RemoveStaleContentTypesTests(TestCase):
              contenttypes_management.create_contenttypes(self.app_config, interactive=False, verbosity=0, apps=apps)
          self.assertEqual(ContentType.objects.count(), self.before_count + 1)
- 
+
 -    def test_contenttypes_removed_in_apps_without_models(self):
 -        ContentType.objects.create(app_label='no_models', model='Fake')
 +    @modify_settings(INSTALLED_APPS={'remove': ['empty_models']})

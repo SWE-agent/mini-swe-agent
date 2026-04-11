@@ -144,17 +144,17 @@ Author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 Date:   Thu Apr 20 10:38:46 2023 +0000
 
     Update hypothesis requirement from <6.72.1 to <6.72.2 (#4307)
-    
+
     Updates the requirements on [hypothesis](https://github.com/HypothesisWorks/hypothesis) to permit the latest version.
     - [Release notes](https://github.com/HypothesisWorks/hypothesis/releases)
     - [Commits](https://github.com/HypothesisWorks/hypothesis/compare/hypothesis-ruby-0.0.1...hypothesis-python-6.72.1)
-    
+
     ---
     updated-dependencies:
     - dependency-name: hypothesis
       dependency-type: direct:production
     ...
-    
+
     Signed-off-by: dependabot[bot] <support@github.com>
     Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
 
@@ -179,7 +179,7 @@ index 6ce23688..b52b8b8c 100644
 @@ -127,6 +127,13 @@ class RectilinearGrid(_vtk.vtkRectilinearGrid, Grid, RectilinearGridFilters):
          """Initialize the rectilinear grid."""
          super().__init__()
- 
+
 +        # Helper function to convert sequences to numpy arrays
 +        def _to_array(arr):
 +            """Convert array-like object to numpy array."""
@@ -200,7 +200,7 @@ index 6ce23688..b52b8b8c 100644
 +                self._from_arrays(_to_array(args[0]), None, None, check_duplicates)
              else:
                  raise TypeError(f'Type ({type(args[0])}) not understood by `RectilinearGrid`')
- 
+
          elif len(args) == 3 or len(args) == 2:
 -            arg0_is_arr = isinstance(args[0], np.ndarray)
 -            arg1_is_arr = isinstance(args[1], np.ndarray)
@@ -213,7 +213,7 @@ index 6ce23688..b52b8b8c 100644
              else:
 -                arg2_is_arr = False
 +                arg2_is_arr_like = False
- 
+
 -            if all([arg0_is_arr, arg1_is_arr, arg2_is_arr]):
 -                self._from_arrays(args[0], args[1], args[2], check_duplicates)
 -            elif all([arg0_is_arr, arg1_is_arr]):
@@ -224,7 +224,7 @@ index 6ce23688..b52b8b8c 100644
 +                self._from_arrays(_to_array(args[0]), _to_array(args[1]), None, check_duplicates)
              else:
                  raise TypeError("Arguments not understood by `RectilinearGrid`.")
- 
+
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3
 ++ . /opt/miniconda3/etc/profile.d/conda.sh

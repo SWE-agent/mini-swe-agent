@@ -14,13 +14,13 @@ index 302cd37d5f..d964e36fa2 100644
 +            # We need to handle this case by converting non-pickleable
 +            # iterables to lists.
 +            import collections.abc
-+            
++
 +            def _deepcopy_value(value, memo):
 +                """Deep copy a value, converting non-pickleable iterables to lists."""
 +                # Check if it's a Node instance
 +                if isinstance(value, Node):
 +                    return copy.deepcopy(value, memo)
-+                
++
 +                # Check if it's a sequence (list or tuple)
 +                if isinstance(value, (list, tuple)):
 +                    # Recursively copy elements
@@ -28,7 +28,7 @@ index 302cd37d5f..d964e36fa2 100644
 +                        return tuple(_deepcopy_value(item, memo) for item in value)
 +                    else:
 +                        return [_deepcopy_value(item, memo) for item in value]
-+                
++
 +                # Try normal deepcopy first
 +                try:
 +                    return copy.deepcopy(value, memo)
@@ -39,8 +39,8 @@ index 302cd37d5f..d964e36fa2 100644
 +                        return list(value)
 +                    # Re-raise for other errors
 +                    raise
-+            
++
 +            obj.children = _deepcopy_value(self.children, memodict)
          return obj
- 
+
      def __len__(self):

@@ -155,7 +155,7 @@ Author: Raffaele Salmaso <raffaele@salmaso.org>
 Date:   Tue Sep 22 23:05:42 2020 +0200
 
     Fixed #32034 -- Removed redundant get_app_config() call in AdminSite.app_index.
-    
+
     app_config.verbose_name is already in app_dict.
 
 diff --git a/django/contrib/admin/sites.py b/django/contrib/admin/sites.py
@@ -186,7 +186,7 @@ index 503f7f56fd..e9799a2d7d 100644
 -from django.db import router
 +from django.db import router, DatabaseError
  from django.db.transaction import atomic
- 
+
  # The prefix to put on the default database name when creating
 @@ -115,7 +115,12 @@ class BaseDatabaseCreation:
                              queryset = model._default_manager.using(

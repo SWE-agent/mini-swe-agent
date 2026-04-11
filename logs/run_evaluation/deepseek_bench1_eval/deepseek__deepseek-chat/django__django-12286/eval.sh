@@ -26,13 +26,13 @@ diff --git a/tests/check_framework/test_translation.py b/tests/check_framework/t
  )
 -from django.test import SimpleTestCase
 +from django.test import SimpleTestCase, override_settings
- 
- 
+
+
  class TranslationCheckTests(SimpleTestCase):
 @@ -75,12 +75,36 @@ def test_invalid_languages_bidi(self):
                      Error(msg % tag, id='translation.E003'),
                  ])
- 
+
 +    @override_settings(USE_I18N=True, LANGUAGES=[('en', 'English')])
      def test_inconsistent_language_settings(self):
          msg = (

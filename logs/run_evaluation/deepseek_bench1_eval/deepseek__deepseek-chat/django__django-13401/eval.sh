@@ -23,7 +23,7 @@ diff --git a/tests/model_fields/tests.py b/tests/model_fields/tests.py
 @@ -102,6 +102,36 @@ def test_deconstruct_nested_field(self):
          name, path, args, kwargs = Nested.Field().deconstruct()
          self.assertEqual(path, 'model_fields.tests.Nested.Field')
- 
+
 +    def test_abstract_inherited_fields(self):
 +        """Field instances from abstract models are not equal."""
 +        class AbstractModel(models.Model):
@@ -54,9 +54,9 @@ diff --git a/tests/model_fields/tests.py b/tests/model_fields/tests.py
 +        self.assertNotEqual(hash(abstract_model_field), hash(inherit2_model_field))
 +        self.assertNotEqual(hash(inherit1_model_field), hash(inherit2_model_field))
 +
- 
+
  class ChoicesTests(SimpleTestCase):
- 
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

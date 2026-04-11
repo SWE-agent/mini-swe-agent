@@ -12,6 +12,6 @@ index 84960d77e1..e6b479bc89 100644
 +        # This fixes issue where GROUP BY would use external_cols (columns
 +        # referenced by the subquery) instead of the subquery itself.
 +        return [self]
- 
- 
+
+
  class Exists(Subquery):

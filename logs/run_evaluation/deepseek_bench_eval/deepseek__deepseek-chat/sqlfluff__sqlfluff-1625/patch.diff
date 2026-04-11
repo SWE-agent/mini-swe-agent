@@ -10,7 +10,7 @@ index 838c6ce5d..ab2e607d2 100644
 +        """Lint and fix all table aliases - except for self-joins."""
          # A buffer to keep any violations.
          violation_buff = []
- 
+
 @@ -211,7 +211,7 @@ class Rule_L031(BaseRule):
              violation_buff.append(
                  LintResult(
@@ -31,5 +31,5 @@ index 490cf3602..b2a95d391 100644
 -L:   5 | P:  13 | L031 | Avoid using aliases in join condition
 +L:   5 | P:  13 | L031 | Avoid using table aliases
  """
- 
- 
+
+

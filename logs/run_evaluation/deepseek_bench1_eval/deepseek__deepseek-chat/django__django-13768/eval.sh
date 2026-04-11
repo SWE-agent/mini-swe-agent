@@ -54,7 +54,7 @@ diff --git a/tests/dispatch/tests.py b/tests/dispatch/tests.py
 +        finally:
 +            a_signal.disconnect(fails)
          self.assertTestIsClean(a_signal)
- 
+
      def test_disconnection(self):
 
 EOF_114329324912

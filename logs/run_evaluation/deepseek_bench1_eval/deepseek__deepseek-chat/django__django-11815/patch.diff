@@ -14,15 +14,15 @@ index 27b5cbd379..16c81fb01b 100644
 +        name_string, name_imports = serializer_factory(self.value.name).serialize()
 +        imports = {'import %s' % module, *name_imports}
 +        return "%s.%s[%s]" % (module, enum_class.__name__, name_string), imports
- 
- 
+
+
  class FloatSerializer(BaseSimpleSerializer):
 diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 index f97d76e9ad..39c9ab47b9 100644
 --- a/tests/migrations/test_writer.py
 +++ b/tests/migrations/test_writer.py
 @@ -267,15 +267,15 @@ class WriterTests(SimpleTestCase):
- 
+
          self.assertSerializedResultEqual(
              TextEnum.A,
 -            ("migrations.test_writer.TextEnum('a-value')", {'import migrations.test_writer'})
@@ -38,7 +38,7 @@ index f97d76e9ad..39c9ab47b9 100644
 -            ("migrations.test_writer.IntEnum(2)", {'import migrations.test_writer'})
 +            ("migrations.test_writer.IntEnum['B']", {'import migrations.test_writer'})
          )
- 
+
          field = models.CharField(default=TextEnum.B, choices=[(m.value, m) for m in TextEnum])
 @@ -283,27 +283,27 @@ class WriterTests(SimpleTestCase):
          self.assertEqual(
@@ -75,5 +75,5 @@ index f97d76e9ad..39c9ab47b9 100644
 +            "(2, migrations.test_writer.IntEnum['B'])], "
 +            "default=migrations.test_writer.IntEnum['A'])"
          )
- 
+
      def test_serialize_choices(self):

@@ -155,7 +155,7 @@ Author: Simon Charette <charettes@users.noreply.github.com>
 Date:   Mon May 27 16:00:14 2019 -0400
 
     Refs #30485 -- Avoided unnecessary instance checks in urlencode.
-    
+
     Given doseq defaults to False it should avoid an unnecessary instance
     check in most cases.
 
@@ -190,7 +190,7 @@ index 7ca0d68fae..f6e76e9787 100644
 -        if spec.has_location:
 -            origin = spec.loader.archive if isinstance(spec.loader, zipimporter) else spec.origin
 -            sys_file_paths.append(origin)
-+        
++
 +        spec = getattr(module, '__spec__', None)
 +        if spec is not None:
 +            # Modules could be loaded from places without a concrete location. If
@@ -202,7 +202,7 @@ index 7ca0d68fae..f6e76e9787 100644
 +            # Handle modules without __spec__ but with __file__
 +            # This includes __main__ when a script is executed
 +            sys_file_paths.append(module.__file__)
- 
+
      results = set()
      for filename in itertools.chain(sys_file_paths, extra_files):
 + source /opt/miniconda3/bin/activate

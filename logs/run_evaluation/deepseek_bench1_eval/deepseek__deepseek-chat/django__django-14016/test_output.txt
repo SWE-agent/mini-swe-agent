@@ -152,7 +152,7 @@ index 23cae64ee5..271f774fde 100644
 @@ -69,7 +69,7 @@
      {% endblock %}
      {% endif %}
- 
+
 -    <div class="main shifted" id="main">
 +    <div class="main" id="main">
        {% if not is_popup and is_nav_sidebar_enabled %}
@@ -163,12 +163,12 @@ index b3d4955b19..be1cfb5209 100644
 --- a/tests/admin_views/test_nav_sidebar.py
 +++ b/tests/admin_views/test_nav_sidebar.py
 @@ -39,6 +39,7 @@ class AdminSidebarTests(TestCase):
- 
+
      def test_sidebar_not_on_index(self):
          response = self.client.get(reverse('test_with_sidebar:index'))
 +        self.assertContains(response, '<div class="main" id="main">')
          self.assertNotContains(response, '<nav class="sticky" id="nav-sidebar">')
- 
+
      def test_sidebar_disabled(self):
 + git -c core.fileMode=false diff 1710cdbe79c90665046034fe1700933d038d90ad
 diff --git a/django/utils/tree.py b/django/utils/tree.py
@@ -187,13 +187,13 @@ index 302cd37d5f..d964e36fa2 100644
 +            # We need to handle this case by converting non-pickleable
 +            # iterables to lists.
 +            import collections.abc
-+            
++
 +            def _deepcopy_value(value, memo):
 +                """Deep copy a value, converting non-pickleable iterables to lists."""
 +                # Check if it's a Node instance
 +                if isinstance(value, Node):
 +                    return copy.deepcopy(value, memo)
-+                
++
 +                # Check if it's a sequence (list or tuple)
 +                if isinstance(value, (list, tuple)):
 +                    # Recursively copy elements
@@ -201,7 +201,7 @@ index 302cd37d5f..d964e36fa2 100644
 +                        return tuple(_deepcopy_value(item, memo) for item in value)
 +                    else:
 +                        return [_deepcopy_value(item, memo) for item in value]
-+                
++
 +                # Try normal deepcopy first
 +                try:
 +                    return copy.deepcopy(value, memo)
@@ -212,10 +212,10 @@ index 302cd37d5f..d964e36fa2 100644
 +                        return list(value)
 +                    # Re-raise for other errors
 +                    raise
-+            
++
 +            obj.children = _deepcopy_value(self.children, memodict)
          return obj
- 
+
      def __len__(self):
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

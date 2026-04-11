@@ -17,16 +17,16 @@ diff --git a/tests/test_marshalling.py b/tests/test_marshalling.py
 --- a/tests/test_marshalling.py
 +++ b/tests/test_marshalling.py
 @@ -2,7 +2,7 @@
- 
+
  import pytest
- 
+
 -from marshmallow import fields, Schema
 +from marshmallow import fields, Schema, validates
  from marshmallow.marshalling import Marshaller, Unmarshaller, missing
  from marshmallow.exceptions import ValidationError
- 
+
 @@ -283,3 +283,24 @@ class TestSchema(Schema):
- 
+
              assert result is None
              assert excinfo.value.messages == {'foo': {'_schema': ['Invalid input type.']}}
 +

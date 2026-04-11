@@ -3,7 +3,7 @@ index c957ffa564..e20d3d2b3a 100644
 --- a/django/db/models/query_utils.py
 +++ b/django/db/models/query_utils.py
 @@ -41,7 +41,11 @@ class Q(tree.Node):
- 
+
      def _combine(self, other, conn):
          if not isinstance(other, Q):
 -            raise TypeError(other)
@@ -12,7 +12,7 @@ index c957ffa564..e20d3d2b3a 100644
 +                other = Q(other)
 +            else:
 +                raise TypeError(other)
- 
+
          # If the other Q() is empty, ignore it and just use `self`.
          if not other:
 @@ -57,7 +61,6 @@ class Q(tree.Node):
@@ -22,7 +22,7 @@ index c957ffa564..e20d3d2b3a 100644
 -
      def __or__(self, other):
          return self._combine(other, self.OR)
- 
+
 @@ -87,7 +90,12 @@ class Q(tree.Node):
          args, kwargs = (), {}
          if len(self.children) == 1 and not isinstance(self.children[0], Q):

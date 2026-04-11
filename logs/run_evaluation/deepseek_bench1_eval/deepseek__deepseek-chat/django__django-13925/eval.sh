@@ -33,7 +33,7 @@ diff --git a/tests/check_framework/test_model_checks.py b/tests/check_framework/
      def test_auto_created_pk(self):
          class Model(models.Model):
              pass
- 
+
          self.assertEqual(checks.run_checks(app_configs=self.apps.get_app_configs()), [
 -            Warning(
 -                "Auto-created primary key used when not defining a primary "
@@ -89,7 +89,7 @@ diff --git a/tests/check_framework/test_model_checks.py b/tests/check_framework/
 +        self.assertEqual(checks.run_checks(app_configs=self.apps.get_app_configs()), [
 +            Warning(self.msg, hint=self.hint, obj=Parent, id='models.W042'),
          ])
- 
+
      @override_settings(DEFAULT_AUTO_FIELD='django.db.models.BigAutoField')
 
 EOF_114329324912

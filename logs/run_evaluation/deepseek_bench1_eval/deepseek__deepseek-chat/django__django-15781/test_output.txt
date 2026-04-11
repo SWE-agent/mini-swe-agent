@@ -163,7 +163,7 @@ index 79fbe57c8f..494cea245a 100644
 +++ b/django/contrib/postgres/apps.py
 @@ -11,7 +11,13 @@ from django.db.models.indexes import IndexExpression
  from django.utils.translation import gettext_lazy as _
- 
+
  from .indexes import OpClass
 -from .lookups import SearchLookup, TrigramSimilar, TrigramWordSimilar, Unaccent
 +from .lookups import (
@@ -175,7 +175,7 @@ index 79fbe57c8f..494cea245a 100644
 +)
  from .serializers import RangeSerializer
  from .signals import register_type_handlers
- 
+
 @@ -37,6 +43,8 @@ def uninstall_if_needed(setting, value, enter, **kwargs):
          TextField._unregister_lookup(TrigramSimilar)
          CharField._unregister_lookup(TrigramWordSimilar)
@@ -212,8 +212,8 @@ index d43163a40b..2b57156263 100644
 +++ b/django/contrib/postgres/search.py
 @@ -366,5 +366,14 @@ class TrigramWordDistance(TrigramWordBase):
      arg_joiner = " <<-> "
- 
- 
+
+
 +class TrigramStrictWordDistance(TrigramWordBase):
 +    function = ""
 +    arg_joiner = " <<<-> "
@@ -230,9 +230,9 @@ index 83f21e8dc1..3070227530 100644
 --- a/docs/ref/contrib/postgres/lookups.txt
 +++ b/docs/ref/contrib/postgres/lookups.txt
 @@ -7,6 +7,9 @@ Trigram similarity
- 
+
  .. fieldlookup:: trigram_similar
- 
+
 +``trigram_similar``
 +-------------------
 +
@@ -240,9 +240,9 @@ index 83f21e8dc1..3070227530 100644
  measuring the number of trigrams (three consecutive characters) shared, using a
  dedicated PostgreSQL extension. A trigram lookup is given an expression and
 @@ -27,6 +30,9 @@ The ``trigram_similar`` lookup can be used on
- 
+
  .. fieldlookup:: trigram_word_similar
- 
+
 +``trigram_word_similar``
 +------------------------
 +
@@ -252,7 +252,7 @@ index 83f21e8dc1..3070227530 100644
 @@ -46,6 +52,25 @@ The ``trigram_word_similar`` lookup can be used on
      >>> Sentence.objects.filter(name__trigram_word_similar='Middlesborough')
      ['<Sentence: Gumby rides on the path of Middlesbrough>']
- 
+
 +.. fieldlookup:: trigram_strict_word_similar
 +
 +``trigram_strict_word_similar``
@@ -273,7 +273,7 @@ index 83f21e8dc1..3070227530 100644
 +:class:`~django.db.models.CharField` and :class:`~django.db.models.TextField`.
 +
  .. _`pg_trgm extension`: https://www.postgresql.org/docs/current/pgtrgm.html
- 
+
  ``Unaccent``
 diff --git a/docs/ref/contrib/postgres/search.txt b/docs/ref/contrib/postgres/search.txt
 index e36f4028fe..2e2877a750 100644
@@ -281,7 +281,7 @@ index e36f4028fe..2e2877a750 100644
 +++ b/docs/ref/contrib/postgres/search.txt
 @@ -286,9 +286,9 @@ Trigram similarity
  ==================
- 
+
  Another approach to searching is trigram similarity. A trigram is a group of
 -three consecutive characters. In addition to the :lookup:`trigram_similar` and
 -:lookup:`trigram_word_similar` lookups, you can use a couple of other
@@ -289,13 +289,13 @@ index e36f4028fe..2e2877a750 100644
 +three consecutive characters. In addition to the :lookup:`trigram_similar`,
 +:lookup:`trigram_word_similar`, and :lookup:`trigram_strict_word_similar`
 +lookups, you can use a couple of other expressions.
- 
+
  To use them, you need to activate the `pg_trgm extension
  <https://www.postgresql.org/docs/current/pgtrgm.html>`_ on PostgreSQL. You can
 @@ -334,6 +334,18 @@ Usage example::
      ... ).filter(similarity__gt=0.3).order_by('-similarity')
      [<Author: Katy Stevens>]
- 
+
 +``TrigramStrictWordSimilarity``
 +-------------------------------
 +
@@ -310,7 +310,7 @@ index e36f4028fe..2e2877a750 100644
 +
  ``TrigramDistance``
  -------------------
- 
+
 @@ -371,3 +383,13 @@ Usage example::
      ...     distance=TrigramWordDistance(test, 'name'),
      ... ).filter(distance__lte=0.7).order_by('distance')
@@ -332,7 +332,7 @@ index d43d391408..124470cf5b 100644
 @@ -65,7 +65,12 @@ Minor features
  :mod:`django.contrib.postgres`
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
 -* ...
 +* The new :lookup:`trigram_strict_word_similar` lookup, and the
 +  :class:`TrigramStrictWordSimilarity()
@@ -340,7 +340,7 @@ index d43d391408..124470cf5b 100644
 +  :class:`TrigramStrictWordDistance()
 +  <django.contrib.postgres.search.TrigramStrictWordDistance>` expressions allow
 +  using trigram strict word similarity.
- 
+
  :mod:`django.contrib.redirects`
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 diff --git a/tests/postgres_tests/test_trigram.py b/tests/postgres_tests/test_trigram.py
@@ -379,13 +379,13 @@ index 6870e80737..2d7549fb4b 100644
 +            self.Model.objects.filter(field__trigram_strict_word_similar="Middle"),
 +            [],
 +        )
- 
+
      def test_trigram_similarity(self):
          search = "Bat sat on cat."
 @@ -75,6 +96,19 @@ class TrigramTest(PostgreSQLTestCase):
              ],
          )
- 
+
 +    def test_trigram_strict_word_similarity(self):
 +        search = "matt"
 +        self.assertSequenceEqual(
@@ -405,7 +405,7 @@ index 6870e80737..2d7549fb4b 100644
 @@ -104,6 +138,20 @@ class TrigramTest(PostgreSQLTestCase):
              ],
          )
- 
+
 +    def test_trigram_strict_word_distance(self):
 +        self.assertSequenceEqual(
 +            self.Model.objects.annotate(
@@ -420,7 +420,7 @@ index 6870e80737..2d7549fb4b 100644
 +            ],
 +        )
 +
- 
+
  class TrigramTextFieldTest(TrigramTest):
      """
 + git -c core.fileMode=false diff 8d160f154f0240a423e83ffe0690e472f837373c
@@ -438,7 +438,7 @@ index d37d43d5c5..092a0ac6d2 100644
  import sys
  from argparse import ArgumentParser, HelpFormatter
 @@ -129,6 +131,50 @@ class DjangoHelpFormatter(HelpFormatter):
- 
+
      def add_arguments(self, actions):
          super().add_arguments(self._reordered_actions(actions))
 +    def _fill_text(self, text, width, indent):
@@ -447,7 +447,7 @@ index d37d43d5c5..092a0ac6d2 100644
 +        """
 +        # Split the text into lines
 +        lines = text.splitlines()
-+        
++
 +        # Find the minimum indentation (excluding empty lines)
 +        non_empty_lines = [line for line in lines if line.strip()]
 +        if non_empty_lines:
@@ -455,7 +455,7 @@ index d37d43d5c5..092a0ac6d2 100644
 +            min_indent = min(len(line) - len(line.lstrip()) for line in non_empty_lines)
 +        else:
 +            min_indent = 0
-+        
++
 +        # Process each line
 +        result = []
 +        for line in lines:
@@ -463,17 +463,17 @@ index d37d43d5c5..092a0ac6d2 100644
 +                # Calculate this line's indentation relative to minimum
 +                line_indent = len(line) - len(line.lstrip())
 +                relative_indent = line_indent - min_indent
-+                
++
 +                # Remove the common minimum indentation
 +                if len(line) >= min_indent:
 +                    line = line[min_indent:]
-+                
++
 +                # Collapse multiple spaces within the line to a single space
 +                # but preserve the line structure
 +                line = re.sub(r'[ \t\f\v]+', ' ', line)
 +                # Remove trailing whitespace
 +                line = line.rstrip()
-+                
++
 +                # Wrap the line if it's too long
 +                # Add back the relative indentation
 +                actual_indent = indent + ' ' * relative_indent
@@ -483,10 +483,10 @@ index d37d43d5c5..092a0ac6d2 100644
 +                result.append(wrapped)
 +            else:  # Empty line - preserve as paragraph break
 +                result.append('')
-+        
++
 +        return '\n'.join(result)
- 
- 
+
+
  class OutputWrapper(TextIOBase):
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

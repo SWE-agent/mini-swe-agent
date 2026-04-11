@@ -3,7 +3,7 @@ index 187e14b1b7..cbdacd2c16 100644
 --- a/django/contrib/sessions/backends/base.py
 +++ b/django/contrib/sessions/backends/base.py
 @@ -132,8 +132,8 @@ class SessionBase:
- 
+
      def _legacy_decode(self, session_data):
          # RemovedInDjango40Warning: pre-Django 3.1 format will be invalid.
 -        encoded_data = base64.b64decode(session_data.encode('ascii'))

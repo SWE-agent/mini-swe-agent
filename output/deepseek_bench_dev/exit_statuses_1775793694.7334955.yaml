@@ -1,11 +1,11 @@
 instances_by_exit_status:
     Submitted:
-    - pylint-dev__astroid-1978
-    - pylint-dev__astroid-1196
-    - pylint-dev__astroid-1866
-    - pylint-dev__astroid-1268
+    - pylint-dev__asteroid-1978
+    - pylint-dev__asteroid-1196
+    - pylint-dev__asteroid-1866
+    - pylint-dev__asteroid-1268
     - pydicom__pydicom-1694
-    - pylint-dev__astroid-1333
+    - pylint-dev__asteroid-1333
     - pydicom__pydicom-1413
     - pydicom__pydicom-901
     - pydicom__pydicom-1139

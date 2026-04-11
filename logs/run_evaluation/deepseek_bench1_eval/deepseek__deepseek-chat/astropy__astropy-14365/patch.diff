@@ -12,7 +12,7 @@ index 83a4f004a..5324dc81c 100644
      if not line:
          return "comment"
 @@ -306,7 +306,7 @@ def _get_tables_from_qdp_file(qdp_file, input_colnames=None, delimiter=None):
- 
+
              values = []
              for v in line.split(delimiter):
 -                if v == "NO":

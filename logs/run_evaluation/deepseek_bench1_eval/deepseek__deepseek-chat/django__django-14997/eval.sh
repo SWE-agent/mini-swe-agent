@@ -22,12 +22,12 @@ diff --git a/tests/backends/test_ddl_references.py b/tests/backends/test_ddl_ref
  from django.db.models.indexes import IndexExpression
 +from django.db.models.sql import Query
  from django.test import SimpleTestCase, TransactionTestCase
- 
+
  from .models import Person
 @@ -229,6 +230,27 @@ def test_rename_table_references(self):
              str(self.expressions),
          )
- 
+
 +    def test_rename_table_references_without_alias(self):
 +        compiler = Query(Person, alias_cols=False).get_compiler(connection=connection)
 +        table = Person._meta.db_table
@@ -58,7 +58,7 @@ diff --git a/tests/migrations/test_operations.py b/tests/migrations/test_operati
 @@ -2106,6 +2106,25 @@ def test_remove_func_index(self):
          self.assertEqual(definition[1], [])
          self.assertEqual(definition[2], {'model_name': 'Pony', 'name': index_name})
- 
+
 +    @skipUnlessDBFeature('supports_expression_indexes')
 +    def test_alter_field_with_func_index(self):
 +        app_label = 'test_alfuncin'
@@ -84,7 +84,7 @@ diff --git a/tests/migrations/test_operations.py b/tests/migrations/test_operati
 @@ -2664,6 +2683,26 @@ def test_remove_covering_unique_constraint(self):
              'name': 'covering_pink_constraint_rm',
          })
- 
+
 +    def test_alter_field_with_func_unique_constraint(self):
 +        app_label = 'test_alfuncuc'
 +        constraint_name = f'{app_label}_pony_uq'

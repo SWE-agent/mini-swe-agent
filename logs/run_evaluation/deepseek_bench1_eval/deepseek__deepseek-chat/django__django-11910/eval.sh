@@ -23,7 +23,7 @@ diff --git a/tests/migrations/test_autodetector.py b/tests/migrations/test_autod
 @@ -932,6 +932,30 @@ def test_rename_foreign_object_fields(self):
              changes, 'app', 0, 1, model_name='bar', old_name='second', new_name='second_renamed',
          )
- 
+
 +    def test_rename_referenced_primary_key(self):
 +        before = [
 +            ModelState('app', 'Foo', [

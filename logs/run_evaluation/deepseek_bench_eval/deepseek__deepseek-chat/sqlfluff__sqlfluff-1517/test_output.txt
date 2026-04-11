@@ -288,9 +288,9 @@ index 39a350373..ccb5d608f 100644
                      if not match or not match.is_complete():
 -                        return MatchResult.from_unmatched(mutated_segments)
 +                        return MatchResult.from_unmatched(segments)
- 
+
                      # We have a complete match!
- 
+
 @@ -170,7 +170,7 @@ class Delimited(OneOf):
                              self.min_delimiters
                              and len(delimiters) < self.min_delimiters
@@ -315,7 +315,7 @@ index 39a350373..ccb5d608f 100644
                  if self.min_delimiters and len(delimiters) < self.min_delimiters:
 -                    return MatchResult.from_unmatched(mutated_segments)
 +                    return MatchResult.from_unmatched(segments)
- 
+
                  # We use the whitespace padded match to hoover up whitespace if enabled,
                  # and default to the longest matcher. We don't care which one matches.
 @@ -248,4 +248,4 @@ class Delimited(OneOf):
@@ -523,14 +523,14 @@ raw = 'select id from tbl;;', expected_message = 'Could not parse: ;'
         """Multiple semicolons should be properly handled."""
         lnt = Linter()
         parsed = lnt.parse_string(raw)
-    
+
         assert len(parsed.violations) == (1 if expected_message else 0)
         if expected_message:
             violation = parsed.violations[0]
             assert isinstance(violation, SQLParseError)
 >           assert violation.desc() == expected_message
 E           assert "Line 1, Posi...d from tbl;;'" == 'Could not parse: ;'
-E             
+E
 E             - Could not parse: ;
 E             + Line 1, Position 1: Found unparsable section: 'select id from tbl;;'
 
@@ -557,14 +557,14 @@ raw = 'select id from tbl;;;;;;', expected_message = 'Could not parse: ;;;;;'
         """Multiple semicolons should be properly handled."""
         lnt = Linter()
         parsed = lnt.parse_string(raw)
-    
+
         assert len(parsed.violations) == (1 if expected_message else 0)
         if expected_message:
             violation = parsed.violations[0]
             assert isinstance(violation, SQLParseError)
 >           assert violation.desc() == expected_message
 E           assert "Line 1, Posi...om tbl;;;;;;'" == 'Could not parse: ;;;;;'
-E             
+E
 E             - Could not parse: ;;;;;
 E             + Line 1, Position 1: Found unparsable section: 'select id from tbl;;;;;;'
 
@@ -592,14 +592,14 @@ expected_message = 'Could not parse: ;select id2 from tbl2;'
         """Multiple semicolons should be properly handled."""
         lnt = Linter()
         parsed = lnt.parse_string(raw)
-    
+
         assert len(parsed.violations) == (1 if expected_message else 0)
         if expected_message:
             violation = parsed.violations[0]
             assert isinstance(violation, SQLParseError)
 >           assert violation.desc() == expected_message
 E           assert "Line 1, Posi...from tbl2...'" == 'Could not pa...d2 from tbl2;'
-E             
+E
 E             - Could not parse: ;select id2 from tbl2;
 E             + Line 1, Position 1: Found unparsable section: 'select id from tbl;;select id2 from tbl2...'
 
@@ -1401,7 +1401,7 @@ Initial Structure:
 [L:  1, P: 17]      |        whitespace:                                           ' '
 [L:  1, P: 18]      |        identifier:                                           'min_test_id'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 1. Expanding: FunctionSegment: 'MIN (test.id)'
@@ -1431,7 +1431,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <FunctionNameSegment: ([L:  1, P:  1])>...
 INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <WhitespaceSegment: ([L:  1, P:  4]) ' '>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 2. Expanding: BracketedSegment: '(test.id)'
@@ -1457,7 +1457,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <SymbolSegment: ([L:  1, P:  5]) '('>...
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <Indent: ([L:  1, P:  6]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 3. Expanding: EphemeralSegment: 'test.id'
@@ -2193,7 +2193,7 @@ Initial Structure:
 [L:  1, P: 51]      |        whitespace:                                           ' '
 [L:  1, P: 52]      |        identifier:                                           'relative_abundance'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 1. Expanding: ExpressionSegment: '(count_18_24 * bits[OFFSET(0)]) / audien...'
@@ -2232,7 +2232,7 @@ Initial Structure:
 [L:  1, P: 35]      |    column_reference:
 [L:  1, P: 35]      |        identifier:                                           'audience_size'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 2. Expanding: BracketedSegment: '(count_18_24 * bits[OFFSET(0)])'
@@ -2267,7 +2267,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <SymbolSegment: ([L:  1, P:  1]) '('>...
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <Indent: ([L:  1, P:  2]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 3. Expanding: EphemeralSegment: 'count_18_24 * bits[OFFSET(0)]'
@@ -2548,7 +2548,7 @@ Initial Structure:
 [L:  1, P: 30]      |            [META] dedent:
 [L:  1, P: 30]      |            end_square_bracket:                               ']'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 4. Expanding: ExpressionSegment: 'count_18_24 * bits[OFFSET(0)]'
@@ -2587,7 +2587,7 @@ INFO     sqlfluff.parser:base.py:251 [PD:5] Skipping expansion of <WhitespaceSeg
 INFO     sqlfluff.parser:base.py:251 [PD:5] Skipping expansion of <SymbolSegment: ([L:  1, P: 14]) '*'>...
 INFO     sqlfluff.parser:base.py:251 [PD:5] Skipping expansion of <WhitespaceSegment: ([L:  1, P: 15]) ' '>...
 INFO     sqlfluff.parser:base.py:251 [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  1, P: 16])>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 5. Expanding: ArrayAccessorSegment: '[OFFSET(0)]'
@@ -2615,7 +2615,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:6] Skipping expansion of <SymbolSegment: ([L:  1, P: 20]) '['>...
 INFO     sqlfluff.parser:base.py:251 [PD:6] Skipping expansion of <Indent: ([L:  1, P: 21]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 6. Expanding: EphemeralSegment: 'OFFSET(0)'
@@ -2693,7 +2693,7 @@ Initial Structure:
 [L:  1, P: 29]      |                [META] dedent:
 [L:  1, P: 29]      |                end_bracket:                                  ')'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 7. Expanding: ExpressionSegment: 'OFFSET(0)'
@@ -2719,7 +2719,7 @@ Initial Structure:
 [L:  1, P: 29]      |            [META] dedent:
 [L:  1, P: 29]      |            end_bracket:                                      ')'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 8. Expanding: FunctionSegment: 'OFFSET(0)'
@@ -2745,7 +2745,7 @@ Initial Structure:
 [L:  1, P: 29]      |        end_bracket:                                          ')'
 
 INFO     sqlfluff.parser:base.py:251 [PD:9] Skipping expansion of <FunctionNameSegment: ([L:  1, P: 21])>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 9. Expanding: BracketedSegment: '(0)'
@@ -2769,7 +2769,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:10] Skipping expansion of <SymbolSegment: ([L:  1, P: 27]) '('>...
 INFO     sqlfluff.parser:base.py:251 [PD:10] Skipping expansion of <Indent: ([L:  1, P: 28]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 10. Expanding: EphemeralSegment: '0'
@@ -3280,7 +3280,7 @@ Initial Structure:
 [L:  1, P: 65]      |        whitespace:                                           ' '
 [L:  1, P: 66]      |        identifier:                                           'relative_abundance'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 1. Expanding: ExpressionSegment: '(count_18_24 * bits[OFFSET(0)] + count_2...'
@@ -3323,7 +3323,7 @@ Initial Structure:
 [L:  1, P: 49]      |    column_reference:
 [L:  1, P: 49]      |        identifier:                                           'audience_size'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 2. Expanding: BracketedSegment: '(count_18_24 * bits[OFFSET(0)] + count_2...'
@@ -3362,7 +3362,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <SymbolSegment: ([L:  1, P:  1]) '('>...
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <Indent: ([L:  1, P:  2]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 3. Expanding: EphemeralSegment: 'count_18_24 * bits[OFFSET(0)] + count_25...'
@@ -3731,7 +3731,7 @@ Initial Structure:
 [L:  1, P: 34]      |        column_reference:
 [L:  1, P: 34]      |            identifier:                                       'count_25_34'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 4. Expanding: ExpressionSegment: 'count_18_24 * bits[OFFSET(0)] + count_25...'
@@ -3775,7 +3775,7 @@ INFO     sqlfluff.parser:base.py:251 [PD:5] Skipping expansion of <WhitespaceSeg
 INFO     sqlfluff.parser:base.py:251 [PD:5] Skipping expansion of <SymbolSegment: ([L:  1, P: 14]) '*'>...
 INFO     sqlfluff.parser:base.py:251 [PD:5] Skipping expansion of <WhitespaceSegment: ([L:  1, P: 15]) ' '>...
 INFO     sqlfluff.parser:base.py:251 [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  1, P: 16])>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 5. Expanding: ArrayAccessorSegment: '[OFFSET(0)]'
@@ -3803,7 +3803,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:6] Skipping expansion of <SymbolSegment: ([L:  1, P: 20]) '['>...
 INFO     sqlfluff.parser:base.py:251 [PD:6] Skipping expansion of <Indent: ([L:  1, P: 21]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 6. Expanding: EphemeralSegment: 'OFFSET(0)'
@@ -3881,7 +3881,7 @@ Initial Structure:
 [L:  1, P: 29]      |                [META] dedent:
 [L:  1, P: 29]      |                end_bracket:                                  ')'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 7. Expanding: ExpressionSegment: 'OFFSET(0)'
@@ -3907,7 +3907,7 @@ Initial Structure:
 [L:  1, P: 29]      |            [META] dedent:
 [L:  1, P: 29]      |            end_bracket:                                      ')'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 8. Expanding: FunctionSegment: 'OFFSET(0)'
@@ -3933,7 +3933,7 @@ Initial Structure:
 [L:  1, P: 29]      |        end_bracket:                                          ')'
 
 INFO     sqlfluff.parser:base.py:251 [PD:9] Skipping expansion of <FunctionNameSegment: ([L:  1, P: 21])>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 9. Expanding: BracketedSegment: '(0)'
@@ -3957,7 +3957,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:10] Skipping expansion of <SymbolSegment: ([L:  1, P: 27]) '('>...
 INFO     sqlfluff.parser:base.py:251 [PD:10] Skipping expansion of <Indent: ([L:  1, P: 28]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 10. Expanding: EphemeralSegment: '0'
@@ -4144,7 +4144,7 @@ Initial Structure:
 [L:  1, P: 46]      |        whitespace:                                           ' '
 [L:  1, P: 47]      |        raw:                                                  '0.8'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 1. Expanding: SelectClauseSegment: 'SELECT t.val/t.id'
@@ -4190,7 +4190,7 @@ Initial Structure:
 INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <KeywordSegment: ([L:  1, P:  1]) 'SELECT'>...
 INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <Indent: ([L:  1, P:  7]) ''>...
 INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <WhitespaceSegment: ([L:  1, P:  7]) ' '>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 2. Expanding: SelectClauseElementSegment: 't.val/t.id'
@@ -4693,7 +4693,7 @@ Initial Structure:
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <ExpressionSegment: ([L:  1, P:  8])>...
 INFO     sqlfluff.parser:base.py:251 [PD:1] Skipping expansion of <WhitespaceSegment: ([L:  1, P: 18]) ' '>...
 INFO     sqlfluff.parser:base.py:251 [PD:1] Skipping expansion of <Dedent: ([L:  1, P: 19]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 1. Expanding: FromClauseSegment: 'FROM test'
@@ -4788,7 +4788,7 @@ INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <KeywordSegmen
 INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <WhitespaceSegment: ([L:  1, P: 23]) ' '>...
 INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <FromExpressionSegment: ([L:  1, P: 24])>...
 INFO     sqlfluff.parser:base.py:251 [PD:1] Skipping expansion of <WhitespaceSegment: ([L:  1, P: 28]) ' '>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 1. Expanding: WhereClauseSegment: 'WHERE id*1.0/id > 0.8'
@@ -5863,7 +5863,7 @@ Initial Structure:
 [L:  1, P: 18]      |            [META] dedent:
 [L:  1, P: 18]      |            end_bracket:                                      ')'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 1. Expanding: FunctionSegment: 'CAST(num AS INT64)'
@@ -5893,7 +5893,7 @@ Initial Structure:
 [L:  1, P: 18]      |        end_bracket:                                          ')'
 
 INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <FunctionNameSegment: ([L:  1, P:  1])>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 2. Expanding: BracketedSegment: '(num AS INT64)'
@@ -5921,7 +5921,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <SymbolSegment: ([L:  1, P:  5]) '('>...
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <Indent: ([L:  1, P:  6]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 3. Expanding: EphemeralSegment: 'num AS INT64'
@@ -6332,7 +6332,7 @@ Initial Structure:
 [L:  1, P: 25]      |            [META] dedent:
 [L:  1, P: 25]      |            end_bracket:                                      ')'
 
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 1. Expanding: FunctionSegment: 'CAST(num AS numeric(8,4))'
@@ -6368,7 +6368,7 @@ Initial Structure:
 [L:  1, P: 25]      |        end_bracket:                                          ')'
 
 INFO     sqlfluff.parser:base.py:251 [PD:2] Skipping expansion of <FunctionNameSegment: ([L:  1, P:  1])>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 2. Expanding: BracketedSegment: '(num AS numeric(8,4))'
@@ -6402,7 +6402,7 @@ Initial Structure:
 
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <SymbolSegment: ([L:  1, P:  5]) '('>...
 INFO     sqlfluff.parser:base.py:251 [PD:3] Skipping expansion of <Indent: ([L:  1, P:  6]) ''>...
-INFO     sqlfluff.parser:base.py:275 
+INFO     sqlfluff.parser:base.py:275
 ###
 #
 # Parse Depth 3. Expanding: EphemeralSegment: 'num AS numeric(8,4)'

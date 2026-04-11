@@ -19,7 +19,7 @@ diff --git a/tests/expressions/tests.py b/tests/expressions/tests.py
 @@ -537,6 +537,15 @@ def test_subquery_eq(self):
              qs.query.annotations['small_company'],
          )
- 
+
 +    def test_subquery_sql(self):
 +        employees = Employee.objects.all()
 +        employees_subquery = Subquery(employees)

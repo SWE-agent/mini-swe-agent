@@ -11,5 +11,5 @@ index 7bb3fa4706..1ed5f7c379 100644
 +            if isinstance(constraint, UniqueConstraint):
 +                errors.extend(cls._check_local_fields(constraint.fields, 'constraints'))
          return errors
- 
- 
+
+

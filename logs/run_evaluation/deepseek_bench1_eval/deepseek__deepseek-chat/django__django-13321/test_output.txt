@@ -155,7 +155,7 @@ Author: Mariusz Felisiak <felisiak.mariusz@gmail.com>
 Date:   Mon Aug 17 13:34:13 2020 +0200
 
     Refs #9061 -- Allowed GenericInlineFormSet to disable deleting extra forms.
-    
+
     Follow up to 162765d6c3182e36095d29543e21b44b908625fc.
 
 diff --git a/django/contrib/contenttypes/forms.py b/django/contrib/contenttypes/forms.py
@@ -170,7 +170,7 @@ index ce1c361b6c..92a58d49f8 100644
 +                                  absolute_max=None, can_delete_extra=True):
      """
      Return a ``GenericInlineFormSet`` for the given kwargs.
- 
+
 @@ -76,7 +76,7 @@ def generic_inlineformset_factory(model, form=ModelForm,
          formset=formset, extra=extra, can_delete=can_delete,
          can_order=can_order, fields=fields, exclude=exclude, max_num=max_num,
@@ -185,23 +185,23 @@ index 6cc0033132..28a2e40819 100644
 --- a/docs/ref/contrib/contenttypes.txt
 +++ b/docs/ref/contrib/contenttypes.txt
 @@ -466,7 +466,7 @@ The :mod:`django.contrib.contenttypes.forms` module provides:
- 
+
  .. class:: BaseGenericInlineFormSet
- 
+
 -.. function:: generic_inlineformset_factory(model, form=ModelForm, formset=BaseGenericInlineFormSet, ct_field="content_type", fk_field="object_id", fields=None, exclude=None, extra=3, can_order=False, can_delete=True, max_num=None, formfield_callback=None, validate_max=False, for_concrete_model=True, min_num=None, validate_min=False, absolute_max=None)
 +.. function:: generic_inlineformset_factory(model, form=ModelForm, formset=BaseGenericInlineFormSet, ct_field="content_type", fk_field="object_id", fields=None, exclude=None, extra=3, can_order=False, can_delete=True, max_num=None, formfield_callback=None, validate_max=False, for_concrete_model=True, min_num=None, validate_min=False, absolute_max=None, can_delete_extra=True)
- 
+
      Returns a ``GenericInlineFormSet`` using
      :func:`~django.forms.models.modelformset_factory`.
 @@ -483,7 +483,7 @@ The :mod:`django.contrib.contenttypes.forms` module provides:
- 
+
      .. versionchanged:: 3.2
- 
+
 -        The ``absolute_max`` argument was added.
 +        The ``absolute_max`` and ``can_delete_extra`` arguments were added.
- 
+
  .. module:: django.contrib.contenttypes.admin
- 
+
 diff --git a/docs/releases/3.2.txt b/docs/releases/3.2.txt
 index 1acea66cff..3a55edb591 100644
 --- a/docs/releases/3.2.txt
@@ -209,7 +209,7 @@ index 1acea66cff..3a55edb591 100644
 @@ -90,6 +90,11 @@ Minor features
    allows customizing the maximum number of forms that can be instantiated when
    supplying ``POST`` data. See :ref:`formsets-absolute-max` for more details.
- 
+
 +* The new ``can_delete_extra`` argument for
 +  :func:`~django.contrib.contenttypes.forms.generic_inlineformset_factory`
 +  allows removal of the option to delete extra forms. See
@@ -217,7 +217,7 @@ index 1acea66cff..3a55edb591 100644
 +
  :mod:`django.contrib.gis`
  ~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
 diff --git a/tests/generic_relations/test_forms.py b/tests/generic_relations/test_forms.py
 index 1a05681711..f5e76fd3f5 100644
 --- a/tests/generic_relations/test_forms.py
@@ -256,7 +256,7 @@ index 187e14b1b7..cbdacd2c16 100644
 --- a/django/contrib/sessions/backends/base.py
 +++ b/django/contrib/sessions/backends/base.py
 @@ -132,8 +132,8 @@ class SessionBase:
- 
+
      def _legacy_decode(self, session_data):
          # RemovedInDjango40Warning: pre-Django 3.1 format will be invalid.
 -        encoded_data = base64.b64decode(session_data.encode('ascii'))

@@ -16,4 +16,4 @@ index e4ddc8f017..32aa8c59d8 100644
 +        return display_for_value(value, empty_value_display)
      else:
          return display_for_value(value, empty_value_display)
- 
+

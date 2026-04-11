@@ -30,7 +30,7 @@ diff --git a/tests/auth_tests/test_validators.py b/tests/auth_tests/test_validat
          v = validators.UnicodeUsernameValidator()
          for valid in valid_usernames:
 @@ -250,7 +250,7 @@ def test_unicode_validator(self):
- 
+
      def test_ascii_validator(self):
          valid_usernames = ['glenn', 'GLEnN', 'jean-marc']
 -        invalid_usernames = ["o'connell", 'Éric', 'jean marc', "أحمد"]

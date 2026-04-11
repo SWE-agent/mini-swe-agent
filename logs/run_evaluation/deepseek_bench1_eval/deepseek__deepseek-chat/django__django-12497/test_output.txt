@@ -175,7 +175,7 @@ index b3db28fbf0..d7866c174e 100644
 +++ b/django/contrib/admin/static/admin/css/responsive.css
 @@ -354,6 +354,14 @@ input[type="submit"], button {
      }
- 
+
      .stacked .active.selector-add {
 +        background-position: 0 -40px;
 +    }
@@ -187,10 +187,10 @@ index b3db28fbf0..d7866c174e 100644
 +    .stacked .active.selector-add:focus, .stacked .active.selector-add:hover {
          background-position: 0 -60px;
      }
- 
+
 @@ -362,6 +370,14 @@ input[type="submit"], button {
      }
- 
+
      .stacked .active.selector-remove {
 +        background-position: 0 0;
 +    }
@@ -202,11 +202,11 @@ index b3db28fbf0..d7866c174e 100644
 +    .stacked .active.selector-remove:focus, .stacked .active.selector-remove:hover {
          background-position: 0 -20px;
      }
- 
+
 @@ -725,10 +741,18 @@ input[type="submit"], button {
          background-position: 0 0;
      }
- 
+
 +    .active.selector-remove:focus, .active.selector-remove:hover {
 +        background-position: 0 -20px;
 +    }
@@ -214,13 +214,13 @@ index b3db28fbf0..d7866c174e 100644
      .selector-add  {
          background-position: 0 -40px;
      }
- 
+
 +    .active.selector-add:focus, .active.selector-add:hover {
 +        background-position: 0 -60px;
 +    }
 +
      /* Inlines */
- 
+
      .inline-group[data-inline-type="stacked"] .inline-related {
 diff --git a/django/contrib/admin/static/admin/css/widgets.css b/django/contrib/admin/static/admin/css/widgets.css
 index 6dbc58e018..14ef12db94 100644
@@ -228,7 +228,7 @@ index 6dbc58e018..14ef12db94 100644
 +++ b/django/contrib/admin/static/admin/css/widgets.css
 @@ -211,6 +211,11 @@ a.active.selector-clearall:focus, a.active.selector-clearall:hover {
  }
- 
+
  .stacked .active.selector-add {
 +    background-position: 0 -32px;
 +    cursor: pointer;
@@ -240,7 +240,7 @@ index 6dbc58e018..14ef12db94 100644
  }
 @@ -221,6 +226,11 @@ a.active.selector-clearall:focus, a.active.selector-clearall:hover {
  }
- 
+
  .stacked .active.selector-remove {
 +    background-position: 0 0px;
 +    cursor: pointer;

@@ -3,7 +3,7 @@ index 69224c0287..7042fe7e17 100644
 --- a/django/db/models/base.py
 +++ b/django/db/models/base.py
 @@ -673,9 +673,9 @@ class Model(metaclass=ModelBase):
- 
+
      def _set_pk_val(self, value):
          for parent_link in self._meta.parents.values():
 -            if parent_link and parent_link != self._meta.pk:
@@ -11,9 +11,9 @@ index 69224c0287..7042fe7e17 100644
                  setattr(self, parent_link.target_field.attname, value)
 -        return setattr(self, self._meta.pk.attname, value)
 +        return setattr(self, self._meta.concrete_model._meta.pk.attname, value)
- 
+
      pk = property(_get_pk_val, _set_pk_val)
- 
+
 @@ -1565,8 +1565,8 @@ class Model(metaclass=ModelBase):
              and
              # Inherited PKs are checked in parents models.
@@ -36,7 +36,7 @@ index 6912b49498..f82d3a2be0 100644
 -                setattr(instance, model._meta.pk.attname, None)
 +                setattr(instance, model._meta.concrete_model._meta.pk.attname, None)
                  return count, {model._meta.label: count}
- 
+
          with transaction.atomic(using=self.using, savepoint=False):
 @@ -504,5 +504,5 @@ class Collector:
                      setattr(obj, field.attname, value)
@@ -59,7 +59,7 @@ index be0deb90b0..16cebfe117 100644
                      "Raw query must include the primary key"
                  )
 @@ -1963,7 +1963,7 @@ class QuerySet:
- 
+
      def _check_ordering_first_last_queryset_aggregation(self, method):
          if isinstance(self.query.group_by, tuple) and not any(
 -            col.output_field is self.model._meta.pk for col in self.query.group_by
@@ -69,7 +69,7 @@ index be0deb90b0..16cebfe117 100644
                  f"Cannot use QuerySet.{method}() on an unordered queryset performing "
 @@ -2596,7 +2596,7 @@ class RelatedPopulator:
              )
- 
+
          self.model_cls = klass_info["model"]
 -        self.pk_idx = self.init_list.index(self.model_cls._meta.pk.attname)
 +        self.pk_idx = self.init_list.index(self.model_cls._meta.concrete_model._meta.pk.attname)
@@ -88,7 +88,7 @@ index 33cc636b22..670437a475 100644
 +                        self.model._meta.concrete_model._meta.pk.get_col(inner_query.get_initial_alias()),
                      )
                  inner_query.default_cols = False
- 
+
 @@ -523,7 +523,7 @@ class Query(BaseExpression):
                  # field selected in the inner query, yet we must use a subquery.
                  # So, make sure at least one field is selected.

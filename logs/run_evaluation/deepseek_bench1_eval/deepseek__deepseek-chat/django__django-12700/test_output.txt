@@ -163,7 +163,7 @@ index 69a5fbf389..2099d14861 100644
 @@ -249,17 +249,25 @@ class BaseModelAdmin(metaclass=forms.MediaDefiningClass):
              return None
          db = kwargs.get('using')
- 
+
 -        autocomplete_fields = self.get_autocomplete_fields(request)
 -        if db_field.name in autocomplete_fields:
 -            kwargs['widget'] = AutocompleteSelectMultiple(db_field.remote_field, self.admin_site, using=db)
@@ -215,7 +215,7 @@ index 719d0d8095..b255d2188a 100644
 @@ -138,6 +140,21 @@ class AdminFormfieldForDBFieldTests(SimpleTestCase):
          self.assertEqual(f2.widget.attrs['maxlength'], '20')
          self.assertEqual(f2.widget.attrs['size'], '10')
- 
+
 +    def test_formfield_overrides_m2m_filter_widget(self):
 +        """
 +        The autocomplete_fields, raw_id_fields, filter_vertical, and
@@ -253,7 +253,7 @@ index e6b7d4d821..6edad556a2 100644
          except TypeError:
 @@ -100,7 +105,6 @@ class SafeExceptionReporterFilter:
              cleansed = CallableSettingWrapper(cleansed)
- 
+
          return cleansed
 -
      def get_safe_settings(self):

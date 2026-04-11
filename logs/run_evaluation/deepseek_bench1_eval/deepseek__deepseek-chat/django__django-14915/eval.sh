@@ -17,7 +17,7 @@ diff --git a/tests/model_forms/test_modelchoicefield.py b/tests/model_forms/test
 --- a/tests/model_forms/test_modelchoicefield.py
 +++ b/tests/model_forms/test_modelchoicefield.py
 @@ -2,7 +2,7 @@
- 
+
  from django import forms
  from django.core.exceptions import ValidationError
 -from django.forms.models import ModelChoiceIterator
@@ -28,7 +28,7 @@ diff --git a/tests/model_forms/test_modelchoicefield.py b/tests/model_forms/test
 @@ -341,6 +341,12 @@ class CustomModelMultipleChoiceField(forms.ModelMultipleChoiceField):
  </div>""" % (self.c1.pk, self.c2.pk, self.c3.pk),
          )
- 
+
 +    def test_choice_value_hash(self):
 +        value_1 = ModelChoiceIteratorValue(self.c1.pk, self.c1)
 +        value_2 = ModelChoiceIteratorValue(self.c2.pk, self.c2)

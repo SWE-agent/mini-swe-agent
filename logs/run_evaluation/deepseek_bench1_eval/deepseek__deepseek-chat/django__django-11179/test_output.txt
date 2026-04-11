@@ -166,7 +166,7 @@ index 92fe4affb9..3a462f1c4c 100644
                      count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)
 +                setattr(instance, model._meta.pk.attname, None)
                  return count, {model._meta.label: count}
- 
+
          with transaction.atomic(using=self.using, savepoint=False):
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

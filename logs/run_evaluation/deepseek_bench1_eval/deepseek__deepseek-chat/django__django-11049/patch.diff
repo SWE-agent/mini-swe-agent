@@ -10,10 +10,10 @@ index f32ce64629..6c857bc663 100644
 +                     "[DD] [[HH:]MM:]ss[.uuuuuu] format.")
      }
      description = _("Duration")
- 
+
 @@ -1631,9 +1631,15 @@ class DurationField(Field):
          return '' if val is None else duration_string(val)
- 
+
      def formfield(self, **kwargs):
 +        defaults = {}
 +        if self.help_text:
@@ -26,8 +26,8 @@ index f32ce64629..6c857bc663 100644
 -            **kwargs,
 +            **defaults,
          })
- 
- 
+
+
 diff --git a/tests/model_fields/test_durationfield.py b/tests/model_fields/test_durationfield.py
 index b73994f86a..f1c82ab8bd 100644
 --- a/tests/model_fields/test_durationfield.py
@@ -39,5 +39,5 @@ index b73994f86a..f1c82ab8bd 100644
 -            "It must be in [DD] [HH:[MM:]]ss[.uuuuuu] format."
 +            "It must be in [DD] [[HH:]MM:]ss[.uuuuuu] format."
          )
- 
- 
+
+

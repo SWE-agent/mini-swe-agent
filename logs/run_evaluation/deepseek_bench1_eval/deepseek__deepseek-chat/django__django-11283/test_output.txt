@@ -162,7 +162,7 @@ index ca70d81f41..4302e01fda 100644
 +++ b/tests/i18n/tests.py
 @@ -1801,7 +1801,7 @@ class NonDjangoLanguageTests(SimpleTestCase):
          self.assertEqual(gettext("year"), "reay")
- 
+
      @override_settings(USE_I18N=True)
 -    def test_check_for_langauge(self):
 +    def test_check_for_language(self):
@@ -176,7 +176,7 @@ index 1362bc2911..2bff4faefd 100644
 @@ -157,7 +157,7 @@ class SetLanguageTests(TestCase):
          self.assertEqual(response.url, '/')
          self.assertEqual(self.client.cookies[settings.LANGUAGE_COOKIE_NAME].value, lang_code)
- 
+
 -    def test_session_langauge_deprecation(self):
 +    def test_session_language_deprecation(self):
          msg = (
@@ -192,14 +192,14 @@ index 0e66649695..75662824f7 100644
          old_content_type = proxy_content_type if reverse else concrete_content_type
          new_content_type = concrete_content_type if reverse else proxy_content_type
 -        Permission.objects.filter(
-+        
++
 +        # Get permissions that would be updated
 +        permissions_to_update = Permission.objects.filter(
              permissions_query,
              content_type=old_content_type,
 -        ).update(content_type=new_content_type)
 +        )
-+        
++
 +        # Update permissions one by one, skipping those that would create duplicates
 +        for permission in permissions_to_update:
 +            # Check if a permission with the new content type and same codename exists
@@ -210,8 +210,8 @@ index 0e66649695..75662824f7 100644
 +                # No duplicate exists, safe to update
 +                permission.content_type = new_content_type
 +                permission.save()
- 
- 
+
+
  def revert_proxy_model_permissions(apps, schema_editor):
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

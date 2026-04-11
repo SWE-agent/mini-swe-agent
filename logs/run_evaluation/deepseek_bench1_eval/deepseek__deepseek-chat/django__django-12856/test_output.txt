@@ -181,8 +181,8 @@ index 7bb3fa4706..1ed5f7c379 100644
 +            if isinstance(constraint, UniqueConstraint):
 +                errors.extend(cls._check_local_fields(constraint.fields, 'constraints'))
          return errors
- 
- 
+
+
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3
 ++ . /opt/miniconda3/etc/profile.d/conda.sh

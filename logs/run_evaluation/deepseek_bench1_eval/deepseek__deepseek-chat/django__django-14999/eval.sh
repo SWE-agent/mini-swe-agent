@@ -19,7 +19,7 @@ diff --git a/tests/migrations/test_operations.py b/tests/migrations/test_operati
 @@ -793,6 +793,28 @@ def test_rename_model_with_m2m(self):
          self.assertEqual(Rider.objects.count(), 2)
          self.assertEqual(Pony._meta.get_field('riders').remote_field.through.objects.count(), 2)
- 
+
 +    def test_rename_model_with_db_table_noop(self):
 +        app_label = 'test_rmwdbtn'
 +        project_state = self.apply_operations(app_label, ProjectState(), operations=[

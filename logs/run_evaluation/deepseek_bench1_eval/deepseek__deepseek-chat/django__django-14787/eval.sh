@@ -19,7 +19,7 @@ diff --git a/tests/decorators/tests.py b/tests/decorators/tests.py
 @@ -425,6 +425,29 @@ class Test:
                  def __module__(cls):
                      return "tests"
- 
+
 +    def test_wrapper_assignments(self):
 +        """@method_decorator preserves wrapper assignments."""
 +        func_name = None
@@ -43,7 +43,7 @@ diff --git a/tests/decorators/tests.py b/tests/decorators/tests.py
 +        self.assertEqual(func_name, 'method')
 +        self.assertIsNotNone(func_module)
 +
- 
+
  class XFrameOptionsDecoratorsTests(TestCase):
      """
 

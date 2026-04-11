@@ -30,8 +30,8 @@ diff --git a/tests/check_framework/test_model_checks.py b/tests/check_framework/
 -    isolate_apps, modify_settings, override_system_checks,
 +    isolate_apps, modify_settings, override_settings, override_system_checks,
  )
- 
- 
+
+
 +class EmptyRouter:
 +    pass
 +
@@ -42,7 +42,7 @@ diff --git a/tests/check_framework/test_model_checks.py b/tests/check_framework/
 @@ -28,6 +32,30 @@ class Meta:
              )
          ])
- 
+
 +    @override_settings(DATABASE_ROUTERS=['check_framework.test_model_checks.EmptyRouter'])
 +    def test_collision_in_same_app_database_routers_installed(self):
 +        class Model1(models.Model):
@@ -73,7 +73,7 @@ diff --git a/tests/check_framework/test_model_checks.py b/tests/check_framework/
 @@ -50,6 +78,34 @@ class Meta:
              )
          ])
- 
+
 +    @modify_settings(INSTALLED_APPS={'append': 'basic'})
 +    @override_settings(DATABASE_ROUTERS=['check_framework.test_model_checks.EmptyRouter'])
 +    @isolate_apps('basic', 'check_framework', kwarg_name='apps')

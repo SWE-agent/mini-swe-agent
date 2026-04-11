@@ -171,7 +171,7 @@ index 83a4f004a..5324dc81c 100644
      if not line:
          return "comment"
 @@ -306,7 +306,7 @@ def _get_tables_from_qdp_file(qdp_file, input_colnames=None, delimiter=None):
- 
+
              values = []
              for v in line.split(delimiter):
 -                if v == "NO":
@@ -1282,15 +1282,15 @@ Platform: Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35
 
 Executable: /opt/miniconda3/envs/testbed/bin/python
 
-Full Python Version: 
-3.9.20 (main, Oct  3 2024, 07:27:41) 
+Full Python Version:
+3.9.20 (main, Oct  3 2024, 07:27:41)
 [GCC 11.2.0]
 
 encodings: sys: utf-8, locale: UTF-8, filesystem: utf-8
 byteorder: little
 float info: dig: 15, mant_dig: 15
 
-Package versions: 
+Package versions:
 Numpy: 1.25.2
 Scipy: not available
 Matplotlib: not available

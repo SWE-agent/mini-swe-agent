@@ -144,7 +144,7 @@ Author: Keryn Knight <keryn@kerynknight.com>
 Date:   Tue Jul 20 10:59:21 2021 +0100
 
     Fixed #32944 -- Avoided unnecessary WhereNode.add() calls.
-    
+
     Co-authored-by: Mariusz Felisiak <felisiak.mariusz@gmail.com>
 
 diff --git a/django/contrib/contenttypes/fields.py b/django/contrib/contenttypes/fields.py
@@ -157,8 +157,8 @@ index 4aa3ddaf98..35df584dbc 100644
  from django.db.models.query_utils import PathInfo
 +from django.db.models.sql import AND
  from django.utils.functional import cached_property
- 
- 
+
+
 @@ -468,10 +469,8 @@ class GenericRelation(ForeignObject):
      def get_extra_restriction(self, where_class, alias, remote_alias):
          field = self.remote_field.model._meta.get_field(self.content_type_field_name)
@@ -168,7 +168,7 @@ index 4aa3ddaf98..35df584dbc 100644
 -        cond.add(lookup, 'AND')
 -        return cond
 +        return where_class([lookup], connector=AND)
- 
+
      def bulk_related_objects(self, objs, using=DEFAULT_DB_ALIAS):
          """
 diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
@@ -189,23 +189,23 @@ index b3d92d786c..8837881579 100644
 @@ -1286,11 +1284,9 @@ class Query(BaseExpression):
          if check_filterable:
              self.check_filterable(value)
- 
+
 -        clause = self.where_class()
          if reffed_expression:
              condition = self.build_lookup(lookups, reffed_expression, value)
 -            clause.add(condition, AND)
 -            return clause, []
 +            return self.where_class([condition], connector=AND), []
- 
+
          opts = self.get_meta()
          alias = self.get_initial_alias()
 @@ -1333,7 +1329,7 @@ class Query(BaseExpression):
- 
+
          condition = self.build_lookup(lookups, col, value)
          lookup_type = condition.lookup_name
 -        clause.add(condition, AND)
 +        clause = self.where_class([condition], connector=AND)
- 
+
          require_outer = lookup_type == 'isnull' and condition.rhs is True and not current_negated
          if current_negated and (lookup_type != 'isnull' or condition.rhs is False) and condition.rhs is not None:
 + git -c core.fileMode=false diff 6a970a8b4600eb91be25f38caed0a52269d6303d
@@ -230,7 +230,7 @@ index 8837881579..005477ad75 100644
 +                self.deferred_loading = frozenset(all_fields), True
 +            else:
 +                self.deferred_loading = new_fields, False
- 
+
      def add_immediate_loading(self, field_names):
          """
 + source /opt/miniconda3/bin/activate

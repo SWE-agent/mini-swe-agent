@@ -23,7 +23,7 @@ diff --git a/tests/invalid_models_tests/test_relative_fields.py b/tests/invalid_
 @@ -128,7 +128,36 @@ class ThroughModel(models.Model):
              ),
          ])
- 
+
 -    def test_ambiguous_relationship_model(self):
 +    def test_ambiguous_relationship_model_from(self):
 +        class Person(models.Model):
@@ -55,7 +55,7 @@ diff --git a/tests/invalid_models_tests/test_relative_fields.py b/tests/invalid_
 +        ])
 +
 +    def test_ambiguous_relationship_model_to(self):
- 
+
          class Person(models.Model):
              pass
 @@ -152,7 +181,7 @@ class AmbiguousRelationship(models.Model):

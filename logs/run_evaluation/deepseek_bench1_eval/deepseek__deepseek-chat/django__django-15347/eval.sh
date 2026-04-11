@@ -19,7 +19,7 @@ diff --git a/tests/messages_tests/test_cookie.py b/tests/messages_tests/test_coo
 @@ -52,6 +52,12 @@ class CookieTests(BaseTests, SimpleTestCase):
      def stored_messages_count(self, storage, response):
          return stored_cookie_messages_count(storage, response)
- 
+
 +    def encode_decode(self, *args, **kwargs):
 +        storage = self.get_storage()
 +        message = Message(constants.DEBUG, *args, **kwargs)
@@ -46,7 +46,7 @@ diff --git a/tests/messages_tests/test_cookie.py b/tests/messages_tests/test_coo
 +            self.encode_decode('<b>Hello Django!</b>').message,
 +            SafeData,
 +        )
- 
+
 -        storage = self.get_storage()
 -        self.assertIsInstance(encode_decode(mark_safe("<b>Hello Django!</b>")), SafeData)
 -        self.assertNotIsInstance(encode_decode("<b>Hello Django!</b>"), SafeData)

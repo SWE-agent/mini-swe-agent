@@ -21,9 +21,9 @@ diff --git a/tests/invalid_models_tests/test_ordinary_fields.py b/tests/invalid_
 --- a/tests/invalid_models_tests/test_ordinary_fields.py
 +++ b/tests/invalid_models_tests/test_ordinary_fields.py
 @@ -304,6 +304,32 @@ class Model(models.Model):
- 
+
          self.assertEqual(Model._meta.get_field('field').check(), [])
- 
+
 +    def test_choices_in_max_length(self):
 +        class Model(models.Model):
 +            field = models.CharField(

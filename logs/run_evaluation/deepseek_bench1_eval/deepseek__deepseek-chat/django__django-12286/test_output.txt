@@ -166,7 +166,7 @@ index baa0c875b2..a375f6ba1d 100644
  import inspect
 -from bisect import bisect
  from collections import defaultdict
- 
+
  from django.apps import apps
 @@ -271,9 +271,9 @@ class Options:
          if private:
@@ -178,7 +178,7 @@ index baa0c875b2..a375f6ba1d 100644
 -            self.local_fields.insert(bisect(self.local_fields, field), field)
 +            bisect.insort(self.local_fields, field)
              self.setup_pk(field)
- 
+
          # If the field being added is a relation to another known field,
 + git -c core.fileMode=false diff 979f61abd322507aafced9627702362e541ec34e
 diff --git a/django/core/checks/translation.py b/django/core/checks/translation.py
@@ -192,11 +192,11 @@ index 138ed07ff8..c5cdb3749d 100644
 -    if settings.LANGUAGE_CODE not in available_tags:
 -        return [E004]
 -    return []
-+    
++
 +    # If LANGUAGE_CODE is directly in available_tags, it's valid
 +    if settings.LANGUAGE_CODE in available_tags:
 +        return []
-+    
++
 +    # Check LANG_INFO fallbacks if available
 +    try:
 +        from django.conf.locale import LANG_INFO
@@ -206,7 +206,7 @@ index 138ed07ff8..c5cdb3749d 100644
 +                    return []
 +    except ImportError:
 +        pass
-+    
++
 +    # Check base language
 +    # Get the base language (e.g., 'de' from 'de-at', 'sr' from 'sr@latin')
 +    lang_code = settings.LANGUAGE_CODE
@@ -219,12 +219,12 @@ index 138ed07ff8..c5cdb3749d 100644
 +    base_language = first_part
 +    if base_language in available_tags:
 +        return []
-+    
++
 +    # Check for country variants (e.g., 'fr-ca' when 'fr-fr' is available)
 +    for available_lang_code, _ in settings.LANGUAGES:
 +        if available_lang_code.startswith(base_language + '-'):
 +            return []
-+    
++
 +    return [E004]
 \ No newline at end of file
 + source /opt/miniconda3/bin/activate

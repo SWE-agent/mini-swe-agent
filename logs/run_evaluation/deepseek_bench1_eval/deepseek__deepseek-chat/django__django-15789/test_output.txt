@@ -144,7 +144,7 @@ Author: Mehrdad <mhrddmoradii@gmail.com>
 Date:   Fri Jun 24 14:46:34 2022 -0400
 
     Refs #33697 -- Used django.utils.http.parse_header_parameters() for parsing boundary streams.
-    
+
     This also removes unused parse_header() and _parse_header_params()
     helpers in django.http.multipartparser.
 
@@ -157,7 +157,7 @@ index 73ef074744..b3e0925a42 100644
  import collections
  import html
 -from urllib.parse import unquote
- 
+
  from django.conf import settings
  from django.core.exceptions import (
 @@ -675,8 +674,9 @@ def parse_boundary_stream(stream, max_header_size):
@@ -170,7 +170,7 @@ index 73ef074744..b3e0925a42 100644
 +            params = {k: v.encode() for k, v in params.items()}
          except ValueError:  # Invalid header.
              continue
- 
+
 @@ -703,50 +703,3 @@ class Parser:
          for sub_stream in boundarystream:
              # Iterate over each part
@@ -272,7 +272,7 @@ index 44c54d908e..c6d76aa4c9 100644
 -    parse_header,
  )
  from django.test import SimpleTestCase, TestCase, client, override_settings
- 
+
 @@ -906,47 +905,3 @@ class MultiParserTests(SimpleTestCase):
          for file_name in CANDIDATE_INVALID_FILE_NAMES:
              with self.subTest(file_name=file_name):
@@ -374,8 +374,8 @@ index d0bc97be80..488b7119ab 100644
 +++ b/django/utils/html.py
 @@ -59,15 +59,17 @@ _json_script_escapes = {
  }
- 
- 
+
+
 -def json_script(value, element_id=None):
 +def json_script(value, element_id=None, encoder=None):
      """
@@ -387,7 +387,7 @@ index d0bc97be80..488b7119ab 100644
 +    if encoder is None:
 +        from django.core.serializers.json import DjangoJSONEncoder
 +        encoder = DjangoJSONEncoder
- 
+
 -    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)
 +    json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)
      if element_id:

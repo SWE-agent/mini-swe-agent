@@ -24,7 +24,7 @@ index 4c27fce605..b57b175afa 100644
 +                    relative_url = url[1:] if url.startswith('/') else url
 +                    url = urljoin(script_prefix, relative_url)
 +        return url
- 
+
      def _datetime_from_timestamp(self, ts):
          """
 diff --git a/django/templatetags/static.py b/django/templatetags/static.py
@@ -32,7 +32,7 @@ index 39712aaba0..31f4e3ea7d 100644
 --- a/django/templatetags/static.py
 +++ b/django/templatetags/static.py
 @@ -48,12 +48,21 @@ class PrefixNode(template.Node):
- 
+
      def render(self, context):
          prefix = self.handle_simple(self.name)
 +        # Prepend script prefix for consistency with Django's URL handling
@@ -56,7 +56,7 @@ index 39712aaba0..31f4e3ea7d 100644
  def get_static_prefix(parser, token):
      """
 @@ -100,7 +109,19 @@ class StaticNode(template.Node):
- 
+
      def url(self, context):
          path = self.path.resolve(context)
 -        return self.handle_simple(path)
@@ -73,7 +73,7 @@ index 39712aaba0..31f4e3ea7d 100644
 +                relative_url = url[1:] if url.startswith('/') else url
 +                url = urljoin(script_prefix, relative_url)
 +        return url
- 
+
      def render(self, context):
          url = self.url(context)
 @@ -164,4 +185,16 @@ def static(path):

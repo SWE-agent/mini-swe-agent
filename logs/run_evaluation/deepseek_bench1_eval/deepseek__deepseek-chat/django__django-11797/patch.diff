@@ -22,11 +22,11 @@ index 8e55bd092d..1be2ba3252 100644
 --- a/django/db/models/sql/query.py
 +++ b/django/db/models/sql/query.py
 @@ -243,7 +243,7 @@ class Query(BaseExpression):
- 
+
      @property
      def has_select_fields(self):
 -        return bool(self.select or self.annotation_select_mask or self.extra_select_mask)
 +        return bool(self.select or self.annotation_select or self.annotation_select_mask or self.extra_select_mask)
- 
+
      @cached_property
      def base_table(self):

@@ -11,6 +11,6 @@ index 991568f..8199885 100644
          iterlimit = 1 + np.nanmax(
 -            np.trunc(np.log(atol / (df['VH'] - df['VL'])) / np.log(phim1)))
 +            np.trunc(np.log(atol / safe_diff) / np.log(phim1)))
- 
+
      while not converged and (iterations <= iterlimit):
- 
+

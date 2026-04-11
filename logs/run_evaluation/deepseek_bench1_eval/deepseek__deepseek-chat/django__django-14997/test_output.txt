@@ -150,15 +150,15 @@ index 7f6762909a..be7e2a8469 100644
 --- a/docs/ref/models/fields.txt
 +++ b/docs/ref/models/fields.txt
 @@ -573,8 +573,8 @@ case it can't be included in a :class:`~django.forms.ModelForm`.
- 
+
  .. attribute:: BinaryField.max_length
- 
+
 -    The maximum length (in characters) of the field. The maximum length is
 -    enforced in Django's validation using
 +    The maximum length (in bytes) of the field. The maximum length is enforced
 +    in Django's validation using
      :class:`~django.core.validators.MaxLengthValidator`.
- 
+
  .. admonition:: Abusing ``BinaryField``
 + git -c core.fileMode=false diff 0d4e575c96d408e0efb4dfd0cbfc864219776950
 diff --git a/django/db/backends/ddl_references.py b/django/db/backends/ddl_references.py
@@ -172,7 +172,7 @@ index c06386a2fa..b07c8acb52 100644
 -        columns = [col.target.column for col in self.compiler.query._gen_cols([self.expressions])]
 +        columns = [col.target.column for col in self.compiler.query._gen_cols([self.expressions]) if hasattr(col, "target") and hasattr(col.target, "column")]
          super().__init__(table, columns)
- 
+
      def rename_table_references(self, old_table, new_table):
 @@ -215,7 +215,8 @@ class Expressions(TableColumns):
          expressions = deepcopy(self.expressions)
@@ -183,7 +183,7 @@ index c06386a2fa..b07c8acb52 100644
 +                col.alias = None  # SQLite doesn\'t allow table-qualified column names in indexes
          self.expressions = expressions
          super().rename_table_references(old_table, new_table)
- 
+
 @@ -225,9 +226,10 @@ class Expressions(TableColumns):
          expressions = deepcopy(self.expressions)
          self.columns = []
@@ -195,7 +195,7 @@ index c06386a2fa..b07c8acb52 100644
 +            if hasattr(col, "target") and hasattr(col.target, "column"):
 +                self.columns.append(col.target.column)
          self.expressions = expressions
- 
+
      def __str__(self):
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

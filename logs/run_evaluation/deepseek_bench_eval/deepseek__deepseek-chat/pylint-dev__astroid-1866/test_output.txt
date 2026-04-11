@@ -157,13 +157,13 @@ index af1ddf4d..6c01bead 100644
 +        value = helpers.safe_infer(node.func.expr)
      else:
          value = node.func.expr
- 
+
 +    # Check if value is a Const node with a string value
 +    if not isinstance(value, nodes.Const) or not isinstance(value.value, str):
 +        return iter([util.Uninferable])
-+    
++
      format_template = value.value
- 
+
      # Get the positional arguments passed
 @@ -942,7 +946,7 @@ def _infer_str_format_call(
      ]
@@ -171,7 +171,7 @@ index af1ddf4d..6c01bead 100644
          return iter([util.Uninferable])
 -    pos_values: list[str] = [i.value for i in inferred_positional]
 +    pos_values = [i.value for i in inferred_positional]
- 
+
      # Get the keyword arguments passed
      inferred_keyword = {
 @@ -950,12 +954,15 @@ def _infer_str_format_call(
@@ -180,7 +180,7 @@ index af1ddf4d..6c01bead 100644
          return iter([util.Uninferable])
 -    keyword_values: dict[str, str] = {k: v.value for k, v in inferred_keyword.items()}
 +    keyword_values = {k: v.value for k, v in inferred_keyword.items()}
- 
+
      try:
          formatted_string = format_template.format(*pos_values, **keyword_values)
 -    except (IndexError, KeyError):
@@ -190,7 +190,7 @@ index af1ddf4d..6c01bead 100644
 +        # AttributeError can happen if format_template is not a string
 +        # ValueError can happen for other format errors
          return iter([util.Uninferable])
- 
+
      return iter([nodes.const_factory(formatted_string)])
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

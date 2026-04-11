@@ -150,14 +150,14 @@ index d33c7c281..1196a738b 100644
 --- a/src/sqlfluff/rules/L041.py
 +++ b/src/sqlfluff/rules/L041.py
 @@ -10,7 +10,7 @@ from sqlfluff.core.rules.functional import sp
- 
+
  @document_fix_compatible
  class Rule_L041(BaseRule):
 -    """``SELECT`` modifiers (e.g.``DISTINCT``) must be on the same line as ``SELECT``.
 +    """``SELECT`` modifiers (e.g. ``DISTINCT``) must be on the same line as ``SELECT``.
- 
+
      | **Anti-pattern**
- 
+
 diff --git a/src/sqlfluff/rules/L043.py b/src/sqlfluff/rules/L043.py
 index 7cbeadd7b..13cf2a96f 100644
 --- a/src/sqlfluff/rules/L043.py
@@ -165,26 +165,26 @@ index 7cbeadd7b..13cf2a96f 100644
 @@ -30,7 +30,7 @@ class Rule_L043(BaseRule):
              end as is_fab
          from fancy_table
- 
+
 -        -- This rule can also simplify ``CASE`` statements
 +        -- This rule can also simplify CASE statements
          -- that aim to fill NULL values.
- 
+
          select
 @@ -60,13 +60,13 @@ class Rule_L043(BaseRule):
              coalesce(fab > 0, false) as is_fab
          from fancy_table
- 
+
 -        -- To fill ``NULL`` values.
 +        -- To fill NULL values.
- 
+
          select
              coalesce(fab, 0) as fab_clean
          from fancy_table
- 
+
 -        -- ``NULL`` filling ``NULL``.
 +        -- NULL filling NULL.
- 
+
          select fab as fab_clean
          from fancy_table
 diff --git a/src/sqlfluff/rules/L047.py b/src/sqlfluff/rules/L047.py
@@ -193,12 +193,12 @@ index 98c94e64e..0db6f80fe 100644
 +++ b/src/sqlfluff/rules/L047.py
 @@ -31,7 +31,7 @@ class Rule_L047(BaseRule):
      So by default, SQLFluff enforces the consistent use of ``COUNT(*)``.
- 
+
      If the SQL engine you work with, or your team, prefers ``COUNT(1)`` or
 -    ``COUNT(0)``cover ``COUNT(*)``, you can configure this rule to consistently
 +    ``COUNT(0)`` over ``COUNT(*)``, you can configure this rule to consistently
      enforce your preference.
- 
+
      .. _ANSI-92: http://msdn.microsoft.com/en-us/library/ms175997.aspx
 diff --git a/src/sqlfluff/rules/L056.py b/src/sqlfluff/rules/L056.py
 index 4e0057832..a2975e24c 100644
@@ -207,11 +207,11 @@ index 4e0057832..a2975e24c 100644
 @@ -37,7 +37,7 @@ class Rule_L056(BaseRule):
              CaseOutput
          FROM table1
- 
+
 -        -- Alternatively prefix with ``USP_`` to
 +        -- Alternatively prefix with USP_ to
          -- indicate a user-defined stored procedure.
- 
+
          CREATE PROCEDURE dbo.usp_pull_data
 + git -c core.fileMode=false diff f1dba0e1dd764ae72d67c3d5e1471cf14d3db030
 diff --git a/src/sqlfluff/rules/L060.py b/src/sqlfluff/rules/L060.py
@@ -220,18 +220,18 @@ index 836941edc..072509b75 100644
 +++ b/src/sqlfluff/rules/L060.py
 @@ -44,7 +44,8 @@ class Rule_L060(BaseRule):
              return None
- 
+
          # Only care if the function is ``IFNULL`` or ``NVL``.
 -        if context.segment.raw_upper not in {"IFNULL", "NVL"}:
 +        raw_upper = context.segment.raw_upper
 +        if raw_upper not in {"IFNULL", "NVL"}:
              return None
- 
+
          # Create fix to replace ``IFNULL`` or ``NVL`` with ``COALESCE``.
 @@ -59,4 +60,7 @@ class Rule_L060(BaseRule):
              ],
          )
- 
+
 -        return LintResult(context.segment, [fix])
 +        # Create specific error message
 +        description = f"Use 'COALESCE' instead of '{raw_upper}'."

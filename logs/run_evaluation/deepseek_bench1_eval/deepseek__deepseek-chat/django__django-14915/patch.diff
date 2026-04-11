@@ -5,10 +5,10 @@ index 5dcf923c12..bc7e6959e7 100644
 @@ -1171,6 +1171,9 @@ class ModelChoiceIteratorValue:
              other = other.value
          return self.value == other
- 
+
 +    def __hash__(self):
 +        return hash(self.value)
 +
- 
+
  class ModelChoiceIterator:
      def __init__(self, field):

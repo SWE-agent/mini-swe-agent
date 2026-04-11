@@ -167,7 +167,7 @@ index d610dc86f0..9930101cea 100644
  import copy
  import datetime
 @@ -790,6 +791,8 @@ class Field(RegisterLookupMixin):
- 
+
      def get_prep_value(self, value):
          """Perform preliminary non-db specific value checks and conversions."""
 +        if isinstance(value, enum.Enum):
@@ -177,7 +177,7 @@ index d610dc86f0..9930101cea 100644
          return value
 @@ -931,6 +934,8 @@ class BooleanField(Field):
          return "BooleanField"
- 
+
      def to_python(self, value):
 +        if isinstance(value, enum.Enum):
 +            return value.value
@@ -186,7 +186,7 @@ index d610dc86f0..9930101cea 100644
          if value in (True, False):
 @@ -1008,6 +1013,8 @@ class CharField(Field):
          return "CharField"
- 
+
      def to_python(self, value):
 +        if isinstance(value, enum.Enum):
 +            return value.value
@@ -195,7 +195,7 @@ index d610dc86f0..9930101cea 100644
          return str(value)
 @@ -1481,6 +1488,8 @@ class DecimalField(Field):
          return "DecimalField"
- 
+
      def to_python(self, value):
 +        if isinstance(value, enum.Enum):
 +            return value.value
@@ -204,7 +204,7 @@ index d610dc86f0..9930101cea 100644
          if isinstance(value, float):
 @@ -1680,6 +1689,8 @@ class FloatField(Field):
          return "FloatField"
- 
+
      def to_python(self, value):
 +        if isinstance(value, enum.Enum):
 +            return value.value
@@ -213,7 +213,7 @@ index d610dc86f0..9930101cea 100644
          try:
 @@ -1767,6 +1778,8 @@ class IntegerField(Field):
          return "IntegerField"
- 
+
      def to_python(self, value):
 +        if isinstance(value, enum.Enum):
 +            return value.value
@@ -222,7 +222,7 @@ index d610dc86f0..9930101cea 100644
          try:
 @@ -2023,6 +2036,8 @@ class TextField(Field):
          return "TextField"
- 
+
      def to_python(self, value):
 +        if isinstance(value, enum.Enum):
 +            return value.value
@@ -237,7 +237,7 @@ index 189fb4fa44..f2536dcd00 100644
 +import enum
  """
  Various data structures used in query construction.
- 
+
 @@ -136,7 +137,11 @@ class DeferredAttribute:
                  instance.refresh_from_db(fields=[field_name])
                  val = getattr(instance, field_name)
@@ -248,13 +248,13 @@ index 189fb4fa44..f2536dcd00 100644
 +        if isinstance(value, enum.Enum):
 +            return value.value
 +        return value
- 
+
      def _check_parent_chain(self, instance):
          """
 @@ -151,6 +156,13 @@ class DeferredAttribute:
          return None
- 
- 
+
+
 +
 +    def __set__(self, instance, value):
 +        """Set the value on the instance."""
@@ -263,7 +263,7 @@ index 189fb4fa44..f2536dcd00 100644
 +            value = value.value
 +        instance.__dict__[self.field.attname] = value
  class RegisterLookupMixin:
- 
+
      @classmethod
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

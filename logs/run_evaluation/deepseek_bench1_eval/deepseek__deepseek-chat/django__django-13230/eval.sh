@@ -23,7 +23,7 @@ diff --git a/tests/syndication_tests/feeds.py b/tests/syndication_tests/feeds.py
 @@ -29,6 +29,9 @@ def item_pubdate(self, item):
      def item_updateddate(self, item):
          return item.updated
- 
+
 +    def item_comments(self, item):
 +        return "%scomments" % item.get_absolute_url()
 +

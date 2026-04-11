@@ -18,7 +18,7 @@ diff --git a/pydicom/tests/test_json.py b/pydicom/tests/test_json.py
 +++ b/pydicom/tests/test_json.py
 @@ -354,3 +354,25 @@ def bulk_data_reader(tag, vr, value):
          ds = Dataset().from_json(json.dumps(json_data), bulk_data_reader)
- 
+
          assert b'xyzzy' == ds[0x00091002].value
 +
 +    def test_bulk_data_reader_is_called_within_SQ(self):
@@ -27,7 +27,7 @@ diff --git a/pydicom/tests/test_json.py b/pydicom/tests/test_json.py
 +
 +        json_data = {
 +            "003a0200": {
-+                "vr": "SQ", 
++                "vr": "SQ",
 +                "Value": [
 +                    {
 +                        "54001010": {

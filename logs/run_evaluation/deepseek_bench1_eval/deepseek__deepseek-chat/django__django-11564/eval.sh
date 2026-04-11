@@ -37,8 +37,8 @@ diff --git a/tests/settings_tests/tests.py b/tests/settings_tests/tests.py
  )
  from django.test.utils import requires_tz_support
 +from django.urls import clear_script_prefix, set_script_prefix
- 
- 
+
+
  @modify_settings(ITEMS={
 @@ -567,3 +568,51 @@ def decorated_function():
          signals.setting_changed.disconnect(self.receiver)

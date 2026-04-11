@@ -20,11 +20,11 @@ diff --git a/tests/admin_views/test_autocomplete_view.py b/tests/admin_views/tes
 +import datetime
  import json
  from contextlib import contextmanager
- 
+
 @@ -293,6 +294,29 @@ class PKOrderingQuestionAdmin(QuestionAdmin):
              'pagination': {'more': False},
          })
- 
+
 +    def test_serialize_result(self):
 +        class AutocompleteJsonSerializeResultView(AutocompleteJsonView):
 +            def serialize_result(self, obj, to_field_name):
@@ -48,7 +48,7 @@ diff --git a/tests/admin_views/test_autocomplete_view.py b/tests/admin_views/tes
 +            'pagination': {'more': False},
 +        })
 +
- 
+
  @override_settings(ROOT_URLCONF='admin_views.urls')
  class SeleniumTests(AdminSeleniumTestCase):
 

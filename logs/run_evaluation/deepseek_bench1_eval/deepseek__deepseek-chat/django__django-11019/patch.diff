@@ -27,6 +27,6 @@ index 8cb484a15e..345c55014b 100644
 +            # With the fix for 3+ element merges, the result may be [2, 1]
 +            # instead of [1, 2]. Both are valid when elements are independent.
 +            self.assertIn(result, [[1, 2], [2, 1]])
- 
+
      def test_merge_js_three_way(self):
          """

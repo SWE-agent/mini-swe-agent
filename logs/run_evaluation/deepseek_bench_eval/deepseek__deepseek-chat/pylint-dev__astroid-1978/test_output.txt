@@ -346,7 +346,7 @@ caplog = <_pytest.logging.LogCaptureFixture object at 0x7e43750a3d00>
         caplog: pytest.LogCaptureFixture,
     ) -> None:
         """Catch stdout and stderr in module __getattr__ calls when building a module.
-    
+
         Usually raised by DeprecationWarning or FutureWarning.
         """
         caplog.set_level(logging.INFO)
@@ -354,23 +354,23 @@ caplog = <_pytest.logging.LogCaptureFixture object at 0x7e43750a3d00>
         original_module = sys.modules["posix"]
         expected_out = "INFO (TEST): Welcome to posix!"
         expected_err = "WARNING (TEST): Monkey-patched version of posix - module getattr"
-    
+
         class CustomGetattr:
             def __getattr__(self, name: str) -> Any:
                 print(f"{expected_out}")
                 print(expected_err, file=sys.stderr)
                 return getattr(original_module, name)
-    
+
         def mocked_sys_modules_getitem(name: str) -> types.ModuleType | CustomGetattr:
             if name != "posix":
                 return original_sys[name]
             return CustomGetattr()
-    
+
         with mock.patch("astroid.raw_building.sys.modules") as sys_mock:
             sys_mock.__getitem__.side_effect = mocked_sys_modules_getitem
             builder = AstroidBuilder()
             builder.inspect_build(os)
-    
+
         out, err = capsys.readouterr()
 >       assert expected_out in caplog.text
 E       AssertionError: assert 'INFO (TEST): Welcome to posix!' in ''

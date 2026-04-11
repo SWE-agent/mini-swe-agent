@@ -22,8 +22,8 @@ diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 +++ b/tests/migrations/test_writer.py
 @@ -26,6 +26,11 @@
  from .models import FoodManager, FoodQuerySet
- 
- 
+
+
 +class DeconstructibleInstances:
 +    def deconstruct(self):
 +        return ('DeconstructibleInstances', [], {})
@@ -35,7 +35,7 @@ diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 @@ -188,6 +193,10 @@ class NestedEnum(enum.IntEnum):
          A = 1
          B = 2
- 
+
 +    class NestedChoices(models.TextChoices):
 +        X = 'X', 'X value'
 +        Y = 'Y', 'Y value'
@@ -46,7 +46,7 @@ diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 @@ -383,6 +392,18 @@ class DateChoices(datetime.date, models.Choices):
              "default=datetime.date(1969, 11, 19))"
          )
- 
+
 +    def test_serialize_nested_class(self):
 +        for nested_cls in [self.NestedEnum, self.NestedChoices]:
 +            cls_name = nested_cls.__name__
@@ -72,7 +72,7 @@ diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 -
          string = MigrationWriter.serialize(models.CharField(default=DeconstructibleInstances))[0]
          self.assertEqual(string, "models.CharField(default=migrations.test_writer.DeconstructibleInstances)")
- 
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

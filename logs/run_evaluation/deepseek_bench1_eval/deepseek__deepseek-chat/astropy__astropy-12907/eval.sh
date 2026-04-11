@@ -18,8 +18,8 @@ diff --git a/astropy/modeling/tests/test_separable.py b/astropy/modeling/tests/t
 +++ b/astropy/modeling/tests/test_separable.py
 @@ -28,6 +28,13 @@
  p1 = models.Polynomial1D(1, name='p1')
- 
- 
+
+
 +cm_4d_expected = (np.array([False, False, True, True]),
 +                  np.array([[True,  True,  False, False],
 +                            [True,  True,  False, False],
@@ -47,8 +47,8 @@ diff --git a/astropy/modeling/tests/test_separable.py b/astropy/modeling/tests/t
 +                        [False, False, False, True,  False],
 +                        [False, False, False, False, True]]))),
  }
- 
- 
+
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

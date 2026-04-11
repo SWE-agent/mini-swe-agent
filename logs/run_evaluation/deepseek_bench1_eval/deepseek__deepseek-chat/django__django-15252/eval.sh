@@ -24,7 +24,7 @@ diff --git a/tests/backends/base/test_creation.py b/tests/backends/base/test_cre
  @mock.patch('django.core.management.commands.migrate.Command.sync_apps')
  class TestDbCreationTests(SimpleTestCase):
      available_apps = ['backends.base.app_unmigrated']
- 
+
 -    def test_migrate_test_setting_false(self, mocked_sync_apps, mocked_migrate, *mocked_objects):
 +    @mock.patch('django.db.migrations.executor.MigrationExecutor.migrate')
 +    def test_migrate_test_setting_false(self, mocked_migrate, mocked_sync_apps, *mocked_objects):
@@ -34,7 +34,7 @@ diff --git a/tests/backends/base/test_creation.py b/tests/backends/base/test_cre
 @@ -86,7 +86,32 @@ def test_migrate_test_setting_false(self, mocked_sync_apps, mocked_migrate, *moc
              with mock.patch.object(creation, '_destroy_test_db'):
                  creation.destroy_test_db(old_database_name, verbosity=0)
- 
+
 -    def test_migrate_test_setting_true(self, mocked_sync_apps, mocked_migrate, *mocked_objects):
 +    @mock.patch('django.db.migrations.executor.MigrationRecorder.ensure_schema')
 +    def test_migrate_test_setting_false_ensure_schema(
@@ -67,7 +67,7 @@ diff --git a/tests/backends/base/test_creation.py b/tests/backends/base/test_cre
          creation = test_connection.creation_class(test_connection)
 @@ -109,6 +134,7 @@ def test_migrate_test_setting_true(self, mocked_sync_apps, mocked_migrate, *mock
                  creation.destroy_test_db(old_database_name, verbosity=0)
- 
+
      @mock.patch.dict(os.environ, {'RUNNING_DJANGOS_TEST_SUITE': ''})
 +    @mock.patch('django.db.migrations.executor.MigrationExecutor.migrate')
      @mock.patch.object(BaseDatabaseCreation, 'mark_expected_failures_and_skips')
@@ -79,7 +79,7 @@ diff --git a/tests/migrations/test_executor.py b/tests/migrations/test_executor.
 @@ -759,6 +759,17 @@ def apply(self, project_state, schema_editor, collect_sql=False):
              False,
          )
- 
+
 +    @mock.patch.object(MigrationRecorder, 'has_table', return_value=False)
 +    def test_migrate_skips_schema_creation(self, mocked_has_table):
 +        """
@@ -91,7 +91,7 @@ diff --git a/tests/migrations/test_executor.py b/tests/migrations/test_executor.
 +        with self.assertNumQueries(0):
 +            executor.migrate([], plan=[])
 +
- 
+
  class FakeLoader:
      def __init__(self, graph, applied):
 

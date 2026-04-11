@@ -23,7 +23,7 @@ diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 @@ -257,6 +257,10 @@ class TextEnum(enum.Enum):
              A = 'a-value'
              B = 'value-b'
- 
+
 +        class TextTranslatedEnum(enum.Enum):
 +            A = _('a-value')
 +            B = _('value-b')
@@ -32,7 +32,7 @@ diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
              A = b'a-value'
              B = b'value-b'
 @@ -267,15 +271,19 @@ class IntEnum(enum.IntEnum):
- 
+
          self.assertSerializedResultEqual(
              TextEnum.A,
 -            ("migrations.test_writer.TextEnum('a-value')", {'import migrations.test_writer'})
@@ -52,7 +52,7 @@ diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 -            ("migrations.test_writer.IntEnum(2)", {'import migrations.test_writer'})
 +            ("migrations.test_writer.IntEnum['B']", {'import migrations.test_writer'})
          )
- 
+
          field = models.CharField(default=TextEnum.B, choices=[(m.value, m) for m in TextEnum])
 @@ -283,27 +291,39 @@ class IntEnum(enum.IntEnum):
          self.assertEqual(
@@ -101,7 +101,7 @@ diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 +            "(2, migrations.test_writer.IntEnum['B'])], "
 +            "default=migrations.test_writer.IntEnum['A'])"
          )
- 
+
      def test_serialize_choices(self):
 @@ -454,7 +474,7 @@ def test_serialize_class_based_validators(self):
          # Test a string regex with flag
@@ -110,7 +110,7 @@ diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 -        self.assertEqual(string, "django.core.validators.RegexValidator('^[0-9]+$', flags=re.RegexFlag(16))")
 +        self.assertEqual(string, "django.core.validators.RegexValidator('^[0-9]+$', flags=re.RegexFlag['DOTALL'])")
          self.serialize_round_trip(validator)
- 
+
          # Test message and code
 
 EOF_114329324912

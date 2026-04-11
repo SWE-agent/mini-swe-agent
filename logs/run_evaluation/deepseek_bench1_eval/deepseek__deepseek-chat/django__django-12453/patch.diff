@@ -8,7 +8,7 @@ index c50fc90171..5cf1f5b3c2 100644
  from django.core import serializers
 -from django.db import router
 +from django.db import router, transaction
- 
+
  # The prefix to put on the default database name when creating
  # the test database.
 @@ -126,8 +126,9 @@ class BaseDatabaseCreation:
@@ -20,6 +20,6 @@ index c50fc90171..5cf1f5b3c2 100644
 +        with transaction.atomic(using=self.connection.alias):
 +            for obj in serializers.deserialize("json", data, using=self.connection.alias):
 +                obj.save()
- 
+
      def _get_database_display_str(self, verbosity, database_name):
          """

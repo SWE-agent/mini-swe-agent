@@ -159,11 +159,11 @@ index 6d698469..fb2839c0 100644
              return _normalize_path(path)
          result = _NORM_PATH_CACHE[path] = _normalize_path(path)
          return result
- 
+
 -
  def load_module_from_name(dotted_name: str) -> types.ModuleType:
      """Load a Python module from its name.
- 
+
 @@ -310,6 +311,7 @@ def modpath_from_file_with_callback(filename, path=None, is_package_cb=None):
      for pathname in itertools.chain(
          path or [], map(_cache_normalize_path, sys.path), sys.path
@@ -341,7 +341,7 @@ self = <tests.unittest_modutils.ModPathFromFileTest testMethod=test_load_from_mo
         path_to_include = os.path.join(tmp, "path_to_include")
         real_secret_path = os.path.join(tmp, "secret.py")
         symlink_secret_path = os.path.join(path_to_include, "secret.py")
-    
+
         # setup double symlink
         # /tmp/deployment
         # /tmp/path_to_include (symlink to /tmp/deployment)
@@ -358,19 +358,19 @@ self = <tests.unittest_modutils.ModPathFromFileTest testMethod=test_load_from_mo
             pass
         os.symlink(real_secret_path, symlink_secret_path)
         self.addCleanup(os.remove, real_secret_path)
-    
+
         # add the symlinked path to sys.path
         sys.path.append(path_to_include)
         self.addCleanup(sys.path.pop)
-    
+
         # this should be equivalent to: import secret
 >       self.assertEqual(modutils.modpath_from_file(symlink_secret_path), ["secret"])
 
-tests/unittest_modutils.py:191: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unittest_modutils.py:191:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 astroid/modutils.py:346: in modpath_from_file
     return modpath_from_file_with_callback(filename, path, check_modpath_has_init)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 filename = '/tmp/path_to_include/secret.py', path = None
 is_package_cb = <function check_modpath_has_init at 0x733d3a97ac10>
@@ -388,18 +388,18 @@ is_package_cb = <function check_modpath_has_init at 0x733d3a97ac10>
                 continue
             if is_package_cb(pathname, modpath[:-1]):
                 return modpath
-    
+
 >       raise ImportError(
             "Unable to find module for {} in {}".format(filename, ", \n".join(sys.path))
         )
-E       ImportError: Unable to find module for /tmp/path_to_include/secret.py in /testbed, 
-E       /opt/miniconda3/envs/testbed/bin, 
-E       /opt/miniconda3/envs/testbed/lib/python39.zip, 
-E       /opt/miniconda3/envs/testbed/lib/python3.9, 
-E       /opt/miniconda3/envs/testbed/lib/python3.9/lib-dynload, 
-E       /opt/miniconda3/envs/testbed/lib/python3.9/site-packages, 
-E       /testbed, 
-E       /opt/miniconda3/envs/testbed/lib/python3.9/site-packages/setuptools/_vendor, 
+E       ImportError: Unable to find module for /tmp/path_to_include/secret.py in /testbed,
+E       /opt/miniconda3/envs/testbed/bin,
+E       /opt/miniconda3/envs/testbed/lib/python39.zip,
+E       /opt/miniconda3/envs/testbed/lib/python3.9,
+E       /opt/miniconda3/envs/testbed/lib/python3.9/lib-dynload,
+E       /opt/miniconda3/envs/testbed/lib/python3.9/site-packages,
+E       /testbed,
+E       /opt/miniconda3/envs/testbed/lib/python3.9/site-packages/setuptools/_vendor,
 E       /tmp/path_to_include
 
 astroid/modutils.py:323: ImportError

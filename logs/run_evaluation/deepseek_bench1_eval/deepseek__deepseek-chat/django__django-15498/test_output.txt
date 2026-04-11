@@ -169,9 +169,9 @@ index 7cf405713d..1e12efac38 100644
  from django.db.models import Exists, OuterRef, Q
 +from django.utils.deprecation import RemovedInDjango50Warning
 +from django.utils.inspect import func_supports_parameter
- 
+
  UserModel = get_user_model()
- 
+
 @@ -192,6 +196,7 @@ class RemoteUserBackend(ModelBackend):
          """
          if not remote_user:
@@ -179,7 +179,7 @@ index 7cf405713d..1e12efac38 100644
 +        created = False
          user = None
          username = self.clean_username(remote_user)
- 
+
 @@ -202,13 +207,24 @@ class RemoteUserBackend(ModelBackend):
              user, created = UserModel._default_manager.get_or_create(
                  **{UserModel.USERNAME_FIELD: username}
@@ -205,18 +205,18 @@ index 7cf405713d..1e12efac38 100644
 +            if created:
 +                user = self.configure_user(request, user)
          return user if self.user_can_authenticate(user) else None
- 
+
      def clean_username(self, username):
 @@ -220,9 +236,9 @@ class RemoteUserBackend(ModelBackend):
          """
          return username
- 
+
 -    def configure_user(self, request, user):
 +    def configure_user(self, request, user, created=True):
          """
 -        Configure a user after creation and return the updated user.
 +        Configure a user and return the updated user.
- 
+
          By default, return the user unmodified.
          """
 diff --git a/docs/internals/deprecation.txt b/docs/internals/deprecation.txt
@@ -224,14 +224,14 @@ index 11f69b1844..2c85eafc85 100644
 --- a/docs/internals/deprecation.txt
 +++ b/docs/internals/deprecation.txt
 @@ -87,6 +87,9 @@ details on these changes.
- 
+
  * Passing unsaved model instances to related filters will no longer be allowed.
- 
+
 +* ``created=True`` will be required in the signature of
 +  ``RemoteUserBackend.configure_user()`` subclasses.
 +
  .. _deprecation-removed-in-4.1:
- 
+
  4.1
 diff --git a/docs/ref/contrib/auth.txt b/docs/ref/contrib/auth.txt
 index 40c3c84e75..abcf3905c9 100644
@@ -240,10 +240,10 @@ index 40c3c84e75..abcf3905c9 100644
 @@ -649,17 +649,27 @@ The following backends are available in :mod:`django.contrib.auth.backends`:
          information) prior to using it to get or create a user object. Returns
          the cleaned username.
- 
+
 -    .. method:: configure_user(request, user)
 +    .. method:: configure_user(request, user, created=True)
- 
+
 -        Configures a newly created user.  This method is called immediately
 -        after a new user is created, and can be used to perform custom setup
 -        actions, such as setting the user's groups based on attributes in an
@@ -258,17 +258,17 @@ index 40c3c84e75..abcf3905c9 100644
 +        (``created`` is ``True``) or on existing users (``created`` is
 +        ``False``) as a way of synchronizing attributes between the remote and
 +        the local systems.
- 
+
          ``request`` is an :class:`~django.http.HttpRequest` and may be ``None``
          if it wasn't provided to :func:`~django.contrib.auth.authenticate`
          (which passes it on to the backend).
- 
+
 +        .. versionchanged:: 4.1
 +
 +            The ``created`` argument was added.
 +
      .. method:: user_can_authenticate()
- 
+
          Returns whether the user is allowed to authenticate. This method
 diff --git a/docs/releases/4.1.txt b/docs/releases/4.1.txt
 index 72c1c15c7a..9dff4784cb 100644
@@ -277,24 +277,24 @@ index 72c1c15c7a..9dff4784cb 100644
 @@ -74,6 +74,9 @@ Minor features
  * The default iteration count for the PBKDF2 password hasher is increased from
    320,000 to 390,000.
- 
+
 +* The :meth:`.RemoteUserBackend.configure_user` method now allows synchronizing
 +  user attributes with attributes in a remote system such as an LDAP directory.
 +
  :mod:`django.contrib.contenttypes`
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
 @@ -493,6 +496,10 @@ Miscellaneous
  * Passing unsaved model instances to related filters is deprecated. In Django
    5.0, the exception will be raised.
- 
+
 +* ``created=True`` is added to the signature of
 +  :meth:`.RemoteUserBackend.configure_user`. Support  for ``RemoteUserBackend``
 +  subclasses that do not accept this argument is deprecated.
 +
  Features removed in 4.1
  =======================
- 
+
 diff --git a/tests/auth_tests/test_remote_user.py b/tests/auth_tests/test_remote_user.py
 index bd974cb1d5..8fb1b972b5 100644
 --- a/tests/auth_tests/test_remote_user.py
@@ -313,13 +313,13 @@ index bd974cb1d5..8fb1b972b5 100644
 +)
  from django.utils import timezone
 +from django.utils.deprecation import RemovedInDjango50Warning
- 
- 
+
+
  @override_settings(ROOT_URLCONF="auth_tests.urls")
 @@ -215,11 +222,14 @@ class CustomRemoteUserBackend(RemoteUserBackend):
          """
          return username.split("@")[0]
- 
+
 -    def configure_user(self, request, user):
 +    def configure_user(self, request, user, created=True):
          """
@@ -331,7 +331,7 @@ index bd974cb1d5..8fb1b972b5 100644
 +            user.last_name = user.username
          user.save()
          return user
- 
+
 @@ -242,8 +252,12 @@ class RemoteUserCustomTest(RemoteUserTest):
          should not have been configured with an email address.
          """
@@ -344,7 +344,7 @@ index bd974cb1d5..8fb1b972b5 100644
 +        self.assertEqual(knownuser2.email, "")
 +        self.assertEqual(knownuser.last_name, "knownuser")
 +        self.assertEqual(knownuser2.last_name, "knownuser2")
- 
+
      def test_unknown_user(self):
          """
 @@ -260,11 +274,40 @@ class RemoteUserCustomTest(RemoteUserTest):
@@ -355,8 +355,8 @@ index bd974cb1d5..8fb1b972b5 100644
          self.assertEqual(User.objects.count(), num_users + 1)
          newuser = User.objects.get(username="newuser")
          self.assertEqual(newuser.email, "user@example.com")
- 
- 
+
+
 +# RemovedInDjango50Warning.
 +class CustomRemoteUserNoCreatedArgumentBackend(CustomRemoteUserBackend):
 +    def configure_user(self, request, user):

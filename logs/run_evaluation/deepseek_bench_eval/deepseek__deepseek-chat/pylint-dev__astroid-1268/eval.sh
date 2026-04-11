@@ -19,13 +19,13 @@ diff --git a/tests/unittest_nodes.py b/tests/unittest_nodes.py
 @@ -306,6 +306,11 @@ def test_f_strings(self):
          ast = abuilder.string_build(code)
          self.assertEqual(ast.as_string().strip(), code.strip())
- 
+
 +    @staticmethod
 +    def test_as_string_unknown() -> None:
 +        assert nodes.Unknown().as_string() == "Unknown.Unknown()"
 +        assert nodes.Unknown(lineno=1, col_offset=0).as_string() == "Unknown.Unknown()"
 +
- 
+
  class _NodeTest(unittest.TestCase):
      """test transformation of If Node"""
 

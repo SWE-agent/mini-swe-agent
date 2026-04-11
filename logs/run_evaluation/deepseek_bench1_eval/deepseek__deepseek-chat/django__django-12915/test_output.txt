@@ -176,7 +176,7 @@ index ed00da159f..79408d4858 100644
 +    ]
  else:
      raise ImproperlyConfigured('GDAL is unsupported on OS "%s".' % os.name)
- 
+
 + git -c core.fileMode=false diff 4652f1f0aa459a7b980441d629648707c32e36bf
 diff --git a/django/contrib/staticfiles/handlers.py b/django/contrib/staticfiles/handlers.py
 index 711d8864ad..44b62f9f97 100644
@@ -187,13 +187,13 @@ index 711d8864ad..44b62f9f97 100644
  from urllib.request import url2pathname
 +from asgiref.sync import sync_to_async
 +
- 
+
  from django.conf import settings
  from django.contrib.staticfiles import utils
 @@ -53,6 +55,15 @@ class StaticFilesHandlerMixin:
              return response_for_exception(request, e)
- 
- 
+
+
 +    async def get_response_async(self, request):
 +        """
 +        Asynchronous version of get_response.

@@ -23,7 +23,7 @@ diff --git a/tests/migrations/test_commands.py b/tests/migrations/test_commands.
 @@ -536,7 +536,13 @@ def test_sqlmigrate_forwards(self):
          index_op_desc_unique_together = output.find('-- alter unique_together')
          index_tx_end = output.find(connection.ops.end_transaction_sql().lower())
- 
+
 -        self.assertGreater(index_tx_start, -1, "Transaction start not found")
 +        if connection.features.can_rollback_ddl:
 +            self.assertGreater(index_tx_start, -1, "Transaction start not found")
@@ -43,13 +43,13 @@ diff --git a/tests/migrations/test_commands.py b/tests/migrations/test_commands.
 -            index_tx_end, index_op_desc_unique_together,
 -            "Transaction end not found or found before operation description (unique_together)"
 -        )
- 
+
      @override_settings(MIGRATION_MODULES={"migrations": "migrations.test_migrations"})
      def test_sqlmigrate_backwards(self):
 @@ -577,7 +579,12 @@ def test_sqlmigrate_backwards(self):
          index_drop_table = output.rfind('drop table')
          index_tx_end = output.find(connection.ops.end_transaction_sql().lower())
- 
+
 -        self.assertGreater(index_tx_start, -1, "Transaction start not found")
 +        if connection.features.can_rollback_ddl:
 +            self.assertGreater(index_tx_start, -1, "Transaction start not found")
@@ -68,13 +68,13 @@ diff --git a/tests/migrations/test_commands.py b/tests/migrations/test_commands.
 -            index_tx_end, index_op_desc_unique_together,
 -            "Transaction end not found or found before DROP TABLE"
 -        )
- 
+
          # Cleanup by unmigrating everything
          call_command("migrate", "migrations", "zero", verbosity=0)
 @@ -616,6 +619,22 @@ def test_sqlmigrate_for_non_atomic_migration(self):
              self.assertNotIn(connection.ops.start_transaction_sql().lower(), queries)
          self.assertNotIn(connection.ops.end_transaction_sql().lower(), queries)
- 
+
 +    @override_settings(MIGRATION_MODULES={'migrations': 'migrations.test_migrations'})
 +    def test_sqlmigrate_for_non_transactional_databases(self):
 +        """

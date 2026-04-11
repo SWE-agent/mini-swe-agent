@@ -19,7 +19,7 @@ diff --git a/tests/admin_scripts/tests.py b/tests/admin_scripts/tests.py
 @@ -2206,6 +2206,13 @@ def test_importable_target_name(self):
              "another directory."
          )
- 
+
 +    def test_trailing_slash_in_target_app_directory_name(self):
 +        app_dir = os.path.join(self.test_dir, 'apps', 'app1')
 +        os.makedirs(app_dir)

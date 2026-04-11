@@ -19,25 +19,25 @@ diff --git a/tests/queries/test_q.py b/tests/queries/test_q.py
 @@ -8,6 +8,10 @@ def test_combine_and_empty(self):
          self.assertEqual(q & Q(), q)
          self.assertEqual(Q() & q, q)
- 
+
 +        q = Q(x__in={}.keys())
 +        self.assertEqual(q & Q(), q)
 +        self.assertEqual(Q() & q, q)
 +
      def test_combine_and_both_empty(self):
          self.assertEqual(Q() & Q(), Q())
- 
+
 @@ -16,6 +20,10 @@ def test_combine_or_empty(self):
          self.assertEqual(q | Q(), q)
          self.assertEqual(Q() | q, q)
- 
+
 +        q = Q(x__in={}.keys())
 +        self.assertEqual(q | Q(), q)
 +        self.assertEqual(Q() | q, q)
 +
      def test_combine_or_both_empty(self):
          self.assertEqual(Q() | Q(), Q())
- 
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

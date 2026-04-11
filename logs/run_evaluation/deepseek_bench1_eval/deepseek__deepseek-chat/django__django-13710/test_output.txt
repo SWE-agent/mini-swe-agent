@@ -144,7 +144,7 @@ Author: Siburg <jelle.sjoerdsma@gmail.com>
 Date:   Wed Sep 8 11:19:35 2021 +0200
 
     Refs #32219 -- Added admin model inline tests for verbose names.
-    
+
     Co-authored-by: Mariusz Felisiak <felisiak.mariusz@gmail.com>
 
 diff --git a/tests/admin_inlines/models.py b/tests/admin_inlines/models.py
@@ -176,7 +176,7 @@ index 74b10d80b3..261c4f0148 100644
 --- a/tests/admin_inlines/tests.py
 +++ b/tests/admin_inlines/tests.py
 @@ -8,11 +8,12 @@ from django.urls import reverse
- 
+
  from .admin import InnerInline, site as admin_site
  from .models import (
 -    Author, BinaryTree, Book, Chapter, Child, ChildModel1, ChildModel2,
@@ -191,12 +191,12 @@ index 74b10d80b3..261c4f0148 100644
 +    ProfileCollection, Question, Sighting, SomeChildModel, SomeParentModel,
 +    Teacher, VerboseNamePluralProfile, VerboseNameProfile,
  )
- 
+
  INLINE_CHANGELINK_HTML = 'class="inlinechangelink">Change</a>'
 @@ -962,6 +963,115 @@ class TestReadOnlyChangeViewInlinePermissions(TestCase):
          self.assertNotContains(response, 'id="id_question_set-0-text"')
- 
- 
+
+
 +@override_settings(ROOT_URLCONF='admin_inlines.urls')
 +class TestVerboseNameInlineForms(TestDataMixin, TestCase):
 +    factory = RequestFactory()
@@ -308,7 +308,7 @@ index 74b10d80b3..261c4f0148 100644
 +
  @override_settings(ROOT_URLCONF='admin_inlines.urls')
  class SeleniumTests(AdminSeleniumTestCase):
- 
+
 + git -c core.fileMode=false diff 1bd6a7a0acc11e249fca11c017505ad39f15ebf6
 diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
 index dadd4acfa1..1276892709 100644
@@ -320,10 +320,10 @@ index dadd4acfa1..1276892709 100644
          super().__init__()
 +        # Store whether verbose_name was explicitly set before we potentially override it
 +        verbose_name_was_set = self.verbose_name is not None
-+        
++
          if self.verbose_name is None:
              self.verbose_name = self.model._meta.verbose_name
-+        
++
          if self.verbose_name_plural is None:
 -            self.verbose_name_plural = self.model._meta.verbose_name_plural
 +            if verbose_name_was_set:
@@ -332,7 +332,7 @@ index dadd4acfa1..1276892709 100644
 +            else:
 +                # If verbose_name was not set, use the model's verbose_name_plural
 +                self.verbose_name_plural = self.model._meta.verbose_name_plural
- 
+
      @property
      def media(self):
 + source /opt/miniconda3/bin/activate

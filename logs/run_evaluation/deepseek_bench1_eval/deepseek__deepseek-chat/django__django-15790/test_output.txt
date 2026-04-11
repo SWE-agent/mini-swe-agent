@@ -150,9 +150,9 @@ index a169d0c235..be0deb90b0 100644
 --- a/django/db/models/query.py
 +++ b/django/db/models/query.py
 @@ -834,11 +834,22 @@ class QuerySet:
- 
+
          return objs
- 
+
 -    async def abulk_create(self, objs, batch_size=None, ignore_conflicts=False):
 +    async def abulk_create(
 +        self,
@@ -171,25 +171,25 @@ index a169d0c235..be0deb90b0 100644
 +            update_fields=update_fields,
 +            unique_fields=unique_fields,
          )
- 
+
      def bulk_update(self, objs, fields, batch_size=None):
 diff --git a/tests/async_queryset/tests.py b/tests/async_queryset/tests.py
 index 792797fb9d..1b6dddce1f 100644
 --- a/tests/async_queryset/tests.py
 +++ b/tests/async_queryset/tests.py
 @@ -6,7 +6,7 @@ from asgiref.sync import async_to_sync, sync_to_async
- 
+
  from django.db import NotSupportedError, connection
  from django.db.models import Sum
 -from django.test import TestCase, skipUnlessDBFeature
 +from django.test import TestCase, skipIfDBFeature, skipUnlessDBFeature
- 
+
  from .models import SimpleModel
- 
+
 @@ -111,6 +111,22 @@ class AsyncQuerySetTest(TestCase):
          qs = await SimpleModel.objects.abulk_create(instances)
          self.assertEqual(len(qs), 10)
- 
+
 +    @skipUnlessDBFeature("has_bulk_insert", "supports_update_conflicts")
 +    @skipIfDBFeature("supports_update_conflicts_with_target")
 +    @async_to_sync
@@ -220,17 +220,17 @@ index 5214276987..692ec98203 100644
      errors = []
 -    libraries = defaultdict(list)
 +    libraries = defaultdict(set)
- 
+
      for conf in settings.TEMPLATES:
          custom_libraries = conf.get("OPTIONS", {}).get("libraries", {})
          for module_name, module_path in custom_libraries.items():
 -            libraries[module_name].append(module_path)
 +            libraries[module_name].add(module_path)
- 
+
      for module_name, module_path in get_template_tag_modules():
 -        libraries[module_name].append(module_path)
 +        libraries[module_name].add(module_path)
- 
+
      for library_name, items in libraries.items():
          if len(items) > 1:
 @@ -66,7 +66,7 @@ def check_for_template_tags_with_the_same_name(app_configs, **kwargs):

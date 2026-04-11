@@ -19,5 +19,5 @@ index d6ece4cc6d..ff7b92800d 100644
 -        self.assertTrue(autoreload.template_changed(None, template_path))
 +        self.assertIsNone(autoreload.template_changed(None, template_path))
          mock_reset.assert_called_once()
- 
+
      @mock.patch('django.template.autoreload.reset_loaders')

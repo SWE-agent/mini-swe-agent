@@ -5,7 +5,7 @@ index 6ce23688..b52b8b8c 100644
 @@ -127,6 +127,13 @@ class RectilinearGrid(_vtk.vtkRectilinearGrid, Grid, RectilinearGridFilters):
          """Initialize the rectilinear grid."""
          super().__init__()
- 
+
 +        # Helper function to convert sequences to numpy arrays
 +        def _to_array(arr):
 +            """Convert array-like object to numpy array."""
@@ -26,7 +26,7 @@ index 6ce23688..b52b8b8c 100644
 +                self._from_arrays(_to_array(args[0]), None, None, check_duplicates)
              else:
                  raise TypeError(f'Type ({type(args[0])}) not understood by `RectilinearGrid`')
- 
+
          elif len(args) == 3 or len(args) == 2:
 -            arg0_is_arr = isinstance(args[0], np.ndarray)
 -            arg1_is_arr = isinstance(args[1], np.ndarray)
@@ -39,7 +39,7 @@ index 6ce23688..b52b8b8c 100644
              else:
 -                arg2_is_arr = False
 +                arg2_is_arr_like = False
- 
+
 -            if all([arg0_is_arr, arg1_is_arr, arg2_is_arr]):
 -                self._from_arrays(args[0], args[1], args[2], check_duplicates)
 -            elif all([arg0_is_arr, arg1_is_arr]):
@@ -50,4 +50,4 @@ index 6ce23688..b52b8b8c 100644
 +                self._from_arrays(_to_array(args[0]), _to_array(args[1]), None, check_duplicates)
              else:
                  raise TypeError("Arguments not understood by `RectilinearGrid`.")
- 
+

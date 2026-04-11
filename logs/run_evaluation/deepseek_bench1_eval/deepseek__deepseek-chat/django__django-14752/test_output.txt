@@ -159,11 +159,11 @@ index 3903e4c98c..d1978ec717 100644
              ],
              'pagination': {'more': context['page_obj'].has_next()},
          })
- 
+
 +    def serialize_result(self, obj, to_field_name):
 +        """
 +        Convert an object to a dictionary representation suitable for autocomplete results.
-+        
++
 +        The default implementation returns {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}.
 +        Subclasses can override this method to add extra fields or customize the representation.
 +        """

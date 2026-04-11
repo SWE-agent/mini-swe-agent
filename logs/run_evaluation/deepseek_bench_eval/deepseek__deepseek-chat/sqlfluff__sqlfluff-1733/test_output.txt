@@ -144,15 +144,15 @@ Author: wangxiaolei <fatelei@gmail.com>
 Date:   Sun Oct 24 23:59:39 2021 +0800
 
     MySQL: Add drop index support (#1738)
-    
+
     * feat: support hive left semi join
-    
+
     * fix: fix sql style for left semi join
-    
+
     * fix: fix mysql drop index lint
-    
+
     * feat: enhance mysql drop index
-    
+
     Co-authored-by: Barry Pollard <barry@tunetheweb.com>
 
 diff --git a/src/sqlfluff/dialects/dialect_mysql.py b/src/sqlfluff/dialects/dialect_mysql.py
@@ -173,7 +173,7 @@ index 0b36227a5..5fca2dc6d 100644
 +        "EXCLUSIVE",
      ]
  )
- 
+
 @@ -1238,3 +1246,35 @@ class CursorFetchSegment(BaseSegment):
              Ref("LocalVariableNameSegment"),
          ),

@@ -162,7 +162,7 @@ index 7d226955d5..5687c1c9dd 100644
 --- a/django/db/migrations/serializer.py
 +++ b/django/db/migrations/serializer.py
 @@ -90,19 +90,49 @@ class DeconstructableSerializer(BaseSerializer):
- 
+
      @staticmethod
      def _serialize_path(path):
 -        module, name = path.rsplit(".", 1)
@@ -183,7 +183,7 @@ index 7d226955d5..5687c1c9dd 100644
              name = "models.%s" % name
 -        else:
 +            return name, imports
-+        
++
 +        module, name = path.rsplit(".", 1)
 +        # Check if the module part looks like a module (all lowercase)
 +        # This is a heuristic for handling nested classes
@@ -207,10 +207,10 @@ index 7d226955d5..5687c1c9dd 100644
 +                imports = {"import %s" % module}
 +                name = path
          return name, imports
- 
+
      def serialize(self):
          return self.serialize_deconstructed(*self.value.deconstruct())
- 
+
 -
  class DictionarySerializer(BaseSerializer):
      def serialize(self):
@@ -230,8 +230,8 @@ index 7d226955d5..5687c1c9dd 100644
              else:
 -                return "%s.%s" % (module, self.value.__name__), {"import %s" % module}
 +                return "%s.%s" % (module, self.value.__qualname__), {"import %s" % module}
- 
- 
+
+
  class UUIDSerializer(BaseSerializer):
 diff --git a/django/utils/deconstruct.py b/django/utils/deconstruct.py
 index aa952f6b73..00d80c1f3e 100644

@@ -17,7 +17,7 @@ index 29c6ff0926..3c6531c81f 100644
 +        # Note: lhs_params might be empty or have multiple values
 +        all_params = tuple(lhs_params) + (lhs_json_path,)
 +        return sql % all_params, []
- 
+
      def as_sqlite(self, compiler, connection):
          if not self.rhs:
              return HasKey(self.lhs.lhs, self.lhs.key_name).as_sqlite(compiler, connection)
@@ -27,6 +27,6 @@ index 29c6ff0926..3c6531c81f 100644
 +        lhs_json_path = compile_json_path(lhs_key_transforms)
 +        # For SQLite, check JSON_TYPE(...) IS NULL (key doesn't exist)
 +        return 'JSON_TYPE(%s, %%s) IS NULL' % lhs, tuple(lhs_params) + (lhs_json_path,)
- 
- 
+
+
  class KeyTransformIn(lookups.In):

@@ -42,8 +42,8 @@ diff --git a/tests/expressions/tests.py b/tests/expressions/tests.py
 +        for conditions in tests:
 +            with self.subTest(conditions):
 +                self.assertCountEqual(Employee.objects.filter(conditions), [self.max])
- 
- 
+
+
  class IterableLookupInnerExpressionsTests(TestCase):
 
 EOF_114329324912

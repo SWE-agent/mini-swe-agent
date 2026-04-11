@@ -22,7 +22,7 @@ diff --git a/tests/invalid_models_tests/test_models.py b/tests/invalid_models_te
 +++ b/tests/invalid_models_tests/test_models.py
 @@ -1501,3 +1501,70 @@ class Meta:
                  ]
- 
+
          self.assertEqual(Model.check(databases=self.databases), [])
 +
 +    def test_unique_constraint_pointing_to_missing_field(self):

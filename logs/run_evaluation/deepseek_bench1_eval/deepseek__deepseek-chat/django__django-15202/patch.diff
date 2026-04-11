@@ -26,5 +26,5 @@ index 72fbe15551..bb29a2d7a5 100644
 +            raise ValidationError(self.message, code=self.code, params={'value': value})
 +        if hostname is not None and len(hostname) > 253:
              raise ValidationError(self.message, code=self.code, params={'value': value})
- 
- 
+
+

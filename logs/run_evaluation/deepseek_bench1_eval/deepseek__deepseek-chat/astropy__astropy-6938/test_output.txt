@@ -145,7 +145,7 @@ Author: Pey Lian Lim <lim@stsci.edu>
 Date:   Thu Dec 21 17:09:47 2017 -0500
 
     Merge pull request #6981 from mhvk/iers-b-for-3.0
-    
+
     Update IERS-B table to Dec 2017.
 
 diff --cc astropy/utils/iers/tests/test_iers.py
@@ -158,7 +158,7 @@ index cb87ca3b69,3adb7fc4d1..0cddea7377
                                    [-0.4916557, -0.4925323, -0.4934373] * u.s,
 -                                  atol=1.*u.ns)
 +                                  atol=0.1*u.ms)
-  
+
  +
  +        dcip_x,dcip_y, status = iers_tab.dcip_xy(t, return_status=True)
  +        assert status[0] == iers.FROM_IERS_B
@@ -183,14 +183,14 @@ index 574b4073b1..5cb4f2c931 100644
 --- a/astropy/io/fits/fitsrec.py
 +++ b/astropy/io/fits/fitsrec.py
 @@ -1261,7 +1261,8 @@ class FITS_rec(np.recarray):
- 
+
          # Replace exponent separator in floating point numbers
          if 'D' in format:
 -            output_field.replace(encode_ascii('E'), encode_ascii('D'))
 +            if len(output_field):
 +                output_field[:] = output_field.replace(encode_ascii('E'), encode_ascii('D'))
- 
- 
+
+
  def _get_recarray_field(array, key):
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3
@@ -526,8 +526,8 @@ Platform: Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-debian-bookworm-sid
 
 Executable: /opt/miniconda3/envs/testbed/bin/python
 
-Full Python Version: 
-3.6.13 |Anaconda, Inc.| (default, Jun  4 2021, 14:25:59) 
+Full Python Version:
+3.6.13 |Anaconda, Inc.| (default, Jun  4 2021, 14:25:59)
 [GCC 7.5.0]
 
 encodings: sys: utf-8, locale: ANSI_X3.4-1968, filesystem: ascii

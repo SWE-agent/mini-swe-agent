@@ -19,18 +19,18 @@ diff --git a/tests/unittest_python3.py b/tests/unittest_python3.py
 @@ -5,7 +5,9 @@
  import unittest
  from textwrap import dedent
- 
+
 -from astroid import nodes
 +import pytest
 +
 +from astroid import exceptions, nodes
  from astroid.builder import AstroidBuilder, extract_node
  from astroid.test_utils import require_version
- 
+
 @@ -285,6 +287,33 @@ def test_unpacking_in_dict_getitem(self) -> None:
              self.assertIsInstance(value, nodes.Const)
              self.assertEqual(value.value, expected)
- 
+
 +    @staticmethod
 +    def test_unpacking_in_dict_getitem_with_ref() -> None:
 +        node = extract_node(

@@ -53,13 +53,13 @@ diff --git a/tests/migrations/test_autodetector.py b/tests/migrations/test_autod
 -        self.assertOperationAttributes(changes, "testapp", 0, 2, name="Publisher")
 -        self.assertOperationFieldAttributes(changes, "testapp", 0, 1, max_length=100)
 +        self.assertOperationFieldAttributes(changes, "testapp", 0, 2, max_length=100)
- 
+
      def test_non_circular_foreignkey_dependency_removal(self):
          """
 @@ -4346,6 +4358,36 @@ def test_fk_dependency_other_app(self):
              changes, "testapp", 0, [("otherapp", "__first__")]
          )
- 
+
 +    def test_alter_unique_together_fk_to_m2m(self):
 +        changes = self.get_changes(
 +            [self.author_name, self.book_unique_together],

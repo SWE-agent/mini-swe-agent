@@ -173,7 +173,7 @@ index b0b9275622..9a89fda02d 100644
          'timestamp with time zone': 'tstzrange',
      }
 @@ -209,13 +211,17 @@ class RangeContainedBy(lookups.PostgresSimpleLookup):
- 
+
      def process_rhs(self, compiler, connection):
          rhs, rhs_params = super().process_rhs(compiler, connection)
 -        cast_type = self.type_mapping[self.lhs.output_field.db_type(connection)]
@@ -181,7 +181,7 @@ index b0b9275622..9a89fda02d 100644
 +        db_type = self.lhs.output_field.cast_db_type(connection).split('(')[0]
 +        cast_type = self.type_mapping[db_type]
          return '%s::%s' % (rhs, cast_type), rhs_params
- 
+
      def process_lhs(self, compiler, connection):
          lhs, lhs_params = super().process_lhs(compiler, connection)
          if isinstance(self.lhs.output_field, models.FloatField):
@@ -189,15 +189,15 @@ index b0b9275622..9a89fda02d 100644
 +        elif isinstance(self.lhs.output_field, models.SmallIntegerField):
 +            lhs = '%s::integer' % lhs
          return lhs, lhs_params
- 
+
      def get_prep_lookup(self):
 @@ -226,6 +232,7 @@ models.DateField.register_lookup(RangeContainedBy)
  models.DateTimeField.register_lookup(RangeContainedBy)
  models.IntegerField.register_lookup(RangeContainedBy)
  models.FloatField.register_lookup(RangeContainedBy)
 +models.DecimalField.register_lookup(RangeContainedBy)
- 
- 
+
+
  @RangeField.register_lookup
 diff --git a/docs/ref/contrib/postgres/fields.txt b/docs/ref/contrib/postgres/fields.txt
 index cd35a33ee6..e8fcef6215 100644
@@ -205,7 +205,7 @@ index cd35a33ee6..e8fcef6215 100644
 +++ b/docs/ref/contrib/postgres/fields.txt
 @@ -738,10 +738,14 @@ operators ``@>``, ``<@``, and ``&&`` respectively.
      <QuerySet [<Event: Soft play>]>
- 
+
  The ``contained_by`` lookup is also available on the non-range field types:
 +:class:`~django.db.models.SmallAutoField`,
 +:class:`~django.db.models.AutoField`, :class:`~django.db.models.BigAutoField`,
@@ -217,13 +217,13 @@ index cd35a33ee6..e8fcef6215 100644
 +:class:`~django.db.models.DecimalField`, :class:`~django.db.models.FloatField`,
 +:class:`~django.db.models.DateField`, and
 +:class:`~django.db.models.DateTimeField`. For example::
- 
+
      >>> from psycopg2.extras import DateTimeTZRange
      >>> Event.objects.filter(start__contained_by=DateTimeTZRange(
 @@ -750,6 +754,14 @@ and :class:`~django.db.models.DateTimeField`. For example::
      ... )
      <QuerySet [<Event: Soft play>]>
- 
+
 +.. versionchanged:: 3.1
 +
 +    Support for :class:`~django.db.models.SmallAutoField`,
@@ -233,7 +233,7 @@ index cd35a33ee6..e8fcef6215 100644
 +    :class:`~django.db.models.DecimalField` was added.
 +
  .. fieldlookup:: rangefield.overlap
- 
+
  ``overlap``
 diff --git a/docs/releases/3.1.txt b/docs/releases/3.1.txt
 index 631978d0ac..ec107bf29b 100644
@@ -242,7 +242,7 @@ index 631978d0ac..ec107bf29b 100644
 @@ -90,6 +90,13 @@ Minor features
    :lookup:`rangefield.upper_inc`, and :lookup:`rangefield.upper_inf` allows
    querying :class:`~django.contrib.postgres.fields.RangeField` by a bound type.
- 
+
 +* :lookup:`rangefield.contained_by` now supports
 +  :class:`~django.db.models.SmallAutoField`,
 +  :class:`~django.db.models.AutoField`,
@@ -252,7 +252,7 @@ index 631978d0ac..ec107bf29b 100644
 +
  :mod:`django.contrib.redirects`
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
 diff --git a/tests/postgres_tests/migrations/0002_create_test_models.py b/tests/postgres_tests/migrations/0002_create_test_models.py
 index 0e36cd1256..12d94e348a 100644
 --- a/tests/postgres_tests/migrations/0002_create_test_models.py
@@ -293,8 +293,8 @@ index 2cf47b88c7..8528c59da1 100644
 +++ b/tests/postgres_tests/models.py
 @@ -93,6 +93,14 @@ class TextFieldModel(models.Model):
          return self.field
- 
- 
+
+
 +class SmallAutoFieldModel(models.Model):
 +    id = models.SmallAutoField(primary_key=True)
 +
@@ -312,8 +312,8 @@ index 2cf47b88c7..8528c59da1 100644
      date = models.DateField(blank=True, null=True)
 +    small_integer = models.SmallIntegerField(blank=True, null=True)
 +    decimal_field = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
- 
- 
+
+
  class JSONModel(PostgreSQLModel):
 diff --git a/tests/postgres_tests/test_ranges.py b/tests/postgres_tests/test_ranges.py
 index 789ff3d546..7257d66505 100644
@@ -321,20 +321,20 @@ index 789ff3d546..7257d66505 100644
 +++ b/tests/postgres_tests/test_ranges.py
 @@ -11,7 +11,10 @@ from django.test.utils import isolate_apps
  from django.utils import timezone
- 
+
  from . import PostgreSQLSimpleTestCase, PostgreSQLTestCase
 -from .models import PostgreSQLModel, RangeLookupsModel, RangesModel
 +from .models import (
 +    BigAutoFieldModel, PostgreSQLModel, RangeLookupsModel, RangesModel,
 +    SmallAutoFieldModel,
 +)
- 
+
  try:
      from psycopg2.extras import DateRange, DateTimeTZRange, NumericRange
 @@ -354,6 +357,17 @@ class TestQueryingWithRanges(PostgreSQLTestCase):
              [objs[0]],
          )
- 
+
 +    def test_small_integer_field_contained_by(self):
 +        objs = [
 +            RangeLookupsModel.objects.create(small_integer=8),
@@ -352,7 +352,7 @@ index 789ff3d546..7257d66505 100644
 @@ -376,6 +390,19 @@ class TestQueryingWithRanges(PostgreSQLTestCase):
              [objs[0]]
          )
- 
+
 +    def test_decimal_field_contained_by(self):
 +        objs = [
 +            RangeLookupsModel.objects.create(decimal_field=Decimal('1.33')),
@@ -372,7 +372,7 @@ index 789ff3d546..7257d66505 100644
 @@ -387,6 +414,39 @@ class TestQueryingWithRanges(PostgreSQLTestCase):
              [objs[0]]
          )
- 
+
 +    def test_small_auto_field_contained_by(self):
 +        objs = SmallAutoFieldModel.objects.bulk_create([
 +            SmallAutoFieldModel() for i in range(1, 5)

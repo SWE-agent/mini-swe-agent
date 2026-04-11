@@ -155,10 +155,10 @@ Author: Jon Dufresne <jon.dufresne@gmail.com>
 Date:   Mon Jul 22 22:45:07 2019 -0700
 
     Removed unnecessary code in Model.__init__().
-    
+
     As is_related_object is True, the val variable is unused for the
     remainder of the method.
-    
+
     Unnecessary since 53da1e47942f22a56e761d786ba89d05ca55a224.
 
 diff --git a/django/db/models/base.py b/django/db/models/base.py

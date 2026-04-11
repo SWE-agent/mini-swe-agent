@@ -12,7 +12,7 @@ index d37d43d5c5..092a0ac6d2 100644
  import sys
  from argparse import ArgumentParser, HelpFormatter
 @@ -129,6 +131,50 @@ class DjangoHelpFormatter(HelpFormatter):
- 
+
      def add_arguments(self, actions):
          super().add_arguments(self._reordered_actions(actions))
 +    def _fill_text(self, text, width, indent):
@@ -21,7 +21,7 @@ index d37d43d5c5..092a0ac6d2 100644
 +        """
 +        # Split the text into lines
 +        lines = text.splitlines()
-+        
++
 +        # Find the minimum indentation (excluding empty lines)
 +        non_empty_lines = [line for line in lines if line.strip()]
 +        if non_empty_lines:
@@ -29,7 +29,7 @@ index d37d43d5c5..092a0ac6d2 100644
 +            min_indent = min(len(line) - len(line.lstrip()) for line in non_empty_lines)
 +        else:
 +            min_indent = 0
-+        
++
 +        # Process each line
 +        result = []
 +        for line in lines:
@@ -37,17 +37,17 @@ index d37d43d5c5..092a0ac6d2 100644
 +                # Calculate this line's indentation relative to minimum
 +                line_indent = len(line) - len(line.lstrip())
 +                relative_indent = line_indent - min_indent
-+                
++
 +                # Remove the common minimum indentation
 +                if len(line) >= min_indent:
 +                    line = line[min_indent:]
-+                
++
 +                # Collapse multiple spaces within the line to a single space
 +                # but preserve the line structure
 +                line = re.sub(r'[ \t\f\v]+', ' ', line)
 +                # Remove trailing whitespace
 +                line = line.rstrip()
-+                
++
 +                # Wrap the line if it's too long
 +                # Add back the relative indentation
 +                actual_indent = indent + ' ' * relative_indent
@@ -57,8 +57,8 @@ index d37d43d5c5..092a0ac6d2 100644
 +                result.append(wrapped)
 +            else:  # Empty line - preserve as paragraph break
 +                result.append('')
-+        
++
 +        return '\n'.join(result)
- 
- 
+
+
  class OutputWrapper(TextIOBase):

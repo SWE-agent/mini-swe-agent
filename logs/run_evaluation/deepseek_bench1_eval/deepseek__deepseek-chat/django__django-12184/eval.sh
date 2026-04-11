@@ -38,7 +38,7 @@ diff --git a/tests/urlpatterns/tests.py b/tests/urlpatterns/tests.py
 @@ -68,6 +68,16 @@ def test_re_path_with_optional_parameter(self):
                      r'^regex_optional/(?P<arg1>\d+)/(?:(?P<arg2>\d+)/)?',
                  )
- 
+
 +    def test_re_path_with_missing_optional_parameter(self):
 +        match = resolve('/regex_only_optional/')
 +        self.assertEqual(match.url_name, 'regex_only_optional')

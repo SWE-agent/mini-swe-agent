@@ -19,7 +19,7 @@ diff --git a/tests/utils_tests/test_html.py b/tests/utils_tests/test_html.py
 @@ -1,6 +1,7 @@
  import os
  from datetime import datetime
- 
+
 +from django.core.serializers.json import DjangoJSONEncoder
  from django.test import SimpleTestCase
  from django.utils.functional import lazystr
@@ -27,7 +27,7 @@ diff --git a/tests/utils_tests/test_html.py b/tests/utils_tests/test_html.py
 @@ -211,6 +212,16 @@ def test_json_script(self):
              with self.subTest(arg=arg):
                  self.assertEqual(json_script(arg, "test_id"), expected)
- 
+
 +    def test_json_script_custom_encoder(self):
 +        class CustomDjangoJSONEncoder(DjangoJSONEncoder):
 +            def encode(self, o):

@@ -145,17 +145,17 @@ Author: Mariusz Felisiak <felisiak.mariusz@gmail.com>
 Date:   Thu Feb 3 11:20:46 2022 +0100
 
     Refs #33476 -- Refactored problematic code before reformatting by Black.
-    
+
     In these cases Black produces unexpected results, e.g.
-    
+
     def make_random_password(
         self,
         length=10,
         allowed_chars='abcdefghjkmnpqrstuvwxyz' 'ABCDEFGHJKLMNPQRSTUVWXYZ' '23456789',
     ):
-    
+
     or
-    
+
     cursor.execute("""
     SELECT ...
     """,
@@ -169,7 +169,7 @@ index 945a7a3d8a..cbfe5d686a 100644
 @@ -29,10 +29,11 @@ class BaseUserManager(models.Manager):
              email = email_name + '@' + domain_part.lower()
          return email
- 
+
 -    def make_random_password(self, length=10,
 -                             allowed_chars='abcdefghjkmnpqrstuvwxyz'
 -                                           'ABCDEFGHJKLMNPQRSTUVWXYZ'
@@ -197,14 +197,14 @@ index 6e1091375c..b0b3e730b8 100644
 +            )
          hashers.append(hasher)
      return hashers
- 
+
 diff --git a/django/contrib/gis/utils/srs.py b/django/contrib/gis/utils/srs.py
 index b10cf263b3..d44d340383 100644
 --- a/django/contrib/gis/utils/srs.py
 +++ b/django/contrib/gis/utils/srs.py
 @@ -36,8 +36,9 @@ def add_srs_entry(srs, auth_name='EPSG', auth_srid=None, ref_sys_name=None,
      connection = connections[database]
- 
+
      if not hasattr(connection.ops, 'spatial_version'):
 -        raise Exception('The `add_srs_entry` utility only works '
 -                        'with spatial backends.')
@@ -251,8 +251,8 @@ index 857a77da5a..197230fc14 100644
 -            "a handle_app_config() method.")
 +            "Subclasses of AppCommand must provide a handle_app_config() method."
 +        )
- 
- 
+
+
  class LabelCommand(BaseCommand):
 diff --git a/django/db/backends/mysql/base.py b/django/db/backends/mysql/base.py
 index 3e348846cf..ef2cd3a5ae 100644
@@ -266,7 +266,7 @@ index 3e348846cf..ef2cd3a5ae 100644
 -        'Did you install mysqlclient?'
 +        'Error loading MySQLdb module.\nDid you install mysqlclient?'
      ) from err
- 
+
  from MySQLdb.constants import CLIENT, FIELD_TYPE
 diff --git a/django/db/backends/mysql/introspection.py b/django/db/backends/mysql/introspection.py
 index 47ce6c3f4e..3a76168227 100644
@@ -324,7 +324,7 @@ index 47ce6c3f4e..3a76168227 100644
 +            [default_column_collation, table_name],
 +        )
          field_info = {line[0]: InfoLine(*line) for line in cursor.fetchall()}
- 
+
          cursor.execute("SELECT * FROM %s LIMIT 1" % self.connection.ops.quote_name(table_name))
 @@ -153,14 +162,17 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
          Return a dictionary of {field_name: (field_name_other_table, other_table)}
@@ -379,7 +379,7 @@ index 923e50a8d4..7f1994e657 100644
 +                'The database backend does not accept 0 as a value for AutoField.'
 +            )
          return value
- 
+
      def adapt_datetimefield_value(self, value):
 diff --git a/django/db/backends/oracle/introspection.py b/django/db/backends/oracle/introspection.py
 index f1f2e18e58..b8882e3cd8 100644
@@ -408,7 +408,7 @@ index f1f2e18e58..b8882e3cd8 100644
              for column, default, collation, internal_size, is_autofield, is_json in cursor.fetchall()
 @@ -151,7 +154,8 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
          return name.lower()
- 
+
      def get_sequences(self, cursor, table_name, table_fields=()):
 -        cursor.execute("""
 +        cursor.execute(
@@ -429,7 +429,7 @@ index f1f2e18e58..b8882e3cd8 100644
          if row:
 @@ -203,7 +209,8 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
          }
- 
+
      def get_primary_key_column(self, cursor, table_name):
 -        cursor.execute("""
 +        cursor.execute(
@@ -447,7 +447,7 @@ index f1f2e18e58..b8882e3cd8 100644
 +        )
          row = cursor.fetchone()
          return self.identifier_converter(row[0]) if row else None
- 
+
 @@ -225,7 +234,8 @@ class DatabaseIntrospection(BaseDatabaseIntrospection):
          """
          constraints = {}
@@ -549,14 +549,14 @@ index a10973b6b7..d53942b919 100644
 +                    (table_name,),
 +                )
              return cursor.fetchall()
- 
+
      @cached_property
 diff --git a/django/db/backends/oracle/schema.py b/django/db/backends/oracle/schema.py
 index 70698b15e7..98e49413c9 100644
 --- a/django/db/backends/oracle/schema.py
 +++ b/django/db/backends/oracle/schema.py
 @@ -179,13 +179,16 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
- 
+
      def _is_identity_column(self, table_name, column_name):
          with self.connection.cursor() as cursor:
 -            cursor.execute("""
@@ -573,9 +573,9 @@ index 70698b15e7..98e49413c9 100644
 +            )
              row = cursor.fetchone()
              return row[0] if row else False
- 
+
 @@ -197,9 +200,12 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
- 
+
      def _get_default_collation(self, table_name):
          with self.connection.cursor() as cursor:
 -            cursor.execute("""
@@ -587,7 +587,7 @@ index 70698b15e7..98e49413c9 100644
 +                [self.normalize_name(table_name)],
 +            )
              return cursor.fetchone()[0]
- 
+
      def _alter_column_collation_sql(self, model, new_field, new_type, new_collation):
 diff --git a/django/db/migrations/utils.py b/django/db/migrations/utils.py
 index 97bd96a90a..42a4d90340 100644
@@ -616,7 +616,7 @@ index d36d076346..5abedaf3d1 100644
 +                'CheckConstraint.check must be a Q instance or boolean expression.'
              )
          super().__init__(name)
- 
+
 diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
 index fcea1597ef..6d6d10a483 100644
 --- a/django/db/models/fields/__init__.py
@@ -734,7 +734,7 @@ index c82aaf12e1..19a5cb142a 100644
 +        ),
      }
      iterator = ModelChoiceIterator
- 
+
 @@ -1338,8 +1339,9 @@ class ModelMultipleChoiceField(ModelChoiceField):
      hidden_widget = MultipleHiddenInput
      default_error_messages = {
@@ -746,7 +746,7 @@ index c82aaf12e1..19a5cb142a 100644
 +        ),
          'invalid_pk_value': _('“%(pk)s” is not a valid value.')
      }
- 
+
 diff --git a/django/template/backends/base.py b/django/template/backends/base.py
 index 22628c6355..f1fa142362 100644
 --- a/django/template/backends/base.py
@@ -759,7 +759,7 @@ index 22628c6355..f1fa142362 100644
 -            "a from_string() method")
 +            "subclasses of BaseEngine should provide a from_string() method"
 +        )
- 
+
      def get_template(self, template_name):
          """
 @@ -48,8 +48,8 @@ class BaseEngine:
@@ -770,7 +770,7 @@ index 22628c6355..f1fa142362 100644
 -            "a get_template() method")
 +            "subclasses of BaseEngine must provide a get_template() method"
 +        )
- 
+
      # Utility methods: they are provided to minimize code duplication and
      #                  security issues in third-party backends.
 diff --git a/django/template/base.py b/django/template/base.py
@@ -816,7 +816,7 @@ index 99c09a483a..9090b14e40 100644
 +        raise TemplateSyntaxError(
 +            "'for' statements should have at least four words: %s" % token.contents
 +        )
- 
+
      is_reversed = bits[-1] == 'reversed'
      in_index = -3 if is_reversed else -2
 @@ -806,8 +807,9 @@ def do_for(parser, token):
@@ -828,7 +828,7 @@ index 99c09a483a..9090b14e40 100644
 +            raise TemplateSyntaxError(
 +                "'for' tag received an invalid argument: %s" % token.contents
 +            )
- 
+
      sequence = parser.compile_filter(bits[in_index + 1])
      nodelist_loop = parser.parse(('empty', 'endfor',))
 @@ -1160,8 +1162,9 @@ def regroup(parser, token):
@@ -952,7 +952,7 @@ index 2c2b946835..1755a9f435 100644
 --- a/tests/annotations/tests.py
 +++ b/tests/annotations/tests.py
 @@ -987,8 +987,7 @@ class AliasTests(TestCase):
- 
+
      def test_aggregate_alias(self):
          msg = (
 -            "Cannot aggregate over the 'other_age' alias. Use annotate() to "
@@ -962,7 +962,7 @@ index 2c2b946835..1755a9f435 100644
          with self.assertRaisesMessage(FieldError, msg):
              Author.objects.alias(
 @@ -1012,10 +1011,7 @@ class AliasTests(TestCase):
- 
+
      def test_values_alias(self):
          qs = Book.objects.alias(rating_alias=F('rating') - 1)
 -        msg = (
@@ -1002,21 +1002,21 @@ index 07f6fea48d..6327698dfa 100644
 --- a/tests/cache/tests.py
 +++ b/tests/cache/tests.py
 @@ -70,8 +70,7 @@ def empty_response(request):
- 
- 
+
+
  KEY_ERRORS_WITH_MEMCACHED_MSG = (
 -    'Cache key contains characters that will cause errors if used with '
 -    'memcached: %r'
 +    'Cache key contains characters that will cause errors if used with memcached: %r'
  )
- 
- 
+
+
 diff --git a/tests/expressions/tests.py b/tests/expressions/tests.py
 index 89c6a7c8de..dcde321c57 100644
 --- a/tests/expressions/tests.py
 +++ b/tests/expressions/tests.py
 @@ -409,16 +409,22 @@ class BasicExpressionsTests(TestCase):
- 
+
      def test_order_by_multiline_sql(self):
          raw_order_by = (
 -            RawSQL('''
@@ -1068,7 +1068,7 @@ index 0e5ee8f73f..cb1e9d31c5 100644
 -            '<input type="text" name="code_1">'
 +            '<input type="text" name="code_0"><input type="text" name="code_1">'
          ), strict=True)
- 
+
      def test_deepcopy(self):
 diff --git a/tests/gis_tests/geoapp/test_functions.py b/tests/gis_tests/geoapp/test_functions.py
 index a1b1f48e02..67e4313f3f 100644
@@ -1089,7 +1089,7 @@ index 4a36ac8285..c8c4cfa420 100644
 --- a/tests/invalid_models_tests/test_models.py
 +++ b/tests/invalid_models_tests/test_models.py
 @@ -1707,8 +1707,7 @@ class ConstraintsTests(TestCase):
- 
+
          self.assertEqual(Model.check(databases=self.databases), [
              Error(
 -                "'constraints' refers to the nonexistent field "
@@ -1099,7 +1099,7 @@ index 4a36ac8285..c8c4cfa420 100644
                  id='models.E012',
              ),
 @@ -1972,8 +1971,7 @@ class ConstraintsTests(TestCase):
- 
+
          self.assertEqual(Model.check(databases=self.databases), [
              Error(
 -                "'constraints' refers to the nonexistent field "
@@ -1109,7 +1109,7 @@ index 4a36ac8285..c8c4cfa420 100644
                  id='models.E012',
              ),
 @@ -2075,8 +2073,7 @@ class ConstraintsTests(TestCase):
- 
+
          self.assertEqual(Model.check(databases=self.databases), [
              Error(
 -                "'constraints' refers to the nonexistent field "
@@ -1119,7 +1119,7 @@ index 4a36ac8285..c8c4cfa420 100644
                  id='models.E012',
              ),
 @@ -2193,8 +2190,7 @@ class ConstraintsTests(TestCase):
- 
+
          self.assertEqual(Model.check(databases=self.databases), [
              Error(
 -                "'constraints' refers to the nonexistent field "
@@ -1129,7 +1129,7 @@ index 4a36ac8285..c8c4cfa420 100644
                  id='models.E012',
              ),
 @@ -2331,8 +2327,7 @@ class ConstraintsTests(TestCase):
- 
+
          self.assertEqual(Model.check(databases=self.databases), [
              Error(
 -                "'constraints' refers to the nonexistent field "
@@ -1139,7 +1139,7 @@ index 4a36ac8285..c8c4cfa420 100644
                  id='models.E012',
              ),
 @@ -2348,8 +2343,7 @@ class ConstraintsTests(TestCase):
- 
+
          self.assertEqual(Model.check(databases=self.databases), [
              Error(
 -                "'constraints' refers to the nonexistent field "
@@ -1162,7 +1162,7 @@ index 5709372cbc..0c62db8ae6 100644
 +            '\x1b[1mmigrations\n\x1b[0m [ ] 0001_initial\n [ ] 0002_second\n',
              out.getvalue().lower()
          )
- 
+
 @@ -320,9 +318,7 @@ class MigrateTests(MigrationTestBase):
          # Giving the explicit app_label tests for selective `show_list` in the command
          call_command("showmigrations", "migrations", format='list', stdout=out, verbosity=0, no_color=True)
@@ -1252,7 +1252,7 @@ index 5709372cbc..0c62db8ae6 100644
 -        "'auth'?"
 +        "No installed app with label 'django.contrib.auth'. Did you mean 'auth'?"
      )
- 
+
      def test_makemigrations_nonexistent_app_label(self):
 diff --git a/tests/migrations/test_writer.py b/tests/migrations/test_writer.py
 index 4506e6b541..f55c48a0d4 100644
@@ -1266,14 +1266,14 @@ index 4506e6b541..f55c48a0d4 100644
 -            '),'
 +            'custom_migration_operations.operations.TestOperation(\n),',
          )
- 
+
      def test_args_signature(self):
 diff --git a/tests/model_fields/test_jsonfield.py b/tests/model_fields/test_jsonfield.py
 index f7721aa6e8..faedd451cb 100644
 --- a/tests/model_fields/test_jsonfield.py
 +++ b/tests/model_fields/test_jsonfield.py
 @@ -129,8 +129,7 @@ class TestFormField(SimpleTestCase):
- 
+
  class TestSerialization(SimpleTestCase):
      test_data = (
 -        '[{"fields": {"value": %s}, '
@@ -1287,7 +1287,7 @@ index 1d6f1ba023..b08d52e6dd 100644
 --- a/tests/modeladmin/test_checks.py
 +++ b/tests/modeladmin/test_checks.py
 @@ -411,8 +411,7 @@ class PrepopulatedFieldsCheckTests(CheckTestCase):
- 
+
          self.assertIsInvalid(
              TestModelAdmin, ValidationTestModel,
 -            'The value of \'prepopulated_fields["slug"]\' must be a list '
@@ -1295,7 +1295,7 @@ index 1d6f1ba023..b08d52e6dd 100644
 +            'The value of \'prepopulated_fields["slug"]\' must be a list or tuple.',
              'admin.E029'
          )
- 
+
 diff --git a/tests/postgres_tests/test_operations.py b/tests/postgres_tests/test_operations.py
 index 1464f3177e..790fef8332 100644
 --- a/tests/postgres_tests/test_operations.py
@@ -1325,7 +1325,7 @@ index 18f5de746f..b6de765391 100644
 +            books,
 +            "Poems (Charlotte Bronte)\nSense and Sensibility (Jane Austen)\n",
 +        )
- 
+
      def test_using_is_honored_inheritance(self):
          B = BookWithYear.objects.using('other')
 @@ -1391,19 +1392,20 @@ class MultiDbTests(TestCase):
@@ -1353,7 +1353,7 @@ index 18f5de746f..b6de765391 100644
 +            books,
 +            "Poems (Charlotte Bronte)\nSense and Sensibility (Jane Austen)\n",
 +        )
- 
+
          # Explicit using on a different db.
          with self.assertNumQueries(1, using='default'), self.assertNumQueries(1, using='other'):
 diff --git a/tests/queries/tests.py b/tests/queries/tests.py
@@ -1361,7 +1361,7 @@ index f146bc89fd..09aaad95a9 100644
 --- a/tests/queries/tests.py
 +++ b/tests/queries/tests.py
 @@ -3149,8 +3149,7 @@ class QuerySetExceptionTests(SimpleTestCase):
- 
+
      def test_invalid_order_by(self):
          msg = (
 -            "Cannot resolve keyword '*' into field. Choices are: created, id, "
@@ -1457,21 +1457,21 @@ index df32562f6b..aadd618109 100644
 -        'f()'
 +        'import django\ndef f():\n    print(django.__version__)\nf()'
      )
- 
+
      def test_command_option(self):
 diff --git a/tests/template_tests/filter_tests/test_urlizetrunc.py b/tests/template_tests/filter_tests/test_urlizetrunc.py
 index e37e277212..09bbe776cf 100644
 --- a/tests/template_tests/filter_tests/test_urlizetrunc.py
 +++ b/tests/template_tests/filter_tests/test_urlizetrunc.py
 @@ -60,14 +60,13 @@ class FunctionTests(SimpleTestCase):
- 
+
          self.assertEqual(
              urlizetrunc(uri, 1),
 -            '<a href="http://31characteruri.com/test/"'
 -            ' rel="nofollow">…</a>',
 +            '<a href="http://31characteruri.com/test/" rel="nofollow">…</a>',
          )
- 
+
      def test_overtruncate(self):
          self.assertEqual(
 -            urlizetrunc('http://short.com/', 20), '<a href='
@@ -1479,7 +1479,7 @@ index e37e277212..09bbe776cf 100644
 +            urlizetrunc('http://short.com/', 20),
 +            '<a href="http://short.com/" rel="nofollow">http://short.com/</a>',
          )
- 
+
      def test_query_string(self):
 diff --git a/tests/template_tests/syntax_tests/i18n/test_get_language_info.py b/tests/template_tests/syntax_tests/i18n/test_get_language_info.py
 index 51e8d2bc79..4ae8186af5 100644
@@ -1488,7 +1488,7 @@ index 51e8d2bc79..4ae8186af5 100644
 @@ -36,7 +36,7 @@ class I18nGetLanguageInfoTagTests(SimpleTestCase):
              output = self.engine.render_to_string('i18n38')
          self.assertEqual(output, 'de: German/Deutsch/německy bidi=False')
- 
+
 -    @setup({'template': '{% load i18n %}''{% get_language_info %}'})
 +    @setup({'template': '{% load i18n %}{% get_language_info %}'})
      def test_no_for_as(self):
@@ -1513,7 +1513,7 @@ index 7fef5652df..dedc36aeb7 100644
 --- a/tests/test_runner/test_discover_runner.py
 +++ b/tests/test_runner/test_discover_runner.py
 @@ -445,8 +445,7 @@ class DiscoverRunnerTests(SimpleTestCase):
- 
+
      def test_pdb_with_parallel(self):
          msg = (
 -            'You cannot use --pdb with parallel tests; pass --parallel=1 to '
@@ -1527,7 +1527,7 @@ index 9474373138..0da45d9f64 100644
 --- a/tests/test_utils/tests.py
 +++ b/tests/test_utils/tests.py
 @@ -437,8 +437,7 @@ class AssertNumQueriesContextManagerTests(TestCase):
- 
+
      def test_failure(self):
          msg = (
 -            '1 != 2 : 1 queries executed, 2 expected\nCaptured queries were:\n'
@@ -1538,7 +1538,7 @@ index 9474373138..0da45d9f64 100644
              with self.assertNumQueries(2):
 @@ -927,11 +926,7 @@ class HTMLEqualTests(SimpleTestCase):
              parse_html('</p>')
- 
+
      def test_escaped_html_errors(self):
 -        msg = (
 -            '<p>\n<foo>\n</p>'
@@ -1583,7 +1583,7 @@ index 84d675b79b..8fc7ea2fcd 100644
 +            '"generated", line 2, in funcName\n    <source code not available>',
              text,
          )
- 
+
 @@ -731,14 +729,12 @@ class ExceptionReporterTests(SimpleTestCase):
                  html,
              )
@@ -1600,7 +1600,7 @@ index 84d675b79b..8fc7ea2fcd 100644
 +                '"generated", line 2, in funcName\n    <source code not available>',
                  text,
              )
- 
+
 + git -c core.fileMode=false diff c5cd8783825b5f6384417dac5f3889b4210b7d08
 diff --git a/django/template/autoreload.py b/django/template/autoreload.py
 index cf1b20ba95..9fc33da215 100644
@@ -1623,7 +1623,7 @@ index d6ece4cc6d..ff7b92800d 100644
 -        self.assertTrue(autoreload.template_changed(None, template_path))
 +        self.assertIsNone(autoreload.template_changed(None, template_path))
          mock_reset.assert_called_once()
- 
+
      @mock.patch('django.template.autoreload.reset_loaders')
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

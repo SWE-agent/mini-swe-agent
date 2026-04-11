@@ -11,7 +11,7 @@ index 1a55d3d417..3c8310aab2 100644
 +            method_name = 'get_%s_display' % self.name
 +            # Check if we should create/update the method
 +            create_method = False
-+            
++
 +            if hasattr(cls, method_name):
 +                # Method exists (possibly inherited)
 +                # Check if it's the default implementation in any parent class
@@ -29,7 +29,7 @@ index 1a55d3d417..3c8310aab2 100644
 +            else:
 +                # Method doesn't exist at all
 +                create_method = True
-+            
++
 +            if create_method:
 +                # Create or update the get_FOO_display method
                  setattr(
@@ -38,7 +38,7 @@ index 1a55d3d417..3c8310aab2 100644
 +                    method_name,
                      partialmethod(cls._get_FIELD_display, field=self),
                  )
- 
+
 @@ -1194,14 +1218,40 @@ class DateField(DateTimeCheckMixin, Field):
      def contribute_to_class(self, cls, name, **kwargs):
          super().contribute_to_class(cls, name, **kwargs)
@@ -54,7 +54,7 @@ index 1a55d3d417..3c8310aab2 100644
 +            # Check if we need to create or update get_next_by_FOO and get_previous_by_FOO
 +            next_method_name = 'get_next_by_%s' % self.name
 +            prev_method_name = 'get_previous_by_%s' % self.name
-+            
++
 +            # Helper to check and update a method
 +            def check_and_update_method(method_name, is_next):
 +                create_method = False
@@ -75,16 +75,16 @@ index 1a55d3d417..3c8310aab2 100644
 +                else:
 +                    # Method doesn't exist at all
 +                    create_method = True
-+                
++
 +                if create_method:
 +                    setattr(
 +                        cls,
 +                        method_name,
 +                        partialmethod(cls._get_next_or_previous_by_FIELD, field=self, is_next=is_next),
 +                    )
-+            
++
 +            check_and_update_method(next_method_name, is_next=True)
 +            check_and_update_method(prev_method_name, is_next=False)
- 
+
      def get_prep_value(self, value):
          value = super().get_prep_value(value)

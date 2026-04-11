@@ -8,9 +8,9 @@ index 39a350373..ccb5d608f 100644
                      if not match or not match.is_complete():
 -                        return MatchResult.from_unmatched(mutated_segments)
 +                        return MatchResult.from_unmatched(segments)
- 
+
                      # We have a complete match!
- 
+
 @@ -170,7 +170,7 @@ class Delimited(OneOf):
                              self.min_delimiters
                              and len(delimiters) < self.min_delimiters
@@ -35,7 +35,7 @@ index 39a350373..ccb5d608f 100644
                  if self.min_delimiters and len(delimiters) < self.min_delimiters:
 -                    return MatchResult.from_unmatched(mutated_segments)
 +                    return MatchResult.from_unmatched(segments)
- 
+
                  # We use the whitespace padded match to hoover up whitespace if enabled,
                  # and default to the longest matcher. We don't care which one matches.
 @@ -248,4 +248,4 @@ class Delimited(OneOf):

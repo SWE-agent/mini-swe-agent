@@ -23,12 +23,12 @@ diff --git a/tests/utils_tests/test_autoreload.py b/tests/utils_tests/test_autor
 @@ -132,6 +132,10 @@ def test_module_without_spec(self):
          del module.__spec__
          self.assertEqual(autoreload.iter_modules_and_files((module,), frozenset()), frozenset())
- 
+
 +    def test_main_module_is_resolved(self):
 +        main_module = sys.modules['__main__']
 +        self.assertFileFound(Path(main_module.__file__))
 +
- 
+
  class TestCommonRoots(SimpleTestCase):
      def test_common_roots(self):
 

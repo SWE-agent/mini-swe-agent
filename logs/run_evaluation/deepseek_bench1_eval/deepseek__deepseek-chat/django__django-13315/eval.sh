@@ -34,8 +34,8 @@ diff --git a/tests/model_forms/models.py b/tests/model_forms/models.py
 +        related_name='jokes_today',
 +    )
 +    funny = models.BooleanField(default=False)
- 
- 
+
+
  # Model for #13776
 diff --git a/tests/model_forms/tests.py b/tests/model_forms/tests.py
 --- a/tests/model_forms/tests.py
@@ -45,13 +45,13 @@ diff --git a/tests/model_forms/tests.py b/tests/model_forms/tests.py
  from django.template import Context, Template
  from django.test import SimpleTestCase, TestCase, skipUnlessDBFeature
 +from django.test.utils import isolate_apps
- 
+
  from .models import (
      Article, ArticleStatus, Author, Author1, Award, BetterWriter, BigInt, Book,
 @@ -2829,6 +2830,72 @@ def test_callable_called_each_time_form_is_instantiated(self):
              StumpJokeForm()
              self.assertEqual(today_callable_dict.call_count, 3)
- 
+
 +    @isolate_apps('model_forms')
 +    def test_limit_choices_to_no_duplicates(self):
 +        joke1 = StumpJoke.objects.create(
@@ -118,9 +118,9 @@ diff --git a/tests/model_forms/tests.py b/tests/model_forms/tests.py
 +            [self.marley, self.threepwood],
 +        )
 +
- 
+
  class FormFieldCallbackTests(SimpleTestCase):
- 
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

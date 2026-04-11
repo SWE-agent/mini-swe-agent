@@ -160,7 +160,7 @@ index a4b4910c36..c574bed84f 100644
 +        name = kwargs.get('name')
 +        if not name:
 +            name = self._create_index_name(model._meta.db_table, [field.column], '_id')
- 
+
          return super()._create_index_sql(
              model,
 diff --git a/tests/gis_tests/geoapp/test_indexes.py b/tests/gis_tests/geoapp/test_indexes.py
@@ -173,13 +173,13 @@ index 4aee5062d8..ce9376d810 100644
  from django.db.models import Index
  from django.test import TransactionTestCase
 +from django.test.utils import isolate_apps
- 
+
  from .models import City
- 
+
 @@ -38,6 +40,30 @@ class SchemaIndexesTests(TransactionTestCase):
              str(index.create_sql(City, editor)),
          )
- 
+
 +    @isolate_apps('gis_tests.geoapp')
 +    def test_namespaced_db_table(self):
 +        if not connection.ops.postgis:
@@ -213,7 +213,7 @@ index 25d55619ed..6c7adcf359 100644
 +++ b/tests/gis_tests/gis_migrations/test_operations.py
 @@ -210,7 +210,7 @@ class OperationTests(OperationTestCase):
          self.assertSpatialIndexExists('gis_neighborhood', 'point3d')
- 
+
          with connection.cursor() as cursor:
 -            index_name = 'gis_neighborhood_point3d_id'
 +            index_name = 'gis_neighborhood_point3d_113bc868_id'

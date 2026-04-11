@@ -152,7 +152,7 @@ index 730e4c5751..ed4285855e 100644
 @@ -2,7 +2,7 @@
  {% load i18n static %}
  {% load admin_urls %}
- 
+
 -{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
 +{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
  {% block bodyclass %}{{ block.super }} {{ opts.app_label }}-{{ opts.model_name }} change-form{% endblock %}
@@ -197,18 +197,18 @@ index 21b1c9bceb..33343846bf 100644
 @@ -6,7 +6,7 @@
  {{ media }}
  {% endblock %}
- 
+
 -{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
 +{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
- 
+
  {% block coltype %}colM{% endblock %}
- 
+
 diff --git a/django/contrib/admin/templates/admin/change_list.html b/django/contrib/admin/templates/admin/change_list.html
 index 15508a9a9f..12a495504f 100644
 --- a/django/contrib/admin/templates/admin/change_list.html
 +++ b/django/contrib/admin/templates/admin/change_list.html
 @@ -3,9 +3,9 @@
- 
+
  {% block extrastyle %}
    {{ block.super }}
 -  <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}">
@@ -226,12 +226,12 @@ index b6e84b64ed..5674264093 100644
 @@ -1,7 +1,7 @@
  {% extends "admin/base_site.html" %}
  {% load i18n static %}
- 
+
 -{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
 +{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
- 
+
  {% block coltype %}colMS{% endblock %}
- 
+
 diff --git a/django/contrib/admin/templates/admin/login.html b/django/contrib/admin/templates/admin/login.html
 index 7a192a4bdf..aaa21fb450 100644
 --- a/django/contrib/admin/templates/admin/login.html
@@ -239,12 +239,12 @@ index 7a192a4bdf..aaa21fb450 100644
 @@ -1,7 +1,7 @@
  {% extends "admin/base_site.html" %}
  {% load i18n static %}
- 
+
 -{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}">
 +{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/login.css" %}">
  {{ form.media }}
  {% endblock %}
- 
+
 diff --git a/django/contrib/admin/templates/registration/password_change_form.html b/django/contrib/admin/templates/registration/password_change_form.html
 index 95c84f922d..c79020180b 100644
 --- a/django/contrib/admin/templates/registration/password_change_form.html
@@ -264,7 +264,7 @@ index 373e703416..c93f9c4692 100644
 @@ -1,7 +1,7 @@
  {% extends "admin/base_site.html" %}
  {% load i18n static %}
- 
+
 -{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
 +{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
  {% block breadcrumbs %}
@@ -277,7 +277,7 @@ index 33785f7c14..380441501e 100644
 @@ -1,7 +1,7 @@
  {% extends "admin/base_site.html" %}
  {% load i18n static %}
- 
+
 -{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
 +{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
  {% block breadcrumbs %}
@@ -321,31 +321,31 @@ index c8770173aa..487c2b4922 100644
 +<link rel="stylesheet" href="{{ pathto('_static/console-tabs.css', 1) }}">
  {%- endif -%}
  {% endblock %}
- 
+
 diff --git a/docs/intro/tutorial06.txt b/docs/intro/tutorial06.txt
 index c3df546cae..f0087f8905 100644
 --- a/docs/intro/tutorial06.txt
 +++ b/docs/intro/tutorial06.txt
 @@ -74,7 +74,7 @@ Next, add the following at the top of ``polls/templates/polls/index.html``:
- 
+
      {% load static %}
- 
+
 -    <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
 +    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
- 
+
  The ``{% static %}`` template tag generates the absolute URL of static files.
- 
+
 diff --git a/docs/ref/templates/builtins.txt b/docs/ref/templates/builtins.txt
 index 1fcfa1fa88..08c1ca47e2 100644
 --- a/docs/ref/templates/builtins.txt
 +++ b/docs/ref/templates/builtins.txt
 @@ -2637,7 +2637,7 @@ It is also able to consume standard context variables, e.g. assuming a
  ``user_stylesheet`` variable is passed to the template::
- 
+
      {% load static %}
 -    <link rel="stylesheet" href="{% static user_stylesheet %}" type="text/css" media="screen">
 +    <link rel="stylesheet" href="{% static user_stylesheet %}" media="screen">
- 
+
  If you'd like to retrieve a static URL without displaying it, you can use a
  slightly different call::
 diff --git a/docs/releases/4.1.txt b/docs/releases/4.1.txt
@@ -355,30 +355,30 @@ index 8a531039ef..cf4eb07b35 100644
 @@ -366,6 +366,9 @@ Miscellaneous
    :attr:`~django.contrib.admin.ModelAdmin.inlines` attributes now default to an
    empty tuple rather than an empty list to discourage unintended mutation.
- 
+
 +* The ``type="text/css"`` attribute is no longer included in ``<link>`` tags
 +  for CSS :doc:`form media </topics/forms/media>`.
 +
  .. _deprecated-features-4.1:
- 
+
  Features deprecated in 4.1
 diff --git a/docs/topics/forms/media.txt b/docs/topics/forms/media.txt
 index 34bc70dcc5..6ca7c66fde 100644
 --- a/docs/topics/forms/media.txt
 +++ b/docs/topics/forms/media.txt
 @@ -71,7 +71,7 @@ can be retrieved through this property::
- 
+
      >>> w = CalendarWidget()
      >>> print(w.media)
 -    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
 +    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
      <script src="http://static.example.com/animations.js"></script>
      <script src="http://static.example.com/actions.js"></script>
- 
+
 @@ -114,9 +114,14 @@ requirements::
- 
+
  If this last CSS definition were to be rendered, it would become the following HTML::
- 
+
 -    <link href="http://static.example.com/pretty.css" type="text/css" media="screen" rel="stylesheet">
 -    <link href="http://static.example.com/lo_res.css" type="text/css" media="tv,projector" rel="stylesheet">
 -    <link href="http://static.example.com/newspaper.css" type="text/css" media="print" rel="stylesheet">
@@ -390,11 +390,11 @@ index 34bc70dcc5..6ca7c66fde 100644
 +
 +    In older versions, the ``type="text/css"`` attribute is included in CSS
 +    links.
- 
+
  ``js``
  ------
 @@ -145,8 +150,8 @@ example above::
- 
+
      >>> w = FancyCalendarWidget()
      >>> print(w.media)
 -    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
@@ -405,54 +405,54 @@ index 34bc70dcc5..6ca7c66fde 100644
      <script src="http://static.example.com/actions.js"></script>
      <script src="http://static.example.com/whizbang.js"></script>
 @@ -165,7 +170,7 @@ an ``extend=False`` declaration to the ``Media`` declaration::
- 
+
      >>> w = FancyCalendarWidget()
      >>> print(w.media)
 -    <link href="http://static.example.com/fancy.css" type="text/css" media="all" rel="stylesheet">
 +    <link href="http://static.example.com/fancy.css" media="all" rel="stylesheet">
      <script src="http://static.example.com/whizbang.js"></script>
- 
+
  If you require even more control over inheritance, define your assets using a
 @@ -228,7 +233,7 @@ was ``None``::
- 
+
      >>> w = CalendarWidget()
      >>> print(w.media)
 -    <link href="/css/pretty.css" type="text/css" media="all" rel="stylesheet">
 +    <link href="/css/pretty.css" media="all" rel="stylesheet">
      <script src="http://uploads.example.com/animations.js"></script>
      <script src="http://othersite.com/actions.js"></script>
- 
+
 @@ -236,7 +241,7 @@ But if :setting:`STATIC_URL` is ``'http://static.example.com/'``::
- 
+
      >>> w = CalendarWidget()
      >>> print(w.media)
 -    <link href="/css/pretty.css" type="text/css" media="all" rel="stylesheet">
 +    <link href="/css/pretty.css" media="all" rel="stylesheet">
      <script src="http://static.example.com/animations.js"></script>
      <script src="http://othersite.com/actions.js"></script>
- 
+
 @@ -245,7 +250,7 @@ Or if :mod:`~django.contrib.staticfiles` is configured using the
- 
+
      >>> w = CalendarWidget()
      >>> print(w.media)
 -    <link href="/css/pretty.css" type="text/css" media="all" rel="stylesheet">
 +    <link href="/css/pretty.css" media="all" rel="stylesheet">
      <script src="https://static.example.com/animations.27e20196a850.js"></script>
      <script src="http://othersite.com/actions.js"></script>
- 
+
 @@ -268,12 +273,12 @@ operator to filter out a medium of interest. For example::
- 
+
      >>> w = CalendarWidget()
      >>> print(w.media)
 -    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
 +    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
      <script src="http://static.example.com/animations.js"></script>
      <script src="http://static.example.com/actions.js"></script>
- 
+
      >>> print(w.media['css'])
 -    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
 +    <link href="http://static.example.com/pretty.css" media="all" rel="stylesheet">
- 
+
  When you use the subscript operator, the value that is returned is a
  new ``Media`` object -- but one that only contains the media of interest.
 @@ -300,7 +305,7 @@ specified by both::
@@ -465,7 +465,7 @@ index 34bc70dcc5..6ca7c66fde 100644
      <script src="http://static.example.com/actions.js"></script>
      <script src="http://static.example.com/whizbang.js"></script>
 @@ -356,7 +361,7 @@ are part of the form::
- 
+
      >>> f = ContactForm()
      >>> f.media
 -    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
@@ -474,7 +474,7 @@ index 34bc70dcc5..6ca7c66fde 100644
      <script src="http://static.example.com/actions.js"></script>
      <script src="http://static.example.com/whizbang.js"></script>
 @@ -375,8 +380,8 @@ CSS for form layout -- add a ``Media`` declaration to the form::
- 
+
      >>> f = ContactForm()
      >>> f.media
 -    <link href="http://static.example.com/pretty.css" type="text/css" media="all" rel="stylesheet">
@@ -530,7 +530,7 @@ index 26f81a4602..d145560d9b 100644
 +            """<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
 +<link href="/path/to/css2" media="all" rel="stylesheet">"""
          )
- 
+
          self.assertEqual(
 @@ -120,9 +120,9 @@ class FormsMediaTestCase(SimpleTestCase):
          w3 = MyWidget3()
@@ -558,12 +558,12 @@ index 26f81a4602..d145560d9b 100644
  <script src="https://secure.other.com/path/to/js3"></script>"""
 @@ -148,7 +148,7 @@ class FormsMediaTestCase(SimpleTestCase):
                  js = ('/path/to/js1', '/path/to/js1')
- 
+
          w4 = MyWidget4()
 -        self.assertEqual(str(w4.media), """<link href="/path/to/css1" type="text/css" media="all" rel="stylesheet">
 +        self.assertEqual(str(w4.media), """<link href="/path/to/css1" media="all" rel="stylesheet">
  <script src="/path/to/js1"></script>""")
- 
+
      def test_media_deduplication(self):
 @@ -159,7 +159,7 @@ class FormsMediaTestCase(SimpleTestCase):
              css={'all': ('/path/to/css1', '/path/to/css1')},
@@ -572,20 +572,20 @@ index 26f81a4602..d145560d9b 100644
 -        self.assertEqual(str(media), """<link href="/path/to/css1" type="text/css" media="all" rel="stylesheet">
 +        self.assertEqual(str(media), """<link href="/path/to/css1" media="all" rel="stylesheet">
  <script src="/path/to/js1"></script>""")
- 
+
      def test_media_property(self):
 @@ -174,7 +174,7 @@ class FormsMediaTestCase(SimpleTestCase):
              media = property(_media)
- 
+
          w4 = MyWidget4()
 -        self.assertEqual(str(w4.media), """<link href="/some/path" type="text/css" media="all" rel="stylesheet">
 +        self.assertEqual(str(w4.media), """<link href="/some/path" media="all" rel="stylesheet">
  <script src="/some/js"></script>""")
- 
+
          # Media properties can reference the media of their parents
 @@ -184,8 +184,8 @@ class FormsMediaTestCase(SimpleTestCase):
              media = property(_media)
- 
+
          w5 = MyWidget5()
 -        self.assertEqual(str(w5.media), """<link href="/some/path" type="text/css" media="all" rel="stylesheet">
 -<link href="/other/path" type="text/css" media="all" rel="stylesheet">
@@ -593,7 +593,7 @@ index 26f81a4602..d145560d9b 100644
 +<link href="/other/path" media="all" rel="stylesheet">
  <script src="/some/js"></script>
  <script src="/other/js"></script>""")
- 
+
 @@ -207,9 +207,9 @@ class FormsMediaTestCase(SimpleTestCase):
          w6 = MyWidget6()
          self.assertEqual(
@@ -644,7 +644,7 @@ index 26f81a4602..d145560d9b 100644
          )
 @@ -303,8 +303,8 @@ class FormsMediaTestCase(SimpleTestCase):
                  js = ('/path/to/js1', '/path/to/js4')
- 
+
          w10 = MyWidget10()
 -        self.assertEqual(str(w10.media), """<link href="/path/to/css3" type="text/css" media="all" rel="stylesheet">
 -<link href="http://media.example.com/static/path/to/css1" type="text/css" media="all" rel="stylesheet">
@@ -652,7 +652,7 @@ index 26f81a4602..d145560d9b 100644
 +<link href="http://media.example.com/static/path/to/css1" media="all" rel="stylesheet">
  <script src="/path/to/js1"></script>
  <script src="/path/to/js4"></script>""")
- 
+
 @@ -328,9 +328,9 @@ class FormsMediaTestCase(SimpleTestCase):
          w11 = MyWidget11()
          self.assertEqual(
@@ -761,7 +761,7 @@ index 26f81a4602..d145560d9b 100644
 +<link href="/path/to/css2" media="all" rel="stylesheet">
 +<link href="/path/to/css3" media="all" rel="stylesheet">"""
          )
- 
+
      def test_html_safe(self):
 diff --git a/tests/model_forms/tests.py b/tests/model_forms/tests.py
 index 0307569c12..db36216d14 100644
@@ -776,7 +776,7 @@ index 0307569c12..db36216d14 100644
 +            '<link href="/some/form/css" media="all" rel="stylesheet">'
 +            '<script src="/some/form/javascript"></script>'
          )
- 
+
      def test_choices_type(self):
 diff --git a/tests/staticfiles_tests/test_forms.py b/tests/staticfiles_tests/test_forms.py
 index 1fbcbe164c..fadbe6e1d5 100644

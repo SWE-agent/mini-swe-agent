@@ -25,9 +25,9 @@ diff --git a/tests/auth_tests/test_migrations.py b/tests/auth_tests/test_migrati
  from django.contrib.contenttypes.models import ContentType
  from django.test import TestCase
 +from django.test.utils import captured_stdout
- 
+
  from .models import Proxy, UserProxy
- 
+
 @@ -152,3 +153,27 @@ def test_user_keeps_same_permissions_after_migrating_backward(self):
          user = User._default_manager.get(pk=user.pk)
          for permission in [self.default_permission, self.custom_permission]:

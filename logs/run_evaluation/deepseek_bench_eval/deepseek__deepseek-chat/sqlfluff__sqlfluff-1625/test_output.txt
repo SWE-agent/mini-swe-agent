@@ -145,9 +145,9 @@ Author: myschkyna <65536105+myschkyna@users.noreply.github.com>
 Date:   Wed Oct 13 16:14:42 2021 +0200
 
     Snowflake auto increments fixes (#1620)
-    
+
     * Replace non-existent NumericLiteralValue with NumericLiteralSegment
-    
+
     * Update tests
 
 diff --git a/src/sqlfluff/dialects/dialect_snowflake.py b/src/sqlfluff/dialects/dialect_snowflake.py
@@ -284,7 +284,7 @@ index 838c6ce5d..ab2e607d2 100644
 +        """Lint and fix all table aliases - except for self-joins."""
          # A buffer to keep any violations.
          violation_buff = []
- 
+
 @@ -211,7 +211,7 @@ class Rule_L031(BaseRule):
              violation_buff.append(
                  LintResult(
@@ -305,8 +305,8 @@ index 490cf3602..b2a95d391 100644
 -L:   5 | P:  13 | L031 | Avoid using aliases in join condition
 +L:   5 | P:  13 | L031 | Avoid using table aliases
  """
- 
- 
+
+
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3
 ++ . /opt/miniconda3/etc/profile.d/conda.sh
@@ -553,65 +553,65 @@ implementation:        cpython dialect:                  ansi
 verbosity:                   2 templater:               jinja
 
 == Raw Config:
-core:                                   
-    color:              False               
-    dialect:            ansi                
-    encoding:           autodetect          
-    ignore:             []                  
-    ignore_templated_areas:True                
-    nocolor:            True                
-    output_line_length: 80                  
-    recurse:            True                
-    runaway_limit:      10                  
+core:
+    color:              False
+    dialect:            ansi
+    encoding:           autodetect
+    ignore:             []
+    ignore_templated_areas:True
+    nocolor:            True
+    output_line_length: 80
+    recurse:            True
+    runaway_limit:      10
     sql_file_exts:      .sql,.sql.j2,.dml,.ddl
-    templater:          jinja               
-    verbose:            2                   
-indentation:                            
-    indented_joins:     False               
-    indented_using_on:  True                
-    template_blocks_indent:True                
-rules:                                  
-    allow_scalar:       True                
-    comma_style:        trailing            
-    indent_unit:        space               
-    max_line_length:    80                  
-    single_table_references:consistent          
-    tab_space_size:     4                   
-    unquoted_identifiers_policy:all                 
-    L007:                                   
-        operator_new_lines: after               
-    L010:                                   
-        capitalisation_policy:consistent          
-    L011:                                   
-        aliasing:           explicit            
-    L012:                                   
-        aliasing:           explicit            
-    L014:                                   
-        extended_capitalisation_policy:consistent          
-    L016:                                   
-        ignore_comment_lines:False               
-    L026:                                   
-        force_enable:       False               
-    L028:                                   
-        force_enable:       False               
-    L029:                                   
-        unquoted_identifiers_policy:aliases             
-    L030:                                   
-        capitalisation_policy:consistent          
-    L038:                                   
-        select_clause_trailing_comma:forbid              
-    L040:                                   
-        capitalisation_policy:consistent          
-    L042:                                   
-        forbid_subquery_in: join                
-    L047:                                   
-        prefer_count_0:     False               
-        prefer_count_1:     False               
-templater:                              
-    unwrap_wrapped_queries:True                
-    jinja:                                  
-        apply_dbt_builtins: True                
-        macros:                                 
+    templater:          jinja
+    verbose:            2
+indentation:
+    indented_joins:     False
+    indented_using_on:  True
+    template_blocks_indent:True
+rules:
+    allow_scalar:       True
+    comma_style:        trailing
+    indent_unit:        space
+    max_line_length:    80
+    single_table_references:consistent
+    tab_space_size:     4
+    unquoted_identifiers_policy:all
+    L007:
+        operator_new_lines: after
+    L010:
+        capitalisation_policy:consistent
+    L011:
+        aliasing:           explicit
+    L012:
+        aliasing:           explicit
+    L014:
+        extended_capitalisation_policy:consistent
+    L016:
+        ignore_comment_lines:False
+    L026:
+        force_enable:       False
+    L028:
+        force_enable:       False
+    L029:
+        unquoted_identifiers_policy:aliases
+    L030:
+        capitalisation_policy:consistent
+    L038:
+        select_clause_trailing_comma:forbid
+    L040:
+        capitalisation_policy:consistent
+    L042:
+        forbid_subquery_in: join
+    L047:
+        prefer_count_0:     False
+        prefer_count_1:     False
+templater:
+    unwrap_wrapped_queries:True
+    jinja:
+        apply_dbt_builtins: True
+        macros:
             dbt_config:         {% macro config() %}{% for k in kwargs %}{% endfor %}{% endmacro %}
             dbt_is_incremental: {% macro is_incremental() %}True{% endmacro %}
             dbt_ref:            {% macro ref(model_ref) %}{{model_ref}}{% endmacro %}
@@ -632,64 +632,64 @@ implementation:        cpython dialect:                  ansi
 verbosity:                   2 templater:               jinja
 
 == Raw Config:
-core:                                   
-    dialect:            ansi                
-    encoding:           autodetect          
-    ignore:             []                  
-    ignore_templated_areas:True                
-    nocolor:            False               
-    output_line_length: 80                  
-    recurse:            True                
-    runaway_limit:      10                  
+core:
+    dialect:            ansi
+    encoding:           autodetect
+    ignore:             []
+    ignore_templated_areas:True
+    nocolor:            False
+    output_line_length: 80
+    recurse:            True
+    runaway_limit:      10
     sql_file_exts:      .sql,.sql.j2,.dml,.ddl
-    templater:          jinja               
-    verbose:            2                   
-indentation:                            
-    indented_joins:     False               
-    indented_using_on:  True                
-    template_blocks_indent:True                
-rules:                                  
-    allow_scalar:       True                
-    comma_style:        trailing            
-    indent_unit:        space               
-    max_line_length:    80                  
-    single_table_references:consistent          
-    tab_space_size:     4                   
-    unquoted_identifiers_policy:all                 
-    L007:                                   
-        operator_new_lines: after               
-    L010:                                   
-        capitalisation_policy:consistent          
-    L011:                                   
-        aliasing:           explicit            
-    L012:                                   
-        aliasing:           explicit            
-    L014:                                   
-        extended_capitalisation_policy:consistent          
-    L016:                                   
-        ignore_comment_lines:False               
-    L026:                                   
-        force_enable:       False               
-    L028:                                   
-        force_enable:       False               
-    L029:                                   
-        unquoted_identifiers_policy:aliases             
-    L030:                                   
-        capitalisation_policy:consistent          
-    L038:                                   
-        select_clause_trailing_comma:forbid              
-    L040:                                   
-        capitalisation_policy:consistent          
-    L042:                                   
-        forbid_subquery_in: join                
-    L047:                                   
-        prefer_count_0:     False               
-        prefer_count_1:     False               
-templater:                              
-    unwrap_wrapped_queries:True                
-    jinja:                                  
-        apply_dbt_builtins: True                
-        macros:                                 
+    templater:          jinja
+    verbose:            2
+indentation:
+    indented_joins:     False
+    indented_using_on:  True
+    template_blocks_indent:True
+rules:
+    allow_scalar:       True
+    comma_style:        trailing
+    indent_unit:        space
+    max_line_length:    80
+    single_table_references:consistent
+    tab_space_size:     4
+    unquoted_identifiers_policy:all
+    L007:
+        operator_new_lines: after
+    L010:
+        capitalisation_policy:consistent
+    L011:
+        aliasing:           explicit
+    L012:
+        aliasing:           explicit
+    L014:
+        extended_capitalisation_policy:consistent
+    L016:
+        ignore_comment_lines:False
+    L026:
+        force_enable:       False
+    L028:
+        force_enable:       False
+    L029:
+        unquoted_identifiers_policy:aliases
+    L030:
+        capitalisation_policy:consistent
+    L038:
+        select_clause_trailing_comma:forbid
+    L040:
+        capitalisation_policy:consistent
+    L042:
+        forbid_subquery_in: join
+    L047:
+        prefer_count_0:     False
+        prefer_count_1:     False
+templater:
+    unwrap_wrapped_queries:True
+    jinja:
+        apply_dbt_builtins: True
+        macros:
             dbt_config:         {% macro config() %}{% for k in kwargs %}{% endfor %}{% endmacro %}
             dbt_is_incremental: {% macro is_incremental() %}True{% endmacro %}
             dbt_ref:            {% macro ref(model_ref) %}{{model_ref}}{% endmacro %}
@@ -734,65 +734,65 @@ implementation:        cpython dialect:                  ansi
 verbosity:                   4 templater:               jinja
 
 == Raw Config:
-core:                                   
-    color:              False               
-    dialect:            ansi                
-    encoding:           autodetect          
-    ignore:             []                  
-    ignore_templated_areas:True                
-    nocolor:            True                
-    output_line_length: 80                  
-    recurse:            True                
-    runaway_limit:      10                  
+core:
+    color:              False
+    dialect:            ansi
+    encoding:           autodetect
+    ignore:             []
+    ignore_templated_areas:True
+    nocolor:            True
+    output_line_length: 80
+    recurse:            True
+    runaway_limit:      10
     sql_file_exts:      .sql,.sql.j2,.dml,.ddl
-    templater:          jinja               
-    verbose:            4                   
-indentation:                            
-    indented_joins:     False               
-    indented_using_on:  True                
-    template_blocks_indent:True                
-rules:                                  
-    allow_scalar:       True                
-    comma_style:        trailing            
-    indent_unit:        space               
-    max_line_length:    80                  
-    single_table_references:consistent          
-    tab_space_size:     4                   
-    unquoted_identifiers_policy:all                 
-    L007:                                   
-        operator_new_lines: after               
-    L010:                                   
-        capitalisation_policy:consistent          
-    L011:                                   
-        aliasing:           explicit            
-    L012:                                   
-        aliasing:           explicit            
-    L014:                                   
-        extended_capitalisation_policy:consistent          
-    L016:                                   
-        ignore_comment_lines:False               
-    L026:                                   
-        force_enable:       False               
-    L028:                                   
-        force_enable:       False               
-    L029:                                   
-        unquoted_identifiers_policy:aliases             
-    L030:                                   
-        capitalisation_policy:consistent          
-    L038:                                   
-        select_clause_trailing_comma:forbid              
-    L040:                                   
-        capitalisation_policy:consistent          
-    L042:                                   
-        forbid_subquery_in: join                
-    L047:                                   
-        prefer_count_0:     False               
-        prefer_count_1:     False               
-templater:                              
-    unwrap_wrapped_queries:True                
-    jinja:                                  
-        apply_dbt_builtins: True                
-        macros:                                 
+    templater:          jinja
+    verbose:            4
+indentation:
+    indented_joins:     False
+    indented_using_on:  True
+    template_blocks_indent:True
+rules:
+    allow_scalar:       True
+    comma_style:        trailing
+    indent_unit:        space
+    max_line_length:    80
+    single_table_references:consistent
+    tab_space_size:     4
+    unquoted_identifiers_policy:all
+    L007:
+        operator_new_lines: after
+    L010:
+        capitalisation_policy:consistent
+    L011:
+        aliasing:           explicit
+    L012:
+        aliasing:           explicit
+    L014:
+        extended_capitalisation_policy:consistent
+    L016:
+        ignore_comment_lines:False
+    L026:
+        force_enable:       False
+    L028:
+        force_enable:       False
+    L029:
+        unquoted_identifiers_policy:aliases
+    L030:
+        capitalisation_policy:consistent
+    L038:
+        select_clause_trailing_comma:forbid
+    L040:
+        capitalisation_policy:consistent
+    L042:
+        forbid_subquery_in: join
+    L047:
+        prefer_count_0:     False
+        prefer_count_1:     False
+templater:
+    unwrap_wrapped_queries:True
+    jinja:
+        apply_dbt_builtins: True
+        macros:
             dbt_config:         {% macro config() %}{% for k in kwargs %}{% endfor %}{% endmacro %}
             dbt_is_incremental: {% macro is_incremental() %}True{% endmacro %}
             dbt_ref:            {% macro ref(model_ref) %}{{model_ref}}{% endmacro %}
@@ -870,7 +870,7 @@ INFO       Lexed tokens: ['SELECT', '\n', '    ', 'tbl', '.', 'name', ',', '\n',
 INFO       PARSING (test/fixtures/cli/passing_a.sql)
 INFO       [PD:0  MD:2 ]	..StatementSegment                                	Greed.match OUT     	++  	[match=<MatchResult 16/16: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
 INFO       [PD:0  MD:0 ]	FileSegment                                       	Delim.match OUT     	++  	[match=<MatchResult 1/1: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
-INFO       
+INFO
 ###
 #
 # Parse Depth 1. Expanding: StatementSegment: 'SELECT\n    tbl.name,\n    tbl.value\nFROM ...'
@@ -919,16 +919,16 @@ INFO       [PD:1  MD:3 ]	...NonWithSelectableGrammar                       	Opti
 INFO       [PD:1  MD:2 ]	..NonWithSelectableGrammar                        	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
 INFO       [PD:1  MD:1 ]	.SelectableGrammar                                	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
 INFO       [PD:1  MD:0 ]	StatementSegment                                  	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
-INFO       
+INFO
 ###
 #
 # Parse Depth 2. Expanding: SelectStatementSegment: 'SELECT\n    tbl.name,\n    tbl.value\nFROM ...'
 #
 ###
-INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF   	    
+INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF
 INFO       [PD:2  MD:2 ]	..FromClauseSegment                               	Start.match OUT     	++  	[match=<MatchResult 3/3: 'FROM tbl'>, seg="'FROM tbl'"]
 INFO       [PD:2  MD:0 ]	SelectStatementSegment                            	Seque.match OUT     	++  	[match=<MatchResult 4/4: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: SelectClauseSegment: 'SELECT\n    tbl.name,\n    tbl.value'
@@ -944,7 +944,7 @@ INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L:  1, P:  1]) 'SELEC
 INFO       [PD:4] Skipping expansion of <Indent: ([L:  1, P:  7]) ''>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  1, P:  7]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  2, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'tbl.name'
@@ -1020,7 +1020,7 @@ INFO       [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  2, P:  5]
 INFO       [PD:4] Skipping expansion of <SymbolSegment: ([L:  2, P: 13]) ','>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  2, P: 14]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  3, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'tbl.value'
@@ -1095,7 +1095,7 @@ INFO       [PD:4  MD:0 ]	SelectClauseElementSegment                        	OneO
 INFO       [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  3, P:  5])>...
 INFO       [PD:3] Skipping expansion of <NewlineSegment: ([L:  3, P: 14]) '\n'>...
 INFO       [PD:3] Skipping expansion of <Dedent: ([L:  4, P:  1]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: FromClauseSegment: 'FROM tbl'
@@ -1140,13 +1140,13 @@ INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L:  4, P:  1]) 'FROM'
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  4, P:  5]) ' '>...
 INFO       [PD:4] Skipping expansion of <FromExpressionSegment: ([L:  4, P:  6])>...
 INFO       [PD:1] Skipping expansion of <NewlineSegment: ([L:  4, P:  9]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parsed Tree:
 #
 ###
-INFO       
+INFO
 [L:  1, P:  1]      |file:
 [L:  1, P:  1]      |    statement:
 [L:  1, P:  1]      |        select_statement:
@@ -1238,64 +1238,64 @@ implementation:        cpython dialect:                  ansi
 verbosity:                   4 templater:               jinja
 
 == Raw Config:
-core:                                   
-    dialect:            ansi                
-    encoding:           autodetect          
-    ignore:             []                  
-    ignore_templated_areas:True                
-    nocolor:            False               
-    output_line_length: 80                  
-    recurse:            True                
-    runaway_limit:      10                  
+core:
+    dialect:            ansi
+    encoding:           autodetect
+    ignore:             []
+    ignore_templated_areas:True
+    nocolor:            False
+    output_line_length: 80
+    recurse:            True
+    runaway_limit:      10
     sql_file_exts:      .sql,.sql.j2,.dml,.ddl
-    templater:          jinja               
-    verbose:            4                   
-indentation:                            
-    indented_joins:     False               
-    indented_using_on:  True                
-    template_blocks_indent:True                
-rules:                                  
-    allow_scalar:       True                
-    comma_style:        trailing            
-    indent_unit:        space               
-    max_line_length:    80                  
-    single_table_references:consistent          
-    tab_space_size:     4                   
-    unquoted_identifiers_policy:all                 
-    L007:                                   
-        operator_new_lines: after               
-    L010:                                   
-        capitalisation_policy:consistent          
-    L011:                                   
-        aliasing:           explicit            
-    L012:                                   
-        aliasing:           explicit            
-    L014:                                   
-        extended_capitalisation_policy:consistent          
-    L016:                                   
-        ignore_comment_lines:False               
-    L026:                                   
-        force_enable:       False               
-    L028:                                   
-        force_enable:       False               
-    L029:                                   
-        unquoted_identifiers_policy:aliases             
-    L030:                                   
-        capitalisation_policy:consistent          
-    L038:                                   
-        select_clause_trailing_comma:forbid              
-    L040:                                   
-        capitalisation_policy:consistent          
-    L042:                                   
-        forbid_subquery_in: join                
-    L047:                                   
-        prefer_count_0:     False               
-        prefer_count_1:     False               
-templater:                              
-    unwrap_wrapped_queries:True                
-    jinja:                                  
-        apply_dbt_builtins: True                
-        macros:                                 
+    templater:          jinja
+    verbose:            4
+indentation:
+    indented_joins:     False
+    indented_using_on:  True
+    template_blocks_indent:True
+rules:
+    allow_scalar:       True
+    comma_style:        trailing
+    indent_unit:        space
+    max_line_length:    80
+    single_table_references:consistent
+    tab_space_size:     4
+    unquoted_identifiers_policy:all
+    L007:
+        operator_new_lines: after
+    L010:
+        capitalisation_policy:consistent
+    L011:
+        aliasing:           explicit
+    L012:
+        aliasing:           explicit
+    L014:
+        extended_capitalisation_policy:consistent
+    L016:
+        ignore_comment_lines:False
+    L026:
+        force_enable:       False
+    L028:
+        force_enable:       False
+    L029:
+        unquoted_identifiers_policy:aliases
+    L030:
+        capitalisation_policy:consistent
+    L038:
+        select_clause_trailing_comma:forbid
+    L040:
+        capitalisation_policy:consistent
+    L042:
+        forbid_subquery_in: join
+    L047:
+        prefer_count_0:     False
+        prefer_count_1:     False
+templater:
+    unwrap_wrapped_queries:True
+    jinja:
+        apply_dbt_builtins: True
+        macros:
             dbt_config:         {% macro config() %}{% for k in kwargs %}{% endfor %}{% endmacro %}
             dbt_is_incremental: {% macro is_incremental() %}True{% endmacro %}
             dbt_ref:            {% macro ref(model_ref) %}{{model_ref}}{% endmacro %}
@@ -1373,7 +1373,7 @@ INFO       Lexed tokens: ['SELECT', '\n', '    ', 'tbl', '.', 'name', ',', '\n',
 INFO       PARSING (test/fixtures/cli/passing_a.sql)
 INFO       [PD:0  MD:2 ]	..StatementSegment                                	Greed.match OUT     	++  	[match=<MatchResult 16/16: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
 INFO       [PD:0  MD:0 ]	FileSegment                                       	Delim.match OUT     	++  	[match=<MatchResult 1/1: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
-INFO       
+INFO
 ###
 #
 # Parse Depth 1. Expanding: StatementSegment: 'SELECT\n    tbl.name,\n    tbl.value\nFROM ...'
@@ -1422,16 +1422,16 @@ INFO       [PD:1  MD:3 ]	...NonWithSelectableGrammar                       	Opti
 INFO       [PD:1  MD:2 ]	..NonWithSelectableGrammar                        	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
 INFO       [PD:1  MD:1 ]	.SelectableGrammar                                	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
 INFO       [PD:1  MD:0 ]	StatementSegment                                  	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
-INFO       
+INFO
 ###
 #
 # Parse Depth 2. Expanding: SelectStatementSegment: 'SELECT\n    tbl.name,\n    tbl.value\nFROM ...'
 #
 ###
-INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF   	    
+INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF
 INFO       [PD:2  MD:2 ]	..FromClauseSegment                               	Start.match OUT     	++  	[match=<MatchResult 3/3: 'FROM tbl'>, seg="'FROM tbl'"]
 INFO       [PD:2  MD:0 ]	SelectStatementSegment                            	Seque.match OUT     	++  	[match=<MatchResult 4/4: 'SELECT\n    tbl.....value\nFROM tbl'>, seg="'SELECT\\n    tbl.name,...'"]
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: SelectClauseSegment: 'SELECT\n    tbl.name,\n    tbl.value'
@@ -1447,7 +1447,7 @@ INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L:  1, P:  1]) 'SELEC
 INFO       [PD:4] Skipping expansion of <Indent: ([L:  1, P:  7]) ''>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  1, P:  7]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  2, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'tbl.name'
@@ -1523,7 +1523,7 @@ INFO       [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  2, P:  5]
 INFO       [PD:4] Skipping expansion of <SymbolSegment: ([L:  2, P: 13]) ','>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  2, P: 14]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  3, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'tbl.value'
@@ -1598,7 +1598,7 @@ INFO       [PD:4  MD:0 ]	SelectClauseElementSegment                        	OneO
 INFO       [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  3, P:  5])>...
 INFO       [PD:3] Skipping expansion of <NewlineSegment: ([L:  3, P: 14]) '\n'>...
 INFO       [PD:3] Skipping expansion of <Dedent: ([L:  4, P:  1]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: FromClauseSegment: 'FROM tbl'
@@ -1643,13 +1643,13 @@ INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L:  4, P:  1]) 'FROM'
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  4, P:  5]) ' '>...
 INFO       [PD:4] Skipping expansion of <FromExpressionSegment: ([L:  4, P:  6])>...
 INFO       [PD:1] Skipping expansion of <NewlineSegment: ([L:  4, P:  9]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parsed Tree:
 #
 ###
-INFO       
+INFO
 [L:  1, P:  1]      |file:
 [L:  1, P:  1]      |    statement:
 [L:  1, P:  1]      |        select_statement:
@@ -1741,65 +1741,65 @@ implementation:        cpython dialect:                  ansi
 verbosity:                  11 templater:               jinja
 
 == Raw Config:
-core:                                   
-    color:              False               
-    dialect:            ansi                
-    encoding:           autodetect          
-    ignore:             []                  
-    ignore_templated_areas:True                
-    nocolor:            True                
-    output_line_length: 80                  
-    recurse:            True                
-    runaway_limit:      10                  
+core:
+    color:              False
+    dialect:            ansi
+    encoding:           autodetect
+    ignore:             []
+    ignore_templated_areas:True
+    nocolor:            True
+    output_line_length: 80
+    recurse:            True
+    runaway_limit:      10
     sql_file_exts:      .sql,.sql.j2,.dml,.ddl
-    templater:          jinja               
-    verbose:            11                  
-indentation:                            
-    indented_joins:     False               
-    indented_using_on:  True                
-    template_blocks_indent:True                
-rules:                                  
-    allow_scalar:       True                
-    comma_style:        trailing            
-    indent_unit:        space               
-    max_line_length:    80                  
-    single_table_references:consistent          
-    tab_space_size:     4                   
-    unquoted_identifiers_policy:all                 
-    L007:                                   
-        operator_new_lines: after               
-    L010:                                   
-        capitalisation_policy:consistent          
-    L011:                                   
-        aliasing:           explicit            
-    L012:                                   
-        aliasing:           explicit            
-    L014:                                   
-        extended_capitalisation_policy:consistent          
-    L016:                                   
-        ignore_comment_lines:False               
-    L026:                                   
-        force_enable:       False               
-    L028:                                   
-        force_enable:       False               
-    L029:                                   
-        unquoted_identifiers_policy:aliases             
-    L030:                                   
-        capitalisation_policy:consistent          
-    L038:                                   
-        select_clause_trailing_comma:forbid              
-    L040:                                   
-        capitalisation_policy:consistent          
-    L042:                                   
-        forbid_subquery_in: join                
-    L047:                                   
-        prefer_count_0:     False               
-        prefer_count_1:     False               
-templater:                              
-    unwrap_wrapped_queries:True                
-    jinja:                                  
-        apply_dbt_builtins: True                
-        macros:                                 
+    templater:          jinja
+    verbose:            11
+indentation:
+    indented_joins:     False
+    indented_using_on:  True
+    template_blocks_indent:True
+rules:
+    allow_scalar:       True
+    comma_style:        trailing
+    indent_unit:        space
+    max_line_length:    80
+    single_table_references:consistent
+    tab_space_size:     4
+    unquoted_identifiers_policy:all
+    L007:
+        operator_new_lines: after
+    L010:
+        capitalisation_policy:consistent
+    L011:
+        aliasing:           explicit
+    L012:
+        aliasing:           explicit
+    L014:
+        extended_capitalisation_policy:consistent
+    L016:
+        ignore_comment_lines:False
+    L026:
+        force_enable:       False
+    L028:
+        force_enable:       False
+    L029:
+        unquoted_identifiers_policy:aliases
+    L030:
+        capitalisation_policy:consistent
+    L038:
+        select_clause_trailing_comma:forbid
+    L040:
+        capitalisation_policy:consistent
+    L042:
+        forbid_subquery_in: join
+    L047:
+        prefer_count_0:     False
+        prefer_count_1:     False
+templater:
+    unwrap_wrapped_queries:True
+    jinja:
+        apply_dbt_builtins: True
+        macros:
             dbt_config:         {% macro config() %}{% for k in kwargs %}{% endfor %}{% endmacro %}
             dbt_is_incremental: {% macro is_incremental() %}True{% endmacro %}
             dbt_ref:            {% macro ref(model_ref) %}{{model_ref}}{% endmacro %}
@@ -2157,7 +2157,7 @@ Initial Structure:
 [L: 14, P: 19]      |        raw:                                                  'ASC'
 [L: 14, P: 22]      |    newline:                                                  '\n'
 
-INFO       
+INFO
 ###
 #
 # Parse Depth 1. Expanding: StatementSegment: 'SELECT\n    tbl.name,\n    b.value,\n    /*...'
@@ -2420,13 +2420,13 @@ Initial Structure:
 [L: 14, P: 18]      |        whitespace:                                           ' '
 [L: 14, P: 19]      |        raw:                                                  'ASC'
 
-INFO       
+INFO
 ###
 #
 # Parse Depth 2. Expanding: SelectStatementSegment: 'SELECT\n    tbl.name,\n    b.value,\n    /*...'
 #
 ###
-INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF   	    
+INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF
 DEBUG      [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec.match OUT     	+   	[match=<MatchResult 1/43: 'SELECT\n    tbl....S a_calculation'>, seg="'SELECT\\n    tbl.name,...'"]
 DEBUG      [PD:2  MD:1 ]	.SelectStatementSegment                           	Ref.match OUT       	+   	[match=<MatchResult 1/43: 'SELECT\n    tbl....S a_calculation'>, seg="'SELECT\\n    tbl.name,...'"]
 DEBUG      [PD:2  MD:3 ]	...FromClauseSegment                              	Ref.match OUT       	+   	[match=<MatchResult 1/41: 'FROM'>, seg="'FROM tbl\\nINNER JOIN ...'"]
@@ -2611,7 +2611,7 @@ Initial Structure:
 [L: 14, P: 18]      |        whitespace:                                           ' '
 [L: 14, P: 19]      |        raw:                                                  'ASC'
 
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: SelectClauseSegment: 'SELECT\n    tbl.name,\n    b.value,\n    /*...'
@@ -2755,7 +2755,7 @@ INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L:  1, P:  1]) 'SELEC
 INFO       [PD:4] Skipping expansion of <Indent: ([L:  1, P:  7]) ''>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  1, P:  7]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  2, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'tbl.name'
@@ -2902,7 +2902,7 @@ INFO       [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  2, P:  5]
 INFO       [PD:4] Skipping expansion of <SymbolSegment: ([L:  2, P: 13]) ','>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  2, P: 14]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  3, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'b.value'
@@ -3058,7 +3058,7 @@ INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  6, P:  1]) '  
 INFO       [PD:4] Skipping expansion of <CommentSegment: ([L:  6, P:  5]) '*/'>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  6, P:  7]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  7, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'd.something'
@@ -3207,7 +3207,7 @@ INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  7, P: 17]) '  
 INFO       [PD:4] Skipping expansion of <CommentSegment: ([L:  7, P: 21]) '-- Which a comment after it'>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  7, P: 48]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  8, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'tbl.foo'
@@ -3354,7 +3354,7 @@ INFO       [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  8, P:  5]
 INFO       [PD:4] Skipping expansion of <SymbolSegment: ([L:  8, P: 12]) ','>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  8, P: 13]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  9, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'c.val + b.val / -2 AS a_calculation'
@@ -4069,7 +4069,7 @@ INFO       [PD:5] Skipping expansion of <WhitespaceSegment: ([L:  9, P: 23]) ' '
 INFO       [PD:5] Skipping expansion of <AliasExpressionSegment: ([L:  9, P: 24])>...
 INFO       [PD:3] Skipping expansion of <NewlineSegment: ([L:  9, P: 40]) '\n'>...
 INFO       [PD:3] Skipping expansion of <Dedent: ([L: 10, P:  1]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: FromClauseSegment: 'FROM tbl\nINNER JOIN b ON (tbl.common_id ...'
@@ -5927,7 +5927,7 @@ Initial Structure:
 
 INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L: 10, P:  1]) 'FROM'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L: 10, P:  5]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: FromExpressionSegment: 'tbl\nINNER JOIN b ON (tbl.common_id = b.c...'
@@ -6058,7 +6058,7 @@ INFO       [PD:5] Skipping expansion of <Indent: ([L: 10, P:  6]) ''>...
 INFO       [PD:5] Skipping expansion of <FromExpressionElementSegment: ([L: 10, P:  6])>...
 INFO       [PD:5] Skipping expansion of <NewlineSegment: ([L: 10, P:  9]) '\n'>...
 INFO       [PD:5] Skipping expansion of <Dedent: ([L: 11, P:  1]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 5. Expanding: JoinClauseSegment: 'INNER JOIN b ON (tbl.common_id = b.commo...'
@@ -6115,7 +6115,7 @@ INFO       [PD:6] Skipping expansion of <Indent: ([L: 11, P: 11]) ''>...
 INFO       [PD:6] Skipping expansion of <WhitespaceSegment: ([L: 11, P: 11]) ' '>...
 INFO       [PD:6] Skipping expansion of <FromExpressionElementSegment: ([L: 11, P: 12])>...
 INFO       [PD:6] Skipping expansion of <WhitespaceSegment: ([L: 11, P: 13]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 6. Expanding: JoinOnConditionSegment: 'ON (tbl.common_id = b.common_id)'
@@ -6156,7 +6156,7 @@ Initial Structure:
 INFO       [PD:7] Skipping expansion of <KeywordSegment: ([L: 11, P: 14]) 'ON'>...
 INFO       [PD:7] Skipping expansion of <Indent: ([L: 11, P: 16]) ''>...
 INFO       [PD:7] Skipping expansion of <WhitespaceSegment: ([L: 11, P: 16]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 7. Expanding: BracketedSegment: '(tbl.common_id = b.common_id)'
@@ -6191,14 +6191,14 @@ Initial Structure:
 
 INFO       [PD:8] Skipping expansion of <SymbolSegment: ([L: 11, P: 17]) '('>...
 INFO       [PD:8] Skipping expansion of <Indent: ([L: 11, P: 18]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 8. Expanding: EphemeralSegment: 'tbl.common_id = b.common_id'
 #
 ###
 INFO       [PD:8  MD:0 ]	EphemeralSegment                                  	OneOf.match PRN     	    	[ns=2, ps=1, ms=0, pruned=[<Ref: SelectableGrammar>], opts=[<Ref: ExpressionSegment>, <Delimited: [<Ref: ColumnReferenceSegment>, <Ref: FunctionSegment>, <Ref: LiteralGrammar>]>]]
-INFO       [PD:8  MD:1 ]	.ExpressionSegment                                	Expre._match SELF   	    
+INFO       [PD:8  MD:1 ]	.ExpressionSegment                                	Expre._match SELF
 DEBUG      [PD:8  MD:1 ]	.ExpressionSegment                                	Expre.match OUT     	++  	[match=<MatchResult 1/1: 'tbl.common_id = b.common_id'>, seg="'tbl.common_id = b.co...'"]
 DEBUG      [PD:8  MD:1 ]	.EphemeralSegment                                 	Ref.match OUT       	++  	[match=<MatchResult 1/1: 'tbl.common_id = b.common_id'>, seg="'tbl.common_id = b.co...'"]
 INFO       [PD:8  MD:0 ]	EphemeralSegment                                  	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'tbl.common_id = b.common_id'>, seg="'tbl.common_id = b.co...'"]
@@ -6229,7 +6229,7 @@ INFO       [PD:8] Skipping expansion of <SymbolSegment: ([L: 11, P: 45]) ')'>...
 INFO       [PD:7] Skipping expansion of <Dedent: ([L: 11, P: 46]) ''>...
 INFO       [PD:6] Skipping expansion of <Dedent: ([L: 11, P: 46]) ''>...
 INFO       [PD:5] Skipping expansion of <NewlineSegment: ([L: 11, P: 46]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 5. Expanding: JoinClauseSegment: 'JOIN c ON (tbl.id = c.id)'
@@ -6282,7 +6282,7 @@ INFO       [PD:6] Skipping expansion of <Indent: ([L: 12, P:  5]) ''>...
 INFO       [PD:6] Skipping expansion of <WhitespaceSegment: ([L: 12, P:  5]) ' '>...
 INFO       [PD:6] Skipping expansion of <FromExpressionElementSegment: ([L: 12, P:  6])>...
 INFO       [PD:6] Skipping expansion of <WhitespaceSegment: ([L: 12, P:  7]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 6. Expanding: JoinOnConditionSegment: 'ON (tbl.id = c.id)'
@@ -6323,7 +6323,7 @@ Initial Structure:
 INFO       [PD:7] Skipping expansion of <KeywordSegment: ([L: 12, P:  8]) 'ON'>...
 INFO       [PD:7] Skipping expansion of <Indent: ([L: 12, P: 10]) ''>...
 INFO       [PD:7] Skipping expansion of <WhitespaceSegment: ([L: 12, P: 10]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 7. Expanding: BracketedSegment: '(tbl.id = c.id)'
@@ -6358,14 +6358,14 @@ Initial Structure:
 
 INFO       [PD:8] Skipping expansion of <SymbolSegment: ([L: 12, P: 11]) '('>...
 INFO       [PD:8] Skipping expansion of <Indent: ([L: 12, P: 12]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 8. Expanding: EphemeralSegment: 'tbl.id = c.id'
 #
 ###
 INFO       [PD:8  MD:0 ]	EphemeralSegment                                  	OneOf.match PRN     	    	[ns=2, ps=1, ms=0, pruned=[<Ref: SelectableGrammar>], opts=[<Ref: ExpressionSegment>, <Delimited: [<Ref: ColumnReferenceSegment>, <Ref: FunctionSegment>, <Ref: LiteralGrammar>]>]]
-INFO       [PD:8  MD:1 ]	.ExpressionSegment                                	Expre._match SELF   	    
+INFO       [PD:8  MD:1 ]	.ExpressionSegment                                	Expre._match SELF
 DEBUG      [PD:8  MD:1 ]	.ExpressionSegment                                	Expre.match OUT     	++  	[match=<MatchResult 1/1: 'tbl.id = c.id'>, seg="'tbl.id = c.id'"]
 DEBUG      [PD:8  MD:1 ]	.EphemeralSegment                                 	Ref.match OUT       	++  	[match=<MatchResult 1/1: 'tbl.id = c.id'>, seg="'tbl.id = c.id'"]
 INFO       [PD:8  MD:0 ]	EphemeralSegment                                  	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'tbl.id = c.id'>, seg="'tbl.id = c.id'"]
@@ -6398,7 +6398,7 @@ INFO       [PD:6] Skipping expansion of <Dedent: ([L: 12, P: 26]) ''>...
 INFO       [PD:5] Skipping expansion of <NewlineSegment: ([L: 12, P: 26]) '\n'>...
 INFO       [PD:5] Skipping expansion of <JoinClauseSegment: ([L: 13, P:  1])>...
 INFO       [PD:3] Skipping expansion of <NewlineSegment: ([L: 13, P: 37]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: OrderByClauseSegment: 'ORDER BY tbl.name ASC'
@@ -6689,13 +6689,13 @@ INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L: 14, P: 18]) ' '
 INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L: 14, P: 19]) 'ASC'>...
 INFO       [PD:4] Skipping expansion of <Dedent: ([L: 14, P: 22]) ''>...
 INFO       [PD:1] Skipping expansion of <NewlineSegment: ([L: 14, P: 22]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parsed Tree:
 #
 ###
-INFO       
+INFO
 [L:  1, P:  1]      |file:
 [L:  1, P:  1]      |    statement:
 [L:  1, P:  1]      |        select_statement:
@@ -7127,65 +7127,65 @@ implementation:        cpython dialect:                  ansi
 verbosity:                   3 templater:               jinja
 
 == Raw Config:
-core:                                   
-    color:              False               
-    dialect:            ansi                
-    encoding:           autodetect          
-    ignore:             []                  
-    ignore_templated_areas:True                
-    nocolor:            True                
-    output_line_length: 80                  
-    recurse:            True                
-    runaway_limit:      10                  
+core:
+    color:              False
+    dialect:            ansi
+    encoding:           autodetect
+    ignore:             []
+    ignore_templated_areas:True
+    nocolor:            True
+    output_line_length: 80
+    recurse:            True
+    runaway_limit:      10
     sql_file_exts:      .sql,.sql.j2,.dml,.ddl
-    templater:          jinja               
-    verbose:            3                   
-indentation:                            
-    indented_joins:     False               
-    indented_using_on:  True                
-    template_blocks_indent:True                
-rules:                                  
-    allow_scalar:       True                
-    comma_style:        trailing            
-    indent_unit:        space               
-    max_line_length:    80                  
-    single_table_references:consistent          
-    tab_space_size:     4                   
-    unquoted_identifiers_policy:all                 
-    L007:                                   
-        operator_new_lines: after               
-    L010:                                   
-        capitalisation_policy:consistent          
-    L011:                                   
-        aliasing:           explicit            
-    L012:                                   
-        aliasing:           explicit            
-    L014:                                   
-        extended_capitalisation_policy:consistent          
-    L016:                                   
-        ignore_comment_lines:False               
-    L026:                                   
-        force_enable:       False               
-    L028:                                   
-        force_enable:       False               
-    L029:                                   
-        unquoted_identifiers_policy:aliases             
-    L030:                                   
-        capitalisation_policy:consistent          
-    L038:                                   
-        select_clause_trailing_comma:forbid              
-    L040:                                   
-        capitalisation_policy:consistent          
-    L042:                                   
-        forbid_subquery_in: join                
-    L047:                                   
-        prefer_count_0:     False               
-        prefer_count_1:     False               
-templater:                              
-    unwrap_wrapped_queries:True                
-    jinja:                                  
-        apply_dbt_builtins: True                
-        macros:                                 
+    templater:          jinja
+    verbose:            3
+indentation:
+    indented_joins:     False
+    indented_using_on:  True
+    template_blocks_indent:True
+rules:
+    allow_scalar:       True
+    comma_style:        trailing
+    indent_unit:        space
+    max_line_length:    80
+    single_table_references:consistent
+    tab_space_size:     4
+    unquoted_identifiers_policy:all
+    L007:
+        operator_new_lines: after
+    L010:
+        capitalisation_policy:consistent
+    L011:
+        aliasing:           explicit
+    L012:
+        aliasing:           explicit
+    L014:
+        extended_capitalisation_policy:consistent
+    L016:
+        ignore_comment_lines:False
+    L026:
+        force_enable:       False
+    L028:
+        force_enable:       False
+    L029:
+        unquoted_identifiers_policy:aliases
+    L030:
+        capitalisation_policy:consistent
+    L038:
+        select_clause_trailing_comma:forbid
+    L040:
+        capitalisation_policy:consistent
+    L042:
+        forbid_subquery_in: join
+    L047:
+        prefer_count_0:     False
+        prefer_count_1:     False
+templater:
+    unwrap_wrapped_queries:True
+    jinja:
+        apply_dbt_builtins: True
+        macros:
             dbt_config:         {% macro config() %}{% for k in kwargs %}{% endfor %}{% endmacro %}
             dbt_is_incremental: {% macro is_incremental() %}True{% endmacro %}
             dbt_ref:            {% macro ref(model_ref) %}{{model_ref}}{% endmacro %}
@@ -7422,65 +7422,65 @@ implementation:        cpython dialect:                  ansi
 verbosity:                  11 templater:               jinja
 
 == Raw Config:
-core:                                   
-    color:              False               
-    dialect:            ansi                
-    encoding:           autodetect          
-    ignore:             []                  
-    ignore_templated_areas:True                
-    nocolor:            True                
-    output_line_length: 80                  
-    recurse:            True                
-    runaway_limit:      10                  
+core:
+    color:              False
+    dialect:            ansi
+    encoding:           autodetect
+    ignore:             []
+    ignore_templated_areas:True
+    nocolor:            True
+    output_line_length: 80
+    recurse:            True
+    runaway_limit:      10
     sql_file_exts:      .sql,.sql.j2,.dml,.ddl
-    templater:          jinja               
-    verbose:            11                  
-indentation:                            
-    indented_joins:     False               
-    indented_using_on:  True                
-    template_blocks_indent:True                
-rules:                                  
-    allow_scalar:       True                
-    comma_style:        trailing            
-    indent_unit:        space               
-    max_line_length:    80                  
-    single_table_references:consistent          
-    tab_space_size:     4                   
-    unquoted_identifiers_policy:all                 
-    L007:                                   
-        operator_new_lines: after               
-    L010:                                   
-        capitalisation_policy:consistent          
-    L011:                                   
-        aliasing:           explicit            
-    L012:                                   
-        aliasing:           explicit            
-    L014:                                   
-        extended_capitalisation_policy:consistent          
-    L016:                                   
-        ignore_comment_lines:False               
-    L026:                                   
-        force_enable:       False               
-    L028:                                   
-        force_enable:       False               
-    L029:                                   
-        unquoted_identifiers_policy:aliases             
-    L030:                                   
-        capitalisation_policy:consistent          
-    L038:                                   
-        select_clause_trailing_comma:forbid              
-    L040:                                   
-        capitalisation_policy:consistent          
-    L042:                                   
-        forbid_subquery_in: join                
-    L047:                                   
-        prefer_count_0:     False               
-        prefer_count_1:     False               
-templater:                              
-    unwrap_wrapped_queries:True                
-    jinja:                                  
-        apply_dbt_builtins: True                
-        macros:                                 
+    templater:          jinja
+    verbose:            11
+indentation:
+    indented_joins:     False
+    indented_using_on:  True
+    template_blocks_indent:True
+rules:
+    allow_scalar:       True
+    comma_style:        trailing
+    indent_unit:        space
+    max_line_length:    80
+    single_table_references:consistent
+    tab_space_size:     4
+    unquoted_identifiers_policy:all
+    L007:
+        operator_new_lines: after
+    L010:
+        capitalisation_policy:consistent
+    L011:
+        aliasing:           explicit
+    L012:
+        aliasing:           explicit
+    L014:
+        extended_capitalisation_policy:consistent
+    L016:
+        ignore_comment_lines:False
+    L026:
+        force_enable:       False
+    L028:
+        force_enable:       False
+    L029:
+        unquoted_identifiers_policy:aliases
+    L030:
+        capitalisation_policy:consistent
+    L038:
+        select_clause_trailing_comma:forbid
+    L040:
+        capitalisation_policy:consistent
+    L042:
+        forbid_subquery_in: join
+    L047:
+        prefer_count_0:     False
+        prefer_count_1:     False
+templater:
+    unwrap_wrapped_queries:True
+    jinja:
+        apply_dbt_builtins: True
+        macros:
             dbt_config:         {% macro config() %}{% for k in kwargs %}{% endfor %}{% endmacro %}
             dbt_is_incremental: {% macro is_incremental() %}True{% endmacro %}
             dbt_ref:            {% macro ref(model_ref) %}{{model_ref}}{% endmacro %}
@@ -7810,7 +7810,7 @@ Initial Structure:
 [L: 14, P: 19]      |        raw:                                                  'ASC'
 [L: 14, P: 22]      |    newline:                                                  '\n'
 
-INFO       
+INFO
 ###
 #
 # Parse Depth 1. Expanding: StatementSegment: 'SELECT\n    tbl.name,\n    b.value,\n    /*...'
@@ -8073,13 +8073,13 @@ Initial Structure:
 [L: 14, P: 18]      |        whitespace:                                           ' '
 [L: 14, P: 19]      |        raw:                                                  'ASC'
 
-INFO       
+INFO
 ###
 #
 # Parse Depth 2. Expanding: SelectStatementSegment: 'SELECT\n    tbl.name,\n    b.value,\n    /*...'
 #
 ###
-INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF   	    
+INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF
 DEBUG      [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec.match OUT     	+   	[match=<MatchResult 1/43: 'SELECT\n    tbl....S a_calculation'>, seg="'SELECT\\n    tbl.name,...'"]
 DEBUG      [PD:2  MD:1 ]	.SelectStatementSegment                           	Ref.match OUT       	+   	[match=<MatchResult 1/43: 'SELECT\n    tbl....S a_calculation'>, seg="'SELECT\\n    tbl.name,...'"]
 DEBUG      [PD:2  MD:3 ]	...FromClauseSegment                              	Ref.match OUT       	+   	[match=<MatchResult 1/41: 'FROM'>, seg="'FROM tbl\\nINNER JOIN ...'"]
@@ -8264,7 +8264,7 @@ Initial Structure:
 [L: 14, P: 18]      |        whitespace:                                           ' '
 [L: 14, P: 19]      |        raw:                                                  'ASC'
 
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: SelectClauseSegment: 'SELECT\n    tbl.name,\n    b.value,\n    /*...'
@@ -8408,7 +8408,7 @@ INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L:  1, P:  1]) 'SELEC
 INFO       [PD:4] Skipping expansion of <Indent: ([L:  1, P:  7]) ''>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  1, P:  7]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  2, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'tbl.name'
@@ -8555,7 +8555,7 @@ INFO       [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  2, P:  5]
 INFO       [PD:4] Skipping expansion of <SymbolSegment: ([L:  2, P: 13]) ','>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  2, P: 14]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  3, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'b.value'
@@ -8711,7 +8711,7 @@ INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  6, P:  1]) '  
 INFO       [PD:4] Skipping expansion of <CommentSegment: ([L:  6, P:  5]) '*/'>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  6, P:  7]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  7, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'd.something'
@@ -8860,7 +8860,7 @@ INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  7, P: 17]) '  
 INFO       [PD:4] Skipping expansion of <CommentSegment: ([L:  7, P: 21]) '-- Which a comment after it'>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  7, P: 48]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  8, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'tbl.foo'
@@ -9007,7 +9007,7 @@ INFO       [PD:5] Skipping expansion of <ColumnReferenceSegment: ([L:  8, P:  5]
 INFO       [PD:4] Skipping expansion of <SymbolSegment: ([L:  8, P: 12]) ','>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  8, P: 13]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  9, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'c.val + b.val / -2 AS a_calculation'
@@ -9722,7 +9722,7 @@ INFO       [PD:5] Skipping expansion of <WhitespaceSegment: ([L:  9, P: 23]) ' '
 INFO       [PD:5] Skipping expansion of <AliasExpressionSegment: ([L:  9, P: 24])>...
 INFO       [PD:3] Skipping expansion of <NewlineSegment: ([L:  9, P: 40]) '\n'>...
 INFO       [PD:3] Skipping expansion of <Dedent: ([L: 10, P:  1]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: FromClauseSegment: 'FROM tbl\nINNER JOIN b ON (tbl.common_id ...'
@@ -11580,7 +11580,7 @@ Initial Structure:
 
 INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L: 10, P:  1]) 'FROM'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L: 10, P:  5]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: FromExpressionSegment: 'tbl\nINNER JOIN b ON (tbl.common_id = b.c...'
@@ -11711,7 +11711,7 @@ INFO       [PD:5] Skipping expansion of <Indent: ([L: 10, P:  6]) ''>...
 INFO       [PD:5] Skipping expansion of <FromExpressionElementSegment: ([L: 10, P:  6])>...
 INFO       [PD:5] Skipping expansion of <NewlineSegment: ([L: 10, P:  9]) '\n'>...
 INFO       [PD:5] Skipping expansion of <Dedent: ([L: 11, P:  1]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 5. Expanding: JoinClauseSegment: 'INNER JOIN b ON (tbl.common_id = b.commo...'
@@ -11768,7 +11768,7 @@ INFO       [PD:6] Skipping expansion of <Indent: ([L: 11, P: 11]) ''>...
 INFO       [PD:6] Skipping expansion of <WhitespaceSegment: ([L: 11, P: 11]) ' '>...
 INFO       [PD:6] Skipping expansion of <FromExpressionElementSegment: ([L: 11, P: 12])>...
 INFO       [PD:6] Skipping expansion of <WhitespaceSegment: ([L: 11, P: 13]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 6. Expanding: JoinOnConditionSegment: 'ON (tbl.common_id = b.common_id)'
@@ -11809,7 +11809,7 @@ Initial Structure:
 INFO       [PD:7] Skipping expansion of <KeywordSegment: ([L: 11, P: 14]) 'ON'>...
 INFO       [PD:7] Skipping expansion of <Indent: ([L: 11, P: 16]) ''>...
 INFO       [PD:7] Skipping expansion of <WhitespaceSegment: ([L: 11, P: 16]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 7. Expanding: BracketedSegment: '(tbl.common_id = b.common_id)'
@@ -11844,14 +11844,14 @@ Initial Structure:
 
 INFO       [PD:8] Skipping expansion of <SymbolSegment: ([L: 11, P: 17]) '('>...
 INFO       [PD:8] Skipping expansion of <Indent: ([L: 11, P: 18]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 8. Expanding: EphemeralSegment: 'tbl.common_id = b.common_id'
 #
 ###
 INFO       [PD:8  MD:0 ]	EphemeralSegment                                  	OneOf.match PRN     	    	[ns=2, ps=1, ms=0, pruned=[<Ref: SelectableGrammar>], opts=[<Ref: ExpressionSegment>, <Delimited: [<Ref: ColumnReferenceSegment>, <Ref: FunctionSegment>, <Ref: LiteralGrammar>]>]]
-INFO       [PD:8  MD:1 ]	.ExpressionSegment                                	Expre._match SELF   	    
+INFO       [PD:8  MD:1 ]	.ExpressionSegment                                	Expre._match SELF
 DEBUG      [PD:8  MD:1 ]	.ExpressionSegment                                	Expre.match OUT     	++  	[match=<MatchResult 1/1: 'tbl.common_id = b.common_id'>, seg="'tbl.common_id = b.co...'"]
 DEBUG      [PD:8  MD:1 ]	.EphemeralSegment                                 	Ref.match OUT       	++  	[match=<MatchResult 1/1: 'tbl.common_id = b.common_id'>, seg="'tbl.common_id = b.co...'"]
 INFO       [PD:8  MD:0 ]	EphemeralSegment                                  	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'tbl.common_id = b.common_id'>, seg="'tbl.common_id = b.co...'"]
@@ -11882,7 +11882,7 @@ INFO       [PD:8] Skipping expansion of <SymbolSegment: ([L: 11, P: 45]) ')'>...
 INFO       [PD:7] Skipping expansion of <Dedent: ([L: 11, P: 46]) ''>...
 INFO       [PD:6] Skipping expansion of <Dedent: ([L: 11, P: 46]) ''>...
 INFO       [PD:5] Skipping expansion of <NewlineSegment: ([L: 11, P: 46]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 5. Expanding: JoinClauseSegment: 'JOIN c ON (tbl.id = c.id)'
@@ -11935,7 +11935,7 @@ INFO       [PD:6] Skipping expansion of <Indent: ([L: 12, P:  5]) ''>...
 INFO       [PD:6] Skipping expansion of <WhitespaceSegment: ([L: 12, P:  5]) ' '>...
 INFO       [PD:6] Skipping expansion of <FromExpressionElementSegment: ([L: 12, P:  6])>...
 INFO       [PD:6] Skipping expansion of <WhitespaceSegment: ([L: 12, P:  7]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 6. Expanding: JoinOnConditionSegment: 'ON (tbl.id = c.id)'
@@ -11976,7 +11976,7 @@ Initial Structure:
 INFO       [PD:7] Skipping expansion of <KeywordSegment: ([L: 12, P:  8]) 'ON'>...
 INFO       [PD:7] Skipping expansion of <Indent: ([L: 12, P: 10]) ''>...
 INFO       [PD:7] Skipping expansion of <WhitespaceSegment: ([L: 12, P: 10]) ' '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 7. Expanding: BracketedSegment: '(tbl.id = c.id)'
@@ -12011,14 +12011,14 @@ Initial Structure:
 
 INFO       [PD:8] Skipping expansion of <SymbolSegment: ([L: 12, P: 11]) '('>...
 INFO       [PD:8] Skipping expansion of <Indent: ([L: 12, P: 12]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 8. Expanding: EphemeralSegment: 'tbl.id = c.id'
 #
 ###
 INFO       [PD:8  MD:0 ]	EphemeralSegment                                  	OneOf.match PRN     	    	[ns=2, ps=1, ms=0, pruned=[<Ref: SelectableGrammar>], opts=[<Ref: ExpressionSegment>, <Delimited: [<Ref: ColumnReferenceSegment>, <Ref: FunctionSegment>, <Ref: LiteralGrammar>]>]]
-INFO       [PD:8  MD:1 ]	.ExpressionSegment                                	Expre._match SELF   	    
+INFO       [PD:8  MD:1 ]	.ExpressionSegment                                	Expre._match SELF
 DEBUG      [PD:8  MD:1 ]	.ExpressionSegment                                	Expre.match OUT     	++  	[match=<MatchResult 1/1: 'tbl.id = c.id'>, seg="'tbl.id = c.id'"]
 DEBUG      [PD:8  MD:1 ]	.EphemeralSegment                                 	Ref.match OUT       	++  	[match=<MatchResult 1/1: 'tbl.id = c.id'>, seg="'tbl.id = c.id'"]
 INFO       [PD:8  MD:0 ]	EphemeralSegment                                  	OneOf.match OUT     	++  	[match=<MatchResult 1/1: 'tbl.id = c.id'>, seg="'tbl.id = c.id'"]
@@ -12051,7 +12051,7 @@ INFO       [PD:6] Skipping expansion of <Dedent: ([L: 12, P: 26]) ''>...
 INFO       [PD:5] Skipping expansion of <NewlineSegment: ([L: 12, P: 26]) '\n'>...
 INFO       [PD:5] Skipping expansion of <JoinClauseSegment: ([L: 13, P:  1])>...
 INFO       [PD:3] Skipping expansion of <NewlineSegment: ([L: 13, P: 37]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: OrderByClauseSegment: 'ORDER BY tbl.name ASC'
@@ -12342,13 +12342,13 @@ INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L: 14, P: 18]) ' '
 INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L: 14, P: 19]) 'ASC'>...
 INFO       [PD:4] Skipping expansion of <Dedent: ([L: 14, P: 22]) ''>...
 INFO       [PD:1] Skipping expansion of <NewlineSegment: ([L: 14, P: 22]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parsed Tree:
 #
 ###
-INFO       
+INFO
 [L:  1, P:  1]      |file:
 [L:  1, P:  1]      |    statement:
 [L:  1, P:  1]      |        select_statement:
@@ -13802,65 +13802,65 @@ implementation:        cpython dialect:                  ansi
 verbosity:                   7 templater:               jinja
 rules:                               L001
 == Raw Config:
-core:                                   
-    dialect:            ansi                
-    encoding:           autodetect          
-    ignore:             []                  
-    ignore_templated_areas:True                
-    nocolor:            False               
-    output_line_length: 80                  
-    recurse:            True                
-    rules:              L001                
-    runaway_limit:      10                  
+core:
+    dialect:            ansi
+    encoding:           autodetect
+    ignore:             []
+    ignore_templated_areas:True
+    nocolor:            False
+    output_line_length: 80
+    recurse:            True
+    rules:              L001
+    runaway_limit:      10
     sql_file_exts:      .sql,.sql.j2,.dml,.ddl
-    templater:          jinja               
-    verbose:            7                   
-indentation:                            
-    indented_joins:     False               
-    indented_using_on:  True                
-    template_blocks_indent:True                
-rules:                                  
-    allow_scalar:       True                
-    comma_style:        trailing            
-    indent_unit:        space               
-    max_line_length:    80                  
-    single_table_references:consistent          
-    tab_space_size:     4                   
-    unquoted_identifiers_policy:all                 
-    L007:                                   
-        operator_new_lines: after               
-    L010:                                   
-        capitalisation_policy:consistent          
-    L011:                                   
-        aliasing:           explicit            
-    L012:                                   
-        aliasing:           explicit            
-    L014:                                   
-        extended_capitalisation_policy:consistent          
-    L016:                                   
-        ignore_comment_lines:False               
-    L026:                                   
-        force_enable:       False               
-    L028:                                   
-        force_enable:       False               
-    L029:                                   
-        unquoted_identifiers_policy:aliases             
-    L030:                                   
-        capitalisation_policy:consistent          
-    L038:                                   
-        select_clause_trailing_comma:forbid              
-    L040:                                   
-        capitalisation_policy:consistent          
-    L042:                                   
-        forbid_subquery_in: join                
-    L047:                                   
-        prefer_count_0:     False               
-        prefer_count_1:     False               
-templater:                              
-    unwrap_wrapped_queries:True                
-    jinja:                                  
-        apply_dbt_builtins: True                
-        macros:                                 
+    templater:          jinja
+    verbose:            7
+indentation:
+    indented_joins:     False
+    indented_using_on:  True
+    template_blocks_indent:True
+rules:
+    allow_scalar:       True
+    comma_style:        trailing
+    indent_unit:        space
+    max_line_length:    80
+    single_table_references:consistent
+    tab_space_size:     4
+    unquoted_identifiers_policy:all
+    L007:
+        operator_new_lines: after
+    L010:
+        capitalisation_policy:consistent
+    L011:
+        aliasing:           explicit
+    L012:
+        aliasing:           explicit
+    L014:
+        extended_capitalisation_policy:consistent
+    L016:
+        ignore_comment_lines:False
+    L026:
+        force_enable:       False
+    L028:
+        force_enable:       False
+    L029:
+        unquoted_identifiers_policy:aliases
+    L030:
+        capitalisation_policy:consistent
+    L038:
+        select_clause_trailing_comma:forbid
+    L040:
+        capitalisation_policy:consistent
+    L042:
+        forbid_subquery_in: join
+    L047:
+        prefer_count_0:     False
+        prefer_count_1:     False
+templater:
+    unwrap_wrapped_queries:True
+    jinja:
+        apply_dbt_builtins: True
+        macros:
             dbt_config:         {% macro config() %}{% for k in kwargs %}{% endfor %}{% endmacro %}
             dbt_is_incremental: {% macro is_incremental() %}True{% endmacro %}
             dbt_ref:            {% macro ref(model_ref) %}{{model_ref}}{% endmacro %}
@@ -13965,7 +13965,7 @@ Initial Structure:
 
 INFO       [PD:1] Skipping expansion of <CommentSegment: ([L:  1, P:  1]) '-- File which fails on templating and lexing errors.'>...
 INFO       [PD:1] Skipping expansion of <NewlineSegment: ([L:  1, P: 53]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 1. Expanding: StatementSegment: 'SELECT\n     as trailing_space   ,\n    3 ...'
@@ -14089,13 +14089,13 @@ Initial Structure:
 [L:  4, P: 20]      |        whitespace:                                           ' '
 [L:  4, P: 21]      |        raw:                                                  'FROM'
 
-INFO       
+INFO
 ###
 #
 # Parse Depth 2. Expanding: SelectStatementSegment: 'SELECT\n     as trailing_space   ,\n    3 ...'
 #
 ###
-INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF   	    
+INFO       [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec._match SELF
 DEBUG      [PD:2  MD:1 ]	.SelectClauseSegment                              	Selec.match OUT     	+   	[match=<MatchResult 1/7: 'SELECT\n     as ...ace   ,\n    3 +'>, seg="'SELECT\\n     as trail...'"]
 DEBUG      [PD:2  MD:1 ]	.SelectStatementSegment                           	Ref.match OUT       	+   	[match=<MatchResult 1/7: 'SELECT\n     as ...ace   ,\n    3 +'>, seg="'SELECT\\n     as trail...'"]
 DEBUG      [PD:2  MD:3 ]	...FromClauseSegment                              	Ref.match OUT       	+   	[match=<MatchResult 1/5: 'FROM'>, seg="'FROM SELECT FROM'"]
@@ -14137,7 +14137,7 @@ Initial Structure:
 [L:  4, P: 20]      |        whitespace:                                           ' '
 [L:  4, P: 21]      |        raw:                                                  'FROM'
 
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: SelectClauseSegment: 'SELECT\n     as trailing_space   ,\n    3 ...'
@@ -14199,7 +14199,7 @@ INFO       [PD:4] Skipping expansion of <KeywordSegment: ([L:  2, P:  1]) 'SELEC
 INFO       [PD:4] Skipping expansion of <Indent: ([L:  2, P:  7]) ''>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  2, P:  7]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  3, P:  1]) '     '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: 'as trailing_space'
@@ -14388,7 +14388,7 @@ INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  3, P: 38]) '  
 INFO       [PD:4] Skipping expansion of <SymbolSegment: ([L:  3, P: 41]) ','>...
 INFO       [PD:4] Skipping expansion of <NewlineSegment: ([L:  3, P: 42]) '\n'>...
 INFO       [PD:4] Skipping expansion of <WhitespaceSegment: ([L:  4, P:  1]) '    '>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 4. Expanding: SelectClauseElementSegment: '3 +'
@@ -14635,7 +14635,7 @@ INFO       [PD:5] Skipping expansion of <CodeSegment: ([L:  4, P:  5]) '3'>...
 INFO       [PD:5] Skipping expansion of <UnparsableSegment: ([L:  4, P:  6])>...
 INFO       [PD:3] Skipping expansion of <WhitespaceSegment: ([L:  4, P:  8]) ' '>...
 INFO       [PD:3] Skipping expansion of <Dedent: ([L:  4, P:  9]) ''>...
-INFO       
+INFO
 ###
 #
 # Parse Depth 3. Expanding: FromClauseSegment: 'FROM SELECT FROM'
@@ -14738,13 +14738,13 @@ Initial Structure:
 
 INFO       [PD:4] Skipping expansion of <UnparsableSegment: ([L:  4, P:  9])>...
 INFO       [PD:1] Skipping expansion of <NewlineSegment: ([L:  4, P: 25]) '\n'>...
-INFO       
+INFO
 ###
 #
 # Parsed Tree:
 #
 ###
-INFO       
+INFO
 [L:  1, P:  1]      |file:
 [L:  1, P:  1]      |    comment:                                                  '-- File which fails on templating and lexing errors.'
 [L:  1, P: 53]      |    newline:                                                  '\n'
@@ -14834,60 +14834,60 @@ All Finished 📜 🎉!
 ___________________________ test__cli__command_rules ___________________________
 ----------------------------- Captured stdout call -----------------------------
 ==== sqlfluff - rules ====
-L001: Unnecessary trailing whitespace.                                          
-L002: Mixed Tabs and Spaces in single whitespace.                               
-L003: Indentation not consistent with previous lines.                           
-L004: Incorrect indentation type.                                               
-L005: Commas should not have whitespace directly before them.                   
-L006: Operators should be surrounded by a single whitespace.                    
-L007: Operators should follow a standard for being before/after newlines.       
-L008: Commas should be followed by a single whitespace unless followed by a     
-      comment.                                                                  
-L009: Files must end with a trailing newline.                                   
-L010: Inconsistent capitalisation of keywords.                                  
-L011: Implicit/explicit aliasing of table.                                      
-L012: Implicit/explicit aliasing of columns.                                    
-L013: Column expression without alias. Use explicit `AS` clause.                
-L014: Inconsistent capitalisation of unquoted identifiers.                      
-L015: DISTINCT used with parentheses.                                           
-L016: Line is too long                                                          
-L017: Function name not immediately followed by bracket.                        
-L018: WITH clause closing bracket should be aligned with WITH keyword.          
-L019: Leading/Trailing comma enforcement.                                       
-L020: Table aliases should be unique within each clause.                        
-L021: Ambiguous use of DISTINCT in select statement with GROUP BY.              
-L022: Blank line expected but not found after CTE closing bracket.              
-L023: Single whitespace expected after AS in WITH clause.                       
-L024: Single whitespace expected after USING in JOIN clause.                    
-L025: Tables should not be aliased if that alias is not used.                   
-L026: References cannot reference objects not present in FROM clause.           
-L027: References should be qualified if select has more than one referenced     
-      table/view.                                                               
-L028: References should be consistent in statements with a single table.        
-L029: Keywords should not be used as identifiers.                               
-L030: Inconsistent capitalisation of function names.                            
-L031: Avoid table aliases in from clauses and join conditions.                  
-L032: Prefer specifying join keys instead of using "USING".                     
-L033: UNION [DISTINCT|ALL] is preferred over just UNION.                        
-L034: Use wildcards then simple targets before calculations and aggregates in   
-      select statements.                                                        
-L035: Do not specify "else null" in a case when statement (redundant).          
-L036: Select targets should be on a new line unless there is only one select    
-      target.                                                                   
-L037: Ambiguous ordering directions for columns in order by clause.             
-L038: Trailing commas within select clause.                                     
-L039: Unnecessary whitespace found.                                             
-L040: Inconsistent capitalisation of boolean/null literal.                      
-L041: SELECT clause modifiers such as DISTINCT must be on the same line as      
-      SELECT.                                                                   
-L042: Join/From clauses should not contain subqueries. Use CTEs instead.        
-L043: Unnecessary case when statement. Use the "when" condition itself.         
-L044: Query produces an unknown number of result columns.                       
-L045: Query defines a CTE (common-table expression) but does not use it.        
-L046: Jinja tags should have a single whitespace on either side.                
-L047: Use consistent syntax to express "count number of rows".                  
-L048: Quoted literals should be surrounded by a single whitespace.              
-L049: Comparisons with NULL should use "IS" or "IS NOT".                        
+L001: Unnecessary trailing whitespace.
+L002: Mixed Tabs and Spaces in single whitespace.
+L003: Indentation not consistent with previous lines.
+L004: Incorrect indentation type.
+L005: Commas should not have whitespace directly before them.
+L006: Operators should be surrounded by a single whitespace.
+L007: Operators should follow a standard for being before/after newlines.
+L008: Commas should be followed by a single whitespace unless followed by a
+      comment.
+L009: Files must end with a trailing newline.
+L010: Inconsistent capitalisation of keywords.
+L011: Implicit/explicit aliasing of table.
+L012: Implicit/explicit aliasing of columns.
+L013: Column expression without alias. Use explicit `AS` clause.
+L014: Inconsistent capitalisation of unquoted identifiers.
+L015: DISTINCT used with parentheses.
+L016: Line is too long
+L017: Function name not immediately followed by bracket.
+L018: WITH clause closing bracket should be aligned with WITH keyword.
+L019: Leading/Trailing comma enforcement.
+L020: Table aliases should be unique within each clause.
+L021: Ambiguous use of DISTINCT in select statement with GROUP BY.
+L022: Blank line expected but not found after CTE closing bracket.
+L023: Single whitespace expected after AS in WITH clause.
+L024: Single whitespace expected after USING in JOIN clause.
+L025: Tables should not be aliased if that alias is not used.
+L026: References cannot reference objects not present in FROM clause.
+L027: References should be qualified if select has more than one referenced
+      table/view.
+L028: References should be consistent in statements with a single table.
+L029: Keywords should not be used as identifiers.
+L030: Inconsistent capitalisation of function names.
+L031: Avoid table aliases in from clauses and join conditions.
+L032: Prefer specifying join keys instead of using "USING".
+L033: UNION [DISTINCT|ALL] is preferred over just UNION.
+L034: Use wildcards then simple targets before calculations and aggregates in
+      select statements.
+L035: Do not specify "else null" in a case when statement (redundant).
+L036: Select targets should be on a new line unless there is only one select
+      target.
+L037: Ambiguous ordering directions for columns in order by clause.
+L038: Trailing commas within select clause.
+L039: Unnecessary whitespace found.
+L040: Inconsistent capitalisation of boolean/null literal.
+L041: SELECT clause modifiers such as DISTINCT must be on the same line as
+      SELECT.
+L042: Join/From clauses should not contain subqueries. Use CTEs instead.
+L043: Unnecessary case when statement. Use the "when" condition itself.
+L044: Query produces an unknown number of result columns.
+L045: Query defines a CTE (common-table expression) but does not use it.
+L046: Jinja tags should have a single whitespace on either side.
+L047: Use consistent syntax to express "count number of rows".
+L048: Quoted literals should be surrounded by a single whitespace.
+L049: Comparisons with NULL should use "IS" or "IS NOT".
 
 _________________________ test__cli__command_dialects __________________________
 ----------------------------- Captured stdout call -----------------------------

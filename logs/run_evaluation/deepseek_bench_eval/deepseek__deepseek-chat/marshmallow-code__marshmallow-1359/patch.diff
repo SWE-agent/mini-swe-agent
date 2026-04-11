@@ -10,4 +10,4 @@ index 0b18e7dd..102b0cfd 100644
 +            or (self.root and getattr(self.root.opts, self.SCHEMA_OPTS_VAR_NAME, None))
              or self.DEFAULT_FORMAT
          )
- 
+

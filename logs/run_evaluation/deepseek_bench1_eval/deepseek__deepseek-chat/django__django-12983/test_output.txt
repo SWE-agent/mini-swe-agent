@@ -155,7 +155,7 @@ Author: Jon Dufresne <jon.dufresne@gmail.com>
 Date:   Sun May 10 09:27:47 2020 -0700
 
     Removed unused admin:jsi18n <script> element from change_password.html.
-    
+
     The view does not contain any other JavaScript and therefore does not
     have any user facing JavaScript strings to translate. Avoid the HTTP
     request.
@@ -167,7 +167,7 @@ index 1c3347e659..895374deea 100644
 @@ -2,9 +2,6 @@
  {% load i18n static %}
  {% load admin_urls %}
- 
+
 -{% block extrahead %}{{ block.super }}
 -<script src="{% url 'admin:jsi18n' %}"></script>
 -{% endblock %}
@@ -196,8 +196,8 @@ index fb5f6298c4..258168ed7b 100644
 -    return re.sub(r'[-\s]+', '-', value)
 +    value = re.sub(r'[-\s]+', '-', value)
 +    return value.strip('-_')
- 
- 
+
+
  def camel_case_to_spaces(value):
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

@@ -23,10 +23,10 @@ diff --git a/tests/backends/base/test_creation.py b/tests/backends/base/test_cre
 @@ -7,6 +7,8 @@
  )
  from django.test import SimpleTestCase
- 
+
 +from ..models import Object, ObjectReference
 +
- 
+
  def get_connection_copy():
      # Get a copy of the default connection. (Can't use django.db.connection
 @@ -73,3 +75,29 @@ def test_migrate_test_setting_true(self, mocked_migrate, mocked_ensure_connectio
@@ -63,11 +63,11 @@ diff --git a/tests/backends/models.py b/tests/backends/models.py
 --- a/tests/backends/models.py
 +++ b/tests/backends/models.py
 @@ -89,6 +89,7 @@ def __str__(self):
- 
+
  class Object(models.Model):
      related_objects = models.ManyToManyField("self", db_constraint=False, symmetrical=False)
 +    obj_ref = models.ForeignKey('ObjectReference', models.CASCADE, null=True)
- 
+
      def __str__(self):
          return str(self.id)
 

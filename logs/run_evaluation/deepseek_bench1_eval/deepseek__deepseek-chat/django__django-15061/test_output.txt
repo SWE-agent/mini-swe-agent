@@ -152,18 +152,18 @@ index 9089117215..7e6c4f62cc 100644
 @@ -273,6 +273,10 @@ Generic Views
    deletion. In addition, this allows ``DeleteView`` to function with
    :class:`django.contrib.messages.views.SuccessMessageMixin`.
- 
+
 +  In accordance with ``FormMixin``, object deletion for POST requests is
 +  handled in ``form_valid()``. Custom delete logic in ``delete()`` handlers
 +  should be moved to ``form_valid()``, or a shared helper method, as needed.
 +
  Logging
  ~~~~~~~
- 
+
 @@ -477,6 +481,14 @@ As a side-effect, running ``makemigrations`` might generate no-op
  ``AlterField`` operations for ``ManyToManyField`` and ``ForeignKey`` fields in
  some cases.
- 
+
 +``DeleteView`` changes
 +----------------------
 +
@@ -174,7 +174,7 @@ index 9089117215..7e6c4f62cc 100644
 +
  Miscellaneous
  -------------
- 
+
 + git -c core.fileMode=false diff 2c01ebb4be5d53cbf6450f356c10e436025d6d07
 diff --git a/django/forms/widgets.py b/django/forms/widgets.py
 index 00c19e2c55..7307f3b15b 100644
@@ -183,7 +183,7 @@ index 00c19e2c55..7307f3b15b 100644
 @@ -848,11 +848,6 @@ class MultiWidget(Widget):
          context['widget']['subwidgets'] = subwidgets
          return context
- 
+
 -    def id_for_label(self, id_):
 -        if id_:
 -            id_ += '_0'

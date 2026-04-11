@@ -21,8 +21,8 @@ diff --git a/tests/shell/tests.py b/tests/shell/tests.py
 --- a/tests/shell/tests.py
 +++ b/tests/shell/tests.py
 @@ -9,6 +9,13 @@
- 
- 
+
+
  class ShellCommandTestCase(SimpleTestCase):
 +    script_globals = 'print("__name__" in globals())'
 +    script_with_inline_function = (
@@ -31,13 +31,13 @@ diff --git a/tests/shell/tests.py b/tests/shell/tests.py
 +        '    print(django.__version__)\n'
 +        'f()'
 +    )
- 
+
      def test_command_option(self):
          with self.assertLogs('test', 'INFO') as cm:
 @@ -21,6 +28,16 @@ def test_command_option(self):
              )
          self.assertEqual(cm.records[0].getMessage(), __version__)
- 
+
 +    def test_command_option_globals(self):
 +        with captured_stdout() as stdout:
 +            call_command('shell', command=self.script_globals)
@@ -54,7 +54,7 @@ diff --git a/tests/shell/tests.py b/tests/shell/tests.py
 @@ -30,6 +47,30 @@ def test_stdin_read(self, select):
              call_command('shell')
          self.assertEqual(stdout.getvalue().strip(), '100')
- 
+
 +    @unittest.skipIf(
 +        sys.platform == 'win32',
 +        "Windows select() doesn't support file descriptors.",

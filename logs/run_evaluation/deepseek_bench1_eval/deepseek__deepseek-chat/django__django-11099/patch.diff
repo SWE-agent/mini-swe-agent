@@ -3,7 +3,7 @@ index b4878cfd45..1304f20a60 100644
 --- a/django/contrib/auth/validators.py
 +++ b/django/contrib/auth/validators.py
 @@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
- 
+
  @deconstructible
  class ASCIIUsernameValidator(validators.RegexValidator):
 -    regex = r'^[\w.@+-]+$'
@@ -12,7 +12,7 @@ index b4878cfd45..1304f20a60 100644
          'Enter a valid username. This value may contain only English letters, '
          'numbers, and @/./+/-/_ characters.'
 @@ -17,7 +17,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):
- 
+
  @deconstructible
  class UnicodeUsernameValidator(validators.RegexValidator):
 -    regex = r'^[\w.@+-]+$'

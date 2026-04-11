@@ -151,13 +151,13 @@ index 06a3bfee6d..a34880a4be 100644
 +++ b/docs/ref/request-response.txt
 @@ -51,7 +51,7 @@ All attributes should be considered read-only, unless stated otherwise.
  .. attribute:: HttpRequest.path
- 
+
      A string representing the full path to the requested page, not including
 -    the scheme or domain.
 +    the scheme, domain, or query string.
- 
+
      Example: ``"/music/bands/the_beatles/"``
- 
+
 + git -c core.fileMode=false diff fa4e963ee7e6876581b5432363603571839ba00c
 diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py
 index 20d8922799..6b07fb5dca 100644
@@ -166,11 +166,11 @@ index 20d8922799..6b07fb5dca 100644
 @@ -50,6 +50,9 @@ class ReadOnlyPasswordHashWidget(forms.Widget):
          context['summary'] = summary
          return context
- 
+
 +    def id_for_label(self, id_):
 +        return ''
 +
- 
+
  class ReadOnlyPasswordHashField(forms.Field):
      widget = ReadOnlyPasswordHashWidget
 + source /opt/miniconda3/bin/activate

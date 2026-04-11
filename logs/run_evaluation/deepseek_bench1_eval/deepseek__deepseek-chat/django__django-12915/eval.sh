@@ -32,10 +32,10 @@ diff --git a/tests/asgi/tests.py b/tests/asgi/tests.py
  import threading
 +from pathlib import Path
  from unittest import skipIf
- 
+
  from asgiref.sync import SyncToAsync
  from asgiref.testing import ApplicationCommunicator
- 
+
 +from django.contrib.staticfiles.handlers import ASGIStaticFilesHandler
  from django.core.asgi import get_asgi_application
  from django.core.signals import request_finished, request_started
@@ -45,18 +45,18 @@ diff --git a/tests/asgi/tests.py b/tests/asgi/tests.py
 +    AsyncRequestFactory, SimpleTestCase, modify_settings, override_settings,
 +)
 +from django.utils.http import http_date
- 
+
  from .urls import test_filename
- 
+
 +TEST_STATIC_ROOT = Path(__file__).parent / 'project' / 'static'
 +
- 
+
  @skipIf(sys.platform == 'win32' and (3, 8, 0) < sys.version_info < (3, 8, 1), 'https://bugs.python.org/issue38563')
  @override_settings(ROOT_URLCONF='asgi.urls')
 @@ -79,6 +86,45 @@ async def test_file_response(self):
          # Allow response.close() to finish.
          await communicator.wait()
- 
+
 +    @modify_settings(INSTALLED_APPS={'append': 'django.contrib.staticfiles'})
 +    @override_settings(
 +        STATIC_URL='/static/',

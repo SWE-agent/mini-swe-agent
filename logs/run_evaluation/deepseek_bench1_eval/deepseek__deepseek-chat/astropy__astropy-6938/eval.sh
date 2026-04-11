@@ -25,7 +25,7 @@ diff --git a/astropy/io/fits/tests/test_checksum.py b/astropy/io/fits/tests/test
                  assert 'DATASUM' in hdul[1].header
 -                assert hdul[1].header['DATASUM'] == '1948208413'
 +                assert hdul[1].header['DATASUM'] == '1914653725'
- 
+
      def test_compressed_image_data(self):
          with fits.open(self.data('comp.fits')) as h1:
 diff --git a/astropy/io/fits/tests/test_table.py b/astropy/io/fits/tests/test_table.py
@@ -49,7 +49,7 @@ diff --git a/astropy/io/fits/tests/test_table.py b/astropy/io/fits/tests/test_ta
 +            assert comparerecords(hdu.data, hdul[1].data)
 +
          a.close()
- 
+
      def test_endianness(self):
 
 EOF_114329324912

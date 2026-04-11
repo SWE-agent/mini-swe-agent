@@ -16,7 +16,7 @@ index e6b7d4d821..6edad556a2 100644
          except TypeError:
 @@ -100,7 +105,6 @@ class SafeExceptionReporterFilter:
              cleansed = CallableSettingWrapper(cleansed)
- 
+
          return cleansed
 -
      def get_safe_settings(self):

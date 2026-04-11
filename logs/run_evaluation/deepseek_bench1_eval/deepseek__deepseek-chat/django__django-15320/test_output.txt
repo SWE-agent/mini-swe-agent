@@ -152,7 +152,7 @@ index 23e0836d85..d099778836 100644
 @@ -1281,10 +1281,20 @@ implementation details see :ref:`using-the-views`.
      that can be used to reset the password, and sending that link to the
      user's registered email address.
- 
+
 -    If the email address provided does not exist in the system, this view
 -    won't send an email, but the user won't receive any error message either.
 -    This prevents information leaking to potential attackers. If you want to
@@ -173,11 +173,11 @@ index 23e0836d85..d099778836 100644
 +    this case, you can subclass
      :class:`~django.contrib.auth.forms.PasswordResetForm` and use the
      ``form_class`` attribute.
- 
+
 @@ -1298,13 +1308,6 @@ implementation details see :ref:`using-the-views`.
          that allows to send emails asynchronously, e.g. `django-mailer
          <https://pypi.org/project/django-mailer/>`_.
- 
+
 -    Users flagged with an unusable password (see
 -    :meth:`~django.contrib.auth.models.User.set_unusable_password()` aren't
 -    allowed to request a password reset to prevent misuse when using an
@@ -186,7 +186,7 @@ index 23e0836d85..d099778836 100644
 -    mail will be sent either.
 -
      **Attributes:**
- 
+
      .. attribute:: template_name
 + git -c core.fileMode=false diff b55ebe32417e0884b6b8b3e1bc0379033aa221af
 diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py
@@ -200,7 +200,7 @@ index 6f26dff0e0..201e4832f2 100644
 +        self.query.subquery = True
          self.extra = extra
          super().__init__(output_field)
- 
+
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3
 ++ . /opt/miniconda3/etc/profile.d/conda.sh

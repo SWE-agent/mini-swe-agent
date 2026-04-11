@@ -155,7 +155,7 @@ Author: Tim Graham <timograham@gmail.com>
 Date:   Thu Jul 30 00:38:02 2020 -0400
 
     Refs #31829 -- Added DatabaseFeatures.json_key_contains_list_matching_requires_list.
-    
+
     CockroachDB's behavior matches PostgreSQL.
 
 diff --git a/django/db/backends/base/features.py b/django/db/backends/base/features.py
@@ -169,7 +169,7 @@ index 6847a6fe84..4639f1bb2e 100644
 +    # Does value__d__contains={'f': 'g'} (without a list around the dict) match
 +    # {'d': [{'f': 'g'}]}?
 +    json_key_contains_list_matching_requires_list = False
- 
+
      def __init__(self, connection):
          self.connection = connection
 diff --git a/django/db/backends/postgresql/features.py b/django/db/backends/postgresql/features.py
@@ -181,7 +181,7 @@ index 864bcf3919..df16691444 100644
      supports_deferrable_unique_constraints = True
      has_json_operators = True
 +    json_key_contains_list_matching_requires_list = True
- 
+
      @cached_property
      def introspected_field_types(self):
 diff --git a/tests/model_fields/test_jsonfield.py b/tests/model_fields/test_jsonfield.py

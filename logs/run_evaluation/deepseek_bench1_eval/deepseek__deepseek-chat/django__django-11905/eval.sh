@@ -44,13 +44,13 @@ diff --git a/tests/lookup/tests.py b/tests/lookup/tests.py
  from django.db.models.functions import Substr
  from django.test import TestCase, skipUnlessDBFeature
 +from django.utils.deprecation import RemovedInDjango40Warning
- 
+
  from .models import (
 -    Article, Author, Game, IsNullWithNoneAsRHS, Player, Season, Tag,
 +    Article, Author, Freebie, Game, IsNullWithNoneAsRHS, Player, Season, Tag,
  )
- 
- 
+
+
 @@ -969,3 +970,24 @@ def test_exact_query_rhs_with_selected_columns(self):
          ).values('max_id')
          authors = Author.objects.filter(id=authors_max_ids[:1])

@@ -13,14 +13,14 @@ index 9ce46e3f73..122031e0b7 100644
 @@ -291,6 +292,48 @@ class Field(RegisterLookupMixin):
              )
          ]
- 
+
 +    def _check_max_length_vs_choices(self):
 +        """
 +        Check that max_length is large enough to fit the longest value in choices.
 +        """
 +        if not self.choices or self.max_length is None:
 +            return []
-+        
++
 +        # Helper to extract choice values
 +        def get_choice_values(choices):
 +            values = []
@@ -37,14 +37,14 @@ index 9ce46e3f73..122031e0b7 100644
 +                        value, _ = item
 +                        values.append(value)
 +            return values
-+        
++
 +        choice_values = get_choice_values(self.choices)
 +        if not choice_values:
 +            return []
-+        
++
 +        # Find the longest choice value when converted to string
 +        max_choice_length = max(len(str(value)) for value in choice_values)
-+        
++
 +        if max_choice_length > self.max_length:
 +            return [
 +                checks.Error(

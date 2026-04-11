@@ -5,7 +5,7 @@ index 9344979c56..e651effd49 100644
 @@ -462,6 +462,14 @@ class IsNull(BuiltinLookup):
      lookup_name = 'isnull'
      prepare_rhs = False
- 
+
 +    def __init__(self, lhs, rhs):
 +        super().__init__(lhs, rhs)
 +        # Allow expressions (they have resolve_expression attribute)

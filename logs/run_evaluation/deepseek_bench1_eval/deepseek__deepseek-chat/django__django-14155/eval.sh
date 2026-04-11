@@ -25,7 +25,7 @@ diff --git a/tests/urlpatterns_reverse/tests.py b/tests/urlpatterns_reverse/test
 +            "args=('42', '37'), kwargs={}, url_name='no-kwargs', app_names=[], "
 +            "namespaces=[], route='^no_kwargs/([0-9]+)/([0-9]+)/$')",
          )
- 
+
 +    @override_settings(ROOT_URLCONF='urlpatterns_reverse.urls')
 +    def test_repr_functools_partial(self):
 +        tests = [
@@ -46,7 +46,7 @@ diff --git a/tests/urlpatterns_reverse/tests.py b/tests/urlpatterns_reverse/test
 +                    f"route='{name}/')",
 +                )
 +
- 
+
  @override_settings(ROOT_URLCONF='urlpatterns_reverse.erroneous_urls')
  class ErroneousViewTests(SimpleTestCase):
 

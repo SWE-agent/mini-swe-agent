@@ -34,13 +34,13 @@ diff --git a/tests/admin_scripts/tests.py b/tests/admin_scripts/tests.py
      LiveServerTestCase, SimpleTestCase, TestCase, override_settings,
  )
 +from django.test.utils import captured_stderr, captured_stdout
- 
+
  custom_templates_dir = os.path.join(os.path.dirname(__file__), 'custom_templates')
- 
+
 @@ -1867,6 +1868,20 @@ def _test(self, args, option_b="'2'"):
          )
- 
- 
+
+
 +class ExecuteFromCommandLine(SimpleTestCase):
 +    def test_program_name_from_argv(self):
 +        """
@@ -57,7 +57,7 @@ diff --git a/tests/admin_scripts/tests.py b/tests/admin_scripts/tests.py
 +
  @override_settings(ROOT_URLCONF='admin_scripts.urls')
  class StartProject(LiveServerTestCase, AdminScriptTestCase):
- 
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

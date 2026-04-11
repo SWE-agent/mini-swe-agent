@@ -17,7 +17,7 @@ diff --git a/pydicom/tests/test_json.py b/pydicom/tests/test_json.py
 --- a/pydicom/tests/test_json.py
 +++ b/pydicom/tests/test_json.py
 @@ -7,7 +7,7 @@
- 
+
  from pydicom import dcmread
  from pydicom.data import get_testdata_file
 -from pydicom.dataelem import DataElement
@@ -26,9 +26,9 @@ diff --git a/pydicom/tests/test_json.py b/pydicom/tests/test_json.py
  from pydicom.tag import Tag, BaseTag
  from pydicom.valuerep import PersonName
 @@ -284,7 +284,23 @@ def test_suppress_invalid_tags(self, _):
- 
+
          ds_json = ds.to_json_dict(suppress_invalid_tags=True)
- 
+
 -        assert ds_json.get("00100010") is None
 +        assert "00100010" not in ds_json
 +
@@ -47,8 +47,8 @@ diff --git a/pydicom/tests/test_json.py b/pydicom/tests/test_json.py
 +        ds_json = ds.to_json_dict(suppress_invalid_tags=True)
 +
 +        assert "00082128" not in ds_json
- 
- 
+
+
  class TestSequence:
 
 EOF_114329324912

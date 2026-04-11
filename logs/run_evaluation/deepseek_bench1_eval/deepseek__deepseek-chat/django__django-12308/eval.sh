@@ -23,7 +23,7 @@ diff --git a/tests/admin_utils/tests.py b/tests/admin_utils/tests.py
 @@ -176,6 +176,23 @@ def test_null_display_for_field(self):
          display_value = display_for_field(None, models.FloatField(), self.empty_value)
          self.assertEqual(display_value, self.empty_value)
- 
+
 +        display_value = display_for_field(None, models.JSONField(), self.empty_value)
 +        self.assertEqual(display_value, self.empty_value)
 +

@@ -3,7 +3,7 @@ index 0c64748ccd..0f241875e4 100644
 --- a/django/db/models/fields/__init__.py
 +++ b/django/db/models/fields/__init__.py
 @@ -1663,11 +1663,20 @@ class FilePathField(Field):
- 
+
      def __init__(self, verbose_name=None, name=None, path='', match=None,
                   recursive=False, allow_files=True, allow_folders=False, **kwargs):
 -        self.path, self.match, self.recursive = path, match, recursive
@@ -13,7 +13,7 @@ index 0c64748ccd..0f241875e4 100644
          self.allow_files, self.allow_folders = allow_files, allow_folders
          kwargs.setdefault('max_length', 100)
          super().__init__(verbose_name, name, **kwargs)
- 
+
 +    @property
 +    def path(self):
 +        if self._path_callable:
@@ -25,7 +25,7 @@ index 0c64748ccd..0f241875e4 100644
          return [
              *super().check(**kwargs),
 @@ -1687,8 +1696,8 @@ class FilePathField(Field):
- 
+
      def deconstruct(self):
          name, path, args, kwargs = super().deconstruct()
 -        if self.path != '':
@@ -49,7 +49,7 @@ index a977256525..6a50afe0fc 100644
 +        self.match, self.recursive = match, recursive
          self.allow_files, self.allow_folders = allow_files, allow_folders
          super().__init__(choices=(), **kwargs)
- 
+
 @@ -1096,14 +1098,14 @@ class FilePathField(ChoiceField):
                      for f in sorted(files):
                          if self.match is None or self.match_re.search(f):
@@ -68,9 +68,9 @@ index a977256525..6a50afe0fc 100644
              choices = []
              for f in os.scandir(self.path):
 @@ -1118,6 +1120,13 @@ class FilePathField(ChoiceField):
- 
+
          self.widget.choices = self.choices
- 
+
 +    @property
 +    def path(self):
 +        if self._path_callable:
@@ -78,6 +78,6 @@ index a977256525..6a50afe0fc 100644
 +        return self._path
 +
 +
- 
+
  class SplitDateTimeField(MultiValueField):
      widget = SplitDateTimeWidget

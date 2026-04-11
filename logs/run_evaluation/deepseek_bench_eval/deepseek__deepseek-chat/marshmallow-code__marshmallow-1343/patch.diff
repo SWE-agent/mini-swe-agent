@@ -4,7 +4,7 @@ index feb7d1aa..83363703 100644
 +++ b/src/marshmallow/marshalling.py
 @@ -13,7 +13,7 @@ from __future__ import unicode_literals
  import collections
- 
+
  from marshmallow.utils import is_collection, missing, set_value
 -from marshmallow.compat import text_type, iteritems
 +from marshmallow.compat import text_type, iteritems, Mapping
@@ -12,9 +12,9 @@ index feb7d1aa..83363703 100644
      ValidationError,
  )
 @@ -250,7 +250,7 @@ class Unmarshaller(ErrorStore):
- 
+
          ret = dict_class()
- 
+
 -        if not isinstance(data, collections.Mapping):
 +        if not isinstance(data, Mapping):
              errors = self.get_errors(index=index)
@@ -26,7 +26,7 @@ index 085c509b..ed9a7e0f 100644
 +++ b/src/marshmallow/schema.py
 @@ -861,6 +861,9 @@ class BaseSchema(base.SchemaABC):
          return data
- 
+
      def _invoke_field_validators(self, unmarshal, data, many):
 +        # If data is None (e.g., when nested validation fails), skip field validators
 +        if data is None:
@@ -35,7 +35,7 @@ index 085c509b..ed9a7e0f 100644
              validator = getattr(self, attr_name)
              validator_kwargs = validator.__marshmallow_kwargs__[(VALIDATES, False)]
 @@ -875,6 +878,9 @@ class BaseSchema(base.SchemaABC):
- 
+
              if many:
                  for idx, item in enumerate(data):
 +                    # Skip None items (e.g., when nested validation fails)
@@ -45,7 +45,7 @@ index 085c509b..ed9a7e0f 100644
                          value = item[field_obj.attribute or field_name]
                      except KeyError:
 @@ -906,6 +912,9 @@ class BaseSchema(base.SchemaABC):
- 
+
      def _invoke_validators(
              self, unmarshal, pass_many, data, original_data, many, field_errors=False):
 +        # If data is None (e.g., when nested validation fails), skip validators
@@ -56,7 +56,7 @@ index 085c509b..ed9a7e0f 100644
              validator = getattr(self, attr_name)
 @@ -938,6 +947,9 @@ class BaseSchema(base.SchemaABC):
          return None
- 
+
      def _invoke_processors(self, tag_name, pass_many, data, many, original_data=None):
 +        # If data is None (e.g., when nested validation fails), return None
 +        if data is None:

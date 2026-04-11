@@ -21,7 +21,7 @@ diff --git a/tests/lookup/tests.py b/tests/lookup/tests.py
 --- a/tests/lookup/tests.py
 +++ b/tests/lookup/tests.py
 @@ -5,6 +5,7 @@
- 
+
  from django.core.exceptions import FieldError
  from django.db import connection
 +from django.db.models import Max

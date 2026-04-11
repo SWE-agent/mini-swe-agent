@@ -3,12 +3,12 @@ index 5c2266ca1d..faae5adb27 100644
 --- a/django/core/checks/model_checks.py
 +++ b/django/core/checks/model_checks.py
 @@ -5,11 +5,13 @@ from itertools import chain
- 
+
  from django.apps import apps
  from django.core.checks import Error, Tags, register
 +from django.db import connections, router
- 
- 
+
+
  @register(Tags.models)
  def check_all_models(app_configs=None, **kwargs):
 -    db_table_models = defaultdict(list)

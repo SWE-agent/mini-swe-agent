@@ -15,7 +15,7 @@ index 7ca0d68fae..f6e76e9787 100644
 -        if spec.has_location:
 -            origin = spec.loader.archive if isinstance(spec.loader, zipimporter) else spec.origin
 -            sys_file_paths.append(origin)
-+        
++
 +        spec = getattr(module, '__spec__', None)
 +        if spec is not None:
 +            # Modules could be loaded from places without a concrete location. If
@@ -27,6 +27,6 @@ index 7ca0d68fae..f6e76e9787 100644
 +            # Handle modules without __spec__ but with __file__
 +            # This includes __main__ when a script is executed
 +            sys_file_paths.append(module.__file__)
- 
+
      results = set()
      for filename in itertools.chain(sys_file_paths, extra_files):

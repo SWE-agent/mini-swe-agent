@@ -22,29 +22,29 @@ diff --git a/tests/model_inheritance/models.py b/tests/model_inheritance/models.
 +++ b/tests/model_inheritance/models.py
 @@ -181,6 +181,8 @@ class GrandParent(models.Model):
      place = models.ForeignKey(Place, models.CASCADE, null=True, related_name='+')
- 
+
      class Meta:
 +        # Ordering used by test_inherited_ordering_pk_desc.
 +        ordering = ['-pk']
          unique_together = ('first_name', 'last_name')
- 
- 
+
+
 diff --git a/tests/model_inheritance/tests.py b/tests/model_inheritance/tests.py
 --- a/tests/model_inheritance/tests.py
 +++ b/tests/model_inheritance/tests.py
 @@ -7,7 +7,7 @@
- 
+
  from .models import (
      Base, Chef, CommonInfo, GrandChild, GrandParent, ItalianRestaurant,
 -    MixinModel, ParkingLot, Place, Post, Restaurant, Student, SubBase,
 +    MixinModel, Parent, ParkingLot, Place, Post, Restaurant, Student, SubBase,
      Supplier, Title, Worker,
  )
- 
+
 @@ -204,6 +204,19 @@ class A(models.Model):
- 
+
          self.assertEqual(A.attr.called, (A, 'attr'))
- 
+
 +    def test_inherited_ordering_pk_desc(self):
 +        p1 = Parent.objects.create(first_name='Joe', email='joe@email.com')
 +        p2 = Parent.objects.create(first_name='Jon', email='jon@email.com')
@@ -58,7 +58,7 @@ diff --git a/tests/model_inheritance/tests.py b/tests/model_inheritance/tests.py
 +        self.assertSequenceEqual(qs, [p2, p1])
 +        self.assertIn(expected_order_by_sql, str(qs.query))
 +
- 
+
  class ModelInheritanceDataTests(TestCase):
      @classmethod
 

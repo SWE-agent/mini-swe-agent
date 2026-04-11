@@ -39,13 +39,13 @@ diff --git a/tests/forms_tests/field_tests/test_splitdatetimefield.py b/tests/fo
 +++ b/tests/forms_tests/field_tests/test_splitdatetimefield.py
 @@ -1,7 +1,7 @@
  import datetime
- 
+
  from django.core.exceptions import ValidationError
 -from django.forms import SplitDateTimeField
 +from django.forms import Form, SplitDateTimeField
  from django.forms.widgets import SplitDateTimeWidget
  from django.test import SimpleTestCase
- 
+
 @@ -60,3 +60,16 @@ def test_splitdatetimefield_changed(self):
          self.assertTrue(f.has_changed(datetime.datetime(2008, 5, 6, 12, 40, 00), ['2008-05-06', '12:40:00']))
          self.assertFalse(f.has_changed(datetime.datetime(2008, 5, 6, 12, 40, 00), ['06/05/2008', '12:40']))
@@ -94,7 +94,7 @@ diff --git a/tests/postgres_tests/test_ranges.py b/tests/postgres_tests/test_ran
              <input type="text" name="datetime_field_0"
              value="2010-01-01 11:13:00" id="id_datetime_field_0">
 @@ -754,7 +754,7 @@ class RangeForm(forms.Form):
- 
+
          self.assertHTMLEqual(str(RangeForm()), '''
          <tr>
 -            <th><label for="id_ints_0">Ints:</label></th>

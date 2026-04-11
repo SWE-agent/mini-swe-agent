@@ -21,7 +21,7 @@ diff --git a/tests/user_commands/tests.py b/tests/user_commands/tests.py
 +from argparse import ArgumentDefaultsHelpFormatter
  from io import StringIO
  from unittest import mock
- 
+
 @@ -408,8 +409,14 @@ def test_subparser_invalid_option(self):
      def test_create_parser_kwargs(self):
          """BaseCommand.create_parser() passes kwargs to CommandParser."""
@@ -35,7 +35,7 @@ diff --git a/tests/user_commands/tests.py b/tests/user_commands/tests.py
 +        )
          self.assertEqual(parser.epilog, epilog)
 +        self.assertEqual(parser.formatter_class, ArgumentDefaultsHelpFormatter)
- 
+
      def test_outputwrapper_flush(self):
          out = StringIO()
 

@@ -32,7 +32,7 @@ diff --git a/tests/delete/tests.py b/tests/delete/tests.py
 +        self.assertCountEqual(deleted_objs.keys(), existed_objs.keys())
          for k, v in existed_objs.items():
              self.assertEqual(deleted_objs[k], v)
- 
+
 @@ -550,13 +549,13 @@ def test_model_delete_returns_num_rows(self):
          existed_objs = {
              R._meta.label: R.objects.count(),
@@ -47,7 +47,7 @@ diff --git a/tests/delete/tests.py b/tests/delete/tests.py
 +        self.assertCountEqual(deleted_objs.keys(), existed_objs.keys())
          for k, v in existed_objs.items():
              self.assertEqual(deleted_objs[k], v)
- 
+
 @@ -694,7 +693,7 @@ def test_fast_delete_empty_no_update_can_self_select(self):
          with self.assertNumQueries(1):
              self.assertEqual(
@@ -55,7 +55,7 @@ diff --git a/tests/delete/tests.py b/tests/delete/tests.py
 -                (0, {'delete.User': 0})
 +                (0, {}),
              )
- 
+
      def test_fast_delete_combined_relationships(self):
 
 EOF_114329324912

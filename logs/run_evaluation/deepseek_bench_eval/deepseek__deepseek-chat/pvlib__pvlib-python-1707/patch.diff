@@ -4,7 +4,7 @@ index 3eaa6b4..821cb02 100644
 +++ b/pvlib/iam.py
 @@ -175,8 +175,28 @@ def physical(aoi, n=1.526, K=4.0, L=0.002, *, n_ar=None):
      n2costheta2 = n2 * costheta
- 
+
      # reflectance of s-, p-polarized, and normal light by the first interface
 -    rho12_s = ((n1costheta1 - n2costheta2) / (n1costheta1 + n2costheta2)) ** 2
 -    rho12_p = ((n1costheta2 - n2costheta1) / (n1costheta2 + n2costheta1)) ** 2
@@ -12,30 +12,30 @@ index 3eaa6b4..821cb02 100644
 +        # handle division by zero when costheta = 0
 +        rho12_s = ((n1costheta1 - n2costheta2) / (n1costheta1 + n2costheta2)) ** 2
 +        rho12_p = ((n1costheta2 - n2costheta1) / (n1costheta2 + n2costheta1)) ** 2
-+        
++
 +        # when denominator is zero (costheta = 0)
 +        denom_zero_s = np.abs(n1costheta1 + n2costheta2) < 1e-12
 +        denom_zero_p = np.abs(n1costheta2 + n2costheta1) < 1e-12
-+        
++
 +        # if n1 == n2, reflectance is 0, otherwise it's 1 (grazing incidence)
 +        if np.any(denom_zero_s):
 +            if np.allclose(n1, n2):
 +                rho12_s = np.where(denom_zero_s, 0.0, rho12_s)
 +            else:
 +                rho12_s = np.where(denom_zero_s, 1.0, rho12_s)
-+        
++
 +        if np.any(denom_zero_p):
 +            if np.allclose(n1, n2):
 +                rho12_p = np.where(denom_zero_p, 0.0, rho12_p)
 +            else:
 +                rho12_p = np.where(denom_zero_p, 1.0, rho12_p)
-+    
++
      rho12_0 = ((n1 - n2) / (n1 + n2)) ** 2
- 
+
      # transmittance through the first interface
 @@ -193,12 +213,31 @@ def physical(aoi, n=1.526, K=4.0, L=0.002, *, n_ar=None):
          n3costheta3 = n3 * costheta
- 
+
          # reflectance by the second interface
 -        rho23_s = (
 -            (n2costheta2 - n3costheta3) / (n2costheta2 + n3costheta3)
@@ -50,30 +50,30 @@ index 3eaa6b4..821cb02 100644
 +            rho23_p = (
 +                (n2costheta3 - n3costheta2) / (n2costheta3 + n3costheta2)
 +            ) ** 2
-+            
++
 +            # when denominator is zero (costheta = 0)
 +            denom_zero_s = np.abs(n2costheta2 + n3costheta3) < 1e-12
 +            denom_zero_p = np.abs(n2costheta3 + n3costheta2) < 1e-12
-+            
++
 +            # if n2 == n3, reflectance is 0, otherwise it's 1 (grazing incidence)
 +            if np.any(denom_zero_s):
 +                if np.allclose(n2, n3):
 +                    rho23_s = np.where(denom_zero_s, 0.0, rho23_s)
 +                else:
 +                    rho23_s = np.where(denom_zero_s, 1.0, rho23_s)
-+            
++
 +            if np.any(denom_zero_p):
 +                if np.allclose(n2, n3):
 +                    rho23_p = np.where(denom_zero_p, 0.0, rho23_p)
 +                else:
 +                    rho23_p = np.where(denom_zero_p, 1.0, rho23_p)
-+        
++
          rho23_0 = ((n2 - n3) / (n2 + n3)) ** 2
- 
+
          # transmittance through the coating, including internal reflections
 @@ -208,8 +247,9 @@ def physical(aoi, n=1.526, K=4.0, L=0.002, *, n_ar=None):
          tau_0 *= (1 - rho23_0) / (1 - rho23_0 * rho12_0)
- 
+
      # transmittance after absorption in the glass
 -    tau_s *= np.exp(-K * L / costheta)
 -    tau_p *= np.exp(-K * L / costheta)
@@ -81,5 +81,5 @@ index 3eaa6b4..821cb02 100644
 +        tau_s *= np.exp(-K * L / costheta)
 +        tau_p *= np.exp(-K * L / costheta)
      tau_0 *= np.exp(-K * L)
- 
+
      # incidence angle modifier

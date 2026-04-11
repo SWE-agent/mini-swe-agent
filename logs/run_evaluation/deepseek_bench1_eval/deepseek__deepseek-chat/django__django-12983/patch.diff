@@ -19,6 +19,6 @@ index fb5f6298c4..258168ed7b 100644
 -    return re.sub(r'[-\s]+', '-', value)
 +    value = re.sub(r'[-\s]+', '-', value)
 +    return value.strip('-_')
- 
- 
+
+
  def camel_case_to_spaces(value):

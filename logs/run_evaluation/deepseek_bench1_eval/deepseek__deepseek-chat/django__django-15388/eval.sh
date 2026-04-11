@@ -19,7 +19,7 @@ diff --git a/tests/template_tests/test_autoreloader.py b/tests/template_tests/te
 @@ -39,6 +39,19 @@ def test_non_template_changed(self, mock_reset):
          self.assertIsNone(autoreload.template_changed(None, Path(__file__)))
          mock_reset.assert_not_called()
- 
+
 +    @override_settings(
 +        TEMPLATES=[
 +            {

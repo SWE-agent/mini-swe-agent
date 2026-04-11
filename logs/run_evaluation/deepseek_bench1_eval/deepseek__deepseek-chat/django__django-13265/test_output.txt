@@ -170,7 +170,7 @@ index db090de3f6..f44bef411d 100644
 +order to allow compatibility with the older versions of Django. Note that this
 +requires Django 3.1.1+. Once the transition to 3.1 is complete you can stop
 +overriding :setting:`DEFAULT_HASHING_ALGORITHM`.
- 
+
  This setting is deprecated as of this release, because support for tokens,
  cookies, sessions, and signatures that use SHA-1 algorithm will be removed in
 + git -c core.fileMode=false diff b2b0711b555fa292751763c2df4fe577c396f265
@@ -182,7 +182,7 @@ index 89e2dceeaf..9670e21363 100644
                  for name in sorted(related_fields)
              ]
              related_dependencies.append((app_label, model_name, None, True))
-+            
++
 +            # When order_with_respect_to is set, defer indexes with _order
 +            # until after AlterOrderWithRespectTo
 +            deferred_indexes = []
@@ -215,7 +215,7 @@ index 89e2dceeaf..9670e21363 100644
                          (app_label, model_name, None, True),
                      ]
                  )
-+                
++
 +                # Add deferred indexes with _order after AlterOrderWithRespectTo
 +                for index in deferred_indexes:
 +                    self.add_operation(
@@ -226,7 +226,7 @@ index 89e2dceeaf..9670e21363 100644
 +                        ),
 +                        dependencies=related_dependencies,
 +                    )
- 
+
              # Fix relationships if the model changed from a proxy model to a
              # concrete model.
 + source /opt/miniconda3/bin/activate

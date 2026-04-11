@@ -27,7 +27,7 @@ diff --git a/tests/auth_tests/test_forms.py b/tests/auth_tests/test_forms.py
 @@ -1025,6 +1026,18 @@ def test_readonly_field_has_changed(self):
          self.assertIs(field.disabled, True)
          self.assertFalse(field.has_changed('aaa', 'bbb'))
- 
+
 +    def test_label(self):
 +        """
 +        ReadOnlyPasswordHashWidget doesn't contain a for attribute in the
@@ -40,9 +40,9 @@ diff --git a/tests/auth_tests/test_forms.py b/tests/auth_tests/test_forms.py
 +        self.assertEqual(bound_field.field.widget.id_for_label('id'), None)
 +        self.assertEqual(bound_field.label_tag(), '<label>Hash field:</label>')
 +
- 
+
  class AdminPasswordChangeFormTest(TestDataMixin, TestCase):
- 
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

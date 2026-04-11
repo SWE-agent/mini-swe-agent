@@ -3,7 +3,7 @@ index ae9c8bdf1..5f8f03a87 100644
 --- a/pydicom/config.py
 +++ b/pydicom/config.py
 @@ -62,10 +62,9 @@ and datetime.time respectively. Default: False
- 
+
  # Logging system and debug function to change logging level
  logger = logging.getLogger('pydicom')
 -handler = logging.StreamHandler()
@@ -13,19 +13,19 @@ index ae9c8bdf1..5f8f03a87 100644
 +
 +# Debugging flag
 +debugging = False
- 
- 
+
+
  import pydicom.pixel_data_handlers.numpy_handler as np_handler  # noqa
 @@ -115,18 +114,17 @@ def debug(debug_on=True):
      When debugging is on, file location and details about the
      elements read at that location are logged to the 'pydicom'
      logger using python's logging module.
-+    
++
 +    Note: This function only sets the internal debugging flag used by
 +    pydicom. It does not configure the logging level or handlers.
 +    Client code should configure logging separately using Python's
 +    logging module.
- 
+
      :param debug_on: True (default) to turn on debugging,
      False to turn off.
      """

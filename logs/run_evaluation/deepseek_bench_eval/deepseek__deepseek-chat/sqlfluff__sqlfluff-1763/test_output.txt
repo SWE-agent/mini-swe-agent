@@ -144,7 +144,7 @@ Author: Alan Cruickshank <alanmcruickshank@gmail.com>
 Date:   Tue Oct 26 10:10:38 2021 +0100
 
     Update older dbt dependency (#1756)
-    
+
     Co-authored-by: Danny Jones <51742311+WittierDinosaur@users.noreply.github.com>
 
 diff --git a/tox.ini b/tox.ini
@@ -197,7 +197,7 @@ index 3a8593edd..c1ece7288 100644
                  )
              ]
          return violations
- 
+
 -    @staticmethod
 -    def _should_ignore_violation_line_range(
 -        line_no: int, ignore_rule: List[NoQaDirective]
@@ -264,18 +264,18 @@ index 3a8593edd..c1ece7288 100644
 -
      def num_violations(self, **kwargs) -> int:
          """Count the number of violations.
- 
+
          Optionally now with filters.
          """
 -        violations = self.get_violations(**kwargs)
 -        return len(violations)
 +        return len(self.get_violations(**kwargs))
- 
+
      def is_clean(self) -> bool:
          """Return True if there are no ignorable violations."""
 -        return not any(self.get_violations(filter_ignore=True))
 +        return self.num_violations(filter_ignore=True) == 0
- 
+
 -    @staticmethod
 -    def _log_hints(
 -        patch: Union[EnrichedFixPatch, FixPatch], templated_file: TemplatedFile
@@ -310,7 +310,7 @@ index 3a8593edd..c1ece7288 100644
 +        for v in self.get_violations(**kwargs):
 +            buffer.setdefault(v.rule_code(), []).append(v)
 +        return buffer
- 
+
      def fix_string(self) -> Tuple[Any, bool]:
          """Obtain the changes to a path as a string.
 @@ -257,234 +160,109 @@ class LintedFile(NamedTuple):
@@ -343,7 +343,7 @@ index 3a8593edd..c1ece7288 100644
 +            for p in raw_patches
 +        ]
 +        linter_logger.debug("Fix Patches: %r", fix_patches)
- 
+
 +        # Filter out any source only patches (i.e. those which are only in
 +        # the source, not in the templated). These happen when the source
 +        # contains loops or similar.
@@ -576,7 +576,7 @@ index 3a8593edd..c1ece7288 100644
 +                slice(source_slice.start, source_slice.stop, patch.fixed_raw)
 +            )
 +            source_idx = source_slice.stop
- 
+
 -            # Add this patch.
 -            slice_buff.append(patch.source_slice)
 -            source_idx = patch.source_slice.stop
@@ -584,7 +584,7 @@ index 3a8593edd..c1ece7288 100644
 +        # Add any remaining content
          if source_idx < len(self.templated_file.source_str):
              slice_buff.append(slice(source_idx, len(self.templated_file.source_str)))
- 
+
 -        linter_logger.debug("Final slice buffer: %s", slice_buff)
 -
 -        # Iterate through the patches, building up the new string.
@@ -619,17 +619,17 @@ index 3a8593edd..c1ece7288 100644
 -                str_buff += self.templated_file.source_str[source_slice]
 +                # It's a slice
 +                out_buff += self.templated_file.source_str[slc]
- 
+
 -        # The success metric here is whether anything ACTUALLY changed.
 -        return str_buff, str_buff != original_source
 +        linter_logger.debug("Out Buff: %r", out_buff)
 +        return out_buff, True
- 
+
      def persist_tree(self, suffix: str = "") -> bool:
          """Persist changes to the given path."""
 +        import tempfile
          write_buff, success = self.fix_string()
- 
+
          if success:
 @@ -493,7 +271,56 @@ class LintedFile(NamedTuple):
              if suffix:
@@ -638,7 +638,7 @@ index 3a8593edd..c1ece7288 100644
 -            # Actually write the file.
 -            with open(fname, "w", encoding=self.encoding) as f:
 -                f.write(write_buff)
-+            
++
 +            # Helper function to write with a specific encoding
 +            def write_with_encoding(encoding: str) -> bool:
 +                tmp_name = None
@@ -648,7 +648,7 @@ index 3a8593edd..c1ece7288 100644
 +                    linter_logger.debug("Using UTF-8 as default encoding")
 +                try:
 +                    with tempfile.NamedTemporaryFile(
-+                        mode="w", encoding=encoding, delete=False, 
++                        mode="w", encoding=encoding, delete=False,
 +                        dir=os.path.dirname(fname) or None
 +                    ) as tmp_file:
 +                        tmp_file.write(write_buff)
@@ -661,7 +661,7 @@ index 3a8593edd..c1ece7288 100644
 +                    if tmp_name and os.path.exists(tmp_name):
 +                        os.unlink(tmp_name)
 +                    raise
-+            
++
 +            # First try with the detected encoding
 +            try:
 +                write_with_encoding(self.encoding)
@@ -681,7 +681,7 @@ index 3a8593edd..c1ece7288 100644
 +                    # If UTF-8 also fails, re-raise the original UnicodeEncodeError
 +                    # to give better context about what went wrong
 +                    raise e
-+                    
++
          return success
 +
 +    @staticmethod
@@ -3590,8 +3590,8 @@ _______________________________ test_linter_noqa _______________________________
             """
 >       result = lntr.lint_string(sql)
 
-test/core/linter_test.py:590: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test/core/linter_test.py:590:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 src/sqlfluff/core/linter/linter.py:670: in lint_string
     return self.lint_parsed(
 src/sqlfluff/core/linter/linter.py:463: in lint_parsed
@@ -3610,7 +3610,7 @@ src/sqlfluff/core/rules/base.py:418: in crawl
     dvs, raw_stack, child_fixes, memory = self.crawl(
 src/sqlfluff/core/rules/base.py:386: in crawl
     _process_lint_result(res)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 res = <sqlfluff.core.rules.base.LintResult object at 0x7692a8b82790>
 
@@ -3646,8 +3646,8 @@ _______________________ test_linter_noqa_with_templating _______________________
             """
 >       result = lntr.lint_string(sql)
 
-test/core/linter_test.py:613: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test/core/linter_test.py:613:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 src/sqlfluff/core/linter/linter.py:670: in lint_string
     return self.lint_parsed(
 src/sqlfluff/core/linter/linter.py:463: in lint_parsed
@@ -3664,7 +3664,7 @@ src/sqlfluff/core/rules/base.py:418: in crawl
     dvs, raw_stack, child_fixes, memory = self.crawl(
 src/sqlfluff/core/rules/base.py:386: in crawl
     _process_lint_result(res)
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 res = <sqlfluff.core.rules.base.LintResult object at 0x7692a8ba4bb0>
 
@@ -3734,13 +3734,13 @@ tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file
             pass
 >       actual = p.read_text(encoding=case["encoding"])
 
-test/core/linter_test.py:695: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test/core/linter_test.py:695:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 /opt/miniconda3/envs/testbed/lib/python3.9/pathlib.py:1266: in read_text
     with self.open(mode='r', encoding=encoding, errors=errors) as f:
 /opt/miniconda3/envs/testbed/lib/python3.9/pathlib.py:1252: in open
     return io.open(self, mode, buffering, encoding, errors, newline,
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = PosixPath('/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file_0/test.sql')
 name = '/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file_0/test.sql'
@@ -3809,7 +3809,7 @@ tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file
         actual = p.read_text(encoding=case["encoding"])
 >       assert case["expected"] == actual
 E       AssertionError: assert 'def' == 'abc'
-E         
+E
 E         - abc
 E         + def
 
@@ -3871,7 +3871,7 @@ tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file
         actual = p.read_text(encoding=case["encoding"])
 >       assert case["expected"] == actual
 E       AssertionError: assert '→' == 'abc'
-E         
+E
 E         - abc
 E         + →
 

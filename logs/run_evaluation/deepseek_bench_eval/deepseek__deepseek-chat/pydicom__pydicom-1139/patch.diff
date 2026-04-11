@@ -3,7 +3,7 @@ index e992f7872..3ac2ac0d4 100644
 --- a/pydicom/valuerep.py
 +++ b/pydicom/valuerep.py
 @@ -755,6 +755,21 @@ class PersonName:
- 
+
      def __hash__(self):
          return hash(self.components)
 +    def __contains__(self, item):
@@ -21,6 +21,6 @@ index e992f7872..3ac2ac0d4 100644
 +    def __len__(self):
 +        """Return the length of the string representation."""
 +        return len(str(self))
- 
+
      def decode(self, encodings=None):
          """Return the patient name decoded by the given `encodings`.

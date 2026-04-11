@@ -5,7 +5,7 @@ index 8642e1f151..1eafcc29a3 100644
 @@ -969,6 +969,11 @@ class ExpressionWrapper(SQLiteNumericMixin, Expression):
      def get_source_expressions(self):
          return [self.expression]
- 
+
 +
 +    @property
 +    def empty_result_set_value(self):
@@ -16,7 +16,7 @@ index 8642e1f151..1eafcc29a3 100644
              expression = self.expression.copy()
 @@ -979,7 +984,17 @@ class ExpressionWrapper(SQLiteNumericMixin, Expression):
          return super().get_group_by_cols()
- 
+
      def as_sql(self, compiler, connection):
 -        return compiler.compile(self.expression)
 +        sql, params = compiler.compile(self.expression)
@@ -30,7 +30,7 @@ index 8642e1f151..1eafcc29a3 100644
 +            if empty_result_set_value is not NotImplemented:
 +                raise EmptyResultSet
 +        return sql, params
- 
+
      def __repr__(self):
          return "{}({})".format(self.__class__.__name__, self.expression)
 diff --git a/django/db/models/sql/where.py b/django/db/models/sql/where.py
@@ -40,7 +40,7 @@ index 50ff13be75..8b669aff0a 100644
 @@ -29,6 +29,14 @@ class WhereNode(tree.Node):
      resolved = False
      conditional = True
- 
+
 +    @property
 +    def empty_result_set_value(self):
 +        # When used as an expression in SELECT clause, what value should

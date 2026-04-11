@@ -9,11 +9,11 @@ index 138ed07ff8..c5cdb3749d 100644
 -    if settings.LANGUAGE_CODE not in available_tags:
 -        return [E004]
 -    return []
-+    
++
 +    # If LANGUAGE_CODE is directly in available_tags, it's valid
 +    if settings.LANGUAGE_CODE in available_tags:
 +        return []
-+    
++
 +    # Check LANG_INFO fallbacks if available
 +    try:
 +        from django.conf.locale import LANG_INFO
@@ -23,7 +23,7 @@ index 138ed07ff8..c5cdb3749d 100644
 +                    return []
 +    except ImportError:
 +        pass
-+    
++
 +    # Check base language
 +    # Get the base language (e.g., 'de' from 'de-at', 'sr' from 'sr@latin')
 +    lang_code = settings.LANGUAGE_CODE
@@ -36,11 +36,11 @@ index 138ed07ff8..c5cdb3749d 100644
 +    base_language = first_part
 +    if base_language in available_tags:
 +        return []
-+    
++
 +    # Check for country variants (e.g., 'fr-ca' when 'fr-fr' is available)
 +    for available_lang_code, _ in settings.LANGUAGES:
 +        if available_lang_code.startswith(base_language + '-'):
 +            return []
-+    
++
 +    return [E004]
 \ No newline at end of file

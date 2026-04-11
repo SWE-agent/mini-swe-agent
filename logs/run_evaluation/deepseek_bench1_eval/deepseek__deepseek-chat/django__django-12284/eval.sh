@@ -23,7 +23,7 @@ diff --git a/tests/model_fields/tests.py b/tests/model_fields/tests.py
 @@ -178,6 +178,19 @@ def get_foo_bar_display(self):
          f = FooBar(foo_bar=1)
          self.assertEqual(f.get_foo_bar_display(), 'something')
- 
+
 +    def test_overriding_inherited_FIELD_display(self):
 +        class Base(models.Model):
 +            foo = models.CharField(max_length=254, choices=[('A', 'Base A')])

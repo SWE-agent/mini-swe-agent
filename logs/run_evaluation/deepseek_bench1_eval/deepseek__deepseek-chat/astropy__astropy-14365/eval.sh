@@ -18,8 +18,8 @@ diff --git a/astropy/io/ascii/tests/test_qdp.py b/astropy/io/ascii/tests/test_qd
 +++ b/astropy/io/ascii/tests/test_qdp.py
 @@ -43,7 +43,18 @@ def test_get_tables_from_qdp_file(tmp_path):
      assert np.isclose(table2["MJD_nerr"][0], -2.37847222222222e-05)
- 
- 
+
+
 -def test_roundtrip(tmp_path):
 +def lowercase_header(value):
 +    """Make every non-comment line lower case."""
@@ -42,7 +42,7 @@ diff --git a/astropy/io/ascii/tests/test_qdp.py b/astropy/io/ascii/tests/test_qd
      """
 +    if lowercase:
 +        example_qdp = lowercase_header(example_qdp)
- 
+
      path = str(tmp_path / "test.qdp")
      path2 = str(tmp_path / "test2.qdp")
 

@@ -19,7 +19,7 @@ diff --git a/tests/check_framework/test_templates.py b/tests/check_framework/tes
 @@ -158,6 +158,19 @@ def test_template_tags_with_same_library_name(self):
                  [self.error_same_tags],
              )
- 
+
 +    @override_settings(
 +        INSTALLED_APPS=["check_framework.template_test_apps.same_tags_app_1"]
 +    )

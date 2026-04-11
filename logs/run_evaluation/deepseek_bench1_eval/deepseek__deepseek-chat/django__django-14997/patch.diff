@@ -9,7 +9,7 @@ index c06386a2fa..b07c8acb52 100644
 -        columns = [col.target.column for col in self.compiler.query._gen_cols([self.expressions])]
 +        columns = [col.target.column for col in self.compiler.query._gen_cols([self.expressions]) if hasattr(col, "target") and hasattr(col.target, "column")]
          super().__init__(table, columns)
- 
+
      def rename_table_references(self, old_table, new_table):
 @@ -215,7 +215,8 @@ class Expressions(TableColumns):
          expressions = deepcopy(self.expressions)
@@ -20,7 +20,7 @@ index c06386a2fa..b07c8acb52 100644
 +                col.alias = None  # SQLite doesn\'t allow table-qualified column names in indexes
          self.expressions = expressions
          super().rename_table_references(old_table, new_table)
- 
+
 @@ -225,9 +226,10 @@ class Expressions(TableColumns):
          expressions = deepcopy(self.expressions)
          self.columns = []
@@ -32,5 +32,5 @@ index c06386a2fa..b07c8acb52 100644
 +            if hasattr(col, "target") and hasattr(col.target, "column"):
 +                self.columns.append(col.target.column)
          self.expressions = expressions
- 
+
      def __str__(self):

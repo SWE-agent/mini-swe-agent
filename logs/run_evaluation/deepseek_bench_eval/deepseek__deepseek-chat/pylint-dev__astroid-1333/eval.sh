@@ -23,11 +23,11 @@ diff --git a/tests/unittest_modutils.py b/tests/unittest_modutils.py
 +from pathlib import Path
  from xml import etree
  from xml.etree import ElementTree
- 
+
 @@ -189,6 +190,30 @@ def test_load_from_module_symlink_on_symlinked_paths_in_syspath(self) -> None:
          # this should be equivalent to: import secret
          self.assertEqual(modutils.modpath_from_file(symlink_secret_path), ["secret"])
- 
+
 +    def test_load_packages_without_init(self) -> None:
 +        """Test that we correctly find packages with an __init__.py file.
 +
@@ -52,7 +52,7 @@ diff --git a/tests/unittest_modutils.py b/tests/unittest_modutils.py
 +            ["src", "package"],
 +        )
 +
- 
+
  class LoadModuleFromPathTest(resources.SysPathSetup, unittest.TestCase):
      def test_do_not_load_twice(self) -> None:
 

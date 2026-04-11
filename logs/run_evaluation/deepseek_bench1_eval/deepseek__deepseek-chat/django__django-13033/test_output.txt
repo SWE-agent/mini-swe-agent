@@ -168,7 +168,7 @@ index abbb1e37cb..eaa407b9b0 100644
 +        # Check if we're ordering by the foreign key attribute itself (e.g., 'field_id').
 +        # We're ordering by the attribute name if the last piece of the path equals
 +        # field.attname.
-+        is_ordering_by_fk_attname = (pieces and 
++        is_ordering_by_fk_attname = (pieces and
 +                                     getattr(field, 'attname', None) == pieces[-1] and
 +                                     pieces[-1] != 'pk')
 +        if field.is_relation and opts.ordering and not is_ordering_by_fk_attname and name != 'pk':

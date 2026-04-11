@@ -155,7 +155,7 @@ Author: Mariusz Felisiak <felisiak.mariusz@gmail.com>
 Date:   Fri Feb 14 13:16:17 2020 +0100
 
     Removed unused and incorrect PossessedCar.__str__() method in test_utils.
-    
+
     PossessedCar doesn't have a color.
 
 diff --git a/tests/test_utils/models.py b/tests/test_utils/models.py
@@ -180,7 +180,7 @@ index c50fc90171..5cf1f5b3c2 100644
  from django.core import serializers
 -from django.db import router
 +from django.db import router, transaction
- 
+
  # The prefix to put on the default database name when creating
  # the test database.
 @@ -126,8 +126,9 @@ class BaseDatabaseCreation:
@@ -192,7 +192,7 @@ index c50fc90171..5cf1f5b3c2 100644
 +        with transaction.atomic(using=self.connection.alias):
 +            for obj in serializers.deserialize("json", data, using=self.connection.alias):
 +                obj.save()
- 
+
      def _get_database_display_str(self, verbosity, database_name):
          """
 + source /opt/miniconda3/bin/activate

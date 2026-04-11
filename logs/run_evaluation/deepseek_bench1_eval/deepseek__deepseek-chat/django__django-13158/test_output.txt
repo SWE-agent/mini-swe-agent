@@ -170,7 +170,7 @@ index 07d6ffd4ca..2c22c86d65 100644
 +            clone.query.combinator_all = False
 +            clone.query.combined_queries = ()
          return clone
- 
+
 +
      ##################################################################
      # PUBLIC METHODS THAT ALTER ATTRIBUTES AND RETURN A NEW QUERYSET #

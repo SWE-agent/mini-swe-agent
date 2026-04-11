@@ -23,9 +23,9 @@ diff --git a/tests/test_exceptions/test_validation_error.py b/tests/test_excepti
 @@ -1,4 +1,5 @@
  import unittest
 +from unittest import mock
- 
+
  from django.core.exceptions import ValidationError
- 
+
 @@ -14,3 +15,271 @@ def test_messages_concatenates_error_dict_values(self):
          message_dict['field2'] = ['E3', 'E4']
          exception = ValidationError(message_dict)

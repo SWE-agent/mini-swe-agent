@@ -28,7 +28,7 @@ diff --git a/tests/test_utils/tests.py b/tests/test_utils/tests.py
 +        self.assertEqual(default_storage.file_permissions_mode, 0o644)
          with self.settings(FILE_UPLOAD_PERMISSIONS=0o777):
              self.assertEqual(default_storage.file_permissions_mode, 0o777)
- 
+
 
 EOF_114329324912
 : '>>>>> Start Test Output'

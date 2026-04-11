@@ -23,7 +23,7 @@ diff --git a/tests/utils_tests/test_autoreload.py b/tests/utils_tests/test_autor
 @@ -140,6 +140,17 @@ def test_main_module_without_file_is_not_resolved(self):
          fake_main = types.ModuleType('__main__')
          self.assertEqual(autoreload.iter_modules_and_files((fake_main,), frozenset()), frozenset())
- 
+
 +    def test_path_with_embedded_null_bytes(self):
 +        for path in (
 +            'embedded_null_byte\x00.py',
@@ -35,7 +35,7 @@ diff --git a/tests/utils_tests/test_autoreload.py b/tests/utils_tests/test_autor
 +                    frozenset(),
 +                )
 +
- 
+
  class TestCommonRoots(SimpleTestCase):
      def test_common_roots(self):
 

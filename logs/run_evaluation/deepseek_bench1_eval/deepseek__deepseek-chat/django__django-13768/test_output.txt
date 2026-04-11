@@ -162,13 +162,13 @@ index 33d0605443..a586b82aeb 100644
 +++ b/tests/servers/tests.py
 @@ -266,8 +266,8 @@ class LiveServerPort(LiveServerBase):
              TestCase.tearDownClass()
- 
- 
+
+
 -class LiverServerThreadedTests(LiveServerBase):
 -    """If LiverServerTestCase isn't threaded, these tests will hang."""
 +class LiveServerThreadedTests(LiveServerBase):
 +    """If LiveServerTestCase isn't threaded, these tests will hang."""
- 
+
      def test_view_calls_subview(self):
          url = '/subview_calling_view/?%s' % urlencode({'url': self.live_server_url})
 + git -c core.fileMode=false diff 965d2d95c630939b53eb60d9c169f5dfc77ee0c6

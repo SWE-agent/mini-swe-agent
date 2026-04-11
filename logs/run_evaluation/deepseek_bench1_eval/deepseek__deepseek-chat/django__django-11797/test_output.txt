@@ -156,7 +156,7 @@ Author: Andrew <36489577+recvfrom@users.noreply.github.com>
 Date:   Thu Sep 19 22:23:33 2019 -0400
 
     Fixed #30786 -- Used CONVERT_TZ to check if the time zone definitions are installed on MySQL.
-    
+
     Replaced a timezone check in the MySQL backend with one that doesn't
     require access to the mysql.time_zone database.
 
@@ -165,7 +165,7 @@ index 94b57ae57f..82d3eef867 100644
 --- a/django/db/backends/mysql/features.py
 +++ b/django/db/backends/mysql/features.py
 @@ -69,10 +69,11 @@ class DatabaseFeatures(BaseDatabaseFeatures):
- 
+
      @cached_property
      def has_zoneinfo_database(self):
 -        # Test if the time zone definitions are installed.
@@ -176,7 +176,7 @@ index 94b57ae57f..82d3eef867 100644
 -            return cursor.fetchone() is not None
 +            cursor.execute("SELECT CONVERT_TZ('2001-01-01 01:00:00', 'UTC', 'UTC')")
 +            return cursor.fetchone()[0] is not None
- 
+
      @cached_property
      def is_sql_auto_is_null_enabled(self):
 + git -c core.fileMode=false diff 3346b78a8a872286a245d1e77ef4718fc5e6be1a
@@ -204,12 +204,12 @@ index 8e55bd092d..1be2ba3252 100644
 --- a/django/db/models/sql/query.py
 +++ b/django/db/models/sql/query.py
 @@ -243,7 +243,7 @@ class Query(BaseExpression):
- 
+
      @property
      def has_select_fields(self):
 -        return bool(self.select or self.annotation_select_mask or self.extra_select_mask)
 +        return bool(self.select or self.annotation_select or self.annotation_select_mask or self.extra_select_mask)
- 
+
      @cached_property
      def base_table(self):
 + source /opt/miniconda3/bin/activate

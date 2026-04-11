@@ -150,7 +150,7 @@ index 8c5122ad1d..208464b60a 100644
 --- a/django/forms/widgets.py
 +++ b/django/forms/widgets.py
 @@ -101,7 +101,9 @@ class Media:
- 
+
      def render_js(self):
          return [
 -            format_html('<script src="{}"></script>', self.absolute_path(path))
@@ -159,7 +159,7 @@ index 8c5122ad1d..208464b60a 100644
 +            else format_html('<script src="{}"></script>', self.absolute_path(path))
              for path in self._js
          ]
- 
+
 @@ -111,7 +113,9 @@ class Media:
          media = sorted(self._css)
          return chain.from_iterable(
@@ -178,7 +178,7 @@ index 02d51ed2a5..4b62cf09cf 100644
 @@ -192,6 +192,11 @@ Forms
  * The new ``edit_only`` argument for :func:`.modelformset_factory` and
    :func:`.inlineformset_factory` allows preventing new objects creation.
- 
+
 +* The ``js`` and ``css`` class attributes of :doc:`Media </topics/forms/media>`
 +  now allow using hashable objects, not only path strings, as long as those
 +  objects implement the ``__html__()`` method (typically when decorated with
@@ -186,7 +186,7 @@ index 02d51ed2a5..4b62cf09cf 100644
 +
  Generic Views
  ~~~~~~~~~~~~~
- 
+
 diff --git a/docs/topics/forms/media.txt b/docs/topics/forms/media.txt
 index 6ca7c66fde..7e5a04e3d9 100644
 --- a/docs/topics/forms/media.txt
@@ -194,7 +194,7 @@ index 6ca7c66fde..7e5a04e3d9 100644
 @@ -206,7 +206,10 @@ return values for dynamic ``media`` properties.
  Paths in asset definitions
  ==========================
- 
+
 -Paths used to specify assets can be either relative or absolute. If a
 +Paths as strings
 +----------------
@@ -206,7 +206,7 @@ index 6ca7c66fde..7e5a04e3d9 100644
 @@ -254,6 +257,28 @@ Or if :mod:`~django.contrib.staticfiles` is configured using the
      <script src="https://static.example.com/animations.27e20196a850.js"></script>
      <script src="http://othersite.com/actions.js"></script>
- 
+
 +Paths as objects
 +----------------
 +
@@ -231,7 +231,7 @@ index 6ca7c66fde..7e5a04e3d9 100644
 +
  ``Media`` objects
  =================
- 
+
 diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/test_media.py
 index 4338321af8..171b70e508 100644
 --- a/tests/forms_tests/tests/test_media.py
@@ -242,8 +242,8 @@ index 4338321af8..171b70e508 100644
 +from django.templatetags.static import static
  from django.test import SimpleTestCase, override_settings
 +from django.utils.html import format_html, html_safe
- 
- 
+
+
  @override_settings(
 @@ -710,3 +712,160 @@ class FormsMediaTestCase(SimpleTestCase):
          merged = media + empty_media
@@ -414,7 +414,7 @@ index 9e1be0fe0f..51610c4223 100644
 @@ -373,6 +373,100 @@ class LazyObject:
      __len__ = new_method_proxy(len)
      __contains__ = new_method_proxy(operator.contains)
- 
+
 +    # Arithmetic operators
 +    __add__ = new_method_proxy(operator.add)
 +    __sub__ = new_method_proxy(operator.sub)
@@ -429,17 +429,17 @@ index 9e1be0fe0f..51610c4223 100644
 +    __lshift__ = new_method_proxy(operator.lshift)
 +    __rshift__ = new_method_proxy(operator.rshift)
 +    __matmul__ = new_method_proxy(operator.matmul)
-+    
++
 +    # Unary operators
 +    __neg__ = new_method_proxy(operator.neg)
 +    __pos__ = new_method_proxy(operator.pos)
 +    __abs__ = new_method_proxy(operator.abs)
 +    __invert__ = new_method_proxy(operator.invert)
-+    
++
 +    # Additional comparison operators
 +    __le__ = new_method_proxy(operator.le)
 +    __ge__ = new_method_proxy(operator.ge)
-+    
++
 +    # Callable support
 +    __call__ = new_method_proxy(operator.call)
 +
@@ -449,67 +449,67 @@ index 9e1be0fe0f..51610c4223 100644
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other + self._wrapped
-+    
++
 +    def __rsub__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other - self._wrapped
-+    
++
 +    def __rmul__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other * self._wrapped
-+    
++
 +    def __rtruediv__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other / self._wrapped
-+    
++
 +    def __rfloordiv__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other // self._wrapped
-+    
++
 +    def __rmod__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other % self._wrapped
-+    
++
 +    def __rpow__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other ** self._wrapped
-+    
++
 +    def __rand__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other & self._wrapped
-+    
++
 +    def __ror__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other | self._wrapped
-+    
++
 +    def __rxor__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other ^ self._wrapped
-+    
++
 +    def __rlshift__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other << self._wrapped
-+    
++
 +    def __rrshift__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other >> self._wrapped
-+    
++
 +    def __rmatmul__(self, other):
 +        if self._wrapped is empty:
 +            self._setup()
 +        return other @ self._wrapped
- 
+
  def unpickle_lazyobject(wrapped):
      """
 + source /opt/miniconda3/bin/activate
@@ -645,21 +645,21 @@ Obtaining file:///testbed
   Getting requirements to build editable: started
   Getting requirements to build editable: finished with status 'error'
   error: subprocess-exited-with-error
-  
+
   × Getting requirements to build editable did not run successfully.
   │ exit code: 1
   ╰─> [80 lines of output]
       /tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
       !!
-      
+
               ********************************************************************************
               Please consider removing the following classifiers in favor of a SPDX license expression:
-      
+
               License :: OSI Approved :: BSD License
-      
+
               See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
               ********************************************************************************
-      
+
       !!
         self._finalize_license_expression()
       Traceback (most recent call last):
@@ -678,18 +678,18 @@ Obtaining file:///testbed
         File "/opt/miniconda3/envs/testbed/lib/python3.9/ast.py", line 66, in _raise_malformed_node
           raise ValueError(f'malformed node or string: {node!r}')
       ValueError: malformed node or string: <ast.Call object at 0x72a29e257280>
-      
+
       The above exception was the direct cause of the following exception:
-      
+
       Traceback (most recent call last):
         File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/expand.py", line 185, in read_attr
           value = getattr(StaticModule(module_name, spec), attr_name)
         File "/tmp/pip-build-env-g904_szz/overlay/lib/python3.9/site-packages/setuptools/config/expand.py", line 77, in __getattr__
           raise AttributeError(f"{self.name} has no attribute {attr}") from e
       AttributeError: django has no attribute __version__
-      
+
       During handling of the above exception, another exception occurred:
-      
+
       Traceback (most recent call last):
         File "/opt/miniconda3/envs/testbed/lib/python3.9/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 353, in <module>
           main()
@@ -730,7 +730,7 @@ Obtaining file:///testbed
           return getattr(module, attr_name)
       AttributeError: module 'django' has no attribute '__version__'
       [end of output]
-  
+
   note: This error originates from a subprocess, and is likely not a problem with pip.
 error: subprocess-exited-with-error
 

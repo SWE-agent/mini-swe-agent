@@ -22,8 +22,8 @@ diff --git a/pvlib/tests/test_irradiance.py b/pvlib/tests/test_irradiance.py
      # values from matlab 1.4 code
 -    assert_allclose(result, [np.nan, 27.9412, 104.1317, 34.1663], atol=1e-4)
 +    assert_allclose(result, [0., 27.9412, 104.1317, 34.1663], atol=1e-4)
- 
- 
+
+
  def test_king(irrad_data, ephem_data):
 
 EOF_114329324912

@@ -19,7 +19,7 @@ diff --git a/tests/test_fields.py b/tests/test_fields.py
 @@ -169,6 +169,20 @@ class OtherSchema(MySchema):
          assert schema2.fields["foo"].key_field.root == schema2
          assert schema2.fields["foo"].value_field.root == schema2
- 
+
 +    # Regression test for https://github.com/marshmallow-code/marshmallow/issues/1357
 +    def test_datetime_list_inner_format(self, schema):
 +        class MySchema(Schema):
@@ -34,7 +34,7 @@ diff --git a/tests/test_fields.py b/tests/test_fields.py
 +        assert schema.fields["foo"].inner.format == "iso8601"
 +        assert schema.fields["bar"].tuple_fields[0].format == "iso8601"
 +
- 
+
  class TestMetadata:
      @pytest.mark.parametrize("FieldClass", ALL_FIELDS)
 

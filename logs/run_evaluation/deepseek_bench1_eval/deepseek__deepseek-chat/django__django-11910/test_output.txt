@@ -162,7 +162,7 @@ index 4405d152b2..dac9502abb 100644
 +++ b/docs/ref/settings.txt
 @@ -2306,8 +2306,11 @@ available in ``request.META``.)
  Default: ``[]`` (Empty list)
- 
+
  If a URL path matches a regular expression in this list, the request will not be
 -redirected to HTTPS. If :setting:`SECURE_SSL_REDIRECT` is ``False``, this
 -setting has no effect.
@@ -171,9 +171,9 @@ index 4405d152b2..dac9502abb 100644
 +from URL paths, so patterns shouldn't include them, e.g.
 +``SECURE_REDIRECT_EXEMPT = [r'^no-ssl/$', …]``. If
 +:setting:`SECURE_SSL_REDIRECT` is ``False``, this setting has no effect.
- 
+
  .. setting:: SECURE_REFERRER_POLICY
- 
+
 + git -c core.fileMode=false diff d232fd76a85870daf345fd8f8d617fe7802ae194
 diff --git a/django/db/migrations/operations/fields.py b/django/db/migrations/operations/fields.py
 index 402dae2829..1e1817e3b0 100644

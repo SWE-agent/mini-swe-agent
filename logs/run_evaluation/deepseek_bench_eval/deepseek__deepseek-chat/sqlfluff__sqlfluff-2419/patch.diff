@@ -4,18 +4,18 @@ index 836941edc..072509b75 100644
 +++ b/src/sqlfluff/rules/L060.py
 @@ -44,7 +44,8 @@ class Rule_L060(BaseRule):
              return None
- 
+
          # Only care if the function is ``IFNULL`` or ``NVL``.
 -        if context.segment.raw_upper not in {"IFNULL", "NVL"}:
 +        raw_upper = context.segment.raw_upper
 +        if raw_upper not in {"IFNULL", "NVL"}:
              return None
- 
+
          # Create fix to replace ``IFNULL`` or ``NVL`` with ``COALESCE``.
 @@ -59,4 +60,7 @@ class Rule_L060(BaseRule):
              ],
          )
- 
+
 -        return LintResult(context.segment, [fix])
 +        # Create specific error message
 +        description = f"Use 'COALESCE' instead of '{raw_upper}'."

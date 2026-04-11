@@ -17,17 +17,17 @@ diff --git a/astropy/io/ascii/tests/test_rst.py b/astropy/io/ascii/tests/test_rs
 --- a/astropy/io/ascii/tests/test_rst.py
 +++ b/astropy/io/ascii/tests/test_rst.py
 @@ -2,7 +2,11 @@
- 
+
  from io import StringIO
- 
+
 +import numpy as np
 +
 +import astropy.units as u
  from astropy.io import ascii
 +from astropy.table import QTable
- 
+
  from .common import assert_almost_equal, assert_equal
- 
+
 @@ -185,3 +189,27 @@ def test_write_normal():
  ==== ========= ==== ====
  """,

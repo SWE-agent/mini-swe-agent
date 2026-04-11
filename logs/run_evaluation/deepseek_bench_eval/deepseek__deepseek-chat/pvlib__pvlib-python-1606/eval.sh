@@ -36,8 +36,8 @@ diff --git a/pvlib/tests/test_tools.py b/pvlib/tests/test_tools.py
 +    v, x = tools._golden_sect_DataFrame(params, lower, upper,
 +                                        _obj_test_golden_sect)
 +    assert np.allclose(x, expected, atol=1e-8)
- 
- 
+
+
  def test__golden_sect_DataFrame_nans():
 
 EOF_114329324912

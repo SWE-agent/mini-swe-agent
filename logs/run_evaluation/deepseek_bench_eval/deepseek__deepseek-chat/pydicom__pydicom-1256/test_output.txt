@@ -168,7 +168,7 @@ index c6ef519c3..adcba36cb 100644
 +                    , self.bulk_data_element_handler)
                  ds.add(elem)
          return ds
- 
+
 +++ '[' -z x ']'
 ++ conda activate
 ++ local cmd=activate
@@ -299,7 +299,7 @@ WARNING: Running pip as the 'root' user can result in broken permissions and con
 Updated 0 paths from cf3db18aa
 + git apply -v -
 <stdin>:15: trailing whitespace.
-                "vr": "SQ", 
+                "vr": "SQ",
 Checking patch pydicom/tests/test_json.py...
 Applied patch pydicom/tests/test_json.py cleanly.
 warning: 1 line adds whitespace errors.

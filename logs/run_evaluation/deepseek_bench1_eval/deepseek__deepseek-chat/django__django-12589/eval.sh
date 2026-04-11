@@ -25,7 +25,7 @@ diff --git a/tests/aggregation/models.py b/tests/aggregation/models.py
      age = models.IntegerField()
      friends = models.ManyToManyField('self', blank=True)
 +    rating = models.FloatField(null=True)
- 
+
      def __str__(self):
          return self.name
 diff --git a/tests/aggregation/tests.py b/tests/aggregation/tests.py
@@ -34,7 +34,7 @@ diff --git a/tests/aggregation/tests.py b/tests/aggregation/tests.py
 @@ -1191,6 +1191,22 @@ def test_aggregation_subquery_annotation_values(self):
              },
          ])
- 
+
 +    def test_aggregation_subquery_annotation_values_collision(self):
 +        books_rating_qs = Book.objects.filter(
 +            publisher=OuterRef('pk'),

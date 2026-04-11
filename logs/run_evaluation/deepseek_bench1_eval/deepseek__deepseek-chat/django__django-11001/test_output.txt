@@ -161,7 +161,7 @@ index 0c64748ccd..4d7eb11151 100644
 --- a/django/db/models/fields/__init__.py
 +++ b/django/db/models/fields/__init__.py
 @@ -1709,7 +1709,7 @@ class FilePathField(Field):
- 
+
      def formfield(self, **kwargs):
          return super().formfield(**{
 -            'path': self.path,
@@ -176,7 +176,7 @@ index e352e8b007..fbcba2bd66 100644
 @@ -868,6 +868,23 @@ directory on the filesystem. Has three special arguments, of which the first is
      Required. The absolute filesystem path to a directory from which this
      :class:`FilePathField` should get its choices. Example: ``"/home/images"``.
- 
+
 +    ``path`` may also be a callable, such as a function to dynamically set the
 +    path at runtime. Example::
 +
@@ -195,21 +195,21 @@ index e352e8b007..fbcba2bd66 100644
 +        ``path`` can now be a callable.
 +
  .. attribute:: FilePathField.match
- 
+
      Optional. A regular expression, as a string, that :class:`FilePathField`
 diff --git a/docs/releases/3.0.txt b/docs/releases/3.0.txt
 index b78d4bd6ab..966644385b 100644
 --- a/docs/releases/3.0.txt
 +++ b/docs/releases/3.0.txt
 @@ -206,6 +206,8 @@ Models
- 
+
  * ``connection.queries`` now shows ``COPY … TO`` statements on PostgreSQL.
- 
+
 +* :class:`~django.db.models.FilePathField` now accepts a callable ``path``.
 +
  Requests and Responses
  ~~~~~~~~~~~~~~~~~~~~~~
- 
+
 diff --git a/tests/model_fields/test_filepathfield.py b/tests/model_fields/test_filepathfield.py
 index d5d43ff6f6..362d12d0db 100644
 --- a/tests/model_fields/test_filepathfield.py
@@ -240,7 +240,7 @@ index 7649c39262..57150f96dc 100644
 -        self.ordering_parts = re.compile(r'(.*)\s(ASC|DESC)(.*)')
 +        self.ordering_parts = re.compile(r'(.*)\s(ASC|DESC)(.*)', re.DOTALL)
          self._meta_ordering = None
- 
+
      def setup_query(self):
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

@@ -24,7 +24,7 @@ diff --git a/tests/admin_views/test_adminsite.py b/tests/admin_views/test_admins
 +        article = admin_views['models'][0]
 +        self.assertEqual(article['object_name'], 'Article')
 +        self.assertEqual(article['model'], Article)
- 
+
          # auth.User
          auth = apps[1]
 @@ -63,6 +65,7 @@ def test_available_apps(self):
@@ -32,7 +32,7 @@ diff --git a/tests/admin_views/test_adminsite.py b/tests/admin_views/test_admins
          user = auth['models'][0]
          self.assertEqual(user['object_name'], 'User')
 +        self.assertEqual(user['model'], User)
- 
+
          self.assertEqual(auth['app_url'], '/test_admin/admin/auth/')
          self.assertIs(auth['has_module_perms'], True)
 

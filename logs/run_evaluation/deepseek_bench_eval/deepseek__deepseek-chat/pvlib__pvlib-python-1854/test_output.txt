@@ -177,7 +177,7 @@ index c277a77..bbf7ab1 100644
 +                                 "values directly to PVSystem attributes, e.g., "
 +                                 "`surface_tilt=30`")
 +            self.arrays = arrays_tuple
- 
+
          self.inverter = inverter
          if inverter_parameters is None:
 diff --git a/pvlib/tests/test_pvsystem.py b/pvlib/tests/test_pvsystem.py
@@ -193,8 +193,8 @@ index b379dd4..c5d2741 100644
 +    # Test that single Array instance works (GH #XXXX)
 +    pv_system_single = pvsystem.PVSystem(arrays=array_one)
 +    assert pv_system_single.arrays == (array_one,)
- 
- 
+
+
  def test_PVSystem_get_aoi():
 + source /opt/miniconda3/bin/activate
 ++ _CONDA_ROOT=/opt/miniconda3

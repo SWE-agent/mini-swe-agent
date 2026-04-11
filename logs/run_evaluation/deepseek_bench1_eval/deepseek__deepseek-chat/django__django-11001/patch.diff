@@ -9,5 +9,5 @@ index 7649c39262..57150f96dc 100644
 -        self.ordering_parts = re.compile(r'(.*)\s(ASC|DESC)(.*)')
 +        self.ordering_parts = re.compile(r'(.*)\s(ASC|DESC)(.*)', re.DOTALL)
          self._meta_ordering = None
- 
+
      def setup_query(self):

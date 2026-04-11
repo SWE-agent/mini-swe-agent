@@ -64,13 +64,13 @@ diff --git a/tests/backends/base/test_creation.py b/tests/backends/base/test_cre
  )
  from django.test import SimpleTestCase, TransactionTestCase
 +from django.test.utils import override_settings
- 
+
  from ..models import (
      CircularA, CircularB, Object, ObjectReference, ObjectSelfReference,
 @@ -49,31 +50,57 @@ def test_custom_test_name_with_test_prefix(self):
          self.assertEqual(signature[3], test_name)
- 
- 
+
+
 +@override_settings(INSTALLED_APPS=['backends.base.app_unmigrated'])
  @mock.patch.object(connection, 'ensure_connection')
 -@mock.patch('django.core.management.commands.migrate.Command.handle', return_value=None)
@@ -106,7 +106,7 @@ diff --git a/tests/backends/base/test_creation.py b/tests/backends/base/test_cre
          finally:
              with mock.patch.object(creation, '_destroy_test_db'):
                  creation.destroy_test_db(old_database_name, verbosity=0)
- 
+
 -    def test_migrate_test_setting_true(self, mocked_migrate, mocked_ensure_connection):
 +    def test_migrate_test_setting_true(self, mocked_sync_apps, mocked_migrate, *mocked_objects):
          test_connection = get_connection_copy()

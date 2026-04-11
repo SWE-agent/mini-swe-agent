@@ -156,7 +156,7 @@ Author: Tim Graham <timograham@gmail.com>
 Date:   Wed Feb 27 16:17:10 2019 -0500
 
     Refs #29523 -- Updated admin's collapse.min.js.
-    
+
     Omitted in ba83378a7762c51be235b521aa5b48233d6c6c82.
 
 diff --git a/django/contrib/admin/static/admin/js/collapse.min.js b/django/contrib/admin/static/admin/js/collapse.min.js
@@ -201,7 +201,7 @@ index 8cb484a15e..345c55014b 100644
 +            # With the fix for 3+ element merges, the result may be [2, 1]
 +            # instead of [1, 2]. Both are valid when elements are independent.
 +            self.assertIn(result, [[1, 2], [2, 1]])
- 
+
      def test_merge_js_three_way(self):
          """
 + source /opt/miniconda3/bin/activate
