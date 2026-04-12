@@ -1,0 +1,24 @@
+diff --git a/src/sqlfluff/rules/L031.py b/src/sqlfluff/rules/L031.py
+index 838c6ce5d..42f3e9022 100644
+--- a/src/sqlfluff/rules/L031.py
++++ b/src/sqlfluff/rules/L031.py
+@@ -91,6 +91,19 @@ class Rule_L031(BaseRule):
+                 for column_reference in clause.recursive_crawl("column_reference"):
+                     column_reference_segments.append(column_reference)
+ 
++            
++            # Check if there is actually a join
++            # If not, skip this rule (single table queries with aliases are ok)
++            if len(from_expression_elements) <= 1:
++                # Check for explicit JOIN clauses
++                has_join_clause = False
++                for clause in from_clause_and_after:
++                    if clause.is_type("join_clause"):
++                        has_join_clause = True
++                        break
++                if not has_join_clause:
++                    return None
++
+             return (
+                 self._lint_aliases_in_join(
+                     base_table,

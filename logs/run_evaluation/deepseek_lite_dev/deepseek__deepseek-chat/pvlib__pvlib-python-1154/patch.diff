@@ -1,0 +1,27 @@
+diff --git a/pvlib/irradiance.py b/pvlib/irradiance.py
+index 6580030..aeb56c5 100644
+--- a/pvlib/irradiance.py
++++ b/pvlib/irradiance.py
+@@ -886,9 +886,20 @@ def reindl(surface_tilt, surface_azimuth, dhi, dni, ghi, dni_extra,
+     # these are the () and [] sub-terms of the second term of eqn 8
+     term1 = 1 - AI
+     term2 = 0.5 * (1 + tools.cosd(surface_tilt))
+-    term3 = 1 + np.sqrt(HB / ghi) * (tools.sind(0.5 * surface_tilt) ** 3)
++    # silence warning from 0 / 0
++    with np.errstate(invalid='ignore', divide='ignore'):
++        hb_over_ghi = HB / ghi
++    
++    try:
++        # fails with single point input
++        hb_over_ghi.fillna(0, inplace=True)
++    except AttributeError:
++        hb_over_ghi = np.where(np.isnan(hb_over_ghi), 0, hb_over_ghi)
++        hb_over_ghi = np.where(np.isinf(hb_over_ghi), 0, hb_over_ghi)
++    
++    term3 = 1 + np.sqrt(hb_over_ghi) * (tools.sind(0.5 * surface_tilt) ** 3)
+ 
+-    sky_diffuse = dhi * (AI * Rb + term1 * term2 * term3)
++    sky_diffuse = np.where(ghi == 0, 0, dhi * (AI * Rb + term1 * term2 * term3))
+     sky_diffuse = np.maximum(sky_diffuse, 0)
+ 
+     return sky_diffuse

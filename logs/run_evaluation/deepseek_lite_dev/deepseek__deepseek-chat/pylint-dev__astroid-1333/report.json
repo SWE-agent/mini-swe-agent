@@ -1,0 +1,75 @@
+{
+    "pylint-dev__astroid-1333": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "tests/unittest_modutils.py::ModPathFromFileTest::test_load_packages_without_init"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "tests/unittest_modutils.py::ModuleFileTest::test_find_egg_module",
+                    "tests/unittest_modutils.py::ModuleFileTest::test_find_zipped_module",
+                    "tests/unittest_modutils.py::LoadModuleFromNameTest::test_known_values_load_module_from_name_1",
+                    "tests/unittest_modutils.py::LoadModuleFromNameTest::test_known_values_load_module_from_name_2",
+                    "tests/unittest_modutils.py::LoadModuleFromNameTest::test_raise_load_module_from_name_1",
+                    "tests/unittest_modutils.py::GetModulePartTest::test_get_module_part_exception",
+                    "tests/unittest_modutils.py::GetModulePartTest::test_known_values_get_builtin_module_part",
+                    "tests/unittest_modutils.py::GetModulePartTest::test_known_values_get_compiled_module_part",
+                    "tests/unittest_modutils.py::GetModulePartTest::test_known_values_get_module_part_1",
+                    "tests/unittest_modutils.py::GetModulePartTest::test_known_values_get_module_part_2",
+                    "tests/unittest_modutils.py::GetModulePartTest::test_known_values_get_module_part_3",
+                    "tests/unittest_modutils.py::ModPathFromFileTest::test_import_symlink_both_outside_of_path",
+                    "tests/unittest_modutils.py::ModPathFromFileTest::test_import_symlink_with_source_outside_of_path",
+                    "tests/unittest_modutils.py::ModPathFromFileTest::test_known_values_modpath_from_file_1",
+                    "tests/unittest_modutils.py::ModPathFromFileTest::test_load_from_module_symlink_on_symlinked_paths_in_syspath",
+                    "tests/unittest_modutils.py::ModPathFromFileTest::test_raise_modpath_from_file_exception",
+                    "tests/unittest_modutils.py::LoadModuleFromPathTest::test_do_not_load_twice",
+                    "tests/unittest_modutils.py::FileFromModPathTest::test_builtin",
+                    "tests/unittest_modutils.py::FileFromModPathTest::test_site_packages",
+                    "tests/unittest_modutils.py::FileFromModPathTest::test_std_lib",
+                    "tests/unittest_modutils.py::FileFromModPathTest::test_unexisting",
+                    "tests/unittest_modutils.py::FileFromModPathTest::test_unicode_in_package_init",
+                    "tests/unittest_modutils.py::GetSourceFileTest::test",
+                    "tests/unittest_modutils.py::GetSourceFileTest::test_raise",
+                    "tests/unittest_modutils.py::StandardLibModuleTest::test_4",
+                    "tests/unittest_modutils.py::StandardLibModuleTest::test_builtin",
+                    "tests/unittest_modutils.py::StandardLibModuleTest::test_builtins",
+                    "tests/unittest_modutils.py::StandardLibModuleTest::test_custom_path",
+                    "tests/unittest_modutils.py::StandardLibModuleTest::test_datetime",
+                    "tests/unittest_modutils.py::StandardLibModuleTest::test_failing_edge_cases",
+                    "tests/unittest_modutils.py::StandardLibModuleTest::test_nonstandard",
+                    "tests/unittest_modutils.py::StandardLibModuleTest::test_unknown",
+                    "tests/unittest_modutils.py::IsRelativeTest::test_deep_relative",
+                    "tests/unittest_modutils.py::IsRelativeTest::test_deep_relative2",
+                    "tests/unittest_modutils.py::IsRelativeTest::test_deep_relative3",
+                    "tests/unittest_modutils.py::IsRelativeTest::test_deep_relative4",
+                    "tests/unittest_modutils.py::IsRelativeTest::test_is_relative_bad_path",
+                    "tests/unittest_modutils.py::IsRelativeTest::test_known_values_is_relative_1",
+                    "tests/unittest_modutils.py::IsRelativeTest::test_known_values_is_relative_3",
+                    "tests/unittest_modutils.py::IsRelativeTest::test_known_values_is_relative_4",
+                    "tests/unittest_modutils.py::IsRelativeTest::test_known_values_is_relative_5",
+                    "tests/unittest_modutils.py::GetModuleFilesTest::test_get_all_files",
+                    "tests/unittest_modutils.py::GetModuleFilesTest::test_get_module_files_1",
+                    "tests/unittest_modutils.py::GetModuleFilesTest::test_load_module_set_attribute",
+                    "tests/unittest_modutils.py::ExtensionPackageWhitelistTest::test_is_module_name_part_of_extension_package_whitelist_success",
+                    "tests/unittest_modutils.py::ExtensionPackageWhitelistTest::test_is_module_name_part_of_extension_package_whitelist_true"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

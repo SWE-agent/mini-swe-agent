@@ -1,0 +1,32 @@
+{
+    "sqlfluff__sqlfluff-1733": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": true,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [
+                    "test/rules/std_L003_L036_L039_combo_test.py::test__rules__std_L003_L036_L039"
+                ],
+                "failure": []
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test/rules/std_L016_L36_combo_test.py::test__rules__std_L016_L036_long_line_lint",
+                    "test/rules/std_L016_L36_combo_test.py::test__rules__std_L016_L036_long_line_fix",
+                    "test/rules/std_L016_L36_combo_test.py::test__rules__std_L016_L036_long_line_fix2"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

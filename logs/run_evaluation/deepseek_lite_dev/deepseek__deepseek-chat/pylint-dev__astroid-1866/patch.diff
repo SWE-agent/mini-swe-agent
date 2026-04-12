@@ -1,0 +1,29 @@
+diff --git a/astroid/brain/brain_builtin_inference.py b/astroid/brain/brain_builtin_inference.py
+index af1ddf4d..9406844e 100644
+--- a/astroid/brain/brain_builtin_inference.py
++++ b/astroid/brain/brain_builtin_inference.py
+@@ -921,7 +921,7 @@ def _is_str_format_call(node: nodes.Call) -> bool:
+     else:
+         value = node.func.expr
+ 
+-    return isinstance(value, nodes.Const) and isinstance(value.value, str)
++    return value is not None and isinstance(value, nodes.Const) and isinstance(value.value, str)
+ 
+ 
+ def _infer_str_format_call(
+@@ -934,7 +934,15 @@ def _infer_str_format_call(
+     else:
+         value = node.func.expr
+ 
++    # Check if value is None or not a Const node
++    if value is None or not isinstance(value, nodes.Const):
++        return iter([util.Uninferable])
++    
+     format_template = value.value
++    
++    # Check if format_template is None or not a string
++    if format_template is None or not isinstance(format_template, str):
++        return iter([util.Uninferable])
+ 
+     # Get the positional arguments passed
+     inferred_positional = [

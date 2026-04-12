@@ -1,0 +1,94 @@
+{
+    "sqlfluff__sqlfluff-1763": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "test/core/linter_test.py::test_safe_create_replace_file[utf8_create]",
+                    "test/core/linter_test.py::test_safe_create_replace_file[utf8_update]",
+                    "test/core/linter_test.py::test_safe_create_replace_file[utf8_special_char]"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "test/core/linter_test.py::test__linter__path_from_paths__dir",
+                    "test/core/linter_test.py::test__linter__path_from_paths__default",
+                    "test/core/linter_test.py::test__linter__path_from_paths__exts",
+                    "test/core/linter_test.py::test__linter__path_from_paths__file",
+                    "test/core/linter_test.py::test__linter__path_from_paths__not_exist",
+                    "test/core/linter_test.py::test__linter__path_from_paths__not_exist_ignore",
+                    "test/core/linter_test.py::test__linter__path_from_paths__explicit_ignore",
+                    "test/core/linter_test.py::test__linter__path_from_paths__dot",
+                    "test/core/linter_test.py::test__linter__path_from_paths__ignore[test/fixtures/linter/sqlfluffignore]",
+                    "test/core/linter_test.py::test__linter__path_from_paths__ignore[test/fixtures/linter/sqlfluffignore/]",
+                    "test/core/linter_test.py::test__linter__path_from_paths__ignore[test/fixtures/linter/sqlfluffignore/.]",
+                    "test/core/linter_test.py::test__linter__lint_string_vs_file[test/fixtures/linter/indentation_errors.sql]",
+                    "test/core/linter_test.py::test__linter__lint_string_vs_file[test/fixtures/linter/whitespace_errors.sql]",
+                    "test/core/linter_test.py::test__linter__get_violations_filter_rules[None-7]",
+                    "test/core/linter_test.py::test__linter__get_violations_filter_rules[L010-2]",
+                    "test/core/linter_test.py::test__linter__get_violations_filter_rules[rules2-2]",
+                    "test/core/linter_test.py::test__linter__linting_result__sum_dicts",
+                    "test/core/linter_test.py::test__linter__linting_result__combine_dicts",
+                    "test/core/linter_test.py::test__linter__linting_result_check_tuples_by_path[False-list]",
+                    "test/core/linter_test.py::test__linter__linting_result_check_tuples_by_path[True-dict]",
+                    "test/core/linter_test.py::test__linter__linting_result_get_violations[1]",
+                    "test/core/linter_test.py::test__linter__linting_result_get_violations[2]",
+                    "test/core/linter_test.py::test__linter__linting_parallel_thread[False]",
+                    "test/core/linter_test.py::test__linter__linting_parallel_thread[True]",
+                    "test/core/linter_test.py::test_lint_path_parallel_wrapper_exception",
+                    "test/core/linter_test.py::test__linter__linting_unexpected_error_handled_gracefully",
+                    "test/core/linter_test.py::test__linter__raises_malformed_noqa",
+                    "test/core/linter_test.py::test__linter__empty_file",
+                    "test/core/linter_test.py::test__linter__mask_templated_violations[True-check_tuples0]",
+                    "test/core/linter_test.py::test__linter__mask_templated_violations[False-check_tuples1]",
+                    "test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8.sql-autodetect-False]",
+                    "test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8-sig.sql-autodetect-False]",
+                    "test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8.sql-utf-8-False]",
+                    "test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8-sig.sql-utf-8-True]",
+                    "test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8.sql-utf-8-sig-False]",
+                    "test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8-sig.sql-utf-8-sig-False]",
+                    "test/core/linter_test.py::test_parse_noqa[-None]",
+                    "test/core/linter_test.py::test_parse_noqa[noqa-expected1]",
+                    "test/core/linter_test.py::test_parse_noqa[noqa?-SQLParseError]",
+                    "test/core/linter_test.py::test_parse_noqa[noqa:-expected3]",
+                    "test/core/linter_test.py::test_parse_noqa[noqa:L001,L002-expected4]",
+                    "test/core/linter_test.py::test_parse_noqa[noqa:",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_no_ignore]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_specific_line]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_different_specific_line]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_different_specific_rule]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_enable_this_range]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_disable_this_range]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_1_ignore_disable_specific_2_3]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_2_ignore_disable_specific_2_3]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_3_ignore_disable_specific_2_3]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_4_ignore_disable_specific_2_3]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_1_ignore_disable_all_2_3]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_2_ignore_disable_all_2_3]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_3_ignore_disable_all_2_3]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_4_ignore_disable_all_2_3]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[4_violations_two_types_disable_specific_enable_all]",
+                    "test/core/linter_test.py::test_linted_file_ignore_masked_violations[4_violations_two_types_disable_all_enable_specific]",
+                    "test/core/linter_test.py::test_linter_noqa",
+                    "test/core/linter_test.py::test_linter_noqa_with_templating",
+                    "test/core/linter_test.py::test_delayed_exception",
+                    "test/core/linter_test.py::test__attempt_to_change_templater_warning",
+                    "test/core/linter_test.py::test_safe_create_replace_file[incorrect_encoding]"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

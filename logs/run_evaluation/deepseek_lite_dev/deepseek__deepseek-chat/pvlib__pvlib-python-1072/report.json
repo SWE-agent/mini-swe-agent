@@ -1,0 +1,47 @@
+{
+    "pvlib__pvlib-python-1072": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "pvlib/tests/test_temperature.py::test_fuentes_timezone[Etc/GMT+5]"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "pvlib/tests/test_temperature.py::test_sapm_cell",
+                    "pvlib/tests/test_temperature.py::test_sapm_module",
+                    "pvlib/tests/test_temperature.py::test_sapm_cell_from_module",
+                    "pvlib/tests/test_temperature.py::test_sapm_ndarray",
+                    "pvlib/tests/test_temperature.py::test_sapm_series",
+                    "pvlib/tests/test_temperature.py::test_pvsyst_cell_default",
+                    "pvlib/tests/test_temperature.py::test_pvsyst_cell_kwargs",
+                    "pvlib/tests/test_temperature.py::test_pvsyst_cell_ndarray",
+                    "pvlib/tests/test_temperature.py::test_pvsyst_cell_series",
+                    "pvlib/tests/test_temperature.py::test_faiman_default",
+                    "pvlib/tests/test_temperature.py::test_faiman_kwargs",
+                    "pvlib/tests/test_temperature.py::test_faiman_list",
+                    "pvlib/tests/test_temperature.py::test_faiman_ndarray",
+                    "pvlib/tests/test_temperature.py::test_faiman_series",
+                    "pvlib/tests/test_temperature.py::test__temperature_model_params",
+                    "pvlib/tests/test_temperature.py::test_fuentes[pvwatts_8760_rackmount.csv-45]",
+                    "pvlib/tests/test_temperature.py::test_fuentes[pvwatts_8760_roofmount.csv-49]",
+                    "pvlib/tests/test_temperature.py::test_fuentes_timezone[None]"
+                ]
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

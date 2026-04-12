@@ -8,7 +8,11 @@ patch.txt
 /traj.json
 /.tools/
 /.wsl-eval-venv/
-/scripts/
+/scripts/*
+!/scripts/
+!/scripts/*.py
+!/scripts/*.sh
+/scripts/__pycache__/
 .claude/**
 .vscode/**
 

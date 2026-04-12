@@ -1,0 +1,27 @@
+diff --git a/pydicom/valuerep.py b/pydicom/valuerep.py
+index e992f7872..1ab057eec 100644
+--- a/pydicom/valuerep.py
++++ b/pydicom/valuerep.py
+@@ -755,6 +755,22 @@ class PersonName:
+ 
+     def __hash__(self):
+         return hash(self.components)
++    def __iter__(self):
++        """Return an iterator over the string representation."""
++        return iter(str(self))
++
++    def __contains__(self, item):
++        """Support for 'in' operator."""
++        return item in str(self)
++
++    def __len__(self):
++        """Return length of string representation."""
++        return len(str(self))
++
++    def __getitem__(self, key):
++        """Support for indexing and slicing."""
++        return str(self)[key]
++
+ 
+     def decode(self, encodings=None):
+         """Return the patient name decoded by the given `encodings`.

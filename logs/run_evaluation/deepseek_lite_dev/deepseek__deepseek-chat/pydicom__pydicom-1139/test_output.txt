@@ -1,0 +1,440 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   pydicom/valuerep.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit f9e2ab42f2d6b48bdf117931b14cdb834f7384a9
+Author: SWE-bench <setup@swebench.config>
+Date:   Tue May 6 23:49:55 2025 +0000
+
+    SWE-bench
++ git -c core.fileMode=false diff b9fb05c177b685bf683f7f57b2d57374eb7d882d
+diff --git a/pydicom/valuerep.py b/pydicom/valuerep.py
+index e992f7872..1ab057eec 100644
+--- a/pydicom/valuerep.py
++++ b/pydicom/valuerep.py
+@@ -755,6 +755,22 @@ class PersonName:
+ 
+     def __hash__(self):
+         return hash(self.components)
++    def __iter__(self):
++        """Return an iterator over the string representation."""
++        return iter(str(self))
++
++    def __contains__(self, item):
++        """Support for 'in' operator."""
++        return item in str(self)
++
++    def __len__(self):
++        """Return length of string representation."""
++        return len(str(self))
++
++    def __getitem__(self, key):
++        """Support for indexing and slicing."""
++        return str(self)[key]
++
+ 
+     def decode(self, encodings=None):
+         """Return the patient name decoded by the given `encodings`.
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Installing collected packages: pydicom
+  Attempting uninstall: pydicom
+    Found existing installation: pydicom 2.1.0.dev0
+    Uninstalling pydicom-2.1.0.dev0:
+      Successfully uninstalled pydicom-2.1.0.dev0
+  DEPRECATION: Legacy editable install of pydicom==2.1.0.dev0 from file:///testbed (setup.py develop) is deprecated. pip 25.0 will enforce this behaviour change. A possible replacement is to add a pyproject.toml or enable --use-pep517, and use setuptools >= 64. If the resulting installation is not behaving as expected, try using --config-settings editable_mode=compat. Please consult the setuptools documentation for more information. Discussion can be found at https://github.com/pypa/pip/issues/11457
+  Running setup.py develop for pydicom
+Successfully installed pydicom
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable.It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
++ git checkout b9fb05c177b685bf683f7f57b2d57374eb7d882d pydicom/tests/test_valuerep.py
+Updated 0 paths from 5569920b8
++ git apply -v -
+<stdin>:49: trailing whitespace.
+        
+Checking patch pydicom/tests/test_valuerep.py...
+Applied patch pydicom/tests/test_valuerep.py cleanly.
+warning: 1 line adds whitespace errors.
++ : '>>>>> Start Test Output'
++ pytest -rA pydicom/tests/test_valuerep.py
+============================= test session starts ==============================
+platform linux -- Python 3.8.20, pytest-8.3.5, pluggy-1.5.0
+rootdir: /testbed
+collected 41 items
+
+pydicom/tests/test_valuerep.py ..................FF...............F..... [100%]
+
+=================================== FAILURES ===================================
+______________ TestBadValueRead.test_read_bad_value_in_VR_default ______________
+
+self = <pydicom.tests.test_valuerep.TestBadValueRead object at 0x749e4e4eb2e0>
+
+    def test_read_bad_value_in_VR_default(self):
+        # found a conversion
+>       assert "1A" == convert_value("SH", self.tag)
+E       AttributeError: 'TestBadValueRead' object has no attribute 'tag'
+
+pydicom/tests/test_valuerep.py:228: AttributeError
+________ TestBadValueRead.test_read_bad_value_in_VR_enforce_valid_value ________
+
+self = <pydicom.tests.test_valuerep.TestBadValueRead object at 0x749e4e4eb790>
+
+    def test_read_bad_value_in_VR_enforce_valid_value(self):
+        pydicom.config.enforce_valid_values = True
+        # found a conversion
+>       assert "1A" == convert_value("SH", self.tag)
+E       AttributeError: 'TestBadValueRead' object has no attribute 'tag'
+
+pydicom/tests/test_valuerep.py:239: AttributeError
+___________________________ TestPersonName.test_next ___________________________
+
+self = <pydicom.tests.test_valuerep.TestPersonName object at 0x749e4e4eb370>
+
+    def test_next(self):
+        """Test that the next function works on it's own"""
+        # Test getting the first character
+        pn1 = PersonName("John^Doe^^Dr", encodings=default_encoding)
+        pn1_itr = iter(pn1)
+        assert next(pn1_itr) == "J"
+    
+        # Test getting multiple characters
+        pn2 = PersonName(
+            "Yamada^Tarou=山田^太郎=やまだ^たろう", [default_encoding, "iso2022_jp"]
+        )
+        pn2_itr = iter(pn2)
+        assert next(pn2_itr) == "Y"
+        assert next(pn2_itr) == "a"
+    
+        # Test getting all characters
+        pn3 = PersonName("SomeName")
+        pn3_itr = iter(pn3)
+        assert next(pn3_itr) == "S"
+        assert next(pn3_itr) == "o"
+        assert next(pn3_itr) == "m"
+        assert next(pn3_itr) == "e"
+        assert next(pn3_itr) == "N"
+        assert next(pn3_itr) == "a"
+        assert next(pn3_itr) == "m"
+        assert next(pn3_itr) == "e"
+    
+        # Attempting to get next characeter should stop the iteration
+        # I.e. next can only start once
+        with pytest.raises(StopIteration):
+            next(pn3_itr)
+    
+        # Test that next() doesn't work without instantiating an iterator
+        pn4 = PersonName("SomeName")
+        with pytest.raises(AttributeError):
+>           next(pn4)
+E           TypeError: 'PersonName' object is not an iterator
+
+pydicom/tests/test_valuerep.py:465: TypeError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED pydicom/tests/test_valuerep.py::TestTM::test_pickling
+PASSED pydicom/tests/test_valuerep.py::TestDT::test_pickling
+PASSED pydicom/tests/test_valuerep.py::TestDA::test_pickling
+PASSED pydicom/tests/test_valuerep.py::TestDS::test_empty_value
+PASSED pydicom/tests/test_valuerep.py::TestDS::test_float_values
+PASSED pydicom/tests/test_valuerep.py::TestDSfloat::test_pickling
+PASSED pydicom/tests/test_valuerep.py::TestDSfloat::test_str
+PASSED pydicom/tests/test_valuerep.py::TestDSfloat::test_repr
+PASSED pydicom/tests/test_valuerep.py::TestDSdecimal::test_pickling
+PASSED pydicom/tests/test_valuerep.py::TestDSdecimal::test_float_value
+PASSED pydicom/tests/test_valuerep.py::TestIS::test_empty_value
+PASSED pydicom/tests/test_valuerep.py::TestIS::test_valid_value
+PASSED pydicom/tests/test_valuerep.py::TestIS::test_invalid_value
+PASSED pydicom/tests/test_valuerep.py::TestIS::test_pickling
+PASSED pydicom/tests/test_valuerep.py::TestIS::test_longint
+PASSED pydicom/tests/test_valuerep.py::TestIS::test_overflow
+PASSED pydicom/tests/test_valuerep.py::TestIS::test_str
+PASSED pydicom/tests/test_valuerep.py::TestIS::test_repr
+PASSED pydicom/tests/test_valuerep.py::TestDecimalString::test_DS_decimal_set
+PASSED pydicom/tests/test_valuerep.py::TestDecimalString::test_valid_decimal_strings
+PASSED pydicom/tests/test_valuerep.py::TestDecimalString::test_invalid_decimal_strings
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_last_first
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_copy
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_three_component
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_formatting
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_unicode_kr
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_unicode_jp_from_bytes
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_unicode_jp_from_bytes_comp_delimiter
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_unicode_jp_from_bytes_caret_delimiter
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_unicode_jp_from_unicode
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_not_equal
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_encoding_carried
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_hash
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_iterator
+PASSED pydicom/tests/test_valuerep.py::TestPersonName::test_contains
+PASSED pydicom/tests/test_valuerep.py::TestDateTime::test_date
+PASSED pydicom/tests/test_valuerep.py::TestDateTime::test_date_time
+PASSED pydicom/tests/test_valuerep.py::TestDateTime::test_time
+FAILED pydicom/tests/test_valuerep.py::TestBadValueRead::test_read_bad_value_in_VR_default
+FAILED pydicom/tests/test_valuerep.py::TestBadValueRead::test_read_bad_value_in_VR_enforce_valid_value
+FAILED pydicom/tests/test_valuerep.py::TestPersonName::test_next - TypeError:...
+========================= 3 failed, 38 passed in 0.40s =========================
++ : '>>>>> End Test Output'
++ git checkout b9fb05c177b685bf683f7f57b2d57374eb7d882d pydicom/tests/test_valuerep.py
+Updated 1 path from 5569920b8

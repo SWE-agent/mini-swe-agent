@@ -1,0 +1,39 @@
+{
+    "pylint-dev__astroid-1866": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format_uninferable[\\n"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [
+                    "tests/unittest_brain_builtin.py::BuiltinsTest::test_infer_property",
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format[empty-indexes]",
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format[numbered-indexes]",
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format[named-indexes]",
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format[numbered-indexes-from-positional]",
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format[named-indexes-from-keyword]",
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format[mixed-indexes-from-mixed]",
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format[empty-indexes-on-variable]",
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format_uninferable[\"I",
+                    "tests/unittest_brain_builtin.py::TestStringNodes::test_string_format_with_specs"
+                ],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

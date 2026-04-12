@@ -1,0 +1,12 @@
+diff --git a/src/sqlfluff/core/linter/linted_file.py b/src/sqlfluff/core/linter/linted_file.py
+index 3a8593edd..c32a65f74 100644
+--- a/src/sqlfluff/core/linter/linted_file.py
++++ b/src/sqlfluff/core/linter/linted_file.py
+@@ -494,6 +494,6 @@ class LintedFile(NamedTuple):
+                 root, ext = os.path.splitext(fname)
+                 fname = root + suffix + ext
+             # Actually write the file.
+-            with open(fname, "w", encoding=self.encoding) as f:
++            with open(fname, "w", encoding=self.encoding, errors="backslashreplace") as f:
+                 f.write(write_buff)
+         return success

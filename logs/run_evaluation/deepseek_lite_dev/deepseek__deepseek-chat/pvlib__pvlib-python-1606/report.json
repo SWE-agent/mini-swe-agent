@@ -1,0 +1,39 @@
+{
+    "pvlib__pvlib-python-1606": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "pvlib/tests/test_tools.py::test__golden_sect_DataFrame_vector"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "pvlib/tests/test_tools.py::test_build_kwargs[keys0-input_dict0-expected0]",
+                    "pvlib/tests/test_tools.py::test_build_kwargs[keys1-input_dict1-expected1]",
+                    "pvlib/tests/test_tools.py::test_build_kwargs[keys2-input_dict2-expected2]",
+                    "pvlib/tests/test_tools.py::test_build_kwargs[keys3-input_dict3-expected3]",
+                    "pvlib/tests/test_tools.py::test__golden_sect_DataFrame[params0-0.0-1.0-0.5-_obj_test_golden_sect]",
+                    "pvlib/tests/test_tools.py::test__golden_sect_DataFrame[params1-0.0-1.0-0.07230200263994839-_obj_test_golden_sect]",
+                    "pvlib/tests/test_tools.py::test__golden_sect_DataFrame[params2-0.0-100.0-89.14332727531685-_obj_test_golden_sect]",
+                    "pvlib/tests/test_tools.py::test__golden_sect_DataFrame_atol",
+                    "pvlib/tests/test_tools.py::test__golden_sect_DataFrame_nans",
+                    "pvlib/tests/test_tools.py::test_degrees_to_index_1"
+                ]
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

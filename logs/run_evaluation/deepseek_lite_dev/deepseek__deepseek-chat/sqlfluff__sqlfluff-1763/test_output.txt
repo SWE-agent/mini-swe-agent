@@ -1,0 +1,665 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   src/sqlfluff/core/linter/linted_file.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit a10057635e5b2559293a676486f0b730981f037a
+Author: Alan Cruickshank <alanmcruickshank@gmail.com>
+Date:   Tue Oct 26 10:10:38 2021 +0100
+
+    Update older dbt dependency (#1756)
+    
+    Co-authored-by: Danny Jones <51742311+WittierDinosaur@users.noreply.github.com>
+
+diff --git a/tox.ini b/tox.ini
+index d0478a825..477876ed7 100644
+--- a/tox.ini
++++ b/tox.ini
+@@ -25,7 +25,7 @@ deps =
+     # Define dbt versions
+     dbt017: dbt==0.17.2
+     dbt018: dbt==0.18.2
+-    dbt019: dbt==0.19.1
++    dbt019: dbt==0.19.2
+     dbt020: dbt==0.20.2
+     dbt021: dbt==0.21.0
+     # Install the plugins as required
++ git -c core.fileMode=false diff a10057635e5b2559293a676486f0b730981f037a
+diff --git a/src/sqlfluff/core/linter/linted_file.py b/src/sqlfluff/core/linter/linted_file.py
+index 3a8593edd..c32a65f74 100644
+--- a/src/sqlfluff/core/linter/linted_file.py
++++ b/src/sqlfluff/core/linter/linted_file.py
+@@ -494,6 +494,6 @@ class LintedFile(NamedTuple):
+                 root, ext = os.path.splitext(fname)
+                 fname = root + suffix + ext
+             # Actually write the file.
+-            with open(fname, "w", encoding=self.encoding) as f:
++            with open(fname, "w", encoding=self.encoding, errors="backslashreplace") as f:
+                 f.write(write_buff)
+         return success
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e .
+Obtaining file:///testbed
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Requirement already satisfied: click>=7.1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (8.1.7)
+Requirement already satisfied: colorama>=0.3 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (0.4.6)
+Requirement already satisfied: configparser in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (7.1.0)
+Requirement already satisfied: oyaml in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (1.0)
+Requirement already satisfied: Jinja2 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (3.1.4)
+Requirement already satisfied: diff-cover>=2.5.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (9.2.0)
+Requirement already satisfied: pathspec in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (0.12.1)
+Requirement already satisfied: appdirs in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (1.4.4)
+Requirement already satisfied: cached-property in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (2.0.1)
+Requirement already satisfied: typing_extensions in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (4.12.2)
+Requirement already satisfied: pytest in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (8.3.3)
+Requirement already satisfied: toml in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (0.10.2)
+Requirement already satisfied: tblib in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from sqlfluff==0.7.1) (3.0.0)
+Requirement already satisfied: Pygments<3.0.0,>=2.9.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from diff-cover>=2.5.0->sqlfluff==0.7.1) (2.18.0)
+Requirement already satisfied: chardet>=3.0.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from diff-cover>=2.5.0->sqlfluff==0.7.1) (5.2.0)
+Requirement already satisfied: pluggy<2,>=0.13.1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from diff-cover>=2.5.0->sqlfluff==0.7.1) (1.5.0)
+Requirement already satisfied: MarkupSafe>=2.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from Jinja2->sqlfluff==0.7.1) (3.0.2)
+Requirement already satisfied: pyyaml in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from oyaml->sqlfluff==0.7.1) (6.0.2)
+Requirement already satisfied: iniconfig in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->sqlfluff==0.7.1) (2.0.0)
+Requirement already satisfied: packaging in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->sqlfluff==0.7.1) (24.2)
+Requirement already satisfied: exceptiongroup>=1.0.0rc8 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->sqlfluff==0.7.1) (1.2.2)
+Requirement already satisfied: tomli>=1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->sqlfluff==0.7.1) (2.1.0)
+Installing collected packages: sqlfluff
+  Attempting uninstall: sqlfluff
+    Found existing installation: sqlfluff 0.7.1
+    Uninstalling sqlfluff-0.7.1:
+      Successfully uninstalled sqlfluff-0.7.1
+  DEPRECATION: Legacy editable install of sqlfluff==0.7.1 from file:///testbed (setup.py develop) is deprecated. pip 25.0 will enforce this behaviour change. A possible replacement is to add a pyproject.toml or enable --use-pep517, and use setuptools >= 64. If the resulting installation is not behaving as expected, try using --config-settings editable_mode=compat. Please consult the setuptools documentation for more information. Discussion can be found at https://github.com/pypa/pip/issues/11457
+  Running setup.py develop for sqlfluff
+Successfully installed sqlfluff
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable.It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
++ git checkout a10057635e5b2559293a676486f0b730981f037a test/core/linter_test.py
+Updated 0 paths from e74a7dd76
++ git apply -v -
+Checking patch test/core/linter_test.py...
+Applied patch test/core/linter_test.py cleanly.
++ : '>>>>> Start Test Output'
++ pytest -rA test/core/linter_test.py
+============================= test session starts ==============================
+platform linux -- Python 3.9.20, pytest-8.3.3, pluggy-1.5.0
+rootdir: /testbed
+configfile: pytest.ini
+plugins: sugar-1.0.0, hypothesis-6.119.3, cov-6.0.0
+collected 69 items
+
+test/core/linter_test.py ............................................... [ 68%]
+..................FFF.                                                   [100%]
+
+=================================== FAILURES ===================================
+__________________ test_safe_create_replace_file[utf8_create] __________________
+
+case = {'encoding': 'utf-8', 'existing': None, 'expected': 'def', 'fname': 'test.sql', ...}
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file_0')
+
+    @pytest.mark.parametrize(
+        "case",
+        [
+            dict(
+                name="utf8_create",
+                fname="test.sql",
+                encoding="utf-8",
+                existing=None,
+                update="def",
+                expected="def",
+            ),
+            dict(
+                name="utf8_update",
+                fname="test.sql",
+                encoding="utf-8",
+                existing="abc",
+                update="def",
+                expected="def",
+            ),
+            dict(
+                name="utf8_special_char",
+                fname="test.sql",
+                encoding="utf-8",
+                existing="abc",
+                update="→",  # Special utf-8 character
+                expected="→",
+            ),
+            dict(
+                name="incorrect_encoding",
+                fname="test.sql",
+                encoding="Windows-1252",
+                existing="abc",
+                update="→",  # Not valid in Windows-1252
+                expected="abc",  # File should be unchanged
+            ),
+        ],
+        ids=lambda case: case["name"],
+    )
+    def test_safe_create_replace_file(case, tmp_path):
+        """Test creating or updating .sql files, various content and encoding."""
+        p = tmp_path / case["fname"]
+        if case["existing"]:
+            p.write_text(case["existing"])
+        try:
+            linter.LintedFile._safe_create_replace_file(
+                str(p), case["update"], case["encoding"]
+            )
+        except:  # noqa: E722
+            pass
+>       actual = p.read_text(encoding=case["encoding"])
+
+test/core/linter_test.py:695: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/miniconda3/envs/testbed/lib/python3.9/pathlib.py:1266: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+/opt/miniconda3/envs/testbed/lib/python3.9/pathlib.py:1252: in open
+    return io.open(self, mode, buffering, encoding, errors, newline,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file_0/test.sql')
+name = '/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file_0/test.sql'
+flags = 524288, mode = 438
+
+    def _opener(self, name, flags, mode=0o666):
+        # A stub for the opener argument to built-in open()
+>       return self._accessor.open(self, flags, mode)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file_0/test.sql'
+
+/opt/miniconda3/envs/testbed/lib/python3.9/pathlib.py:1120: FileNotFoundError
+__________________ test_safe_create_replace_file[utf8_update] __________________
+
+case = {'encoding': 'utf-8', 'existing': 'abc', 'expected': 'def', 'fname': 'test.sql', ...}
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file_1')
+
+    @pytest.mark.parametrize(
+        "case",
+        [
+            dict(
+                name="utf8_create",
+                fname="test.sql",
+                encoding="utf-8",
+                existing=None,
+                update="def",
+                expected="def",
+            ),
+            dict(
+                name="utf8_update",
+                fname="test.sql",
+                encoding="utf-8",
+                existing="abc",
+                update="def",
+                expected="def",
+            ),
+            dict(
+                name="utf8_special_char",
+                fname="test.sql",
+                encoding="utf-8",
+                existing="abc",
+                update="→",  # Special utf-8 character
+                expected="→",
+            ),
+            dict(
+                name="incorrect_encoding",
+                fname="test.sql",
+                encoding="Windows-1252",
+                existing="abc",
+                update="→",  # Not valid in Windows-1252
+                expected="abc",  # File should be unchanged
+            ),
+        ],
+        ids=lambda case: case["name"],
+    )
+    def test_safe_create_replace_file(case, tmp_path):
+        """Test creating or updating .sql files, various content and encoding."""
+        p = tmp_path / case["fname"]
+        if case["existing"]:
+            p.write_text(case["existing"])
+        try:
+            linter.LintedFile._safe_create_replace_file(
+                str(p), case["update"], case["encoding"]
+            )
+        except:  # noqa: E722
+            pass
+        actual = p.read_text(encoding=case["encoding"])
+>       assert case["expected"] == actual
+E       AssertionError: assert 'def' == 'abc'
+E         
+E         - abc
+E         + def
+
+test/core/linter_test.py:696: AssertionError
+_______________ test_safe_create_replace_file[utf8_special_char] _______________
+
+case = {'encoding': 'utf-8', 'existing': 'abc', 'expected': '→', 'fname': 'test.sql', ...}
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_safe_create_replace_file_2')
+
+    @pytest.mark.parametrize(
+        "case",
+        [
+            dict(
+                name="utf8_create",
+                fname="test.sql",
+                encoding="utf-8",
+                existing=None,
+                update="def",
+                expected="def",
+            ),
+            dict(
+                name="utf8_update",
+                fname="test.sql",
+                encoding="utf-8",
+                existing="abc",
+                update="def",
+                expected="def",
+            ),
+            dict(
+                name="utf8_special_char",
+                fname="test.sql",
+                encoding="utf-8",
+                existing="abc",
+                update="→",  # Special utf-8 character
+                expected="→",
+            ),
+            dict(
+                name="incorrect_encoding",
+                fname="test.sql",
+                encoding="Windows-1252",
+                existing="abc",
+                update="→",  # Not valid in Windows-1252
+                expected="abc",  # File should be unchanged
+            ),
+        ],
+        ids=lambda case: case["name"],
+    )
+    def test_safe_create_replace_file(case, tmp_path):
+        """Test creating or updating .sql files, various content and encoding."""
+        p = tmp_path / case["fname"]
+        if case["existing"]:
+            p.write_text(case["existing"])
+        try:
+            linter.LintedFile._safe_create_replace_file(
+                str(p), case["update"], case["encoding"]
+            )
+        except:  # noqa: E722
+            pass
+        actual = p.read_text(encoding=case["encoding"])
+>       assert case["expected"] == actual
+E       AssertionError: assert '→' == 'abc'
+E         
+E         - abc
+E         + →
+
+test/core/linter_test.py:696: AssertionError
+=============================== warnings summary ===============================
+src/sqlfluff/__init__.py:9
+  /testbed/src/sqlfluff/__init__.py:9: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+    import pkg_resources
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+________________ test__linter__path_from_paths__explicit_ignore ________________
+------------------------------ Captured log call -------------------------------
+WARNING  sqlfluff.linter:linter.py:770 Exact file path test/fixtures/linter/sqlfluffignore/path_a/query_a.sql was given but it was ignored by a .sqlfluffignore pattern in /testbed/test/fixtures/linter/sqlfluffignore, re-run with `--disregard-sqlfluffignores` to skip .sqlfluffignore
+_________________ test__linter__linting_parallel_thread[True] __________________
+------------------------------ Captured log call -------------------------------
+WARNING  sqlfluff.linter:runner.py:82 Unable to lint None due to an internal error. Please report this as an issue with your query's contents and stacktrace below!
+To hide this warning, add the failing file to .sqlfluffignore
+Traceback (most recent call last):
+  File "/testbed/src/sqlfluff/core/linter/runner.py", line 136, in run
+    lint_result.reraise()
+  File "/testbed/src/sqlfluff/core/linter/runner.py", line 214, in reraise
+    raise self.ee.with_traceback(self.tb)
+ValueError
+__________________ test_lint_path_parallel_wrapper_exception ___________________
+------------------------------ Captured log call -------------------------------
+WARNING  sqlfluff.linter:runner.py:82 Unable to lint None due to an internal error. Please report this as an issue with your query's contents and stacktrace below!
+To hide this warning, add the failing file to .sqlfluffignore
+Traceback (most recent call last):
+  File "/testbed/src/sqlfluff/core/linter/runner.py", line 136, in run
+    lint_result.reraise()
+  File "/testbed/src/sqlfluff/core/linter/runner.py", line 214, in reraise
+    raise self.ee.with_traceback(self.tb)
+  File "/testbed/src/sqlfluff/core/linter/runner.py", line 159, in _apply
+    return partial()
+  File "/opt/miniconda3/envs/testbed/lib/python3.9/unittest/mock.py", line 1092, in __call__
+    return self._mock_call(*args, **kwargs)
+  File "/opt/miniconda3/envs/testbed/lib/python3.9/unittest/mock.py", line 1096, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+  File "/opt/miniconda3/envs/testbed/lib/python3.9/unittest/mock.py", line 1151, in _execute_mock_call
+    raise effect
+ValueError: Something unexpected happened
+__________________ test__attempt_to_change_templater_warning ___________________
+------------------------------ Captured log call -------------------------------
+WARNING  sqlfluff.linter:linter.py:544 Attempt to set templater to python failed. Using jinja templater. Templater cannot be set in a .sqlfluff file in a subdirectory of the current working directory. It can be set in a .sqlfluff in the current working directory. See Nesting section of the docs for more details.
+=========================== short test summary info ============================
+PASSED test/core/linter_test.py::test__linter__path_from_paths__dir
+PASSED test/core/linter_test.py::test__linter__path_from_paths__default
+PASSED test/core/linter_test.py::test__linter__path_from_paths__exts
+PASSED test/core/linter_test.py::test__linter__path_from_paths__file
+PASSED test/core/linter_test.py::test__linter__path_from_paths__not_exist
+PASSED test/core/linter_test.py::test__linter__path_from_paths__not_exist_ignore
+PASSED test/core/linter_test.py::test__linter__path_from_paths__explicit_ignore
+PASSED test/core/linter_test.py::test__linter__path_from_paths__dot
+PASSED test/core/linter_test.py::test__linter__path_from_paths__ignore[test/fixtures/linter/sqlfluffignore]
+PASSED test/core/linter_test.py::test__linter__path_from_paths__ignore[test/fixtures/linter/sqlfluffignore/]
+PASSED test/core/linter_test.py::test__linter__path_from_paths__ignore[test/fixtures/linter/sqlfluffignore/.]
+PASSED test/core/linter_test.py::test__linter__lint_string_vs_file[test/fixtures/linter/indentation_errors.sql]
+PASSED test/core/linter_test.py::test__linter__lint_string_vs_file[test/fixtures/linter/whitespace_errors.sql]
+PASSED test/core/linter_test.py::test__linter__get_violations_filter_rules[None-7]
+PASSED test/core/linter_test.py::test__linter__get_violations_filter_rules[L010-2]
+PASSED test/core/linter_test.py::test__linter__get_violations_filter_rules[rules2-2]
+PASSED test/core/linter_test.py::test__linter__linting_result__sum_dicts
+PASSED test/core/linter_test.py::test__linter__linting_result__combine_dicts
+PASSED test/core/linter_test.py::test__linter__linting_result_check_tuples_by_path[False-list]
+PASSED test/core/linter_test.py::test__linter__linting_result_check_tuples_by_path[True-dict]
+PASSED test/core/linter_test.py::test__linter__linting_result_get_violations[1]
+PASSED test/core/linter_test.py::test__linter__linting_result_get_violations[2]
+PASSED test/core/linter_test.py::test__linter__linting_parallel_thread[False]
+PASSED test/core/linter_test.py::test__linter__linting_parallel_thread[True]
+PASSED test/core/linter_test.py::test_lint_path_parallel_wrapper_exception
+PASSED test/core/linter_test.py::test__linter__linting_unexpected_error_handled_gracefully
+PASSED test/core/linter_test.py::test__linter__raises_malformed_noqa
+PASSED test/core/linter_test.py::test__linter__empty_file
+PASSED test/core/linter_test.py::test__linter__mask_templated_violations[True-check_tuples0]
+PASSED test/core/linter_test.py::test__linter__mask_templated_violations[False-check_tuples1]
+PASSED test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8.sql-autodetect-False]
+PASSED test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8-sig.sql-autodetect-False]
+PASSED test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8.sql-utf-8-False]
+PASSED test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8-sig.sql-utf-8-True]
+PASSED test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8.sql-utf-8-sig-False]
+PASSED test/core/linter_test.py::test__linter__encoding[test/fixtures/linter/encoding-utf-8-sig.sql-utf-8-sig-False]
+PASSED test/core/linter_test.py::test_parse_noqa[-None]
+PASSED test/core/linter_test.py::test_parse_noqa[noqa-expected1]
+PASSED test/core/linter_test.py::test_parse_noqa[noqa?-SQLParseError]
+PASSED test/core/linter_test.py::test_parse_noqa[noqa:-expected3]
+PASSED test/core/linter_test.py::test_parse_noqa[noqa:L001,L002-expected4]
+PASSED test/core/linter_test.py::test_parse_noqa[noqa: enable=L005-expected5]
+PASSED test/core/linter_test.py::test_parse_noqa[noqa: disable=L010-expected6]
+PASSED test/core/linter_test.py::test_parse_noqa[noqa: disable=all-expected7]
+PASSED test/core/linter_test.py::test_parse_noqa[noqa: disable-SQLParseError]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_no_ignore]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_specific_line]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_different_specific_line]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_different_specific_rule]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_enable_this_range]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_ignore_disable_this_range]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_1_ignore_disable_specific_2_3]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_2_ignore_disable_specific_2_3]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_3_ignore_disable_specific_2_3]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_4_ignore_disable_specific_2_3]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_1_ignore_disable_all_2_3]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_2_ignore_disable_all_2_3]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_3_ignore_disable_all_2_3]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[1_violation_line_4_ignore_disable_all_2_3]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[4_violations_two_types_disable_specific_enable_all]
+PASSED test/core/linter_test.py::test_linted_file_ignore_masked_violations[4_violations_two_types_disable_all_enable_specific]
+PASSED test/core/linter_test.py::test_linter_noqa
+PASSED test/core/linter_test.py::test_linter_noqa_with_templating
+PASSED test/core/linter_test.py::test_delayed_exception
+PASSED test/core/linter_test.py::test__attempt_to_change_templater_warning
+PASSED test/core/linter_test.py::test_safe_create_replace_file[incorrect_encoding]
+FAILED test/core/linter_test.py::test_safe_create_replace_file[utf8_create]
+FAILED test/core/linter_test.py::test_safe_create_replace_file[utf8_update]
+FAILED test/core/linter_test.py::test_safe_create_replace_file[utf8_special_char]
+=================== 3 failed, 66 passed, 1 warning in 1.70s ====================
++ : '>>>>> End Test Output'
++ git checkout a10057635e5b2559293a676486f0b730981f037a test/core/linter_test.py
+Updated 1 path from e74a7dd76

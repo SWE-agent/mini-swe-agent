@@ -1,0 +1,62 @@
+diff --git a/src/marshmallow/marshalling.py b/src/marshmallow/marshalling.py
+index feb7d1aa..83363703 100644
+--- a/src/marshmallow/marshalling.py
++++ b/src/marshmallow/marshalling.py
+@@ -13,7 +13,7 @@ from __future__ import unicode_literals
+ import collections
+ 
+ from marshmallow.utils import is_collection, missing, set_value
+-from marshmallow.compat import text_type, iteritems
++from marshmallow.compat import text_type, iteritems, Mapping
+ from marshmallow.exceptions import (
+     ValidationError,
+ )
+@@ -250,7 +250,7 @@ class Unmarshaller(ErrorStore):
+ 
+         ret = dict_class()
+ 
+-        if not isinstance(data, collections.Mapping):
++        if not isinstance(data, Mapping):
+             errors = self.get_errors(index=index)
+             msg = 'Invalid input type.'
+             self.error_field_names = [SCHEMA]
+diff --git a/src/marshmallow/schema.py b/src/marshmallow/schema.py
+index 085c509b..2b6bb941 100644
+--- a/src/marshmallow/schema.py
++++ b/src/marshmallow/schema.py
+@@ -861,6 +861,8 @@ class BaseSchema(base.SchemaABC):
+         return data
+ 
+     def _invoke_field_validators(self, unmarshal, data, many):
++        if data is None:
++            return
+         for attr_name in self.__processors__[(VALIDATES, False)]:
+             validator = getattr(self, attr_name)
+             validator_kwargs = validator.__marshmallow_kwargs__[(VALIDATES, False)]
+@@ -875,6 +877,8 @@ class BaseSchema(base.SchemaABC):
+ 
+             if many:
+                 for idx, item in enumerate(data):
++                    if item is None:
++                        continue
+                     try:
+                         value = item[field_obj.attribute or field_name]
+                     except KeyError:
+@@ -906,6 +910,8 @@ class BaseSchema(base.SchemaABC):
+ 
+     def _invoke_validators(
+             self, unmarshal, pass_many, data, original_data, many, field_errors=False):
++        if data is None:
++            return
+         errors = {}
+         for attr_name in self.__processors__[(VALIDATES_SCHEMA, pass_many)]:
+             validator = getattr(self, attr_name)
+@@ -920,6 +926,8 @@ class BaseSchema(base.SchemaABC):
+                 validator = functools.partial(validator, many=many)
+             if many and not pass_many:
+                 for idx, item in enumerate(data):
++                    if item is None:
++                        continue
+                     try:
+                         unmarshal.run_validator(validator,
+                                                 item, original_data, self.fields, many=many,

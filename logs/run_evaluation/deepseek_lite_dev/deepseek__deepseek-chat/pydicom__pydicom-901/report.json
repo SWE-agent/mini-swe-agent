@@ -1,0 +1,32 @@
+{
+    "pydicom__pydicom-901": {
+        "patch_is_None": false,
+        "patch_exists": true,
+        "patch_successfully_applied": true,
+        "resolved": false,
+        "tests_status": {
+            "FAIL_TO_PASS": {
+                "success": [],
+                "failure": [
+                    "pydicom/tests/test_config.py::TestDebug::test_default",
+                    "pydicom/tests/test_config.py::TestDebug::test_debug_on_handler_null",
+                    "pydicom/tests/test_config.py::TestDebug::test_debug_off_handler_null",
+                    "pydicom/tests/test_config.py::TestDebug::test_debug_on_handler_stream",
+                    "pydicom/tests/test_config.py::TestDebug::test_debug_off_handler_stream"
+                ]
+            },
+            "PASS_TO_PASS": {
+                "success": [],
+                "failure": []
+            },
+            "FAIL_TO_FAIL": {
+                "success": [],
+                "failure": []
+            },
+            "PASS_TO_FAIL": {
+                "success": [],
+                "failure": []
+            }
+        }
+    }
+}

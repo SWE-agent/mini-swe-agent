@@ -1,0 +1,529 @@
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z '' ']'
++++ export CONDA_SHLVL=0
++++ CONDA_SHLVL=0
++++ '[' -n '' ']'
++++++ dirname /opt/miniconda3/bin/conda
+++++ dirname /opt/miniconda3/bin
++++ PATH=/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export PATH
++++ '[' -z '' ']'
++++ PS1=
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1=
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_1='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_1=/opt/miniconda3
+++ CONDA_PREFIX_1=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ cd /testbed
++ git config --global --add safe.directory /testbed
++ cd /testbed
++ git status
+On branch dev
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   src/marshmallow/fields.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
++ git show
+commit 8ad28316545371a1d1d7c2ad0b32d5f8ab206853
+Author: SWE-bench <setup@swebench.config>
+Date:   Tue May 6 23:07:21 2025 +0000
+
+    SWE-bench
++ git -c core.fileMode=false diff b40a0f4e33823e6d0f341f7e8684e359a99060d1
+diff --git a/src/marshmallow/fields.py b/src/marshmallow/fields.py
+index 0b18e7dd..534da31f 100644
+--- a/src/marshmallow/fields.py
++++ b/src/marshmallow/fields.py
+@@ -1112,11 +1112,11 @@ class DateTime(Field):
+ 
+     def _bind_to_schema(self, field_name, schema):
+         super()._bind_to_schema(field_name, schema)
+-        self.format = (
+-            self.format
+-            or getattr(schema.opts, self.SCHEMA_OPTS_VAR_NAME)
+-            or self.DEFAULT_FORMAT
+-        )
++        if not self.format:
++            root_schema = self.root
++            if root_schema is not None:
++                self.format = getattr(root_schema.opts, self.SCHEMA_OPTS_VAR_NAME, None)
++            self.format = self.format or self.DEFAULT_FORMAT
+ 
+     def _serialize(self, value, attr, obj, **kwargs):
+         if value is None:
++ source /opt/miniconda3/bin/activate
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/etc/profile.d/conda.sh
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ '[' -z x ']'
+++ conda activate
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='(testbed) '
++++ __conda_exe shell.posix activate
++++ /opt/miniconda3/bin/conda shell.posix activate
+++ ask_conda='PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ eval 'PS1='\''(base) '\''
+export PATH='\''/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3'\''
+export CONDA_SHLVL='\''3'\''
+export CONDA_DEFAULT_ENV='\''base'\''
+export CONDA_PROMPT_MODIFIER='\''(base) '\''
+export CONDA_PREFIX_2='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++++ PS1='(base) '
++++ export PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ PATH=/opt/miniconda3/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
++++ export CONDA_PREFIX=/opt/miniconda3
++++ CONDA_PREFIX=/opt/miniconda3
++++ export CONDA_SHLVL=3
++++ CONDA_SHLVL=3
++++ export CONDA_DEFAULT_ENV=base
++++ CONDA_DEFAULT_ENV=base
++++ export 'CONDA_PROMPT_MODIFIER=(base) '
++++ CONDA_PROMPT_MODIFIER='(base) '
++++ export CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ CONDA_PREFIX_2=/opt/miniconda3/envs/testbed
++++ export CONDA_EXE=/opt/miniconda3/bin/conda
++++ CONDA_EXE=/opt/miniconda3/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ conda activate testbed
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate testbed
++ '[' -n '' ']'
++ local ask_conda
+++ PS1='(base) '
+++ __conda_exe shell.posix activate testbed
+++ /opt/miniconda3/bin/conda shell.posix activate testbed
++ ask_conda='PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
++ eval 'PS1='\''(testbed) '\''
+export PATH='\''/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'\''
+export CONDA_PREFIX='\''/opt/miniconda3/envs/testbed'\''
+export CONDA_SHLVL='\''4'\''
+export CONDA_DEFAULT_ENV='\''testbed'\''
+export CONDA_PROMPT_MODIFIER='\''(testbed) '\''
+export CONDA_PREFIX_3='\''/opt/miniconda3'\''
+export CONDA_EXE='\''/opt/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/opt/miniconda3/bin/python'\'''
+++ PS1='(testbed) '
+++ export PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ PATH=/opt/miniconda3/envs/testbed/bin:/opt/miniconda3/condabin:/opt/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ CONDA_PREFIX=/opt/miniconda3/envs/testbed
+++ export CONDA_SHLVL=4
+++ CONDA_SHLVL=4
+++ export CONDA_DEFAULT_ENV=testbed
+++ CONDA_DEFAULT_ENV=testbed
+++ export 'CONDA_PROMPT_MODIFIER=(testbed) '
+++ CONDA_PROMPT_MODIFIER='(testbed) '
+++ export CONDA_PREFIX_3=/opt/miniconda3
+++ CONDA_PREFIX_3=/opt/miniconda3
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python -m pip install -e '.[dev]'
+Obtaining file:///testbed
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: pytest in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from marshmallow==3.0.0) (8.3.5)
+Requirement already satisfied: pytz in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from marshmallow==3.0.0) (2025.2)
+Requirement already satisfied: simplejson in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from marshmallow==3.0.0) (3.20.1)
+Requirement already satisfied: flake8==3.7.8 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from marshmallow==3.0.0) (3.7.8)
+Requirement already satisfied: flake8-bugbear==19.8.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from marshmallow==3.0.0) (19.8.0)
+Requirement already satisfied: pre-commit~=1.17 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from marshmallow==3.0.0) (1.21.0)
+Requirement already satisfied: tox in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from marshmallow==3.0.0) (4.25.0)
+Requirement already satisfied: entrypoints<0.4.0,>=0.3.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from flake8==3.7.8->marshmallow==3.0.0) (0.3)
+Requirement already satisfied: pyflakes<2.2.0,>=2.1.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from flake8==3.7.8->marshmallow==3.0.0) (2.1.1)
+Requirement already satisfied: pycodestyle<2.6.0,>=2.5.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from flake8==3.7.8->marshmallow==3.0.0) (2.5.0)
+Requirement already satisfied: mccabe<0.7.0,>=0.6.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from flake8==3.7.8->marshmallow==3.0.0) (0.6.1)
+Requirement already satisfied: attrs in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from flake8-bugbear==19.8.0->marshmallow==3.0.0) (25.3.0)
+Requirement already satisfied: aspy.yaml in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pre-commit~=1.17->marshmallow==3.0.0) (1.3.0)
+Requirement already satisfied: cfgv>=2.0.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pre-commit~=1.17->marshmallow==3.0.0) (3.4.0)
+Requirement already satisfied: identify>=1.0.0 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pre-commit~=1.17->marshmallow==3.0.0) (2.6.10)
+Requirement already satisfied: nodeenv>=0.11.1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pre-commit~=1.17->marshmallow==3.0.0) (1.9.1)
+Requirement already satisfied: pyyaml in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pre-commit~=1.17->marshmallow==3.0.0) (6.0.2)
+Requirement already satisfied: six in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pre-commit~=1.17->marshmallow==3.0.0) (1.17.0)
+Requirement already satisfied: toml in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pre-commit~=1.17->marshmallow==3.0.0) (0.10.2)
+Requirement already satisfied: virtualenv>=15.2 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pre-commit~=1.17->marshmallow==3.0.0) (20.31.1)
+Requirement already satisfied: distlib<1,>=0.3.7 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from virtualenv>=15.2->pre-commit~=1.17->marshmallow==3.0.0) (0.3.9)
+Requirement already satisfied: filelock<4,>=3.12.2 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from virtualenv>=15.2->pre-commit~=1.17->marshmallow==3.0.0) (3.18.0)
+Requirement already satisfied: platformdirs<5,>=3.9.1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from virtualenv>=15.2->pre-commit~=1.17->marshmallow==3.0.0) (4.3.7)
+Requirement already satisfied: exceptiongroup>=1.0.0rc8 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->marshmallow==3.0.0) (1.2.2)
+Requirement already satisfied: iniconfig in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->marshmallow==3.0.0) (2.1.0)
+Requirement already satisfied: packaging in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->marshmallow==3.0.0) (25.0)
+Requirement already satisfied: pluggy<2,>=1.5 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->marshmallow==3.0.0) (1.5.0)
+Requirement already satisfied: tomli>=1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from pytest->marshmallow==3.0.0) (2.2.1)
+Requirement already satisfied: cachetools>=5.5.1 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from tox->marshmallow==3.0.0) (5.5.2)
+Requirement already satisfied: chardet>=5.2 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from tox->marshmallow==3.0.0) (5.2.0)
+Requirement already satisfied: colorama>=0.4.6 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from tox->marshmallow==3.0.0) (0.4.6)
+Requirement already satisfied: pyproject-api>=1.8 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from tox->marshmallow==3.0.0) (1.9.0)
+Requirement already satisfied: typing-extensions>=4.12.2 in /opt/miniconda3/envs/testbed/lib/python3.9/site-packages (from tox->marshmallow==3.0.0) (4.13.2)
+Building wheels for collected packages: marshmallow
+  Building editable for marshmallow (pyproject.toml): started
+  Building editable for marshmallow (pyproject.toml): finished with status 'done'
+  Created wheel for marshmallow: filename=marshmallow-3.0.0-0.editable-py2.py3-none-any.whl size=4552 sha256=7867706ac7560946e2e33de82f6748d0aec91fd43967ed9a25e88303aaa861cd
+  Stored in directory: /tmp/pip-ephem-wheel-cache-4nafulj_/wheels/7d/66/67/70d1ee2124ccf21d601c352e25cdca10f611f7c8b3f9ffb9e4
+Successfully built marshmallow
+Installing collected packages: marshmallow
+  Attempting uninstall: marshmallow
+    Found existing installation: marshmallow 3.0.0
+    Uninstalling marshmallow-3.0.0:
+      Successfully uninstalled marshmallow-3.0.0
+Successfully installed marshmallow-3.0.0
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
++ git checkout b40a0f4e33823e6d0f341f7e8684e359a99060d1 tests/test_fields.py
+Updated 0 paths from 56ab4168
++ git apply -v -
+Checking patch tests/test_fields.py...
+Applied patch tests/test_fields.py cleanly.
++ : '>>>>> Start Test Output'
++ pytest -rA tests/test_fields.py
+============================= test session starts ==============================
+platform linux -- Python 3.9.21, pytest-8.3.5, pluggy-1.5.0 -- /opt/miniconda3/envs/testbed/bin/python
+cachedir: .pytest_cache
+rootdir: /testbed
+configfile: setup.cfg
+collecting ... collected 77 items
+
+tests/test_fields.py::test_field_aliases[Integer-Integer] PASSED         [  1%]
+tests/test_fields.py::test_field_aliases[String-String] PASSED           [  2%]
+tests/test_fields.py::test_field_aliases[Boolean-Boolean] PASSED         [  3%]
+tests/test_fields.py::test_field_aliases[Url-Url] PASSED                 [  5%]
+tests/test_fields.py::TestField::test_repr PASSED                        [  6%]
+tests/test_fields.py::TestField::test_error_raised_if_uncallable_validator_passed PASSED [  7%]
+tests/test_fields.py::TestField::test_error_raised_if_missing_is_set_on_required_field PASSED [  9%]
+tests/test_fields.py::TestField::test_custom_field_receives_attr_and_obj PASSED [ 10%]
+tests/test_fields.py::TestField::test_custom_field_receives_data_key_if_set PASSED [ 11%]
+tests/test_fields.py::TestField::test_custom_field_follows_data_key_if_set PASSED [ 12%]
+tests/test_fields.py::TestParentAndName::test_simple_field_parent_and_name PASSED [ 14%]
+tests/test_fields.py::TestParentAndName::test_unbound_field_root_returns_none PASSED [ 15%]
+tests/test_fields.py::TestParentAndName::test_list_field_inner_parent_and_name PASSED [ 16%]
+tests/test_fields.py::TestParentAndName::test_tuple_field_inner_parent_and_name PASSED [ 18%]
+tests/test_fields.py::TestParentAndName::test_mapping_field_inner_parent_and_name PASSED [ 19%]
+tests/test_fields.py::TestParentAndName::test_simple_field_root PASSED   [ 20%]
+tests/test_fields.py::TestParentAndName::test_list_field_inner_root PASSED [ 22%]
+tests/test_fields.py::TestParentAndName::test_tuple_field_inner_root PASSED [ 23%]
+tests/test_fields.py::TestParentAndName::test_list_root_inheritance PASSED [ 24%]
+tests/test_fields.py::TestParentAndName::test_dict_root_inheritance PASSED [ 25%]
+tests/test_fields.py::TestParentAndName::test_datetime_list_inner_format PASSED [ 27%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[String] PASSED [ 28%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Integer] PASSED [ 29%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Boolean] PASSED [ 31%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Float] PASSED [ 32%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Number] PASSED [ 33%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[DateTime] PASSED [ 35%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Time] PASSED [ 36%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Date] PASSED [ 37%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[TimeDelta] PASSED [ 38%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Dict] PASSED [ 40%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Url] PASSED [ 41%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Email] PASSED [ 42%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[UUID] PASSED [ 44%]
+tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Decimal] PASSED [ 45%]
+tests/test_fields.py::TestErrorMessages::test_default_error_messages_get_merged_with_parent_error_messages_cstm_msg PASSED [ 46%]
+tests/test_fields.py::TestErrorMessages::test_default_error_messages_get_merged_with_parent_error_messages PASSED [ 48%]
+tests/test_fields.py::TestErrorMessages::test_make_error[required-Missing data for required field.] PASSED [ 49%]
+tests/test_fields.py::TestErrorMessages::test_make_error[null-Field may not be null.] PASSED [ 50%]
+tests/test_fields.py::TestErrorMessages::test_make_error[custom-Custom error message.] PASSED [ 51%]
+tests/test_fields.py::TestErrorMessages::test_make_error[validator_failed-Invalid value.] PASSED [ 53%]
+tests/test_fields.py::TestErrorMessages::test_fail[required-Missing data for required field.] PASSED [ 54%]
+tests/test_fields.py::TestErrorMessages::test_fail[null-Field may not be null.] PASSED [ 55%]
+tests/test_fields.py::TestErrorMessages::test_fail[custom-Custom error message.] PASSED [ 57%]
+tests/test_fields.py::TestErrorMessages::test_fail[validator_failed-Invalid value.] PASSED [ 58%]
+tests/test_fields.py::TestErrorMessages::test_make_error_key_doesnt_exist PASSED [ 59%]
+tests/test_fields.py::TestNestedField::test_nested_only_and_exclude_as_string[only] PASSED [ 61%]
+tests/test_fields.py::TestNestedField::test_nested_only_and_exclude_as_string[exclude] PASSED [ 62%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[None-exclude] PASSED [ 63%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[None-include] PASSED [ 64%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[None-raise] PASSED [ 66%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[exclude-exclude] PASSED [ 67%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[exclude-include] PASSED [ 68%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[exclude-raise] PASSED [ 70%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[include-exclude] PASSED [ 71%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[include-include] PASSED [ 72%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[include-raise] PASSED [ 74%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[raise-exclude] PASSED [ 75%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[raise-include] PASSED [ 76%]
+tests/test_fields.py::TestNestedField::test_nested_unknown_override[raise-raise] PASSED [ 77%]
+tests/test_fields.py::TestListNested::test_list_nested_only_exclude_dump_only_load_only_propagated_to_nested[only] PASSED [ 79%]
+tests/test_fields.py::TestListNested::test_list_nested_only_exclude_dump_only_load_only_propagated_to_nested[exclude] PASSED [ 80%]
+tests/test_fields.py::TestListNested::test_list_nested_only_exclude_dump_only_load_only_propagated_to_nested[dump_only] PASSED [ 81%]
+tests/test_fields.py::TestListNested::test_list_nested_only_exclude_dump_only_load_only_propagated_to_nested[load_only] PASSED [ 83%]
+tests/test_fields.py::TestListNested::test_list_nested_only_and_exclude_merged_with_nested[only-expected0] PASSED [ 84%]
+tests/test_fields.py::TestListNested::test_list_nested_only_and_exclude_merged_with_nested[exclude-expected1] PASSED [ 85%]
+tests/test_fields.py::TestListNested::test_list_nested_partial_propagated_to_nested PASSED [ 87%]
+tests/test_fields.py::TestTupleNested::test_tuple_nested_only_exclude_dump_only_load_only_propagated_to_nested[dump_only] PASSED [ 88%]
+tests/test_fields.py::TestTupleNested::test_tuple_nested_only_exclude_dump_only_load_only_propagated_to_nested[load_only] PASSED [ 89%]
+tests/test_fields.py::TestTupleNested::test_tuple_nested_partial_propagated_to_nested PASSED [ 90%]
+tests/test_fields.py::TestDictNested::test_dict_nested_only_exclude_dump_only_load_only_propagated_to_nested[only] PASSED [ 92%]
+tests/test_fields.py::TestDictNested::test_dict_nested_only_exclude_dump_only_load_only_propagated_to_nested[exclude] PASSED [ 93%]
+tests/test_fields.py::TestDictNested::test_dict_nested_only_exclude_dump_only_load_only_propagated_to_nested[dump_only] PASSED [ 94%]
+tests/test_fields.py::TestDictNested::test_dict_nested_only_exclude_dump_only_load_only_propagated_to_nested[load_only] PASSED [ 96%]
+tests/test_fields.py::TestDictNested::test_dict_nested_only_and_exclude_merged_with_nested[only-expected0] PASSED [ 97%]
+tests/test_fields.py::TestDictNested::test_dict_nested_only_and_exclude_merged_with_nested[exclude-expected1] PASSED [ 98%]
+tests/test_fields.py::TestDictNested::test_dict_nested_partial_propagated_to_nested PASSED [100%]
+
+=============================== warnings summary ===============================
+src/marshmallow/__init__.py:17
+  /testbed/src/marshmallow/__init__.py:17: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+    __version_info__ = tuple(LooseVersion(__version__).version)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_fields.py::test_field_aliases[Integer-Integer]
+PASSED tests/test_fields.py::test_field_aliases[String-String]
+PASSED tests/test_fields.py::test_field_aliases[Boolean-Boolean]
+PASSED tests/test_fields.py::test_field_aliases[Url-Url]
+PASSED tests/test_fields.py::TestField::test_repr
+PASSED tests/test_fields.py::TestField::test_error_raised_if_uncallable_validator_passed
+PASSED tests/test_fields.py::TestField::test_error_raised_if_missing_is_set_on_required_field
+PASSED tests/test_fields.py::TestField::test_custom_field_receives_attr_and_obj
+PASSED tests/test_fields.py::TestField::test_custom_field_receives_data_key_if_set
+PASSED tests/test_fields.py::TestField::test_custom_field_follows_data_key_if_set
+PASSED tests/test_fields.py::TestParentAndName::test_simple_field_parent_and_name
+PASSED tests/test_fields.py::TestParentAndName::test_unbound_field_root_returns_none
+PASSED tests/test_fields.py::TestParentAndName::test_list_field_inner_parent_and_name
+PASSED tests/test_fields.py::TestParentAndName::test_tuple_field_inner_parent_and_name
+PASSED tests/test_fields.py::TestParentAndName::test_mapping_field_inner_parent_and_name
+PASSED tests/test_fields.py::TestParentAndName::test_simple_field_root
+PASSED tests/test_fields.py::TestParentAndName::test_list_field_inner_root
+PASSED tests/test_fields.py::TestParentAndName::test_tuple_field_inner_root
+PASSED tests/test_fields.py::TestParentAndName::test_list_root_inheritance
+PASSED tests/test_fields.py::TestParentAndName::test_dict_root_inheritance
+PASSED tests/test_fields.py::TestParentAndName::test_datetime_list_inner_format
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[String]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Integer]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Boolean]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Float]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Number]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[DateTime]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Time]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Date]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[TimeDelta]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Dict]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Url]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Email]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[UUID]
+PASSED tests/test_fields.py::TestMetadata::test_extra_metadata_may_be_added_to_field[Decimal]
+PASSED tests/test_fields.py::TestErrorMessages::test_default_error_messages_get_merged_with_parent_error_messages_cstm_msg
+PASSED tests/test_fields.py::TestErrorMessages::test_default_error_messages_get_merged_with_parent_error_messages
+PASSED tests/test_fields.py::TestErrorMessages::test_make_error[required-Missing data for required field.]
+PASSED tests/test_fields.py::TestErrorMessages::test_make_error[null-Field may not be null.]
+PASSED tests/test_fields.py::TestErrorMessages::test_make_error[custom-Custom error message.]
+PASSED tests/test_fields.py::TestErrorMessages::test_make_error[validator_failed-Invalid value.]
+PASSED tests/test_fields.py::TestErrorMessages::test_fail[required-Missing data for required field.]
+PASSED tests/test_fields.py::TestErrorMessages::test_fail[null-Field may not be null.]
+PASSED tests/test_fields.py::TestErrorMessages::test_fail[custom-Custom error message.]
+PASSED tests/test_fields.py::TestErrorMessages::test_fail[validator_failed-Invalid value.]
+PASSED tests/test_fields.py::TestErrorMessages::test_make_error_key_doesnt_exist
+PASSED tests/test_fields.py::TestNestedField::test_nested_only_and_exclude_as_string[only]
+PASSED tests/test_fields.py::TestNestedField::test_nested_only_and_exclude_as_string[exclude]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[None-exclude]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[None-include]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[None-raise]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[exclude-exclude]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[exclude-include]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[exclude-raise]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[include-exclude]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[include-include]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[include-raise]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[raise-exclude]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[raise-include]
+PASSED tests/test_fields.py::TestNestedField::test_nested_unknown_override[raise-raise]
+PASSED tests/test_fields.py::TestListNested::test_list_nested_only_exclude_dump_only_load_only_propagated_to_nested[only]
+PASSED tests/test_fields.py::TestListNested::test_list_nested_only_exclude_dump_only_load_only_propagated_to_nested[exclude]
+PASSED tests/test_fields.py::TestListNested::test_list_nested_only_exclude_dump_only_load_only_propagated_to_nested[dump_only]
+PASSED tests/test_fields.py::TestListNested::test_list_nested_only_exclude_dump_only_load_only_propagated_to_nested[load_only]
+PASSED tests/test_fields.py::TestListNested::test_list_nested_only_and_exclude_merged_with_nested[only-expected0]
+PASSED tests/test_fields.py::TestListNested::test_list_nested_only_and_exclude_merged_with_nested[exclude-expected1]
+PASSED tests/test_fields.py::TestListNested::test_list_nested_partial_propagated_to_nested
+PASSED tests/test_fields.py::TestTupleNested::test_tuple_nested_only_exclude_dump_only_load_only_propagated_to_nested[dump_only]
+PASSED tests/test_fields.py::TestTupleNested::test_tuple_nested_only_exclude_dump_only_load_only_propagated_to_nested[load_only]
+PASSED tests/test_fields.py::TestTupleNested::test_tuple_nested_partial_propagated_to_nested
+PASSED tests/test_fields.py::TestDictNested::test_dict_nested_only_exclude_dump_only_load_only_propagated_to_nested[only]
+PASSED tests/test_fields.py::TestDictNested::test_dict_nested_only_exclude_dump_only_load_only_propagated_to_nested[exclude]
+PASSED tests/test_fields.py::TestDictNested::test_dict_nested_only_exclude_dump_only_load_only_propagated_to_nested[dump_only]
+PASSED tests/test_fields.py::TestDictNested::test_dict_nested_only_exclude_dump_only_load_only_propagated_to_nested[load_only]
+PASSED tests/test_fields.py::TestDictNested::test_dict_nested_only_and_exclude_merged_with_nested[only-expected0]
+PASSED tests/test_fields.py::TestDictNested::test_dict_nested_only_and_exclude_merged_with_nested[exclude-expected1]
+PASSED tests/test_fields.py::TestDictNested::test_dict_nested_partial_propagated_to_nested
+======================== 77 passed, 1 warning in 0.09s =========================
++ : '>>>>> End Test Output'
++ git checkout b40a0f4e33823e6d0f341f7e8684e359a99060d1 tests/test_fields.py
+Updated 1 path from 56ab4168
