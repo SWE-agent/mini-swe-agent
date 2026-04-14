@@ -343,6 +343,8 @@ async def test_trajectory_inspector_css_loading():
     assert ".message-container" in app.CSS
     assert ".message-header" in app.CSS
     assert ".message-content" in app.CSS
+    assert ".reasoning-header" in app.CSS
+    assert ".reasoning-content" in app.CSS
 
 
 @pytest.mark.slow
@@ -367,6 +369,118 @@ def test_trajectory_inspector_binding_labels():
     bindings = {b.action: b.description for b in TrajectoryInspector.BINDINGS}
     assert bindings["scroll_down"] == "↓"
     assert bindings["scroll_up"] == "↑"
+
+
+@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
+def test_main_no_reasoning_flag(mock_run, temp_trajectory_files):
+    """Test that --no-reasoning passes show_reasoning=False to TrajectoryInspector."""
+    valid_file = temp_trajectory_files[0]
+    with patch("minisweagent.run.utilities.inspector.TrajectoryInspector.__init__", return_value=None) as mock_init:
+        try:
+            main(str(valid_file), reasoning=False)
+        except AttributeError:
+            pass  # __init__ mocked, app state incomplete — expected
+        mock_init.assert_called_once_with([valid_file], show_reasoning=False)
+
+
+@pytest.fixture
+def sample_reasoning_trajectory():
+    """Sample trajectory with reasoning_content on an assistant message."""
+    return [
+        {"role": "user", "content": "Think about this."},
+        {"role": "assistant", "content": "My answer.", "reasoning_content": "Let me think..."},
+    ]
+
+
+@pytest.mark.slow
+async def test_trajectory_inspector_reasoning_display(sample_reasoning_trajectory):
+    """Test that reasoning_content is shown/hidden based on show_reasoning flag."""
+    with tempfile.TemporaryDirectory() as tmp:
+        f = Path(tmp) / "r.traj.json"
+        f.write_text(json.dumps(sample_reasoning_trajectory))
+
+        app = TrajectoryInspector([f], show_reasoning=True)
+        async with app.run_test() as pilot:
+            await pilot.pause(0.1)
+            await pilot.press("l")  # step with assistant message
+            await pilot.pause(0.1)
+            content = get_screen_text(app)
+            assert "REASONING" in content
+            assert "Let me think..." in content
+
+        app2 = TrajectoryInspector([f], show_reasoning=False)
+        async with app2.run_test() as pilot:
+            await pilot.pause(0.1)
+            await pilot.press("l")
+            await pilot.pause(0.1)
+            assert "REASONING" not in get_screen_text(app2)
+
+
+@pytest.mark.slow
+async def test_trajectory_inspector_toggle_reasoning(sample_reasoning_trajectory):
+    """Test that pressing r toggles reasoning blocks on and off."""
+    with tempfile.TemporaryDirectory() as tmp:
+        f = Path(tmp) / "r.traj.json"
+        f.write_text(json.dumps(sample_reasoning_trajectory))
+
+        app = TrajectoryInspector([f])
+        async with app.run_test() as pilot:
+            await pilot.pause(0.1)
+            await pilot.press("l")
+            await pilot.pause(0.1)
+            assert "REASONING" in get_screen_text(app)
+
+            await pilot.press("r")  # toggle off
+            assert "REASONING" not in get_screen_text(app)
+
+            await pilot.press("r")  # toggle back on
+            assert "REASONING" in get_screen_text(app)
+
+
+@pytest.mark.slow
+async def test_trajectory_inspector_reload(sample_simple_trajectory):
+    """Test that R reloads the file and preserves step position."""
+    with tempfile.TemporaryDirectory() as tmp:
+        f = Path(tmp) / "t.traj.json"
+        f.write_text(json.dumps(sample_simple_trajectory))
+
+        app = TrajectoryInspector([f])
+        async with app.run_test() as pilot:
+            await pilot.pause(0.1)
+            await pilot.press("l")  # go to step 2
+            assert "Step 2/3" in app.title
+
+            f.write_text(
+                json.dumps(
+                    sample_simple_trajectory
+                    + [
+                        {"role": "user", "content": "extra output"},
+                        {"role": "assistant", "content": "Done."},
+                    ]
+                )
+            )
+            await pilot.press("R")
+            await pilot.pause(0.1)
+            assert "Step 2/4" in app.title
+
+
+@pytest.mark.slow
+async def test_trajectory_inspector_reload_clamps_step(sample_simple_trajectory):
+    """Test that R clamps step to last when the file shrinks."""
+    with tempfile.TemporaryDirectory() as tmp:
+        f = Path(tmp) / "t.traj.json"
+        f.write_text(json.dumps(sample_simple_trajectory))
+
+        app = TrajectoryInspector([f])
+        async with app.run_test() as pilot:
+            await pilot.pause(0.1)
+            await pilot.press("$")  # go to last step (3/3)
+            assert "Step 3/3" in app.title
+
+            f.write_text(json.dumps(sample_simple_trajectory[:2]))
+            await pilot.press("R")
+            await pilot.pause(0.1)
+            assert "Step 1/1" in app.title
 
 
 @pytest.fixture
