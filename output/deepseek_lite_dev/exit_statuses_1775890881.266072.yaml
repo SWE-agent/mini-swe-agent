@@ -21,5 +21,5 @@ instances_by_exit_status:
     - pydicom__pydicom-1139
     - pyvista__pyvista-4315
     - pydicom__pydicom-1256
-    - pylint-dev__astroid-1333
+    - pylint-dev__asteroid-1333
     - pydicom__pydicom-1413

@@ -1,4 +1,5 @@
 """Check SWE-bench evaluation results from report.json files."""
+
 import json
 import os
 import sys
@@ -26,14 +27,16 @@ def check_results(eval_dir):
         p2p_failure = len(p2p.get("failure", []))
         p2f_failure = len(p2f.get("failure", []))
 
-        results.append({
-            "id": instance_id,
-            "resolved": resolved,
-            "patch_applied": patch_applied,
-            "bugs_fixed": f2p_success,
-            "bugs_not_fixed": f2p_failure,
-            "regressions": p2p_failure + p2f_failure,
-        })
+        results.append(
+            {
+                "id": instance_id,
+                "resolved": resolved,
+                "patch_applied": patch_applied,
+                "bugs_fixed": f2p_success,
+                "bugs_not_fixed": f2p_failure,
+                "regressions": p2p_failure + p2f_failure,
+            }
+        )
 
     # Print results
     resolved_count = sum(1 for r in results if r["resolved"])
@@ -51,7 +54,9 @@ def check_results(eval_dir):
         print(f"{r['id']:<45} {status:<10} {r['bugs_fixed']:<7} {r['bugs_not_fixed']:<10} {r['regressions']}")
 
     print("-" * 90)
-    print(f"Total: {total}  |  Resolved: {resolved_count}  |  Failed: {total - resolved_count}  |  Rate: {resolved_count/total*100:.1f}%")
+    print(
+        f"Total: {total}  |  Resolved: {resolved_count}  |  Failed: {total - resolved_count}  |  Rate: {resolved_count / total * 100:.1f}%"
+    )
 
 
 if __name__ == "__main__":
