@@ -224,11 +224,12 @@ environment:
   environment_class: docker
 
 model:
-  model_name: "mistralai/Devstral-Small-2-24B-Instruct-2512"
-  # action_regex: '\A[\s\S]*?```mswea_bash_command\s*\n([\s\S]*?)\n```'
+  model_name: anthropic/claude-opus-4-5-20251101
+  # action_regex: "```mswea_bash_command\\s*\\n(.*?)\\n```"
   cost_tracking: "ignore_errors"
   model_kwargs:
-    api_base: "http://localhost:8000/v1"
-    api_key: "empty"
-    custom_llm_provider: "openai"
+    api_base: "https://api.anthropic.com/v1/messages"
+    api_key: "api_key"
+    custom_llm_provider: "anthropic"
     temperature: 0.0
+    drop_params: true
