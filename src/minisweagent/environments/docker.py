@@ -33,6 +33,8 @@ class DockerEnvironmentConfig:
     """Timeout in seconds for pulling images."""
     container_id: str | None = None
     """Optional container ID to use instead of starting a new container."""
+    swebench_pro: bool = False
+    """If True, use shell -c syntax for the sleep command (required for SWE-bench Pro images)."""
 
 
 class DockerEnvironment:
@@ -61,6 +63,11 @@ class DockerEnvironment:
     def _start_container(self):
         """Start the Docker container and return the container ID."""
         container_name = f"minisweagent-{uuid.uuid4().hex[:8]}"
+        sleep_cmd = (
+            ["-c", f"sleep {self.config.container_timeout}"]
+            if self.config.swebench_pro
+            else ["sleep", self.config.container_timeout]
+        )
         cmd = [
             self.config.executable,
             "run",
@@ -71,8 +78,7 @@ class DockerEnvironment:
             self.config.cwd,
             *self.config.run_args,
             self.config.image,
-            "sleep",
-            self.config.container_timeout,
+            *sleep_cmd,
         ]
         self.logger.debug(f"Starting container with command: {shlex.join(cmd)}")
         result = subprocess.run(

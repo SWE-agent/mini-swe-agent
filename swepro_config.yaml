@@ -215,6 +215,7 @@ agent:
 environment:
   cwd: "/app"
   timeout: 60
+  swebench_pro: true
   env:
     PAGER: cat
     MANPAGER: cat
