@@ -191,3 +191,43 @@ def test_portkey_model_cost_validation_error():
 
                 assert "Error calculating cost" in str(exc_info.value)
                 assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)
+
+
+def test_portkey_model_query_merges_tool_calls_across_multiple_choices():
+    """Portkey chat completions may also split assistant text and tool calls across choices."""
+    mock_portkey_class = MagicMock()
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+
+    text_choice = MagicMock()
+    text_choice.message.model_dump.return_value = {
+        "role": "assistant",
+        "content": "Let me inspect the repository first.",
+        "tool_calls": None,
+    }
+
+    tool_choice = MagicMock()
+    tool_choice.message.model_dump.return_value = {
+        "role": "assistant",
+        "content": None,
+        "tool_calls": [
+            {"id": "call_multi", "function": {"name": "bash", "arguments": json.dumps({"command": "ls -la"})}}
+        ],
+    }
+
+    mock_response.choices = [text_choice, tool_choice]
+    mock_response.model_dump.return_value = {"test": "response"}
+    mock_response.model_copy.return_value = mock_response
+    mock_response.usage = MagicMock(prompt_tokens=10, completion_tokens=5, total_tokens=15)
+
+    mock_client.chat.completions.create.return_value = mock_response
+    mock_portkey_class.return_value = mock_client
+
+    with patch("minisweagent.models.portkey_model.Portkey", mock_portkey_class):
+        with patch.dict(os.environ, {"PORTKEY_API_KEY": "test-key"}):
+            with patch("minisweagent.models.portkey_model.litellm.cost_calculator.completion_cost", return_value=0.01):
+                model = PortkeyModel(model_name="gpt-4o")
+                result = model.query([{"role": "user", "content": "test"}])
+
+    assert result["content"] == "Let me inspect the repository first."
+    assert result["extra"]["actions"] == [{"command": "ls -la", "tool_call_id": "call_multi"}]

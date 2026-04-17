@@ -2,6 +2,8 @@
 
 import json
 import time
+from collections.abc import Sequence
+from typing import Any
 
 from jinja2 import StrictUndefined, Template
 
@@ -27,6 +29,69 @@ BASH_TOOL = {
 }
 
 
+def _message_to_dict(message: Any) -> dict:
+    if hasattr(message, "model_dump"):
+        return message.model_dump()
+    if isinstance(message, dict):
+        return dict(message)
+    return {
+        "role": getattr(message, "role", "assistant"),
+        "content": getattr(message, "content", None),
+        "tool_calls": getattr(message, "tool_calls", None),
+    }
+
+
+def _tool_call_attr(tool_call: Any, key: str) -> Any:
+    if isinstance(tool_call, dict):
+        return tool_call.get(key)
+    return getattr(tool_call, key, None)
+
+
+def _tool_function_attr(tool_call: Any, key: str) -> Any:
+    function = _tool_call_attr(tool_call, "function")
+    if isinstance(function, dict):
+        return function.get(key)
+    return getattr(function, key, None)
+
+
+def merge_choice_messages(choices: Sequence[Any]) -> dict:
+    """Merge assistant content/tool calls across multiple choices into one message dict."""
+    merged: dict[str, Any] = {}
+    contents: list[Any] = []
+    tool_calls: list[Any] = []
+
+    for choice in choices:
+        choice_message = _message_to_dict(choice.message if hasattr(choice, "message") else choice["message"])
+        if not merged:
+            merged = dict(choice_message)
+        content = choice_message.get("content")
+        if content not in (None, "", []):
+            contents.append(content)
+        if choice_message.get("tool_calls"):
+            tool_calls.extend(choice_message["tool_calls"])
+
+    if not merged:
+        return {"role": "assistant", "content": None, "tool_calls": []}
+
+    if not contents:
+        merged["content"] = None
+    elif len(contents) == 1:
+        merged["content"] = contents[0]
+    elif all(isinstance(content, str) for content in contents):
+        merged["content"] = "\n".join(content for content in contents if content)
+    else:
+        merged_content = []
+        for content in contents:
+            if isinstance(content, list):
+                merged_content.extend(content)
+            else:
+                merged_content.append(content)
+        merged["content"] = merged_content
+
+    merged["tool_calls"] = tool_calls
+    return merged
+
+
 def parse_toolcall_actions(tool_calls: list, *, format_error_template: str) -> list[dict]:
     """Parse tool calls from the response. Raises FormatError if unknown tool or invalid args."""
     if not tool_calls:
@@ -44,12 +109,15 @@ def parse_toolcall_actions(tool_calls: list, *, format_error_template: str) -> l
     for tool_call in tool_calls:
         error_msg = ""
         args = {}
+        tool_name = _tool_function_attr(tool_call, "name")
+        tool_arguments = _tool_function_attr(tool_call, "arguments")
+        tool_call_id = _tool_call_attr(tool_call, "id")
         try:
-            args = json.loads(tool_call.function.arguments)
+            args = json.loads(tool_arguments)
         except Exception as e:
             error_msg = f"Error parsing tool call arguments: {e}."
-        if tool_call.function.name != "bash":
-            error_msg += f"Unknown tool '{tool_call.function.name}'."
+        if tool_name != "bash":
+            error_msg += f"Unknown tool '{tool_name}'."
         if not isinstance(args, dict) or "command" not in args:
             error_msg += "Missing 'command' argument in bash tool call."
         if error_msg:
@@ -62,7 +130,7 @@ def parse_toolcall_actions(tool_calls: list, *, format_error_template: str) -> l
                     "extra": {"interrupt_type": "FormatError"},
                 }
             )
-        actions.append({"command": args["command"], "tool_call_id": tool_call.id})
+        actions.append({"command": args["command"], "tool_call_id": tool_call_id})
     return actions
 
 
