@@ -94,7 +94,7 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     env_config = config.setdefault("environment", {})
     env_config["environment_class"] = env_config.get("environment_class", "docker")
     image_name = get_swebench_docker_image_name(instance)
-    if env_config["environment_class"] in ["docker", "swerex_modal"]:
+    if env_config["environment_class"] in ["docker", "swerex_modal", "e2b"]:
         env_config["image"] = image_name
     elif env_config["environment_class"] in ["singularity", "contree"]:
         env_config["image"] = "docker://" + image_name
@@ -156,6 +156,7 @@ def process_instance(
     result = None
     extra_info = {}
 
+    env = None
     try:
         env = get_sb_environment(config, instance)
         agent = ProgressTrackingAgent(
@@ -189,6 +190,8 @@ def process_instance(
             logger.info(f"Saved trajectory to '{traj_path}'")
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
         progress_manager.on_instance_end(instance_id, exit_status)
+        if env is not None and hasattr(env, "stop"):
+            env.stop()
 
 
 def filter_instances(
