@@ -76,7 +76,7 @@ class BubblewrapEnvironment:
         self.logger = logger or logging.getLogger("minisweagent.environment")
         self.config = config_class(**kwargs)
         self.working_dir = Path(tempfile.gettempdir()) / f"minisweagent-{uuid.uuid4().hex[:8]}"
-        self.working_dir.mkdir(parents=True)
+        self.working_dir.mkdir(parents=True, exist_ok=True)
 
     def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the bubblewrap environment and return the result as a dict."""
