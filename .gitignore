@@ -1,13 +1,25 @@
 .cursor/rules/_*
 uv.lock
 patch.txt
-exit_statuses*.yaml
-preds.json
-*.traj.json
+/exit_statuses*.yaml
+/preds.json
 .env
-traj.json
+.mswea-config/
+/traj.json
+/.tools/
+/.wsl-eval-venv/
+/scripts/*
+!/scripts/
+!/scripts/*.py
+!/scripts/*.sh
+/scripts/__pycache__/
 .claude/**
 .vscode/**
+.codex
+.hf-cache/
+logs/*
+!logs/.gitkeep
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
@@ -185,4 +197,3 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
-

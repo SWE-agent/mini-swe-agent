@@ -1,0 +1,19 @@
+instances_by_exit_status:
+    InternalServerError:
+    - sqlfluff__sqlfluff-1733
+    - pvlib__pvlib-python-1606
+    - pvlib__pvlib-python-1707
+    - sqlfluff__sqlfluff-1517
+    - pvlib__pvlib-python-1072
+    - pvlib__pvlib-python-1854
+    Submitted:
+    - sqlfluff__sqlfluff-2419
+    - sqlfluff__sqlfluff-1625
+    - marshmallow-code__marshmallow-1359
+    - sqlfluff__sqlfluff-1763
+    - marshmallow-code__marshmallow-1343
+    Timeout:
+    - pvlib__pvlib-python-1154
+    - pylint-dev__astroid-1978
+    - pylint-dev__astroid-1333
+    - pylint-dev__astroid-1196

@@ -1,0 +1,77 @@
+{
+  "sqlfluff__sqlfluff-2419": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "sqlfluff__sqlfluff-2419",
+    "model_patch": "diff --git a/src/sqlfluff/rules/L060.py b/src/sqlfluff/rules/L060.py\nindex 836941edc..7396ebc6d 100644\n--- a/src/sqlfluff/rules/L060.py\n+++ b/src/sqlfluff/rules/L060.py\n@@ -43,11 +43,12 @@ class Rule_L060(BaseRule):\n         if context.segment.name != \"function_name_identifier\":\n             return None\n \n-        # Only care if the function is ``IFNULL`` or ``NVL``.\n-        if context.segment.raw_upper not in {\"IFNULL\", \"NVL\"}:\n+        # Only care if the function is IFNULL or NVL.\n+        wrong_func = context.segment.raw_upper\n+        if wrong_func not in {\"IFNULL\", \"NVL\"}:\n             return None\n \n-        # Create fix to replace ``IFNULL`` or ``NVL`` with ``COALESCE``.\n+        # Create fix to replace IFNULL or NVL with COALESCE.\n         fix = LintFix.replace(\n             context.segment,\n             [\n@@ -59,4 +60,5 @@ class Rule_L060(BaseRule):\n             ],\n         )\n \n-        return LintResult(context.segment, [fix])\n+        description = f\"Use 'COALESCE' instead of '{wrong_func}'.\"\n+        return LintResult(context.segment, [fix], description=description)\n"
+  },
+  "sqlfluff__sqlfluff-1625": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "sqlfluff__sqlfluff-1625",
+    "model_patch": "diff --git a/src/sqlfluff/rules/L031.py b/src/sqlfluff/rules/L031.py\nindex 838c6ce5d..95c55f75a 100644\n--- a/src/sqlfluff/rules/L031.py\n+++ b/src/sqlfluff/rules/L031.py\n@@ -211,7 +211,7 @@ class Rule_L031(BaseRule):\n             violation_buff.append(\n                 LintResult(\n                     anchor=alias_info.alias_identifier_ref,\n-                    description=\"Avoid using aliases in join condition\",\n+                    description=\"Avoid using aliases in from clauses and join conditions\",\n                     fixes=fixes,\n                 )\n             )\n"
+  },
+  "marshmallow-code__marshmallow-1359": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "marshmallow-code__marshmallow-1359",
+    "model_patch": "diff --git a/src/marshmallow/fields.py b/src/marshmallow/fields.py\nindex 0b18e7dd..973383dc 100644\n--- a/src/marshmallow/fields.py\n+++ b/src/marshmallow/fields.py\n@@ -1114,7 +1114,7 @@ class DateTime(Field):\n         super()._bind_to_schema(field_name, schema)\n         self.format = (\n             self.format\n-            or getattr(schema.opts, self.SCHEMA_OPTS_VAR_NAME)\n+            or getattr(self.root.opts, self.SCHEMA_OPTS_VAR_NAME, None) if self.root is not None else None\n             or self.DEFAULT_FORMAT\n         )\n \n"
+  },
+  "sqlfluff__sqlfluff-1763": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "sqlfluff__sqlfluff-1763",
+    "model_patch": "diff --git a/src/sqlfluff/core/file_helpers.py b/src/sqlfluff/core/file_helpers.py\nindex 52f74f0bb..916f18db7 100644\n--- a/src/sqlfluff/core/file_helpers.py\n+++ b/src/sqlfluff/core/file_helpers.py\n@@ -1,9 +1,13 @@\n \"\"\"File Helpers for the parser module.\"\"\"\n \n+import logging\n import chardet\n \n from sqlfluff.core.config import FluffConfig\n \n+# Instantiate the logger\n+logger = logging.getLogger(__name__)\n+\n \n def get_encoding(fname: str, config: FluffConfig) -> str:\n     \"\"\"Get the encoding of the file (autodetect).\"\"\"\n@@ -12,6 +16,45 @@ def get_encoding(fname: str, config: FluffConfig) -> str:\n     if encoding_config == \"autodetect\":\n         with open(fname, \"rb\") as f:\n             data = f.read()\n-        return chardet.detect(data)[\"encoding\"]\n+        # Check for UTF-8 BOM\n+        if data.startswith(b'\\xef\\xbb\\xbf'):\n+            # UTF-8 with BOM\n+            return 'UTF-8-SIG'\n+        # Check for pure ASCII (all bytes < 128)\n+        if all(b < 128 for b in data):\n+            return 'ascii'\n+        # Try decode as UTF-8 (strict)\n+        try:\n+            data.decode('utf-8')\n+            # Valid UTF-8 without BOM\n+            return 'utf-8'\n+        except UnicodeDecodeError:\n+            pass\n+        # Fall back to chardet detection\n+        detection = chardet.detect(data)\n+        encoding = detection[\"encoding\"]\n+        confidence = detection.get(\"confidence\", 0)\n+        logger.debug(\n+            \"File %s detected as %s (confidence %s)\",\n+            fname, encoding, confidence\n+        )\n+        return encoding\n \n     return encoding_config\n+\n+\n+def get_safe_write_encoding(content: str, preferred_encoding: str) -> str:\n+    \"\"\"Return an encoding that can encode the content without errors.\n+    \n+    If the preferred encoding cannot encode the content, we fallback to UTF-8.\n+    If UTF-8 also fails (should not happen), we fallback to UTF-8 with\n+    errors='replace' (but we don't handle that here; the caller must handle).\n+    \"\"\"\n+    try:\n+        content.encode(preferred_encoding, errors='strict')\n+        return preferred_encoding\n+    except (UnicodeEncodeError, LookupError):\n+        # LookupError occurs if the encoding is unknown (e.g., 'autodetect')\n+        pass\n+    # Fallback to UTF-8 which can encode any Unicode string.\n+    return 'utf-8'\ndiff --git a/src/sqlfluff/core/linter/linted_file.py b/src/sqlfluff/core/linter/linted_file.py\nindex 3a8593edd..26fe330f6 100644\n--- a/src/sqlfluff/core/linter/linted_file.py\n+++ b/src/sqlfluff/core/linter/linted_file.py\n@@ -6,6 +6,7 @@ post linting.\n \"\"\"\n \n import os\n+import tempfile\n import logging\n from typing import (\n     Any,\n@@ -26,6 +27,7 @@ from sqlfluff.core.errors import (\n )\n from sqlfluff.core.string_helpers import findall\n from sqlfluff.core.templaters import TemplatedFile\n+from sqlfluff.core.file_helpers import get_safe_write_encoding\n \n # Classes needed only for type checking\n from sqlfluff.core.parser.segments.base import BaseSegment, FixPatch\n@@ -493,7 +495,30 @@ class LintedFile(NamedTuple):\n             if suffix:\n                 root, ext = os.path.splitext(fname)\n                 fname = root + suffix + ext\n-            # Actually write the file.\n-            with open(fname, \"w\", encoding=self.encoding) as f:\n-                f.write(write_buff)\n+            # Determine safe encoding that can encode the content\n+            safe_encoding = get_safe_write_encoding(write_buff, self.encoding)\n+            if safe_encoding != self.encoding:\n+                # Log a warning that encoding changed\n+                linter_logger.warning(\n+                    \"Encoding %s cannot encode all characters in %s. \"\n+                    \"Using %s instead.\",\n+                    self.encoding, self.path, safe_encoding\n+                )\n+            # Write to a temporary file first to avoid wiping the original on error\n+            tmp_path = None\n+            try:\n+                with tempfile.NamedTemporaryFile(\n+                    mode='w', encoding=safe_encoding,\n+                    delete=False, dir=os.path.dirname(fname),\n+                    suffix='.tmp'\n+                ) as tmp:\n+                    tmp.write(write_buff)\n+                    tmp_path = tmp.name\n+                # Replace the original file atomically (as atomic as possible)\n+                os.replace(tmp_path, fname)\n+            except Exception:\n+                # Clean up temporary file if it exists\n+                if tmp_path and os.path.exists(tmp_path):\n+                    os.unlink(tmp_path)\n+                raise\n         return success\ndiff --git a/src/sqlfluff/core/linter/linter.py b/src/sqlfluff/core/linter/linter.py\nindex 452abf342..270afbb12 100644\n--- a/src/sqlfluff/core/linter/linter.py\n+++ b/src/sqlfluff/core/linter/linter.py\n@@ -100,14 +100,50 @@ class Linter:\n     @staticmethod\n     def _load_raw_file_and_config(fname, root_config):\n         \"\"\"Load a raw file and the associated config.\"\"\"\n+        import chardet\n         file_config = root_config.make_child_from_path(fname)\n         encoding = get_encoding(fname=fname, config=file_config)\n-        with open(fname, encoding=encoding, errors=\"backslashreplace\") as target_file:\n-            raw_file = target_file.read()\n+        # Read bytes\n+        with open(fname, \"rb\") as f:\n+            raw_bytes = f.read()\n+        # Try to decode with the detected encoding strictly\n+        decoded = None\n+        for candidate_encoding in [encoding, 'utf-8']:\n+            try:\n+                decoded = raw_bytes.decode(candidate_encoding, errors='strict')\n+                if candidate_encoding != encoding:\n+                    # Log that we fell back to UTF-8\n+                    linter_logger.warning(\n+                        \"File %s could not be decoded as %s; falling back to UTF-8.\",\n+                        fname, encoding\n+                    )\n+                    encoding = candidate_encoding\n+                break\n+            except UnicodeDecodeError:\n+                continue\n+        if decoded is None:\n+            # If both fail, let chardet re-evaluate the raw bytes\n+            detection = chardet.detect(raw_bytes)\n+            candidate_encoding = detection[\"encoding\"]\n+            try:\n+                decoded = raw_bytes.decode(candidate_encoding, errors='strict')\n+                linter_logger.warning(\n+                    \"File %s could not be decoded as %s or UTF-8; using chardet detection %s.\",\n+                    fname, encoding, candidate_encoding\n+                )\n+                encoding = candidate_encoding\n+            except UnicodeDecodeError:\n+                # Final fallback: use original encoding with backslashreplace\n+                linter_logger.warning(\n+                    \"File %s could not be decoded strictly with any encoding; \"\n+                    \"using %s with backslashreplace.\",\n+                    fname, encoding\n+                )\n+                decoded = raw_bytes.decode(encoding, errors='backslashreplace')\n         # Scan the raw file for config commands.\n-        file_config.process_raw_file_for_config(raw_file)\n+        file_config.process_raw_file_for_config(decoded)\n         # Return the raw file and config\n-        return raw_file, file_config, encoding\n+        return decoded, file_config, encoding\n \n     @staticmethod\n     def _lex_templated_file(\n"
+  },
+  "marshmallow-code__marshmallow-1343": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "marshmallow-code__marshmallow-1343",
+    "model_patch": "diff --git a/src/marshmallow/marshalling.py b/src/marshmallow/marshalling.py\nindex feb7d1aa..83363703 100644\n--- a/src/marshmallow/marshalling.py\n+++ b/src/marshmallow/marshalling.py\n@@ -13,7 +13,7 @@ from __future__ import unicode_literals\n import collections\n \n from marshmallow.utils import is_collection, missing, set_value\n-from marshmallow.compat import text_type, iteritems\n+from marshmallow.compat import text_type, iteritems, Mapping\n from marshmallow.exceptions import (\n     ValidationError,\n )\n@@ -250,7 +250,7 @@ class Unmarshaller(ErrorStore):\n \n         ret = dict_class()\n \n-        if not isinstance(data, collections.Mapping):\n+        if not isinstance(data, Mapping):\n             errors = self.get_errors(index=index)\n             msg = 'Invalid input type.'\n             self.error_field_names = [SCHEMA]\ndiff --git a/src/marshmallow/schema.py b/src/marshmallow/schema.py\nindex 085c509b..9510c7f5 100644\n--- a/src/marshmallow/schema.py\n+++ b/src/marshmallow/schema.py\n@@ -861,6 +861,8 @@ class BaseSchema(base.SchemaABC):\n         return data\n \n     def _invoke_field_validators(self, unmarshal, data, many):\n+        if data is None:\n+            return\n         for attr_name in self.__processors__[(VALIDATES, False)]:\n             validator = getattr(self, attr_name)\n             validator_kwargs = validator.__marshmallow_kwargs__[(VALIDATES, False)]\n@@ -907,6 +909,8 @@ class BaseSchema(base.SchemaABC):\n     def _invoke_validators(\n             self, unmarshal, pass_many, data, original_data, many, field_errors=False):\n         errors = {}\n+        if data is None:\n+            return\n         for attr_name in self.__processors__[(VALIDATES_SCHEMA, pass_many)]:\n             validator = getattr(self, attr_name)\n             validator_kwargs = validator.__marshmallow_kwargs__[(VALIDATES_SCHEMA, pass_many)]\n"
+  },
+  "sqlfluff__sqlfluff-1733": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "sqlfluff__sqlfluff-1733",
+    "model_patch": ""
+  },
+  "pvlib__pvlib-python-1606": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "pvlib__pvlib-python-1606",
+    "model_patch": ""
+  },
+  "pvlib__pvlib-python-1707": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "pvlib__pvlib-python-1707",
+    "model_patch": ""
+  },
+  "sqlfluff__sqlfluff-1517": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "sqlfluff__sqlfluff-1517",
+    "model_patch": ""
+  },
+  "pvlib__pvlib-python-1072": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "pvlib__pvlib-python-1072",
+    "model_patch": ""
+  },
+  "pvlib__pvlib-python-1854": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "pvlib__pvlib-python-1854",
+    "model_patch": ""
+  },
+  "pvlib__pvlib-python-1154": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "pvlib__pvlib-python-1154",
+    "model_patch": ""
+  },
+  "pylint-dev__astroid-1978": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "pylint-dev__astroid-1978",
+    "model_patch": ""
+  },
+  "pylint-dev__astroid-1333": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "pylint-dev__astroid-1333",
+    "model_patch": ""
+  },
+  "pylint-dev__astroid-1196": {
+    "model_name_or_path": "deepseek/deepseek-reasoner",
+    "instance_id": "pylint-dev__astroid-1196",
+    "model_patch": ""
+  }
+}

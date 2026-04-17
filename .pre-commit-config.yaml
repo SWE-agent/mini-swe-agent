@@ -1,4 +1,5 @@
 ci:
+  autofix_prs: false
   autoupdate_commit_msg: "chore: update pre-commit hooks"
 
 repos:
