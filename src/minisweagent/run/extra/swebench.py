@@ -70,10 +70,15 @@ def get_swebench_docker_image_name(instance: dict) -> str:
     """Get the image name for a SWEBench instance."""
     image_name = instance.get("image_name", None)
     if image_name is None:
-        # Docker doesn't allow double underscore, so we replace them with a magic token
-        iid = instance["instance_id"]
-        id_docker_compatible = iid.replace("__", "_1776_")
-        image_name = f"docker.io/swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
+        # SWE-bench Pro instances provide a dockerhub_tag field pointing to jefzda/sweap-images
+        dockerhub_tag = instance.get("dockerhub_tag", None)
+        if dockerhub_tag is not None:
+            image_name = f"docker.io/jefzda/sweap-images:{dockerhub_tag}"
+        else:
+            # Docker doesn't allow double underscore, so we replace them with a magic token
+            iid = instance["instance_id"]
+            id_docker_compatible = iid.replace("__", "_1776_")
+            image_name = f"docker.io/swebench/sweb.eval.x86_64.{id_docker_compatible}:latest".lower()
     return image_name
 
 
