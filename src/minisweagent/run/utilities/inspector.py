@@ -55,6 +55,8 @@ class BindingCommandProvider(Provider):
         "previous_trajectory": "Previous trajectory",
         "open_in_jless": "Open the current step in jless",
         "open_in_jless_all": "Open the entire trajectory in jless",
+        "toggle_reasoning": "Toggle reasoning content visibility",
+        "reload": "Reload trajectory file from disk",
         "quit": "Quit the inspector",
     }
 
@@ -87,16 +89,19 @@ class TrajectoryInspector(App):
         Binding("H", "previous_trajectory", "Traj--"),
         Binding("e", "open_in_jless", "Jless"),
         Binding("E", "open_in_jless_all", "Jless (all)"),
+        Binding("r", "toggle_reasoning", "Reasoning"),
+        Binding("R", "reload", "Reload"),
         Binding("q", "quit", "Quit"),
     ]
 
-    def __init__(self, trajectory_files: list[Path]):
+    def __init__(self, trajectory_files: list[Path], show_reasoning: bool = True):
         css_path = os.environ.get(
             "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent.parent / "config" / "inspector.tcss")
         )
         self.__class__.CSS = Path(css_path).read_text()
 
         super().__init__()
+        self.show_reasoning = show_reasoning
         self.trajectory_files = trajectory_files
         self._i_trajectory = 0
         self._i_step = 0
@@ -205,6 +210,13 @@ class TrajectoryInspector(App):
             message_container.mount(Static(role.upper(), classes="message-header"))
             clean_str = content_str.replace("\x00", "")
             message_container.mount(Static(Text.from_ansi(clean_str, no_wrap=False), classes="message-content"))
+            reasoning = message.get("reasoning_content")
+            if reasoning and self.show_reasoning:
+                clean_reasoning = reasoning.replace("\x00", "")
+                message_container.mount(Static("REASONING", classes="reasoning-header"))
+                message_container.mount(
+                    Static(Text.from_ansi(clean_reasoning, no_wrap=False), classes="reasoning-content")
+                )
 
         self.title = (
             f"Trajectory {self.i_trajectory + 1}/{self.n_trajectories} - "
@@ -259,6 +271,18 @@ class TrajectoryInspector(App):
         self._open_in_jless(temp_path)
         temp_path.unlink()
 
+    def action_toggle_reasoning(self) -> None:
+        self.show_reasoning = not self.show_reasoning
+        self.update_content()
+
+    def action_reload(self) -> None:
+        """Reload the current trajectory file from disk, preserving step position."""
+        saved_step = self._i_step
+        self._load_current_trajectory()
+        self._i_step = min(saved_step, self.n_steps - 1) if self.n_steps > 0 else 0
+        self.update_content()
+        self.notify("Reloaded")
+
     def action_open_in_jless_all(self) -> None:
         """Open the entire trajectory in jless."""
         if not self.trajectory_files:
@@ -270,6 +294,7 @@ class TrajectoryInspector(App):
 @app.command(help=__doc__)
 def main(
     path: str = typer.Argument(".", help="Directory to search for trajectory files or specific trajectory file"),
+    reasoning: bool = typer.Option(True, "--reasoning/--no-reasoning", help="Show reasoning content"),
 ) -> None:
     path_obj = Path(path)
 
@@ -282,7 +307,7 @@ def main(
     else:
         raise typer.BadParameter(f"Error: Path '{path}' does not exist")
 
-    inspector = TrajectoryInspector(trajectory_files)
+    inspector = TrajectoryInspector(trajectory_files, show_reasoning=reasoning)
     inspector.run()
 
 
