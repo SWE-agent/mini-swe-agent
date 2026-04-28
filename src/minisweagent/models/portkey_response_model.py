@@ -8,6 +8,7 @@ from typing import Any, Literal
 import litellm
 from pydantic import BaseModel
 
+from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
@@ -97,9 +98,16 @@ class PortkeyResponseAPIModel:
                 response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        try:
+            actions = self._parse_actions(response)
+        except FormatError as e:
+            e.messages[0]["extra"]["response"] = (
+                response.model_dump(mode="json") if hasattr(response, "model_dump") else dict(response)
+            )
+            raise
         message = response.model_dump() if hasattr(response, "model_dump") else dict(response)
         message["extra"] = {
-            "actions": self._parse_actions(response),
+            "actions": actions,
             **cost_output,
             "timestamp": time.time(),
         }
