@@ -57,6 +57,8 @@ class LitellmResponseModel(LitellmModel):
         try:
             actions = self._parse_actions(response)
         except FormatError as e:
+            # hasattr guard: litellm.responses() returns a pydantic object, but tests
+            # may inject a plain dict; dict(response) is the correct fallback in that case.
             e.messages[0]["extra"]["response"] = (
                 response.model_dump(mode="json") if hasattr(response, "model_dump") else dict(response)
             )

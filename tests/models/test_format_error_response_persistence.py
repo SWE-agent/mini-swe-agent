@@ -376,7 +376,8 @@ def test_openrouter_textbased_model_format_error_persists_response() -> None:
 
 def test_format_error_not_swallowed_when_model_dump_raises() -> None:
     """If response.model_dump(mode='json') raises (e.g. serialization error),
-    the original FormatError must still propagate — not an opaque secondary error."""
+    the original FormatError must still propagate AND extra['response'] must be
+    set to repr(response) — the spec contract holds unconditionally."""
     from minisweagent.models.litellm_model import LitellmModel
 
     response = MagicMock()
@@ -390,5 +391,11 @@ def test_format_error_not_swallowed_when_model_dump_raises() -> None:
     with patch.object(LitellmModel, "_query", return_value=response), \
          patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.0}):
         # Must raise FormatError, not TypeError from the failed model_dump.
-        with pytest.raises(FormatError):
+        with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
+
+    extra = excinfo.value.messages[0]["extra"]
+    # repr fallback must set the key (spec: response MUST be persisted)
+    assert "response" in extra, "extra['response'] missing — fallback not applied"
+    assert isinstance(extra["response"], str), "repr fallback must produce a string"
+    assert extra["response"], "repr fallback must be non-empty"

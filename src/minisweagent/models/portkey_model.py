@@ -113,7 +113,9 @@ class PortkeyModel:
             try:
                 e.messages[0]["extra"]["response"] = response.model_dump(mode="json")
             except Exception:
-                pass
+                # model_dump failed (e.g. unserializable object); fall back to repr
+                # so the spec contract ("response MUST be persisted") holds unconditionally.
+                e.messages[0]["extra"]["response"] = repr(response)
             raise
         message = response.choices[0].message.model_dump()
         message["extra"] = {
