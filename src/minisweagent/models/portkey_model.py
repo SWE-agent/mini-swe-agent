@@ -110,7 +110,10 @@ class PortkeyModel:
         try:
             actions = self._parse_actions(response)
         except FormatError as e:
-            e.messages[0]["extra"]["response"] = response.model_dump(mode="json")
+            try:
+                e.messages[0]["extra"]["response"] = response.model_dump(mode="json")
+            except Exception:
+                pass
             raise
         message = response.choices[0].message.model_dump()
         message["extra"] = {

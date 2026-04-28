@@ -312,3 +312,83 @@ def test_format_error_still_propagates_after_persisting_response() -> None:
         # If the handler silently swallowed FormatError, pytest.raises would fail.
         with pytest.raises(FormatError):
             model.query([{"role": "user", "content": "hi"}])
+
+
+# --------------------------------------------------------------------------- #
+# Text-based models — fix applied via inheritance from parent query()
+# --------------------------------------------------------------------------- #
+
+def test_litellm_textbased_model_format_error_persists_response() -> None:
+    """LitellmTextbasedModel overrides _parse_actions but not query(); the fix
+    must reach the parse_regex_actions code path via inherited query()."""
+    from minisweagent.models.litellm_textbased_model import LitellmTextbasedModel
+
+    response = MagicMock()
+    response.choices = [MagicMock()]
+    # Provide zero actions in content — triggers FormatError in parse_regex_actions.
+    response.choices[0].message.content = "no backtick block here"
+    serialized = {"id": "resp_txt", "choices": [{"message": {"content": "no backtick block here"}}]}
+    response.model_dump.return_value = serialized
+
+    model = LitellmTextbasedModel(model_name="test/model")
+
+    with patch.object(LitellmTextbasedModel, "_query", return_value=response), \
+         patch.object(LitellmTextbasedModel, "_calculate_cost", return_value={"cost": 0.0}):
+        with pytest.raises(FormatError) as excinfo:
+            model.query([{"role": "user", "content": "hi"}])
+
+    extra = excinfo.value.messages[0]["extra"]
+    assert "response" in extra, "response key missing from FormatError extra"
+    assert extra["response"] == serialized
+    json.dumps(extra["response"])  # JSON-serialisable
+    response.model_dump.assert_any_call(mode="json")
+
+
+def test_openrouter_textbased_model_format_error_persists_response() -> None:
+    """OpenRouterTextbasedModel overrides _parse_actions but not query(); the fix
+    must reach the parse_regex_actions code path via inherited query()."""
+    from minisweagent.models.openrouter_textbased_model import OpenRouterTextbasedModel
+
+    # OpenRouterTextbasedModel uses plain dict responses (dict from response.json()).
+    response = {
+        "id": "resp_txt",
+        "model": "test-model",
+        "choices": [{"message": {"role": "assistant", "content": "no backtick block here", "tool_calls": None}}],
+        "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2, "cost": 0.01},
+    }
+
+    model = OpenRouterTextbasedModel(model_name="test/model")
+
+    with patch.object(OpenRouterTextbasedModel, "_query", return_value=response), \
+         patch.object(OpenRouterTextbasedModel, "_calculate_cost", return_value={"cost": 0.01}):
+        with pytest.raises(FormatError) as excinfo:
+            model.query([{"role": "user", "content": "hi"}])
+
+    extra = excinfo.value.messages[0]["extra"]
+    assert "response" in extra, "response key missing from FormatError extra"
+    # OpenRouter/textbased stores dict(response) — a shallow copy of the plain dict.
+    assert extra["response"] == response
+
+
+# --------------------------------------------------------------------------- #
+# ATK-01: model_dump failure inside except block must not swallow FormatError
+# --------------------------------------------------------------------------- #
+
+def test_format_error_not_swallowed_when_model_dump_raises() -> None:
+    """If response.model_dump(mode='json') raises (e.g. serialization error),
+    the original FormatError must still propagate — not an opaque secondary error."""
+    from minisweagent.models.litellm_model import LitellmModel
+
+    response = MagicMock()
+    response.choices = [MagicMock()]
+    response.choices[0].message.tool_calls = [_bad_tool_call_mock()]
+    # Simulate model_dump raising regardless of kwargs.
+    response.model_dump.side_effect = TypeError("unserializable object")
+
+    model = LitellmModel(model_name="test/model")
+
+    with patch.object(LitellmModel, "_query", return_value=response), \
+         patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.0}):
+        # Must raise FormatError, not TypeError from the failed model_dump.
+        with pytest.raises(FormatError):
+            model.query([{"role": "user", "content": "hi"}])

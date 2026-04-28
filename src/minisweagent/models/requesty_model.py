@@ -108,7 +108,7 @@ class RequestyModel:
         try:
             actions = self._parse_actions(response)
         except FormatError as e:
-            e.messages[0]["extra"]["response"] = response
+            e.messages[0]["extra"]["response"] = dict(response)
             raise
         message = dict(response["choices"][0]["message"])
         message["extra"] = {
