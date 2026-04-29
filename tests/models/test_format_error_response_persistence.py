@@ -22,6 +22,7 @@ from minisweagent.exceptions import FormatError
 # Helpers
 # --------------------------------------------------------------------------- #
 
+
 def _bad_tool_call_mock() -> MagicMock:
     """Build a tool-call mock whose function name is not 'bash'."""
     tc = MagicMock()
@@ -77,6 +78,7 @@ def _bad_response_api_dict() -> dict[str, Any]:
 # litellm_model.LitellmModel
 # --------------------------------------------------------------------------- #
 
+
 def test_litellm_model_format_error_persists_response() -> None:
     from minisweagent.models.litellm_model import LitellmModel
 
@@ -88,8 +90,10 @@ def test_litellm_model_format_error_persists_response() -> None:
 
     model = LitellmModel(model_name="test/model")
 
-    with patch.object(LitellmModel, "_query", return_value=response), \
-         patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(LitellmModel, "_query", return_value=response),
+        patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -105,20 +109,21 @@ def test_litellm_model_format_error_persists_response() -> None:
 # litellm_response_model.LitellmResponseModel
 # --------------------------------------------------------------------------- #
 
+
 def test_litellm_response_model_format_error_persists_response_with_model_dump() -> None:
     from minisweagent.models.litellm_response_model import LitellmResponseModel
 
     response = MagicMock()
-    response.output = [
-        {"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}
-    ]
+    response.output = [{"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}]
     serialized = {"id": "resp_2", "output": response.output}
     response.model_dump.return_value = serialized
 
     model = LitellmResponseModel(model_name="test/model")
 
-    with patch.object(LitellmResponseModel, "_query", return_value=response), \
-         patch.object(LitellmResponseModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(LitellmResponseModel, "_query", return_value=response),
+        patch.object(LitellmResponseModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -135,8 +140,10 @@ def test_litellm_response_model_format_error_persists_response_plain_dict_fallba
     response = _bad_response_api_dict()  # plain dict, no model_dump
     model = LitellmResponseModel(model_name="test/model")
 
-    with patch.object(LitellmResponseModel, "_query", return_value=response), \
-         patch.object(LitellmResponseModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(LitellmResponseModel, "_query", return_value=response),
+        patch.object(LitellmResponseModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -149,14 +156,17 @@ def test_litellm_response_model_format_error_persists_response_plain_dict_fallba
 # openrouter_model.OpenRouterModel
 # --------------------------------------------------------------------------- #
 
+
 def test_openrouter_model_format_error_persists_response() -> None:
     from minisweagent.models.openrouter_model import OpenRouterModel
 
     response = _bad_chat_completion_dict()
     model = OpenRouterModel(model_name="test/model")
 
-    with patch.object(OpenRouterModel, "_query", return_value=response), \
-         patch.object(OpenRouterModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(OpenRouterModel, "_query", return_value=response),
+        patch.object(OpenRouterModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -170,14 +180,17 @@ def test_openrouter_model_format_error_persists_response() -> None:
 # openrouter_response_model.OpenRouterResponseModel
 # --------------------------------------------------------------------------- #
 
+
 def test_openrouter_response_model_format_error_persists_response() -> None:
     from minisweagent.models.openrouter_response_model import OpenRouterResponseModel
 
     response = _bad_response_api_dict()
     model = OpenRouterResponseModel(model_name="test/model")
 
-    with patch.object(OpenRouterResponseModel, "_query", return_value=response), \
-         patch.object(OpenRouterResponseModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(OpenRouterResponseModel, "_query", return_value=response),
+        patch.object(OpenRouterResponseModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -190,6 +203,7 @@ def test_openrouter_response_model_format_error_persists_response() -> None:
 # --------------------------------------------------------------------------- #
 # portkey_model.PortkeyModel
 # --------------------------------------------------------------------------- #
+
 
 def test_portkey_model_format_error_persists_response(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("PORTKEY_API_KEY", "test-key")
@@ -204,8 +218,10 @@ def test_portkey_model_format_error_persists_response(monkeypatch: pytest.Monkey
     with patch("minisweagent.models.portkey_model.Portkey"):
         model = PortkeyModel(model_name="gpt-4o")
 
-    with patch.object(PortkeyModel, "_query", return_value=response), \
-         patch.object(PortkeyModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(PortkeyModel, "_query", return_value=response),
+        patch.object(PortkeyModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -220,6 +236,7 @@ def test_portkey_model_format_error_persists_response(monkeypatch: pytest.Monkey
 # portkey_response_model.PortkeyResponseAPIModel
 # --------------------------------------------------------------------------- #
 
+
 def test_portkey_response_model_format_error_persists_response_with_model_dump(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -227,17 +244,17 @@ def test_portkey_response_model_format_error_persists_response_with_model_dump(
     from minisweagent.models.portkey_response_model import PortkeyResponseAPIModel
 
     response = MagicMock()
-    response.output = [
-        {"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}
-    ]
+    response.output = [{"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}]
     serialized = {"id": "resp_2", "output": response.output}
     response.model_dump.return_value = serialized
 
     with patch("minisweagent.models.portkey_response_model.Portkey"):
         model = PortkeyResponseAPIModel(model_name="gpt-4o")
 
-    with patch.object(PortkeyResponseAPIModel, "_query", return_value=response), \
-         patch.object(PortkeyResponseAPIModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(PortkeyResponseAPIModel, "_query", return_value=response),
+        patch.object(PortkeyResponseAPIModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -251,14 +268,17 @@ def test_portkey_response_model_format_error_persists_response_with_model_dump(
 # requesty_model.RequestyModel
 # --------------------------------------------------------------------------- #
 
+
 def test_requesty_model_format_error_persists_response() -> None:
     from minisweagent.models.requesty_model import RequestyModel
 
     response = _bad_chat_completion_dict()
     model = RequestyModel(model_name="test/model")
 
-    with patch.object(RequestyModel, "_query", return_value=response), \
-         patch.object(RequestyModel, "_calculate_cost", return_value={"cost": 0.01}):
+    with (
+        patch.object(RequestyModel, "_query", return_value=response),
+        patch.object(RequestyModel, "_calculate_cost", return_value={"cost": 0.01}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -271,6 +291,7 @@ def test_requesty_model_format_error_persists_response() -> None:
 # --------------------------------------------------------------------------- #
 # Trajectory log round-trip — the persisted response must JSON-serialise
 # --------------------------------------------------------------------------- #
+
 
 def test_persisted_response_round_trips_through_json() -> None:
     """The whole point of the fix is that the trajectory log can dump the
@@ -285,8 +306,10 @@ def test_persisted_response_round_trips_through_json() -> None:
 
     model = LitellmModel(model_name="test/model")
 
-    with patch.object(LitellmModel, "_query", return_value=response), \
-         patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(LitellmModel, "_query", return_value=response),
+        patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -302,6 +325,7 @@ def test_persisted_response_round_trips_through_json() -> None:
 # Contract — FormatError must still propagate (not be swallowed)
 # --------------------------------------------------------------------------- #
 
+
 def test_format_error_still_propagates_after_persisting_response() -> None:
     """The except block must re-raise. If a future change accidentally swallows
     the FormatError (e.g. forgets `raise`), this test catches it."""
@@ -310,8 +334,10 @@ def test_format_error_still_propagates_after_persisting_response() -> None:
     response = _bad_chat_completion_dict()
     model = OpenRouterModel(model_name="test/model")
 
-    with patch.object(OpenRouterModel, "_query", return_value=response), \
-         patch.object(OpenRouterModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(OpenRouterModel, "_query", return_value=response),
+        patch.object(OpenRouterModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         # If the handler silently swallowed FormatError, pytest.raises would fail.
         with pytest.raises(FormatError):
             model.query([{"role": "user", "content": "hi"}])
@@ -320,6 +346,7 @@ def test_format_error_still_propagates_after_persisting_response() -> None:
 # --------------------------------------------------------------------------- #
 # Text-based models — fix applied via inheritance from parent query()
 # --------------------------------------------------------------------------- #
+
 
 def test_litellm_textbased_model_format_error_persists_response() -> None:
     """LitellmTextbasedModel overrides _parse_actions but not query(); the fix
@@ -335,8 +362,10 @@ def test_litellm_textbased_model_format_error_persists_response() -> None:
 
     model = LitellmTextbasedModel(model_name="test/model")
 
-    with patch.object(LitellmTextbasedModel, "_query", return_value=response), \
-         patch.object(LitellmTextbasedModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(LitellmTextbasedModel, "_query", return_value=response),
+        patch.object(LitellmTextbasedModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -362,8 +391,10 @@ def test_openrouter_textbased_model_format_error_persists_response() -> None:
 
     model = OpenRouterTextbasedModel(model_name="test/model")
 
-    with patch.object(OpenRouterTextbasedModel, "_query", return_value=response), \
-         patch.object(OpenRouterTextbasedModel, "_calculate_cost", return_value={"cost": 0.01}):
+    with (
+        patch.object(OpenRouterTextbasedModel, "_query", return_value=response),
+        patch.object(OpenRouterTextbasedModel, "_calculate_cost", return_value={"cost": 0.01}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -376,6 +407,7 @@ def test_openrouter_textbased_model_format_error_persists_response() -> None:
 # --------------------------------------------------------------------------- #
 # ATK-01: model_dump failure inside except block must not swallow FormatError
 # --------------------------------------------------------------------------- #
+
 
 def test_format_error_not_swallowed_when_model_dump_raises() -> None:
     """If response.model_dump(mode='json') raises (e.g. serialization error),
@@ -391,8 +423,10 @@ def test_format_error_not_swallowed_when_model_dump_raises() -> None:
 
     model = LitellmModel(model_name="test/model")
 
-    with patch.object(LitellmModel, "_query", return_value=response), \
-         patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(LitellmModel, "_query", return_value=response),
+        patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         # Must raise FormatError, not TypeError from the failed model_dump.
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
@@ -411,15 +445,15 @@ def test_litellm_response_model_format_error_not_swallowed_when_model_dump_raise
     from minisweagent.models.litellm_response_model import LitellmResponseModel
 
     response = MagicMock()
-    response.output = [
-        {"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}
-    ]
+    response.output = [{"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}]
     response.model_dump.side_effect = TypeError("unserializable object")
 
     model = LitellmResponseModel(model_name="test/model")
 
-    with patch.object(LitellmResponseModel, "_query", return_value=response), \
-         patch.object(LitellmResponseModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(LitellmResponseModel, "_query", return_value=response),
+        patch.object(LitellmResponseModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -446,8 +480,10 @@ def test_portkey_model_format_error_not_swallowed_when_model_dump_raises(
     with patch("minisweagent.models.portkey_model.Portkey"):
         model = PortkeyModel(model_name="gpt-4o")
 
-    with patch.object(PortkeyModel, "_query", return_value=response), \
-         patch.object(PortkeyModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(PortkeyModel, "_query", return_value=response),
+        patch.object(PortkeyModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
@@ -467,16 +503,16 @@ def test_portkey_response_model_format_error_not_swallowed_when_model_dump_raise
     from minisweagent.models.portkey_response_model import PortkeyResponseAPIModel
 
     response = MagicMock()
-    response.output = [
-        {"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}
-    ]
+    response.output = [{"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}]
     response.model_dump.side_effect = TypeError("unserializable object")
 
     with patch("minisweagent.models.portkey_response_model.Portkey"):
         model = PortkeyResponseAPIModel(model_name="gpt-4o")
 
-    with patch.object(PortkeyResponseAPIModel, "_query", return_value=response), \
-         patch.object(PortkeyResponseAPIModel, "_calculate_cost", return_value={"cost": 0.0}):
+    with (
+        patch.object(PortkeyResponseAPIModel, "_query", return_value=response),
+        patch.object(PortkeyResponseAPIModel, "_calculate_cost", return_value={"cost": 0.0}),
+    ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
 
