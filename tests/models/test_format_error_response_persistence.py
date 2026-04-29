@@ -163,6 +163,7 @@ def test_openrouter_model_format_error_persists_response() -> None:
     extra = excinfo.value.messages[0]["extra"]
     assert "response" in extra
     assert extra["response"] == response  # plain dict round-trip
+    assert extra["response"] is not response  # must be a copy, not the same object
 
 
 # --------------------------------------------------------------------------- #
@@ -183,6 +184,7 @@ def test_openrouter_response_model_format_error_persists_response() -> None:
     extra = excinfo.value.messages[0]["extra"]
     assert "response" in extra
     assert extra["response"] == response
+    assert extra["response"] is not response  # must be a copy, not the same object
 
 
 # --------------------------------------------------------------------------- #
@@ -263,6 +265,7 @@ def test_requesty_model_format_error_persists_response() -> None:
     extra = excinfo.value.messages[0]["extra"]
     assert "response" in extra
     assert extra["response"] == response
+    assert extra["response"] is not response  # must be a copy, not the same object
 
 
 # --------------------------------------------------------------------------- #
@@ -397,5 +400,59 @@ def test_format_error_not_swallowed_when_model_dump_raises() -> None:
     extra = excinfo.value.messages[0]["extra"]
     # repr fallback must set the key (spec: response MUST be persisted)
     assert "response" in extra, "extra['response'] missing — fallback not applied"
+    assert isinstance(extra["response"], str), "repr fallback must produce a string"
+    assert extra["response"], "repr fallback must be non-empty"
+
+
+def test_litellm_response_model_format_error_not_swallowed_when_model_dump_raises() -> None:
+    """If response.model_dump(mode='json') raises inside the FormatError handler,
+    the original FormatError must still propagate AND extra['response'] must be
+    set to repr(response) — the repr fallback holds for LitellmResponseModel."""
+    from minisweagent.models.litellm_response_model import LitellmResponseModel
+
+    response = MagicMock()
+    response.output = [
+        {"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}
+    ]
+    response.model_dump.side_effect = TypeError("unserializable object")
+
+    model = LitellmResponseModel(model_name="test/model")
+
+    with patch.object(LitellmResponseModel, "_query", return_value=response), \
+         patch.object(LitellmResponseModel, "_calculate_cost", return_value={"cost": 0.0}):
+        with pytest.raises(FormatError) as excinfo:
+            model.query([{"role": "user", "content": "hi"}])
+
+    extra = excinfo.value.messages[0]["extra"]
+    assert "response" in extra, "extra['response'] missing — repr fallback not applied"
+    assert isinstance(extra["response"], str), "repr fallback must produce a string"
+    assert extra["response"], "repr fallback must be non-empty"
+
+
+def test_portkey_response_model_format_error_not_swallowed_when_model_dump_raises(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """If response.model_dump(mode='json') raises inside the FormatError handler,
+    the original FormatError must still propagate AND extra['response'] must be
+    set to repr(response) — the repr fallback holds for PortkeyResponseAPIModel."""
+    monkeypatch.setenv("PORTKEY_API_KEY", "test-key")
+    from minisweagent.models.portkey_response_model import PortkeyResponseAPIModel
+
+    response = MagicMock()
+    response.output = [
+        {"type": "function_call", "call_id": "call_xyz", "name": "unknown_tool", "arguments": "{}"}
+    ]
+    response.model_dump.side_effect = TypeError("unserializable object")
+
+    with patch("minisweagent.models.portkey_response_model.Portkey"):
+        model = PortkeyResponseAPIModel(model_name="gpt-4o")
+
+    with patch.object(PortkeyResponseAPIModel, "_query", return_value=response), \
+         patch.object(PortkeyResponseAPIModel, "_calculate_cost", return_value={"cost": 0.0}):
+        with pytest.raises(FormatError) as excinfo:
+            model.query([{"role": "user", "content": "hi"}])
+
+    extra = excinfo.value.messages[0]["extra"]
+    assert "response" in extra, "extra['response'] missing — repr fallback not applied"
     assert isinstance(extra["response"], str), "repr fallback must produce a string"
     assert extra["response"], "repr fallback must be non-empty"

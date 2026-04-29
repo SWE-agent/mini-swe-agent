@@ -59,9 +59,13 @@ class LitellmResponseModel(LitellmModel):
         except FormatError as e:
             # hasattr guard: litellm.responses() returns a pydantic object, but tests
             # may inject a plain dict; dict(response) is the correct fallback in that case.
-            e.messages[0]["extra"]["response"] = (
-                response.model_dump(mode="json") if hasattr(response, "model_dump") else dict(response)
-            )
+            # Inner try: if serialization itself fails, repr() guarantees the key is always set.
+            try:
+                e.messages[0]["extra"]["response"] = (
+                    response.model_dump(mode="json") if hasattr(response, "model_dump") else dict(response)
+                )
+            except Exception:
+                e.messages[0]["extra"]["response"] = repr(response)
             raise
         message = response.model_dump() if hasattr(response, "model_dump") else dict(response)
         message["extra"] = {
