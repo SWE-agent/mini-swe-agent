@@ -429,6 +429,34 @@ def test_litellm_response_model_format_error_not_swallowed_when_model_dump_raise
     assert extra["response"], "repr fallback must be non-empty"
 
 
+def test_portkey_model_format_error_not_swallowed_when_model_dump_raises(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """If response.model_dump(mode='json') raises inside the FormatError handler,
+    the original FormatError must still propagate AND extra['response'] must be
+    set to repr(response) — the repr fallback holds for PortkeyModel."""
+    monkeypatch.setenv("PORTKEY_API_KEY", "test-key")
+    from minisweagent.models.portkey_model import PortkeyModel
+
+    response = MagicMock()
+    response.choices = [MagicMock()]
+    response.choices[0].message.tool_calls = [_bad_tool_call_mock()]
+    response.model_dump.side_effect = TypeError("unserializable object")
+
+    with patch("minisweagent.models.portkey_model.Portkey"):
+        model = PortkeyModel(model_name="gpt-4o")
+
+    with patch.object(PortkeyModel, "_query", return_value=response), \
+         patch.object(PortkeyModel, "_calculate_cost", return_value={"cost": 0.0}):
+        with pytest.raises(FormatError) as excinfo:
+            model.query([{"role": "user", "content": "hi"}])
+
+    extra = excinfo.value.messages[0]["extra"]
+    assert "response" in extra, "extra['response'] missing — repr fallback not applied"
+    assert isinstance(extra["response"], str), "repr fallback must produce a string"
+    assert extra["response"], "repr fallback must be non-empty"
+
+
 def test_portkey_response_model_format_error_not_swallowed_when_model_dump_raises(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
