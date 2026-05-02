@@ -12,7 +12,7 @@ Use the following format for commit messages:
 - `enh(component): description` for enhancements
 - `docs: description` for documentation
 - `ref(component): description` for refactoring
-- `chore: description` for maintenance tasks (pre-commit hooks, imports, etc.)
+- `chore: description` for maintenance tasks (imports, dependency updates, etc.)
 
 Generally, the description should focus on the intent of the changes, not the implementation details.
 

@@ -20,7 +20,6 @@ We happily accept contributions!
 - Our target audience is anyone who doesn't shy away from modifying a bit of code (especially a run script) to get what they want.
 - Therefore, not everything needs to be configurable with the config files, but it should be easy to create a run script that makes use of it.
 - Many LMs write very verbose code -- please clean it up! Same goes for the tests. They should still be concise and readable.
-- Please install `pre-commit` (`pip install pre-commit && pre-commit install`) and run it before committing. This will enforce our style guide.
 
 ## Development setup
 

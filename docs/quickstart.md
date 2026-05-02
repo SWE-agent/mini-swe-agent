@@ -86,12 +86,10 @@
         python src/minisweagent/run/hello_world.py
         ```
 
-        If you are planning to contribute, please also install the dev dependencies
-        and `pre-commit` hooks:
+        If you are planning to contribute, please also install the dev dependencies:
 
         ```bash
         pip install -e '.[dev]'
-        pip install pre-commit && pre-commit install
         ```
 
         To check your installation, you can run `pytest -n auto` in the root folder.

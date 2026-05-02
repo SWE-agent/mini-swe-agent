@@ -65,7 +65,6 @@ dev = [
     "pytest-cov",
     "pytest-asyncio",
     "pytest-xdist",
-    "pre-commit",
     "ruff",
     "mkdocs-include-markdown-plugin",
     "mkdocstrings[python]>=0.18",
