@@ -168,16 +168,11 @@ def _exchange_code(code: str, verifier: str) -> dict[str, Any]:
             timeout=30,
         )
     except requests.exceptions.RequestException as exc:
-        raise OAuthTransientError(
-            f"Codex token exchange failed (network): {type(exc).__name__}: {exc}"
-        ) from exc
+        raise OAuthTransientError(f"Codex token exchange failed (network): {type(exc).__name__}: {exc}") from exc
     if not response.ok:
         # Don't echo response.text — IdP error bodies can mirror the rejected
         # code or refresh token back to us.
-        message = (
-            f"Codex token exchange failed: status={response.status_code} "
-            f"reason={response.reason}"
-        )
+        message = f"Codex token exchange failed: status={response.status_code} reason={response.reason}"
         if response.status_code >= 500:
             raise OAuthTransientError(message)
         raise RuntimeError(message)
@@ -193,21 +188,18 @@ def _refresh(refresh_token: str) -> dict[str, Any]:
             timeout=30,
         )
     except requests.exceptions.RequestException as exc:
-        raise OAuthTransientError(
-            f"Codex token refresh failed (network): {type(exc).__name__}: {exc}"
-        ) from exc
+        raise OAuthTransientError(f"Codex token refresh failed (network): {type(exc).__name__}: {exc}") from exc
     if not response.ok:
-        message = (
-            f"Codex token refresh failed: status={response.status_code} "
-            f"reason={response.reason}"
-        )
+        message = f"Codex token refresh failed: status={response.status_code} reason={response.reason}"
         if response.status_code >= 500:
             raise OAuthTransientError(message)
         raise RuntimeError(message)
     return response.json()
 
 
-def _credentials_from_token_response(data: dict[str, Any], refresh_token: str | None, *, context: str) -> OAuthCredentials:
+def _credentials_from_token_response(
+    data: dict[str, Any], refresh_token: str | None, *, context: str
+) -> OAuthCredentials:
     """Validate a Codex token endpoint response and convert it to credentials.
 
     ``refresh_token`` is passed explicitly because the refresh endpoint may not
@@ -220,8 +212,7 @@ def _credentials_from_token_response(data: dict[str, Any], refresh_token: str | 
     if missing:
         keys = ", ".join(sorted(data.keys())) or "<empty>"
         raise RuntimeError(
-            f"Codex {context} response missing required fields {missing}. "
-            f"Received keys: {keys}. Body: {data!r}"
+            f"Codex {context} response missing required fields {missing}. Received keys: {keys}. Body: {data!r}"
         )
 
     access = data["access_token"]
@@ -235,9 +226,7 @@ def _credentials_from_token_response(data: dict[str, Any], refresh_token: str | 
     try:
         expires_seconds = int(expires_in)
     except (TypeError, ValueError) as exc:
-        raise RuntimeError(
-            f"Codex {context} returned non-integer expires_in: {expires_in!r}"
-        ) from exc
+        raise RuntimeError(f"Codex {context} returned non-integer expires_in: {expires_in!r}") from exc
 
     account_id = get_account_id(access)
     if not account_id:
@@ -302,11 +291,7 @@ def login_openai_codex(callbacks: OAuthLoginCallbacks, originator: str = "mini-s
                 # Server callback won the race: release the manual-input
                 # thread that's still blocked on stdin so it does not eat the
                 # next interactive prompt's keystrokes.
-                if (
-                    manual_text[0] is None
-                    and manual_err[0] is None
-                    and callbacks.cancel_manual_code_input is not None
-                ):
+                if manual_text[0] is None and manual_err[0] is None and callbacks.cancel_manual_code_input is not None:
                     try:
                         callbacks.cancel_manual_code_input()
                     except Exception:  # noqa: BLE001
@@ -329,9 +314,7 @@ def login_openai_codex(callbacks: OAuthLoginCallbacks, originator: str = "mini-s
                 code = result.code
 
         if not code:
-            text = callbacks.on_prompt(
-                OAuthPrompt(message="Paste the authorization code (or full redirect URL):")
-            )
+            text = callbacks.on_prompt(OAuthPrompt(message="Paste the authorization code (or full redirect URL):"))
             parsed_code, parsed_state = _parse_authorization_input(text)
             if parsed_state and parsed_state != state:
                 raise RuntimeError("State mismatch")

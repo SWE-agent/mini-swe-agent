@@ -52,9 +52,7 @@ def test_credentials_from_dict_with_extra():
 
 
 def test_credentials_from_dict_roundtrip():
-    original = OAuthCredentials(
-        refresh="r", access="a", expires=123456, extra={"k": "v"}
-    )
+    original = OAuthCredentials(refresh="r", access="a", expires=123456, extra={"k": "v"})
     restored = OAuthCredentials.from_dict(original.to_dict())
     assert restored.refresh == original.refresh
     assert restored.access == original.access

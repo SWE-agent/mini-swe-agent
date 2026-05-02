@@ -2,8 +2,6 @@
 
 import time
 
-import pytest
-
 from minisweagent.run.utilities.oauth_cli import _format_expiry
 
 

@@ -26,7 +26,6 @@ from minisweagent.oauth.types import (
     OAuthTransientError,
 )
 
-
 # ---------------------------------------------------------------------------
 # 1. Manual-input cancellation
 # ---------------------------------------------------------------------------
@@ -178,7 +177,7 @@ def test_codex_cancel_hook_called_when_server_wins(patched_codex_callback, monke
         codex_oauth,
         "_exchange_code",
         lambda *a, **kw: {
-            "access_token": "header.eyJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOiB7ImNoYXRncHRfYWNjb3VudF9pZCI6ICJhYy0xIn19.sig",
+            "access_token": "header.eyJobHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOiB7ImNoYXRncHRfYWNjb3VudF9pZCI6ICJhYy0xIn19.sig",
             "refresh_token": "rt",
             "expires_in": 3600,
         },
@@ -260,9 +259,7 @@ class _FlakyProvider(OAuthProviderInterface):
         self.calls += 1
         if self.calls <= self.transient_failures:
             raise OAuthTransientError(f"simulated 502 attempt {self.calls}")
-        return OAuthCredentials(
-            refresh="rotated", access="fresh", expires=int(time.time() * 1000) + 60_000
-        )
+        return OAuthCredentials(refresh="rotated", access="fresh", expires=int(time.time() * 1000) + 60_000)
 
     def get_api_key(self, credentials: OAuthCredentials) -> str:
         return credentials.access
@@ -528,9 +525,7 @@ def test_storage_concurrent_save_no_data_loss(monkeypatch, tmp_path):
     assert set(raw.keys()) == {f"p{i}" for i in range(8)}
 
 
-@pytest.mark.skipif(
-    __import__("sys").platform == "win32", reason="fcntl only available on POSIX"
-)
+@pytest.mark.skipif(__import__("sys").platform == "win32", reason="fcntl only available on POSIX")
 def test_storage_flock_serializes_writers(monkeypatch, tmp_path):
     """Two threads bypassing the in-process ``_LOCK`` must still serialize via
     fcntl.flock — that is the only barrier between separate processes."""

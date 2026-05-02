@@ -37,6 +37,7 @@ DEFAULT_CODEX_BASE_URL = "https://chatgpt.com/backend-api/codex"
 def _default_codex_base_url() -> str:
     return os.getenv("MSWEA_CODEX_BASE_URL", DEFAULT_CODEX_BASE_URL)
 
+
 logger = logging.getLogger("oauth_model")
 
 DEFAULT_CLAUDE_CODE_VERSION = "2.1.75"
@@ -53,6 +54,7 @@ def _claude_code_version() -> str:
     take effect without a re-import.
     """
     return os.getenv("MSWEA_CLAUDE_CODE_VERSION", DEFAULT_CLAUDE_CODE_VERSION)
+
 
 # LiteLLM's Anthropic adapter requires a non-empty ``api_key`` and uses it to set
 # ``x-api-key``. For OAuth we authenticate via ``Authorization: Bearer <token>``
@@ -107,9 +109,7 @@ class OAuthLitellmModel(LitellmModel):
     def __init__(self, **kwargs: Any) -> None:
         provider = kwargs.get("oauth_provider")
         if provider not in _VALID_PROVIDERS:
-            raise ValueError(
-                f"oauth_provider must be one of {sorted(_VALID_PROVIDERS)}, got {provider!r}"
-            )
+            raise ValueError(f"oauth_provider must be one of {sorted(_VALID_PROVIDERS)}, got {provider!r}")
         super().__init__(config_class=OAuthLitellmModelConfig, **kwargs)
         self.config: OAuthLitellmModelConfig
 
@@ -121,8 +121,7 @@ class OAuthLitellmModel(LitellmModel):
         creds = oauth.get_credentials(provider_id, refresh_if_expired=True)
         if creds is None:
             raise RuntimeError(
-                f"No OAuth credentials for provider {provider_id!r}. "
-                f"Run `mini-extra oauth login {provider_id}` first."
+                f"No OAuth credentials for provider {provider_id!r}. Run `mini-extra oauth login {provider_id}` first."
             )
         token = creds.access
 

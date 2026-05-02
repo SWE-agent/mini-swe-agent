@@ -210,9 +210,7 @@ def _refresh_retry_wait_max() -> float:
     return float(os.getenv("MSWEA_OAUTH_REFRESH_RETRY_WAIT_MAX", "10"))
 
 
-def _refresh_with_retry(
-    provider: OAuthProviderInterface, creds: OAuthCredentials
-) -> OAuthCredentials:
+def _refresh_with_retry(provider: OAuthProviderInterface, creds: OAuthCredentials) -> OAuthCredentials:
     """Call ``provider.refresh_token(creds)`` with retries on transient errors.
 
     Mirrors the LitellmModel retry pattern: tenacity with exponential backoff,

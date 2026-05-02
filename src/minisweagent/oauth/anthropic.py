@@ -42,10 +42,7 @@ CALLBACK_HOST = "localhost"
 CALLBACK_PORT = int(os.getenv("MSWEA_ANTHROPIC_CALLBACK_PORT", "53692"))
 CALLBACK_PATH = "/callback"
 REDIRECT_URI = f"http://localhost:{CALLBACK_PORT}{CALLBACK_PATH}"
-SCOPES = (
-    "org:create_api_key user:profile user:inference user:sessions:claude_code "
-    "user:mcp_servers user:file_upload"
-)
+SCOPES = "org:create_api_key user:profile user:inference user:sessions:claude_code user:mcp_servers user:file_upload"
 EXPIRY_SAFETY_MS = 5 * 60 * 1000
 CALLBACK_WAIT_TIMEOUT_S = float(os.getenv("MSWEA_OAUTH_CALLBACK_TIMEOUT", "300"))
 
@@ -158,10 +155,7 @@ def _post_json(url: str, body: dict[str, Any]) -> dict[str, Any]:
         # Don't echo response.text — the IdP can include the refresh token in
         # error responses (e.g. ``invalid_grant`` payloads that quote the
         # offending token). status + reason is enough for the operator log.
-        message = (
-            f"HTTP request failed. status={response.status_code}; "
-            f"reason={response.reason}; url={url}"
-        )
+        message = f"HTTP request failed. status={response.status_code}; reason={response.reason}; url={url}"
         if response.status_code >= 500:
             raise OAuthTransientError(message)
         raise RuntimeError(message)
@@ -187,8 +181,7 @@ def _credentials_from_token_response(data: dict[str, Any], *, context: str) -> O
     if missing:
         keys = ", ".join(sorted(data.keys())) or "<empty>"
         raise RuntimeError(
-            f"Anthropic {context} response missing required fields {missing}. "
-            f"Received keys: {keys}. Body: {data!r}"
+            f"Anthropic {context} response missing required fields {missing}. Received keys: {keys}. Body: {data!r}"
         )
 
     access = data["access_token"]
@@ -202,9 +195,7 @@ def _credentials_from_token_response(data: dict[str, Any], *, context: str) -> O
     try:
         expires_seconds = int(expires_in)
     except (TypeError, ValueError) as exc:
-        raise RuntimeError(
-            f"Anthropic {context} returned non-integer expires_in: {expires_in!r}"
-        ) from exc
+        raise RuntimeError(f"Anthropic {context} returned non-integer expires_in: {expires_in!r}") from exc
 
     return OAuthCredentials(
         refresh=refresh,
@@ -281,11 +272,7 @@ def login_anthropic(callbacks: OAuthLoginCallbacks) -> OAuthCredentials:
                 # is still blocked on stdin (e.g. inside ``prompt_toolkit.prompt``).
                 # Tell the caller to cancel it so it does not keep eating
                 # keystrokes meant for the next interactive prompt.
-                if (
-                    manual_text[0] is None
-                    and manual_err[0] is None
-                    and callbacks.cancel_manual_code_input is not None
-                ):
+                if manual_text[0] is None and manual_err[0] is None and callbacks.cancel_manual_code_input is not None:
                     try:
                         callbacks.cancel_manual_code_input()
                     except Exception:  # noqa: BLE001

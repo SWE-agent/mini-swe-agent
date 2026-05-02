@@ -1,6 +1,5 @@
 """Smoke tests for non-network helpers in the OAuth providers."""
 
-
 import base64
 import json
 

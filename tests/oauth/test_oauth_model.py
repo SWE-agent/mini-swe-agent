@@ -246,8 +246,7 @@ def test_anthropic_no_inject_claude_code_system(isolated_oauth):
         )
         prepared = model._prepare_messages_for_api([{"role": "user", "content": "hi"}])
         assert not any(
-            msg.get("role") == "system" and CLAUDE_CODE_SYSTEM_PROMPT in str(msg.get("content", ""))
-            for msg in prepared
+            msg.get("role") == "system" and CLAUDE_CODE_SYSTEM_PROMPT in str(msg.get("content", "")) for msg in prepared
         )
     finally:
         oauth.restore_oauth_provider("anthropic")
@@ -259,8 +258,7 @@ def test_non_anthropic_provider_no_system_inject(isolated_oauth):
     model = OAuthLitellmModel(model_name="openai/codex-mini", oauth_provider="openai-codex")
     prepared = model._prepare_messages_for_api([{"role": "user", "content": "hi"}])
     assert not any(
-        msg.get("role") == "system" and CLAUDE_CODE_SYSTEM_PROMPT in str(msg.get("content", ""))
-        for msg in prepared
+        msg.get("role") == "system" and CLAUDE_CODE_SYSTEM_PROMPT in str(msg.get("content", "")) for msg in prepared
     )
 
 

@@ -115,9 +115,7 @@ def logout(provider_id: str = Argument(..., help="Provider id to log out of")) -
 def refresh(provider_id: str = Argument(..., help="Provider id to refresh")) -> None:
     """Force-refresh the access token (explicit refresh hook)."""
     creds = oauth.refresh_provider(provider_id)
-    console.print(
-        f"[bold green]Refreshed {provider_id}[/bold green]. New expiry {_format_expiry(creds.expires)}."
-    )
+    console.print(f"[bold green]Refreshed {provider_id}[/bold green]. New expiry {_format_expiry(creds.expires)}.")
 
 
 @app.command("list")

@@ -94,9 +94,7 @@ def _post_form(url: str, data: dict[str, str]) -> dict[str, Any]:
     if not response.ok:
         # Don't echo response.text — error bodies can echo the access token
         # we sent in the form.
-        message = (
-            f"HTTP {response.status_code} {response.reason} from {url}"
-        )
+        message = f"HTTP {response.status_code} {response.reason} from {url}"
         if response.status_code >= 500:
             raise OAuthTransientError(message)
         raise RuntimeError(message)
@@ -150,7 +148,9 @@ def _poll_for_access_token(
         if error == "slow_down":
             slow_downs += 1
             new_interval = data.get("interval")
-            interval = float(new_interval) if isinstance(new_interval, (int, float)) and new_interval > 0 else interval + 5.0
+            interval = (
+                float(new_interval) if isinstance(new_interval, (int, float)) and new_interval > 0 else interval + 5.0
+            )
             multiplier = SLOW_DOWN_POLL_MULTIPLIER
             continue
         if error:
@@ -158,15 +158,11 @@ def _poll_for_access_token(
             suffix = f": {description}" if description else ""
             raise RuntimeError(f"Device flow failed: {error}{suffix}")
     if slow_downs > 0:
-        raise RuntimeError(
-            "Device flow timed out after slow_down responses. Sync your system clock and try again."
-        )
+        raise RuntimeError("Device flow timed out after slow_down responses. Sync your system clock and try again.")
     raise RuntimeError("Device flow timed out")
 
 
-def refresh_github_copilot_token(
-    refresh_token: str, enterprise_domain: str | None = None
-) -> OAuthCredentials:
+def refresh_github_copilot_token(refresh_token: str, enterprise_domain: str | None = None) -> OAuthCredentials:
     domain = enterprise_domain or "github.com"
     try:
         response = requests.get(
@@ -179,17 +175,12 @@ def refresh_github_copilot_token(
             timeout=30,
         )
     except requests.exceptions.RequestException as exc:
-        raise OAuthTransientError(
-            f"Copilot token request failed (network): {type(exc).__name__}: {exc}"
-        ) from exc
+        raise OAuthTransientError(f"Copilot token request failed (network): {type(exc).__name__}: {exc}") from exc
     if not response.ok:
         # Don't echo response.text — Copilot's bearer token (the
         # ``refresh_token`` arg here) is on the Authorization header and the
         # response body can echo it back in error scenarios.
-        message = (
-            f"Copilot token request failed: status={response.status_code} "
-            f"reason={response.reason}"
-        )
+        message = f"Copilot token request failed: status={response.status_code} reason={response.reason}"
         if response.status_code >= 500:
             raise OAuthTransientError(message)
         raise RuntimeError(message)
@@ -227,9 +218,7 @@ def login_github_copilot(callbacks: OAuthLoginCallbacks) -> OAuthCredentials:
     domain = enterprise_domain or "github.com"
 
     device = _start_device_flow(domain)
-    callbacks.on_auth(
-        OAuthAuthInfo(url=device["verification_uri"], instructions=f"Enter code: {device['user_code']}")
-    )
+    callbacks.on_auth(OAuthAuthInfo(url=device["verification_uri"], instructions=f"Enter code: {device['user_code']}"))
 
     access_token = _poll_for_access_token(
         domain, device["device_code"], int(device["interval"]), int(device["expires_in"])

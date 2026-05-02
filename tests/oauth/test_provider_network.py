@@ -11,7 +11,6 @@ import pytest
 
 from minisweagent.oauth.types import OAuthCredentials
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -189,8 +188,10 @@ def test_copilot_provider_refresh_reads_enterprise_from_extra():
 def test_poll_for_token_success():
     from minisweagent.oauth.github_copilot import _poll_for_access_token
 
-    with patch("minisweagent.oauth.github_copilot.time.sleep"), \
-         patch("minisweagent.oauth.github_copilot._post_form") as mock_post:
+    with (
+        patch("minisweagent.oauth.github_copilot.time.sleep"),
+        patch("minisweagent.oauth.github_copilot._post_form") as mock_post,
+    ):
         mock_post.side_effect = [
             {"error": "authorization_pending"},
             {"access_token": "gh-tok"},
@@ -202,8 +203,10 @@ def test_poll_for_token_success():
 def test_poll_for_token_explicit_error():
     from minisweagent.oauth.github_copilot import _poll_for_access_token
 
-    with patch("minisweagent.oauth.github_copilot.time.sleep"), \
-         patch("minisweagent.oauth.github_copilot._post_form") as mock_post:
+    with (
+        patch("minisweagent.oauth.github_copilot.time.sleep"),
+        patch("minisweagent.oauth.github_copilot._post_form") as mock_post,
+    ):
         mock_post.return_value = {"error": "access_denied", "error_description": "Denied by user"}
         with pytest.raises(RuntimeError, match="access_denied: Denied by user"):
             _poll_for_access_token("github.com", "dc", 0, 9999)
@@ -212,8 +215,10 @@ def test_poll_for_token_explicit_error():
 def test_poll_for_token_error_no_description():
     from minisweagent.oauth.github_copilot import _poll_for_access_token
 
-    with patch("minisweagent.oauth.github_copilot.time.sleep"), \
-         patch("minisweagent.oauth.github_copilot._post_form") as mock_post:
+    with (
+        patch("minisweagent.oauth.github_copilot.time.sleep"),
+        patch("minisweagent.oauth.github_copilot._post_form") as mock_post,
+    ):
         mock_post.return_value = {"error": "expired_token"}
         with pytest.raises(RuntimeError, match="expired_token"):
             _poll_for_access_token("github.com", "dc", 0, 9999)
@@ -222,8 +227,10 @@ def test_poll_for_token_error_no_description():
 def test_poll_for_token_post_form_raises():
     from minisweagent.oauth.github_copilot import _poll_for_access_token
 
-    with patch("minisweagent.oauth.github_copilot.time.sleep"), \
-         patch("minisweagent.oauth.github_copilot._post_form", side_effect=RuntimeError("network error")):
+    with (
+        patch("minisweagent.oauth.github_copilot.time.sleep"),
+        patch("minisweagent.oauth.github_copilot._post_form", side_effect=RuntimeError("network error")),
+    ):
         with pytest.raises(RuntimeError, match="Device flow failed: network error"):
             _poll_for_access_token("github.com", "dc", 0, 9999)
 
@@ -244,9 +251,11 @@ def test_poll_for_token_slow_down_updates_interval():
     #   2. while time.time() < deadline          → 1, enter loop
     #   3. deadline - time.time() in wait_for    → 1
     #   4. (slow_down → continue) while check    → 99999, exit loop → raises
-    with patch("minisweagent.oauth.github_copilot.time.sleep"), \
-         patch("minisweagent.oauth.github_copilot._post_form") as mock_post, \
-         patch("minisweagent.oauth.github_copilot.time.time", side_effect=[0, 1, 1, 99999]):
+    with (
+        patch("minisweagent.oauth.github_copilot.time.sleep"),
+        patch("minisweagent.oauth.github_copilot._post_form") as mock_post,
+        patch("minisweagent.oauth.github_copilot.time.time", side_effect=[0, 1, 1, 99999]),
+    ):
         mock_post.return_value = {"error": "slow_down", "interval": 15}
         with pytest.raises(RuntimeError, match="slow_down responses"):
             _poll_for_access_token("github.com", "dc", 5, 300)
@@ -325,9 +334,7 @@ def test_codex_provider_refresh_delegates():
     access_token = _make_jwt({"https://api.openai.com/auth": {"chatgpt_account_id": account_id}})
     resp = _make_ok_response({"access_token": access_token, "refresh_token": "rt", "expires_in": 3600})
     with patch("minisweagent.oauth.openai_codex.requests.post", return_value=resp):
-        creds = openai_codex_oauth_provider.refresh_token(
-            OAuthCredentials(refresh="old-rt", access="x", expires=0)
-        )
+        creds = openai_codex_oauth_provider.refresh_token(OAuthCredentials(refresh="old-rt", access="x", expires=0))
     assert creds.extra.get("account_id") == account_id
 
 
@@ -340,9 +347,7 @@ def test_codex_refresh_applies_expiry_safety_margin():
     account_id = "acc-7"
     access_token = _make_jwt({"https://api.openai.com/auth": {"chatgpt_account_id": account_id}})
     expires_in = 3600
-    resp = _make_ok_response(
-        {"access_token": access_token, "refresh_token": "rt", "expires_in": expires_in}
-    )
+    resp = _make_ok_response({"access_token": access_token, "refresh_token": "rt", "expires_in": expires_in})
     before_ms = int(time.time() * 1000)
     with patch("minisweagent.oauth.openai_codex.requests.post", return_value=resp):
         creds = refresh_openai_codex_token("old-rt")

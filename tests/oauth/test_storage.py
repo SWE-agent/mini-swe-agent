@@ -81,11 +81,13 @@ def test_get_storage_path_default(monkeypatch):
 
 def test_load_all_skips_non_dict_entries(tmp_oauth_file):
     tmp_oauth_file.write_text(
-        json.dumps({
-            "valid": {"refresh": "r", "access": "a", "expires": 1},
-            "bad-string": "not-a-dict",
-            "bad-int": 42,
-        })
+        json.dumps(
+            {
+                "valid": {"refresh": "r", "access": "a", "expires": 1},
+                "bad-string": "not-a-dict",
+                "bad-int": 42,
+            }
+        )
     )
     result = storage.load_all()
     assert "valid" in result
@@ -95,10 +97,12 @@ def test_load_all_skips_non_dict_entries(tmp_oauth_file):
 
 def test_load_all_skips_entries_missing_required_fields(tmp_oauth_file):
     tmp_oauth_file.write_text(
-        json.dumps({
-            "ok": {"refresh": "r", "access": "a", "expires": 1},
-            "no-access": {"refresh": "r", "expires": 1},
-        })
+        json.dumps(
+            {
+                "ok": {"refresh": "r", "access": "a", "expires": 1},
+                "no-access": {"refresh": "r", "expires": 1},
+            }
+        )
     )
     result = storage.load_all()
     assert "ok" in result

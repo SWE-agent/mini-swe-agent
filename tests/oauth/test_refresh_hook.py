@@ -202,6 +202,7 @@ class _SerializingProvider(OAuthProviderInterface):
 
     def __init__(self) -> None:
         import threading as _t
+
         self._inflight = _t.Lock()
         self._concurrent_breaches = 0
         self.refresh_calls = 0
