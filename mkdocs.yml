@@ -71,6 +71,7 @@ nav:
     - "Language models":
       - "Quick start": models/quickstart.md
       - "Local models": models/local_models.md
+      - "OAuth subscription auth": models/oauth.md
       - "Troubleshooting": models/troubleshooting.md
     - "Configuration":
       - "Global configuration": advanced/global_configuration.md
@@ -96,6 +97,7 @@ nav:
       - "RequestyModel": "reference/models/requesty.md"
       - "PortkeyModel": "reference/models/portkey.md"
       - "PortkeyResponse": "reference/models/portkey_response.md"
+      - "OAuthLitellmModel": "reference/models/oauth.md"
       - "DeterministicModel": "reference/models/test_models.md"
       - "Extra Models": "reference/models/extra.md"
       - "Model Utilities": "reference/models/utils.md"
@@ -112,6 +114,7 @@ nav:
       - "mini": "reference/run/mini.md"
       - "mini-extra": "reference/run/mini_extra.md"
       - "Config": "reference/run/config.md"
+      - "OAuth CLI": "reference/run/oauth_cli.md"
       - "Inspector": "reference/run/inspector.md"
       - "SWE-bench (batch)": "reference/run/swebench.md"
       - "SWE-bench (single)": "reference/run/swebench_single.md"

@@ -136,4 +136,31 @@ MSWEA_BUBBLEWRAP_EXECUTABLE="bwrap"
 MSWEA_DEFAULT_RUN="minisweagent.run.mini"
 ```
 
+## OAuth subscription auth
+
+See the [OAuth subscription auth guide](../models/oauth.md) for the end-to-end workflow.
+
+```bash
+# Path to the OAuth credentials file. Created with mode 0600.
+# (default: "$MSWEA_GLOBAL_CONFIG_DIR/oauth.json")
+MSWEA_OAUTH_FILE="/path/to/oauth.json"
+
+# Seconds to wait for the localhost callback during anthropic / openai-codex login
+# before falling back to a paste prompt
+# (default: 300)
+MSWEA_OAUTH_CALLBACK_TIMEOUT="300"
+
+# Localhost port used by the Anthropic OAuth callback listener
+# (default: 53692)
+MSWEA_ANTHROPIC_CALLBACK_PORT="53692"
+
+# Localhost port used by the OpenAI Codex OAuth callback listener
+# (default: 1455)
+MSWEA_CODEX_CALLBACK_PORT="1455"
+
+# Base URL for requests when using the openai-codex OAuth provider
+# (default: "https://chatgpt.com/backend-api/codex")
+MSWEA_CODEX_BASE_URL="https://chatgpt.com/backend-api/codex"
+```
+
 {% include-markdown "_footer.md" %}

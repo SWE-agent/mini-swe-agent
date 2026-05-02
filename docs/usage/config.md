@@ -47,6 +47,10 @@ Open the global config file in your default editor (uses `$EDITOR` or `nano`).
 mini-extra config edit
 ```
 
+## Related: `mini-extra oauth`
+
+For OAuth subscription auth (Claude Pro/Max, ChatGPT Codex, GitHub Copilot), use `mini-extra oauth login|logout|refresh|list|status|token`. See the [OAuth subscription auth guide](../models/oauth.md).
+
 ## Configuration keys
 
 For more configuration options, see [global configuration](../advanced/global_configuration.md).

@@ -300,6 +300,8 @@ For example:
 
 * **`portkey`** ([`PortkeyModel`](../reference/models/portkey.md)) - Integration with [Portkey](https://portkey.ai/) for accessing various models with enhanced observability, caching, and routing features. Note that this still uses `litellm` to calculate costs.
 
+* **`oauth`** ([`OAuthLitellmModel`](../reference/models/oauth.md)) - Authenticates via stored OAuth subscription credentials (Anthropic Claude Pro/Max, ChatGPT Plus/Pro Codex, GitHub Copilot) instead of API keys. Requires `oauth_provider` to be set to one of `anthropic`, `openai-codex`, `github-copilot`, and a one-time `mini-extra oauth login <provider>`. See the [OAuth subscription auth guide](oauth.md).
+
 On top, there's a few more exotic model classes that you can use:
 
 * **`deterministic`** ([`DeterministicModel`](../reference/models/test_models.md)) - Returns predefined responses for testing and development purposes.
