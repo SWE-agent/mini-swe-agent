@@ -268,6 +268,36 @@ def test_confirm_mode_sets_correct_agent_config():
         mock_agent.run.assert_called_once_with("Test confirm task")
 
 
+def test_cost_limit_zero_is_preserved():
+    """Test that an explicit cost_limit=0 is not dropped during config merge."""
+    with (
+        patch("minisweagent.run.mini.configure_if_first_time"),
+        patch("minisweagent.run.mini.get_agent") as mock_get_agent,
+        patch("minisweagent.run.mini.get_model") as mock_get_model,
+        patch("minisweagent.run.mini.get_environment") as mock_get_env,
+        patch("minisweagent.run.mini.get_config_from_spec") as mock_get_config,
+    ):
+        mock_get_model.return_value = Mock()
+        mock_get_env.return_value = Mock()
+        mock_get_config.return_value = {"agent": {"system_template": "test"}, "env": {}, "model": {}}
+        mock_agent = Mock()
+        mock_get_agent.return_value = mock_agent
+
+        main(
+            config_spec=[str(DEFAULT_CONFIG_FILE)],
+            model_name="test-model",
+            task="Test cost limit task",
+            yolo=False,
+            cost_limit=0,
+            output=None,
+            model_class=None,
+            agent_class=None,
+            environment_class=None,
+        )
+
+        assert mock_get_agent.call_args.args[2]["cost_limit"] == 0
+
+
 def test_mini_help():
     """Test that mini --help works correctly."""
     result = subprocess.run(
