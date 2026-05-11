@@ -57,6 +57,28 @@ class PlanMemConfig(MemorySearchConfig):
     enable_planning_header: bool = False
     planning_header_max_chars: int = 200
 
+    # P1a: per-phase sampling routing — non-prompt channel. Per the design,
+    # planner's phase signal flows into model.query() kwargs (temperature etc.)
+    # instead of (or in addition to) the prompt. Empty dict per phase = no
+    # override. Defaults match common ablation choices for code agents.
+    enable_phase_sampling: bool = False
+    phase_sampling: dict[str, dict] = {
+        "exploration": {"temperature": 0.3},
+        "hypothesis": {"temperature": 0.1},
+        "implementation": {"temperature": 0.0},
+        "verification": {"temperature": 0.0},
+        "backtrack": {"temperature": 0.4},
+    }
+
+    # P1b: trajectory rewind on replan — non-prompt channel that physically
+    # truncates self.messages back to a toolcall-safe boundary just before
+    # the failed sub-task started, then injects a short reset note so the
+    # next model.query sees a coherent conversation tail.
+    enable_trajectory_rewind: bool = False
+    rewind_reset_message: str = (
+        "Previous approach did not work; reconsider with a different angle."
+    )
+
 
 class PlanMemAgent(MemorySearchAgent):
     """Agent with hierarchical planning and adaptive memory co-design.
@@ -97,11 +119,19 @@ class PlanMemAgent(MemorySearchAgent):
         # Last (phase, subtask_id) tuple injected — used to skip re-injection
         # when the planner state is unchanged, preserving prompt cache.
         self._last_header_state: tuple[str, int | None] | None = None
+        # P1b: pending trajectory-rewind target message index. Set after a
+        # successful replan; consumed at the top of the next query().
+        self._pending_rewind: int | None = None
+        # Set of sub-task ids we've already registered birth_idx for, to
+        # avoid double-registration when planner re-emits the same stack.
+        self._registered_birth_ids: set[int] = set()
 
     def run(self, task: str, **kwargs) -> tuple[str, str]:
         """Override run to initialize planner at task start."""
         self._initialized = False
         self._planning_signal = None
+        self._pending_rewind = None
+        self._registered_birth_ids = set()
 
         # Initialize planner before the main loop starts
         if self.config.enable_planner:
@@ -112,9 +142,29 @@ class PlanMemAgent(MemorySearchAgent):
             else:
                 self._planning_signal = self.planner.initialize_without_llm(task)
             logger.info("Planner: %s", self.planner.progress)
+            # P1b: register birth msg-idx for all initial sub-tasks. The
+            # parent ``run()`` seeds messages[0]=system + messages[1]=task,
+            # so length-2 is the earliest the agent could rewind to. We
+            # use that as the birth-idx for all initial sub-tasks.
+            self._register_pending_subtask_births(default_idx=2)
 
         self._initialized = True
         return super().run(task, **kwargs)
+
+    def _register_pending_subtask_births(self, default_idx: int) -> None:
+        """Register ``len(self.messages)`` (or ``default_idx``) for each new
+        sub-task that doesn't yet have a birth index recorded.
+
+        Called after the planner pushes new sub-tasks (initial decomposition
+        or replan). Safe to call multiple times.
+        """
+        if not self.config.enable_planner:
+            return
+        birth_idx = max(default_idx, len(self.messages))
+        for st in self.planner.state.goal_stack:
+            if st.id not in self._registered_birth_ids:
+                self.planner.record_subtask_birth(st.id, birth_idx)
+                self._registered_birth_ids.add(st.id)
 
     def _accounted_query(self, messages: list[dict]) -> dict:
         """Model-query wrapper that books the call to the agent's ledger.
@@ -144,6 +194,16 @@ class PlanMemAgent(MemorySearchAgent):
                 "content": "LimitsExceeded",
                 "extra": {"exit_status": "LimitsExceeded", "submission": ""},
             })
+
+        # P1b: consume a pending rewind BEFORE any other prompt mutation.
+        # Order matters: rewind shortens messages, then header/card etc.
+        # re-apply on the shortened tail.
+        if (
+            self.config.enable_trajectory_rewind
+            and self._pending_rewind is not None
+        ):
+            self._apply_rewind(self._pending_rewind)
+            self._pending_rewind = None
 
         self._ensure_repo_background_card()
 
@@ -183,9 +243,13 @@ class PlanMemAgent(MemorySearchAgent):
                 )}
                 for n in selected_nodes
             ]
+
+        # P1a: per-phase sampling override. Non-prompt channel — flows into the
+        # model API kwargs (temperature et al.), not into the messages list.
+        sampling_kwargs = self._phase_sampling_kwargs()
         try:
             self.n_calls += 1
-            response = self.model.query(self.messages)
+            response = self.model.query(self.messages, **sampling_kwargs)
         finally:
             if not toolcall_mode:
                 self.messages = original_messages
@@ -279,7 +343,36 @@ class PlanMemAgent(MemorySearchAgent):
         # sub-tasks with the failed one as parent. Cooldown lives inside.
         if self.config.enable_replanning and self._planning_signal.should_backtrack:
             replan_qfn = self._accounted_query if self.config.use_llm_replan else None
+            # Capture failed sub-task id BEFORE replan pops it so we can look
+            # up its birth msg-idx for trajectory rewind.
+            failed_id_before = (
+                self.planner.state.goal_stack[-1].id
+                if self.planner.state.goal_stack else None
+            )
             if self.planner.replan_on_backtrack(replan_qfn):
+                # P1b: schedule a trajectory rewind to the failed sub-task's
+                # birth point. Consumed at top of next query() before the
+                # next model call.
+                if (
+                    self.config.enable_trajectory_rewind
+                    and failed_id_before is not None
+                ):
+                    birth = self.planner.get_subtask_birth_msg_idx(failed_id_before)
+                    if birth is not None:
+                        self._pending_rewind = birth
+                    # The birth-idx entry is no longer needed.
+                    self.planner.state.subtask_start_msg_idx.pop(
+                        failed_id_before, None,
+                    )
+                # Register birth idx for newly-pushed recovery sub-tasks.
+                # Use the (about-to-be-rewound) target index when a rewind
+                # is pending so all recovery sub-tasks share the boundary.
+                default_idx = (
+                    self._pending_rewind
+                    if self._pending_rewind is not None
+                    else len(self.messages)
+                )
+                self._register_pending_subtask_births(default_idx=default_idx)
                 # Surface the new active sub-task in the signal.
                 self._planning_signal = self.planner._build_signal(
                     goal_drift=self._planning_signal.goal_drift_detected,
@@ -394,3 +487,104 @@ class PlanMemAgent(MemorySearchAgent):
             re.escape(begin) + r".*?" + re.escape(end), re.DOTALL,
         )
         return pattern.sub("", text).rstrip()
+
+    # ── P1a: phase-aware sampling routing (non-prompt channel) ──────────────
+
+    def _phase_sampling_kwargs(self) -> dict:
+        """Look up sampling kwargs for the current phase.
+
+        Returns a dict like ``{"temperature": 0.0}`` that is passed as kwargs
+        to ``self.model.query``. Empty dict means "no override" — the model's
+        baseline ``model_kwargs`` (typically ``temperature=0.0``) wins.
+
+        Critical invariants:
+        - Returns ``{}`` when feature is disabled or planner gave no signal,
+          so default behaviour is byte-identical to baseline
+        - Only keys known to litellm's completion API (``temperature``,
+          ``top_p``, etc.) — never injects ``messages``/``tools``/etc.
+        - Read-only lookup; does not mutate ``self.config.phase_sampling``
+        """
+        if not self.config.enable_phase_sampling:
+            return {}
+        if self._planning_signal is None:
+            return {}
+        phase = self._planning_signal.current_phase.value
+        per_phase = self.config.phase_sampling or {}
+        kwargs = per_phase.get(phase, {})
+        if not isinstance(kwargs, dict):
+            return {}
+        # Whitelist: only pass through known sampling parameters to keep the
+        # surface tight and prevent silent injection of unrelated fields.
+        allowed = {"temperature", "top_p", "top_k", "seed", "max_tokens", "presence_penalty", "frequency_penalty"}
+        return {k: v for k, v in kwargs.items() if k in allowed}
+
+    # ── P1b: trajectory rewind on replan (non-prompt channel) ───────────────
+
+    def _safe_cut_point(self, target_idx: int) -> int:
+        """Return the largest msg index ``<= target_idx`` that is safe to
+        truncate at without breaking toolcall ``assistant.tool_calls`` ↔
+        ``role: tool`` pairing.
+
+        Safe rule: the position immediately *after* an observation-class
+        message (``role`` in ``user`` or ``tool``) such that the next
+        position is either past the end or starts a fresh ``assistant``
+        turn. We walk backward from ``target_idx`` until we find such a
+        boundary; if none exists (only system message remains), return 1
+        (cut everything after the system message).
+
+        Hard invariants tested in unit tests:
+        - Returned index ≤ ``target_idx``
+        - Returned index ≥ 1 (never strips the system message)
+        - ``self.messages[:returned]`` ends on a non-assistant message OR
+          on the system message alone
+        - No ``assistant.tool_calls`` block at index k-1 is left without
+          its matching ``tool`` message at k onwards (because we cut
+          AFTER an observation, the matched tool message is on the kept
+          side)
+        """
+        if target_idx <= 1:
+            return 1
+        target_idx = min(target_idx, len(self.messages))
+        # Walk backward from target_idx-1 looking for a user/tool boundary.
+        for i in range(target_idx - 1, 0, -1):
+            msg = self.messages[i]
+            role = msg.get("role")
+            if role in ("user", "tool"):
+                # Cut after index i → length i+1.
+                return i + 1
+        # No observation boundary found → cut everything after system.
+        return 1
+
+    def _apply_rewind(self, target_idx: int) -> None:
+        """Truncate ``self.messages`` (and memory graph) to a safe cut.
+
+        Then inject a single short user note so the model sees a coherent
+        "next turn" prompt rather than a hanging observation. The note is
+        configurable (``rewind_reset_message``); intentionally short and
+        non-instructional so it cannot drift the submit protocol.
+        """
+        if not self.messages:
+            return
+        cut = self._safe_cut_point(target_idx)
+        if cut >= len(self.messages):
+            return  # nothing to rewind
+        dropped = len(self.messages) - cut
+        # Truncate parent messages list directly. We bypass any add_messages
+        # override here because we are SHRINKING the list, which the
+        # observer-style hook isn't designed for.
+        del self.messages[cut:]
+        # Keep memory_graph aligned: drop the same suffix span.
+        if hasattr(self, "memory_graph") and len(self.memory_graph) > cut:
+            del self.memory_graph[cut:]
+            # next_node_id should not be reset (id space is monotonic for
+            # downstream beam-search; we just lose access to nodes we cut).
+        logger.info(
+            "Rewind: cut at idx %d (dropped %d messages) reset_note=%r",
+            cut, dropped, self.config.rewind_reset_message[:60],
+        )
+        # Inject the reset note via the standard path so the memory graph
+        # is updated consistently.
+        self.add_messages({
+            "role": "user",
+            "content": self.config.rewind_reset_message,
+        })

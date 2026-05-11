@@ -44,6 +44,28 @@ agent:
   enable_planning_header: true
   planning_header_max_chars: 200
 
+  # P1a: per-phase sampling routing — non-prompt channel.
+  # Phase signal flows into model.query() kwargs (temperature) instead of
+  # the prompt. Defaults are tuned for code agents but DEFAULT OFF so the
+  # P0-only 500-run keeps temperature=0.0 (baseline-byte-aligned). Enable
+  # via CLI when running P1a ablation:
+  #   -c agent.enable_phase_sampling=true
+  enable_phase_sampling: false
+  phase_sampling:
+    exploration: {temperature: 0.3}
+    hypothesis: {temperature: 0.1}
+    implementation: {temperature: 0.0}
+    verification: {temperature: 0.0}
+    backtrack: {temperature: 0.4}
+
+  # P1b: trajectory rewind on replan — non-prompt channel that physically
+  # truncates self.messages back to a toolcall-safe boundary just before
+  # the failed sub-task started. DEFAULT OFF for the P0-only baseline run.
+  # Enable via CLI when running P1b ablation:
+  #   -c agent.enable_trajectory_rewind=true
+  enable_trajectory_rewind: false
+  rewind_reset_message: "Previous approach did not work; reconsider with a different angle."
+
   system_template: |
     You are a helpful assistant that can interact with a computer shell to solve programming tasks.
   instance_template: |

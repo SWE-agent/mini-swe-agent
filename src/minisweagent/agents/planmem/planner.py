@@ -82,6 +82,10 @@ class PlannerState:
     recent_return_codes: list[int] = field(default_factory=list)
     # Per-subtask exit criteria progress
     subtask_progress: dict[int, dict] = field(default_factory=dict)
+    # P1b: per-subtask birth message-index. When a sub-task is first adopted,
+    # the agent records ``len(self.messages)`` here; on replan/failure we
+    # truncate self.messages back to this point (after a safe-cut search).
+    subtask_start_msg_idx: dict[int, int] = field(default_factory=dict)
 
 
 class HierarchicalPlanner:
@@ -292,6 +296,9 @@ class HierarchicalPlanner:
             # Drop the failed sub-task's progress so it can't bleed into
             # the verification predicate of the recovery children.
             self.state.subtask_progress.pop(failed.id, None)
+            # NOTE: keep subtask_start_msg_idx[failed.id] until the agent
+            # has consumed it for the trajectory rewind (it pops the entry
+            # after applying the cut). Do not pop here.
             logger.info("Replan: marking sub-task failed: %s", failed.description)
 
         children = self._generate_replan_children(failed, query_fn)
@@ -349,6 +356,18 @@ class HierarchicalPlanner:
             SubTask(0, "Verify with tests", TaskPhase.VERIFICATION),
         ]
         return self._adopt_as_children(recovery, parent_id=parent_id)
+
+    def record_subtask_birth(self, subtask_id: int, msg_idx: int) -> None:
+        """Register the message index at which ``subtask_id`` became active.
+
+        Called by the agent after adoption (initial decomposition or replan)
+        so that on later failure the agent can rewind ``self.messages`` to
+        this point. Cheap dict write; safe to call repeatedly (idempotent).
+        """
+        self.state.subtask_start_msg_idx[subtask_id] = msg_idx
+
+    def get_subtask_birth_msg_idx(self, subtask_id: int) -> int | None:
+        return self.state.subtask_start_msg_idx.get(subtask_id)
 
     def _adopt_as_children(
         self, subtasks: list[SubTask], parent_id: int | None,

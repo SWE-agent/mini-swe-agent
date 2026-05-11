@@ -648,3 +648,324 @@ class TestPlanningHeader:
         agent._apply_planning_header()
         for orig, current in zip(snapshot_non_sys, agent.messages[1:]):
             assert orig == current, "P0 must not touch non-system messages"
+
+
+# ── P1a: per-phase sampling routing tests ───────────────────────────────────
+
+
+class TestPhaseSampling:
+    """Verify that phase-aware sampling kwargs flow through model.query.
+
+    P1a is a non-prompt channel — the test asserts kwargs are passed,
+    NOT that any message changed.
+    """
+
+    def _make_agent(self, **overrides):
+        from minisweagent.agents.planmem_agent import PlanMemAgent
+        from minisweagent.environments.local import LocalEnvironment
+        from minisweagent.models.test_models import DeterministicModel
+
+        kwargs = dict(
+            system_template="You are an agent.",
+            instance_template="Task: {{task}}",
+            cost_limit=10.0,
+            step_limit=10,
+            enable_repo_background_card=False,
+            enable_planner=True,
+            enable_adaptive_memory=False,
+            enable_replanning=False,
+            enable_memory_to_planner=False,
+            use_llm_decomposition=False,
+            use_llm_replan=False,
+            enable_planning_header=False,
+            enable_phase_sampling=True,
+        )
+        kwargs.update(overrides)
+        return PlanMemAgent(
+            model=DeterministicModel(outputs=[]),
+            env=LocalEnvironment(),
+            **kwargs,
+        )
+
+    def test_returns_phase_specific_kwargs(self):
+        from minisweagent.agents.planmem.types import PlanningSignal, TaskPhase
+
+        agent = self._make_agent()
+        for phase in (
+            TaskPhase.EXPLORATION,
+            TaskPhase.HYPOTHESIS,
+            TaskPhase.IMPLEMENTATION,
+            TaskPhase.VERIFICATION,
+            TaskPhase.BACKTRACK,
+        ):
+            agent._planning_signal = PlanningSignal(current_phase=phase)
+            kw = agent._phase_sampling_kwargs()
+            assert "temperature" in kw, f"missing temperature for {phase}"
+            assert isinstance(kw["temperature"], (int, float))
+
+    def test_implementation_temperature_zero(self):
+        """The recommended default: IMPL/VERIF should be deterministic."""
+        from minisweagent.agents.planmem.types import PlanningSignal, TaskPhase
+
+        agent = self._make_agent()
+        agent._planning_signal = PlanningSignal(current_phase=TaskPhase.IMPLEMENTATION)
+        assert agent._phase_sampling_kwargs()["temperature"] == 0.0
+
+    def test_disabled_returns_empty(self):
+        from minisweagent.agents.planmem.types import PlanningSignal, TaskPhase
+
+        agent = self._make_agent(enable_phase_sampling=False)
+        agent._planning_signal = PlanningSignal(current_phase=TaskPhase.IMPLEMENTATION)
+        assert agent._phase_sampling_kwargs() == {}
+
+    def test_no_signal_returns_empty(self):
+        agent = self._make_agent()
+        agent._planning_signal = None
+        assert agent._phase_sampling_kwargs() == {}
+
+    def test_kwargs_whitelist_blocks_injection(self):
+        """Malicious-looking keys must be filtered — only litellm sampling params pass."""
+        from minisweagent.agents.planmem.types import PlanningSignal, TaskPhase
+
+        agent = self._make_agent(
+            phase_sampling={
+                "exploration": {
+                    "temperature": 0.3,
+                    "messages": "EVIL",  # must be filtered
+                    "tools": "EVIL",     # must be filtered
+                    "model": "EVIL",     # must be filtered
+                }
+            },
+        )
+        agent._planning_signal = PlanningSignal(current_phase=TaskPhase.EXPLORATION)
+        kw = agent._phase_sampling_kwargs()
+        assert "temperature" in kw
+        assert "messages" not in kw
+        assert "tools" not in kw
+        assert "model" not in kw
+
+    def test_kwargs_passed_to_model_query(self, monkeypatch):
+        """End-to-end: agent.query() must pass sampling kwargs to model.query."""
+        from minisweagent.agents.planmem_agent import PlanMemAgent
+        from minisweagent.agents.planmem.types import PlanningSignal, TaskPhase
+        from minisweagent.environments.local import LocalEnvironment
+        from minisweagent.models.test_models import DeterministicModel, make_output
+
+        captured_kwargs = []
+
+        class _SpyModel(DeterministicModel):
+            def query(self, messages, **kwargs):
+                captured_kwargs.append(kwargs)
+                return super().query(messages, **kwargs)
+
+        outputs = [
+            make_output(
+                "finish", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}],
+            ),
+        ]
+        agent = PlanMemAgent(
+            model=_SpyModel(outputs=outputs),
+            env=LocalEnvironment(),
+            system_template="You are an agent.",
+            instance_template="Task: {{task}}",
+            cost_limit=10.0,
+            step_limit=10,
+            enable_repo_background_card=False,
+            enable_planner=True,
+            enable_adaptive_memory=False,
+            enable_replanning=False,
+            enable_memory_to_planner=False,
+            use_llm_decomposition=False,
+            use_llm_replan=False,
+            enable_planning_header=False,
+            enable_phase_sampling=True,
+        )
+        agent.run("task")
+        # At least one call captured; it should have a temperature kwarg.
+        assert captured_kwargs, "model.query was never called"
+        # The single agent step is in EXPLORATION (default phase post-init).
+        assert any("temperature" in kw for kw in captured_kwargs)
+
+
+# ── P1b: trajectory rewind tests ────────────────────────────────────────────
+
+
+class TestTrajectoryRewind:
+    """Strict pairing-preservation tests for the rewind mechanism.
+
+    P1b is the riskiest of the three (cutting in the wrong place breaks the
+    toolcall API), so the tests are deliberately paranoid.
+    """
+
+    def _make_agent(self, **overrides):
+        from minisweagent.agents.planmem_agent import PlanMemAgent
+        from minisweagent.environments.local import LocalEnvironment
+        from minisweagent.models.test_models import DeterministicModel
+
+        kwargs = dict(
+            system_template="You are an agent.",
+            instance_template="Task: {{task}}",
+            cost_limit=10.0,
+            step_limit=10,
+            enable_repo_background_card=False,
+            enable_planner=True,
+            enable_adaptive_memory=False,
+            enable_replanning=True,
+            enable_memory_to_planner=False,
+            use_llm_decomposition=False,
+            use_llm_replan=False,
+            enable_planning_header=False,
+            enable_phase_sampling=False,
+            enable_trajectory_rewind=True,
+        )
+        kwargs.update(overrides)
+        return PlanMemAgent(
+            model=DeterministicModel(outputs=[]),
+            env=LocalEnvironment(),
+            **kwargs,
+        )
+
+    def test_safe_cut_after_observation_only(self):
+        """The cut must land after a user/tool message, never inside a
+        tool_calls→tool pair."""
+        agent = self._make_agent()
+        agent.messages = [
+            {"role": "system", "content": "sys"},
+            {"role": "user", "content": "task"},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c1"}]},
+            {"role": "tool", "tool_call_id": "c1", "content": "obs1"},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c2"}]},
+            {"role": "tool", "tool_call_id": "c2", "content": "obs2"},
+        ]
+        # Target inside the second pair → cut must back off to after obs1.
+        cut = agent._safe_cut_point(5)  # 5 = the second assistant
+        # cut should land at idx 4 (= after obs1 at idx 3)
+        assert cut == 4
+        kept = agent.messages[:cut]
+        assert kept[-1]["role"] == "tool"
+
+    def test_safe_cut_never_strips_system(self):
+        agent = self._make_agent()
+        agent.messages = [{"role": "system", "content": "sys"}]
+        assert agent._safe_cut_point(0) == 1
+        assert agent._safe_cut_point(1) == 1
+        assert agent._safe_cut_point(10) == 1
+
+    def test_safe_cut_at_boundary(self):
+        agent = self._make_agent()
+        agent.messages = [
+            {"role": "system", "content": "sys"},
+            {"role": "user", "content": "task"},
+        ]
+        assert agent._safe_cut_point(2) == 2  # already at boundary
+
+    def test_apply_rewind_truncates_and_appends_reset(self):
+        agent = self._make_agent()
+        agent.add_messages(
+            {"role": "system", "content": "sys"},
+            {"role": "user", "content": "task"},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c1"}]},
+            {"role": "tool", "tool_call_id": "c1", "content": "obs1"},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c2"}]},
+            {"role": "tool", "tool_call_id": "c2", "content": "obs2"},
+        )
+        len_before = len(agent.messages)
+        agent._apply_rewind(target_idx=4)  # rewind to before second pair
+        # Kept: idx 0..3 (4 items) + reset note → 5 items.
+        assert len(agent.messages) == 5
+        assert agent.messages[-1]["role"] == "user"
+        assert agent.messages[-1]["content"] == agent.config.rewind_reset_message
+        # Last pre-reset message is a tool obs → pairing safe.
+        assert agent.messages[-2]["role"] == "tool"
+        # Memory graph aligned.
+        assert len(agent.memory_graph) == 5
+
+    def test_apply_rewind_preserves_toolcall_pairing(self):
+        """Even with target falling on an assistant.tool_calls msg, the cut
+        must back off so the kept tail doesn't have a dangling tool_calls
+        without its matching tool message."""
+        agent = self._make_agent()
+        agent.add_messages(
+            {"role": "system", "content": "sys"},
+            {"role": "user", "content": "task"},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c1"}]},
+            {"role": "tool", "tool_call_id": "c1", "content": "obs1"},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c2"}]},
+            {"role": "tool", "tool_call_id": "c2", "content": "obs2"},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c3"}]},
+            {"role": "tool", "tool_call_id": "c3", "content": "obs3"},
+        )
+        # Target an assistant index — must back off to previous observation.
+        agent._apply_rewind(target_idx=6)  # = the third assistant
+        # Last non-reset kept message must be a tool obs.
+        # Walk back: messages end with the reset user note; the prior msg
+        # must be tool to guarantee pairing.
+        kept = agent.messages[:-1]  # exclude reset note
+        # Every assistant.tool_calls with id X must be followed by a
+        # role=tool with tool_call_id=X within `kept`.
+        pending: set[str] = set()
+        for m in kept:
+            if m.get("tool_calls"):
+                for tc in m["tool_calls"]:
+                    pending.add(tc["id"])
+            if m.get("role") == "tool":
+                pending.discard(m.get("tool_call_id", ""))
+        assert not pending, f"orphan tool_calls left: {pending}"
+
+    def test_rewind_disabled_no_truncation(self):
+        agent = self._make_agent(enable_trajectory_rewind=False)
+        agent.add_messages(
+            {"role": "system", "content": "sys"},
+            {"role": "user", "content": "task"},
+            {"role": "assistant", "content": "a"},
+            {"role": "tool", "tool_call_id": "c", "content": "obs"},
+        )
+        # _apply_rewind not gated internally — the gate is at the query()
+        # call-site. Direct call still mutates; the test is for the gate
+        # condition.
+        agent._pending_rewind = 2
+        # Simulate the query() flow guard:
+        if agent.config.enable_trajectory_rewind and agent._pending_rewind is not None:
+            agent._apply_rewind(agent._pending_rewind)
+        # Flag was off → no mutation.
+        assert len(agent.messages) == 4
+        assert all(m.get("content") != agent.config.rewind_reset_message
+                   for m in agent.messages)
+
+    def test_birth_idx_registered_at_run_start(self):
+        """Initial sub-tasks must have their birth_idx recorded so a later
+        replan can find a rewind target."""
+        from minisweagent.agents.planmem_agent import PlanMemAgent
+        from minisweagent.agents.planmem.types import TaskPhase
+        from minisweagent.environments.local import LocalEnvironment
+        from minisweagent.models.test_models import DeterministicModel, make_output
+
+        outputs = [
+            make_output(
+                "done", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}],
+            ),
+        ]
+        agent = PlanMemAgent(
+            model=DeterministicModel(outputs=outputs),
+            env=LocalEnvironment(),
+            system_template="You are an agent.",
+            instance_template="Task: {{task}}",
+            cost_limit=10.0,
+            step_limit=10,
+            enable_repo_background_card=False,
+            enable_planner=True,
+            enable_adaptive_memory=False,
+            enable_replanning=True,
+            enable_memory_to_planner=False,
+            use_llm_decomposition=False,
+            use_llm_replan=False,
+            enable_planning_header=False,
+            enable_phase_sampling=False,
+            enable_trajectory_rewind=True,
+        )
+        agent.run("task")
+        # Every initial sub-task adopted at run start should have a birth idx.
+        for st in agent.planner.state.goal_stack + agent.planner.state.completed_subtasks:
+            assert st.id in agent.planner.state.subtask_start_msg_idx, (
+                f"sub-task {st.id} ({st.description}) missing birth idx"
+            )
