@@ -629,6 +629,55 @@ class TestPlanningHeader:
         agent._apply_planning_header()
         assert agent.PLANMEM_HEADER_BEGIN not in agent.messages[0]["content"]
 
+    def test_description_with_end_marker_sanitized(self):
+        """Sub-task description containing the END marker must be sanitized
+        before injection — otherwise strip_block regex breaks and the block
+        accumulates on every state change."""
+        from minisweagent.agents.planmem.types import PlanningSignal, SubTask, TaskPhase
+
+        agent = self._make_agent()
+        agent.add_messages({"role": "system", "content": "You are an agent."})
+        evil_desc = f"evil {agent.PLANMEM_HEADER_END} oops"
+        agent._planning_signal = PlanningSignal(
+            current_phase=TaskPhase.EXPLORATION,
+            active_subtask=SubTask(id=1, description=evil_desc, phase=TaskPhase.EXPLORATION),
+        )
+        agent._apply_planning_header()
+        # Now change state; the new block must replace the OLD block fully,
+        # not leave a fragment behind.
+        agent._planning_signal = PlanningSignal(
+            current_phase=TaskPhase.IMPLEMENTATION,
+            active_subtask=SubTask(id=2, description="clean", phase=TaskPhase.IMPLEMENTATION),
+        )
+        agent._apply_planning_header()
+        sys = agent.messages[0]["content"]
+        # Exactly one block; no accumulating residue.
+        assert sys.count(agent.PLANMEM_HEADER_BEGIN) == 1
+        assert sys.count(agent.PLANMEM_HEADER_END) == 1
+        assert "Phase: implementation" in sys
+        assert "Phase: exploration" not in sys
+
+    def test_cache_reinjects_when_marker_externally_removed(self):
+        """If external code (e.g., _ensure_repo_background_card) rewrites
+        messages[0] and removes our marker, the next _apply_planning_header
+        MUST re-inject — not short-circuit on cached state."""
+        from minisweagent.agents.planmem.types import PlanningSignal, SubTask, TaskPhase
+
+        agent = self._make_agent()
+        agent.add_messages({"role": "system", "content": "You are an agent."})
+        agent._planning_signal = PlanningSignal(
+            current_phase=TaskPhase.EXPLORATION,
+            active_subtask=SubTask(id=1, description="A", phase=TaskPhase.EXPLORATION),
+        )
+        agent._apply_planning_header()
+        assert agent.PLANMEM_HEADER_BEGIN in agent.messages[0]["content"]
+        # Simulate external wipe (e.g., repo card rewrites the system msg)
+        agent.messages[0]["content"] = "You are an agent (rewritten)."
+        # State unchanged — but marker missing. Must re-inject.
+        agent._apply_planning_header()
+        assert agent.PLANMEM_HEADER_BEGIN in agent.messages[0]["content"]
+        assert "Phase: exploration" in agent.messages[0]["content"]
+
     def test_does_not_touch_non_system_messages(self):
         """Critical: P0 must never alter user/assistant/tool messages."""
         from minisweagent.agents.planmem.types import PlanningSignal, SubTask, TaskPhase
@@ -931,6 +980,60 @@ class TestTrajectoryRewind:
         assert len(agent.messages) == 4
         assert all(m.get("content") != agent.config.rewind_reset_message
                    for m in agent.messages)
+
+    def test_safe_cut_with_orphan_assistant_tool_calls(self):
+        """If walking back to a user/tool boundary would leave an orphan
+        assistant.tool_calls in the prefix, the cut MUST back off further
+        until the prefix has no orphans. Code-reviewer flagged this gap."""
+        agent = self._make_agent()
+        # Shape: [sys, user, asst{c1}, user{interrupt}, tool{c1}, asst{c2}]
+        # Target the second assistant. The naive "first user/tool boundary"
+        # would return cut=4 (after user{interrupt}) — but [sys, user,
+        # asst{c1}, user{interrupt}] has orphan c1. Cut must go to 2.
+        agent.messages = [
+            {"role": "system", "content": "sys"},
+            {"role": "user", "content": "task"},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c1"}]},
+            {"role": "user", "content": "interrupt"},
+            {"role": "tool", "tool_call_id": "c1", "content": "obs"},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c2"}]},
+        ]
+        cut = agent._safe_cut_point(5)
+        # The naive walk-back returned 4. With orphan check it must return
+        # either 5 (after tool{c1}) or 2 (after the user task).
+        kept = agent.messages[:cut]
+        # No assistant orphan allowed:
+        pending = set()
+        for m in kept:
+            for tc in (m.get("tool_calls") or []):
+                pending.add(tc["id"])
+            if m.get("role") == "tool":
+                pending.discard(m.get("tool_call_id"))
+        assert not pending, f"orphan tool_calls in prefix: {pending}"
+
+    def test_safe_cut_with_multi_tool_calls_in_one_assistant(self):
+        """An assistant turn with two tool_calls; cut must include both
+        tool messages or drop the assistant entirely."""
+        agent = self._make_agent()
+        agent.messages = [
+            {"role": "system", "content": "sys"},
+            {"role": "user", "content": "task"},
+            {"role": "assistant", "content": "",
+             "tool_calls": [{"id": "c1"}, {"id": "c2"}]},
+            {"role": "tool", "tool_call_id": "c1", "content": "o1"},
+            # Note: target inside the pair — between c1 and c2 obs.
+        ]
+        # Target = 4 (just after first tool). Prefix [sys, user, asst{c1,c2},
+        # tool{c1}] still has orphan c2 → cut must back off.
+        cut = agent._safe_cut_point(4)
+        kept = agent.messages[:cut]
+        pending = set()
+        for m in kept:
+            for tc in (m.get("tool_calls") or []):
+                pending.add(tc["id"])
+            if m.get("role") == "tool":
+                pending.discard(m.get("tool_call_id"))
+        assert not pending
 
     def test_birth_idx_registered_at_run_start(self):
         """Initial sub-tasks must have their birth_idx recorded so a later

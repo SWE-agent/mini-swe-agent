@@ -152,18 +152,21 @@ class PlanMemAgent(MemorySearchAgent):
         return super().run(task, **kwargs)
 
     def _register_pending_subtask_births(self, default_idx: int) -> None:
-        """Register ``len(self.messages)`` (or ``default_idx``) for each new
-        sub-task that doesn't yet have a birth index recorded.
+        """Register ``default_idx`` as birth idx for each new sub-task.
 
-        Called after the planner pushes new sub-tasks (initial decomposition
-        or replan). Safe to call multiple times.
+        Trust the caller's ``default_idx``: at initial decomposition it
+        passes ``len(self.messages)`` (~2), at replan it may pass the
+        upcoming rewind target which is intentionally smaller than the
+        current message count so recovery sub-tasks share the boundary.
+
+        Called after the planner pushes new sub-tasks. Idempotent: a
+        sub-task whose birth was already recorded keeps its original idx.
         """
         if not self.config.enable_planner:
             return
-        birth_idx = max(default_idx, len(self.messages))
         for st in self.planner.state.goal_stack:
             if st.id not in self._registered_birth_ids:
-                self.planner.record_subtask_birth(st.id, birth_idx)
+                self.planner.record_subtask_birth(st.id, default_idx)
                 self._registered_birth_ids.add(st.id)
 
     def _accounted_query(self, messages: list[dict]) -> dict:
@@ -409,11 +412,17 @@ class PlanMemAgent(MemorySearchAgent):
         subtask_id = active.id if active is not None else None
         state_key = (phase, subtask_id)
 
-        if state_key == self._last_header_state:
-            return  # planner state unchanged → cache stays warm
+        existing = self.messages[0].get("content") or ""
+        marker_present = self.PLANMEM_HEADER_BEGIN in existing
+        # Cache check has two parts:
+        # 1. Same planner state as last injection (idempotency)
+        # 2. The marker is still present in the system message (external
+        #    code paths like _ensure_repo_background_card might have
+        #    rewritten messages[0]; in that case we must re-inject)
+        if state_key == self._last_header_state and marker_present:
+            return  # planner state unchanged AND marker intact → cache warm
 
         block = self._build_planning_block(phase, active)
-        existing = self.messages[0].get("content") or ""
         stripped = self._strip_block(
             existing, self.PLANMEM_HEADER_BEGIN, self.PLANMEM_HEADER_END,
         )
@@ -444,7 +453,14 @@ class PlanMemAgent(MemorySearchAgent):
         else:
             # Reserve ~half budget for the description; truncate hard.
             remaining = max(20, body_budget - len(phase_line) - 16)
-            desc = (active.description or "").strip().replace("\n", " ")[:remaining]
+            # Sanitize: strip the marker substrings so a maliciously- or
+            # accidentally-formatted sub-task description from the LLM
+            # decomposition cannot break the strip-block regex.
+            desc = (active.description or "")
+            desc = desc.replace(self.PLANMEM_HEADER_BEGIN, "").replace(
+                self.PLANMEM_HEADER_END, "",
+            )
+            desc = desc.strip().replace("\n", " ")[:remaining]
             goal_line = f"Current goal: {desc}"
 
         block = (
@@ -525,35 +541,50 @@ class PlanMemAgent(MemorySearchAgent):
         truncate at without breaking toolcall ``assistant.tool_calls`` ↔
         ``role: tool`` pairing.
 
-        Safe rule: the position immediately *after* an observation-class
-        message (``role`` in ``user`` or ``tool``) such that the next
-        position is either past the end or starts a fresh ``assistant``
-        turn. We walk backward from ``target_idx`` until we find such a
-        boundary; if none exists (only system message remains), return 1
-        (cut everything after the system message).
+        Safe rule: the resulting prefix ``self.messages[:cut]`` MUST have
+        no unmatched ``assistant.tool_calls[id=X]`` (no later ``role:tool``
+        ``tool_call_id=X``) within the kept prefix. We walk backward from
+        ``target_idx`` and accept the first prefix that satisfies the
+        invariant *and* ends on a non-assistant boundary.
 
-        Hard invariants tested in unit tests:
+        Hard invariants:
         - Returned index ≤ ``target_idx``
         - Returned index ≥ 1 (never strips the system message)
+        - ``self.messages[:returned]`` has NO orphan tool_call ids
         - ``self.messages[:returned]`` ends on a non-assistant message OR
           on the system message alone
-        - No ``assistant.tool_calls`` block at index k-1 is left without
-          its matching ``tool`` message at k onwards (because we cut
-          AFTER an observation, the matched tool message is on the kept
-          side)
         """
         if target_idx <= 1:
             return 1
         target_idx = min(target_idx, len(self.messages))
-        # Walk backward from target_idx-1 looking for a user/tool boundary.
-        for i in range(target_idx - 1, 0, -1):
-            msg = self.messages[i]
-            role = msg.get("role")
-            if role in ("user", "tool"):
-                # Cut after index i → length i+1.
-                return i + 1
-        # No observation boundary found → cut everything after system.
+        # Walk backward from target_idx looking for a prefix that is both
+        # (a) ending on a user/tool/system boundary AND (b) leaves no
+        # orphan tool_calls.
+        for cut in range(target_idx, 0, -1):
+            last_role = self.messages[cut - 1].get("role") if cut > 0 else "system"
+            if last_role == "assistant":
+                continue  # cannot end on an assistant turn
+            if self._prefix_has_orphan_tool_calls(cut):
+                continue  # unresolved tool_call_id in the prefix
+            return cut
         return 1
+
+    def _prefix_has_orphan_tool_calls(self, cut: int) -> bool:
+        """True iff ``self.messages[:cut]`` has an unmatched tool_call_id.
+
+        Walks the prefix once: every ``assistant.tool_calls[id=X]`` opens
+        a pending id; every ``role:tool, tool_call_id=X`` closes one.
+        Pending non-empty at the end ⇒ orphan.
+        """
+        pending: set = set()
+        for msg in self.messages[:cut]:
+            for tc in (msg.get("tool_calls") or []):
+                tcid = tc.get("id")
+                if tcid is not None:
+                    pending.add(tcid)
+            if msg.get("role") == "tool":
+                pending.discard(msg.get("tool_call_id"))
+        return bool(pending)
 
     def _apply_rewind(self, target_idx: int) -> None:
         """Truncate ``self.messages`` (and memory graph) to a safe cut.
