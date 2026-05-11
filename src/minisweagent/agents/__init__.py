@@ -8,6 +8,8 @@ from minisweagent import Agent, Environment, Model
 _AGENT_MAPPING = {
     "default": "minisweagent.agents.default.DefaultAgent",
     "interactive": "minisweagent.agents.interactive.InteractiveAgent",
+    "memory_search": "minisweagent.agents.memory_search.MemorySearchAgent",
+    "planmem": "minisweagent.agents.planmem_agent.PlanMemAgent",
 }
 
 

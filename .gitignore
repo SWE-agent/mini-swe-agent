@@ -9,6 +9,14 @@ traj.json
 .claude/**
 .vscode/**
 
+# Local experiment artifacts (not part of source)
+experiments/qwen3_baseline_verified/
+experiments/outputs/
+experiments/logs/
+sb-cli-reports/
+preds_*.json
+*_log.txt
+
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
@@ -186,3 +194,6 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
+
+# Coding agent survey (downloaded papers, large)
+literature/coding-agents-survey-2024/

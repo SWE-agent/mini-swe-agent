@@ -1,0 +1,10 @@
+model:
+  model_name: "hosted_vllm/Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8"
+  model_kwargs:
+    api_base: "http://localhost:8765/v1"
+    api_key: "EMPTY"
+    temperature: 0.0
+    drop_params: true
+    parallel_tool_calls: true
+  litellm_model_registry: "/data/jiahao/code/mini-swe-agent/experiments/registry.json"
+  cost_tracking: "ignore_errors"
