@@ -19,10 +19,9 @@ import time
 from dataclasses import dataclass, field
 
 from minisweagent import Environment, Model
-from minisweagent.agents.memory_search import MemoryNode, MemorySearchAgent
+from minisweagent.agents.memory_search import MemorySearchAgent
 from minisweagent.agents.planmem.memory_controller import AdaptiveMemoryController
 from minisweagent.agents.planmem.types import PlanningSignal, TaskPhase
-
 
 # ── Test harness primitives ─────────────────────────────────────────────────
 
@@ -104,23 +103,29 @@ def needle_in_haystack() -> Scenario:
     nodes = []
     # Distractors first.
     for i in range(20):
-        nodes.append((
-            "user",
-            f"Observation: ran command {i} returncode 0 generic output {i}",
-            {"command": f"ls /tmp/{i}"},
-        ))
+        nodes.append(
+            (
+                "user",
+                f"Observation: ran command {i} returncode 0 generic output {i}",
+                {"command": f"ls /tmp/{i}"},
+            )
+        )
     # The needle.
-    nodes.append((
-        "user",
-        "GOLD: connection failure caused by DB_HOST='prod-db-1' in config.py",
-        {"command": "cat config.py", "filenames": ["config.py"]},
-    ))
-    for i in range(20, 30):
-        nodes.append((
+    nodes.append(
+        (
             "user",
-            f"Observation: irrelevant step {i}",
-            {"command": f"ls /var/{i}"},
-        ))
+            "GOLD: connection failure caused by DB_HOST='prod-db-1' in config.py",
+            {"command": "cat config.py", "filenames": ["config.py"]},
+        )
+    )
+    for i in range(20, 30):
+        nodes.append(
+            (
+                "user",
+                f"Observation: irrelevant step {i}",
+                {"command": f"ls /var/{i}"},
+            )
+        )
     return Scenario(
         name="needle_in_haystack",
         nodes=nodes,
@@ -133,21 +138,28 @@ def file_graph_chain() -> Scenario:
     """Target requires following a Python import edge to reach the cause file."""
     nodes = [
         # main.py imports from config — file-graph signal should help.
-        ("user", "Observation: cat main.py:\nfrom config import DB_HOST\nconnect(DB_HOST)",
-         {"command": "cat main.py", "filenames": ["main.py"]}),
+        (
+            "user",
+            "Observation: cat main.py:\nfrom config import DB_HOST\nconnect(DB_HOST)",
+            {"command": "cat main.py", "filenames": ["main.py"]},
+        ),
     ]
     # Distractors with no overlap to either main.py or config.
     for i in range(15):
-        nodes.append((
+        nodes.append(
+            (
+                "user",
+                f"Observation: noise step {i} apple banana cherry",
+                {"command": f"date {i}"},
+            )
+        )
+    nodes.append(
+        (
             "user",
-            f"Observation: noise step {i} apple banana cherry",
-            {"command": f"date {i}"},
-        ))
-    nodes.append((
-        "user",
-        "GOLD: cat config.py:\nDB_HOST = 'localhost'  # WRONG — should be prod-db-1",
-        {"command": "cat config.py", "filenames": ["config.py"]},
-    ))
+            "GOLD: cat config.py:\nDB_HOST = 'localhost'  # WRONG — should be prod-db-1",
+            {"command": "cat config.py", "filenames": ["config.py"]},
+        )
+    )
     return Scenario(
         name="file_graph_chain",
         nodes=nodes,
@@ -160,11 +172,13 @@ def drift_recovery() -> Scenario:
     """Original task is at node 1; recent chatter should not crowd it out."""
     nodes = []
     for i in range(25):
-        nodes.append((
-            "user",
-            f"Observation: tangential exploration {i} of unrelated module zeta",
-            {"command": f"ls /unrelated/{i}"},
-        ))
+        nodes.append(
+            (
+                "user",
+                f"Observation: tangential exploration {i} of unrelated module zeta",
+                {"command": f"ls /unrelated/{i}"},
+            )
+        )
     return Scenario(
         name="drift_recovery",
         nodes=nodes,
@@ -188,7 +202,10 @@ def recall_at_k(selected_ids: set[int], gold_ids: set[int]) -> float:
 
 
 def run_scenario(
-    scenario_factory, *, phase: TaskPhase | None, token_budget: int = 4000,
+    scenario_factory,
+    *,
+    phase: TaskPhase | None,
+    token_budget: int = 4000,
 ) -> dict:
     agent = MemorySearchAgent(
         model=_StubModel(),
@@ -237,8 +254,7 @@ def main() -> None:
     print("-" * len(header))
     for r in rows:
         print(
-            f"{r['scenario']:<20} {r['phase']:<15} {r['k']:>4} {r['gold']:>5} "
-            f"{r['recall@k']:>10.2f} {r['ms']:>7.1f}",
+            f"{r['scenario']:<20} {r['phase']:<15} {r['k']:>4} {r['gold']:>5} {r['recall@k']:>10.2f} {r['ms']:>7.1f}",
         )
     overall = statistics.mean(r["recall@k"] for r in rows)
     print()

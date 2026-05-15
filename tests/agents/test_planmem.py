@@ -12,16 +12,13 @@ from __future__ import annotations
 
 from typing import Any
 
-import pytest
-
 from minisweagent.agents.planmem.phase_detector import detect_phase, is_edit_action
 from minisweagent.agents.planmem.planner import (
     HierarchicalPlanner,
     PlannerConfig,
     _parse_subtasks,
 )
-from minisweagent.agents.planmem.types import MemoryStats, SubTask, TaskPhase
-
+from minisweagent.agents.planmem.types import MemoryStats, TaskPhase
 
 # ── Phase detection ────────────────────────────────────────────────────────
 
@@ -42,24 +39,35 @@ class TestPhaseDetection:
     def test_hypothesis_via_python_dash_c(self):
         # Diagnostic command should map to HYPOTHESIS, not VERIFICATION
         # (verification needs file paths or test commands).
-        assert detect_phase(
-            "python -c 'import x; print(x.__version__)'", "", TaskPhase.EXPLORATION,
-        ) is TaskPhase.HYPOTHESIS
+        assert (
+            detect_phase(
+                "python -c 'import x; print(x.__version__)'",
+                "",
+                TaskPhase.EXPLORATION,
+            )
+            is TaskPhase.HYPOTHESIS
+        )
 
     def test_hypothesis_via_thought_text(self):
         # Pure reasoning thought + non-exploration action.
-        assert detect_phase(
-            "ls -la something",  # not an exploration command
-            "I suspect the root cause is in the cache",
-            TaskPhase.EXPLORATION,
-        ) is TaskPhase.EXPLORATION  # ls IS exploration
+        assert (
+            detect_phase(
+                "ls -la something",  # not an exploration command
+                "I suspect the root cause is in the cache",
+                TaskPhase.EXPLORATION,
+            )
+            is TaskPhase.EXPLORATION
+        )  # ls IS exploration
 
         # When the action isn't an exploration cmd, hypothesis text wins.
-        assert detect_phase(
-            "echo hello",
-            "Why does this fail? My hypothesis is the import order.",
-            TaskPhase.EXPLORATION,
-        ) is TaskPhase.HYPOTHESIS
+        assert (
+            detect_phase(
+                "echo hello",
+                "Why does this fail? My hypothesis is the import order.",
+                TaskPhase.EXPLORATION,
+            )
+            is TaskPhase.HYPOTHESIS
+        )
 
     def test_falls_back_to_current(self):
         assert detect_phase("", "", TaskPhase.HYPOTHESIS) is TaskPhase.HYPOTHESIS
@@ -74,11 +82,7 @@ class TestPhaseDetection:
 
 class TestSubtaskParsing:
     def test_structured_format(self):
-        text = (
-            "1. [exploration] Find the bug\n"
-            "2. [implementation] Fix it\n"
-            "3. [verification] Run tests\n"
-        )
+        text = "1. [exploration] Find the bug\n2. [implementation] Fix it\n3. [verification] Run tests\n"
         st = _parse_subtasks(text, max_subtasks=8)
         assert len(st) == 3
         assert st[0].phase is TaskPhase.EXPLORATION
@@ -140,7 +144,10 @@ class TestPlannerCore:
         p.update(action="cat src/foo.py", observation="", return_code=0, thought="")
         # Step 2: progressing to implementation should now allow completion.
         p.update(
-            action="sed -i 's/a/b/' src/foo.py", observation="", return_code=0, thought="",
+            action="sed -i 's/a/b/' src/foo.py",
+            observation="",
+            return_code=0,
+            thought="",
         )
         assert len(p.state.goal_stack) < n_before
 
@@ -165,8 +172,7 @@ class TestMemoryToPlanner:
         p = HierarchicalPlanner(cfg)
         p.initialize_without_llm("task")
         stats = MemoryStats(file_read_counts={"src/foo.py": 5})
-        sig = p.update(action="cat src/foo.py", observation="", return_code=0,
-                       memory_stats=stats)
+        sig = p.update(action="cat src/foo.py", observation="", return_code=0, memory_stats=stats)
         assert sig.should_backtrack
 
     def test_repeat_action_triggers_backtrack(self):
@@ -179,8 +185,10 @@ class TestMemoryToPlanner:
 
     def test_no_backtrack_when_stats_below_thresholds(self):
         cfg = PlannerConfig(
-            file_read_saturation_threshold=10, repeat_action_threshold=10,
-            consecutive_failure_threshold=10, repeated_edit_threshold=10,
+            file_read_saturation_threshold=10,
+            repeat_action_threshold=10,
+            consecutive_failure_threshold=10,
+            repeated_edit_threshold=10,
         )
         p = HierarchicalPlanner(cfg)
         p.initialize_without_llm("task")
@@ -236,7 +244,10 @@ class TestReplan:
         active = p.state.goal_stack[-1]
         # Pretend we accumulated some progress on the active sub-task.
         p.state.subtask_progress[active.id] = {
-            "reads": 7, "edits": 3, "verif_pass": 0, "verif_fail": 2,
+            "reads": 7,
+            "edits": 3,
+            "verif_pass": 0,
+            "verif_fail": 2,
         }
         assert p.replan_on_backtrack(query_fn=None)
         assert active.id not in p.state.subtask_progress
@@ -244,10 +255,11 @@ class TestReplan:
     def test_llm_replan_with_mock_model(self):
         class _MockModel:
             def query(self, _messages: list[dict]) -> dict[str, Any]:
-                return {"content": (
-                    "1. [hypothesis] Re-examine the test fixture\n"
-                    "2. [implementation] Adjust the fixture to match\n"
-                )}
+                return {
+                    "content": (
+                        "1. [hypothesis] Re-examine the test fixture\n2. [implementation] Adjust the fixture to match\n"
+                    )
+                }
 
         p = HierarchicalPlanner(PlannerConfig(replan_cooldown_steps=0))
         p.initialize_without_llm("task")
@@ -377,7 +389,7 @@ class TestEndToEndSmoke:
             cost_limit=10.0,
             step_limit=10,
             enable_repo_background_card=False,
-            enable_planner=False,         # cheaper smoke
+            enable_planner=False,  # cheaper smoke
             enable_adaptive_memory=False,
             enable_replanning=False,
             enable_memory_to_planner=False,
@@ -414,11 +426,13 @@ class TestEndToEndSmoke:
         outputs = [
             # The first model call is the *decomposition* (no actions).
             make_output(
-                "1. [exploration] poke around\n2. [verification] run tests\n", [],
+                "1. [exploration] poke around\n2. [verification] run tests\n",
+                [],
             ),
             # Then the agent's normal step calls.
             make_output(
-                "exploring\n```bash\necho hi\n```", [{"command": "echo hi"}],
+                "exploring\n```bash\necho hi\n```",
+                [{"command": "echo hi"}],
             ),
             make_output(
                 "done\n```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
@@ -602,7 +616,9 @@ class TestPlanningHeader:
         agent._planning_signal = PlanningSignal(
             current_phase=TaskPhase.IMPLEMENTATION,
             active_subtask=SubTask(
-                id=1, description="A" * 5000, phase=TaskPhase.IMPLEMENTATION,
+                id=1,
+                description="A" * 5000,
+                phase=TaskPhase.IMPLEMENTATION,
             ),
         )
         agent._apply_planning_header()
@@ -781,8 +797,8 @@ class TestPhaseSampling:
                 "exploration": {
                     "temperature": 0.3,
                     "messages": "EVIL",  # must be filtered
-                    "tools": "EVIL",     # must be filtered
-                    "model": "EVIL",     # must be filtered
+                    "tools": "EVIL",  # must be filtered
+                    "model": "EVIL",  # must be filtered
                 }
             },
         )
@@ -796,7 +812,6 @@ class TestPhaseSampling:
     def test_kwargs_passed_to_model_query(self, monkeypatch):
         """End-to-end: agent.query() must pass sampling kwargs to model.query."""
         from minisweagent.agents.planmem_agent import PlanMemAgent
-        from minisweagent.agents.planmem.types import PlanningSignal, TaskPhase
         from minisweagent.environments.local import LocalEnvironment
         from minisweagent.models.test_models import DeterministicModel, make_output
 
@@ -809,7 +824,8 @@ class TestPhaseSampling:
 
         outputs = [
             make_output(
-                "finish", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}],
+                "finish",
+                [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}],
             ),
         ]
         agent = PlanMemAgent(
@@ -978,8 +994,7 @@ class TestTrajectoryRewind:
             agent._apply_rewind(agent._pending_rewind)
         # Flag was off → no mutation.
         assert len(agent.messages) == 4
-        assert all(m.get("content") != agent.config.rewind_reset_message
-                   for m in agent.messages)
+        assert all(m.get("content") != agent.config.rewind_reset_message for m in agent.messages)
 
     def test_safe_cut_with_orphan_assistant_tool_calls(self):
         """If walking back to a user/tool boundary would leave an orphan
@@ -1005,7 +1020,7 @@ class TestTrajectoryRewind:
         # No assistant orphan allowed:
         pending = set()
         for m in kept:
-            for tc in (m.get("tool_calls") or []):
+            for tc in m.get("tool_calls") or []:
                 pending.add(tc["id"])
             if m.get("role") == "tool":
                 pending.discard(m.get("tool_call_id"))
@@ -1018,8 +1033,7 @@ class TestTrajectoryRewind:
         agent.messages = [
             {"role": "system", "content": "sys"},
             {"role": "user", "content": "task"},
-            {"role": "assistant", "content": "",
-             "tool_calls": [{"id": "c1"}, {"id": "c2"}]},
+            {"role": "assistant", "content": "", "tool_calls": [{"id": "c1"}, {"id": "c2"}]},
             {"role": "tool", "tool_call_id": "c1", "content": "o1"},
             # Note: target inside the pair — between c1 and c2 obs.
         ]
@@ -1029,7 +1043,7 @@ class TestTrajectoryRewind:
         kept = agent.messages[:cut]
         pending = set()
         for m in kept:
-            for tc in (m.get("tool_calls") or []):
+            for tc in m.get("tool_calls") or []:
                 pending.add(tc["id"])
             if m.get("role") == "tool":
                 pending.discard(m.get("tool_call_id"))
@@ -1039,13 +1053,13 @@ class TestTrajectoryRewind:
         """Initial sub-tasks must have their birth_idx recorded so a later
         replan can find a rewind target."""
         from minisweagent.agents.planmem_agent import PlanMemAgent
-        from minisweagent.agents.planmem.types import TaskPhase
         from minisweagent.environments.local import LocalEnvironment
         from minisweagent.models.test_models import DeterministicModel, make_output
 
         outputs = [
             make_output(
-                "done", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}],
+                "done",
+                [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}],
             ),
         ]
         agent = PlanMemAgent(

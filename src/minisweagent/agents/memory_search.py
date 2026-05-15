@@ -1,4 +1,3 @@
-
 import ast
 import re
 import time
@@ -18,7 +17,7 @@ class MemoryNode:
     summary: str = field(default="", hash=False)
     metadata: dict = field(default_factory=dict, hash=False)
     raw_content: str = field(default="", hash=False, repr=False)
-    
+
 
 class MemorySearchConfig(AgentConfig):
     """Pydantic config — inherits ``system_template``/``instance_template`` from
@@ -52,9 +51,10 @@ class MemorySearchConfig(AgentConfig):
     cold_start_graph_edge_threshold: int = 5
     cold_start_w_content: float = 0.8
     cold_start_w_graph: float = 0.2
-    n_recent_fixed: int = 6          # configurable recent window
-    n_anchor_nodes: int = 5          # number of recent nodes for multi-anchor
-    beam_patience: int = 2           # allow N expansions with negative marginal gain
+    n_recent_fixed: int = 6  # configurable recent window
+    n_anchor_nodes: int = 5  # number of recent nodes for multi-anchor
+    beam_patience: int = 2  # allow N expansions with negative marginal gain
+
 
 class MemorySearchAgent(DefaultAgent):
     REPO_CARD_BEGIN = "<!-- REPO_BACKGROUND_CARD:BEGIN -->"
@@ -62,20 +62,20 @@ class MemorySearchAgent(DefaultAgent):
 
     def __init__(self, *args, **kwargs):
         # Use MemorySearchConfig by default unless overridden
-        kwargs.setdefault('config_class', MemorySearchConfig)
+        kwargs.setdefault("config_class", MemorySearchConfig)
         super().__init__(*args, **kwargs)
-        
+
         self.memory_graph: list[MemoryNode] = []
         self.next_node_id = 0
         self._import_module_cache: dict[int, tuple[set[str], set[str]]] = {}
         self._repo_background_card_text: str = ""
         self._repo_background_card_version: int = 0
-        self._repo_background_last_refresh_step: int = -10**9
+        self._repo_background_last_refresh_step: int = -(10**9)
         self._seen_files_for_card: set[str] = set()
         self._seen_topdirs_for_card: set[str] = set()
         self._file_observation_counts_at_refresh: dict[str, int] = {}
         self._edit_observation_count_at_refresh: int = 0
-    
+
     def _max_node_chars(self) -> int:
         """Per-node character cap, independent of total token budget."""
         return self.config.max_node_chars
@@ -93,15 +93,11 @@ class MemorySearchAgent(DefaultAgent):
         max_chars = max_chars or self._max_node_chars()
         if len(content) <= max_chars:
             return content
-        
+
         head = max_chars // 2
         tail = max_chars - head
-        return (
-            content[:head]
-            + f"\n... [Truncated {len(content) - max_chars} chars] ...\n"
-            + content[-tail:]
-        )
-        
+        return content[:head] + f"\n... [Truncated {len(content) - max_chars} chars] ...\n" + content[-tail:]
+
     def add_messages(self, *messages: dict) -> list[dict]:
         # Override the parent (plural) entry point so that *every* message —
         # including system + initial user task seeded by DefaultAgent.run() —
@@ -184,7 +180,9 @@ class MemorySearchAgent(DefaultAgent):
         # ```mswea_bash_command``` , v1 used ```bash``` . Match both.
         text = node.raw_content or node.content or ""
         match = re.search(
-            r"```(?:mswea_bash_command|bash)\s*\n(.*?)\n```", text, re.DOTALL,
+            r"```(?:mswea_bash_command|bash)\s*\n(.*?)\n```",
+            text,
+            re.DOTALL,
         )
         return match.group(1).strip() if match else ""
 
@@ -249,25 +247,25 @@ class MemorySearchAgent(DefaultAgent):
         if not s or len(s) < 2:
             return False
         # Reject shell operators and redirection tokens
-        if s in {'>', '>>', '<', '<<', '|', '&&', '||', ';', '&', '.', '..', '/'}:
+        if s in {">", ">>", "<", "<<", "|", "&&", "||", ";", "&", ".", "..", "/"}:
             return False
-        if s.startswith('<<') or s.startswith('>>'):
+        if s.startswith("<<") or s.startswith(">>"):
             return False
         # Reject ALL-CAPS heredoc terminators (EOF, END, HEREDOC …)
-        if re.fullmatch(r'[A-Z_]{2,}', s):
+        if re.fullmatch(r"[A-Z_]{2,}", s):
             return False
         # Must contain '.' (extension) or '/' (directory separator) to look path-like
-        if '.' not in s and '/' not in s:
+        if "." not in s and "/" not in s:
             return False
         # Reject tokens that start with shell-special characters
-        if s[0] in {'-', '=', '$', '#', '@', '!', '*', '?', '(', ')', '[', ']', '{', '}', '\\'}:
+        if s[0] in {"-", "=", "$", "#", "@", "!", "*", "?", "(", ")", "[", "]", "{", "}", "\\"}:
             return False
         return True
 
     def _extract_filenames(self, cmd: str) -> list[str]:
         """Extract file paths from a command's first line only (avoids heredoc bodies)."""
         # Multi-line commands (heredocs, scripts) - only parse the first line
-        first_line = cmd.split('\n')[0].strip() if '\n' in cmd else cmd.strip()
+        first_line = cmd.split("\n")[0].strip() if "\n" in cmd else cmd.strip()
         parts = first_line.split()
         if not parts:
             return []
@@ -277,12 +275,12 @@ class MemorySearchAgent(DefaultAgent):
 
         if tool in ["cat", "read_file", "open", "head", "tail", "less", "more"]:
             for part in parts[1:]:
-                if part.startswith('-'):
+                if part.startswith("-"):
                     continue
                 raw_filenames.append(part.strip("'\""))
         elif tool in ["diff", "cmp"]:
             for part in parts[1:]:
-                if part.startswith('-'):
+                if part.startswith("-"):
                     continue
                 raw_filenames.append(part.strip("'\""))
                 if len(raw_filenames) >= 2:
@@ -290,7 +288,7 @@ class MemorySearchAgent(DefaultAgent):
         elif tool == "grep":
             found_pattern = False
             for part in parts[1:]:
-                if part.startswith('-'):
+                if part.startswith("-"):
                     continue
                 if not found_pattern:
                     found_pattern = True
@@ -480,10 +478,10 @@ class MemorySearchAgent(DefaultAgent):
 
     def _infer_repo_name(self) -> str:
         """Get the task repo name from env.cwd (the Docker workdir), not host cwd."""
-        env_cwd = getattr(self.env, 'cwd', None)
+        env_cwd = getattr(self.env, "cwd", None)
         if env_cwd:
             return Path(env_cwd).name
-        return 'unknown'
+        return "unknown"
 
     def _discover_top_level_layout(self) -> list[str]:
         """Infer top-level dirs from observed file paths (no host filesystem access)."""
@@ -503,7 +501,7 @@ class MemorySearchAgent(DefaultAgent):
             parts = Path(path).parts
             # Accumulate frequency at each directory depth (up to 3 levels)
             for depth in range(1, min(len(parts), 4)):
-                dir_path = '/'.join(parts[:depth])
+                dir_path = "/".join(parts[:depth])
                 dir_counter[dir_path] += freq
         return [p for p, _ in dir_counter.most_common(6)]
 
@@ -529,25 +527,31 @@ class MemorySearchAgent(DefaultAgent):
         else:
             lines.append("- (unavailable)")
 
-        lines.extend([
-            "",
-            "Key entrypoints:",
-        ])
+        lines.extend(
+            [
+                "",
+                "Key entrypoints:",
+            ]
+        )
         if entrypoints:
             lines.extend([f"- {item}" for item in entrypoints])
         else:
             lines.append("- (none discovered)")
 
-        lines.extend([
-            "",
-            "Notes:",
-            "- File paths are inferred from observed shell commands in this session.",
-        ])
+        lines.extend(
+            [
+                "",
+                "Notes:",
+                "- File paths are inferred from observed shell commands in this session.",
+            ]
+        )
 
-        lines.extend([
-            "",
-            "Likely hot files:",
-        ])
+        lines.extend(
+            [
+                "",
+                "Likely hot files:",
+            ]
+        )
         if hot_files:
             lines.extend([f"- {path}" for path in hot_files])
         else:
@@ -632,7 +636,7 @@ class MemorySearchAgent(DefaultAgent):
         self._seen_topdirs_for_card.update(current_topdirs)
         self._file_observation_counts_at_refresh = dict(self._observed_file_counter())
         self._edit_observation_count_at_refresh = self._count_edit_events()
-        
+
     def query(self) -> dict:
         """Override query to context search before calling model.
 
@@ -642,20 +646,22 @@ class MemorySearchAgent(DefaultAgent):
         loop can terminate cleanly.
         """
         if 0 < self.config.step_limit <= self.n_calls or 0 < self.config.cost_limit <= self.cost:
-            raise LimitsExceeded({
-                "role": "exit",
-                "content": "LimitsExceeded",
-                "extra": {"exit_status": "LimitsExceeded", "submission": ""},
-            })
+            raise LimitsExceeded(
+                {
+                    "role": "exit",
+                    "content": "LimitsExceeded",
+                    "extra": {"exit_status": "LimitsExceeded", "submission": ""},
+                }
+            )
 
         self._ensure_repo_background_card()
-        
+
         # 1. Construct Context via Search
         selected_nodes = self.construct_context_via_search()
-        
+
         # 2. Re-assemble messages for the LLM
         # We need to preserve system prompt usually, and then the selected nodes
-        # sorted by timestamp to maintain readable flow? 
+        # sorted by timestamp to maintain readable flow?
         # Or Just purely selected nodes.
         # For this experiment, let's sort selected nodes by ID (time) to make sense.
         selected_nodes.sort(key=lambda n: n.id)
@@ -663,16 +669,18 @@ class MemorySearchAgent(DefaultAgent):
         # Toolcall mode: don't rewrite messages — the API requires every
         # `tool_calls` block to be followed by matching `tool` messages.
         # See PlanMemAgent.query for the same logic.
-        toolcall_mode = any(
-            m.get("role") == "tool" or m.get("tool_calls") for m in self.messages
-        )
+        toolcall_mode = any(m.get("role") == "tool" or m.get("tool_calls") for m in self.messages)
         original_messages = self.messages
         if not toolcall_mode:
             max_chars = self._max_node_chars()
             self.messages = [
-                {"role": n.role, "content": self._compress_content(
-                    getattr(n, "raw_content", n.content), max_chars,
-                )}
+                {
+                    "role": n.role,
+                    "content": self._compress_content(
+                        getattr(n, "raw_content", n.content),
+                        max_chars,
+                    ),
+                }
                 for n in selected_nodes
             ]
         try:
@@ -691,7 +699,7 @@ class MemorySearchAgent(DefaultAgent):
         selected_indices: set[int]
         current_chars: int
         score: float
-    
+
     def construct_context_via_search(self) -> list[MemoryNode]:
         """
         Construct context using Beam Search + MMR to find the optimal set of nodes
@@ -720,9 +728,7 @@ class MemorySearchAgent(DefaultAgent):
         for i in sorted(fixed_indices):
             if 0 <= i < total_nodes:
                 node = self.memory_graph[i]
-                compressed = self._compress_content(
-                    getattr(node, "raw_content", node.content), self._max_node_chars()
-                )
+                compressed = self._compress_content(getattr(node, "raw_content", node.content), self._max_node_chars())
                 base_chars += len(compressed)
                 fixed_nodes.append(node)
 
@@ -734,9 +740,8 @@ class MemorySearchAgent(DefaultAgent):
         node_word_sets = [self._tokenize_content(node.content) for node in self.memory_graph]
         node_file_stems = [self._node_file_stems(node) for node in self.memory_graph]
         ast_import_graph, regex_import_graph = self._build_import_graphs()
-        graph_edge_count = (
-            sum(len(v) for v in ast_import_graph.values())
-            + sum(len(v) for v in regex_import_graph.values())
+        graph_edge_count = sum(len(v) for v in ast_import_graph.values()) + sum(
+            len(v) for v in regex_import_graph.values()
         )
 
         # ── Fix 4: IDF weights ───────────────────────────────────────────────
@@ -758,9 +763,7 @@ class MemorySearchAgent(DefaultAgent):
             anchor_file_stems |= node_file_stems[i]
         # Fallback to _collect_anchor_file_stems if the above is empty
         if not anchor_file_stems:
-            anchor_file_stems = self._collect_anchor_file_stems(
-                anchor_idx, fixed_indices, node_file_stems
-            )
+            anchor_file_stems = self._collect_anchor_file_stems(anchor_idx, fixed_indices, node_file_stems)
 
         related_reference_indices = self._build_related_reference_indices(
             anchor_file_stems, node_file_stems, ast_import_graph, regex_import_graph
@@ -793,17 +796,17 @@ class MemorySearchAgent(DefaultAgent):
                         continue
 
                     cand_node = self.memory_graph[cand_idx]
-                    cand_chars = len(self._compress_content(
-                        getattr(cand_node, "raw_content", cand_node.content),
-                        self._max_node_chars(),
-                    ))
+                    cand_chars = len(
+                        self._compress_content(
+                            getattr(cand_node, "raw_content", cand_node.content),
+                            self._max_node_chars(),
+                        )
+                    )
 
                     if beam.current_chars + cand_chars <= max_chars_budget:
                         cand_words = node_word_sets[cand_idx]
                         # IDF-weighted relevance (Fix 4)
-                        lexical_relevance = self.calculate_content_score_optimized(
-                            cand_words, anchor_words, idf
-                        )
+                        lexical_relevance = self.calculate_content_score_optimized(cand_words, anchor_words, idf)
                         graph_relevance = self.calculate_graph_score(
                             cand_idx=cand_idx,
                             anchor_file_stems=anchor_file_stems,
@@ -812,28 +815,25 @@ class MemorySearchAgent(DefaultAgent):
                             regex_import_graph=regex_import_graph,
                             related_reference_indices=related_reference_indices,
                         )
-                        relevance = (
-                            effective_w_content * lexical_relevance
-                            + effective_w_graph * graph_relevance
-                        )
+                        relevance = effective_w_content * lexical_relevance + effective_w_graph * graph_relevance
 
                         # IDF-weighted redundancy (Fix 4)
                         redundancy = 0.0
                         for selected_idx in selected_non_fixed:
-                            sim = self._node_similarity(
-                                cand_words, node_word_sets[selected_idx], idf
-                            )
+                            sim = self._node_similarity(cand_words, node_word_sets[selected_idx], idf)
                             redundancy = max(redundancy, sim)
 
                         lam = self.config.diversity_lambda
                         marginal_gain = lam * relevance - (1 - lam) * redundancy
                         best_next_gain = max(best_next_gain, marginal_gain)
 
-                        candidates_next_round.append(self.BeamState(
-                            beam.selected_indices | {cand_idx},
-                            beam.current_chars + cand_chars,
-                            beam.score + marginal_gain,
-                        ))
+                        candidates_next_round.append(
+                            self.BeamState(
+                                beam.selected_indices | {cand_idx},
+                                beam.current_chars + cand_chars,
+                                beam.score + marginal_gain,
+                            )
+                        )
                         expanded_any = True
 
             if not expanded_any:
@@ -867,12 +867,12 @@ class MemorySearchAgent(DefaultAgent):
         # 4. Final Selection
         print(f"Beam Search Selected {len(best_beam.selected_indices)} nodes with score {best_beam.score:.2f}")
         selected_nodes = [self.memory_graph[i] for i in best_beam.selected_indices]
-        
+
         return selected_nodes
 
     def _tokenize_content(self, content: str) -> set[str]:
         """Tokenize content for relevance and redundancy scoring."""
-        return set(re.sub(r'\W+', ' ', content.lower()).split())
+        return set(re.sub(r"\W+", " ", content.lower()).split())
 
     def _node_filenames(self, node: MemoryNode) -> list[str]:
         normalized = []
@@ -891,7 +891,7 @@ class MemorySearchAgent(DefaultAgent):
     def _extract_output_body(self, text: str) -> str:
         """Best-effort extraction for templated observations."""
         if text.startswith("Observation:"):
-            text = text[len("Observation:"):].strip()
+            text = text[len("Observation:") :].strip()
         match = re.search(r"<output>\s*(.*?)\s*</output>", text, re.DOTALL)
         if match:
             return match.group(1)
@@ -1040,9 +1040,7 @@ class MemorySearchAgent(DefaultAgent):
                     regex_import_graph[stem].update(regex_modules)
         return dict(ast_import_graph), dict(regex_import_graph)
 
-    def _has_import_relation(
-        self, files_a: set[str], files_b: set[str], import_graph: dict[str, set[str]]
-    ) -> bool:
+    def _has_import_relation(self, files_a: set[str], files_b: set[str], import_graph: dict[str, set[str]]) -> bool:
         for file_a in files_a:
             if import_graph.get(file_a, set()) & files_b:
                 return True
@@ -1139,11 +1137,7 @@ class MemorySearchAgent(DefaultAgent):
         if total <= 0:
             return 0.0
 
-        return (
-            w_overlap * overlap_score
-            + w_import * import_score
-            + w_adjacency * adjacency_score
-        ) / total
+        return (w_overlap * overlap_score + w_import * import_score + w_adjacency * adjacency_score) / total
 
     def _build_idf_weights(self) -> dict[str, float]:
         """Compute IDF weights from all memory nodes (smoothed log-IDF).
@@ -1152,6 +1146,7 @@ class MemorySearchAgent(DefaultAgent):
         rare identifiers (TimeSeries, _required_columns) get high weight.
         """
         import math
+
         N = len(self.memory_graph)
         if N == 0:
             return {}

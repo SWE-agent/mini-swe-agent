@@ -23,7 +23,6 @@ import re
 from collections import Counter
 from pathlib import Path
 
-
 # ── Per-trajectory parsers ──────────────────────────────────────────────────
 
 
@@ -36,8 +35,11 @@ def assistant_messages(traj: dict) -> list[dict]:
 
 
 def observation_messages(traj: dict) -> list[dict]:
-    return [m for m in traj.get("messages", [])
-            if m.get("role") in ("user", "tool") and "<returncode>" in str(m.get("content", ""))]
+    return [
+        m
+        for m in traj.get("messages", [])
+        if m.get("role") in ("user", "tool") and "<returncode>" in str(m.get("content", ""))
+    ]
 
 
 def extract_command(asst_msg: dict) -> str:
@@ -65,18 +67,27 @@ def extract_command(asst_msg: dict) -> str:
 # self-contained so we can analyze any traj without importing PlanMem.
 _IMPL = re.compile(
     r"^\s*(sed|awk|perl|ed|ex|tee|cp|mv|truncate|apply_patch|patch|"
-    r"git\s+(apply|checkout|restore|mv|rm))\b", re.IGNORECASE)
+    r"git\s+(apply|checkout|restore|mv|rm))\b",
+    re.IGNORECASE,
+)
 _IMPL_REDIRECT = re.compile(r"(^|\s)(>|>>)\s*\S")
 _IMPL_HEREDOC = re.compile(r"cat\s+<<")
 _VERIF = re.compile(
     r"^\s*(python|python3|pytest|py\.test|tox|nox|make\s+test|"
     r"npm\s+test|yarn\s+test|go\s+test|cargo\s+test|"
-    r"\.\/test|bash\s+test|unittest)\b", re.IGNORECASE)
-_HYP_CMD = re.compile(r"^\s*(python\d?\s+-c|python\d?\s+-m\s+pdb|pdb|ipython|"
-                      r"git\s+blame|git\s+log\s+-p)\b", re.IGNORECASE)
+    r"\.\/test|bash\s+test|unittest)\b",
+    re.IGNORECASE,
+)
+_HYP_CMD = re.compile(
+    r"^\s*(python\d?\s+-c|python\d?\s+-m\s+pdb|pdb|ipython|"
+    r"git\s+blame|git\s+log\s+-p)\b",
+    re.IGNORECASE,
+)
 _EXPL = re.compile(
     r"^\s*(find|grep|rg|ag|ack|ls|tree|cat|head|tail|less|more|wc|file|"
-    r"nl|bat|fd|locate|git\s+(log|show|diff|blame))\b", re.IGNORECASE)
+    r"nl|bat|fd|locate|git\s+(log|show|diff|blame))\b",
+    re.IGNORECASE,
+)
 
 
 def detect_phase(cmd: str) -> str:
@@ -182,8 +193,7 @@ def aggregate(rows: list[dict]) -> dict:
 
 def main() -> int:
     p = argparse.ArgumentParser()
-    p.add_argument("--traj-dir", required=True,
-                   help="Directory containing <instance>/<instance>.traj.json files")
+    p.add_argument("--traj-dir", required=True, help="Directory containing <instance>/<instance>.traj.json files")
     args = p.parse_args()
 
     root = Path(args.traj_dir)
@@ -209,8 +219,7 @@ def main() -> int:
     # Top empty-patch instances
     empty_instances = [r["instance_id"] for r in rows if r["patch_empty"]][:20]
     if empty_instances:
-        print(f"\nempty-patch instances (first 20 of "
-              f"{sum(r['patch_empty'] for r in rows)}):")
+        print(f"\nempty-patch instances (first 20 of {sum(r['patch_empty'] for r in rows)}):")
         for iid in empty_instances:
             print(f"  - {iid}")
 

@@ -16,7 +16,6 @@ Run:
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 import time
 from pathlib import Path
@@ -28,8 +27,7 @@ CONFIG_PATH = Path("src/minisweagent/config/benchmarks/swebench_planmem.yaml")
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--instance", default="astropy__astropy-12907",
-                        help="SWE-bench Verified instance_id")
+    parser.add_argument("--instance", default="astropy__astropy-12907", help="SWE-bench Verified instance_id")
     parser.add_argument("--model", default="openai/Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8")
     parser.add_argument("--api-base", default="http://localhost:8765/v1")
     parser.add_argument("--config", default=str(CONFIG_PATH))
@@ -58,7 +56,7 @@ def main() -> int:
     ds = load_dataset("princeton-nlp/SWE-Bench_Verified", split="test")
     matches = [i for i in ds if i["instance_id"] == args.instance]
     if not matches:
-        print(f"ERROR: instance not found in dataset", file=sys.stderr)
+        print("ERROR: instance not found in dataset", file=sys.stderr)
         return 2
     instance = matches[0]
 
@@ -71,19 +69,20 @@ def main() -> int:
     agent = PlanMemAgent(model, env, **agent_kwargs)
 
     print(f"Planner status: {agent.planner.progress if agent.config.enable_planner else 'disabled'}")
-    print(f"Running PlanMemAgent for up to {agent.config.step_limit} steps "
-          f"or ${agent.config.cost_limit:.2f}...")
+    print(f"Running PlanMemAgent for up to {agent.config.step_limit} steps or ${agent.config.cost_limit:.2f}...")
     t0 = time.perf_counter()
     info = agent.run(instance["problem_statement"])
     dt = time.perf_counter() - t0
 
     traj_path = out_dir / f"{args.instance}.traj.json"
-    agent.save(traj_path, {
-        "info": info,
-        "instance_id": args.instance,
-        "planner_progress": agent.planner.progress
-            if agent.config.enable_planner else "disabled",
-    })
+    agent.save(
+        traj_path,
+        {
+            "info": info,
+            "instance_id": args.instance,
+            "planner_progress": agent.planner.progress if agent.config.enable_planner else "disabled",
+        },
+    )
 
     print()
     print(f"exit_status   : {info.get('exit_status')}")
@@ -95,10 +94,7 @@ def main() -> int:
     print(f"trajectory    : {traj_path}")
 
     # Quick metadata sanity check (codex flagged this as a likely break in v2).
-    has_filenames = sum(
-        1 for n in agent.memory_graph
-        if isinstance(n.metadata, dict) and n.metadata.get("filenames")
-    )
+    has_filenames = sum(1 for n in agent.memory_graph if isinstance(n.metadata, dict) and n.metadata.get("filenames"))
     print(f"nodes w/ filename metadata: {has_filenames} (>0 = action-extraction OK)")
 
     # Exit code = 0 only on Submitted, so a CI loop can rely on it.

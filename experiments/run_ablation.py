@@ -20,7 +20,6 @@ import time
 import traceback
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -39,46 +38,61 @@ class Variant:
 
 
 VARIANTS: list[Variant] = [
-    Variant("baseline", {
-        "enable_planner": False,
-        "enable_adaptive_memory": False,
-        "enable_replanning": False,
-        "enable_memory_to_planner": False,
-        "use_llm_decomposition": False,
-        "use_llm_replan": False,
-    }),
-    Variant("planner_only", {
-        "enable_planner": True,
-        "enable_adaptive_memory": False,
-        "enable_replanning": False,
-        "enable_memory_to_planner": False,
-        "use_llm_decomposition": False,
-        "use_llm_replan": False,
-    }),
-    Variant("adaptive_only", {
-        "enable_planner": True,            # adaptive needs planner-derived signal
-        "enable_adaptive_memory": True,
-        "enable_replanning": False,
-        "enable_memory_to_planner": False,
-        "use_llm_decomposition": False,
-        "use_llm_replan": False,
-    }),
-    Variant("plus_mem_to_planner", {
-        "enable_planner": True,
-        "enable_adaptive_memory": True,
-        "enable_replanning": False,
-        "enable_memory_to_planner": True,
-        "use_llm_decomposition": False,
-        "use_llm_replan": False,
-    }),
-    Variant("full", {
-        "enable_planner": True,
-        "enable_adaptive_memory": True,
-        "enable_replanning": True,
-        "enable_memory_to_planner": True,
-        "use_llm_decomposition": True,
-        "use_llm_replan": False,  # keep recovery deterministic for fair compare
-    }),
+    Variant(
+        "baseline",
+        {
+            "enable_planner": False,
+            "enable_adaptive_memory": False,
+            "enable_replanning": False,
+            "enable_memory_to_planner": False,
+            "use_llm_decomposition": False,
+            "use_llm_replan": False,
+        },
+    ),
+    Variant(
+        "planner_only",
+        {
+            "enable_planner": True,
+            "enable_adaptive_memory": False,
+            "enable_replanning": False,
+            "enable_memory_to_planner": False,
+            "use_llm_decomposition": False,
+            "use_llm_replan": False,
+        },
+    ),
+    Variant(
+        "adaptive_only",
+        {
+            "enable_planner": True,  # adaptive needs planner-derived signal
+            "enable_adaptive_memory": True,
+            "enable_replanning": False,
+            "enable_memory_to_planner": False,
+            "use_llm_decomposition": False,
+            "use_llm_replan": False,
+        },
+    ),
+    Variant(
+        "plus_mem_to_planner",
+        {
+            "enable_planner": True,
+            "enable_adaptive_memory": True,
+            "enable_replanning": False,
+            "enable_memory_to_planner": True,
+            "use_llm_decomposition": False,
+            "use_llm_replan": False,
+        },
+    ),
+    Variant(
+        "full",
+        {
+            "enable_planner": True,
+            "enable_adaptive_memory": True,
+            "enable_replanning": True,
+            "enable_memory_to_planner": True,
+            "use_llm_decomposition": True,
+            "use_llm_replan": False,  # keep recovery deterministic for fair compare
+        },
+    ),
 ]
 
 
@@ -91,10 +105,11 @@ def run_one_variant(
     out_root: Path,
 ) -> dict:
     """Run all instances under one variant. Returns summary dict."""
-    from minisweagent.agents.planmem_agent import PlanMemAgent
-    from minisweagent.models import get_model
     from minisweagent.run.extra.swebench import get_sb_environment
     from minisweagent.run.utils.save import save_traj
+
+    from minisweagent.agents.planmem_agent import PlanMemAgent
+    from minisweagent.models import get_model
 
     out_dir = out_root / variant.name
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -154,14 +169,11 @@ def run_one_variant(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--instances", type=int, default=3,
-                        help="Number of SWE-bench instances per variant")
+    parser.add_argument("--instances", type=int, default=3, help="Number of SWE-bench instances per variant")
     parser.add_argument("--model", type=str, required=True)
-    parser.add_argument("--config", type=str, default=None,
-                        help="Optional path to a YAML agent config")
+    parser.add_argument("--config", type=str, default=None, help="Optional path to a YAML agent config")
     parser.add_argument("--out", type=str, default="experiments/outputs/ablation")
-    parser.add_argument("--variants", type=str, default=None,
-                        help="Comma-separated subset of variant names to run")
+    parser.add_argument("--variants", type=str, default=None, help="Comma-separated subset of variant names to run")
     args = parser.parse_args()
 
     import yaml
@@ -169,9 +181,7 @@ def main() -> None:
 
     from minisweagent.config import builtin_config_dir
 
-    config_path = Path(args.config) if args.config else (
-        builtin_config_dir / "extra" / "swebench.yaml"
-    )
+    config_path = Path(args.config) if args.config else (builtin_config_dir / "extra" / "swebench.yaml")
     base_config = yaml.safe_load(Path(config_path).read_text())
 
     print(f"Loading SWE-bench Verified, taking first {args.instances} instances...")
@@ -190,10 +200,15 @@ def main() -> None:
     for variant in selected:
         print(f"\n=== Variant: {variant.name} ===")
         try:
-            summaries.append(run_one_variant(
-                variant, instances,
-                model_name=args.model, base_config=base_config, out_root=out_root,
-            ))
+            summaries.append(
+                run_one_variant(
+                    variant,
+                    instances,
+                    model_name=args.model,
+                    base_config=base_config,
+                    out_root=out_root,
+                )
+            )
         except Exception:
             traceback.print_exc()
 

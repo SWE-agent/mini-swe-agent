@@ -15,19 +15,97 @@ from minisweagent.agents.planmem.types import MemoryStats, PlanningSignal, SubTa
 logger = logging.getLogger(__name__)
 
 # Stop words filtered from goal keyword extraction
-_STOP_WORDS = frozenset({
-    "the", "and", "for", "that", "this", "with", "from", "are", "was",
-    "were", "been", "have", "has", "had", "not", "but", "can", "will",
-    "should", "would", "could", "may", "might", "shall", "does", "did",
-    "into", "than", "then", "when", "where", "which", "while", "also",
-    "each", "every", "all", "any", "both", "few", "more", "most", "other",
-    "some", "such", "only", "own", "same", "too", "very", "just",
-    "because", "about", "between", "through", "during", "before", "after",
-    "above", "below", "here", "there", "once", "further", "being",
-    "file", "line", "code", "function", "class", "method", "import",
-    "return", "value", "type", "name", "error", "output", "input",
-    "use", "using", "used", "new", "old", "first", "last", "next",
-})
+_STOP_WORDS = frozenset(
+    {
+        "the",
+        "and",
+        "for",
+        "that",
+        "this",
+        "with",
+        "from",
+        "are",
+        "was",
+        "were",
+        "been",
+        "have",
+        "has",
+        "had",
+        "not",
+        "but",
+        "can",
+        "will",
+        "should",
+        "would",
+        "could",
+        "may",
+        "might",
+        "shall",
+        "does",
+        "did",
+        "into",
+        "than",
+        "then",
+        "when",
+        "where",
+        "which",
+        "while",
+        "also",
+        "each",
+        "every",
+        "all",
+        "any",
+        "both",
+        "few",
+        "more",
+        "most",
+        "other",
+        "some",
+        "such",
+        "only",
+        "own",
+        "same",
+        "too",
+        "very",
+        "just",
+        "because",
+        "about",
+        "between",
+        "through",
+        "during",
+        "before",
+        "after",
+        "above",
+        "below",
+        "here",
+        "there",
+        "once",
+        "further",
+        "being",
+        "file",
+        "line",
+        "code",
+        "function",
+        "class",
+        "method",
+        "import",
+        "return",
+        "value",
+        "type",
+        "name",
+        "error",
+        "output",
+        "input",
+        "use",
+        "using",
+        "used",
+        "new",
+        "old",
+        "first",
+        "last",
+        "next",
+    }
+)
 
 
 @dataclass
@@ -60,8 +138,8 @@ class PlannerConfig:
     consecutive_failure_threshold: int = 3
     # Memory→planner saturation thresholds
     file_read_saturation_threshold: int = 6  # same file read >=6 times without progress
-    repeat_action_threshold: int = 4         # same command issued >=4 times
-    replan_cooldown_steps: int = 8           # min steps between two replans
+    repeat_action_threshold: int = 4  # same command issued >=4 times
+    replan_cooldown_steps: int = 8  # min steps between two replans
 
 
 @dataclass
@@ -76,7 +154,7 @@ class PlannerState:
     goal_keywords: set[str] = field(default_factory=set)
     step_count: int = 0
     last_goal_reminder_step: int = -100
-    last_replan_step: int = -10**6
+    last_replan_step: int = -(10**6)
     next_subtask_id: int = 0
     file_edit_counts: dict[str, int] = field(default_factory=dict)
     recent_return_codes: list[int] = field(default_factory=list)
@@ -160,7 +238,7 @@ class HierarchicalPlanner:
 
     def _should_backtrack(self, memory_stats: MemoryStats | None = None) -> bool:
         cfg = self.config
-        recent = self.state.recent_return_codes[-cfg.consecutive_failure_threshold:]
+        recent = self.state.recent_return_codes[-cfg.consecutive_failure_threshold :]
         if len(recent) >= cfg.consecutive_failure_threshold and all(rc != 0 for rc in recent):
             logger.info("Backtrack: %d consecutive failures", len(recent))
             return True
@@ -171,15 +249,15 @@ class HierarchicalPlanner:
         # Memory→planner: file-read saturation & repeat-action.
         if memory_stats is not None:
             saturated = [
-                (p, c) for p, c in memory_stats.file_read_counts.items()
-                if c >= cfg.file_read_saturation_threshold
+                (p, c) for p, c in memory_stats.file_read_counts.items() if c >= cfg.file_read_saturation_threshold
             ]
             if saturated:
                 logger.info("Backtrack: read saturation on %s", saturated[0])
                 return True
             if memory_stats.repeat_action_count >= cfg.repeat_action_threshold:
                 logger.info(
-                    "Backtrack: repeat-action count %d", memory_stats.repeat_action_count,
+                    "Backtrack: repeat-action count %d",
+                    memory_stats.repeat_action_count,
                 )
                 return True
         return False
@@ -207,12 +285,17 @@ class HierarchicalPlanner:
     # ── Sub-task management ─────────────────────────────────────────────────
 
     _PHASE_ORDER = {
-        TaskPhase.EXPLORATION: 0, TaskPhase.HYPOTHESIS: 1,
-        TaskPhase.IMPLEMENTATION: 2, TaskPhase.VERIFICATION: 3,
+        TaskPhase.EXPLORATION: 0,
+        TaskPhase.HYPOTHESIS: 1,
+        TaskPhase.IMPLEMENTATION: 2,
+        TaskPhase.VERIFICATION: 3,
     }
 
     def _record_subtask_progress(
-        self, action: str, return_code: int, detected_phase: TaskPhase,
+        self,
+        action: str,
+        return_code: int,
+        detected_phase: TaskPhase,
     ) -> None:
         """Track per-subtask evidence used by the completion predicate."""
         if not self.state.goal_stack:
@@ -254,7 +337,9 @@ class HierarchicalPlanner:
         return True
 
     def _check_subtask_completion(
-        self, detected_phase: TaskPhase, return_code: int,
+        self,
+        detected_phase: TaskPhase,
+        return_code: int,
     ) -> None:
         if not self.state.goal_stack:
             return
@@ -262,8 +347,11 @@ class HierarchicalPlanner:
         if not self._subtask_verified(active, detected_phase):
             return
         completed = SubTask(
-            id=active.id, description=active.description,
-            phase=active.phase, parent_id=active.parent_id, status="completed",
+            id=active.id,
+            description=active.description,
+            phase=active.phase,
+            parent_id=active.parent_id,
+            status="completed",
         )
         self.state.completed_subtasks.append(completed)
         self.state.goal_stack.pop()
@@ -289,10 +377,15 @@ class HierarchicalPlanner:
         failed = self.state.goal_stack[-1] if self.state.goal_stack else None
         if failed is not None:
             self.state.goal_stack.pop()
-            self.state.failed_subtasks.append(SubTask(
-                id=failed.id, description=failed.description,
-                phase=failed.phase, parent_id=failed.parent_id, status="failed",
-            ))
+            self.state.failed_subtasks.append(
+                SubTask(
+                    id=failed.id,
+                    description=failed.description,
+                    phase=failed.phase,
+                    parent_id=failed.parent_id,
+                    status="failed",
+                )
+            )
             # Drop the failed sub-task's progress so it can't bleed into
             # the verification predicate of the recovery children.
             self.state.subtask_progress.pop(failed.id, None)
@@ -313,7 +406,9 @@ class HierarchicalPlanner:
         return True
 
     def _generate_replan_children(
-        self, failed: SubTask | None, query_fn: object | None,
+        self,
+        failed: SubTask | None,
+        query_fn: object | None,
     ) -> list[SubTask]:
         """Build recovery sub-tasks; LLM if available, deterministic fallback otherwise."""
         if query_fn is not None and failed is not None:
@@ -327,7 +422,8 @@ class HierarchicalPlanner:
         recent_codes = ",".join(str(rc) for rc in self.state.recent_return_codes[-5:])
         repeated_files = sorted(
             self.state.file_edit_counts,
-            key=lambda f: self.state.file_edit_counts[f], reverse=True,
+            key=lambda f: self.state.file_edit_counts[f],
+            reverse=True,
         )[:3]
         prompt = (
             "You are a recovery planner. The agent failed sub-task:\n"
@@ -370,17 +466,24 @@ class HierarchicalPlanner:
         return self.state.subtask_start_msg_idx.get(subtask_id)
 
     def _adopt_as_children(
-        self, subtasks: list[SubTask], parent_id: int | None,
+        self,
+        subtasks: list[SubTask],
+        parent_id: int | None,
     ) -> list[SubTask]:
         """Re-id sub-tasks using planner state's id allocator and set parent_id."""
         adopted = []
         for st in subtasks:
             new_id = self.state.next_subtask_id
             self.state.next_subtask_id += 1
-            adopted.append(SubTask(
-                id=new_id, description=st.description, phase=st.phase,
-                parent_id=parent_id, status="pending",
-            ))
+            adopted.append(
+                SubTask(
+                    id=new_id,
+                    description=st.description,
+                    phase=st.phase,
+                    parent_id=parent_id,
+                    status="pending",
+                )
+            )
         return adopted
 
     # ── LLM decomposition ───────────────────────────────────────────────────
@@ -401,13 +504,16 @@ class HierarchicalPlanner:
     # ── Signal building ─────────────────────────────────────────────────────
 
     def _build_signal(
-        self, goal_drift: bool = False, should_backtrack: bool = False,
+        self,
+        goal_drift: bool = False,
+        should_backtrack: bool = False,
     ) -> PlanningSignal:
         phase = self.state.current_phase
         budget = self._phase_budget(phase)
         priority_files = sorted(
             self.state.file_edit_counts.keys(),
-            key=lambda f: self.state.file_edit_counts[f], reverse=True,
+            key=lambda f: self.state.file_edit_counts[f],
+            reverse=True,
         )[:5]
         active = self.state.goal_stack[-1] if self.state.goal_stack else None
         goal_parts = []
@@ -445,13 +551,11 @@ class HierarchicalPlanner:
         failed = len(self.state.failed_subtasks)
         pending = len(self.state.goal_stack)
         total = done + failed + pending
-        return (
-            f"{done}/{total} sub-tasks done, {failed} failed, "
-            f"phase={self.state.current_phase.value}"
-        )
+        return f"{done}/{total} sub-tasks done, {failed} failed, phase={self.state.current_phase.value}"
 
 
 # ── Module-level helpers ────────────────────────────────────────────────────
+
 
 def _call_query_fn(query_fn: object, messages: list[dict]) -> dict:
     """Invoke an LLM query callable or a model object's ``query`` uniformly.

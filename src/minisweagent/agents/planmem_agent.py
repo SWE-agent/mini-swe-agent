@@ -45,10 +45,10 @@ class PlanMemConfig(MemorySearchConfig):
     # Feature flags for ablation
     enable_planner: bool = True
     enable_adaptive_memory: bool = True
-    enable_replanning: bool = True       # close planning loop on backtrack
+    enable_replanning: bool = True  # close planning loop on backtrack
     enable_memory_to_planner: bool = True  # feed MemoryStats into planner
-    use_llm_decomposition: bool = True   # False = use default sub-tasks (cheaper)
-    use_llm_replan: bool = True          # False = deterministic recovery sub-tasks
+    use_llm_decomposition: bool = True  # False = use default sub-tasks (cheaper)
+    use_llm_replan: bool = True  # False = deterministic recovery sub-tasks
 
     # P0: planning header injected into system prompt — bounded, cache-friendly.
     # When enabled, append "Phase: ... / Current goal: ..." to messages[0] only
@@ -75,9 +75,7 @@ class PlanMemConfig(MemorySearchConfig):
     # the failed sub-task started, then injects a short reset note so the
     # next model.query sees a coherent conversation tail.
     enable_trajectory_rewind: bool = False
-    rewind_reset_message: str = (
-        "Previous approach did not work; reconsider with a different angle."
-    )
+    rewind_reset_message: str = "Previous approach did not work; reconsider with a different angle."
 
 
 class PlanMemAgent(MemorySearchAgent):
@@ -137,7 +135,8 @@ class PlanMemAgent(MemorySearchAgent):
         if self.config.enable_planner:
             if self.config.use_llm_decomposition:
                 self._planning_signal = self.planner.initialize(
-                    task, self._accounted_query,
+                    task,
+                    self._accounted_query,
                 )
             else:
                 self._planning_signal = self.planner.initialize_without_llm(task)
@@ -192,19 +191,18 @@ class PlanMemAgent(MemorySearchAgent):
         5. Query LLM with selected context (counted via ``_accounted_query``)
         """
         if 0 < self.config.step_limit <= self.n_calls or 0 < self.config.cost_limit <= self.cost:
-            raise LimitsExceeded({
-                "role": "exit",
-                "content": "LimitsExceeded",
-                "extra": {"exit_status": "LimitsExceeded", "submission": ""},
-            })
+            raise LimitsExceeded(
+                {
+                    "role": "exit",
+                    "content": "LimitsExceeded",
+                    "extra": {"exit_status": "LimitsExceeded", "submission": ""},
+                }
+            )
 
         # P1b: consume a pending rewind BEFORE any other prompt mutation.
         # Order matters: rewind shortens messages, then header/card etc.
         # re-apply on the shortened tail.
-        if (
-            self.config.enable_trajectory_rewind
-            and self._pending_rewind is not None
-        ):
+        if self.config.enable_trajectory_rewind and self._pending_rewind is not None:
             self._apply_rewind(self._pending_rewind)
             self._pending_rewind = None
 
@@ -230,7 +228,8 @@ class PlanMemAgent(MemorySearchAgent):
         # surface only via downstream channels (phase budgets, replan, etc.)
         if self.config.enable_adaptive_memory and self._planning_signal is not None:
             selected_nodes = self.memory_controller.construct_context(
-                self._planning_signal, base_agent=self,
+                self._planning_signal,
+                base_agent=self,
             )
         else:
             selected_nodes = self.construct_context_via_search()
@@ -241,9 +240,13 @@ class PlanMemAgent(MemorySearchAgent):
         if not toolcall_mode:
             max_chars = self._max_node_chars()
             self.messages = [
-                {"role": n.role, "content": self._compress_content(
-                    getattr(n, "raw_content", n.content), max_chars,
-                )}
+                {
+                    "role": n.role,
+                    "content": self._compress_content(
+                        getattr(n, "raw_content", n.content),
+                        max_chars,
+                    ),
+                }
                 for n in selected_nodes
             ]
 
@@ -295,7 +298,8 @@ class PlanMemAgent(MemorySearchAgent):
                     first = actions[0]
                     if isinstance(first, dict):
                         last_action = (
-                            first.get("action") or first.get("command")
+                            first.get("action")
+                            or first.get("command")
                             or first.get("cmd")
                             or (first.get("arguments") or {}).get("command")
                             or (first.get("arguments") or {}).get("cmd")
@@ -306,12 +310,15 @@ class PlanMemAgent(MemorySearchAgent):
                 if not last_action:
                     action_match = re.search(
                         r"```(?:mswea_bash_command|bash)\s*\n(.*?)\n```",
-                        content, re.DOTALL,
+                        content,
+                        re.DOTALL,
                     )
                     if action_match:
                         last_action = action_match.group(1).strip()
                 thought_match = re.search(
-                    r"THOUGHT:\s*(.*?)(?=\n```|\Z)", content, re.DOTALL | re.IGNORECASE,
+                    r"THOUGHT:\s*(.*?)(?=\n```|\Z)",
+                    content,
+                    re.DOTALL | re.IGNORECASE,
                 )
                 if thought_match:
                     last_thought = thought_match.group(1).strip()
@@ -348,33 +355,24 @@ class PlanMemAgent(MemorySearchAgent):
             replan_qfn = self._accounted_query if self.config.use_llm_replan else None
             # Capture failed sub-task id BEFORE replan pops it so we can look
             # up its birth msg-idx for trajectory rewind.
-            failed_id_before = (
-                self.planner.state.goal_stack[-1].id
-                if self.planner.state.goal_stack else None
-            )
+            failed_id_before = self.planner.state.goal_stack[-1].id if self.planner.state.goal_stack else None
             if self.planner.replan_on_backtrack(replan_qfn):
                 # P1b: schedule a trajectory rewind to the failed sub-task's
                 # birth point. Consumed at top of next query() before the
                 # next model call.
-                if (
-                    self.config.enable_trajectory_rewind
-                    and failed_id_before is not None
-                ):
+                if self.config.enable_trajectory_rewind and failed_id_before is not None:
                     birth = self.planner.get_subtask_birth_msg_idx(failed_id_before)
                     if birth is not None:
                         self._pending_rewind = birth
                     # The birth-idx entry is no longer needed.
                     self.planner.state.subtask_start_msg_idx.pop(
-                        failed_id_before, None,
+                        failed_id_before,
+                        None,
                     )
                 # Register birth idx for newly-pushed recovery sub-tasks.
                 # Use the (about-to-be-rewound) target index when a rewind
                 # is pending so all recovery sub-tasks share the boundary.
-                default_idx = (
-                    self._pending_rewind
-                    if self._pending_rewind is not None
-                    else len(self.messages)
-                )
+                default_idx = self._pending_rewind if self._pending_rewind is not None else len(self.messages)
                 self._register_pending_subtask_births(default_idx=default_idx)
                 # Surface the new active sub-task in the signal.
                 self._planning_signal = self.planner._build_signal(
@@ -424,7 +422,9 @@ class PlanMemAgent(MemorySearchAgent):
 
         block = self._build_planning_block(phase, active)
         stripped = self._strip_block(
-            existing, self.PLANMEM_HEADER_BEGIN, self.PLANMEM_HEADER_END,
+            existing,
+            self.PLANMEM_HEADER_BEGIN,
+            self.PLANMEM_HEADER_END,
         )
         new_system = stripped + ("\n\n" if stripped else "") + block
         self._apply_system_content(new_system)
@@ -442,9 +442,7 @@ class PlanMemAgent(MemorySearchAgent):
         """
         cap = self.config.planning_header_max_chars
         # Reserve room for the wrapping markers + the two label lines.
-        wrap_overhead = (
-            len(self.PLANMEM_HEADER_BEGIN) + len(self.PLANMEM_HEADER_END) + 32
-        )
+        wrap_overhead = len(self.PLANMEM_HEADER_BEGIN) + len(self.PLANMEM_HEADER_END) + 32
         body_budget = max(40, cap - wrap_overhead)
 
         phase_line = f"Phase: {phase[:40]}"
@@ -456,30 +454,21 @@ class PlanMemAgent(MemorySearchAgent):
             # Sanitize: strip the marker substrings so a maliciously- or
             # accidentally-formatted sub-task description from the LLM
             # decomposition cannot break the strip-block regex.
-            desc = (active.description or "")
+            desc = active.description or ""
             desc = desc.replace(self.PLANMEM_HEADER_BEGIN, "").replace(
-                self.PLANMEM_HEADER_END, "",
+                self.PLANMEM_HEADER_END,
+                "",
             )
             desc = desc.strip().replace("\n", " ")[:remaining]
             goal_line = f"Current goal: {desc}"
 
-        block = (
-            f"{self.PLANMEM_HEADER_BEGIN}\n"
-            f"{phase_line}\n"
-            f"{goal_line}\n"
-            f"{self.PLANMEM_HEADER_END}"
-        )
+        block = f"{self.PLANMEM_HEADER_BEGIN}\n{phase_line}\n{goal_line}\n{self.PLANMEM_HEADER_END}"
         # Final hard cap — if any drift makes us oversized, truncate from the
         # goal line. Toleration of one trailing close-marker is preserved.
         if len(block) > cap:
             overrun = len(block) - cap
             shrunk_goal = goal_line[: max(0, len(goal_line) - overrun - 3)] + "..."
-            block = (
-                f"{self.PLANMEM_HEADER_BEGIN}\n"
-                f"{phase_line}\n"
-                f"{shrunk_goal}\n"
-                f"{self.PLANMEM_HEADER_END}"
-            )
+            block = f"{self.PLANMEM_HEADER_BEGIN}\n{phase_line}\n{shrunk_goal}\n{self.PLANMEM_HEADER_END}"
         return block
 
     def _strip_planning_header(self) -> None:
@@ -488,7 +477,9 @@ class PlanMemAgent(MemorySearchAgent):
             return
         existing = self.messages[0].get("content") or ""
         stripped = self._strip_block(
-            existing, self.PLANMEM_HEADER_BEGIN, self.PLANMEM_HEADER_END,
+            existing,
+            self.PLANMEM_HEADER_BEGIN,
+            self.PLANMEM_HEADER_END,
         )
         if stripped != existing:
             self._apply_system_content(stripped)
@@ -500,7 +491,8 @@ class PlanMemAgent(MemorySearchAgent):
         if begin not in text or end not in text:
             return text.rstrip()
         pattern = re.compile(
-            re.escape(begin) + r".*?" + re.escape(end), re.DOTALL,
+            re.escape(begin) + r".*?" + re.escape(end),
+            re.DOTALL,
         )
         return pattern.sub("", text).rstrip()
 
@@ -578,7 +570,7 @@ class PlanMemAgent(MemorySearchAgent):
         """
         pending: set = set()
         for msg in self.messages[:cut]:
-            for tc in (msg.get("tool_calls") or []):
+            for tc in msg.get("tool_calls") or []:
                 tcid = tc.get("id")
                 if tcid is not None:
                     pending.add(tcid)
@@ -611,11 +603,15 @@ class PlanMemAgent(MemorySearchAgent):
             # downstream beam-search; we just lose access to nodes we cut).
         logger.info(
             "Rewind: cut at idx %d (dropped %d messages) reset_note=%r",
-            cut, dropped, self.config.rewind_reset_message[:60],
+            cut,
+            dropped,
+            self.config.rewind_reset_message[:60],
         )
         # Inject the reset note via the standard path so the memory graph
         # is updated consistently.
-        self.add_messages({
-            "role": "user",
-            "content": self.config.rewind_reset_message,
-        })
+        self.add_messages(
+            {
+                "role": "user",
+                "content": self.config.rewind_reset_message,
+            }
+        )

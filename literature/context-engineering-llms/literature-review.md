@@ -34,7 +34,7 @@ RAG has become the dominant paradigm for injecting external knowledge into LLM c
 
 **GraphRAG** (Edge et al., 2024) introduces knowledge-graph-based retrieval, where an LLM first extracts entities and relationships to build a graph, then uses community detection (Louvain algorithm) and hierarchical summaries to answer both local (entity-specific) and global (holistic) queries. Microsoft's GraphRAG achieves significant improvements on query-focused summarization tasks compared to naive vector-search RAG.
 
-**Self-RAG** (Asai et al., 2023) trains models to adaptively retrieve on demand and critically evaluate generated outputs using special "reflection tokens" for relevance, support, and usefulness, achieving improved factuality and citation accuracy.
+**Self-RAG** (Asia et al., 2023) trains models to adaptively retrieve on demand and critically evaluate generated outputs using special "reflection tokens" for relevance, support, and usefulness, achieving improved factuality and citation accuracy.
 
 #### 2.1.2 Knowledge Graph Integration
 
@@ -218,7 +218,7 @@ Key papers cited:
 - Mei et al. (2025). *A Survey of Context Engineering for Large Language Models*. arXiv:2507.13334
 - Lewis et al. (2020). *Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*. NeurIPS 2020
 - Edge et al. (2024). *From Local to Global: A Graph RAG Approach to Query-Focused Summarization*. arXiv:2404.16130
-- Asai et al. (2023). *Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection*. ICLR 2024
+- Asia et al. (2023). *Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection*. ICLR 2024
 - Jiang et al. (2023). *LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models*. EMNLP 2023
 - Wu et al. (2024). *LLMLingua-2: Data Distillation for Efficient and Faithful Task-Agnostic Prompt Compression*. ACL 2024
 - Jiang et al. (2024). *LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression*. ACL 2024

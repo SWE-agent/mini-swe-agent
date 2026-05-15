@@ -20,19 +20,39 @@ logger = logging.getLogger(__name__)
 # Default phase parameter table
 DEFAULT_PHASE_PARAMS: dict[TaskPhase, PhaseParams] = {
     TaskPhase.EXPLORATION: PhaseParams(
-        token_budget=20000, diversity_lambda=0.5, w_content=0.7, w_graph=0.3, n_recent=4,
+        token_budget=20000,
+        diversity_lambda=0.5,
+        w_content=0.7,
+        w_graph=0.3,
+        n_recent=4,
     ),
     TaskPhase.HYPOTHESIS: PhaseParams(
-        token_budget=16000, diversity_lambda=0.6, w_content=0.5, w_graph=0.5, n_recent=6,
+        token_budget=16000,
+        diversity_lambda=0.6,
+        w_content=0.5,
+        w_graph=0.5,
+        n_recent=6,
     ),
     TaskPhase.IMPLEMENTATION: PhaseParams(
-        token_budget=12000, diversity_lambda=0.9, w_content=0.3, w_graph=0.7, n_recent=8,
+        token_budget=12000,
+        diversity_lambda=0.9,
+        w_content=0.3,
+        w_graph=0.7,
+        n_recent=8,
     ),
     TaskPhase.VERIFICATION: PhaseParams(
-        token_budget=16000, diversity_lambda=0.7, w_content=0.5, w_graph=0.5, n_recent=6,
+        token_budget=16000,
+        diversity_lambda=0.7,
+        w_content=0.5,
+        w_graph=0.5,
+        n_recent=6,
     ),
     TaskPhase.BACKTRACK: PhaseParams(
-        token_budget=20000, diversity_lambda=0.4, w_content=0.6, w_graph=0.4, n_recent=4,
+        token_budget=20000,
+        diversity_lambda=0.4,
+        w_content=0.6,
+        w_graph=0.4,
+        n_recent=4,
     ),
 }
 
@@ -41,16 +61,18 @@ DEFAULT_PHASE_PARAMS: dict[TaskPhase, PhaseParams] = {
 class MemoryControllerConfig:
     """Configuration for the adaptive memory controller."""
 
-    phase_params: dict[str, dict] = field(default_factory=lambda: {
-        phase.value: {
-            "token_budget": p.token_budget,
-            "diversity_lambda": p.diversity_lambda,
-            "w_content": p.w_content,
-            "w_graph": p.w_graph,
-            "n_recent": p.n_recent,
+    phase_params: dict[str, dict] = field(
+        default_factory=lambda: {
+            phase.value: {
+                "token_budget": p.token_budget,
+                "diversity_lambda": p.diversity_lambda,
+                "w_content": p.w_content,
+                "w_graph": p.w_graph,
+                "n_recent": p.n_recent,
+            }
+            for phase, p in DEFAULT_PHASE_PARAMS.items()
         }
-        for phase, p in DEFAULT_PHASE_PARAMS.items()
-    })
+    )
     file_boost_factor: float = 1.5
     goal_reminder_interval: int = 5
     goal_reminder_max_chars: int = 300
@@ -138,9 +160,7 @@ class AdaptiveMemoryController:
 
         # Inject goal reminder if drift detected
         if planning_signal.goal_drift_detected and planning_signal.goal_summary:
-            selected = self._inject_goal_reminder(
-                selected, planning_signal.goal_summary
-            )
+            selected = self._inject_goal_reminder(selected, planning_signal.goal_summary)
 
         return selected
 
@@ -190,9 +210,7 @@ class AdaptiveMemoryController:
         # Apply priority file boosting: re-score and potentially include
         # nodes related to planner-prioritized files
         if priority_files:
-            selected = self._boost_priority_files(
-                agent, selected, priority_files, token_budget
-            )
+            selected = self._boost_priority_files(agent, selected, priority_files, token_budget)
 
         return selected
 
@@ -211,9 +229,7 @@ class AdaptiveMemoryController:
         selected_ids = {n.id for n in selected}
         max_chars = token_budget * 4
         current_chars = sum(
-            len(agent._compress_content(
-                getattr(n, "raw_content", n.content), agent._max_node_chars()
-            ))
+            len(agent._compress_content(getattr(n, "raw_content", n.content), agent._max_node_chars()))
             for n in selected
         )
 
@@ -234,9 +250,9 @@ class AdaptiveMemoryController:
                 continue
             node_stems = agent._node_file_stems(node)
             if node_stems & priority_stems:
-                node_chars = len(agent._compress_content(
-                    getattr(node, "raw_content", node.content), agent._max_node_chars()
-                ))
+                node_chars = len(
+                    agent._compress_content(getattr(node, "raw_content", node.content), agent._max_node_chars())
+                )
                 candidates.append((node_chars, node))
 
         # Sort by recency (higher id = more recent = preferred)
@@ -273,10 +289,7 @@ class AdaptiveMemoryController:
         self._last_goal_reminder_step = self._step_count
 
         truncated = goal_summary[: self.config.goal_reminder_max_chars]
-        reminder_content = (
-            f"GOAL REMINDER: You may be drifting from the original task. "
-            f"Refocus on: {truncated}"
-        )
+        reminder_content = f"GOAL REMINDER: You may be drifting from the original task. Refocus on: {truncated}"
 
         # Reminder must sort *after* the most-recent observation when the
         # caller re-sorts by id; using id=-1 would leak it ahead of system.

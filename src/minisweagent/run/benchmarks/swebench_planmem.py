@@ -34,8 +34,8 @@ from minisweagent.agents.planmem_agent import PlanMemAgent
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.models import get_model
 from minisweagent.run.benchmarks.swebench import (
-    DATASET_MAPPING,
     _OUTPUT_FILE_LOCK,  # noqa: F401  (kept for parity if the official module changes signature)
+    DATASET_MAPPING,
     filter_instances,
     get_sb_environment,
     remove_from_preds_file,
@@ -127,13 +127,15 @@ def process_instance(
                         **extra_info,
                     },
                     "instance_id": instance_id,
-                    "planner_progress": agent.planner.progress
-                    if agent.config.enable_planner else "disabled",
+                    "planner_progress": agent.planner.progress if agent.config.enable_planner else "disabled",
                 },
             )
             logger.info(f"Saved trajectory to '{traj_path}'")
         update_preds_file(
-            output_dir / "preds.json", instance_id, model.config.model_name, result,
+            output_dir / "preds.json",
+            instance_id,
+            model.config.model_name,
+            result,
         )
         progress_manager.on_instance_end(instance_id, exit_status)
 
