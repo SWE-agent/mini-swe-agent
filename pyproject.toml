@@ -90,7 +90,7 @@ Repository = "https://github.com/SWE-agent/mini-swe-agent"
 mini = "minisweagent.run.mini:app"
 mini-swe-agent = "minisweagent.run.mini:app"
 mini-extra = "minisweagent.run.utilities.mini_extra:main"
-mini-e= "minisweagent.run.utilities.mini_extra:main"
+mini-e = "minisweagent.run.utilities.mini_extra:main"
 
 [tool.setuptools]
 include-package-data = true
@@ -149,7 +149,6 @@ target-version = "py310"
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
 # Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
 # McCabe complexity (`C901`) by default.
-# I001: Isort, I002: required import
 select = [
     # Error (E)
     "E",
