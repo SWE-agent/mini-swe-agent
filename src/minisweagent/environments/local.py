@@ -1,3 +1,4 @@
+import logging
 import os
 import platform
 import subprocess
@@ -24,6 +25,7 @@ class LocalEnvironment:
         """Execute a command in the local environment and return the result as a dict."""
         command = action.get("command", "")
         cwd = cwd or self.config.cwd or os.getcwd()
+        logging.getLogger(__name__).debug("LocalEnvironment.execute command=%r cwd=%r timeout=%r", command, cwd, timeout or self.config.timeout)
         try:
             result = subprocess.run(
                 command,
@@ -38,17 +40,27 @@ class LocalEnvironment:
                 stderr=subprocess.STDOUT,
             )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
+            logging.getLogger(__name__).debug("LocalEnvironment.execute returncode=%s output_len=%d", result.returncode, len(result.stdout or ""))
         except Exception as e:
+            # Extract output safely (may be bytes, bytearray, str or None)
             raw_output = getattr(e, "output", None)
-            raw_output = (
-                raw_output.decode("utf-8", errors="replace") if isinstance(raw_output, bytes) else (raw_output or "")
-            )
+            if isinstance(raw_output, (bytes, bytearray)):
+                try:
+                    decoded = raw_output.decode("utf-8", errors="replace")
+                except Exception:
+                    decoded = str(raw_output)
+            elif raw_output is None:
+                decoded = ""
+            else:
+                decoded = str(raw_output)
+
             output = {
-                "output": raw_output,
+                "output": decoded,
                 "returncode": -1,
                 "exception_info": f"An error occurred while executing the command: {e}",
                 "extra": {"exception_type": type(e).__name__, "exception": str(e)},
             }
+            logging.getLogger(__name__).exception("LocalEnvironment.execute failed for command=%r", command)
         self._check_finished(output)
         return output
 

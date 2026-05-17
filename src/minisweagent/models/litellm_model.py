@@ -93,10 +93,12 @@ class LitellmModel:
         return message
 
     def _calculate_cost(self, response) -> dict[str, float]:
+        """Calculate cost; allow zero-cost responses (e.g., local/free models)."""
         try:
             cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
-            if cost <= 0.0:
-                raise ValueError(f"Cost must be > 0.0, got {cost}")
+            # Allow zero cost (some local/free models may report 0.0); only reject negative costs.
+            if cost < 0.0:
+                raise ValueError(f"Cost must be >= 0.0, got {cost}")
         except Exception as e:
             cost = 0.0
             if self.config.cost_tracking != "ignore_errors":
@@ -110,6 +112,9 @@ class LitellmModel:
                 )
                 logger.critical(msg)
                 raise RuntimeError(msg) from e
+            else:
+                # If the user explicitly opted to ignore cost errors, warn and continue with cost 0.
+                logger.warning(f"Ignoring cost calculation error for model {self.config.model_name}: {e}")
         return {"cost": cost}
 
     def _parse_actions(self, response) -> list[dict]:

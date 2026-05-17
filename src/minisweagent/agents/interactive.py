@@ -141,7 +141,7 @@ class InteractiveAgent(DefaultAgent):
             return
         prompt = (
             f"[bold yellow]Execute {len(commands)} action(s)?[/] [green][bold]Enter[/] to confirm[/], "
-            "[red]type [bold]comment[/] to reject[/], or [blue][bold]/h[/] to show available commands[/]\n"
+            "[red]type [bold]comment[/] to reject[/], or [blue][bold]/h[/bold] to show available commands[/]\n"
             "[bold yellow]>[/bold yellow] "
         )
         match user_input := self._prompt_and_handle_slash_commands(prompt).strip():
@@ -160,7 +160,13 @@ class InteractiveAgent(DefaultAgent):
         console.print(prompt, end="")
         if _multiline:
             return _multiline_prompt()
-        user_input = prompt_session.prompt("")
+-        user_input = prompt_session.prompt("")
++        try:
++            user_input = prompt_session.prompt("")
++        except KeyboardInterrupt:
++            # If user interrupts the prompt, return empty input and let callers handle it.
++            console.print("\n[bold yellow]Input interrupted.[/bold yellow]")
++            return ""
         if user_input == "/m":
             return self._prompt_and_handle_slash_commands(prompt, _multiline=True)
         if user_input == "/h":
