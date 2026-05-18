@@ -84,7 +84,9 @@ class HttpModel:
         if not self.config.api_key_env:
             self.config.api_key_env = _default_api_key_env()
         self._api_key = os.getenv(self.config.api_key_env, "")
-        self._model_name = self.config.model_name.split("/", 1)[-1] if self.config.strip_provider_prefix else self.config.model_name
+        self._model_name = (
+            self.config.model_name.split("/", 1)[-1] if self.config.strip_provider_prefix else self.config.model_name
+        )
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         headers = {

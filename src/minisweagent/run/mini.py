@@ -15,12 +15,11 @@ from minisweagent.agents import get_agent
 from minisweagent.agents.utils.prompt_user import _multiline_prompt
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments import get_environment
+from minisweagent.environments.docker import DockerEnvironment
 from minisweagent.models import get_model
+from minisweagent.run.gitlab_utils import create_merge_request, fetch_issue_details, parse_issue_url
 from minisweagent.run.utilities.config import configure_if_first_time
 from minisweagent.utils.serialize import UNSET, recursive_merge
-
-from minisweagent.run.gitlab_utils import parse_issue_url, fetch_issue_details, create_merge_request
-from minisweagent.environments.docker import DockerEnvironment
 
 DEFAULT_CONFIG_FILE = Path(os.getenv("MSWEA_MINI_CONFIG_PATH", builtin_config_dir / "mini.yaml"))
 DEFAULT_OUTPUT_FILE = global_config_dir / "/last_mini_run.traj.json"
@@ -70,7 +69,7 @@ def main(
 ) -> Any:
     # fmt: on
     if ctx.invoked_subcommand is not None:
-        return
+        return None
     configure_if_first_time()
     console.print(f"DEBUG: Using DEFAULT_CONFIG_FILE: [bold cyan]{DEFAULT_CONFIG_FILE}[/bold cyan]")
 

@@ -1,7 +1,8 @@
 import re
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 import typer
+
 from minisweagent.models.test_models import DeterministicModel, make_output
 from minisweagent.run.mini import DEFAULT_CONFIG_FILE, main
 from tests.conftest import assert_observations_match
