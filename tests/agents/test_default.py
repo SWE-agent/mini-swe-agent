@@ -405,6 +405,39 @@ def test_observations_captured(model_factory):
     assert "second" in observations[1]
 
 
+def test_wall_time_limit_enforcement(model_factory):
+    """Test agent stops when wall-clock time limit is reached."""
+    factory, config = model_factory
+    agent = DefaultAgent(
+        model=factory(
+            [
+                ("Slow command", [{"command": "sleep 2"}]),
+                ("Should not run", [{"command": "echo 'unreachable'"}]),
+            ]
+        ),
+        env=LocalEnvironment(),
+        **{**config, "wall_time_limit_seconds": 1},
+    )
+
+    info = agent.run("Test wall time limit")
+    assert info["exit_status"] == "TimeExceeded"
+    assert agent.n_calls == 1
+
+
+def test_wall_time_limit_template_vars(model_factory):
+    """Test that elapsed_seconds and wall_time_limit_seconds are available as template vars."""
+    factory, config = model_factory
+    agent = DefaultAgent(
+        model=factory([("Test", [{"command": "echo 'test'"}])]),
+        env=LocalEnvironment(),
+        **{**config, "wall_time_limit_seconds": 3600},
+    )
+    agent.add_messages({"role": "system", "content": "test"}, {"role": "user", "content": "test"})
+    tvars = agent.get_template_vars()
+    assert isinstance(tvars["elapsed_seconds"], int)
+    assert tvars["wall_time_limit_seconds"] == 3600
+
+
 def test_empty_actions_handling(model_factory):
     """Test agent handles empty actions (continues without error)."""
     factory, config = model_factory
