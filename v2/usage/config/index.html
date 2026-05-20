@@ -2785,8 +2785,8 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 
 <span class="s2">Here's a few popular models and the required API keys:</span>
 
-<span class="s2">[bold green]anthropic/claude-sonnet-4-5-20250929[/bold green] ([bold green]ANTHROPIC_API_KEY[/bold green])</span>
-<span class="s2">[bold green]openai/gpt-5[/bold green] or [bold green]openai/gpt-5-mini[/bold green] ([bold green]OPENAI_API_KEY[/bold green])</span>
+<span class="s2">[bold green]anthropic/claude-opus-4-6-20260205[/bold green] ([bold green]ANTHROPIC_API_KEY[/bold green])</span>
+<span class="s2">[bold green]openai/gpt-5.4[/bold green] or [bold green]openai/gpt-5.4-mini[/bold green] ([bold green]OPENAI_API_KEY[/bold green])</span>
 <span class="s2">[bold green]gemini/gemini-3-pro-preview[/bold green] ([bold green]GEMINI_API_KEY[/bold green])</span>
 
 <span class="s2">[bold]Note: Please always include the provider (e.g., "openai/") in the model name.[/bold]</span>
@@ -2817,7 +2817,7 @@ mini-extra<span class="w"> </span>config<span class="w"> </span><span class="nb"
 <span class="w">    </span><span class="sd">"""Setup the global config file."""</span>
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">_SETUP_HELP</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">global_config_file</span><span class="o">=</span><span class="n">global_config_file</span><span class="p">))</span>
     <span class="n">default_model</span> <span class="o">=</span> <span class="n">prompt</span><span class="p">(</span>
-        <span class="s2">"Enter your default model (e.g., anthropic/claude-sonnet-4-5-20250929): "</span><span class="p">,</span>
+        <span class="s2">"Enter your default model (e.g., anthropic/claude-opus-4-6-20260205): "</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"MSWEA_MODEL_NAME"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
     <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">default_model</span><span class="p">:</span>
