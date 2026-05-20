@@ -4,6 +4,7 @@ or https://minimal-agent.com for a tutorial on the basic building principles.
 
 import json
 import logging
+import time
 import traceback
 from pathlib import Path
 
@@ -11,7 +12,7 @@ from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
 from minisweagent import Environment, Model, __version__
-from minisweagent.exceptions import InterruptAgentFlow, LimitsExceeded
+from minisweagent.exceptions import InterruptAgentFlow, LimitsExceeded, TimeExceeded
 from minisweagent.utils.serialize import recursive_merge
 
 
@@ -26,6 +27,8 @@ class AgentConfig(BaseModel):
     """Maximum number of steps the agent can take."""
     cost_limit: float = 3.0
     """Stop agent after exceeding (!) this cost."""
+    wall_time_limit_seconds: int = 0
+    """Stop agent after this many seconds of wall-clock time. 0 means no limit."""
     output_path: Path | None = None
     """Save the trajectory to this path."""
 
@@ -41,13 +44,18 @@ class DefaultAgent:
         self.logger = logging.getLogger("agent")
         self.cost = 0.0
         self.n_calls = 0
+        self._start_time = time.time()
 
     def get_template_vars(self, **kwargs) -> dict:
         return recursive_merge(
             self.config.model_dump(),
             self.env.get_template_vars(),
             self.model.get_template_vars(),
-            {"n_model_calls": self.n_calls, "model_cost": self.cost},
+            {
+                "n_model_calls": self.n_calls,
+                "model_cost": self.cost,
+                "elapsed_seconds": int(time.time() - self._start_time),
+            },
             self.extra_template_vars,
             kwargs,
         )
@@ -108,6 +116,14 @@ class DefaultAgent:
                     "role": "exit",
                     "content": "LimitsExceeded",
                     "extra": {"exit_status": "LimitsExceeded", "submission": ""},
+                }
+            )
+        if 0 < self.config.wall_time_limit_seconds <= int(time.time() - self._start_time):
+            raise TimeExceeded(
+                {
+                    "role": "exit",
+                    "content": "TimeExceeded",
+                    "extra": {"exit_status": "TimeExceeded", "submission": ""},
                 }
             )
         self.n_calls += 1
