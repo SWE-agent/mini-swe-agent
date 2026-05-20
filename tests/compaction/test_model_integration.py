@@ -15,7 +15,6 @@ from minisweagent.compaction.providers.generic.sliding_window import SlidingWind
 from minisweagent.models.litellm_model import LitellmModel
 from minisweagent.models.openrouter_model import OpenRouterModel
 
-
 # ---------------------------------------------------------------------------
 # Fixtures / helpers
 # ---------------------------------------------------------------------------

@@ -1,7 +1,5 @@
 """Tests for _group_into_steps helper and SlidingWindowCompaction."""
 
-import pytest
-
 from minisweagent.compaction.providers.generic.sliding_window import (
     SlidingWindowCompaction,
     _group_into_steps,
@@ -69,9 +67,12 @@ class TestGroupIntoSteps:
 
     def test_three_steps(self):
         msgs = [
-            _assistant("a1"), _tool("o1"),
-            _assistant("a2"), _tool("o2"),
-            _assistant("a3"), _tool("o3"),
+            _assistant("a1"),
+            _tool("o1"),
+            _assistant("a2"),
+            _tool("o2"),
+            _assistant("a3"),
+            _tool("o3"),
         ]
         groups = _group_into_steps(msgs)
         assert len(groups) == 3
@@ -96,15 +97,20 @@ class TestSlidingWindowCompaction:
 
     def test_keeps_last_n_steps(self):
         msgs = _anchors() + [
-            _assistant("a1"), _tool("o1"),  # step 1 — should be dropped
-            _assistant("a2"), _tool("o2"),  # step 2 — kept
-            _assistant("a3"), _tool("o3"),  # step 3 — kept
+            _assistant("a1"),
+            _tool("o1"),  # step 1 — should be dropped
+            _assistant("a2"),
+            _tool("o2"),  # step 2 — kept
+            _assistant("a3"),
+            _tool("o3"),  # step 3 — kept
         ]
         s = SlidingWindowCompaction(keep_last_n_steps=2)
         result = s.compact(msgs)
         assert result == _anchors() + [
-            _assistant("a2"), _tool("o2"),
-            _assistant("a3"), _tool("o3"),
+            _assistant("a2"),
+            _tool("o2"),
+            _assistant("a3"),
+            _tool("o3"),
         ]
 
     def test_always_preserves_anchors(self):
@@ -121,9 +127,12 @@ class TestSlidingWindowCompaction:
 
     def test_window_of_one(self):
         msgs = _anchors() + [
-            _assistant("a1"), _tool("o1"),
-            _assistant("a2"), _tool("o2"),
-            _assistant("a3"), _tool("o3"),
+            _assistant("a1"),
+            _tool("o1"),
+            _assistant("a2"),
+            _tool("o2"),
+            _assistant("a3"),
+            _tool("o3"),
         ]
         s = SlidingWindowCompaction(keep_last_n_steps=1)
         result = s.compact(msgs)
@@ -132,8 +141,11 @@ class TestSlidingWindowCompaction:
     def test_preserves_step_with_multiple_tools(self):
         """A step with multiple tool messages is kept or dropped as a unit."""
         msgs = _anchors() + [
-            _assistant("a1"), _tool("o1a"), _tool("o1b"),  # step 1 with 2 tools
-            _assistant("a2"), _tool("o2"),                  # step 2
+            _assistant("a1"),
+            _tool("o1a"),
+            _tool("o1b"),  # step 1 with 2 tools
+            _assistant("a2"),
+            _tool("o2"),  # step 2
         ]
         s = SlidingWindowCompaction(keep_last_n_steps=1)
         result = s.compact(msgs)
