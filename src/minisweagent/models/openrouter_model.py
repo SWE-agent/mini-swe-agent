@@ -7,6 +7,7 @@ from typing import Any, Literal
 import requests
 from pydantic import BaseModel
 
+from minisweagent.compaction import get_compaction_strategy
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
@@ -37,6 +38,10 @@ class OpenRouterModelConfig(BaseModel):
     """Template used to render the observation after executing an action."""
     multimodal_regex: str = ""
     """Regex to extract multimodal content. Empty string disables multimodal processing."""
+    compaction: str = "none"
+    """Compaction strategy name: 'none', 'generic/sliding_window', 'anthropic/summarize', etc."""
+    compaction_kwargs: dict[str, Any] = {}
+    """Keyword arguments forwarded to the compaction strategy constructor."""
 
 
 class OpenRouterAPIError(Exception):
@@ -58,6 +63,7 @@ class OpenRouterModel:
         self.config = OpenRouterModelConfig(**kwargs)
         self._api_url = "https://openrouter.ai/api/v1/chat/completions"
         self._api_key = os.getenv("OPENROUTER_API_KEY", "")
+        self._compaction = get_compaction_strategy(self.config.compaction, **self.config.compaction_kwargs)
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         headers = {
@@ -90,6 +96,7 @@ class OpenRouterModel:
 
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
         prepared = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
+        prepared = self._compaction.compact(prepared)
         prepared = _reorder_anthropic_thinking_blocks(prepared)
         return set_cache_control(prepared, mode=self.config.set_cache_control)
 

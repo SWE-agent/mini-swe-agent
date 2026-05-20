@@ -63,6 +63,7 @@ def main(
     config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT),
     output: Path | None = typer.Option(DEFAULT_OUTPUT_FILE, "-o", "--output", help="Output trajectory file"),
     exit_immediately: bool = typer.Option(False, "--exit-immediately", help="Exit immediately when the agent wants to finish instead of prompting.", rich_help_panel="Advanced"),
+    compaction: str | None = typer.Option(None, "--compaction", help="Compaction strategy for the model context window, e.g. 'generic/sliding_window' or 'anthropic/summarize'.", rich_help_panel="Advanced"),
 ) -> Any:
     # fmt: on
     configure_if_first_time()
@@ -84,6 +85,7 @@ def main(
         "model": {
             "model_class": model_class or UNSET,
             "model_name": model_name or UNSET,
+            "compaction": compaction or UNSET,
         },
         "environment": {
             "environment_class": environment_class or UNSET,

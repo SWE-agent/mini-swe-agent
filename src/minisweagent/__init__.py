@@ -12,7 +12,7 @@ __version__ = "2.2.8"
 
 import os
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Protocol, runtime_checkable
 
 import dotenv
 from platformdirs import user_config_dir
@@ -80,8 +80,20 @@ class Agent(Protocol):
     def save(self, path: Path | None, *extra_dicts) -> dict: ...
 
 
+@runtime_checkable
+class CompactionStrategy(Protocol):
+    """Protocol for context compaction strategies.
+
+    A compaction strategy reduces the message list before each API call to stay
+    within context window limits, without mutating the full trajectory.
+    """
+
+    def compact(self, messages: list[dict]) -> list[dict]: ...
+
+
 __all__ = [
     "Agent",
+    "CompactionStrategy",
     "Model",
     "Environment",
     "package_dir",
