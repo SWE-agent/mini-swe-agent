@@ -194,6 +194,29 @@ Here's a few general examples:
     See [this guide](local_models.md) for more details on local models.
     In particular, you need to configure token costs for local models.
 
+=== "Tuning Engines"
+
+    Tuning Engines exposes an OpenAI-compatible inference endpoint, so you can
+    use the default `litellm` model class with a custom API base. Store your
+    Tuning Engines inference key as the OpenAI-compatible key:
+
+    ```bash
+    mini-extra config set OPENAI_API_KEY sk-te-...
+    ```
+
+    Then set your model alias and API base in the agent config:
+
+    ```yaml
+    model:
+      model_name: "openai/<your-model-alias>"
+      model_kwargs:
+        api_base: "https://api.tuningengines.com/v1"
+    ```
+
+    If your model alias is not in the LiteLLM model registry, either add a
+    registry entry or set `cost_tracking: "ignore_errors"` in the same `model`
+    block. Tuning Engines will still track usage and costs at the gateway.
+
 Here are more examples of how to configure specific models:
 
 === "Gemini 3 (Openrouter)"
@@ -308,4 +331,3 @@ On top, there's a few more exotic model classes that you can use:
 As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the mini-SWE-agent package).
 
 --8<-- "docs/_footer.md"
-
