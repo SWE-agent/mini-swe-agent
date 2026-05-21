@@ -78,39 +78,8 @@
 
 ## FAQ
 
-> Can I set global cost limits?
-
-Yes, you can set global cost limits with the `MSWEA_GLOBAL_CALL_LIMIT` and `MSWEA_GLOBAL_COST_LIMIT` environment variables/global config.
-See [global configuration](../advanced/global_configuration.md) for more details.
-
-> What happens to uncompleted tasks when I abort with KeyboardInterrupt?
-
-Trajectories are saved after every agent step (``agent.output_path`` is set automatically), and
-``submission.tar.gz`` is written in the ``finally`` block of each instance. You can just rerun
-the script — instances that already have a ``submission.tar.gz`` are skipped unless you pass
-``--redo-existing``.
-
-> Certain tasks are stuck even though I deleted the trajectories.
-
-The skip check looks at ``submission.tar.gz``, not ``.traj.json``. Delete the tarball (or the
-whole ``<instance_id>/`` directory) to force a rerun.
-
-> Some progress runners are stuck at 'initializing task' for a very long time / time out
-
-They might be pulling docker containers — the run should start immediately the next time.
-If you see timeouts because of `docker pull` operations, you might want to increase `environment.pull_timeout`
-from the default of `120` (seconds).
-
-> I have some docker issues
-
-Try running the docker command manually to see what's going on (it should be printed out in the console).
-Confirm that it's running with `docker ps`, and that you can use `docker exec -it <container-id> ls` to get some output.
-
-> Docker isn't available on my HPC cluster.
-
-You can use the singularity/apptainer backend by setting `environment.environment_class` to `singularity`
-in your [agent config file](../advanced/yaml_configuration.md)
-or specify `--environment-class singularity` from the command line.
+See the [SWE-bench FAQ](swebench.md#faq) — most entries (cost limits, KeyboardInterrupt behavior,
+docker troubleshooting, singularity backend) apply equally to ProgramBench.
 
 ## Implementation
 
