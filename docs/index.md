@@ -209,6 +209,7 @@ agent.run("Write a sudoku game")</code></pre>
 
 ## 📣 News
 
+* [Run mini-swe-agent on our new & extremely challenging benchmark, ProgramBench](usage/programbench.md)
 * [New tutorial on building minimal AI agents](https://minimal-agent.com/)
 * Nov 19: [Gemini 3 Pro reaches 74% on SWE-bench verified with mini-swe-agent!](https://x.com/KLieret/status/1991164693839270372)
 * Aug 19: [New blogpost: Randomly switching between GPT-5 and Sonnet 4 boosts performance](https://www.swebench.com/post-250820-mini-roulette.html)
