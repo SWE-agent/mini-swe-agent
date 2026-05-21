@@ -2661,6 +2661,7 @@
     <span class="p">(</span><span class="s2">"minisweagent.run.utilities.inspector"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"inspect"</span><span class="p">,</span> <span class="s2">"i"</span><span class="p">,</span> <span class="s2">"inspector"</span><span class="p">],</span> <span class="s2">"Run inspector (browse trajectories)"</span><span class="p">),</span>
     <span class="p">(</span><span class="s2">"minisweagent.run.benchmarks.swebench"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"swebench"</span><span class="p">],</span> <span class="s2">"Evaluate on SWE-bench (batch mode)"</span><span class="p">),</span>
     <span class="p">(</span><span class="s2">"minisweagent.run.benchmarks.swebench_single"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"swebench-single"</span><span class="p">],</span> <span class="s2">"Evaluate on SWE-bench (single instance)"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"minisweagent.run.benchmarks.programbench"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"programbench"</span><span class="p">],</span> <span class="s2">"Run on ProgramBench (batch mode)"</span><span class="p">),</span>
 <span class="p">]</span>
 
 
@@ -2765,6 +2766,11 @@ inspecting trajectories, etc.</p>
         <span class="p">[</span><span class="s2">"swebench-single"</span><span class="p">],</span>
         <span class="s2">"Evaluate on SWE-bench (single instance)"</span><span class="p">,</span>
     <span class="p">),</span>
+    <span class="p">(</span>
+        <span class="s2">"minisweagent.run.benchmarks.programbench"</span><span class="p">,</span>
+        <span class="p">[</span><span class="s2">"programbench"</span><span class="p">],</span>
+        <span class="s2">"Run on ProgramBench (batch mode)"</span><span class="p">,</span>
+    <span class="p">),</span>
 <span class="p">]</span>
 </code></pre></div>
 
@@ -2793,8 +2799,7 @@ inspecting trajectories, etc.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/utilities/mini_extra.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
-<span class="normal">22</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
@@ -2803,7 +2808,8 @@ inspecting trajectories, etc.</p>
 <span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_docstring</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_docstring</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">"This is the [yellow]central entry point for all extra commands[/yellow] from mini-swe-agent."</span><span class="p">,</span>
         <span class="s2">""</span><span class="p">,</span>
@@ -2836,8 +2842,7 @@ inspecting trajectories, etc.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/run/utilities/mini_extra.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
-<span class="normal">35</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
@@ -2846,7 +2851,8 @@ inspecting trajectories, etc.</p>
 <span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
-<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="normal">44</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"-h"</span><span class="p">,</span> <span class="s2">"--help"</span><span class="p">]:</span>
