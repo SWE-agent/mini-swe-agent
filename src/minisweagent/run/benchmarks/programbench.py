@@ -132,8 +132,8 @@ def main(
     environment_class: str | None = typer.Option(None, "--environment-class", help="Environment type (e.g., docker, singularity)", rich_help_panel="Advanced"),
 ) -> None:
     # fmt: on
-    from programbench.utils.instance_filters import filter_instances
-    from programbench.utils.load_data import load_all_instances
+    from programbench.utils.instance_filters import filter_instances  # pylint: disable=import-error
+    from programbench.utils.load_data import load_all_instances  # pylint: disable=import-error
 
     output_path = Path(output) if output else Path(f"programbench_results_{int(time.time())}")
     output_path.mkdir(parents=True, exist_ok=True)
