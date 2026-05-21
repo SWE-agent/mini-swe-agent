@@ -2,12 +2,14 @@
 
 These tests exercise the real ``tar -czf`` + ``docker cp`` flow inside a live
 container. They require a working ``docker``/``podman`` (skipped otherwise).
+
+The ``main()`` orchestration tests additionally require the real ``programbench``
+package to be installed so we verify API compatibility with what programbench
+actually ships — they're skipped via ``pytest.importorskip`` when not available.
 """
 
 import json
-import sys
 import tarfile
-import types
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -35,27 +37,25 @@ def docker_env(container_executable):
 
 
 @pytest.fixture
-def fake_programbench(monkeypatch):
-    """Inject a fake ``programbench`` package exposing the loader + filter mini-swe-agent uses."""
-    pb = types.ModuleType("programbench")
-    pb_utils = types.ModuleType("programbench.utils")
-    pb_load = types.ModuleType("programbench.utils.load_data")
-    pb_filters = types.ModuleType("programbench.utils.instance_filters")
+def programbench_with_generic_image(monkeypatch):
+    """Use *real* programbench, but rewrite the first instance to use ``python:3.11``.
 
-    pb_load.load_all_instances = MagicMock(return_value=[{"instance_id": "test_repo.abc123", "image_name": "python"}])
-    from minisweagent.run.benchmarks.swebench import filter_instances as _filter
+    This exercises the real ``load_all_instances`` / ``filter_instances`` API surface
+    (catching breakage if programbench changes its return shape) while still letting
+    us run against a generic, already-cached docker image.
+    """
+    pytest.importorskip("programbench")
+    from programbench.utils.load_data import load_all_instances as real_load_all_instances
 
-    pb_filters.filter_instances = lambda instances, **kw: _filter(
-        instances,
-        filter_spec=kw.get("filter_spec", ""),
-        slice_spec=kw.get("slice_spec", ""),
-        shuffle=kw.get("shuffle", False),
+    real_instances = real_load_all_instances(include_tests=False)
+    assert real_instances, "real programbench should ship at least one instance"
+    rewritten = [{**real_instances[0], "image_name": "python"}]
+
+    monkeypatch.setattr(
+        "programbench.utils.load_data.load_all_instances",
+        lambda **_kwargs: rewritten,
     )
-
-    monkeypatch.setitem(sys.modules, "programbench", pb)
-    monkeypatch.setitem(sys.modules, "programbench.utils", pb_utils)
-    monkeypatch.setitem(sys.modules, "programbench.utils.load_data", pb_load)
-    monkeypatch.setitem(sys.modules, "programbench.utils.instance_filters", pb_filters)
+    return rewritten[0]
 
 
 # ---------------------------------------------------------------------------
@@ -104,7 +104,6 @@ def test_default_config_disables_network():
     """The shipped ``programbench.yaml`` must contain ``--network none`` in run_args."""
     cfg = yaml.safe_load((package_dir / "config" / "benchmarks" / "programbench.yaml").read_text())
     run_args = cfg["environment"]["run_args"]
-    # Argument and value must appear consecutively in the list.
     assert "--network" in run_args
     assert run_args[run_args.index("--network") + 1] == "none"
 
@@ -118,8 +117,6 @@ def test_container_with_network_none_has_no_internet(container_executable):
         run_args=["--rm", "--network", "none"],
     )
     try:
-        # Try to resolve + reach a well-known external host. Multiple probes so we don't
-        # rely on any single tool being available in the image.
         result = env.execute(
             {
                 "command": (
@@ -128,16 +125,36 @@ def test_container_with_network_none_has_no_internet(container_executable):
                 )
             }
         )
-        assert "INTERNET_BLOCKED" in result["output"], (
-            f"Network should be blocked but probe succeeded; output: {result['output']!r}"
-        )
+        assert "INTERNET_BLOCKED" in result["output"]
         assert "INTERNET_OK" not in result["output"]
     finally:
         env.cleanup()
 
 
 # ---------------------------------------------------------------------------
-# Full main() integration with real docker
+# programbench API compatibility (requires programbench installed)
+# ---------------------------------------------------------------------------
+
+
+def test_real_programbench_api_contract():
+    """The runner relies on a specific shape from ``load_all_instances`` / ``filter_instances``."""
+    pytest.importorskip("programbench")
+    from programbench.utils.instance_filters import filter_instances
+    from programbench.utils.load_data import load_all_instances
+
+    instances = load_all_instances(include_tests=False)
+    assert isinstance(instances, list) and instances
+    for inst in instances:
+        assert "instance_id" in inst, f"missing instance_id: {inst}"
+        assert "image_name" in inst, f"missing image_name: {inst}"
+
+    # The runner passes filter_spec / slice_spec / shuffle by keyword
+    filtered = filter_instances(instances, filter_spec="^abishekvashok", slice_spec="0:1", shuffle=False)
+    assert isinstance(filtered, list)
+
+
+# ---------------------------------------------------------------------------
+# Full main() integration against real programbench + real docker
 # ---------------------------------------------------------------------------
 
 
@@ -173,23 +190,17 @@ class _SubmittingModel:
 
 
 @pytest.mark.slow
-def test_programbench_end_to_end_real_docker(fake_programbench, tmp_path, container_executable):
-    """Run the full ``main()`` against a real container, with model+image patched.
-
-    We override ``_IMAGE_TAG`` to ``"3.11"`` so the runner picks up ``python:3.11``
-    (which the fake programbench advertises as image_name=``python``), yielding a
-    working image without depending on the programbench docker registry.
-    """
-    # Override the prod ``run_args`` (which assume 20 CPUs / 60g RAM / a non-existent
-    # ``agent`` user) with minimal flags compatible with stock ``python:3.11``.
+def test_programbench_end_to_end_real_docker(programbench_with_generic_image, tmp_path, container_executable):
+    """Real programbench API + real docker. Model is mocked; image is overridden to ``python:3.11``."""
+    instance = programbench_with_generic_image
     run_args_override = 'environment.run_args=["--rm"]'
     with (
         patch("minisweagent.run.benchmarks.programbench._IMAGE_TAG", "3.11"),
         patch("minisweagent.run.benchmarks.programbench.get_model", side_effect=lambda **kw: _SubmittingModel()),
     ):
         main(
-            slice_spec="0:1",
-            filter_spec="test_repo",
+            slice_spec="",
+            filter_spec=f"^{instance['instance_id']}$",
             shuffle=False,
             output=str(tmp_path),
             workers=1,
@@ -203,11 +214,10 @@ def test_programbench_end_to_end_real_docker(fake_programbench, tmp_path, contai
             environment_class=None,
         )
 
-    iid = "test_repo.abc123"
+    iid = instance["instance_id"]
     submission = tmp_path / iid / "submission.tar.gz"
     traj = tmp_path / iid / f"{iid}.traj.json"
 
-    # Real tarball produced by `tar -czf` inside the container
     assert submission.exists() and submission.stat().st_size > 0
     with tarfile.open(submission, "r:gz") as tf:
         assert tf.getnames(), "submission tarball should not be empty"
@@ -219,9 +229,10 @@ def test_programbench_end_to_end_real_docker(fake_programbench, tmp_path, contai
 
 
 @pytest.mark.slow
-def test_programbench_skip_existing_real_docker(fake_programbench, tmp_path, container_executable):
-    """An existing ``submission.tar.gz`` should make ``main()`` skip the instance (no container started)."""
-    iid = "test_repo.abc123"
+def test_programbench_skip_existing_real_docker(programbench_with_generic_image, tmp_path, container_executable):
+    """Pre-existing ``submission.tar.gz`` should make ``main()`` skip the instance."""
+    instance = programbench_with_generic_image
+    iid = instance["instance_id"]
     (tmp_path / iid).mkdir(parents=True)
     (tmp_path / iid / "submission.tar.gz").write_bytes(b"pre-existing")
 
@@ -231,7 +242,7 @@ def test_programbench_skip_existing_real_docker(fake_programbench, tmp_path, con
     ):
         main(
             slice_spec="",
-            filter_spec="",
+            filter_spec=f"^{iid}$",
             shuffle=False,
             output=str(tmp_path),
             workers=1,
