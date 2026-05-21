@@ -51,16 +51,13 @@ def copy_submission(env, dest: Path, *, src: str = "/workspace") -> None:
         raise RuntimeError("copy_submission requires a Docker environment with container_id")
     dest.parent.mkdir(parents=True, exist_ok=True)
     container_tar = "/tmp/_submission.tar.gz"
-    env.execute({"command": f"rm -f {container_tar} && tar -czf {container_tar} -C {src} ."})
-    try:
-        subprocess.run(
-            [executable, "cp", f"{container_id}:{container_tar}", str(dest)],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-    finally:
-        env.execute({"command": f"rm -f {container_tar}"})
+    env.execute({"command": f"tar -czf {container_tar} -C {src} ."})
+    subprocess.run(
+        [executable, "cp", f"{container_id}:{container_tar}", str(dest)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
 
 
 def process_instance(
@@ -93,11 +90,9 @@ def process_instance(
 
         agent_config = dict(inst_config.get("agent", {}))
         agent_config["output_path"] = str(instance_dir / f"{iid}.traj.json")
-        wall_time_limit = agent_config.pop("wall_time_limit_seconds", 0)
         agent = ProgramBenchAgent(
             model,
             env,
-            wall_time_limit_seconds=wall_time_limit,
             progress_manager=progress_manager,
             instance_id=iid,
             **agent_config,

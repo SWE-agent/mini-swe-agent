@@ -88,17 +88,6 @@ def test_copy_submission_real_container(tmp_path, docker_env):
     assert contents["./other.txt"].strip() == "world"
 
 
-@pytest.mark.slow
-def test_copy_submission_removes_container_tar(tmp_path, docker_env):
-    """The in-container ``/tmp/_submission.tar.gz`` should be cleaned up after copy."""
-    docker_env.execute({"command": "mkdir -p /workspace && touch /workspace/x"})
-    copy_submission(docker_env, tmp_path / "submission.tar.gz")
-
-    # The tarball inside the container should be gone after copy_submission returns.
-    result = docker_env.execute({"command": "ls /tmp/_submission.tar.gz || echo MISSING"})
-    assert "MISSING" in result["output"]
-
-
 def test_copy_submission_rejects_non_docker_env(tmp_path):
     """No live container needed for this guardrail check."""
     env = MagicMock(spec=["execute"])
