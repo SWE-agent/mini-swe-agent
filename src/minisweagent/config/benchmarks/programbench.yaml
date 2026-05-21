@@ -1,9 +1,4 @@
 # Default config for ProgramBench inference.
-# Override model with: -c programbench.yaml -c model.model_name=claude-4-5-sonnet
-#
-# image_tag is hardcoded to task_cleanroom in the runner script.
-# task_cleanroom: no build artifacts, but some executables may be broken
-#                 (dynamically linked against libs from build.sh)
 
 agent:
   wall_time_limit_seconds: 21600
