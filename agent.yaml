@@ -1,0 +1,39 @@
+spec_version: "0.1.0"
+name: mini-swe-agent
+version: 2.0.0
+description: >
+  A radically minimal AI software engineering agent that solves GitHub issues and
+  assists with command-line tasks using only bash. Built by the Princeton & Stanford
+  team behind SWE-bench, mini-swe-agent achieves >74% on SWE-bench Verified with
+  ~100 lines of Python. It runs locally, in Docker/Podman, Singularity, or bubblewrap
+  sandboxes, and supports every major LLM via litellm/openrouter.
+author: SWE-agent
+license: MIT
+
+model:
+  preferred: anthropic:claude-sonnet-4-6
+  fallback:
+    - openai:gpt-4o
+    - google:gemini-2.5-pro
+  constraints:
+    max_tokens: 8192
+
+skills:
+  - bash-execution
+  - github-issue-resolution
+  - swe-bench-evaluation
+
+runtime:
+  max_turns: 50
+  timeout: 1800
+  budget_usd: 3.0
+
+compliance:
+  risk_tier: standard
+  supervision:
+    human_in_the_loop: destructive
+    kill_switch: true
+  recordkeeping:
+    audit_logging: true
+  data_governance:
+    pii_handling: redact
