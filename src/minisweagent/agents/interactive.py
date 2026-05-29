@@ -160,13 +160,12 @@ class InteractiveAgent(DefaultAgent):
         console.print(prompt, end="")
         if _multiline:
             return _multiline_prompt()
--        user_input = prompt_session.prompt("")
-+        try:
-+            user_input = prompt_session.prompt("")
-+        except KeyboardInterrupt:
-+            # If user interrupts the prompt, return empty input and let callers handle it.
-+            console.print("\n[bold yellow]Input interrupted.[/bold yellow]")
-+            return ""
+        try:
+            user_input = prompt_session.prompt("")
+        except KeyboardInterrupt:
+            # If user interrupts the prompt, return empty input and let callers handle it.
+            console.print("\n[bold yellow]Input interrupted.[/bold yellow]")
+            return ""
         if user_input == "/m":
             return self._prompt_and_handle_slash_commands(prompt, _multiline=True)
         if user_input == "/h":
