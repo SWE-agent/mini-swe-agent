@@ -25,7 +25,9 @@ class LocalEnvironment:
         """Execute a command in the local environment and return the result as a dict."""
         command = action.get("command", "")
         cwd = cwd or self.config.cwd or os.getcwd()
-        logging.getLogger(__name__).debug("LocalEnvironment.execute command=%r cwd=%r timeout=%r", command, cwd, timeout or self.config.timeout)
+        logging.getLogger(__name__).debug(
+            "LocalEnvironment.execute command=%r cwd=%r timeout=%r", command, cwd, timeout or self.config.timeout
+        )
         try:
             result = subprocess.run(
                 command,
@@ -40,7 +42,9 @@ class LocalEnvironment:
                 stderr=subprocess.STDOUT,
             )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
-            logging.getLogger(__name__).debug("LocalEnvironment.execute returncode=%s output_len=%d", result.returncode, len(result.stdout or ""))
+            logging.getLogger(__name__).debug(
+                "LocalEnvironment.execute returncode=%s output_len=%d", result.returncode, len(result.stdout or "")
+            )
         except Exception as e:
             # Extract output safely (may be bytes, bytearray, str or None)
             raw_output = getattr(e, "output", None)
