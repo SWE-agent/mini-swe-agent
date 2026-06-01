@@ -1,0 +1,52 @@
+name: Delete stale branches
+  
+//run on schedule at 9am on the first of every month
+on:
+  schedule:
+    - cron: "0 9 1 * *"
+    
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  delete-stale-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v8
+        with:
+          script: |
+            // Branches with no activity in the last 90 days are considered stale
+            const DAY_MS = 24 * 60 * 60 * 1000;
+            const STALE_DAYS = 90;
+            const cutoff = Date.now() - (STALE_DAYS * DAY_MS);
+
+            // Branches that should never be deleted
+            const PROTECTED_BRANCHES = ["main", "master"];
+            const PROTECTED_PREFIXES = ["release/", "hotfix/"];
+            const isProtected = (name) =>
+              PROTECTED_BRANCHES.includes(name) ||
+              PROTECTED_PREFIXES.some((prefix) => name.startsWith(prefix)) ||
+              /^v\d+(\.\d+)?$/.test(name); // version tags like v1, v1.2
+
+            const { owner, repo } = context.repo;
+            const { data: { default_branch } } = await github.rest.repos.get({ owner, repo });
+            const branches = await github.paginate(github.rest.repos.listBranches, { owner, repo, per_page: 100 });
+
+            for (const branch of branches) {
+              if (branch.name === default_branch || branch.protected || isProtected(branch.name)) continue;
+
+              const { data: prs } = await github.rest.pulls.list({
+                owner, repo, state: "open", head: `${owner}:${branch.name}`, per_page: 1,
+              });
+              if (prs.length) continue;
+
+              const { data: { commit } } = await github.rest.repos.getCommit({
+                owner, repo, ref: branch.commit.sha,
+              });
+              const lastActivity = new Date(commit.committer?.date ?? commit.author.date);
+              if (lastActivity.getTime() >= cutoff) continue;
+
+              await github.rest.git.deleteRef({ owner, repo, ref: `heads/${branch.name}` });
+              core.info(`Deleted ${branch.name}; last activity ${lastActivity.toISOString()}`);
+            }
