@@ -1,6 +1,6 @@
 name: Delete stale branches
   
-//run on schedule at 9am on the first of every month
+#run on schedule at 9am UTC on the first of every month
 on:
   schedule:
     - cron: "0 9 1 * *"
