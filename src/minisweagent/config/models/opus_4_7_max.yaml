@@ -1,0 +1,19 @@
+model:
+  model_name: claude-4-7-opus-genai
+  model_class: reveng.utils.mini_anthropic_model.AnthropicModel
+  api_key_env: LLAMA_API_KEY
+  base_url: https://api.llama.com/experimental/passthrough/anthropic
+  model_kwargs:
+    drop_params: null
+    api_base: null
+    custom_llm_provider: null
+    api_key: null
+    thinking:
+      type: adaptive
+    output_config:
+      effort: max
+  cost:
+    input: 5.0e-06
+    output: 2.5e-05
+    cache_creation_input: 6.25e-06
+    cache_read_input: 5.0e-07

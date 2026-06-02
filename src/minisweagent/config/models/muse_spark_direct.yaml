@@ -1,0 +1,15 @@
+# Start CIF server on devserver: cif_server -t :: -p 8889 --timeout_s 3600
+# If hitting from another machine, use an SSH tunnel for encryption:
+#   ssh -L 8889:localhost:8889 devgpu026.cco5.facebook.com
+model:
+  model_name: muse_spark_direct_5_10
+  tier: smc.rift_parthdt_510reason_scale_c65629m
+  model_class: reveng.utils.mini_muse_spark_direct_model.MuseSparkDirectModel
+  cif_base_url: http://localhost:8889
+  processing_timeout_ms: 300000
+  overall_timeout_ms: 300000
+  model_kwargs:
+    drop_params: null
+    api_base: null
+    custom_llm_provider: null
+    api_key: null

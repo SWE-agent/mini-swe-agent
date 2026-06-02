@@ -1,0 +1,10 @@
+model:
+  model_name: avocado-5-10-reason
+  model_class: reveng.utils.mini_muse_spark_model.MuseSparkModel
+  api_key_env: LLAMA_API_KEY
+  base_url: https://api.llama.com/v1alpha
+  model_kwargs:
+    drop_params: null
+    api_base: null
+    custom_llm_provider: null
+    api_key: null

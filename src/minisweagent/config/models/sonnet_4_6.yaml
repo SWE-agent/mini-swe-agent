@@ -1,0 +1,15 @@
+model:
+  model_name: claude-4-6-sonnet-genai
+  model_class: reveng.utils.mini_anthropic_model.AnthropicModel
+  api_key_env: LLAMA_API_KEY
+  base_url: https://api.llama.com/experimental/passthrough/anthropic
+  model_kwargs:
+    drop_params: null
+    api_base: null
+    custom_llm_provider: null
+    api_key: null
+  cost:
+    input: 3.0e-06
+    output: 1.5e-05
+    cache_creation_input: 3.75e-06
+    cache_read_input: 3.0e-07

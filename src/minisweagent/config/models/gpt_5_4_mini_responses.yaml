@@ -1,0 +1,9 @@
+model:
+  model_name: gpt-5-4-mini-genai-responses
+  model_class: minisweagent.models.litellm_response_model.LitellmResponseModel
+  litellm_model_registry: ~/RevEngBench/reveng/configs/mini/model_prices.json
+  model_kwargs:
+    drop_params: true
+    api_base: "https://api.llama.com/experimental/passthrough/openai/v1/"
+    custom_llm_provider: openai
+    api_key: os.environ/LLAMA_API_KEY

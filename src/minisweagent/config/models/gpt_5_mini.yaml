@@ -1,0 +1,3 @@
+model:
+  model_name: gpt-5-mini-genai
+  litellm_model_registry: ~/RevEngBench/reveng/configs/mini/model_prices.json
