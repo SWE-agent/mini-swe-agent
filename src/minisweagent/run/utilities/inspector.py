@@ -211,7 +211,7 @@ class TrajectoryInspector(App):
             clean_str = content_str.replace("\x00", "")
             message_container.mount(Static(Text.from_ansi(clean_str, no_wrap=False), classes="message-content"))
             reasoning = message.get("reasoning_content")
-            if reasoning and self.show_reasoning:
+if reasoning and self.show_reasoning and role.lower() == "assistant":
                 clean_reasoning = reasoning.replace("\x00", "")
                 message_container.mount(Static("REASONING", classes="reasoning-header"))
                 message_container.mount(
