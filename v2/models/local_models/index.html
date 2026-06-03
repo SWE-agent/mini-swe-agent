@@ -2944,6 +2944,7 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
 <span class="kn">import</span><span class="w"> </span><span class="nn">litellm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">FormatError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">GLOBAL_MODEL_STATS</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.actions_toolcall</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BASH_TOOL</span><span class="p">,</span>
@@ -3018,9 +3019,20 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
                 <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_messages_for_api</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">cost_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_cost</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
         <span class="n">GLOBAL_MODEL_STATS</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cost_output</span><span class="p">[</span><span class="s2">"cost"</span><span class="p">])</span>
+        <span class="c1"># Note: all model.query() implementations must persist the response on FormatError.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_actions</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">FormatError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"extra"</span><span class="p">][</span><span class="s2">"response"</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"json"</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="c1"># model_dump failed (e.g. unserializable object); fall back to repr</span>
+                <span class="c1"># so the spec contract ("response MUST be persisted") holds unconditionally.</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"extra"</span><span class="p">][</span><span class="s2">"response"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span>
         <span class="n">message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
         <span class="n">message</span><span class="p">[</span><span class="s2">"extra"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"actions"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_actions</span><span class="p">(</span><span class="n">response</span><span class="p">),</span>
+            <span class="s2">"actions"</span><span class="p">:</span> <span class="n">actions</span><span class="p">,</span>
             <span class="s2">"response"</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span>
             <span class="o">**</span><span class="n">cost_output</span><span class="p">,</span>
             <span class="s2">"timestamp"</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
