@@ -376,11 +376,9 @@ def test_main_no_reasoning_flag(mock_run, temp_trajectory_files):
     """Test that --no-reasoning passes show_reasoning=False to TrajectoryInspector."""
     valid_file = temp_trajectory_files[0]
     with patch("minisweagent.run.utilities.inspector.TrajectoryInspector.__init__", return_value=None) as mock_init:
-        try:
-            main(str(valid_file), reasoning=False)
-        except AttributeError:
-            pass  # __init__ mocked, app state incomplete — expected
+        main(str(valid_file), reasoning=False)
         mock_init.assert_called_once_with([valid_file], show_reasoning=False)
+        mock_run.assert_called_once()
 
 
 @pytest.fixture

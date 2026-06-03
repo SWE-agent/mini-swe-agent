@@ -211,7 +211,7 @@ class TrajectoryInspector(App):
             clean_str = content_str.replace("\x00", "")
             message_container.mount(Static(Text.from_ansi(clean_str, no_wrap=False), classes="message-content"))
             reasoning = message.get("reasoning_content")
-if reasoning and self.show_reasoning and role.lower() == "assistant":
+            if reasoning and self.show_reasoning and role.lower() == "assistant":
                 clean_reasoning = reasoning.replace("\x00", "")
                 message_container.mount(Static("REASONING", classes="reasoning-header"))
                 message_container.mount(
@@ -281,7 +281,8 @@ if reasoning and self.show_reasoning and role.lower() == "assistant":
         self._load_current_trajectory()
         self._i_step = min(saved_step, self.n_steps - 1) if self.n_steps > 0 else 0
         self.update_content()
-        self.notify("Reloaded")
+        if self.steps:
+            self.notify("Reloaded")
 
     def action_open_in_jless_all(self) -> None:
         """Open the entire trajectory in jless."""
