@@ -112,6 +112,20 @@ def make_response_api_model(
     return DeterministicResponseAPIToolcallModel(outputs=outputs, **kwargs)
 
 
+class RecordingObserver:
+    def __init__(self):
+        self.events = []
+
+    def __getattr__(self, name):
+        if not name.startswith("on_"):
+            raise AttributeError(name)
+
+        def record(**payload):
+            self.events.append((name, payload))
+
+        return record
+
+
 @pytest.fixture(params=["text", "toolcall", "response_api"])
 def model_factory(request, default_config, toolcall_config):
     """Parametrized fixture that returns (factory_fn, config) for all three model types."""
@@ -147,6 +161,99 @@ def test_successful_completion(model_factory):
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "Task completed successfully\n"
     assert agent.n_calls == 2
+
+
+def test_observer_receives_lifecycle_events(default_config):
+    observer = RecordingObserver()
+    agent = DefaultAgent(
+        model=make_text_model(
+            [
+                ("Inspect", [{"command": "echo 'hello'"}]),
+                ("Finish", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'"}]),
+            ]
+        ),
+        env=LocalEnvironment(),
+        observer=observer,
+        **default_config,
+    )
+
+    info = agent.run("Use observer hooks")
+    event_names = [name for name, _payload in observer.events]
+
+    assert info["exit_status"] == "Submitted"
+    assert event_names[0] == "on_run_start"
+    assert event_names.count("on_step_start") == 2
+    assert event_names.count("on_step_end") == 2
+    assert event_names.count("on_model_start") == 2
+    assert event_names.count("on_model_end") == 2
+    assert event_names.count("on_action_start") == 2
+    assert event_names.count("on_action_end") == 2
+    assert "on_interrupt" in event_names
+    assert "on_submit" in event_names
+    assert event_names[-1] == "on_run_end"
+
+    first_action_end = next(payload for name, payload in observer.events if name == "on_action_end")
+    assert first_action_end["action"]["name"] == "action.exec"
+    assert first_action_end["action"]["arguments"] == {"command": "echo 'hello'"}
+    assert first_action_end["raw_action"] == {"command": "echo 'hello'"}
+    assert first_action_end["output"]["returncode"] == 0
+    assert "hello" in first_action_end["output"]["output"]
+
+    submit_payload = next(payload for name, payload in observer.events if name == "on_submit")
+    assert submit_payload["submission"] == "done\n"
+
+
+def test_observer_receives_uncaught_errors(default_config):
+    class ExplodingModel(DeterministicModel):
+        def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+            raise RuntimeError("boom")
+
+    observer = RecordingObserver()
+    agent = DefaultAgent(
+        model=ExplodingModel(outputs=[]),
+        env=LocalEnvironment(),
+        observer=observer,
+        **default_config,
+    )
+
+    with pytest.raises(RuntimeError, match="boom"):
+        agent.run("Raise from model")
+
+    event_names = [name for name, _payload in observer.events]
+    assert "on_model_end" in event_names
+    assert "on_step_end" in event_names
+    assert "on_error" in event_names
+    error_payload = next(payload for name, payload in observer.events if name == "on_error")
+    assert isinstance(error_payload["exception"], RuntimeError)
+
+
+@pytest.mark.parametrize("factory", [make_tc_model, make_response_api_model])
+def test_observer_receives_normalized_tool_call_actions(factory, toolcall_config):
+    observer = RecordingObserver()
+    agent = DefaultAgent(
+        model=factory([("Inspect", [{"command": "echo 'hello'"}])]),
+        env=LocalEnvironment(),
+        observer=observer,
+        **toolcall_config,
+    )
+    agent.add_messages(
+        agent.model.format_message(role="system", content="system"),
+        agent.model.format_message(role="user", content="task"),
+    )
+
+    agent.step()
+
+    action_start = next(payload for name, payload in observer.events if name == "on_action_start")
+    action_end = next(payload for name, payload in observer.events if name == "on_action_end")
+
+    assert action_start["action"]["name"] == "bash"
+    assert action_start["action"]["arguments"] == {"command": "echo 'hello'"}
+    assert action_start["action"]["kind"] == "tool_call"
+    assert action_start["action"]["id"] == action_start["raw_action"]["tool_call_id"]
+    assert action_start["action"]["tool_call_id"] == action_start["raw_action"]["tool_call_id"]
+    assert action_start["raw_action"] == {"command": "echo 'hello'", "tool_call_id": action_start["action"]["id"]}
+    assert action_end["action"] == action_start["action"]
+    assert action_end["raw_action"] == action_start["raw_action"]
 
 
 def test_step_limit_enforcement(model_factory):
