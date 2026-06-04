@@ -72,14 +72,15 @@ def build_reviewer_prompt(task: str, patch: str, trace: str) -> str:
 def extract_patch(text: str) -> str:
     """Extract a unified-diff patch from a free-text model response.
 
-    Looks for the first ``--- `` line and returns everything from there
-    to the end of *text*.  Falls back to returning *text* unchanged if no
-    diff header is found.
+    Strips markdown fences, then looks for the first ``--- `` line and
+    returns everything from there to the end.  Returns ``""`` if no
+    recognizable diff header is found.
     """
-    m = DIFF_HEADER_RE.search(text)
-    if m:
-        return text[m.start() :].strip()
-    # Fallback: try to strip markdown fences at string boundaries
+    # Strip markdown fences at string boundaries
     cleaned = re.sub(r"^```(?:diff)?\s*\n", "", text)
     cleaned = re.sub(r"\n```\s*$", "", cleaned)
-    return cleaned.strip()
+
+    m = DIFF_HEADER_RE.search(cleaned)
+    if m:
+        return cleaned[m.start() :].strip()
+    return ""  # no recognizable diff header found
