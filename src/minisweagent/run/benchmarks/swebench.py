@@ -154,6 +154,28 @@ def process_instance(
         info = agent.run(task)
         exit_status = info.get("exit_status")
         result = info.get("submission")
+
+        # --- Patch Repair hook ---
+        if config.get("agent", {}).get("patch_repair_enabled") and result:
+            from minisweagent.patch_repair import attempt_patch_repair
+
+            progress_manager.update_instance_status(instance_id, "Patch repair evaluation")
+            repair_result = attempt_patch_repair(
+                task=task,
+                patch=result,
+                env=env,
+                model=model,
+                instance=instance,
+                max_rounds=2,
+            )
+            result = repair_result["patch"]
+            if repair_result["success"] and exit_status != "completed":
+                exit_status = "repaired"
+            extra_info["patch_repair"] = {
+                "rounds_used": repair_result["rounds_used"],
+                "success": repair_result["success"],
+                "trace": repair_result["trace"],
+            }
     except Exception as e:
         logger.error(f"Error processing instance {instance_id}: {e}", exc_info=True)
         exit_status, result = type(e).__name__, ""
@@ -212,6 +234,7 @@ def main(
     redo_existing: bool = typer.Option(False, "--redo-existing", help="Redo existing instances", rich_help_panel="Data selection"),
     config_spec: list[str] = typer.Option([str(DEFAULT_CONFIG_FILE)], "-c", "--config", help=_CONFIG_SPEC_HELP_TEXT, rich_help_panel="Basic"),
     environment_class: str | None = typer.Option(None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
+    patch_repair: bool = typer.Option(False, "--patch-repair/--no-patch-repair", help="Enable Coder-Reviewer patch repair loop (up to 2 retries)", rich_help_panel="Basic"),
 ) -> None:
     # fmt: on
     output_path = Path(output)
@@ -239,6 +262,7 @@ def main(
         "model": {"model_name": model or UNSET, "model_class": model_class or UNSET},
     })
     config = recursive_merge(*configs)
+    config.setdefault("agent", {})["patch_repair_enabled"] = patch_repair
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 
