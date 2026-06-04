@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import litellm
+from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
 from minisweagent.exceptions import FormatError
@@ -37,6 +38,13 @@ class LitellmModelConfig(BaseModel):
     """Cost tracking mode for this model. Can be "default" or "ignore_errors" (ignore errors/missing cost info)"""
     format_error_template: str = "{{ error }}"
     """Template used when the LM's output is not in the expected format."""
+    truncation_error_template: str = (
+        "Your previous response reached the output token limit (finish_reason={{ finish_reason }}) "
+        "before you produced a tool call, so it was cut off. Respond more concisely and finish with "
+        "exactly one tool call. If you need to think more, do so briefly."
+    )
+    """Template used when a response is truncated at max_tokens before a tool call is produced.
+    Distinct from format_error_template so the model is told it was cut off (not that it forgot)."""
     observation_template: str = (
         "{% if output.exception_info %}<exception>{{output.exception_info}}</exception>\n{% endif %}"
         "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
@@ -94,6 +102,20 @@ class LitellmModel:
                 # model_dump failed (e.g. unserializable object); fall back to repr
                 # so the spec contract ("response MUST be persisted") holds unconditionally.
                 e.messages[0]["extra"]["response"] = repr(response)
+            # If the response was cut off at the output token limit before a tool call (common with
+            # reasoning models whose thinking can consume the whole max_tokens budget), tell the
+            # model it was truncated instead of the misleading default "no tool call found" retry.
+            if self._is_truncated(response):
+                finish_reason = response.choices[0].finish_reason
+                e.messages[0]["content"] = Template(
+                    self.config.truncation_error_template, undefined=StrictUndefined
+                ).render(finish_reason=finish_reason)
+                e.messages[0]["extra"]["truncated"] = True
+                logger.warning(
+                    "Model response truncated at the output token limit (finish_reason=%s) "
+                    "before a tool call -- consider raising max_tokens.",
+                    finish_reason,
+                )
             raise
         message = response.choices[0].message.model_dump()
         message["extra"] = {
@@ -128,6 +150,22 @@ class LitellmModel:
         """Parse tool calls from the response. Raises FormatError if unknown tool."""
         tool_calls = response.choices[0].message.tool_calls or []
         return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
+
+    @staticmethod
+    def _is_truncated(response) -> bool:
+        """Whether a no-tool-call response was cut off at the output token limit.
+
+        ``length`` means the completion was truncated mid-output; ``tool_calls`` with an empty
+        payload means it was cut right at the tool-call boundary. Both are budget truncations,
+        distinct from a model that simply ended its turn (``stop``/``end_turn``) without acting.
+        """
+        try:
+            choice = response.choices[0]
+            finish_reason = choice.finish_reason
+            has_tool_calls = bool(choice.message.tool_calls)
+        except (AttributeError, IndexError):
+            return False
+        return finish_reason == "length" or (finish_reason == "tool_calls" and not has_tool_calls)
 
     def format_message(self, **kwargs) -> dict:
         return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)

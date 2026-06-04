@@ -5,6 +5,7 @@ import yaml
 
 from minisweagent.agents.default import DefaultAgent
 from minisweagent.environments.local import LocalEnvironment
+from minisweagent.exceptions import FormatError
 from minisweagent.models.test_models import (
     DeterministicModel,
     DeterministicResponseAPIToolcallModel,
@@ -456,3 +457,55 @@ def test_empty_actions_handling(model_factory):
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "done\n"
     assert agent.n_calls == 2
+
+
+class _FlakyToolcallModel(DeterministicToolcallModel):
+    """Like DeterministicToolcallModel, but raises FormatError (as the real LitellmModel now does
+    on a truncated / no-tool-call turn) for any output marked {"_format_error": True}."""
+
+    def query(self, messages, **kwargs):
+        self.current_index += 1
+        output = self.config.outputs[self.current_index]
+        if output.get("_format_error"):
+            raise FormatError(
+                {
+                    "role": "user",
+                    "content": "No tool calls found in the response.",
+                    "extra": {"interrupt_type": "FormatError"},
+                }
+            )
+        return output
+
+
+def test_repeated_format_errors_terminate_cleanly(toolcall_config):
+    """With max_consecutive_format_errors set, a run that keeps producing no-tool-call / truncation
+    turns stops cleanly with exit_status=RepeatedFormatError instead of looping until the budget is
+    gone."""
+    outputs = [{"_format_error": True} for _ in range(5)]
+    agent = DefaultAgent(
+        model=_FlakyToolcallModel(outputs=outputs),
+        env=LocalEnvironment(),
+        **{**toolcall_config, "max_consecutive_format_errors": 2},
+    )
+    info = agent.run("Test repeated format errors")
+    assert info["exit_status"] == "RepeatedFormatError"
+    assert agent.n_calls == 2  # stopped at the 2nd consecutive error, didn't burn all 5
+
+
+def test_format_error_counter_resets_on_success(toolcall_config):
+    """A successful tool call between format errors resets the consecutive counter, so isolated
+    errors don't accumulate to the termination threshold."""
+    good = make_tc_model([("listing", [{"command": "echo hello"}])]).config.outputs[0]
+    submit = make_tc_model(
+        [("done", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho ok"}])]
+    ).config.outputs[0]
+    # error, success (reset), error, submit -> never 2 in a row, so it must NOT terminate early.
+    outputs = [{"_format_error": True}, good, {"_format_error": True}, submit]
+    agent = DefaultAgent(
+        model=_FlakyToolcallModel(outputs=outputs),
+        env=LocalEnvironment(),
+        **{**toolcall_config, "max_consecutive_format_errors": 2},
+    )
+    info = agent.run("Test counter reset")
+    assert info["exit_status"] == "Submitted"
+    assert info["submission"] == "ok\n"
