@@ -6,12 +6,13 @@ import json
 import logging
 import time
 import traceback
+from collections.abc import Iterable
 from pathlib import Path
 
 from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
-from minisweagent import Environment, Model, __version__
+from minisweagent import AgentObserver, AgentObserverEvent, Environment, Model, __version__
 from minisweagent.exceptions import InterruptAgentFlow, LimitsExceeded, TimeExceeded
 from minisweagent.utils.serialize import recursive_merge
 
@@ -34,30 +35,43 @@ class AgentConfig(BaseModel):
 
 
 class DefaultAgent:
-    def __init__(self, model: Model, env: Environment, *, config_class: type = AgentConfig, observer=None, **kwargs):
+    def __init__(
+        self,
+        model: Model,
+        env: Environment,
+        *,
+        config_class: type = AgentConfig,
+        observer: AgentObserver | None = None,
+        observers: Iterable[AgentObserver] | None = None,
+        **kwargs,
+    ):
         """See the `AgentConfig` class for permitted keyword arguments."""
         self.config = config_class(**kwargs)
         self.messages: list[dict] = []
         self.model = model
         self.env = env
-        self.observer = observer
+        observer_list = []
+        if observer is not None:
+            observer_list.append(observer)
+        if observers is not None:
+            observer_list.extend(observers)
+        self.observers = tuple(observer_list)
         self.extra_template_vars = {}
         self.logger = logging.getLogger("agent")
         self.cost = 0.0
         self.n_calls = 0
         self._start_time = time.time()
 
-    def _notify(self, event_name: str, **payload) -> None:
+    def _notify(self, event_name: AgentObserverEvent, **payload) -> None:
         """Notify an optional observer without letting telemetry break agent execution."""
-        if self.observer is None:
-            return
-        handler = getattr(self.observer, event_name, None)
-        if handler is None:
-            return
-        try:
-            handler(agent=self, **payload)
-        except Exception:
-            self.logger.exception("Agent observer failed while handling %s", event_name)
+        for observer in self.observers:
+            handler = getattr(observer, event_name.value, None)
+            if handler is None:
+                continue
+            try:
+                handler(agent=self, **payload)
+            except Exception:
+                self.logger.exception("Agent observer failed while handling %s", event_name.value)
 
     @staticmethod
     def _get_tool_call_id(action: dict) -> str | None:
@@ -176,44 +190,44 @@ class DefaultAgent:
             self.model.format_message(role="system", content=self._render_template(self.config.system_template)),
             self.model.format_message(role="user", content=self._render_template(self.config.instance_template)),
         )
-        self._notify("on_run_start", task=task, kwargs=kwargs, messages=list(self.messages))
+        self._notify(AgentObserverEvent.RUN_START, task=task, kwargs=kwargs, messages=list(self.messages))
         while True:
             try:
                 self.step()
             except InterruptAgentFlow as e:
                 messages = self.add_messages(*e.messages)
-                self._notify("on_interrupt", exception=e, messages=messages)
+                self._notify(AgentObserverEvent.INTERRUPT, exception=e, messages=messages)
                 if messages and messages[-1].get("extra", {}).get("exit_status") == "Submitted":
                     self._notify(
-                        "on_submit",
+                        AgentObserverEvent.SUBMIT,
                         exception=e,
                         messages=messages,
                         submission=messages[-1].get("extra", {}).get("submission", ""),
                     )
             except Exception as e:
                 messages = self.handle_uncaught_exception(e)
-                self._notify("on_error", exception=e, messages=messages)
+                self._notify(AgentObserverEvent.ERROR, exception=e, messages=messages)
                 raise
             finally:
                 self.save(self.config.output_path)
             if self.messages[-1].get("role") == "exit":
                 break
         result = self.messages[-1].get("extra", {})
-        self._notify("on_run_end", result=result, messages=list(self.messages))
+        self._notify(AgentObserverEvent.RUN_END, result=result, messages=list(self.messages))
         return result
 
     def step(self) -> list[dict]:
         """Query the LM, execute actions."""
         step_index = self.n_calls + 1
-        self._notify("on_step_start", step_index=step_index, messages=list(self.messages))
+        self._notify(AgentObserverEvent.STEP_START, step_index=step_index, messages=list(self.messages))
         try:
             message = self.query()
             observations = self.execute_actions(message)
         except Exception as e:
-            self._notify("on_step_end", step_index=step_index, exception=e, messages=list(self.messages))
+            self._notify(AgentObserverEvent.STEP_END, step_index=step_index, exception=e, messages=list(self.messages))
             raise
         self._notify(
-            "on_step_end",
+            AgentObserverEvent.STEP_END,
             step_index=step_index,
             message=message,
             observations=observations,
@@ -241,16 +255,16 @@ class DefaultAgent:
             )
         self.n_calls += 1
         call_index = self.n_calls
-        self._notify("on_model_start", call_index=call_index, messages=list(self.messages))
+        self._notify(AgentObserverEvent.MODEL_START, call_index=call_index, messages=list(self.messages))
         try:
             message = self.model.query(self.messages)
         except Exception as e:
-            self._notify("on_model_end", call_index=call_index, exception=e, messages=list(self.messages))
+            self._notify(AgentObserverEvent.MODEL_END, call_index=call_index, exception=e, messages=list(self.messages))
             raise
         self.cost += message.get("extra", {}).get("cost", 0.0)
         self.add_messages(message)
         self._notify(
-            "on_model_end",
+            AgentObserverEvent.MODEL_END,
             call_index=call_index,
             message=message,
             cost=message.get("extra", {}).get("cost", 0.0),
@@ -265,7 +279,7 @@ class DefaultAgent:
         for action_index, action in enumerate(message.get("extra", {}).get("actions", [])):
             observed_action = self._observer_action(action, message) if isinstance(action, dict) else action
             self._notify(
-                "on_action_start",
+                AgentObserverEvent.ACTION_START,
                 action_index=action_index,
                 action=observed_action,
                 raw_action=action,
@@ -275,7 +289,7 @@ class DefaultAgent:
                 output = self.env.execute(action)
             except Exception as e:
                 self._notify(
-                    "on_action_end",
+                    AgentObserverEvent.ACTION_END,
                     action_index=action_index,
                     action=observed_action,
                     raw_action=action,
@@ -285,7 +299,7 @@ class DefaultAgent:
                 raise
             outputs.append(output)
             self._notify(
-                "on_action_end",
+                AgentObserverEvent.ACTION_END,
                 action_index=action_index,
                 action=observed_action,
                 raw_action=action,

@@ -11,6 +11,7 @@ This file provides:
 __version__ = "2.3.0"
 
 import os
+from enum import Enum
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -70,6 +71,53 @@ class Environment(Protocol):
     def serialize(self) -> dict: ...
 
 
+class AgentObserverEvent(str, Enum):
+    """Agent observer callback names used by agent implementations."""
+
+    RUN_START = "on_run_start"
+    RUN_END = "on_run_end"
+    STEP_START = "on_step_start"
+    STEP_END = "on_step_end"
+    MODEL_START = "on_model_start"
+    MODEL_END = "on_model_end"
+    ACTION_START = "on_action_start"
+    ACTION_END = "on_action_end"
+    INTERRUPT = "on_interrupt"
+    SUBMIT = "on_submit"
+    ERROR = "on_error"
+
+
+class AgentObserver(Protocol):
+    """Protocol for optional agent lifecycle observers.
+
+    Observers may implement any subset of these methods. Agent execution treats
+    observer callbacks as best-effort telemetry and continues if a callback
+    raises.
+    """
+
+    def on_run_start(self, **kwargs) -> None: ...
+
+    def on_run_end(self, **kwargs) -> None: ...
+
+    def on_step_start(self, **kwargs) -> None: ...
+
+    def on_step_end(self, **kwargs) -> None: ...
+
+    def on_model_start(self, **kwargs) -> None: ...
+
+    def on_model_end(self, **kwargs) -> None: ...
+
+    def on_action_start(self, **kwargs) -> None: ...
+
+    def on_action_end(self, **kwargs) -> None: ...
+
+    def on_interrupt(self, **kwargs) -> None: ...
+
+    def on_submit(self, **kwargs) -> None: ...
+
+    def on_error(self, **kwargs) -> None: ...
+
+
 class Agent(Protocol):
     """Protocol for agents."""
 
@@ -82,6 +130,8 @@ class Agent(Protocol):
 
 __all__ = [
     "Agent",
+    "AgentObserverEvent",
+    "AgentObserver",
     "Model",
     "Environment",
     "package_dir",

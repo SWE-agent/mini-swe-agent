@@ -203,6 +203,36 @@ def test_observer_receives_lifecycle_events(default_config):
     assert submit_payload["submission"] == "done\n"
 
 
+def test_multiple_observers_are_isolated(default_config):
+    class FailingObserver:
+        def on_action_start(self, **kwargs):
+            raise RuntimeError("observer failed")
+
+    first = RecordingObserver()
+    second = RecordingObserver()
+    agent = DefaultAgent(
+        model=make_text_model(
+            [
+                ("Inspect", [{"command": "echo 'hello'"}]),
+                ("Finish", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'"}]),
+            ]
+        ),
+        env=LocalEnvironment(),
+        observers=[first, FailingObserver(), second],
+        **default_config,
+    )
+
+    info = agent.run("Use multiple observer hooks")
+
+    assert info["exit_status"] == "Submitted"
+    first_event_names = [name for name, _payload in first.events]
+    second_event_names = [name for name, _payload in second.events]
+    assert first_event_names.count("on_action_start") == 2
+    assert second_event_names.count("on_action_start") == 2
+    assert first_event_names[-1] == "on_run_end"
+    assert second_event_names[-1] == "on_run_end"
+
+
 def test_observer_receives_uncaught_errors(default_config):
     class ExplodingModel(DeterministicModel):
         def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
