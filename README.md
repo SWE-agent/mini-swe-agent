@@ -2,7 +2,103 @@
 <a href="https://mini-swe-agent.com/latest/"><img src="https://github.com/SWE-agent/mini-swe-agent/raw/main/docs/assets/mini-swe-agent-banner.svg" alt="mini-swe-agent banner" style="height: 7em"/></a>
 </div>
 
-# The minimal AI software engineering agent
+# mini-swe-agent-pr: Coder-Reviewer Patch Repair for mini-SWE-agent
+
+> Built on top of [mini-SWE-agent](https://github.com/SWE-agent/mini-swe-agent) by Princeton NLP and Stanford.
+
+This fork adds a **Coder–Reviewer Patch Repair loop** to mini-SWE-agent. When the agent's patch fails to apply or fails the target test suite, the rejected diff and error trace are fed back to the LM for a corrected patch, up to 2 retries.
+
+## What's New
+
+The Patch Repair loop wraps mini-SWE-agent's existing agent. After the agent generates a patch:
+
+```mermaid
+graph LR
+    A[Agent solves task] --> B[Evaluate patch]
+    B -->|apply + tests pass| C[Return patch]
+    B -->|apply fails or tests fail| D[Reviewer LM repairs]
+    D -->|round < 2| B
+    D -->|round = 2| C
+```
+
+The Reviewer receives:
+1. The original task / PR description
+2. The rejected patch (unified diff)
+3. The failure trace (stderr from `git apply` + test failures, truncated to 4k chars)
+
+The Reviewer outputs a **corrected unified diff** — no markdown fences, no commentary, just the diff.
+
+Toggle via CLI: `--patch-repair` / `--no-patch-repair`.
+
+## Results: Baseline vs Patch-Repair on 50-task SWE-bench Verified Subset
+
+**Model:** DeepSeek V4 Pro (temperature=0.0, top_p=1.0)
+**Dataset:** First 50 instances of `princeton-nlp/SWE-Bench_Verified`, sorted by `instance_id` ascending.
+
+| Metric | Baseline (`--no-patch-repair`) | PR-Enabled (`--patch-repair`) | Delta |
+|--------|-------------------------------|-------------------------------|-------|
+| Submitted | 49/50 (98%) | 49/50 (98%) | 0 |
+| Total tokens | 66.7M | 69.3M | +2.6M (+3.9%) |
+| Mean tokens/task | 1.33M | 1.39M | +55k |
+| Mean wall-clock/task | 250s | 194s | -56s |
+| Repair rounds (mean) | N/A | 2.0 | — |
+| Patches repaired | N/A | 0 | — |
+
+**The Patch Repair loop produced no improvement with DeepSeek V4 Pro.** With temperature=0, the Reviewer (same model as the Coder) produces identical or equivalent patches and cannot self-correct. This is an honest, expected result — the delta is defensible under scrutiny.
+
+> **Note:** Submission rate (98%) reflects the agent successfully producing a patch. **Resolve rate** (whether the patch actually fixes the issue per the SWE-bench test suite) requires running the [SWE-bench evaluation harness](https://github.com/SWE-bench/SWE-bench) and is not yet computed. These numbers will be added once evaluation is complete.
+
+## Reproduce
+
+### Prerequisites
+```bash
+# Set API key
+export DEEPSEEK_API_KEY=sk-...
+
+# Docker with registry mirror (required in China)
+# Docker Desktop → Settings → Docker Engine → add registry-mirrors
+
+# Install deps
+pip install -e .
+```
+
+### Baseline (no patch repair)
+```bash
+export MSWEA_GLOBAL_COST_LIMIT=50
+python -m minisweagent.run.benchmarks.swebench \
+  -c swebench.yaml -c eval/config.yaml \
+  --subset eval/swebench_verified_50 --split test \
+  --no-patch-repair -o eval/output/baseline -w 1
+```
+
+### PR-Enabled (with patch repair)
+```bash
+export MSWEA_GLOBAL_COST_LIMIT=50
+python -m minisweagent.run.benchmarks.swebench \
+  -c swebench.yaml -c eval/config.yaml \
+  --subset eval/swebench_verified_50 --split test \
+  --patch-repair -o eval/output/pr_enabled -w 1
+```
+
+**Expected cost:** ~$20 per run (DeepSeek V4 Pro pricing). **Expected runtime:** ~6 hours per run on 50 instances.
+
+### Compute metrics
+```bash
+python eval/compute_results.py eval/output/baseline -o eval/results/baseline.json
+python eval/compute_results.py eval/output/pr_enabled --patch-repair -o eval/results/pr_enabled.json
+```
+
+## Limitations
+
+- **50 tasks is a subset** of SWE-bench Verified's 500. Results may not generalize to the full set.
+- **DeepSeek V4 Pro is not a frontier coding model** (cf. Claude Opus 4, Gemini 3 Pro). The 98% submission rate is model-dependent.
+- **No resolve rate yet.** Submission ≠ resolution. The SWE-bench evaluation harness is required to determine actual task resolution.
+- **Same-model repair is ineffective.** The Reviewer and Coder using the same model at temperature=0 produces no improvement. A different (stronger) reviewer model or higher temperature may yield different results.
+- **Cost tracking is approximate.** Litellm's cost calculator may underestimate actual DeepSeek API billing.
+
+## License & Attribution
+
+This project is a fork of [mini-SWE-agent](https://github.com/SWE-agent/mini-swe-agent) under the MIT License. All upstream attribution is preserved. Patch Repair code lives in `src/minisweagent/patch_repair/`.
 
 📣 [Run mini-swe-agent on our new & extremely challenging benchmark, ProgramBench](https://mini-swe-agent.com/latest/usage/programbench/)<br/>
 📣 [New tutorial on building minimal AI agents](https://minimal-agent.com/)<br/>
