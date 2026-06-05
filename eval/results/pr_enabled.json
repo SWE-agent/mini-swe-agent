@@ -1,0 +1,32 @@
+{
+  "n_tasks": 50,
+  "n_completed": 0,
+  "exit_statuses": {
+    "Submitted": 49,
+    "LimitsExceeded": 1
+  },
+  "total_tokens": {
+    "prompt": 68580788,
+    "completion": 677853,
+    "total": 69258641
+  },
+  "mean_tokens_per_task": {
+    "prompt": 1371616,
+    "completion": 13557,
+    "total": 1385173
+  },
+  "mean_wall_clock_s": 194,
+  "wall_clock_n": 50,
+  "patch_repair": {
+    "mean_rounds": 2.0,
+    "distribution": {
+      "0_rounds": 0,
+      "1_round": 0,
+      "2_rounds": 49
+    },
+    "n_repaired": 0,
+    "n_with_repair_data": 49
+  },
+  "generated_at": "2026-06-05T20:13:03Z",
+  "patch_repair_enabled": true
+}

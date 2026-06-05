@@ -1,0 +1,22 @@
+{
+  "n_tasks": 50,
+  "n_completed": 0,
+  "exit_statuses": {
+    "Submitted": 49,
+    "LimitsExceeded": 1
+  },
+  "total_tokens": {
+    "prompt": 65671457,
+    "completion": 1077485,
+    "total": 66748942
+  },
+  "mean_tokens_per_task": {
+    "prompt": 1313429,
+    "completion": 21550,
+    "total": 1334979
+  },
+  "mean_wall_clock_s": 250,
+  "wall_clock_n": 50,
+  "generated_at": "2026-06-05T17:25:06Z",
+  "patch_repair_enabled": false
+}

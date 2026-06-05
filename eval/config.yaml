@@ -1,0 +1,12 @@
+# Evaluation config for DeepSeek V4 Pro on SWE-bench Verified 50-task subset
+# Usage: -c swebench.yaml -c eval/config.yaml
+
+environment:
+  pull_timeout: 600  # 10 min for large Docker images
+
+model:
+  model_name: "deepseek/deepseek-chat"
+  model_kwargs:
+    temperature: 0.0
+    top_p: 1.0
+    drop_params: true
