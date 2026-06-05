@@ -93,6 +93,11 @@ class AgentObserver(Protocol):
     Observers may implement any subset of these methods. Agent execution treats
     observer callbacks as best-effort telemetry and continues if a callback
     raises.
+
+    In-agent failures are reported on the corresponding paired end callback
+    with ``exception=...`` (for example, ``on_model_end`` or
+    ``on_action_end``). If an uncaught exception fails the workflow as a whole,
+    ``on_error`` is emitted after the agent records its exit message.
     """
 
     def on_run_start(self, **kwargs) -> None: ...
