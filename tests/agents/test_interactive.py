@@ -48,6 +48,20 @@ def get_text(msg: dict) -> str:
     return ""
 
 
+class RecordingObserver:
+    def __init__(self):
+        self.events = []
+
+    def __getattr__(self, name):
+        if not name.startswith("on_"):
+            raise AttributeError(name)
+
+        def record(**payload):
+            self.events.append((name, payload))
+
+        return record
+
+
 # --- Model factory functions ---
 
 
@@ -148,6 +162,36 @@ def test_successful_completion_with_confirmation(model_factory):
         assert info["exit_status"] == "Submitted"
         assert info["submission"] == "completed\n"
         assert agent.n_calls == 1
+
+
+def test_observer_receives_action_events_with_confirmation(model_factory):
+    """Test interactive action execution preserves observer callbacks."""
+    factory, config = model_factory
+    observer = RecordingObserver()
+    with mock_prompts(["", "", ""]):  # Confirm both actions, then no new task
+        agent = InteractiveAgent(
+            model=factory(
+                [
+                    ("Inspect", [{"command": "echo hello"}]),
+                    ("Finishing", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'completed'"}]),
+                ]
+            ),
+            env=LocalEnvironment(),
+            observer=observer,
+            **config,
+        )
+
+        info = agent.run("Test observer action hooks")
+
+    event_names = [name for name, _payload in observer.events]
+    assert info["exit_status"] == "Submitted"
+    assert event_names.count("on_action_start") == 2
+    assert event_names.count("on_action_end") == 2
+
+    action_end = next(payload for name, payload in observer.events if name == "on_action_end")
+    assert action_end["action"]["arguments"] == {"command": "echo hello"}
+    assert action_end["output"]["returncode"] == 0
+    assert "hello" in action_end["output"]["output"]
 
 
 def test_action_rejection_and_recovery(model_factory):

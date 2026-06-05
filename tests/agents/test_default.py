@@ -233,6 +233,45 @@ def test_multiple_observers_are_isolated(default_config):
     assert second_event_names[-1] == "on_run_end"
 
 
+def test_single_observer_shortcut_is_notified_before_observers(default_config):
+    order = []
+
+    class OrderedObserver(RecordingObserver):
+        def __init__(self, label: str):
+            super().__init__()
+            self.label = label
+
+        def __getattr__(self, name):
+            record = super().__getattr__(name)
+
+            def ordered_record(**payload):
+                order.append((name, self.label))
+                record(**payload)
+
+            return ordered_record
+
+    first = OrderedObserver("shortcut")
+    second = OrderedObserver("list")
+    agent = DefaultAgent(
+        model=make_text_model(
+            [
+                ("Finish", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho 'done'"}]),
+            ]
+        ),
+        env=LocalEnvironment(),
+        observer=first,
+        observers=[second],
+        **default_config,
+    )
+
+    info = agent.run("Use observer shortcut")
+
+    assert info["exit_status"] == "Submitted"
+    assert [name for name, _payload in first.events] == [name for name, _payload in second.events]
+    assert first.events[0][0] == "on_run_start"
+    assert order[:2] == [("on_run_start", "shortcut"), ("on_run_start", "list")]
+
+
 def test_observer_receives_uncaught_errors(default_config):
     class ExplodingModel(DeterministicModel):
         def query(self, messages: list[dict[str, str]], **kwargs) -> dict:

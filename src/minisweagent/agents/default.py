@@ -45,7 +45,12 @@ class DefaultAgent:
         observers: Iterable[AgentObserver] | None = None,
         **kwargs,
     ):
-        """See the `AgentConfig` class for permitted keyword arguments."""
+        """See the `AgentConfig` class for permitted keyword arguments.
+
+        `observer` is a convenience shortcut for passing a single observer.
+        Use `observers` when attaching multiple observers. If both are
+        supplied, `observer` is notified first.
+        """
         self.config = config_class(**kwargs)
         self.messages: list[dict] = []
         self.model = model
@@ -273,40 +278,48 @@ class DefaultAgent:
         )
         return message
 
-    def execute_actions(self, message: dict) -> list[dict]:
-        """Execute actions in message, add observation messages, return them."""
-        outputs = []
-        for action_index, action in enumerate(message.get("extra", {}).get("actions", [])):
-            observed_action = self._observer_action(action, message) if isinstance(action, dict) else action
-            self._notify(
-                AgentObserverEvent.ACTION_START,
-                action_index=action_index,
-                action=observed_action,
-                raw_action=action,
-                message=message,
-            )
-            try:
-                output = self.env.execute(action)
-            except Exception as e:
-                self._notify(
-                    AgentObserverEvent.ACTION_END,
-                    action_index=action_index,
-                    action=observed_action,
-                    raw_action=action,
-                    exception=e,
-                    message=message,
-                )
-                raise
-            outputs.append(output)
+    def _execute_action(self, message: dict, action_index: int, action: dict) -> dict:
+        """Execute one action and notify observers around the environment call."""
+        observed_action = self._observer_action(action, message) if isinstance(action, dict) else action
+        self._notify(
+            AgentObserverEvent.ACTION_START,
+            action_index=action_index,
+            action=observed_action,
+            raw_action=action,
+            message=message,
+        )
+        try:
+            output = self.env.execute(action)
+        except Exception as e:
             self._notify(
                 AgentObserverEvent.ACTION_END,
                 action_index=action_index,
                 action=observed_action,
                 raw_action=action,
-                output=output,
+                exception=e,
                 message=message,
             )
+            raise
+        self._notify(
+            AgentObserverEvent.ACTION_END,
+            action_index=action_index,
+            action=observed_action,
+            raw_action=action,
+            output=output,
+            message=message,
+        )
+        return output
+
+    def _add_observation_messages(self, message: dict, outputs: list[dict]) -> list[dict]:
         return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))
+
+    def execute_actions(self, message: dict) -> list[dict]:
+        """Execute actions in message, add observation messages, return them."""
+        outputs = [
+            self._execute_action(message, action_index, action)
+            for action_index, action in enumerate(message.get("extra", {}).get("actions", []))
+        ]
+        return self._add_observation_messages(message, outputs)
 
     def serialize(self, *extra_dicts) -> dict:
         """Serialize agent state to a json-compatible nested dictionary for saving."""
