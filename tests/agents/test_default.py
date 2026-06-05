@@ -5,6 +5,7 @@ import yaml
 
 from minisweagent.agents.default import DefaultAgent
 from minisweagent.environments.local import LocalEnvironment
+from minisweagent.exceptions import FormatError
 from minisweagent.models.test_models import (
     DeterministicModel,
     DeterministicResponseAPIToolcallModel,
@@ -199,8 +200,29 @@ def test_observer_receives_lifecycle_events(default_config):
     assert first_action_end["output"]["returncode"] == 0
     assert "hello" in first_action_end["output"]["output"]
 
+    action_ends = [payload for name, payload in observer.events if name == "on_action_end"]
+    submit_action_end = action_ends[-1]
+    assert submit_action_end["status"] == "interrupted"
+    assert submit_action_end["interrupt_type"] == "Submitted"
+    assert submit_action_end["interrupt_messages"][0]["extra"]["exit_status"] == "Submitted"
+    assert "interrupt" in submit_action_end
+    assert "exception" not in submit_action_end
+
+    step_ends = [payload for name, payload in observer.events if name == "on_step_end"]
+    submit_step_end = step_ends[-1]
+    assert submit_step_end["status"] == "interrupted"
+    assert submit_step_end["interrupt_type"] == "Submitted"
+    assert submit_step_end["interrupt_messages"][0]["extra"]["exit_status"] == "Submitted"
+    assert "interrupt" in submit_step_end
+    assert "exception" not in submit_step_end
+
     submit_payload = next(payload for name, payload in observer.events if name == "on_submit")
     assert submit_payload["submission"] == "done\n"
+    assert submit_payload["status"] == "interrupted"
+    assert submit_payload["interrupt_type"] == "Submitted"
+    assert submit_payload["interrupt_messages"][0]["extra"]["exit_status"] == "Submitted"
+    assert "interrupt" in submit_payload
+    assert "exception" not in submit_payload
 
 
 def test_multiple_observers_are_isolated(default_config):
@@ -294,6 +316,36 @@ def test_observer_receives_uncaught_errors(default_config):
     assert "on_error" in event_names
     error_payload = next(payload for name, payload in observer.events if name == "on_error")
     assert isinstance(error_payload["exception"], RuntimeError)
+
+
+def test_observer_reports_model_interrupts_separately_from_errors(default_config):
+    class FormattingModel(DeterministicModel):
+        def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+            raise FormatError({"role": "user", "content": "bad format", "extra": {"interrupt_type": "FormatError"}})
+
+    observer = RecordingObserver()
+    agent = DefaultAgent(
+        model=FormattingModel(outputs=[]),
+        env=LocalEnvironment(),
+        observer=observer,
+        **default_config,
+    )
+    agent.add_messages(
+        agent.model.format_message(role="system", content="system"),
+        agent.model.format_message(role="user", content="task"),
+    )
+
+    with pytest.raises(FormatError):
+        agent.query()
+
+    model_end = next(payload for name, payload in observer.events if name == "on_model_end")
+    assert model_end["status"] == "interrupted"
+    assert model_end["interrupt_type"] == "FormatError"
+    assert model_end["interrupt_messages"] == [
+        {"role": "user", "content": "bad format", "extra": {"interrupt_type": "FormatError"}}
+    ]
+    assert "interrupt" in model_end
+    assert "exception" not in model_end
 
 
 @pytest.mark.parametrize("factory", [make_tc_model, make_response_api_model])

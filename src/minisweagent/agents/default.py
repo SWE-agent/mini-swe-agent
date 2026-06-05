@@ -79,6 +79,15 @@ class DefaultAgent:
                 self.logger.exception("Agent observer failed while handling %s", event_name.value)
 
     @staticmethod
+    def _interrupt_payload(interrupt: InterruptAgentFlow) -> dict:
+        return {
+            "interrupt": interrupt,
+            "interrupt_type": type(interrupt).__name__,
+            "interrupt_messages": list(interrupt.messages),
+            "status": "interrupted",
+        }
+
+    @staticmethod
     def _get_tool_call_id(action: dict) -> str | None:
         for key in ("id", "tool_call_id", "call_id", "tool_use_id"):
             if action.get(key):
@@ -201,11 +210,11 @@ class DefaultAgent:
                 self.step()
             except InterruptAgentFlow as e:
                 messages = self.add_messages(*e.messages)
-                self._notify(AgentObserverEvent.INTERRUPT, exception=e, messages=messages)
+                self._notify(AgentObserverEvent.INTERRUPT, **self._interrupt_payload(e), messages=messages)
                 if messages and messages[-1].get("extra", {}).get("exit_status") == "Submitted":
                     self._notify(
                         AgentObserverEvent.SUBMIT,
-                        exception=e,
+                        **self._interrupt_payload(e),
                         messages=messages,
                         submission=messages[-1].get("extra", {}).get("submission", ""),
                     )
@@ -228,8 +237,22 @@ class DefaultAgent:
         try:
             message = self.query()
             observations = self.execute_actions(message)
+        except InterruptAgentFlow as e:
+            self._notify(
+                AgentObserverEvent.STEP_END,
+                step_index=step_index,
+                **self._interrupt_payload(e),
+                messages=list(self.messages),
+            )
+            raise
         except Exception as e:
-            self._notify(AgentObserverEvent.STEP_END, step_index=step_index, exception=e, messages=list(self.messages))
+            self._notify(
+                AgentObserverEvent.STEP_END,
+                step_index=step_index,
+                exception=e,
+                status="error",
+                messages=list(self.messages),
+            )
             raise
         self._notify(
             AgentObserverEvent.STEP_END,
@@ -263,8 +286,22 @@ class DefaultAgent:
         self._notify(AgentObserverEvent.MODEL_START, call_index=call_index, messages=list(self.messages))
         try:
             message = self.model.query(self.messages)
+        except InterruptAgentFlow as e:
+            self._notify(
+                AgentObserverEvent.MODEL_END,
+                call_index=call_index,
+                **self._interrupt_payload(e),
+                messages=list(self.messages),
+            )
+            raise
         except Exception as e:
-            self._notify(AgentObserverEvent.MODEL_END, call_index=call_index, exception=e, messages=list(self.messages))
+            self._notify(
+                AgentObserverEvent.MODEL_END,
+                call_index=call_index,
+                exception=e,
+                status="error",
+                messages=list(self.messages),
+            )
             raise
         self.cost += message.get("extra", {}).get("cost", 0.0)
         self.add_messages(message)
@@ -290,6 +327,16 @@ class DefaultAgent:
         )
         try:
             output = self.env.execute(action)
+        except InterruptAgentFlow as e:
+            self._notify(
+                AgentObserverEvent.ACTION_END,
+                action_index=action_index,
+                action=observed_action,
+                raw_action=action,
+                **self._interrupt_payload(e),
+                message=message,
+            )
+            raise
         except Exception as e:
             self._notify(
                 AgentObserverEvent.ACTION_END,
@@ -297,6 +344,7 @@ class DefaultAgent:
                 action=observed_action,
                 raw_action=action,
                 exception=e,
+                status="error",
                 message=message,
             )
             raise
