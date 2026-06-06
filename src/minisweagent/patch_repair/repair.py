@@ -103,9 +103,7 @@ def _call_reviewer_lm(model: Model, task: str, patch: str, trace: str) -> str | 
 
     # Drop tool-specific kwargs not applicable to a plain-text call
     safe_kwargs = {
-        k: v
-        for k, v in model.config.model_kwargs.items()
-        if k not in ("parallel_tool_calls", "tool_choice")
+        k: v for k, v in model.config.model_kwargs.items() if k not in ("parallel_tool_calls", "tool_choice")
     }
 
     try:

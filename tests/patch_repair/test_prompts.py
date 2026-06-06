@@ -1,14 +1,11 @@
 """Tests for minisweagent.patch_repair.prompts — pure functions, no mocking needed."""
 
-import pytest
-
 from minisweagent.patch_repair.prompts import (
     REVIEWER_SYSTEM_PROMPT,
     _truncate,
     build_reviewer_prompt,
     extract_patch,
 )
-
 
 # ---------------------------------------------------------------------------
 # _truncate

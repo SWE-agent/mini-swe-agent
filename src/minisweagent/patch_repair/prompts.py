@@ -69,6 +69,7 @@ def build_reviewer_prompt(task: str, patch: str, trace: str) -> str:
 # Patch extraction
 # ---------------------------------------------------------------------------
 
+
 def extract_patch(text: str) -> str:
     """Extract a unified-diff patch from a free-text model response.
 

@@ -3,14 +3,11 @@
 import base64
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from minisweagent.patch_repair.repair import (
     _call_reviewer_lm,
     attempt_patch_repair,
     evaluate_patch,
 )
-
 
 # ---------------------------------------------------------------------------
 # Shared fixtures
@@ -97,35 +94,41 @@ class TestEvaluatePatch:
 
     def test_apply_fails_but_check_passes(self):
         """git apply --check passes but git apply fails → apply_ok=True, test_ok=False."""
-        env = _make_env([
-            _ok_output(),  # reset
-            _ok_output(),  # write patch
-            _ok_output(),  # check
-            _fail_output("error: patch failed"),  # apply
-        ])
+        env = _make_env(
+            [
+                _ok_output(),  # reset
+                _ok_output(),  # write patch
+                _ok_output(),  # check
+                _fail_output("error: patch failed"),  # apply
+            ]
+        )
         apply_ok, test_ok, trace = evaluate_patch(SAMPLE_PATCH, env, _patch_instance())
         assert apply_ok
         assert not test_ok
 
     def test_apply_ok_no_tests(self):
-        env = _make_env([
-            _ok_output(),  # reset
-            _ok_output(),  # write
-            _ok_output(),  # check
-            _ok_output(),  # apply
-        ])
+        env = _make_env(
+            [
+                _ok_output(),  # reset
+                _ok_output(),  # write
+                _ok_output(),  # check
+                _ok_output(),  # apply
+            ]
+        )
         apply_ok, test_ok, _ = evaluate_patch(SAMPLE_PATCH, env, _patch_instance())
         assert apply_ok
         assert test_ok  # no tests → automatic pass
 
     def test_apply_ok_tests_pass(self):
-        env = _make_env([
-            _ok_output(),  # reset
-            _ok_output(),  # write
-            _ok_output(),  # check
-            _ok_output(),  # apply
-            _ok_output("4 passed"),  # pytest
-        ])
+        env = _make_env(
+            [
+                _ok_output(),  # reset
+                _ok_output(),  # write
+                _ok_output(),  # check
+                _ok_output(),  # apply
+                _ok_output("4 passed"),  # pytest
+            ]
+        )
         apply_ok, test_ok, _ = evaluate_patch(
             SAMPLE_PATCH, env, _patch_instance(FAIL_TO_PASS=["tests/test_a.py::test_x"])
         )
@@ -133,13 +136,15 @@ class TestEvaluatePatch:
         assert test_ok
 
     def test_apply_ok_tests_fail(self):
-        env = _make_env([
-            _ok_output(),  # reset
-            _ok_output(),  # write
-            _ok_output(),  # check
-            _ok_output(),  # apply
-            _fail_output("1 failed, 3 passed"),  # pytest
-        ])
+        env = _make_env(
+            [
+                _ok_output(),  # reset
+                _ok_output(),  # write
+                _ok_output(),  # check
+                _ok_output(),  # apply
+                _fail_output("1 failed, 3 passed"),  # pytest
+            ]
+        )
         apply_ok, test_ok, trace = evaluate_patch(
             SAMPLE_PATCH, env, _patch_instance(FAIL_TO_PASS=["tests/test_x.py::test_fail"])
         )
@@ -193,7 +198,10 @@ class TestCallReviewerLM:
         model = _make_model()
         from litellm.exceptions import AuthenticationError
 
-        with patch("minisweagent.patch_repair.repair.litellm.completion", side_effect=AuthenticationError("bad key", "test-provider", "test-model")):
+        with patch(
+            "minisweagent.patch_repair.repair.litellm.completion",
+            side_effect=AuthenticationError("bad key", "test-provider", "test-model"),
+        ):
             result = _call_reviewer_lm(model, "task", "patch", "trace")
         assert result is None
 
