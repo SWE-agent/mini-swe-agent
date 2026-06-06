@@ -3009,6 +3009,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">NoReturn</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
@@ -3016,7 +3017,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.default</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentConfig</span><span class="p">,</span> <span class="n">DefaultAgent</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.agents.utils.prompt_user</span><span class="w"> </span><span class="kn">import</span> <span class="n">_multiline_prompt</span><span class="p">,</span> <span class="n">prompt_session</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">LimitsExceeded</span><span class="p">,</span> <span class="n">Submitted</span><span class="p">,</span> <span class="n">UserInterruption</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">LimitsExceeded</span><span class="p">,</span> <span class="n">Submitted</span><span class="p">,</span> <span class="n">TimeExceeded</span><span class="p">,</span> <span class="n">UserInterruption</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">minisweagent.models.utils.content_string</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_content_string</span>
 
 <span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">highlight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -3073,7 +3074,19 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">console</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="s2">"Waiting for the LM to respond..."</span><span class="p">):</span>
                 <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">TimeExceeded</span><span class="p">:</span>
+            <span class="c1"># A wall-clock limit can't be lifted by raising the step/cost limits</span>
+            <span class="c1"># (the next query re-checks the clock and raises again), so prompting</span>
+            <span class="c1"># would loop forever. Always stop cleanly instead.</span>
+            <span class="k">raise</span>
         <span class="k">except</span> <span class="n">LimitsExceeded</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stdin_is_interactive</span><span class="p">():</span>
+                <span class="c1"># No terminal to prompt for new limits -- e.g. an unattended</span>
+                <span class="c1"># `--yolo` run, or any run with stdin redirected from /dev/null</span>
+                <span class="c1"># (CI, a sandbox). Stop cleanly so the trajectory is saved with a</span>
+                <span class="c1"># LimitsExceeded exit status, instead of crashing on EOFError when</span>
+                <span class="c1"># reading input.</span>
+                <span class="k">raise</span>
             <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"Limits exceeded. Limits: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">step_limit</span><span class="si">}</span><span class="s2"> steps, $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_limit</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">"</span>
                 <span class="sa">f</span><span class="s2">"Current spend: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span><span class="si">}</span><span class="s2"> steps, $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">."</span>
@@ -3081,6 +3094,19 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">step_limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">"New step limit: "</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_limit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">"New cost limit: "</span><span class="p">))</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_stdin_is_interactive</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Whether an interactive terminal is available to prompt the user.</span>
+
+<span class="sd">        Returns False for unattended runs (e.g. `--yolo` in CI, or inside a</span>
+<span class="sd">        sandbox with stdin redirected from /dev/null), where calling ``input()``</span>
+<span class="sd">        would raise ``EOFError`` and crash the run.</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
         <span class="c1"># Override the step method to handle user interruption</span>
