@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - v2.0
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -19,6 +20,7 @@ on:
   pull_request:
     branches:
       - main
+      - v2.0
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -36,15 +38,20 @@ jobs:
         shell: bash -l {0}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
+        uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - name: Install podman and singularity
+      - name: Update apt package list
+        run: sudo apt-get update
+      - name: Install podman
+        run: sudo apt-get install -y podman
+      - name: Install bubblewrap
         run: |
-            sudo apt-get update
-            sudo apt-get install -y podman
-            # Install singularity/apptainer
+          sudo apt-get install -y bubblewrap
+          sudo chmod u+s $(which bwrap)  # ensure we can set uid permissions
+      - name: Install singularity/apptainer
+        run: |
             sudo apt-get install -y wget
             cd /tmp
             wget https://github.com/apptainer/apptainer/releases/download/v1.3.4/apptainer_1.3.4_amd64.deb
@@ -57,10 +64,17 @@ jobs:
       - name: Install dependencies
         run: |
             uv pip install --python ${Python_ROOT_DIR} -e '.[full]'
+      - name: Configure mini-swe-agent
+        run: |
+          mini-extra config set MSWEA_CONFIGURED 'true'
+          mini-extra config set OPENAI_API_KEY '${{ secrets.OPENAI_API_KEY }}'
+          mini-extra config set OPENROUTER_API_KEY '${{ secrets.OPENROUTER_API_KEY }}'
+          # mini-extra config set PORTKEY_API_KEY '${{ secrets.PORTKEY_API_KEY }}'
+          mini-extra config set REQUESTY_API_KEY '${{ secrets.REQUESTY_API_KEY }}'
       - name: Run pytest
         run: pytest -v --cov --cov-branch --cov-report=xml -n auto
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: SWE-agent/mini-swe-agent

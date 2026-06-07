@@ -2,12 +2,7 @@
 
 !!! abstract "Overview"
 
-    * `mini` is a REPL-style interactive command line interface for using mini-SWE-agent in the local requirement (as opposed for workflows that require sandboxing or large scale batch processing).
-    * Compared to [`mini -v`](mini_v.md), `mini` is more lightweight and does not require threading.
-
-!!! tip "Feedback wanted!"
-    Give feedback on the `mini` and `mini -v` interfaces at [this github issue](https://github.com/swe-agent/mini-swe-agent/issues/161)
-    or in our [Slack channel](https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ).
+    * `mini` is a REPL-style interactive command line interface for using mini-SWE-agent in the local environment (as opposed to workflows that require sandboxing or large scale batch processing).
 
 <figure markdown="span">
   <div class="gif-container gif-container-styled" data-glightbox-disabled>
@@ -24,9 +19,9 @@ Useful switches:
 
 - `-h`/`--help`: Show help
 - `-t`/`--task`: Specify a task to run (else you will be prompted)
-- `-c`/`--config`: Specify a config file to use, else we will use [`mini.yaml`](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml) or the config `MSWEA_MINI_CONFIG_PATH` environment variable (see [configuration](../advanced/configuration.md)).
-  It's enough to specify the name of the config file, e.g., `-c mini.yaml` (see [configuration](../advanced/configuration.md) for how it is resolved).
-- `-m`/`--model`: Specify a model to use, else we will use the model `MSWEA_MODEL_NAME` environment variable (see [configuration](../advanced/configuration.md))
+- `-c`/`--config`: Specify a config file to use, else we will use [`mini.yaml`](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/mini.yaml) or the config `MSWEA_MINI_CONFIG_PATH` environment variable (see [global configuration](../advanced/global_configuration.md)).
+  It's enough to specify the name of the config file, e.g., `-c mini.yaml` (see [global configuration](../advanced/global_configuration.md) for how it is resolved).
+- `-m`/`--model`: Specify a model to use, else we will use the model `MSWEA_MODEL_NAME` environment variable (see [global configuration](../advanced/global_configuration.md))
 - `-y`/`--yolo`: Start in `yolo` mode (see below)
 
 ## Modes of operation

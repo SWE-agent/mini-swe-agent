@@ -1,3 +1,8 @@
+"""This is the simplest possible example of how to use mini-SWE-agent with python bindings.
+For a more complete example, see mini.py
+"""
+
+import logging
 import os
 from pathlib import Path
 
@@ -23,6 +28,7 @@ def main(
         prompt="What model do you want to use?",
     ),
 ) -> DefaultAgent:
+    logging.basicConfig(level=logging.DEBUG)
     agent = DefaultAgent(
         LitellmModel(model_name=model_name),
         LocalEnvironment(),

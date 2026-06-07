@@ -18,12 +18,35 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.13'
+
+    - name: Check version matches release tag
+      if: github.event_name == 'release'
+      run: |
+        # Extract version from src/minisweagent/__init__.py using regex (no imports needed)
+        PACKAGE_VERSION=$(grep -oP '^__version__\s*=\s*"\K[^"]+' src/minisweagent/__init__.py)
+
+        # Extract tag name (remove 'v' prefix if present)
+        TAG_NAME="${{ github.event.release.tag_name }}"
+        TAG_VERSION="${TAG_NAME#v}"
+
+        echo "Package version: $PACKAGE_VERSION"
+        echo "Release tag: $TAG_NAME"
+        echo "Tag version (normalized): $TAG_VERSION"
+
+        if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+          echo "❌ ERROR: Version mismatch!"
+          echo "Package version ($PACKAGE_VERSION) does not match release tag ($TAG_VERSION)"
+          echo "Please update __version__ in src/minisweagent/__init__.py to match the release tag"
+          exit 1
+        fi
+
+        echo "✅ Version check passed: $PACKAGE_VERSION matches $TAG_VERSION"
 
     - name: Install uv
       run: |
@@ -59,7 +82,7 @@ jobs:
 
     steps:
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.13'
 

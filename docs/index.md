@@ -3,6 +3,10 @@
 
 <h1 style="margin-bottom: 1ex;">The 100 line AI agent that's actually useful</h1>
 
+</div>
+
+<div align="center">
+
 <a href="https://join.slack.com/t/swe-bench/shared_invite/zt-36pj9bu5s-o3_yXPZbaH2wVnxnss1EkQ">
     <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white" alt="Slack">
 </a>
@@ -15,31 +19,30 @@
 
 </div>
 
+!!! warning "This is mini-swe-agent v2"
+
+    Read the [migration guide](https://mini-swe-agent.com/latest/advanced/v2_migration/). For the previous version, check out the [v1 documentation](https://mini-swe-agent.com/v1/) or the [v1 branch](https://github.com/SWE-agent/mini-swe-agent/tree/v1).
 
 In 2024, [SWE-bench](https://swebench.com) & [SWE-agent](https://swe-agent.com) helped kickstart the coding agent revolution.
 
-We now ask: **What if the agent was 100x smaller, and still worked nearly as well?**
+We now ask: **What if our agent was 100x simpler, and still worked nearly as well?**
 
-`mini` is for
+`mini` is
 
-- **Researchers** who want to **[benchmark](https://swe-bench.com), [fine-tune](https://swesmith.com/) or RL** without assumptions, bloat, or surprises
-- **Developers** who like their tools like their scripts: **short, sharp, and readable**
-- **Engineers** who want something **trivial to sandbox & to deploy anywhere**
-
-Here's some details:
-
+- **Widely adopted**: Used by Meta, NVIDIA, Essential AI, IBM, Nebius, Anyscale, Princeton University, Stanford University, and many more.
 - **Minimal**: Just [100 lines of python](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/agents/default.py) (+100 total for [env](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/environments/local.py),
 [model](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/models/litellm_model.py), [script](https://github.com/SWE-agent/mini-swe-agent/blob/main/src/minisweagent/run/hello_world.py)) — no fancy dependencies!
-- **Powerful:** Resolves 68% of GitHub issues in the [SWE-bench verified benchmark](https://www.swebench.com/) ([leaderboard](https://swe-bench.com/)).
-- **Convenient:** Comes with UIs that turn this into your daily dev swiss army knife!
-- **Deployable:** In addition to local envs, you can use **docker**, **podman**, **singularity**, **apptainer**, and more
-- **Cutting edge:** Built by the Princeton & Stanford team behind [SWE-bench](https://swebench.com) and [SWE-agent](https://swe-agent.com).
+- **Performant:** Scores >74% on the [SWE-bench verified benchmark](https://www.swebench.com/); starts much faster than Claude Code
+- **Deployable:** Supports **local environments**, **docker/podman**, **singularity/apptainer**, **bublewrap**, **contree**, and more
+- **Compatible:** Supports all models via **litellm**, **openrouter**, **portkey**, and more. Support for `/completion` and `/response` endpoints, interleaved thinking etc.
+- Built by the Princeton & Stanford team behind [SWE-bench](https://swebench.com), [SWE-agent](https://swe-agent.com), and more
+- **Tested:** [![Codecov](https://img.shields.io/codecov/c/github/swe-agent/mini-swe-agent?style=flat-square)](https://codecov.io/gh/SWE-agent/mini-swe-agent)
 
 ??? note "Why use mini-SWE-agent for research?"
 
     [SWE-agent](https://swe-agent.com/latest/) jump-started the development of AI agents in 2024. Back then, we placed a lot of emphasis on tools and special interfaces for the agent. However, one year later, a lot of this is not needed at all to build a useful agent!
 
-    In fact, mini-SWE-agent:
+    In fact, the `mini` agent:
 
     - **Does not have any tools other than bash** — it doesn't even use the tool-calling interface of the LMs.
       This means that you can run it with literally any model.
@@ -57,7 +60,7 @@ Here's some details:
 
     Some agents are overfitted research artifacts. Others are UI-heavy frontend monsters.
 
-    `mini` wants to be a hackable tool, not a black box.
+    The `mini` agent wants to be a hackable tool, not a black box.
 
     - **Simple** enough to understand at a glance
     - **Convenient** enough to use in daily workflows
@@ -76,7 +79,8 @@ Here's some details:
 
 ??? note "Should I use mini-SWE-agent or swe-agent?"
 
-    You should use `mini-swe-agent` if
+    You should consider `mini-swe-agent` your default choice.
+    In particular, you should use `mini-swe-agent` if
 
     - You want a quick command line tool that works locally
     - You want an agent with a very simple control flow
@@ -85,23 +89,21 @@ Here's some details:
 
     You should use `swe-agent` if
 
-    - You need specific tools or want to experiment with different tools
+    - You want to experiment with different sets of tools, each with their own interface
     - You want to experiment with different history processors
-    - You want very powerful yaml configuration without touching code
 
     What you get with both
 
     - Excellent performance on SWE-Bench
     - A trajectory browser
 
-</details>
 <table>
 <tr>
 <td width="50%">
-<a href="usage/mini"><strong>Simple UI</strong></a> (<code>mini</code>)
+<a href="usage/mini"><strong>CLI</strong></a> (<code>mini</code>)
 </td>
 <td>
-<a href="usage/mini_v"><strong>Visual UI</strong></a> (<code>mini -v</code>)
+<a href="usage/swebench/"><strong>Batch inference</strong></a>
 </td>
 </tr>
 <tr>
@@ -113,29 +115,22 @@ Here's some details:
   </div>
 </td>
 <td>
-  <div class="gif-container" data-glightbox-disabled>
-    <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/mini2.png?raw=true"
-         data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/mini2.gif?raw=true"
-         alt="miniv" data-glightbox="false" />
-  </div>
-</td>
-</tr>
-<tr>
-<td>
-<a href="usage/swebench/"><strong>Batch inference</strong></a>
-</td>
-<td>
-<a href="usage/inspector/"><strong>Trajectory browser</strong></a>
-</td>
-</tr>
-<tr>
-<td>
 <div class="gif-container" data-glightbox-disabled>
   <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/swebench.png?raw=true"
        data-gif="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/gif/swebench.gif?raw=true"
        alt="swebench" data-glightbox="false" />
 </div>
 </td>
+</tr>
+<tr>
+<td>
+<a href="usage/inspector/"><strong>Trajectory browser</strong></a>
+</td>
+<td>
+<a href="advanced/cookbook/"><strong>Python bindings</strong></a>
+</td>
+</tr>
+<tr>
 <td>
 <div class="gif-container" data-glightbox-disabled>
   <img src="https://github.com/SWE-agent/swe-agent-media/blob/main/media/mini/png/inspector.png?raw=true"
@@ -143,16 +138,6 @@ Here's some details:
        alt="inspector" data-glightbox="false" />
 </div>
 </td>
-</tr>
-<tr>
-<td>
-<a href="advanced/cookbook/"><strong>Python bindings</strong></a>
-</td>
-<td>
-<a href="https://mini-swe-agent.com"><strong>More in the docs</strong></a>
-</td>
-</tr>
-<tr>
 <td>
 <pre><code class="language-python">agent = DefaultAgent(
     LitellmModel(model_name=...),
@@ -160,18 +145,13 @@ Here's some details:
 )
 agent.run("Write a sudoku game")</code></pre>
 </td>
-<td>
-<ul>
-<li><a href="quickstart">Quick start</a></li>
-<li><a href="usage/mini"><code>mini</code></a></li>
-<li><a href="faq">FAQ</a></li>
-<li><a href="advanced/configuration">Configuration</a></li>
-<li><a href="advanced/cookbook">Power up</a></li>
-</ul>
-</td>
 </tr>
 </table>
 
+
+!!! info "Upgrading to v2?"
+
+    Check out our [v2 migration guide](advanced/v2_migration.md) for all the changes and how to update your code.
 
 ## Continue reading:
 
@@ -196,16 +176,6 @@ agent.run("Write a sudoku game")</code></pre>
     </div>
   </a>
 
-  <a href="usage/mini_v/" class="nav-card-link">
-    <div class="nav-card">
-      <div class="nav-card-header">
-        <span class="material-icons nav-card-icon">visibility</span>
-        <span class="nav-card-title">Usage: Visual UI</span>
-      </div>
-      <p class="nav-card-description">Try the visual interface with <code>mini -v</code></p>
-    </div>
-  </a>
-
   <a href="faq/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
@@ -216,7 +186,7 @@ agent.run("Write a sudoku game")</code></pre>
     </div>
   </a>
 
-  <a href="advanced/configuration/" class="nav-card-link">
+  <a href="advanced/yaml_configuration/" class="nav-card-link">
     <div class="nav-card">
       <div class="nav-card-header">
         <span class="material-icons nav-card-icon">settings</span>
@@ -237,12 +207,19 @@ agent.run("Write a sudoku game")</code></pre>
   </a>
 </div>
 
+## 📣 News
+
+* [Run mini-swe-agent on our new & extremely challenging benchmark, ProgramBench](usage/programbench.md)
+* [New tutorial on building minimal AI agents](https://minimal-agent.com/)
+* Nov 19: [Gemini 3 Pro reaches 74% on SWE-bench verified with mini-swe-agent!](https://x.com/KLieret/status/1991164693839270372)
+* Aug 19: [New blogpost: Randomly switching between GPT-5 and Sonnet 4 boosts performance](https://www.swebench.com/post-250820-mini-roulette.html)
+
 ## 📣 New features
 
 Please check the [github release notes](https://github.com/SWE-agent/mini-swe-agent/releases) for the latest updates.
 
 ## 📣 Documentation updates
 
-* Jul 27: More notes on [local models](advanced/local_models.md)
+* Jul 27: More notes on [local models](models/local_models.md)
 
 {% include-markdown "_footer.md" %}

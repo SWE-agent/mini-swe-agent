@@ -6,19 +6,24 @@ from unittest.mock import patch
 import pytest
 import typer
 
-from minisweagent.run.inspector import TrajectoryInspector, main
+from minisweagent.run.utilities.inspector import TrajectoryInspector, main
 
 
 def get_screen_text(app: TrajectoryInspector) -> str:
     """Extract all text content from the app's UI."""
     text_parts = []
 
+    def _append_visible_static_text(container):
+        for static_widget in container.query("Static"):
+            if static_widget.display:
+                if hasattr(static_widget, "content") and static_widget.content:  # type: ignore[attr-defined]
+                    text_parts.append(str(static_widget.content))  # type: ignore[attr-defined]
+                elif hasattr(static_widget, "renderable") and static_widget.renderable:  # type: ignore[attr-defined]
+                    text_parts.append(str(static_widget.renderable))  # type: ignore[attr-defined]
+
     # Get all Static widgets in the main content container
     content_container = app.query_one("#content")
-    for static_widget in content_container.query("Static"):
-        if static_widget.display:
-            if hasattr(static_widget, "renderable") and static_widget.renderable:  # type: ignore[attr-defined]
-                text_parts.append(str(static_widget.renderable))  # type: ignore[attr-defined]
+    _append_visible_static_text(content_container)
 
     return "\n".join(text_parts)
 
@@ -29,11 +34,11 @@ def sample_simple_trajectory():
     return [
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "Hello, solve this problem."},
-        {"role": "assistant", "content": "I'll help you solve this.\n\n```bash\nls -la\n```"},
+        {"role": "assistant", "content": "I'll help you solve this.\n\n```mswea_bash_command\nls -la\n```"},
         {"role": "user", "content": "Command output here."},
         {
             "role": "assistant",
-            "content": "Now I'll finish.\n\n```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+            "content": "Now I'll finish.\n\n```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
         },
     ]
 
@@ -51,11 +56,45 @@ def sample_swebench_trajectory():
         "messages": [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": [{"type": "text", "text": "Please solve this issue."}]},
-            {"role": "assistant", "content": "I'll analyze the issue.\n\n```bash\ncat file.py\n```"},
+            {"role": "assistant", "content": "I'll analyze the issue.\n\n```mswea_bash_command\ncat file.py\n```"},
             {"role": "user", "content": [{"type": "text", "text": "File contents here."}]},
-            {"role": "assistant", "content": "Fixed!\n\n```bash\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```"},
+            {
+                "role": "assistant",
+                "content": "Fixed!\n\n```mswea_bash_command\necho COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n```",
+            },
         ],
     }
+
+
+@pytest.fixture
+def sample_toolcall_trajectory():
+    """Sample trajectory with tool_calls format."""
+    return [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "List files."},
+        {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [{"id": "1", "function": {"name": "bash", "arguments": '{"command": "ls -la"}'}}],
+        },
+        {"role": "tool", "tool_call_id": "1", "content": '{"returncode": 0, "output": "file.txt"}'},
+    ]
+
+
+@pytest.fixture
+def sample_response_api_trajectory():
+    """Sample trajectory with Responses API format."""
+    return [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "List files."},
+        {
+            "type": "assistant",
+            "output": [
+                {"type": "message", "content": [{"type": "text", "text": "Let me check."}]},
+                {"type": "function_call", "name": "bash", "arguments": '{"command": "ls"}'},
+            ],
+        },
+    ]
 
 
 @pytest.fixture
@@ -98,13 +137,13 @@ async def test_trajectory_inspector_basic_navigation(temp_trajectory_files):
         # Navigate to next step
         await pilot.press("l")
         assert "Step 2/3" in app.title
-        assert "MINI-SWE-AGENT" in get_screen_text(app)
+        assert "ASSISTANT" in get_screen_text(app)
         assert "I'll help you solve this" in get_screen_text(app)
 
         # Navigate to last step
         await pilot.press("$")
         assert "Step 3/3" in app.title
-        assert "MINI-SWE-AGENT" in get_screen_text(app)
+        assert "ASSISTANT" in get_screen_text(app)
         assert "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" in get_screen_text(app)
 
         # Navigate back to first step
@@ -228,26 +267,40 @@ async def test_trajectory_inspector_invalid_file(temp_trajectory_files):
     assert app.steps == []
 
 
-def test_trajectory_inspector_load_trajectory_formats(sample_simple_trajectory, sample_swebench_trajectory):
+def test_trajectory_inspector_load_trajectory_formats(
+    sample_simple_trajectory, sample_swebench_trajectory, sample_toolcall_trajectory, sample_response_api_trajectory
+):
     """Test loading different trajectory formats."""
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
 
-        # Test simple format
+        # Test simple format (text-based actions)
         simple_file = temp_path / "simple.traj.json"
         simple_file.write_text(json.dumps(sample_simple_trajectory))
-
         app = TrajectoryInspector([simple_file])
         assert len(app.messages) == 5
         assert len(app.steps) == 3
 
-        # Test SWEBench format
+        # Test SWEBench format (dict with messages array)
         swebench_file = temp_path / "swebench.traj.json"
         swebench_file.write_text(json.dumps(sample_swebench_trajectory))
-
         app = TrajectoryInspector([swebench_file])
         assert len(app.messages) == 5
         assert len(app.steps) == 3
+
+        # Test tool_calls format (OpenAI function calling)
+        toolcall_file = temp_path / "toolcall.traj.json"
+        toolcall_file.write_text(json.dumps(sample_toolcall_trajectory))
+        app = TrajectoryInspector([toolcall_file])
+        assert len(app.messages) == 4
+        assert len(app.steps) == 2
+
+        # Test Responses API format (step splitting uses 'role', not 'type')
+        response_api_file = temp_path / "response_api.traj.json"
+        response_api_file.write_text(json.dumps(sample_response_api_trajectory))
+        app = TrajectoryInspector([response_api_file])
+        assert len(app.messages) == 3
+        assert len(app.steps) == 1
 
 
 def test_trajectory_inspector_unrecognized_format():
@@ -309,7 +362,54 @@ async def test_trajectory_inspector_quit_binding(temp_trajectory_files):
         # App should exit gracefully (the test framework handles this)
 
 
-@patch("minisweagent.run.inspector.TrajectoryInspector.run")
+def test_trajectory_inspector_binding_labels():
+    """Test that binding labels use arrow symbols."""
+    bindings = {b.action: b.description for b in TrajectoryInspector.BINDINGS}
+    assert bindings["scroll_down"] == "↓"
+    assert bindings["scroll_up"] == "↑"
+
+
+@pytest.fixture
+def sample_ansi_trajectory():
+    """Sample trajectory with ANSI escape codes and null bytes in tool output (e.g. from TUI programs)."""
+    return {
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Run the program."},
+            {
+                "role": "assistant",
+                "content": None,
+                "tool_calls": [{"id": "1", "function": {"name": "bash", "arguments": '{"command": "./executable"}'}}],
+                "extra": {"actions": [{"command": "./executable", "tool_call_id": "1"}]},
+            },
+            {
+                "role": "tool",
+                "tool_call_id": "1",
+                "content": "<returncode>0</returncode>\n<output>\n\x1b[?1049h\x1b[?7l\x1b[?1000h\x00\r\x1b[2K\x1b[39m\x1b[47m\xe2\x94\x80 Score \xe2\x94\x80\x1b[0m\nDone\n</output>",
+            },
+        ],
+    }
+
+
+@pytest.mark.slow
+async def test_trajectory_inspector_ansi_content(sample_ansi_trajectory):
+    """Test that ANSI escape codes and null bytes in tool output don't break rendering."""
+    with tempfile.TemporaryDirectory() as temp_dir:
+        traj_file = Path(temp_dir) / "ansi.traj.json"
+        traj_file.write_text(json.dumps(sample_ansi_trajectory))
+        app = TrajectoryInspector([traj_file])
+        async with app.run_test() as pilot:
+            await pilot.pause(0.1)
+            # Navigate to step with ANSI content
+            await pilot.press("l")
+            await pilot.pause(0.1)
+            content = get_screen_text(app)
+            assert "Done" in content
+            assert "\x1b" not in content
+            assert "\x00" not in content
+
+
+@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_single_file(mock_run, temp_trajectory_files):
     """Test main function with a single trajectory file."""
     valid_file = temp_trajectory_files[0]  # simple.traj.json
@@ -321,7 +421,7 @@ def test_main_with_single_file(mock_run, temp_trajectory_files):
     assert mock_run.call_count == 1
 
 
-@patch("minisweagent.run.inspector.TrajectoryInspector.run")
+@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_directory_containing_trajectories(mock_run, temp_trajectory_files):
     """Test main function with a directory containing trajectory files."""
     directory = temp_trajectory_files[0].parent
@@ -331,7 +431,7 @@ def test_main_with_directory_containing_trajectories(mock_run, temp_trajectory_f
     mock_run.assert_called_once()
 
 
-@patch("minisweagent.run.inspector.TrajectoryInspector.run")
+@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_directory_no_trajectories(mock_run):
     """Test main function with a directory containing no trajectory files."""
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -346,7 +446,7 @@ def test_main_with_directory_no_trajectories(mock_run):
         mock_run.assert_not_called()
 
 
-@patch("minisweagent.run.inspector.TrajectoryInspector.run")
+@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_nonexistent_path(mock_run):
     """Test main function with a path that doesn't exist."""
     nonexistent_path = "/this/path/does/not/exist"
@@ -357,7 +457,7 @@ def test_main_with_nonexistent_path(mock_run):
     mock_run.assert_not_called()
 
 
-@patch("minisweagent.run.inspector.TrajectoryInspector.run")
+@patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_current_directory_default(mock_run, temp_trajectory_files):
     """Test main function with default argument (current directory)."""
     directory = temp_trajectory_files[0].parent

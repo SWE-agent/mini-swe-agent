@@ -1,0 +1,48 @@
+# SWE-bench Modal environment configuration
+#
+# This config provides Modal cloud environment settings for SWE-bench runs.
+# It should be used together with the base swebench config:
+#
+# Usage:
+#   mini-extra swebench -c swebench -c swebench_modal [other options]
+#
+# The configs are merged, with swebench_modal overriding the environment
+# settings to use Modal instead of Docker.
+#
+# Requirements:
+#   1. Run `modal setup` to authenticate with Modal
+#   2. Install the modal extra: `pip install mini-swe-agent[modal]`
+
+# Modal environment configuration via SWE-ReX
+# The image will be dynamically set per-instance to match SWE-bench docker images
+environment:
+  environment_class: swerex_modal
+  cwd: "/testbed"
+  timeout: 60
+  interpreter: ["bash", "-c"]
+  env:
+    PAGER: cat
+    MANPAGER: cat
+    LESS: -R
+    PIP_PROGRESS_BAR: 'off'
+    TQDM_DISABLE: '1'
+  # Modal-specific settings
+  startup_timeout: 600.0  # 10 min to allow image building on first run
+  runtime_timeout: 1800.0  # 30 minutes max per instance
+  deployment_timeout: 1800.0
+  install_pipx: true
+  # Environment variables for the sandbox
+  modal_sandbox_kwargs: {}
+    # You can add Modal-specific options here, e.g.:
+    # cpu: 2.0
+    # memory: 4096
+
+# GPT-5 mini via Portkey
+model:
+  model_name: "gpt-5-mini"
+  model_class: portkey
+  provider: "@openai"
+  model_kwargs:
+    drop_params: true
+    # GPT-5 mini only supports temperature=1.0
+    # temperature: 0.0

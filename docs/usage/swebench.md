@@ -25,6 +25,8 @@
 
 !!! tip "Quickstart"
 
+    We provide two different scripts: `swebench` and `swebench-single`:
+
     === "Batch mode"
 
         Batch mode runs on all task instances in parallel.
@@ -32,10 +34,10 @@
         ```bash
         mini-extra swebench --help
         # or
-        python src/minisweagent/run/extra/swebench.py --help
+        python src/minisweagent/run/benchmarks/swebench.py --help
         # Example:
         mini-extra swebench \
-            --model claude-sonnet-4-20250514 \
+            --model anthropic/claude-sonnet-4-5-20250929 \
             --subset verified \
             --split test \
             --workers 4
@@ -63,23 +65,23 @@
 
     === "Single instance (for debugging)"
 
-        Single instance mode runs on a single task instance with interactivity (useful for debugging).
+        Single instance mode runs on a single task instance with interactivity. This is meant for debugging, and so unlike the batch mode command above, this will not produce a preds.json file.
 
         ```bash
         mini-extra swebench-single --help
         # or
-        python src/minisweagent/run/extra/swebench_single.py --help
+        python src/minisweagent/run/benchmarks/swebench_single.py --help
         # Example:
         mini-extra swebench-single \
             --subset verified \
             --split test \
-            --model claude-sonnet-4-20250514 \
+            --model anthropic/claude-sonnet-4-5-20250929 \
             -i sympy__sympy-15599
         # or
         mini-extra swebench-single \
             --subset verified \
             --split test \
-            -m claude-sonnet-4-20250514 \
+            -m anthropic/claude-sonnet-4-5-20250929 \
             -i 0  # instance index
         ```
 
@@ -105,23 +107,39 @@
 
 !!! tip "Evaluating on SWE-bench"
 
-    You can use the [sb-cli](https://www.swebench.com/sb-cli/) for extremely fast, cloud-based evaluations
-    (and it's free!). After installing it and getting a token, simply run:
+    You have two options to evaluate on SWE-bench: Our free cloud-based evaluation or the SWE-bench CLI.
 
-    ```bash
-    sb-cli submit swe-bench_verified test --predictions_path preds.json --run_id some-id-for-your-run
-    ```
+    === "Cloud-based evaluation"
 
-    Typically you will have results within 20 minutes (this is not limited by how many instances you run,
-    but by the slowest-to-evaluate instance in SWE-bench).
+        You can use the [sb-cli](https://www.swebench.com/sb-cli/) for extremely fast, cloud-based evaluations
+        (and it's free!). After installing it and getting a token, simply run:
 
+        ```bash
+        sb-cli submit swe-bench_verified test --predictions_path preds.json --run_id some-id-for-your-run
+        ```
+
+        Typically you will have results within 20 minutes (this is not limited by how many instances you run,
+        but by the slowest-to-evaluate instance in SWE-bench).
+
+    === "Local evaluation"
+
+        You can also use a local installation of [SWE-bench](https://github.com/SWE-bench/SWE-bench)
+        for evaluation:
+
+        ```bash
+        python -m swebench.harness.run_evaluation \
+            --dataset_name princeton-nlp/SWE-bench_Verified \
+            --predictions_path preds.jsonl \
+            --max_workers <num_workers> \
+            --run_id <run_id>
+        ```
 
 ## FAQ
 
 > Can I set global cost limits?
 
 Yes, you can set global cost limits with the `MSWEA_GLOBAL_CALL_LIMIT` and `MSWEA_GLOBAL_COST_LIMIT` environment variables/global config.
-See [configuration](../advanced/configuration.md) for more details.
+See [global configuration](../advanced/global_configuration.md) for more details.
 
 > What happens to uncompleted tasks when I abort with KeyboardInterrupt?
 
@@ -137,41 +155,73 @@ The completed instances are inferred from `preds.json`. Remove the corresponding
 As long as it follows the SWE-bench format, you can use `--subset /path/to/your/dataset` to run on a custom dataset.
 The dataset needs to be loadable as `datasets.load_dataset(path, split=split)`.
 
-> Some progress runners are stuck at 'initializing task' for a very long time
+> Some progress runners are stuck at 'initializing task' for a very long time / time out
 
-They might be pulling docker containers -- the run sshould start immediately the next time.
+They might be pulling docker containers -- the run should start immediately the next time.
+If you see timeouts because of `docker pull` operations, you might want to increase `environment.pull_timeout`
+from the default of `120` (seconds).
 
 > I have some docker issues
 
 Try running the docker command manually to see what's going on (it should be printed out in the console).
 Confirm that it's running with `docker ps`, and that you can use `docker exec -it <container-id> ls` to get some output.
 
+> Docker isn't available on my HPC cluster.
+
+You can use the singularity/apptainer backend by setting `environment.environment_class` to `singularity`
+in your [agent config file](../advanced/yaml_configuration.md)
+or specify `--environment-class singularity` from the command line
+
+> Can I run a startup command in the environment?
+
+Yes, you can use the `run.env_startup_command` config option to run a command in the environment before the agent starts.
+For example:
+
+```yaml
+run:
+  env_startup_command: "apt-get update && apt-get install -y python3-pip"
+```
+
+The command is rendered with the instance variables as template variables using `jinja2`.
+For example, you could use
+
+```yaml
+run:
+  env_startup_command: "git clone {{ repo_url }} . --force"
+```
+
+which might be particularly useful when running with environments like [`bubblewrap`](../reference/environments/bubblewrap.md).
+
+> What environment can I use for SWE-bench?
+
+See [this guide](../advanced/environments.md) for more details.
+
 ## Implementation
 
 ??? note "Default config"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/extra/swebench.yaml)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/config/benchmarks/swebench.yaml)
 
     ```yaml
-    --8<-- "src/minisweagent/config/extra/swebench.yaml"
+    --8<-- "src/minisweagent/config/benchmarks/swebench.yaml"
     ```
 
 ??? note "`swebench.py` run script"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/extra/swebench.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/benchmarks/swebench.py)
     - [API reference](../reference/run/swebench.md)
 
     ```python
-    --8<-- "src/minisweagent/run/extra/swebench.py"
+    --8<-- "src/minisweagent/run/benchmarks/swebench.py"
     ```
 
 ??? note "`swebench_single.py` run script"
 
-    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/extra/swebench_single.py)
+    - [Read on GitHub](https://github.com/swe-agent/mini-swe-agent/blob/main/src/minisweagent/run/benchmarks/swebench_single.py)
     - [API reference](../reference/run/swebench_single.md)
 
     ```python
-    --8<-- "src/minisweagent/run/extra/swebench_single.py"
+    --8<-- "src/minisweagent/run/benchmarks/swebench_single.py"
     ```
 
 {% include-markdown "../_footer.md" %}

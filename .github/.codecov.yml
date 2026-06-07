@@ -14,3 +14,6 @@ github_checks:
   # Don't mark lines that aren't covered
   annotations: false
 
+ignore:
+  - "tests/**/*"
+

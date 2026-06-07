@@ -1,0 +1,42 @@
+/* Trajectory Inspector Styles */
+
+#main {
+    height: 1fr;
+    overflow: hidden;
+}
+
+VerticalScroll {
+    height: 1fr;
+}
+
+#content {
+    height: auto;
+    padding: 1;
+}
+
+.message-container {
+    height: auto;
+    margin-bottom: 1;
+    padding: 0 1;
+}
+
+.message-header {
+    background: $accent;
+    color: $text;
+    padding: 0 1;
+    text-style: bold;
+}
+
+.message-content {
+    height: auto;
+    padding: 1;
+    background: $surface;
+}
+
+Header {
+    dock: top;
+}
+
+Footer {
+    dock: bottom;
+}

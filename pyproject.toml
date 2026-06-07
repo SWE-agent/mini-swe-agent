@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mini-swe-agent"
 dynamic = ["version"]
-description = "Nano SWE Agent - A simple AI software engineering agent"
+description = "Mini SWE Agent - A simple AI software engineering agent"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE.md"}
@@ -34,7 +34,8 @@ dependencies = [
     "pyyaml",
     "requests",
     "jinja2",
-    "litellm >= 1.75.5",  # want to have gpt-5 support
+    "pydantic >= 2.0",  # v2 required for safe mutable default arguments
+    "litellm >= 1.75.5, != 1.82.7, != 1.82.8", # Security: Skip compromised 1.82.7/8; requires 1.75.5+ for GPT-5
     "tenacity",
     "rich",
     "python-dotenv",
@@ -42,17 +43,24 @@ dependencies = [
     "platformdirs",
     "textual",
     "prompt_toolkit",
-    "openai <= 1.99.5",  # https://github.com/SWE-agent/mini-swe-agent/issues/446
+    "datasets",
+    "openai != 1.100.0,!=1.100.1",  # https://github.com/SWE-agent/mini-swe-agent/issues/446
 ]
 
 [project.optional-dependencies]
 full = [
     "mini-swe-agent[dev]",
     "swe-rex>=1.4.0",
+    "mini-swe-agent[modal]",
+    "mini-swe-agent[contree]",
+]
+
+modal = [
+    "modal",
+    "boto3",
 ]
 
 dev = [
-    "datasets",
     "pytest",
     "pytest-cov",
     "pytest-asyncio",
@@ -64,18 +72,25 @@ dev = [
     "mike",
     "mkdocs-material",
     "mkdocs-glightbox",
+    "mkdocs-redirects",
+    "portkey-ai",
+    "swe-rex",
+]
+
+contree = [
+    "contree-sdk>=0.2.0",
 ]
 
 [project.urls]
 Documentation = "https://mini-swe-agent.com/latest/"
-Repository = "https://github.com/SWE-agent/mini-SWE-agent"
-"Bug Tracker" = "https://github.com/SWE-agent/mini-SWE-agent/issues"
+Repository = "https://github.com/SWE-agent/mini-swe-agent"
+"Bug Tracker" = "https://github.com/SWE-agent/mini-swe-agent/issues"
 
 [project.scripts]
 mini = "minisweagent.run.mini:app"
 mini-swe-agent = "minisweagent.run.mini:app"
-mini-extra = "minisweagent.run.mini_extra:main"
-mini-e= "minisweagent.run.mini_extra:main"
+mini-extra = "minisweagent.run.utilities.mini_extra:main"
+mini-e = "minisweagent.run.utilities.mini_extra:main"
 
 [tool.setuptools]
 include-package-data = true
@@ -134,7 +149,6 @@ target-version = "py310"
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
 # Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
 # McCabe complexity (`C901`) by default.
-# I001: Isort, I002: required import
 select = [
     # Error (E)
     "E",
@@ -260,4 +274,12 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 markers = [
     "slow: marks tests as slow (deselect with '-k \"not slow\"')",
+]
+
+[dependency-groups]
+dev = [
+    "datasets>=4.5.0",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.0.0",
 ]

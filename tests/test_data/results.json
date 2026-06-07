@@ -1,6 +1,6 @@
 {
   "swe-agent__test-repo-1": {
-    "model_name_or_path": "claude-sonnet-4-20250514",
+    "model_name_or_path": "anthropic/claude-sonnet-4-20250514",
     "instance_id": "swe-agent__test-repo-1",
     "model_patch": "diff --git a/tests/missing_colon.py b/tests/missing_colon.py\nindex 20edef5..5857437 100755\n--- a/tests/missing_colon.py\n+++ b/tests/missing_colon.py\n@@ -1,7 +1,7 @@\n #!/usr/bin/env python3\n \n \n-def division(a: float, b: float) -> float\n+def division(a: float, b: float) -> float:\n     return a/b"
   }
