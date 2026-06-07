@@ -129,6 +129,6 @@
 
 !!! success "Which model to use?"
 
-    We recommend using `anthropic/claude-sonnet-4-5-20250929` for most tasks.
-    For openai models, we recommend using `openai/gpt-5` or `openai/gpt-5-mini`.
+    We recommend using `anthropic/claude-opus-4-6-20260205` for most tasks.
+    For openai models, we recommend using `openai/gpt-5.4` or `openai/gpt-5.4-mini`.
     You can check scores of different models at our [SWE-bench (bash-only)](https://swebench.com) leaderboard.

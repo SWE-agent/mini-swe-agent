@@ -7,6 +7,7 @@ There are three modes:
 """
 
 import re
+import sys
 from typing import Literal, NoReturn
 
 from rich.console import Console
@@ -14,7 +15,7 @@ from rich.rule import Rule
 
 from minisweagent.agents.default import AgentConfig, DefaultAgent
 from minisweagent.agents.utils.prompt_user import _multiline_prompt, prompt_session
-from minisweagent.exceptions import LimitsExceeded, Submitted, UserInterruption
+from minisweagent.exceptions import LimitsExceeded, Submitted, TimeExceeded, UserInterruption
 from minisweagent.models.utils.content_string import get_content_string
 
 console = Console(highlight=False)
@@ -71,7 +72,19 @@ class InteractiveAgent(DefaultAgent):
         try:
             with console.status("Waiting for the LM to respond..."):
                 return super().query()
+        except TimeExceeded:
+            # A wall-clock limit can't be lifted by raising the step/cost limits
+            # (the next query re-checks the clock and raises again), so prompting
+            # would loop forever. Always stop cleanly instead.
+            raise
         except LimitsExceeded:
+            if not self._stdin_is_interactive():
+                # No terminal to prompt for new limits -- e.g. an unattended
+                # `--yolo` run, or any run with stdin redirected from /dev/null
+                # (CI, a sandbox). Stop cleanly so the trajectory is saved with a
+                # LimitsExceeded exit status, instead of crashing on EOFError when
+                # reading input.
+                raise
             console.print(
                 f"Limits exceeded. Limits: {self.config.step_limit} steps, ${self.config.cost_limit}.\n"
                 f"Current spend: {self.n_calls} steps, ${self.cost:.2f}."
@@ -79,6 +92,19 @@ class InteractiveAgent(DefaultAgent):
             self.config.step_limit = int(input("New step limit: "))
             self.config.cost_limit = float(input("New cost limit: "))
             return super().query()
+
+    @staticmethod
+    def _stdin_is_interactive() -> bool:
+        """Whether an interactive terminal is available to prompt the user.
+
+        Returns False for unattended runs (e.g. `--yolo` in CI, or inside a
+        sandbox with stdin redirected from /dev/null), where calling ``input()``
+        would raise ``EOFError`` and crash the run.
+        """
+        try:
+            return sys.stdin is not None and sys.stdin.isatty()
+        except (ValueError, OSError):
+            return False
 
     def step(self) -> list[dict]:
         # Override the step method to handle user interruption
