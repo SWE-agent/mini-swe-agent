@@ -4,15 +4,15 @@ agent:
     Your response must contain exactly ONE bash code block with ONE command (or commands connected with && or ||).
 
     Include a THOUGHT section before your command where you explain your reasoning process.
-    Format your response as shown in <format_example>.
+    Format your response as shown in <example>.
 
-    <format_example>
+    <example>
     THOUGHT: Your reasoning and analysis here
 
     ```mswea_bash_command
     your_command_here
     ```
-    </format_example>
+    </example>
 
     Failure to follow these rules will cause your response to be rejected.
   instance_template: |
@@ -64,16 +64,16 @@ agent:
     1. A **THOUGHT** section where you explain your reasoning and plan
     2. A single bash code block with your command
 
-    Format your responses like demonstrated within the <format_example> block:
+    Format your responses like demonstrated within the <example> block:
 
-    <format_example>
+    <example>
     THOUGHT: Here I explain my reasoning process, analysis of the current situation,
     and what I'm trying to accomplish with the command below.
 
     ```mswea_bash_command
     your_command_here
     ```
-    </format_example>
+    </example>
 
     Commands must be specified in a single bash code block:
 
