@@ -2974,6 +2974,9 @@ For example, you could use</p>
 <span class="w">    </span><span class="nt">LESS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-R</span>
 <span class="w">    </span><span class="nt">PIP_PROGRESS_BAR</span><span class="p">:</span><span class="w"> </span><span class="s">"off"</span>
 <span class="w">    </span><span class="nt">TQDM_DISABLE</span><span class="p">:</span><span class="w"> </span><span class="s">"1"</span>
+<span class="w">    </span><span class="c1"># bash -c is non-login so it won't source ~/.bashrc; point BASH_ENV at it so the</span>
+<span class="w">    </span><span class="c1"># image's `conda activate testbed` runs (else commands use the base env, no testbed).</span>
+<span class="w">    </span><span class="nt">BASH_ENV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/root/.bashrc</span>
 <span class="w">  </span><span class="nt">environment_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker</span>
 
 <span class="nt">model</span><span class="p">:</span>
