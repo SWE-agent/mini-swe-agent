@@ -132,7 +132,11 @@ class OpenRouterModel:
         """Parse tool calls from the response. Raises FormatError if unknown tool."""
         tool_calls = response["choices"][0]["message"].get("tool_calls") or []
         tool_calls = [_DictToObj(tc) for tc in tool_calls]
-        return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
+        return parse_toolcall_actions(
+            tool_calls,
+            format_error_template=self.config.format_error_template,
+            template_kwargs={"finish_reason": response["choices"][0].get("finish_reason")},
+        )
 
     def format_message(self, **kwargs) -> dict:
         return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)
