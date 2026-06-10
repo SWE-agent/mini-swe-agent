@@ -9,6 +9,8 @@ import logging
 import re
 from typing import Any
 
+from pydantic import BaseModel, Field
+
 # Module-level registry of live sandboxes for best-effort cleanup on exit
 # (covers Ctrl+C and unhandled exceptions where __del__ may not be called).
 _active_sandboxes: set[E2BEnvironment] = set()
@@ -21,9 +23,6 @@ def _cleanup_all_sandboxes() -> None:
 
 
 atexit.register(_cleanup_all_sandboxes)
-
-from pydantic import BaseModel, Field
-
 
 class E2BEnvironmentConfig(BaseModel):
     image: str
