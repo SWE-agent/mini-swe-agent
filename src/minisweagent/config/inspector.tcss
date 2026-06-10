@@ -40,3 +40,17 @@ Header {
 Footer {
     dock: bottom;
 }
+
+.reasoning-header {
+    background: $warning;
+    color: $text;
+    padding: 0 1;
+    text-style: italic;
+}
+
+.reasoning-content {
+    height: auto;
+    padding: 1;
+    background: $surface-darken-1;
+    color: $text-muted;
+}
