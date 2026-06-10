@@ -101,11 +101,12 @@ class DefaultAgent:
                 self.n_consecutive_format_errors += 1
                 if 0 < self.config.max_consecutive_format_errors <= self.n_consecutive_format_errors:
                     self.add_messages(
+                        *e.messages,
                         {
                             "role": "exit",
                             "content": "RepeatedFormatError",
                             "extra": {"exit_status": "RepeatedFormatError", "submission": ""},
-                        }
+                        },
                     )
                 else:
                     self.add_messages(*e.messages)
