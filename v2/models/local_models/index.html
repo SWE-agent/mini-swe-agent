@@ -2891,6 +2891,9 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 <span class="w">    </span><span class="no">}</span>
 <span class="w">    </span><span class="no">{%- endif -%}</span>
 <span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">{% if finish_reason is defined and finish_reason in ["length", "tool_calls"] -%}</span>
+<span class="w">    </span><span class="no">Your previous response reached the output token limit (finish_reason={{ finish_reason }}) before you produced a tool call, so it was cut off. Respond more concisely and finish with exactly one bash tool call. If you need to think more, do so briefly.</span>
+<span class="w">    </span><span class="no">{%- else -%}</span>
 <span class="w">    </span><span class="no">Tool call error:</span>
 
 <span class="w">    </span><span class="no">&lt;error&gt;</span>
@@ -2907,6 +2910,7 @@ This is done with the <code>model_kwargs</code> dictionary which is directly pas
 
 <span class="w">    </span><span class="no">If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`</span>
 <span class="w">    </span><span class="no">without any other command.</span>
+<span class="w">    </span><span class="no">{%- endif %}</span>
 <span class="w">  </span><span class="nt">model_kwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">drop_params</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
@@ -3062,7 +3066,11 @@ See the <a href="../../advanced/global_configuration/">global configuration guid
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Parse tool calls from the response. Raises FormatError if unknown tool."""</span>
         <span class="n">tool_calls</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span> <span class="ow">or</span> <span class="p">[]</span>
-        <span class="k">return</span> <span class="n">parse_toolcall_actions</span><span class="p">(</span><span class="n">tool_calls</span><span class="p">,</span> <span class="n">format_error_template</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">format_error_template</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parse_toolcall_actions</span><span class="p">(</span>
+            <span class="n">tool_calls</span><span class="p">,</span>
+            <span class="n">format_error_template</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">format_error_template</span><span class="p">,</span>
+            <span class="n">template_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"finish_reason"</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">finish_reason</span><span class="p">},</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">format_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">expand_multimodal_content</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">multimodal_regex</span><span class="p">)</span>

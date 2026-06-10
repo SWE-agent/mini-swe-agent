@@ -3002,6 +3002,9 @@ docker troubleshooting, singularity backend) apply equally to ProgramBench.</p>
 <span class="w">    </span><span class="no">&lt;/IMPORTANT&gt;</span>
 <span class="w">    </span><span class="no">{%- endif %}</span>
 <span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">{% if finish_reason is defined and finish_reason in ["length", "tool_calls"] -%}</span>
+<span class="w">    </span><span class="no">Your previous response reached the output token limit (finish_reason={{ finish_reason }}) before you produced a tool call, so it was cut off. Respond more concisely and finish with exactly one bash tool call. If you need to think more, do so briefly.</span>
+<span class="w">    </span><span class="no">{%- else -%}</span>
 <span class="w">    </span><span class="no">Tool call error:</span>
 
 <span class="w">    </span><span class="no">&lt;error&gt;</span>
@@ -3018,6 +3021,7 @@ docker troubleshooting, singularity backend) apply equally to ProgramBench.</p>
 
 <span class="w">    </span><span class="no">If you have completed your assignment, please consult the first message about how to</span>
 <span class="w">    </span><span class="no">submit your solution (you will not be able to continue working on this task after that).</span>
+<span class="w">    </span><span class="no">{%- endif %}</span>
 </code></pre></div>
 </details>
 <details class="note">
