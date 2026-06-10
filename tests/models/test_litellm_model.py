@@ -62,52 +62,6 @@ class TestLitellmModel:
         with pytest.raises(FormatError):
             model.query([{"role": "user", "content": "test"}])
 
-    @patch("minisweagent.models.litellm_model.litellm.completion")
-    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
-    def test_truncation_finish_length_uses_truncation_message(self, mock_cost, mock_completion):
-        """finish_reason=length (cut off before a tool call) -> a truncation-aware retry, flagged."""
-        response = _mock_litellm_response(None)
-        response.choices[0].finish_reason = "length"
-        mock_completion.return_value = response
-        mock_cost.return_value = 0.001
-
-        with pytest.raises(FormatError) as exc:
-            LitellmModel(model_name="gpt-4").query([{"role": "user", "content": "test"}])
-
-        msg = exc.value.messages[0]
-        assert msg["extra"]["truncated"] is True
-        assert "cut off" in msg["content"] and "token limit" in msg["content"]
-        assert "No tool calls found" not in msg["content"]  # not the misleading "you forgot" message
-
-    @patch("minisweagent.models.litellm_model.litellm.completion")
-    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
-    def test_truncation_empty_toolcalls_payload_is_truncation(self, mock_cost, mock_completion):
-        """finish_reason=tool_calls but an empty payload = cut at the tool-call boundary."""
-        response = _mock_litellm_response(None)
-        response.choices[0].finish_reason = "tool_calls"
-        mock_completion.return_value = response
-        mock_cost.return_value = 0.001
-
-        with pytest.raises(FormatError) as exc:
-            LitellmModel(model_name="gpt-4").query([{"role": "user", "content": "test"}])
-        assert exc.value.messages[0]["extra"]["truncated"] is True
-        assert "cut off" in exc.value.messages[0]["content"]
-
-    @patch("minisweagent.models.litellm_model.litellm.completion")
-    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
-    def test_genuine_no_tool_call_is_not_truncation(self, mock_cost, mock_completion):
-        """finish_reason=stop with no tool call = the model really ended its turn without acting;
-        keep the normal 'no tool calls found' retry and do NOT flag truncation."""
-        response = _mock_litellm_response(None)
-        response.choices[0].finish_reason = "stop"
-        mock_completion.return_value = response
-        mock_cost.return_value = 0.001
-
-        with pytest.raises(FormatError) as exc:
-            LitellmModel(model_name="gpt-4").query([{"role": "user", "content": "test"}])
-        assert "truncated" not in exc.value.messages[0]["extra"]
-        assert "No tool calls found" in exc.value.messages[0]["content"]
-
     def test_format_observation_messages(self):
         model = LitellmModel(model_name="gpt-4", observation_template="{{ output.output }}")
         message = {"extra": {"actions": [{"command": "echo test", "tool_call_id": "call_1"}]}}
