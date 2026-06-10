@@ -44,5 +44,3 @@ model:
   provider: "@openai"
   model_kwargs:
     drop_params: true
-    # GPT-5 mini only supports temperature=1.0
-    # temperature: 0.0
