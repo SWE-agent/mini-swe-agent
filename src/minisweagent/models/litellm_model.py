@@ -58,8 +58,10 @@ class LitellmModel:
 
     def __init__(self, *, config_class: Callable = LitellmModelConfig, **kwargs):
         self.config = config_class(**kwargs)
-        if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
-            litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
+        if self.config.litellm_model_registry:
+            registry_path = Path(self.config.litellm_model_registry).expanduser()
+            if registry_path.is_file():
+                litellm.utils.register_model(json.loads(registry_path.read_text()))
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:

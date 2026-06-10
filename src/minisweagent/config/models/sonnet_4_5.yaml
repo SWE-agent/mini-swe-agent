@@ -8,6 +8,8 @@ model:
     api_base: null
     custom_llm_provider: null
     api_key: null
+    parallel_tool_calls: null
+    temperature: null
   cost:
     input: 3.0e-06
     output: 1.5e-05
