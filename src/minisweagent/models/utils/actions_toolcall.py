@@ -27,8 +27,16 @@ BASH_TOOL = {
 }
 
 
-def parse_toolcall_actions(tool_calls: list, *, format_error_template: str) -> list[dict]:
-    """Parse tool calls from the response. Raises FormatError if unknown tool or invalid args."""
+def parse_toolcall_actions(
+    tool_calls: list, *, format_error_template: str, template_kwargs: dict | None = None
+) -> list[dict]:
+    """Parse tool calls from the response. Raises FormatError if unknown tool or invalid args.
+
+    ``template_kwargs`` are extra variables exposed to ``format_error_template`` (e.g.
+    ``{"finish_reason": ...}`` so a template can distinguish a real format mistake from a
+    ``max_tokens`` truncation).
+    """
+    template_kwargs = template_kwargs or {}
     if not tool_calls:
         raise FormatError(
             {
@@ -36,6 +44,7 @@ def parse_toolcall_actions(tool_calls: list, *, format_error_template: str) -> l
                 "content": Template(format_error_template, undefined=StrictUndefined).render(
                     error="No tool calls found in the response. Every response MUST include at least one tool call.",
                     actions=[],
+                    **template_kwargs,
                 ),
                 "extra": {"interrupt_type": "FormatError"},
             }
@@ -57,7 +66,7 @@ def parse_toolcall_actions(tool_calls: list, *, format_error_template: str) -> l
                 {
                     "role": "user",
                     "content": Template(format_error_template, undefined=StrictUndefined).render(
-                        actions=[], error=error_msg.strip()
+                        actions=[], error=error_msg.strip(), **template_kwargs
                     ),
                     "extra": {"interrupt_type": "FormatError"},
                 }

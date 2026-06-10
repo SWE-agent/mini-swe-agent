@@ -15,6 +15,7 @@ from minisweagent.models.openrouter_model import (
 )
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
+    finish_reason_from_responses_api,
     format_toolcall_observation_messages,
     parse_toolcall_actions_response,
 )
@@ -102,7 +103,9 @@ class OpenRouterResponseModel(OpenRouterModel):
 
     def _parse_actions(self, response: dict) -> list[dict]:
         return parse_toolcall_actions_response(
-            response.get("output", []), format_error_template=self.config.format_error_template
+            response.get("output", []),
+            format_error_template=self.config.format_error_template,
+            template_kwargs={"finish_reason": finish_reason_from_responses_api(response)},
         )
 
     def format_message(self, **kwargs) -> dict:

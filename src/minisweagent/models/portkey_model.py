@@ -129,7 +129,11 @@ class PortkeyModel:
     def _parse_actions(self, response) -> list[dict]:
         """Parse tool calls from the response. Raises FormatError if unknown tool."""
         tool_calls = response.choices[0].message.tool_calls or []
-        return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
+        return parse_toolcall_actions(
+            tool_calls,
+            format_error_template=self.config.format_error_template,
+            template_kwargs={"finish_reason": response.choices[0].finish_reason},
+        )
 
     def format_message(self, **kwargs) -> dict:
         return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)
