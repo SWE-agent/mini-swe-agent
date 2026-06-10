@@ -24,6 +24,7 @@ def _cleanup_all_sandboxes() -> None:
 
 atexit.register(_cleanup_all_sandboxes)
 
+
 class E2BEnvironmentConfig(BaseModel):
     image: str
     """Docker Hub image name to use as the E2B template base.
