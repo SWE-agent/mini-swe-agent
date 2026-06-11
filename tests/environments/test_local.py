@@ -160,11 +160,19 @@ def test_local_environment_timeout_kills_child_process():
         )
 
         assert result["returncode"] == -1
-        child_pid = int(pid_file.read_text())
+        child_pid = _read_pid(pid_file)
         try:
             assert _process_exited(child_pid)
         finally:
             _kill_process_if_running(child_pid)
+
+
+def _read_pid(pid_file: Path) -> int:
+    for _ in range(50):
+        if pid_file.is_file() and (content := pid_file.read_text().strip()):
+            return int(content)
+        time.sleep(0.1)
+    raise AssertionError(f"child never wrote its pid to {pid_file}")
 
 
 def _process_exited(pid: int) -> bool:
