@@ -1,5 +1,9 @@
 import os
+import shlex
+import signal
+import sys
 import tempfile
+import time
 from pathlib import Path
 from unittest.mock import patch
 
@@ -128,6 +132,56 @@ def test_local_environment_timeout():
     assert result["returncode"] == -1
     assert "timed out" in result["exception_info"]
     assert result["extra"]["exception_type"] == "TimeoutExpired"
+
+
+@pytest.mark.skipif(os.name == "nt", reason="process groups are POSIX-specific")
+def test_local_environment_timeout_kills_child_process():
+    """Test that timeout kills shell-spawned child processes."""
+    with tempfile.TemporaryDirectory() as temp_dir:
+        pid_file = Path(temp_dir) / "child.pid"
+        script = Path(temp_dir) / "child.py"
+        script.write_text(
+            "\n".join(
+                [
+                    "import os",
+                    "import sys",
+                    "import time",
+                    "from pathlib import Path",
+                    "Path(sys.argv[1]).write_text(str(os.getpid()))",
+                    "while True:",
+                    "    time.sleep(1)",
+                ]
+            )
+        )
+
+        env = LocalEnvironment(timeout=1)
+        result = env.execute(
+            {"command": f"{shlex.quote(sys.executable)} {shlex.quote(str(script))} {shlex.quote(str(pid_file))}"}
+        )
+
+        assert result["returncode"] == -1
+        child_pid = int(pid_file.read_text())
+        try:
+            assert _process_exited(child_pid)
+        finally:
+            _kill_process_if_running(child_pid)
+
+
+def _process_exited(pid: int) -> bool:
+    for _ in range(20):
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return True
+        time.sleep(0.1)
+    return False
+
+
+def _kill_process_if_running(pid: int) -> None:
+    try:
+        os.kill(pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
 
 
 def test_local_environment_custom_timeout():

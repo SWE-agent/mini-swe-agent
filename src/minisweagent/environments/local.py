@@ -1,5 +1,6 @@
 import os
 import platform
+import signal
 import subprocess
 from typing import Any
 
@@ -24,18 +25,23 @@ class LocalEnvironment:
         """Execute a command in the local environment and return the result as a dict."""
         command = action.get("command", "")
         cwd = cwd or self.config.cwd or os.getcwd()
+        effective_timeout = timeout or self.config.timeout
         try:
-            result = subprocess.run(
-                command,
-                shell=True,
-                text=True,
-                cwd=cwd,
-                env=os.environ | self.config.env,
-                timeout=timeout or self.config.timeout,
-                encoding="utf-8",
-                errors="replace",
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
+            result = (
+                _run_command_in_process_group(command, cwd, os.environ | self.config.env, effective_timeout)
+                if os.name == "posix"
+                else subprocess.run(
+                    command,
+                    shell=True,
+                    text=True,
+                    cwd=cwd,
+                    env=os.environ | self.config.env,
+                    timeout=effective_timeout,
+                    encoding="utf-8",
+                    errors="replace",
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                )
             )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
         except Exception as e:
@@ -77,3 +83,36 @@ class LocalEnvironment:
                 }
             }
         }
+
+
+def _run_command_in_process_group(
+    command: str, cwd: str, env: dict[str, str], timeout: int
+) -> subprocess.CompletedProcess[str]:
+    process = subprocess.Popen(
+        command,
+        shell=True,
+        text=True,
+        cwd=cwd,
+        env=env,
+        encoding="utf-8",
+        errors="replace",
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        start_new_session=True,
+    )
+    try:
+        stdout, _ = process.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        _kill_process_group(process)
+        stdout, _ = process.communicate()
+        raise subprocess.TimeoutExpired(command, timeout, output=stdout)
+    return subprocess.CompletedProcess(command, process.returncode, stdout=stdout, stderr=None)
+
+
+def _kill_process_group(process: subprocess.Popen[str]) -> None:
+    try:
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        return
+    except OSError:
+        process.kill()
