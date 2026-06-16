@@ -221,12 +221,23 @@ class E2BEnvironment:
                 "exception_info": "",
             }
         except Exception as e:
-            output = {
-                "output": "",
-                "returncode": -1,
-                "exception_info": f"An error occurred while executing the command: {e}",
-                "extra": {"exception_type": type(e).__name__, "exception": str(e)},
-            }
+            # e2b raises ``CommandExitException`` (carrying stdout/stderr/exit_code)
+            # for any non-zero exit. That is a normal command result, not an
+            # infrastructure error, so surface the real output and exit code
+            # instead of masking it as a generic failure.
+            if (exit_code := getattr(e, "exit_code", None)) is not None:
+                output = {
+                    "output": getattr(e, "stdout", "") + getattr(e, "stderr", ""),
+                    "returncode": exit_code,
+                    "exception_info": "",
+                }
+            else:
+                output = {
+                    "output": "",
+                    "returncode": -1,
+                    "exception_info": f"An error occurred while executing the command: {e}",
+                    "extra": {"exception_type": type(e).__name__, "exception": str(e)},
+                }
         self._check_finished(output)
         return output
 

@@ -131,16 +131,22 @@ class TestE2BEnvironmentExecute:
         assert output["output"] == "ok\n"
 
     def test_execute_nonzero_exit(self):
+        # e2b's commands.run() RAISES CommandExitException (carrying stdout/stderr/
+        # exit_code) on any non-zero exit. A failing command is a normal result,
+        # not an infrastructure error: its real output and exit code must survive.
         env = _make_env()
-        mock_result = MagicMock()
-        mock_result.stdout = ""
-        mock_result.stderr = "error\n"
-        mock_result.exit_code = 1
-        env.sandbox.commands.run.return_value = mock_result
+        exc = Exception("Command exited with code 1")
+        exc.stdout = "partial stdout\n"
+        exc.stderr = "boom\n"
+        exc.exit_code = 1
+        env.sandbox.commands.run.side_effect = exc
 
         output = env.execute({"command": "false"})
 
         assert output["returncode"] == 1
+        assert "boom" in output["output"]
+        assert "partial stdout" in output["output"]
+        assert output["exception_info"] == ""
 
     def test_execute_exception(self):
         env = _make_env()
