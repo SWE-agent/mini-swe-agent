@@ -176,6 +176,9 @@ class E2BEnvironment:
     See :class:`E2BEnvironmentConfig` for keyword arguments.
     """
 
+    #: Config fields that must never leak into prompts or saved trajectories.
+    _SECRET_FIELDS = {"api_key", "registry_password", "registry_username"}
+
     def __init__(self, **kwargs: Any) -> None:
         from e2b import Sandbox
         from e2b.exceptions import SandboxException
@@ -261,7 +264,8 @@ class E2BEnvironment:
 
         from minisweagent.utils.serialize import recursive_merge
 
-        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), kwargs)
+        config = self.config.model_dump(exclude=self._SECRET_FIELDS)
+        return recursive_merge(config, platform.uname()._asdict(), kwargs)
 
     def serialize(self) -> dict:
         return {
@@ -269,7 +273,7 @@ class E2BEnvironment:
                 "config": {
                     "environment": self.config.model_dump(
                         mode="json",
-                        exclude={"api_key", "registry_password"},
+                        exclude=self._SECRET_FIELDS,
                     ),
                     "environment_type": f"{self.__class__.__module__}.{self.__class__.__name__}",
                 }

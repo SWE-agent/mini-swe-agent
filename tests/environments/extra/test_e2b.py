@@ -187,6 +187,14 @@ class TestE2BEnvironmentTemplateVars:
         for key in ("system", "release", "version", "machine", "node", "processor"):
             assert key in result
 
+    def test_excludes_credentials(self):
+        # Template vars feed the Jinja prompt context; secrets must not leak there.
+        env = _make_env(api_key="secret-key", registry_password="secret-pass", registry_username="user")
+        result = env.get_template_vars()
+        assert "api_key" not in result
+        assert "registry_password" not in result
+        assert "registry_username" not in result
+
     def test_kwargs_override(self):
         env = _make_env()
         result = env.get_template_vars(extra="value")
