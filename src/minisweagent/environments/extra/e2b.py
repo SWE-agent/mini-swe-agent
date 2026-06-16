@@ -179,6 +179,19 @@ class E2BEnvironment:
     #: Config fields that must never leak into prompts or saved trajectories.
     _SECRET_FIELDS = {"api_key", "registry_password", "registry_username"}
 
+    @staticmethod
+    def _is_stale_template_error(e: Exception) -> bool:
+        """Return True if *e* is a 'template not found' (HTTP 404) error.
+
+        e2b surfaces a missing template as a ``SandboxException`` whose message is
+        formatted as ``"{status_code}: {message}"`` (see ``e2b.api.handle_api_exception``).
+        Match the leading 404 status code rather than a bare ``"404"`` substring,
+        which could appear inside a sandbox id or path and trigger a costly,
+        unnecessary template rebuild.
+        """
+        match = re.match(r"\s*(\d{3})\b", str(e))
+        return match is not None and match.group(1) == "404"
+
     def __init__(self, **kwargs: Any) -> None:
         from e2b import Sandbox
         from e2b.exceptions import SandboxException
@@ -195,7 +208,7 @@ class E2BEnvironment:
                 api_key=self.config.api_key,
             )
         except SandboxException as e:
-            if "404" not in str(e):
+            if not self._is_stale_template_error(e):
                 raise
             self.logger.warning("Template %s not found (stale cache). Rebuilding...", template_name)
             manager.rebuild(self.config.image)

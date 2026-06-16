@@ -99,6 +99,27 @@ class TestImageToTemplateName:
 import re  # noqa: E402 (needed after class definitions above for clarity)
 
 # ---------------------------------------------------------------------------
+# E2BEnvironment._is_stale_template_error
+# ---------------------------------------------------------------------------
+
+
+class TestIsStaleTemplateError:
+    def test_404_status_prefix_matches(self):
+        # e2b formats API errors as "{status_code}: {message}".
+        exc = Exception("404: template foo not found")
+        assert E2BEnvironment._is_stale_template_error(exc) is True
+
+    def test_other_status_does_not_match(self):
+        assert E2BEnvironment._is_stale_template_error(Exception("500: internal error")) is False
+        assert E2BEnvironment._is_stale_template_error(Exception("429: rate limited")) is False
+
+    def test_incidental_404_substring_does_not_match(self):
+        # "404" appearing inside an id/path must not trigger a costly rebuild.
+        assert E2BEnvironment._is_stale_template_error(Exception("Sandbox abc404def failed")) is False
+        assert E2BEnvironment._is_stale_template_error(Exception("error in /path/404/x")) is False
+
+
+# ---------------------------------------------------------------------------
 # E2BEnvironment.execute
 # ---------------------------------------------------------------------------
 
