@@ -1,14 +1,12 @@
 import json
 import re
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from pydantic import BaseModel
 
 from minisweagent import package_dir
 from minisweagent.models.test_models import DeterministicModel, make_output
-from unittest.mock import MagicMock
-
 from minisweagent.run.benchmarks.swebench import (
     _teardown_environment,
     filter_instances,
