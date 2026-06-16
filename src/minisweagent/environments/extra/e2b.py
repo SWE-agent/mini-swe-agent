@@ -19,7 +19,7 @@ _active_sandboxes: set[E2BEnvironment] = set()
 def _cleanup_all_sandboxes() -> None:
     """Kill all sandboxes that are still alive at interpreter shutdown."""
     for env in list(_active_sandboxes):
-        env.stop()
+        env.cleanup()
 
 
 atexit.register(_cleanup_all_sandboxes)
@@ -280,7 +280,7 @@ class E2BEnvironment:
             }
         }
 
-    def stop(self) -> None:
+    def cleanup(self) -> None:
         _active_sandboxes.discard(self)
         sandbox = getattr(self, "sandbox", None)
         if sandbox is not None:
@@ -290,4 +290,4 @@ class E2BEnvironment:
                 pass
 
     def __del__(self) -> None:
-        self.stop()
+        self.cleanup()

@@ -230,26 +230,26 @@ class TestE2BEnvironmentSerialize:
 
 
 # ---------------------------------------------------------------------------
-# E2BEnvironment.stop / __del__
+# E2BEnvironment.cleanup / __del__
 # ---------------------------------------------------------------------------
 
 
-class TestE2BEnvironmentStop:
-    def test_stop_kills_sandbox(self):
+class TestE2BEnvironmentCleanup:
+    def test_cleanup_kills_sandbox(self):
         env = _make_env()
-        env.stop()
+        env.cleanup()
         env.sandbox.kill.assert_called_once()
 
-    def test_stop_tolerates_missing_sandbox(self):
+    def test_cleanup_tolerates_missing_sandbox(self):
         with patch.object(E2BEnvironment, "__init__", lambda self, **kw: None):
             env = E2BEnvironment()
             # sandbox was never set
-            env.stop()  # should not raise
+            env.cleanup()  # should not raise
 
-    def test_stop_tolerates_kill_exception(self):
+    def test_cleanup_tolerates_kill_exception(self):
         env = _make_env()
         env.sandbox.kill.side_effect = RuntimeError("already dead")
-        env.stop()  # should not raise
+        env.cleanup()  # should not raise
 
 
 # ---------------------------------------------------------------------------
@@ -258,14 +258,14 @@ class TestE2BEnvironmentStop:
 
 
 class TestAtexitCleanup:
-    def test_stop_removes_from_active_sandboxes(self):
+    def test_cleanup_removes_from_active_sandboxes(self):
         from minisweagent.environments.extra import e2b as e2b_mod
 
         env = _make_env()
         e2b_mod._active_sandboxes.add(env)
         assert env in e2b_mod._active_sandboxes
 
-        env.stop()
+        env.cleanup()
         assert env not in e2b_mod._active_sandboxes
 
     def test_cleanup_all_sandboxes_kills_all(self):

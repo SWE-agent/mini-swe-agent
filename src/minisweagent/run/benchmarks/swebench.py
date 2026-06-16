@@ -190,8 +190,14 @@ def process_instance(
             logger.info(f"Saved trajectory to '{traj_path}'")
         update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
         progress_manager.on_instance_end(instance_id, exit_status)
-        if env is not None and hasattr(env, "stop"):
-            env.stop()
+        if env is not None:
+            # Environments expose teardown as either cleanup() (docker, singularity,
+            # bubblewrap) or stop() (swerex_modal). Call whichever exists so the
+            # per-instance resource (container / cloud sandbox) is released.
+            for teardown_name in ("cleanup", "stop"):
+                if callable(teardown := getattr(env, teardown_name, None)):
+                    teardown()
+                    break
 
 
 def filter_instances(
