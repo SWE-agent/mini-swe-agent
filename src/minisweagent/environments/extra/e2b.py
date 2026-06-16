@@ -257,9 +257,11 @@ class E2BEnvironment:
             )
 
     def get_template_vars(self, **kwargs: Any) -> dict[str, Any]:
+        import platform
+
         from minisweagent.utils.serialize import recursive_merge
 
-        return recursive_merge(self.config.model_dump(), kwargs)
+        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), kwargs)
 
     def serialize(self) -> dict:
         return {

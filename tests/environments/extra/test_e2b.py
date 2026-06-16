@@ -174,6 +174,26 @@ class TestE2BEnvironmentExecute:
 
 
 # ---------------------------------------------------------------------------
+# E2BEnvironment.get_template_vars
+# ---------------------------------------------------------------------------
+
+
+class TestE2BEnvironmentTemplateVars:
+    def test_includes_platform_uname(self):
+        # Default configs (mini/default) render {{system}}/{{machine}}/... under
+        # Jinja StrictUndefined, so these keys must be present like docker/local.
+        env = _make_env()
+        result = env.get_template_vars()
+        for key in ("system", "release", "version", "machine", "node", "processor"):
+            assert key in result
+
+    def test_kwargs_override(self):
+        env = _make_env()
+        result = env.get_template_vars(extra="value")
+        assert result["extra"] == "value"
+
+
+# ---------------------------------------------------------------------------
 # E2BEnvironment.serialize
 # ---------------------------------------------------------------------------
 
