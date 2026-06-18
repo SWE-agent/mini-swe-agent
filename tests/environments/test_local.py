@@ -19,6 +19,7 @@ def test_local_environment_config_defaults():
     assert config.cwd == ""
     assert config.env == {}
     assert config.timeout == 30
+    assert config.interpreter == ["bash", "-lc"]
 
 
 def test_local_environment_basic_execution():
@@ -262,3 +263,13 @@ def test_local_environment_shell_features():
     result = env.execute({"command": "echo $(echo 'nested')"})
     assert result["returncode"] == 0
     assert "nested" in result["output"]
+
+
+@pytest.mark.skipif(os.name == "nt", reason="requires bash")
+def test_local_environment_uses_bash_by_default():
+    """Test that the local environment supports bash-only syntax by default."""
+    env = LocalEnvironment()
+
+    result = env.execute({"command": "cat <(printf 'bash-only')"})
+    assert result["returncode"] == 0
+    assert result["output"] == "bash-only"
