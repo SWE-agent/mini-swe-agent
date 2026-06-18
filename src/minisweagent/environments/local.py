@@ -28,7 +28,9 @@ class LocalEnvironment:
         command = action.get("command", "")
         cwd = cwd or self.config.cwd or os.getcwd()
         try:
-            result = _run(command, cwd, os.environ | self.config.env, timeout or self.config.timeout, self.config.interpreter)
+            result = _run(
+                command, cwd, os.environ | self.config.env, timeout or self.config.timeout, self.config.interpreter
+            )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
         except Exception as e:
             raw_output = getattr(e, "output", None)
