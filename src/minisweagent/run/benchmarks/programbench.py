@@ -25,7 +25,7 @@ Output is compatible with [bold green]programbench eval[/bold green].
 """
 
 DEFAULT_CONFIG_FILE = builtin_config_dir / "benchmarks" / "programbench.yaml"
-_IMAGE_TAG = "task_cleanroom"
+_IMAGE_TAG = "task_cleanroom_v6"
 
 app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
