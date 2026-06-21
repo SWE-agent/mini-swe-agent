@@ -28,6 +28,7 @@ def test_local_environment_basic_execution():
     result = env.execute({"command": "echo 'hello world'"})
     assert result["returncode"] == 0
     assert "hello world" in result["output"]
+    assert "COMMAND FAILED" not in result["output"]
 
 
 def test_local_environment_set_env_variables():
@@ -101,9 +102,11 @@ def test_local_environment_command_failure():
     """Test that command failures are properly captured."""
     env = LocalEnvironment()
 
-    result = env.execute({"command": "exit 1"})
-    assert result["returncode"] == 1
-    assert result["output"] == ""
+    result = env.execute({"command": "echo 'stdout before failure'; echo 'stderr before failure' >&2; exit 7"})
+    assert result["returncode"] == 7
+    assert "COMMAND FAILED with exit code 7" in result["output"]
+    assert "stdout before failure" in result["output"]
+    assert "stderr before failure" in result["output"]
 
 
 def test_local_environment_nonexistent_command():
@@ -130,6 +133,7 @@ def test_local_environment_timeout():
 
     result = env.execute({"command": "sleep 2"})
     assert result["returncode"] == -1
+    assert "COMMAND FAILED with exit code -1" not in result["output"]
     assert "timed out" in result["exception_info"]
     assert result["extra"]["exception_type"] == "TimeoutExpired"
 

@@ -39,6 +39,7 @@ class LocalEnvironment:
                 "exception_info": f"An error occurred while executing the command: {e}",
                 "extra": {"exception_type": type(e).__name__, "exception": str(e)},
             }
+        _mark_failed_command(output)
         self._check_finished(output)
         return output
 
@@ -90,3 +91,10 @@ def _run(command: str, cwd: str, env: dict[str, str], timeout: int) -> subproces
         stdout, _ = process.communicate()
         raise subprocess.TimeoutExpired(command, timeout, output=stdout)
     return subprocess.CompletedProcess(command, process.returncode, stdout=stdout)
+
+
+def _mark_failed_command(output: dict[str, Any]) -> None:
+    """Make nonzero command exits obvious while preserving command output."""
+    returncode = output.get("returncode")
+    if isinstance(returncode, int) and not isinstance(returncode, bool) and returncode > 0:
+        output["output"] = f"COMMAND FAILED with exit code {returncode}\n{output.get('output', '')}"
