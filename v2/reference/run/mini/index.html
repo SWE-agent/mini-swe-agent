@@ -2907,7 +2907,7 @@
 
 </h3>
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span>
-    <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
+    <span class="n"><span title="os">os</span></span><span class="o">.</span><span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
         <span class="s2">"MSWEA_MINI_CONFIG_PATH"</span><span class="p">,</span>
         <span class="n"><span title="minisweagent.config.builtin_config_dir">builtin_config_dir</span></span> <span class="o">/</span> <span class="s2">"mini.yaml"</span><span class="p">,</span>
     <span class="p">)</span>
@@ -2979,7 +2979,7 @@
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">app</span> <span class="o">=</span> <span class="n"><span title="typer.Typer">Typer</span></span><span class="p">(</span><span class="n"><span title="typer.Typer(rich_markup_mode)">rich_markup_mode</span></span><span class="o">=</span><span class="s1">'rich'</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">app</span> <span class="o">=</span> <span class="n"><span title="typer">typer</span></span><span class="o">.</span><span class="n"><span title="typer.Typer">Typer</span></span><span class="p">(</span><span class="n"><span title="typer.Typer(rich_markup_mode)">rich_markup_mode</span></span><span class="o">=</span><span class="s1">'rich'</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">

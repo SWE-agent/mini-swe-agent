@@ -3313,7 +3313,7 @@
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="s1">'portkey_response_model'</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="logging">logging</span></span><span class="o">.</span><span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="s1">'portkey_response_model'</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3418,7 +3418,7 @@
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">|</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">litellm_model_registry</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">|</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n"><span title="os">os</span></span><span class="o">.</span><span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
     <span class="s2">"LITELLM_MODEL_REGISTRY_PATH"</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -3466,8 +3466,8 @@
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">cost_tracking</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">"default"</span><span class="p">,</span> <span class="s2">"ignore_errors"</span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
-    <span class="s2">"MSWEA_COST_TRACKING"</span><span class="p">,</span> <span class="s2">"default"</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">cost_tracking</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">"default"</span><span class="p">,</span> <span class="s2">"ignore_errors"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n"><span title="os">os</span></span><span class="o">.</span><span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span><span class="s2">"MSWEA_COST_TRACKING"</span><span class="p">,</span> <span class="s2">"default"</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
 

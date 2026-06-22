@@ -3132,7 +3132,7 @@ This environment uses bubblewrap to execute commands in a sandboxed environment.
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">executable</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">executable</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="os">os</span></span><span class="o">.</span><span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
     <span class="s2">"MSWEA_BUBBLEWRAP_EXECUTABLE"</span><span class="p">,</span> <span class="s2">"bwrap"</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -3286,7 +3286,9 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment(logger)">logger</span></span> <span class="ow">or</span> <span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="s1">'minisweagent.environment'</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment(logger)">logger</span></span> <span class="ow">or</span> <span class="n"><span title="logging">logging</span></span><span class="o">.</span><span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span>
+    <span class="s2">"minisweagent.environment"</span>
+<span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -3330,7 +3332,10 @@ directory for each environment. See <code>BubblewrapEnvironmentConfig</code> for
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">working_dir</span> <span class="o">=</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="n"><span title="tempfile.gettempdir">gettempdir</span></span><span class="p">())</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"minisweagent-</span><span class="si">{</span><span class="n"><span title="hex">hex</span></span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">working_dir</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">(</span><span class="n"><span title="tempfile">tempfile</span></span><span class="o">.</span><span class="n"><span title="tempfile.gettempdir">gettempdir</span></span><span class="p">())</span>
+    <span class="o">/</span> <span class="sa">f</span><span class="s2">"minisweagent-</span><span class="si">{</span><span class="n"><span title="uuid">uuid</span></span><span class="o">.</span><span class="n"><span title="uuid.uuid4">uuid4</span></span><span class="p">()</span><span class="o">.</span><span class="n"><span title="hex">hex</span></span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+<span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">

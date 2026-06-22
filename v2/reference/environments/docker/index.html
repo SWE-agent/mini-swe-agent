@@ -3450,7 +3450,7 @@ In case of conflict with <code>env</code>, the <code>env</code> variables take p
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">executable</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">executable</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="n"><span title="os">os</span></span><span class="o">.</span><span class="n"><span title="os.getenv">getenv</span></span><span class="p">(</span>
     <span class="s2">"MSWEA_DOCKER_EXECUTABLE"</span><span class="p">,</span> <span class="s2">"docker"</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -3663,7 +3663,9 @@ See <code>DockerEnvironmentConfig</code> for keyword arguments.</p>
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="minisweagent.environments.docker.DockerEnvironment(logger)">logger</span></span> <span class="ow">or</span> <span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="s1">'minisweagent.environment'</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="minisweagent.environments.docker.DockerEnvironment(logger)">logger</span></span> <span class="ow">or</span> <span class="n"><span title="logging">logging</span></span><span class="o">.</span><span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span>
+    <span class="s2">"minisweagent.environment"</span>
+<span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">

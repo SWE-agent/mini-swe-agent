@@ -3486,7 +3486,7 @@
   </span>
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="n"><span title="__name__">__name__</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="logging">logging</span></span><span class="o">.</span><span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="n"><span title="__name__">__name__</span></span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4065,7 +4065,7 @@ using <a href="https://github.com/nebius/contree-sdk">contree-sdk</a></p>
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="s1">'minisweagent.environment'</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n"><span title="logging">logging</span></span><span class="o">.</span><span class="n"><span title="logging.getLogger">getLogger</span></span><span class="p">(</span><span class="s1">'minisweagent.environment'</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4087,7 +4087,7 @@ using <a href="https://github.com/nebius/contree-sdk">contree-sdk</a></p>
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">client</span> <span class="o">=</span> <span class="n"><span title="contree_sdk.ContreeSync">ContreeSync</span></span><span class="p">(</span><span class="n"><span title="contree_sdk.ContreeSync(config)">config</span></span><span class="o">=</span><span class="n"><span title="minisweagent.environments.extra.contree.ContreeEnvironment(self).config.contree_config">contree_config</span></span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">client</span> <span class="o">=</span> <span class="n"><span title="contree_sdk.ContreeSync">ContreeSync</span></span><span class="p">(</span><span class="n"><span title="contree_sdk.ContreeSync(config)">config</span></span><span class="o">=</span><span class="n"><span title="minisweagent.environments.extra.contree.ContreeEnvironment(self)">self</span></span><span class="o">.</span><span class="n"><span title="minisweagent.environments.extra.contree.ContreeEnvironment(self).config">config</span></span><span class="o">.</span><span class="n"><span title="minisweagent.environments.extra.contree.ContreeEnvironment(self).config.contree_config">contree_config</span></span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4109,7 +4109,7 @@ using <a href="https://github.com/nebius/contree-sdk">contree-sdk</a></p>
   </span>
 
 </h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">session</span> <span class="o">=</span> <span class="n"><span title="session">session</span></span><span class="p">()</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">session</span> <span class="o">=</span> <span class="n"><span title="minisweagent.environments.extra.contree.ContreeEnvironment(self)">self</span></span><span class="o">.</span><span class="n"><span title="minisweagent.environments.extra.contree.ContreeEnvironment(self)._pull_image">_pull_image</span></span><span class="p">()</span><span class="o">.</span><span class="n"><span title="session">session</span></span><span class="p">()</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
