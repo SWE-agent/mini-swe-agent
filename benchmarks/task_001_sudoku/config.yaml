@@ -1,0 +1,21 @@
+task_id: task_001_sudoku
+description: Fix off-by-one bug in sudoku hint()
+
+repo:
+  path: .
+  base_commit: "179e790"
+  setup_patch: setup.patch
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/run/test_sudoku.py -v
+expected_behavior: All sudoku tests pass after fix
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.50"
+  output_trajectory: runs/{task_id}/trajectory.traj.json

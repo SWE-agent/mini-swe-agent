@@ -1,0 +1,21 @@
+task_id: task_002_eval_module
+description: Fix multiplication bug in eval_expr()
+
+repo:
+  path: .
+  base_commit: "ddd3785"
+  setup_patch: setup.patch
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/run/test_eval_module.py -v
+expected_behavior: All eval_module tests pass after fix
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.50"
+  output_trajectory: runs/{task_id}/trajectory.traj.json

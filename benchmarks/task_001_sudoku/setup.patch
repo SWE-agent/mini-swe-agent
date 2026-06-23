@@ -1,0 +1,13 @@
+diff --git a/upstream/src/minisweagent/run/sudoku.py b/upstream/src/minisweagent/run/sudoku.py
+index 74e1ca1..c3561af 100644
+--- a/upstream/src/minisweagent/run/sudoku.py
++++ b/upstream/src/minisweagent/run/sudoku.py
+@@ -111,7 +111,7 @@ class SudokuGame:
+         for row, col in empties:
+             for value in range(1, 10):
+                 if self.is_valid_move(row, col, value):
+-                    return row, col, value
++                    return row, col, value + 1  # BUG: off-by-one, may return invalid value
+         return None
+ 
+ 
