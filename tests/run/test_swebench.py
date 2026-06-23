@@ -1,6 +1,6 @@
 import json
 import re
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from pydantic import BaseModel
@@ -8,12 +8,32 @@ from pydantic import BaseModel
 from minisweagent import package_dir
 from minisweagent.models.test_models import DeterministicModel, make_output
 from minisweagent.run.benchmarks.swebench import (
+    _teardown_environment,
     filter_instances,
     get_swebench_docker_image_name,
     main,
     remove_from_preds_file,
     update_preds_file,
 )
+
+
+class TestTeardownEnvironment:
+    def test_prefers_cleanup_over_stop(self):
+        env = MagicMock(spec=["cleanup", "stop"])
+        _teardown_environment(env)
+        env.cleanup.assert_called_once()
+        env.stop.assert_not_called()
+
+    def test_falls_back_to_stop(self):
+        env = MagicMock(spec=["stop"])
+        _teardown_environment(env)
+        env.stop.assert_called_once()
+
+    def test_tolerates_env_without_teardown(self):
+        _teardown_environment(MagicMock(spec=[]))  # should not raise
+
+    def test_tolerates_none(self):
+        _teardown_environment(None)  # should not raise
 
 
 def _make_model_from_fixture(text_outputs: list[str], cost_per_call: float = 1.0, **kwargs) -> DeterministicModel:
