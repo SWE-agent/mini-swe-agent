@@ -53,6 +53,7 @@ full = [
     "swe-rex>=1.4.0",
     "mini-swe-agent[modal]",
     "mini-swe-agent[contree]",
+    "mini-swe-agent[e2b]",
 ]
 
 modal = [
