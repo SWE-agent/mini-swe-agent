@@ -1,6 +1,5 @@
 """Tests for the E2B cloud sandbox environment."""
 
-from types import ModuleType
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -15,14 +14,6 @@ from minisweagent.exceptions import Submitted
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
-
-def _make_mock_e2b() -> ModuleType:
-    """Return a minimal mock of the `e2b` module."""
-    mock_e2b = MagicMock()
-    mock_e2b.Template = MagicMock()
-    mock_e2b.Sandbox = MagicMock()
-    return mock_e2b
 
 
 def _make_env(**kwargs) -> E2BEnvironment:
