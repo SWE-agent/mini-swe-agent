@@ -108,3 +108,40 @@ def test_isolated_workspace_does_not_change_dev_branch():
     ).stdout.strip()
     assert before == after
     assert not worktree.exists()
+
+
+@pytest.mark.skipif(not TASK_002.is_dir(), reason="requires task_002_eval_module")
+def test_setup_patch_stages_buggy_state_in_index():
+    import subprocess
+
+    worktree = ROOT / "runs" / "_index_test" / ".workspace"
+    try:
+        with isolated_workspace(
+            ROOT,
+            "61e468b",
+            TASK_002 / "setup.patch",
+            worktree_path=worktree,
+        ):
+            wt_vs_index = subprocess.run(
+                ["git", "diff", "--stat"],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            cached = subprocess.run(
+                ["git", "diff", "--cached", "--stat"],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout.strip()
+            assert wt_vs_index == ""
+            assert "eval_module.py" in cached
+    finally:
+        if worktree.is_dir():
+            subprocess.run(
+                ["git", "worktree", "remove", "--force", str(worktree)],
+                cwd=ROOT,
+                capture_output=True,
+            )

@@ -36,6 +36,8 @@ class TraceContext:
     difficulty: str | None = None
     bug_count: int | None = None
     eval_tags: list[str] | None = None
+    workspace_patch: str | None = None
+    """Full git diff captured from the task worktree after the agent run."""
 
 
 @dataclass
@@ -122,7 +124,11 @@ def build_trace_document(
     rows = iter_tool_rows(messages)
     steps = iter_trace_steps(messages)
     pytest_runs = extract_pytest_runs(rows)
-    patch_text, patch_source = extract_patch_diff(rows)
+    if ctx.workspace_patch is not None and ctx.workspace_patch.strip():
+        patch_text = ctx.workspace_patch.strip()
+        patch_source = "git diff in workspace (post-run)"
+    else:
+        patch_text, patch_source = extract_patch_diff(rows)
     stats = info.get("model_stats", {})
     config = info.get("config", {})
 

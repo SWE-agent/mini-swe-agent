@@ -7,7 +7,7 @@ import argparse
 from datetime import datetime, timezone
 from pathlib import Path
 
-from repopilot.trace.parse import extract_patch_diff, extract_pytest_runs, iter_tool_rows, load_trajectory
+from repopilot.trace.parse import capture_workspace_diff, extract_patch_diff, extract_pytest_runs, iter_tool_rows, load_trajectory
 
 
 def _summarize_patch(patch_text: str) -> str | None:
@@ -23,12 +23,18 @@ def _summarize_patch(patch_text: str) -> str | None:
     return "; ".join(parts)
 
 
-def extract(traj_path: Path, out_dir: Path, *, issue_path: Path | None = None) -> None:
+def extract(traj_path: Path, out_dir: Path, *, issue_path: Path | None = None, workspace: Path | None = None) -> None:
     traj = load_trajectory(traj_path)
     info = traj["info"]
     rows = iter_tool_rows(traj["messages"])
     pytest_runs = extract_pytest_runs(rows)
-    patch_text, patch_source = extract_patch_diff(rows)
+    if workspace is not None:
+        patch_text = capture_workspace_diff(workspace)
+        patch_source = "git diff in workspace (post-run)" if patch_text else "not found"
+    else:
+        patch_text, patch_source = extract_patch_diff(rows)
+    if workspace is not None and not patch_text:
+        patch_text, patch_source = extract_patch_diff(rows)
 
     pre_fix = next((run for run in pytest_runs if run.phase == "pre_fix"), None)
     post_fix = next((run for run in pytest_runs if run.phase == "post_fix"), None)
@@ -95,7 +101,7 @@ def extract(traj_path: Path, out_dir: Path, *, issue_path: Path | None = None) -
 
 ## Notes
 
-- Patch is taken from `git diff` in the trajectory when available; otherwise reconstructed from edit commands.
+- Patch is taken from post-run `git diff` in the task workspace when available; otherwise from trajectory `git diff` or reconstructed edit commands.
 - `baseline_*` files mirror legacy Phase 0 artifacts; prefer `trace.json` / `patch.diff` for eval harness work.
 """
     (out_dir / "baseline_run.md").write_text(report)
@@ -121,8 +127,14 @@ def main() -> None:
         default=None,
         help="Issue file path for the run report",
     )
+    parser.add_argument(
+        "--workspace",
+        type=Path,
+        default=None,
+        help="Task git worktree; when set, patch is taken from post-run git diff",
+    )
     args = parser.parse_args()
-    extract(args.trajectory, args.output_dir, issue_path=args.issue)
+    extract(args.trajectory, args.output_dir, issue_path=args.issue, workspace=args.workspace)
     print(f"Wrote baseline artifacts to {args.output_dir}/")
 
 

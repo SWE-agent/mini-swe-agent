@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 import json
 import re
+import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -292,17 +293,94 @@ def extract_viewed_files(rows: list[tuple[str, str, int | None]]) -> list[str]:
     return ordered
 
 
+def capture_workspace_diff(workspace: Path) -> str:
+    """Return unstaged git diff from a task worktree after the agent run."""
+    workspace = workspace.resolve()
+    if not workspace.is_dir():
+        return ""
+    if not (workspace / ".git").exists() and not _is_git_worktree(workspace):
+        return ""
+    result = subprocess.run(
+        ["git", "diff", "--no-ext-diff"],
+        cwd=workspace,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return ""
+    return result.stdout.strip()
+
+
+def _is_git_worktree(path: Path) -> bool:
+    result = subprocess.run(
+        ["git", "rev-parse", "--git-dir"],
+        cwd=path,
+        capture_output=True,
+        text=True,
+    )
+    return result.returncode == 0
+
+
+def _split_unified_diff_blocks(text: str) -> list[str]:
+    if not text.strip():
+        return []
+    return [
+        block.rstrip() + "\n"
+        for block in re.split(r"(?=^diff --git )", text.strip(), flags=re.MULTILINE)
+        if block.strip()
+    ]
+
+
+def _diff_block_path(block: str) -> str:
+    match = re.search(r"^diff --git a/(.+?) b/", block, flags=re.MULTILINE)
+    return match.group(1) if match else ""
+
+
+def merge_unified_diffs(*texts: str) -> str:
+    """Merge diff outputs; later blocks win for the same file path."""
+    blocks_by_path: dict[str, str] = {}
+    order: list[str] = []
+    for text in texts:
+        for block in _split_unified_diff_blocks(text):
+            path = _diff_block_path(block)
+            if not path:
+                continue
+            if path not in blocks_by_path:
+                order.append(path)
+            blocks_by_path[path] = block
+    if not blocks_by_path:
+        return ""
+    return "".join(blocks_by_path[path] for path in order)
+
+
 def extract_patch_diff(rows: list[tuple[str, str, int | None]]) -> tuple[str, str]:
     """Return (patch_text, source_description)."""
+    git_diffs: list[str] = []
     for cmd, output, _rc in rows:
         if "git diff" in cmd and output.strip().startswith("diff --git"):
-            return output.strip(), "git diff in trajectory"
+            git_diffs.append(output.strip())
 
+    if git_diffs:
+        merged = merge_unified_diffs(*git_diffs)
+        if merged:
+            source = "git diff in trajectory"
+            if len(git_diffs) > 1:
+                source = "git diff in trajectory (merged)"
+            return merged, source
+
+    edit_patches: list[str] = []
     for cmd, _output, _rc in rows:
         if is_edit_command(cmd):
             patch = _patch_from_edit_command(cmd)
             if patch:
-                return patch, "reconstructed from edit command"
+                edit_patches.append(patch)
+    if edit_patches:
+        merged = merge_unified_diffs(*edit_patches)
+        if merged:
+            source = "reconstructed from edit command"
+            if len(edit_patches) > 1:
+                source = "reconstructed from edit command(s)"
+            return merged, source
 
     return "", "not found"
 

@@ -8,6 +8,7 @@ from repopilot.trace.parse import (
     extract_pytest_log,
     infer_step_stage,
     is_edit_command,
+    merge_unified_diffs,
     parse_pytest_failures,
 )
 from repopilot.trace.parse import ToolCallRecord
@@ -249,3 +250,64 @@ def test_extract_patch_from_replace_command():
     assert "result += num.number" in patch
     assert "result *= num.number" in patch
     assert "sudoku" not in patch.lower()
+
+
+def test_merge_unified_diffs_keeps_latest_block_per_file():
+    first = (
+        "diff --git a/upstream/src/foo.py b/upstream/src/foo.py\n"
+        "--- a/upstream/src/foo.py\n"
+        "+++ b/upstream/src/foo.py\n"
+        "@@ -1 +1 @@\n"
+        "-old\n"
+        "+first\n"
+    )
+    second = (
+        "diff --git a/upstream/src/foo.py b/upstream/src/foo.py\n"
+        "--- a/upstream/src/foo.py\n"
+        "+++ b/upstream/src/foo.py\n"
+        "@@ -1 +1 @@\n"
+        "-old\n"
+        "+second\n"
+    )
+    other = (
+        "diff --git a/upstream/src/bar.py b/upstream/src/bar.py\n"
+        "--- a/upstream/src/bar.py\n"
+        "+++ b/upstream/src/bar.py\n"
+        "@@ -1 +1 @@\n"
+        "-x\n"
+        "+y\n"
+    )
+    merged = merge_unified_diffs(first, second, other)
+    assert merged.count("diff --git") == 2
+    assert "+second" in merged
+    assert "+first" not in merged
+    assert "upstream/src/bar.py" in merged
+
+
+def test_extract_patch_merges_multiple_git_diff_outputs():
+    tokenize = (
+        "diff --git a/upstream/src/minisweagent/run/expr/tokenize.py "
+        "b/upstream/src/minisweagent/run/expr/tokenize.py\n"
+        "--- a/upstream/src/minisweagent/run/expr/tokenize.py\n"
+        "+++ b/upstream/src/minisweagent/run/expr/tokenize.py\n"
+        "@@ -1 +1 @@\n"
+        "-bug\n"
+        "+fix-tokenize\n"
+    )
+    evaluate = (
+        "diff --git a/upstream/src/minisweagent/run/expr/evaluate.py "
+        "b/upstream/src/minisweagent/run/expr/evaluate.py\n"
+        "--- a/upstream/src/minisweagent/run/expr/evaluate.py\n"
+        "+++ b/upstream/src/minisweagent/run/expr/evaluate.py\n"
+        "@@ -1 +1 @@\n"
+        "-bug\n"
+        "+fix-evaluate\n"
+    )
+    rows = [
+        ("git diff -- tokenize.py", tokenize, 0),
+        ("git diff -- evaluate.py", evaluate, 0),
+    ]
+    patch, source = extract_patch_diff(rows)
+    assert source == "git diff in trajectory (merged)"
+    assert "fix-tokenize" in patch
+    assert "fix-evaluate" in patch

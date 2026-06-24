@@ -16,6 +16,8 @@ from repopilot.trace.parse import (
     iter_tool_rows,
     iter_trace_steps,
     load_trajectory,
+    merge_unified_diffs,
+    capture_workspace_diff,
     parse_pytest_failures,
 )
 from repopilot.trace.recorder import TraceArtifacts, TraceContext, build_trace_document, record_trace
@@ -29,6 +31,7 @@ __all__ = [
     "TraceStep",
     "build_failure_reason_md",
     "build_trace_document",
+    "capture_workspace_diff",
     "classify_command_stage",
     "classify_trace",
     "extract_files_touched",
@@ -40,6 +43,7 @@ __all__ = [
     "iter_tool_rows",
     "iter_trace_steps",
     "load_trajectory",
+    "merge_unified_diffs",
     "parse_pytest_failures",
     "record_trace",
 ]

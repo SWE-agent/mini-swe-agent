@@ -15,6 +15,7 @@ import yaml
 
 from repopilot.schema import TaskConfig, load_task
 from repopilot.trace import TraceContext, record_trace
+from repopilot.trace.parse import capture_workspace_diff
 
 
 @dataclass
@@ -112,7 +113,7 @@ def isolated_workspace(
         check=True,
     )
     if setup_patch is not None:
-        subprocess.run(["git", "apply", str(setup_patch)], cwd=worktree_path, check=True)
+        subprocess.run(["git", "apply", "--index", str(setup_patch)], cwd=worktree_path, check=True)
     try:
         yield worktree_path
     finally:
@@ -154,6 +155,7 @@ def extract_baseline_artifacts(
     *,
     issue_path: Path | None = None,
     project_root: Path | None = None,
+    workspace: Path | None = None,
 ) -> None:
     root = project_root or find_project_root()
     script = root / "scripts" / "extract_baseline.py"
@@ -163,6 +165,8 @@ def extract_baseline_artifacts(
     cmd = [sys.executable, str(script), str(trajectory_path), "-o", str(output_dir)]
     if issue_path is not None:
         cmd.extend(["--issue", str(issue_path)])
+    if workspace is not None:
+        cmd.extend(["--workspace", str(workspace)])
     subprocess.run(cmd, check=True)
 
 
@@ -248,6 +252,7 @@ def run_benchmark_task(
 
         test_exit_code = run_verification(task, workspace, verify_log)
         tests_passed = test_exit_code == 0
+        workspace_patch = capture_workspace_diff(workspace)
 
         if trajectory_path.is_file():
             extract_baseline_artifacts(
@@ -255,6 +260,7 @@ def run_benchmark_task(
                 output_dir,
                 issue_path=task.issue_path(),
                 project_root=root,
+                workspace=workspace,
             )
             record_trace(
                 trajectory_path,
@@ -269,6 +275,7 @@ def run_benchmark_task(
                     difficulty=task.eval.difficulty,
                     bug_count=task.eval.bug_count,
                     eval_tags=task.eval.tags or None,
+                    workspace_patch=workspace_patch,
                 ),
             )
 
