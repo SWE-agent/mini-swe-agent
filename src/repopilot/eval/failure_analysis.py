@@ -14,6 +14,7 @@ EXEMPLAR_CATEGORIES = ("tests_still_failing", "wrong_file_edited")
 BY_FIELDS = {
     "failure_mode": "by_failure_mode",
     "difficulty": "by_difficulty",
+    "bug_count": "by_bug_count",
     "failure_category": "by_category",
     "failure_stage": "by_stage",
 }
@@ -106,13 +107,16 @@ def tag_breakdown(records: list[RunRecord]) -> dict:
     base = failure_breakdown(records)
     by_failure_mode: Counter[str] = Counter()
     by_difficulty: Counter[str] = Counter()
+    by_bug_count: Counter[str] = Counter()
     mode_outcomes: dict[str, dict[str, int]] = defaultdict(lambda: {"success": 0, "failure": 0})
 
     for record in records:
         mode = record.failure_mode or "untagged"
         diff = record.difficulty or "untagged"
+        bugs = str(record.bug_count) if record.bug_count is not None else "untagged"
         by_failure_mode[mode] += 1
         by_difficulty[diff] += 1
+        by_bug_count[bugs] += 1
         bucket = "success" if record.outcome == "success" else "failure"
         mode_outcomes[mode][bucket] += 1
 
@@ -120,6 +124,7 @@ def tag_breakdown(records: list[RunRecord]) -> dict:
         **base,
         "by_failure_mode": dict(sorted(by_failure_mode.items())),
         "by_difficulty": dict(sorted(by_difficulty.items())),
+        "by_bug_count": dict(sorted(by_bug_count.items(), key=lambda kv: (kv[0] == "untagged", kv[0]))),
         "outcome_by_failure_mode": {k: dict(v) for k, v in sorted(mode_outcomes.items())},
         "category_exemplars": build_category_exemplars(records),
     }
@@ -158,6 +163,10 @@ def render_tag_breakdown(breakdown: dict, *, by: str | None = None) -> str:
     lines.extend(["", "## By difficulty (task tag)", ""])
     for diff, count in breakdown.get("by_difficulty", {}).items():
         lines.append(f"- `{diff}`: {count}")
+    if breakdown.get("by_bug_count"):
+        lines.extend(["", "## By bug_count (multi-bug tasks)", ""])
+        for bugs, count in breakdown["by_bug_count"].items():
+            lines.append(f"- `{bugs}`: {count}")
 
     lines.extend(_render_exemplar_sections(breakdown))
 
@@ -178,6 +187,7 @@ def _render_breakdown_by_field(breakdown: dict, by: str) -> str:
     title = {
         "failure_mode": "Failure mode (task tag)",
         "difficulty": "Difficulty (task tag)",
+        "bug_count": "Bug count (multi-bug tasks)",
         "failure_category": "Failure category",
         "failure_stage": "Failure stage",
     }[by]

@@ -46,3 +46,45 @@ def test_repo_requires_path_or_url_not_both():
 def test_discover_tasks_includes_task_001():
     tasks = discover_tasks(BENCHMARKS)
     assert TASK_001 in tasks
+
+
+@pytest.mark.parametrize(
+    "task_id,failure_mode",
+    [
+        ("task_006_sudoku_logic", "logic"),
+        ("task_007_eval_import", "import_path"),
+        ("task_008_expr_divzero", "wrong_condition"),
+        ("task_009_serialize_none", "null_handling"),
+        ("task_010_expr_whitespace", "logic"),
+    ],
+)
+def test_load_new_benchmark_tasks(task_id, failure_mode):
+    task_dir = BENCHMARKS / task_id
+    task = load_task(task_dir)
+    assert task.task_id == task_id
+    assert task.eval.failure_mode == failure_mode
+    assert task.setup_patch_path().is_file()
+
+
+def test_discover_tasks_count():
+    tasks = discover_tasks(BENCHMARKS)
+    assert len(tasks) == 14
+
+
+@pytest.mark.parametrize(
+    "task_id,bug_count",
+    [
+        ("task_011_sudoku_multi3", 3),
+        ("task_012_expr_multi4", 4),
+        ("task_013_sudoku_multi5", 5),
+        ("task_014_expr_multi5", 5),
+    ],
+)
+def test_load_multi_bug_tasks(task_id, bug_count):
+    task_dir = BENCHMARKS / task_id
+    task = load_task(task_dir)
+    assert task.task_id == task_id
+    assert task.eval.failure_mode == "composite"
+    assert task.eval.bug_count == bug_count
+    assert "multi_bug" in task.eval.tags
+    assert task.setup_patch_path().is_file()

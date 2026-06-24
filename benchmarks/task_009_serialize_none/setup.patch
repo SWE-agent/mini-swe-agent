@@ -1,0 +1,13 @@
+diff --git a/upstream/src/minisweagent/utils/serialize.py b/upstream/src/minisweagent/utils/serialize.py
+index ccd5947..44fcd5e 100644
+--- a/upstream/src/minisweagent/utils/serialize.py
++++ b/upstream/src/minisweagent/utils/serialize.py
+@@ -17,6 +17,8 @@ def recursive_merge(*dictionaries: dict | None) -> dict:
+         if d is None:
+             continue
+         for key, value in d.items():
++            if value is None:
++                continue  # BUG: None is a valid merge value
+             if value is UNSET:
+                 continue
+             if key in result and isinstance(result[key], dict) and isinstance(value, dict):

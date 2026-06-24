@@ -1,0 +1,13 @@
+diff --git a/upstream/src/minisweagent/run/expr/evaluate.py b/upstream/src/minisweagent/run/expr/evaluate.py
+index 8a1b2c3..d4e5f6a 100644
+--- a/upstream/src/minisweagent/run/expr/evaluate.py
++++ b/upstream/src/minisweagent/run/expr/evaluate.py
+@@ -31,7 +31,7 @@ def evaluate(tokens: list[Token]) -> float:
+         elif op.operator == "*":
+             result *= num.number
+         elif op.operator == "/":
+-            if num.number == 0:
++            if result == 0:  # BUG: should check divisor num.number
+                 raise EvalError("division by zero")
+             result /= num.number
+ 

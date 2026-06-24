@@ -1,0 +1,11 @@
+diff --git a/upstream/src/minisweagent/run/eval_module.py b/upstream/src/minisweagent/run/eval_module.py
+index 3e9a1b2..c4f8e91 100644
+--- a/upstream/src/minisweagent/run/eval_module.py
++++ b/upstream/src/minisweagent/run/eval_module.py
+@@ -1,5 +1,5 @@
+ """Backward-compatible facade for the split ``expr`` package."""
+ 
+-from minisweagent.run.expr import EvalError, Token, eval_expr, evaluate, tokenize
++from minisweagent.run._expr_legacy import EvalError, Token, eval_expr, evaluate, tokenize  # BUG: wrong module path
+ 
+ __all__ = ["EvalError", "Token", "eval_expr", "evaluate", "tokenize"]

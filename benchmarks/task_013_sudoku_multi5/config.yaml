@@ -1,0 +1,28 @@
+task_id: task_013_sudoku_multi5
+description: Fix five independent bugs in sudoku game logic
+
+repo:
+  path: .
+  base_commit: "179e790"
+  setup_patch: setup.patch
+
+eval:
+  failure_mode: composite
+  difficulty: single_file
+  bug_count: 5
+  tags:
+    - multi_bug
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/run/test_sudoku.py -v
+expected_behavior: All sudoku tests pass after all five injected bugs are fixed
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.75"
+  output_trajectory: runs/{task_id}/trajectory.traj.json

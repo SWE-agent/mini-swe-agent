@@ -41,6 +41,7 @@ class RunRecord:
 
     failure_mode: str | None = None
     difficulty: str | None = None
+    bug_count: int | None = None
     eval_tags: list[str] = field(default_factory=list)
 
     pytest_runs: list[dict] = field(default_factory=list)
@@ -183,6 +184,7 @@ def load_run_record(run_dir: Path, *, run_label: str | None = None) -> RunRecord
         failure_message=trace.get("failure_message") if schema_v >= 2.0 else None,
         failure_mode=task_tags.get("failure_mode"),
         difficulty=task_tags.get("difficulty"),
+        bug_count=task_tags.get("bug_count"),
         eval_tags=list(task_tags.get("tags") or []),
         pytest_runs=list(trace.get("pytest_runs") or []),
         steps=list(trace.get("steps") or []),

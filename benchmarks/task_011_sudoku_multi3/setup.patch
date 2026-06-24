@@ -1,0 +1,31 @@
+diff --git a/upstream/src/minisweagent/run/sudoku.py b/upstream/src/minisweagent/run/sudoku.py
+index 74e1ca1..f25f7ee 100644
+--- a/upstream/src/minisweagent/run/sudoku.py
++++ b/upstream/src/minisweagent/run/sudoku.py
+@@ -70,7 +70,7 @@ class SudokuGame:
+         current = self.board[row][col]
+         self.board[row][col] = 0
+         valid = all(self.board[row][c] != value for c in range(9))
+-        valid = valid and all(self.board[r][col] != value for r in range(9))
++        valid = valid and all(self.board[r][row] != value for r in range(9))  # BUG1: wrong column index
+         start_row, start_col = (row // 3) * 3, (col // 3) * 3
+         valid = valid and all(self.board[r][c] != value for r in range(start_row, start_row + 3) for c in range(start_col, start_col + 3))
+         self.board[row][col] = current
+@@ -103,7 +103,7 @@ class SudokuGame:
+ 
+     @staticmethod
+     def is_valid_group(values: list[int]) -> bool:
+-        return sorted(values) == list(range(1, 10))
++        return sorted(values) == list(range(1, 9))  # BUG3: incomplete group check
+ 
+     def hint(self) -> tuple[int, int, int] | None:
+         empties = [(r, c) for r in range(9) for c in range(9) if self.board[r][c] == 0]
+@@ -111,7 +111,7 @@ class SudokuGame:
+         for row, col in empties:
+             for value in range(1, 10):
+                 if self.is_valid_move(row, col, value):
+-                    return row, col, value
++                    return row, col, value + 1  # BUG2: off-by-one hint
+         return None
+ 
+ 

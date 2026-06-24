@@ -1,0 +1,25 @@
+task_id: task_008_expr_divzero
+description: Fix division-by-zero guard in expr evaluator
+
+repo:
+  path: .
+  base_commit: "1e030a2"
+  setup_patch: setup.patch
+
+eval:
+  failure_mode: wrong_condition
+  difficulty: single_file
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/run/test_expr.py -v
+expected_behavior: All expr tests pass after fix
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.50"
+  output_trajectory: runs/{task_id}/trajectory.traj.json

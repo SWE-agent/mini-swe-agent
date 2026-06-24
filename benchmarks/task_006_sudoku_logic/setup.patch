@@ -1,0 +1,13 @@
+diff --git a/upstream/src/minisweagent/run/sudoku.py b/upstream/src/minisweagent/run/sudoku.py
+index 74e1ca1..b8c2d11 100644
+--- a/upstream/src/minisweagent/run/sudoku.py
++++ b/upstream/src/minisweagent/run/sudoku.py
+@@ -70,7 +70,7 @@ class SudokuGame:
+         current = self.board[row][col]
+         self.board[row][col] = 0
+         valid = all(self.board[row][c] != value for c in range(9))
+-        valid = valid and all(self.board[r][col] != value for r in range(9))
++        valid = valid and all(self.board[r][row] != value for r in range(9))  # BUG: uses row as column index
+         start_row, start_col = (row // 3) * 3, (col // 3) * 3
+         valid = valid and all(self.board[r][c] != value for r in range(start_row, start_row + 3) for c in range(start_col, start_col + 3))
+         self.board[row][col] = current

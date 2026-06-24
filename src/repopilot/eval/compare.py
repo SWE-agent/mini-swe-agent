@@ -27,6 +27,7 @@ def _comparison_row(record: RunRecord, traj: dict) -> dict:
         "tests_passed": record.tests_passed,
         "failure_mode": record.failure_mode or "",
         "difficulty": record.difficulty or "",
+        "bug_count": record.bug_count if record.bug_count is not None else "",
         "steps": record.step_count,
         "steps_to_first_edit": traj["steps_to_first_edit"] or "",
         "tests_before_edit": traj["tests_before_edit"],

@@ -1,0 +1,42 @@
+diff --git a/upstream/src/minisweagent/run/expr/__init__.py b/upstream/src/minisweagent/run/expr/__init__.py
+index 13290f3..273b235 100644
+--- a/upstream/src/minisweagent/run/expr/__init__.py
++++ b/upstream/src/minisweagent/run/expr/__init__.py
+@@ -7,7 +7,7 @@ from minisweagent.run.expr.tokenize import Token, tokenize
+ 
+ def eval_expr(expr: str) -> float:
+     """Evaluate a simple math expression and return the result."""
+-    expr = expr.replace(" ", "")
++    expr = expr.strip()  # BUG1
+     if not expr:
+         raise EvalError("empty expression")
+ 
+diff --git a/upstream/src/minisweagent/run/expr/evaluate.py b/upstream/src/minisweagent/run/expr/evaluate.py
+index 2c791e2..699354c 100644
+--- a/upstream/src/minisweagent/run/expr/evaluate.py
++++ b/upstream/src/minisweagent/run/expr/evaluate.py
+@@ -29,9 +29,9 @@ def evaluate(tokens: list[Token]) -> float:
+         elif op.operator == "-":
+             result -= num.number
+         elif op.operator == "*":
+-            result *= num.number
++            result += num.number  # BUG4
+         elif op.operator == "/":
+-            if num.number == 0:
++            if result == 0:  # BUG2
+                 raise EvalError("division by zero")
+             result /= num.number
+ 
+diff --git a/upstream/src/minisweagent/run/expr/tokenize.py b/upstream/src/minisweagent/run/expr/tokenize.py
+index 410195b..1f02007 100644
+--- a/upstream/src/minisweagent/run/expr/tokenize.py
++++ b/upstream/src/minisweagent/run/expr/tokenize.py
+@@ -29,7 +29,7 @@ def tokenize(expr: str) -> list[Token]:
+             tokens.append(Token(is_number=True, number=num))
+             i = j
+         elif ch in "+-*/":
+-            tokens.append(Token(is_number=False, operator=ch))
++            tokens.append(Token(is_number=False, operator="mul" if ch == "*" else ch))  # BUG3
+             i += 1
+         else:
+             raise EvalError(f"invalid character: {ch}")

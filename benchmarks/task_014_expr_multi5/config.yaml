@@ -1,0 +1,29 @@
+task_id: task_014_expr_multi5
+description: Fix five independent bugs across the expr package
+
+repo:
+  path: .
+  base_commit: "1e030a2"
+  setup_patch: setup.patch
+
+eval:
+  failure_mode: composite
+  difficulty: multi_file
+  bug_count: 5
+  tags:
+    - multi_bug
+    - expr_package
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/run/test_expr.py -v
+expected_behavior: All expr tests pass after all five injected bugs are fixed
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.75"
+  output_trajectory: runs/{task_id}/trajectory.traj.json

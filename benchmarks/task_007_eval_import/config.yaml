@@ -1,0 +1,28 @@
+task_id: task_007_eval_import
+description: Fix broken eval_module import path after expr package split
+
+repo:
+  path: .
+  base_commit: "61e468b"
+  setup_patch: setup.patch
+
+eval:
+  failure_mode: import_path
+  difficulty: multi_file
+  tags:
+    - facade
+    - expr_package
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/run/test_eval_module.py -v
+expected_behavior: All eval_module tests pass after fix
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.50"
+  output_trajectory: runs/{task_id}/trajectory.traj.json

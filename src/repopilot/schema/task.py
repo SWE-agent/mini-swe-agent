@@ -26,6 +26,7 @@ class RepoConfig(BaseModel):
 class EvalTags(BaseModel):
     failure_mode: str | None = None
     difficulty: str | None = None
+    bug_count: int | None = None
     expected_repair_rounds: int | None = None
     tags: list[str] = Field(default_factory=list)
 

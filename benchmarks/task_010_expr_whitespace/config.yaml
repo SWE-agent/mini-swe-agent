@@ -1,0 +1,28 @@
+task_id: task_010_expr_whitespace
+description: Fix whitespace normalization in expr evaluator
+
+repo:
+  path: .
+  base_commit: "1e030a2"
+  setup_patch: setup.patch
+
+eval:
+  failure_mode: logic
+  difficulty: multi_file
+  tags:
+    - expr_package
+    - normalization
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/run/test_expr.py -v
+expected_behavior: All expr tests pass after fix
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.50"
+  output_trajectory: runs/{task_id}/trajectory.traj.json

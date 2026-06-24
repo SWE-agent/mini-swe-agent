@@ -267,6 +267,7 @@ def run_benchmark_task(
                     agent_mode=task.agent.mode,
                     failure_mode=task.eval.failure_mode,
                     difficulty=task.eval.difficulty,
+                    bug_count=task.eval.bug_count,
                     eval_tags=task.eval.tags or None,
                 ),
             )

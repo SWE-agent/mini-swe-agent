@@ -1,0 +1,13 @@
+diff --git a/upstream/src/minisweagent/run/expr/__init__.py b/upstream/src/minisweagent/run/expr/__init__.py
+index 13290f3..e830fde 100644
+--- a/upstream/src/minisweagent/run/expr/__init__.py
++++ b/upstream/src/minisweagent/run/expr/__init__.py
+@@ -7,7 +7,7 @@ from minisweagent.run.expr.tokenize import Token, tokenize
+ 
+ def eval_expr(expr: str) -> float:
+     """Evaluate a simple math expression and return the result."""
+-    expr = expr.replace(" ", "")
++    expr = expr.strip()  # BUG: internal spaces remain; tokenize rejects them
+     if not expr:
+         raise EvalError("empty expression")
+ 

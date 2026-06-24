@@ -1,0 +1,48 @@
+diff --git a/upstream/src/minisweagent/run/sudoku.py b/upstream/src/minisweagent/run/sudoku.py
+index 74e1ca1..965ba03 100644
+--- a/upstream/src/minisweagent/run/sudoku.py
++++ b/upstream/src/minisweagent/run/sudoku.py
+@@ -70,22 +70,18 @@ class SudokuGame:
+         current = self.board[row][col]
+         self.board[row][col] = 0
+         valid = all(self.board[row][c] != value for c in range(9))
+-        valid = valid and all(self.board[r][col] != value for r in range(9))
++        valid = valid and all(self.board[r][row] != value for r in range(9))  # BUG1
+         start_row, start_col = (row // 3) * 3, (col // 3) * 3
+         valid = valid and all(self.board[r][c] != value for r in range(start_row, start_row + 3) for c in range(start_col, start_col + 3))
+         self.board[row][col] = current
+         return valid
+ 
+     def set_value(self, row: int, col: int, value: int) -> bool:
+-        if not self.is_valid_move(row, col, value):
+-            return False
+-        self.board[row][col] = value
++        self.board[row][col] = value  # BUG5
+         return True
+ 
+     def clear_value(self, row: int, col: int) -> bool:
+-        if (row, col) in self.fixed:
+-            return False
+-        self.board[row][col] = 0
++        self.board[row][col] = 0  # BUG4
+         return True
+ 
+     def is_complete(self) -> bool:
+@@ -103,7 +99,7 @@ class SudokuGame:
+ 
+     @staticmethod
+     def is_valid_group(values: list[int]) -> bool:
+-        return sorted(values) == list(range(1, 10))
++        return sorted(values) == list(range(1, 9))  # BUG3
+ 
+     def hint(self) -> tuple[int, int, int] | None:
+         empties = [(r, c) for r in range(9) for c in range(9) if self.board[r][c] == 0]
+@@ -111,7 +107,7 @@ class SudokuGame:
+         for row, col in empties:
+             for value in range(1, 10):
+                 if self.is_valid_move(row, col, value):
+-                    return row, col, value
++                    return row, col, value + 1  # BUG2
+         return None
+ 
+ 

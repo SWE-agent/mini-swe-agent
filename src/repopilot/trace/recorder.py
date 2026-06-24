@@ -34,6 +34,7 @@ class TraceContext:
     agent_mode: str = "baseline"
     failure_mode: str | None = None
     difficulty: str | None = None
+    bug_count: int | None = None
     eval_tags: list[str] | None = None
 
 
@@ -134,6 +135,8 @@ def build_trace_document(
         task_tags["failure_mode"] = ctx.failure_mode
     if ctx.difficulty:
         task_tags["difficulty"] = ctx.difficulty
+    if ctx.bug_count is not None:
+        task_tags["bug_count"] = ctx.bug_count
     if ctx.eval_tags:
         task_tags["tags"] = list(ctx.eval_tags)
 
