@@ -4,12 +4,83 @@ from __future__ import annotations
 
 from typing import Any
 
+from repopilot.trace.parse import extract_files_touched, is_edit_command, parse_pytest_failures
+
+
+def _normalize_path(path: str) -> str:
+    return path.replace("\\", "/").lstrip("./")
+
+
+def _module_basename(path: str) -> str:
+    name = path.rsplit("/", 1)[-1]
+    if name.startswith("test_") and name.endswith(".py"):
+        return name[5:]
+    return name
+
+
+def _paths_related(left: str, right: str) -> bool:
+    left = _normalize_path(left)
+    right = _normalize_path(right)
+    if left == right:
+        return True
+    return _module_basename(left) == _module_basename(right)
+
+
+def _collect_edited_files(steps: list[dict]) -> list[str]:
+    files: list[str] = []
+    seen: set[str] = set()
+    for step in steps:
+        for tc in step.get("tool_calls", []):
+            if not is_edit_command(tc.get("command", "")):
+                continue
+            candidates = list(step.get("files_touched") or [])
+            candidates.extend(extract_files_touched(tc.get("command", "")))
+            for path in candidates:
+                if path not in seen:
+                    seen.add(path)
+                    files.append(path)
+    return files
+
+
+def _collect_failing_source_files(pytest_runs: list[dict]) -> list[str]:
+    files: list[str] = []
+    seen: set[str] = set()
+    for run in pytest_runs:
+        if run.get("returncode") in (None, 0):
+            continue
+        for failure in run.get("failed_tests") or []:
+            file_line = failure.get("file_line") if isinstance(failure, dict) else ""
+            if file_line:
+                source = file_line.split(":")[0]
+                if source not in seen:
+                    seen.add(source)
+                    files.append(source)
+        log = run.get("log") or ""
+        if log:
+            for failure in parse_pytest_failures(log):
+                if failure.file_line:
+                    source = failure.file_line.split(":")[0]
+                    if source not in seen:
+                        seen.add(source)
+                        files.append(source)
+    return files
+
+
+def detect_wrong_file_edited(*, steps: list[dict], pytest_runs: list[dict]) -> bool:
+    """True when edits target files unrelated to failing test source locations."""
+    edited = _collect_edited_files(steps)
+    failing = _collect_failing_source_files(pytest_runs)
+    if not edited or not failing:
+        return False
+    return not any(
+        _paths_related(edit_path, fail_path) for edit_path in edited for fail_path in failing
+    )
+
 
 def _has_edit_command(steps: list[dict]) -> bool:
     for step in steps:
         for tc in step.get("tool_calls", []):
-            cmd = tc.get("command", "")
-            if any(token in cmd for token in ("path.write_text", "sed -i", "git apply", "patch")):
+            if is_edit_command(tc.get("command", "")):
                 return True
     return False
 
@@ -102,10 +173,19 @@ def classify_trace(
         message = summary or "Tests still failing"
         if failed_tests:
             message = f"{summary or 'Tests still failing'} — failed: {', '.join(failed_tests[:3])}"
+        category = "tests_still_failing"
+        if has_edit and detect_wrong_file_edited(steps=steps, pytest_runs=pytest_runs):
+            category = "wrong_file_edited"
+            edited = _collect_edited_files(steps)
+            failing = _collect_failing_source_files(pytest_runs)
+            message = (
+                f"Edited {', '.join(edited[:2])} but failing tests point to "
+                f"{', '.join(failing[:2])}"
+            )
         result.update(
             {
-                "failure_category": "tests_still_failing",
-                "failure_stage": "test",
+                "failure_category": category,
+                "failure_stage": "edit" if category == "wrong_file_edited" else "test",
                 "failure_message": message,
             }
         )

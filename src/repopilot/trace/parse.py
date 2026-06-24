@@ -155,11 +155,30 @@ def extract_pytest_sections(text: str) -> list[str]:
     return []
 
 
+def is_edit_command(command: str) -> bool:
+    """Return True if a shell command likely modifies source files."""
+    if not command:
+        return False
+    return any(
+        token in command
+        for token in (
+            "path.write_text",
+            "p.write_text",
+            ".write_text(",
+            ".replace(old",
+            "replace(old",
+            "sed -i",
+            "git apply",
+            "patch -p",
+        )
+    )
+
+
 def classify_command_stage(command: str) -> str:
     cmd = command.lower()
     if "pytest" in cmd:
         return "test"
-    if any(token in command for token in ("path.write_text", "sed -i", "git apply")):
+    if is_edit_command(command):
         return "edit"
     if "git diff" in cmd or "submit" in cmd:
         return "submit"
@@ -280,10 +299,7 @@ def extract_patch_diff(rows: list[tuple[str, str, int | None]]) -> tuple[str, st
             return output.strip(), "git diff in trajectory"
 
     for cmd, _output, _rc in rows:
-        if any(
-            token in cmd
-            for token in ("path.write_text", "p.write_text", ".replace(old, new)", "sed -i")
-        ):
+        if is_edit_command(cmd):
             patch = _patch_from_edit_command(cmd)
             if patch:
                 return patch, "reconstructed from edit command"

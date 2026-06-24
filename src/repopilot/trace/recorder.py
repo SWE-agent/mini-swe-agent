@@ -16,6 +16,7 @@ from repopilot.trace.parse import (
     extract_viewed_files,
     infer_step_stage,
     extract_files_touched,
+    is_edit_command,
     iter_tool_rows,
     iter_trace_steps,
     load_trajectory,
@@ -49,11 +50,7 @@ def _count_repair_rounds(pytest_runs: list[PytestRun], rows: list[tuple[str, str
     failed_runs = sum(1 for run in pytest_runs if run.returncode not in (None, 0))
     if failed_runs == 0:
         return 0
-    edit_commands = sum(
-        1
-        for cmd, _out, _rc in rows
-        if any(token in cmd for token in ("path.write_text", "sed -i", "git apply", "patch"))
-    )
+    edit_commands = sum(1 for cmd, _out, _rc in rows if is_edit_command(cmd))
     return max(edit_commands, 1 if failed_runs else 0)
 
 

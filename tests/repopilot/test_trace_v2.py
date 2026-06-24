@@ -7,6 +7,7 @@ from repopilot.trace.parse import (
     extract_patch_diff,
     extract_pytest_log,
     infer_step_stage,
+    is_edit_command,
     parse_pytest_failures,
 )
 from repopilot.trace.parse import ToolCallRecord
@@ -29,12 +30,30 @@ upstream/tests/run/test_eval_module.py:9: AssertionError
 ========================= 2 failed, 3 passed in 0.02s ==========================
 """
 
+TASK_003_FIX_CMD = """\
+python - <<'PY'
+from pathlib import Path
+p = Path('upstream/src/minisweagent/run/expr/evaluate.py')
+text = p.read_text()
+old = '        elif op.operator == \"*\":\\n            result += num.number  # BUG: should multiply, not add\\n'
+new = '        elif op.operator == \"*\":\\n            result *= num.number\\n'
+p.write_text(text.replace(old, new))
+PY
+"""
+
 
 def test_classify_command_stage():
     assert classify_command_stage("python -m pytest tests/ -v") == "test"
     assert classify_command_stage("path.write_text('x')") == "edit"
+    assert classify_command_stage(TASK_003_FIX_CMD) == "edit"
     assert classify_command_stage("cat upstream/src/foo.py") == "read"
     assert classify_command_stage("git diff") == "submit"
+
+
+def test_is_edit_command_detects_heredoc_replace():
+    assert is_edit_command(TASK_003_FIX_CMD)
+    assert not is_edit_command("pytest upstream/tests/run/test_expr.py -v")
+    assert not is_edit_command("git diff")
 
 
 def test_infer_step_stage():
@@ -94,6 +113,85 @@ def test_classify_trace_tests_still_failing():
     assert result["failure_stage"] == "test"
 
 
+def test_classify_trace_wrong_file_edited():
+    result = classify_trace(
+        steps=[
+            {"step": 1, "tool_calls": [{"command": "pytest -v", "returncode": 1}]},
+            {
+                "step": 2,
+                "tool_calls": [
+                    {
+                        "command": "p = Path('upstream/src/minisweagent/run/expr/tokenize.py'); p.write_text('x')",
+                        "returncode": 0,
+                    }
+                ],
+                "files_touched": ["upstream/src/minisweagent/run/expr/tokenize.py"],
+            },
+            {"step": 3, "tool_calls": [{"command": "pytest -v", "returncode": 1}]},
+        ],
+        pytest_runs=[
+            {
+                "phase": "pre_fix",
+                "returncode": 1,
+                "summary": "1 failed",
+                "log": SAMPLE_PYTEST_LOG,
+                "failed_tests": [
+                    {
+                        "test": "test_eval_basic_arithmetic",
+                        "file_line": "upstream/tests/run/test_eval_module.py:9",
+                    }
+                ],
+            },
+            {"phase": "post_fix", "returncode": 1, "summary": "1 failed", "log": SAMPLE_PYTEST_LOG},
+        ],
+        patch={"text": "diff --git", "source": "test"},
+        exit_status="Submitted",
+        tests_passed=False,
+    )
+    assert result["failure_category"] == "wrong_file_edited"
+    assert result["failure_stage"] == "edit"
+    assert "tokenize.py" in result["failure_message"]
+
+
+def test_classify_trace_replace_edit_not_exited_early():
+    """Heredoc replace edits should not be classified as agent_exited_early."""
+    result = classify_trace(
+        steps=[
+            {"step": 1, "tool_calls": [{"command": "pytest -v", "returncode": 1}]},
+            {"step": 2, "tool_calls": [{"command": TASK_003_FIX_CMD, "returncode": 0}]},
+            {"step": 3, "tool_calls": [{"command": "git diff", "returncode": 0}]},
+            {"step": 4, "tool_calls": [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT", "returncode": -1}]},
+        ],
+        pytest_runs=[
+            {"phase": "pre_fix", "returncode": 1, "summary": "2 failed"},
+            {"phase": "post_fix", "returncode": 0, "summary": "5 passed"},
+        ],
+        patch={"text": "diff --git a/upstream/foo.py", "source": "test"},
+        exit_status="Submitted",
+        tests_passed=True,
+    )
+    assert result["outcome"] == "success"
+    assert result["failure_category"] is None
+
+
+def test_classify_trace_submitted_with_replace_edit_unknown_not_early():
+    """Without verify context, replace edits must not trigger agent_exited_early."""
+    result = classify_trace(
+        steps=[
+            {"step": 2, "tool_calls": [{"command": TASK_003_FIX_CMD, "returncode": 0}]},
+            {"step": 4, "tool_calls": [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT", "returncode": -1}]},
+        ],
+        pytest_runs=[
+            {"phase": "pre_fix", "returncode": 1, "summary": "2 failed"},
+            {"phase": "post_fix", "returncode": 0, "summary": "5 passed"},
+        ],
+        patch={"text": "", "source": "not found"},
+        exit_status="Submitted",
+        tests_passed=None,
+    )
+    assert result["failure_category"] != "agent_exited_early"
+
+
 def test_build_failure_reason_md():
     trace = {
         "task_id": "task_test",
@@ -142,18 +240,6 @@ def test_extract_pytest_log_includes_failures_section():
     assert "test_eval_basic_arithmetic" in log
     assert "2 failed, 3 passed" in log
     assert not log.startswith("patched")
-
-
-TASK_003_FIX_CMD = """\
-python - <<'PY'
-from pathlib import Path
-p = Path('upstream/src/minisweagent/run/expr/evaluate.py')
-text = p.read_text()
-old = '        elif op.operator == \"*\":\\n            result += num.number  # BUG: should multiply, not add\\n'
-new = '        elif op.operator == \"*\":\\n            result *= num.number\\n'
-p.write_text(text.replace(old, new))
-PY
-"""
 
 
 def test_extract_patch_from_replace_command():

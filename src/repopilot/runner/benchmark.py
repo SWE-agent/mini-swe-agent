@@ -6,7 +6,7 @@ from pathlib import Path
 
 import typer
 
-from repopilot.eval import write_eval_summary
+from repopilot.eval import write_eval_compare, write_eval_summary
 from repopilot.runner.run_task import find_project_root, resolve_task_dir, run_benchmark_task
 from repopilot.trace import TraceContext, record_trace
 
@@ -104,6 +104,71 @@ def eval_summary(
     typer.echo("  eval_report.md")
     typer.echo("  metrics.json")
     typer.echo("  failure_breakdown.md")
+    typer.echo("  comparison_table.csv")
+    typer.echo(f"  {runs / 'eval' / 'compare' / 'comparison_report.md'}")
+    typer.echo("  ../eval/{task_id}/trajectory_analysis.md (per task)")
+
+
+@eval_app.command("compare")
+def eval_compare(
+    task: str | None = typer.Option(None, "--task", help="Filter to a single task_id"),
+    runs_dir: Path = typer.Option(
+        Path("runs"),
+        "--runs-dir",
+        help="Directory containing per-task run outputs",
+    ),
+    output_dir: Path | None = typer.Option(
+        None,
+        "-o",
+        "--output-dir",
+        help="Output directory (default: runs/eval/compare)",
+    ),
+) -> None:
+    """Compare tasks on steps, cost, and files touched."""
+    root = find_project_root().resolve()
+    runs = (runs_dir if runs_dir.is_absolute() else root / runs_dir).resolve()
+    out = write_eval_compare(runs, task_id=task, output_dir=output_dir)
+    typer.echo(f"Wrote comparison to {out}/")
+    typer.echo("  comparison_report.md")
+    typer.echo("  comparison_table.csv")
+
+
+@eval_app.command("breakdown")
+def eval_breakdown(
+    by: str | None = typer.Option(
+        None,
+        "--by",
+        help="Group by: failure_mode, difficulty, failure_category, failure_stage",
+    ),
+    runs_dir: Path = typer.Option(
+        Path("runs"),
+        "--runs-dir",
+        help="Directory containing per-task run outputs",
+    ),
+    output_dir: Path | None = typer.Option(
+        None,
+        "-o",
+        "--output-dir",
+        help="Output directory (default: runs/eval/summary)",
+    ),
+) -> None:
+    """Regenerate failure breakdown with failure_mode / difficulty tags."""
+    root = find_project_root().resolve()
+    runs = (runs_dir if runs_dir.is_absolute() else root / runs_dir).resolve()
+    out_dir = (output_dir or runs / "eval" / "summary").resolve()
+    out_dir.mkdir(parents=True, exist_ok=True)
+    from repopilot.eval.failure_analysis import BY_FIELDS, render_tag_breakdown, tag_breakdown
+    from repopilot.eval.loader import load_all_runs
+
+    if by and by not in BY_FIELDS:
+        allowed = ", ".join(sorted(BY_FIELDS))
+        raise typer.BadParameter(f"Unknown --by {by!r}; choose from: {allowed}")
+
+    records = load_all_runs(runs)
+    if not records:
+        raise typer.BadParameter(f"No runs with trace.json found under {runs}")
+    (out_dir / "failure_breakdown.md").write_text(render_tag_breakdown(tag_breakdown(records), by=by))
+    typer.echo(f"Wrote {out_dir / 'failure_breakdown.md'}")
 
 
 if __name__ == "__main__":

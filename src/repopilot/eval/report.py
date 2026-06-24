@@ -6,8 +6,11 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from repopilot.eval.loader import RunRecord, load_all_runs
-from repopilot.eval.metrics import aggregate_runs, failure_breakdown, run_records_table
+from repopilot.eval.compare import DEFAULT_PAIRS, comparison_rows, render_comparison_report, write_comparison_csv
+from repopilot.eval.failure_analysis import render_tag_breakdown, tag_breakdown
+from repopilot.eval.loader import RunRecord, load_all_runs, load_task_runs
+from repopilot.eval.metrics import aggregate_runs, run_records_table
+from repopilot.eval.trajectory_analysis import render_trajectory_analysis
 
 
 def _render_eval_report(
@@ -35,7 +38,14 @@ def _render_eval_report(
     ]
 
     if metrics.get("by_agent_mode"):
-        lines.extend(["## By agent mode", "", "| Mode | Runs | Success | Verify pass | Avg cost | Avg steps |", "|------|-----:|--------:|------------:|---------:|----------:|"])
+        lines.extend(
+            [
+                "## By agent mode",
+                "",
+                "| Mode | Runs | Success | Verify pass | Avg cost | Avg steps |",
+                "|------|-----:|--------:|------------:|---------:|----------:|",
+            ]
+        )
         for mode, stats in metrics["by_agent_mode"].items():
             lines.append(
                 f"| {mode} | {stats['runs']} | {stats['success_rate']}% | {stats['verify_pass_rate']}% | "
@@ -43,7 +53,14 @@ def _render_eval_report(
             )
         lines.append("")
 
-    lines.extend(["## Run table", "", "| task_id | mode | outcome | verify | failure | stage | step | cost |", "|---------|------|---------|--------|---------|-------|-----:|-----:|"])
+    lines.extend(
+        [
+            "## Run table",
+            "",
+            "| task_id | mode | outcome | verify | failure | stage | step | cost |",
+            "|---------|------|---------|--------|---------|-------|-----:|-----:|",
+        ]
+    )
     for row in run_records_table(records):
         verify = "yes" if row["tests_passed"] is True else "no" if row["tests_passed"] is False else "?"
         lines.append(
@@ -64,6 +81,15 @@ def _render_eval_report(
             lines.append(f"- `{stage}`: {count}")
         lines.append("")
 
+    if breakdown.get("by_failure_mode"):
+        lines.extend(["## By task tag (failure_mode)", ""])
+        for mode, count in breakdown["by_failure_mode"].items():
+            outcomes = breakdown.get("outcome_by_failure_mode", {}).get(mode, {})
+            lines.append(
+                f"- `{mode}`: {count} — {outcomes.get('success', 0)} success, {outcomes.get('failure', 0)} failure"
+            )
+        lines.append("")
+
     lines.extend(
         [
             "## Artifacts",
@@ -72,45 +98,14 @@ def _render_eval_report(
             "|------|-------------|",
             "| `eval_report.md` | This summary |",
             "| `metrics.json` | Machine-readable aggregate |",
-            "| `failure_breakdown.md` | Failure taxonomy details |",
+            "| `failure_breakdown.md` | Failure taxonomy + tag breakdown |",
+            "| `comparison_table.csv` | Cross-task metrics |",
+            "| `../compare/comparison_report.md` | Detailed comparison |",
             "| `{task_id}/run_summary.md` | Per-task drill-down |",
+            "| `{task_id}/trajectory_analysis.md` | Steps / files touched |",
             "",
         ]
     )
-    return "\n".join(lines)
-
-
-def _render_failure_breakdown(breakdown: dict) -> str:
-    lines = [
-        "# Failure Breakdown",
-        "",
-        f"Failed runs: **{breakdown['failed_runs']}**",
-        "",
-        "## By category",
-        "",
-    ]
-    if breakdown["by_category"]:
-        for cat, count in breakdown["by_category"].items():
-            lines.append(f"- `{cat}`: {count}")
-    else:
-        lines.append("- (none)")
-    lines.extend(["", "## By stage", ""])
-    if breakdown["by_stage"]:
-        for stage, count in breakdown["by_stage"].items():
-            lines.append(f"- `{stage}`: {count}")
-    else:
-        lines.append("- (none)")
-
-    if breakdown["examples"]:
-        lines.extend(["", "## Examples", ""])
-        for ex in breakdown["examples"]:
-            lines.append(f"### {ex['task_id']} ({ex['agent_mode']})")
-            lines.append(f"- **Category:** `{ex['failure_category']}`")
-            lines.append(f"- **Stage:** `{ex['failure_stage']}`")
-            lines.append(f"- **Failed step:** {ex['failed_step']}")
-            lines.append(f"- **Message:** {ex['failure_message']}")
-            lines.append("")
-
     return "\n".join(lines)
 
 
@@ -185,7 +180,8 @@ def write_eval_summary(
         raise FileNotFoundError(f"No runs with trace.json found under {runs_dir}")
 
     metrics = aggregate_runs(records)
-    breakdown = failure_breakdown(records)
+    breakdown = tag_breakdown(records)
+    rows = comparison_rows(records)
 
     (output_dir / "eval_report.md").write_text(_render_eval_report(records, metrics, breakdown, runs_dir))
     (output_dir / "metrics.json").write_text(
@@ -195,17 +191,56 @@ def write_eval_summary(
                 "runs_dir": str(runs_dir),
                 "metrics": metrics,
                 "runs": run_records_table(records),
+                "comparison": rows,
+                "breakdown": {k: v for k, v in breakdown.items() if k != "examples"},
             },
             indent=2,
         )
         + "\n"
     )
-    (output_dir / "failure_breakdown.md").write_text(_render_failure_breakdown(breakdown))
+    (output_dir / "failure_breakdown.md").write_text(render_tag_breakdown(breakdown))
+    write_comparison_csv(rows, output_dir / "comparison_table.csv")
+
+    compare_dir = runs_dir / "eval" / "compare"
+    compare_dir.mkdir(parents=True, exist_ok=True)
+    (compare_dir / "comparison_report.md").write_text(
+        render_comparison_report(records, highlight_pairs=DEFAULT_PAIRS)
+    )
 
     task_eval_root = runs_dir / "eval"
     for record in records:
         task_out = task_eval_root / record.task_id
         task_out.mkdir(parents=True, exist_ok=True)
         (task_out / "run_summary.md").write_text(_render_task_summary(record))
+        (task_out / "trajectory_analysis.md").write_text(render_trajectory_analysis(record))
 
+    return output_dir
+
+
+def write_eval_compare(
+    runs_dir: Path,
+    *,
+    task_id: str | None = None,
+    output_dir: Path | None = None,
+) -> Path:
+    runs_dir = runs_dir.resolve()
+    output_dir = (output_dir or runs_dir / "eval" / "compare").resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    records = load_all_runs(runs_dir)
+    if not records:
+        raise FileNotFoundError(f"No runs with trace.json found under {runs_dir}")
+
+    if task_id:
+        task_records = load_task_runs(runs_dir, task_id)
+        if not task_records:
+            raise FileNotFoundError(f"No runs found for task {task_id!r} under {runs_dir}")
+        report = render_comparison_report(task_records, task_filter=task_id, runs_dir=runs_dir)
+        rows = comparison_rows(task_records)
+    else:
+        report = render_comparison_report(records, highlight_pairs=DEFAULT_PAIRS, runs_dir=runs_dir)
+        rows = comparison_rows(records)
+
+    (output_dir / "comparison_report.md").write_text(report)
+    write_comparison_csv(rows, output_dir / "comparison_table.csv")
     return output_dir
