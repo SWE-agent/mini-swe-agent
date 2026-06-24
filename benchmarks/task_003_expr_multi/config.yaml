@@ -1,0 +1,27 @@
+task_id: task_003_expr_multi
+description: Fix multiplication bug in split expr package
+
+repo:
+  path: .
+  base_commit: "BASE_COMMIT_EXPR"
+  setup_patch: setup.patch
+
+eval:
+  failure_mode: wrong_operator
+  difficulty: multi_file
+  tags:
+    - cross_directory
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/run/test_expr.py -v
+expected_behavior: All expr package tests pass after fix
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.50"
+  output_trajectory: runs/{task_id}/trajectory.traj.json
