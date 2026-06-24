@@ -1,0 +1,25 @@
+task_id: task_005_serialize_unset
+description: Fix nested UNSET handling in recursive_merge()
+
+repo:
+  path: .
+  base_commit: "1e030a2"
+  setup_patch: setup.patch
+
+eval:
+  failure_mode: edge_case
+  difficulty: single_file
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/utils/test_serialize.py -v
+expected_behavior: All serialize tests pass after fix
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.50"
+  output_trajectory: runs/{task_id}/trajectory.traj.json

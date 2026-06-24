@@ -51,6 +51,8 @@ print(task.agent.resolve_output_trajectory(task.task_id))
 | `task_001_sudoku` | Fix hint off-by-one in sudoku | `179e790` | Uses `setup.patch` to plant bug |
 | `task_002_eval_module` | Fix multiplication bug in eval_expr | `61e468b` | Uses `setup.patch` to plant bug |
 | `task_003_expr_multi` | Fix multiplication bug in expr package | `61e468b` | Multi-file package; same bug as task_002 |
+| `task_004_expr_api_mismatch` | Fix tokenize/evaluate operator contract | `1e030a2` | `*` tokenized as `mul`; evaluator expects `*` |
+| `task_005_serialize_unset` | Fix nested UNSET merge in serialize | `1e030a2` | `recursive_merge` skips nested UNSET filtering |
 
 ### task_001_sudoku
 
@@ -133,6 +135,38 @@ git checkout 61e468b
 git apply benchmarks/task_003_expr_multi/setup.patch
 PYTHONPATH=upstream/src python -m pytest upstream/tests/run/test_expr.py -v   # expect 2 failed
 git checkout -   # restore branch
+```
+
+### task_004_expr_api_mismatch
+
+- **Repo:** this repository (`.`)
+- **Bug:** `setup.patch` makes `tokenize.py` emit `mul` for `*` while `evaluate.py` expects `*`
+- **Verify:** `python -m pytest upstream/tests/run/test_expr.py -v`
+- **Agent:** must trace across `tokenize.py` and `evaluate.py`
+
+Pre-run check (manual):
+
+```bash
+git checkout 1e030a2
+git apply benchmarks/task_004_expr_api_mismatch/setup.patch
+PYTHONPATH=upstream/src python -m pytest upstream/tests/run/test_expr.py -v   # expect 2 failed
+git checkout -
+```
+
+### task_005_serialize_unset
+
+- **Repo:** this repository (`.`)
+- **Bug:** `setup.patch` assigns nested dicts without filtering nested `UNSET` values
+- **Verify:** `python -m pytest upstream/tests/utils/test_serialize.py -v`
+- **Agent:** single-file fix in `utils/serialize.py`
+
+Pre-run check (manual):
+
+```bash
+git checkout 1e030a2
+git apply benchmarks/task_005_serialize_unset/setup.patch
+PYTHONPATH=upstream/src python -m pytest upstream/tests/utils/test_serialize.py -v   # expect 1 failed
+git checkout -
 ```
 
 ## Adding a new task

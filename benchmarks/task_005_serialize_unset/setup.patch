@@ -1,0 +1,13 @@
+diff --git a/upstream/src/minisweagent/utils/serialize.py b/upstream/src/minisweagent/utils/serialize.py
+index ccd5947..050a50d 100644
+--- a/upstream/src/minisweagent/utils/serialize.py
++++ b/upstream/src/minisweagent/utils/serialize.py
+@@ -23,7 +23,7 @@ def recursive_merge(*dictionaries: dict | None) -> dict:
+                 result[key] = recursive_merge(result[key], value)
+             elif isinstance(value, dict):
+                 # Recursively merge dict values to filter out nested UNSET values
+-                result[key] = recursive_merge(value)
++                result[key] = value  # BUG: should recursively merge to filter UNSET
+             else:
+                 result[key] = value
+     return result

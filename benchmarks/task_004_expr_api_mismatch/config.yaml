@@ -1,0 +1,28 @@
+task_id: task_004_expr_api_mismatch
+description: Fix tokenizer/evaluator operator contract mismatch in expr package
+
+repo:
+  path: .
+  base_commit: "1e030a2"
+  setup_patch: setup.patch
+
+eval:
+  failure_mode: api_mismatch
+  difficulty: multi_file
+  tags:
+    - cross_directory
+    - contract_bug
+
+issue_file: issue.md
+
+test_command: python -m pytest upstream/tests/run/test_expr.py -v
+expected_behavior: All expr package tests pass after fix
+
+agent:
+  mode: baseline
+  mini_flags:
+    - -y
+    - --exit-immediately
+    - --cost-limit
+    - "0.50"
+  output_trajectory: runs/{task_id}/trajectory.traj.json
