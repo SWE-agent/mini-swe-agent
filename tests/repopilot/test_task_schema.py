@@ -20,6 +20,8 @@ def test_load_task_001_sudoku():
     assert "upstream/src/minisweagent/run/sudoku.py" in task.read_issue()
     assert task.setup_patch_path().is_file()
     assert task.agent.resolve_output_trajectory(task.task_id) == Path("runs/task_001_sudoku/trajectory.traj.json")
+    assert task.eval.failure_mode == "off_by_one"
+    assert task.eval.difficulty == "single_file"
 
 
 def test_task_id_must_match_directory_name():

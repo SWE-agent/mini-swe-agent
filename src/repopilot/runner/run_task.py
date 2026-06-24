@@ -265,6 +265,9 @@ def run_benchmark_task(
                     verify_test_log=verify_log if verify_log.is_file() else None,
                     tests_passed=tests_passed,
                     agent_mode=task.agent.mode,
+                    failure_mode=task.eval.failure_mode,
+                    difficulty=task.eval.difficulty,
+                    eval_tags=task.eval.tags or None,
                 ),
             )
 

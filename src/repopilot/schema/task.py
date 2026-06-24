@@ -23,6 +23,13 @@ class RepoConfig(BaseModel):
         return self
 
 
+class EvalTags(BaseModel):
+    failure_mode: str | None = None
+    difficulty: str | None = None
+    expected_repair_rounds: int | None = None
+    tags: list[str] = Field(default_factory=list)
+
+
 class AgentConfig(BaseModel):
     mode: Literal["baseline", "repopilot"] = "baseline"
     mini_flags: list[str] = Field(default_factory=lambda: ["-y", "--exit-immediately"])
@@ -39,6 +46,7 @@ class TaskConfig(BaseModel):
     issue_file: str = "issue.md"
     test_command: str
     expected_behavior: str = ""
+    eval: EvalTags = Field(default_factory=EvalTags)
     agent: AgentConfig = Field(default_factory=AgentConfig)
 
     @property

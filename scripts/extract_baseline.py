@@ -4,75 +4,48 @@
 from __future__ import annotations
 
 import argparse
-import json
-import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-PYTEST_SESSION = re.compile(r"={5,} test session starts ={5,}.*", re.DOTALL)
+from repopilot.trace.parse import extract_patch_diff, extract_pytest_runs, iter_tool_rows, load_trajectory
 
 
-def _commands_and_outputs(messages: list[dict]) -> list[tuple[str, str, int | None]]:
-    rows: list[tuple[str, str, int | None]] = []
-    pending: list[str] = []
-    for msg in messages:
-        if msg.get("role") == "assistant":
-            pending = [a["command"] for a in msg.get("extra", {}).get("actions", [])]
-        elif msg.get("role") == "tool":
-            extra = msg.get("extra", {})
-            cmd = pending.pop(0) if pending else ""
-            rows.append((cmd, extra.get("raw_output", ""), extra.get("returncode")))
-    return rows
-
-
-def _extract_pytest_sections(text: str) -> list[str]:
-    return [m.group(0).rstrip() for m in PYTEST_SESSION.finditer(text)]
+def _summarize_patch(patch_text: str) -> str | None:
+    removed = [line[1:] for line in patch_text.splitlines() if line.startswith("-") and not line.startswith("---")]
+    added = [line[1:] for line in patch_text.splitlines() if line.startswith("+") and not line.startswith("+++")]
+    if not removed and not added:
+        return None
+    parts: list[str] = []
+    if removed:
+        parts.append("Removed: `" + " / ".join(removed[:2]) + "`")
+    if added:
+        parts.append("Added: `" + " / ".join(added[:2]) + "`")
+    return "; ".join(parts)
 
 
 def extract(traj_path: Path, out_dir: Path, *, issue_path: Path | None = None) -> None:
-    traj = json.loads(traj_path.read_text())
+    traj = load_trajectory(traj_path)
     info = traj["info"]
-    messages = traj["messages"]
-    rows = _commands_and_outputs(messages)
+    rows = iter_tool_rows(traj["messages"])
+    pytest_runs = extract_pytest_runs(rows)
+    patch_text, patch_source = extract_patch_diff(rows)
 
-    pre_fix_log: str | None = None
-    post_fix_log: str | None = None
-    fix_command: str | None = None
-
-    for cmd, output, _rc in rows:
-        if "pytest" in cmd and "test_sudoku" in cmd:
-            sections = _extract_pytest_sections(output)
-            pytest_log = sections[-1] if sections else output
-            if pre_fix_log is None:
-                pre_fix_log = pytest_log
-            else:
-                post_fix_log = pytest_log
-        if "value + 1" in cmd and "sudoku.py" in cmd:
-            fix_command = cmd
+    pre_fix = next((run for run in pytest_runs if run.phase == "pre_fix"), None)
+    post_fix = next((run for run in pytest_runs if run.phase == "post_fix"), None)
 
     out_dir.mkdir(parents=True, exist_ok=True)
 
     test_log_parts = ["# Extracted from trajectory: pre-fix and post-fix pytest runs\n"]
-    if pre_fix_log:
-        test_log_parts.append("## Pre-fix pytest\n\n```\n" + pre_fix_log + "\n```\n")
-    if post_fix_log:
-        test_log_parts.append("## Post-fix pytest\n\n```\n" + post_fix_log + "\n```\n")
+    if pre_fix and pre_fix.log:
+        test_log_parts.append(f"## Pre-fix pytest\n\n```\n{pre_fix.log}\n```\n")
+    if post_fix and post_fix.log:
+        test_log_parts.append(f"## Post-fix pytest\n\n```\n{post_fix.log}\n```\n")
     (out_dir / "baseline_test.log").write_text("".join(test_log_parts))
 
-    patch = """diff --git a/src/minisweagent/run/sudoku.py b/src/minisweagent/run/sudoku.py
---- a/src/minisweagent/run/sudoku.py
-+++ b/src/minisweagent/run/sudoku.py
-@@ -111,7 +111,7 @@ class SudokuGame:
-         for row, col in empties:
-             for value in range(1, 10):
-                 if self.is_valid_move(row, col, value):
--                    return row, col, value + 1  # BUG: off-by-one, may return invalid value
-+                    return row, col, value
-         return None
-"""
-    if fix_command:
-        patch += f"\n# Agent fix command (from trajectory):\n# {fix_command[:200]}...\n"
-    (out_dir / "baseline_patch.diff").write_text(patch)
+    patch_out = patch_text.strip() or "# No patch extracted from trajectory\n"
+    if patch_source != "not found":
+        patch_out += f"\n\n# Patch source: {patch_source}\n"
+    (out_dir / "baseline_patch.diff").write_text(patch_out)
 
     model = info.get("config", {}).get("model", {}).get("model_name", "unknown")
     stats = info.get("model_stats", {})
@@ -80,7 +53,8 @@ def extract(traj_path: Path, out_dir: Path, *, issue_path: Path | None = None) -
     calls = stats.get("api_calls", 0)
     exit_status = info.get("exit_status", "")
     submission = info.get("submission", "")
-    tests_passed = "yes" if post_fix_log and "3 passed" in post_fix_log else "unknown"
+    tests_passed = "yes" if post_fix and post_fix.returncode == 0 else "unknown"
+    fix_summary = _summarize_patch(patch_text) or "See `baseline_patch.diff` for the agent fix."
 
     task_ref = f"`{issue_path}`" if issue_path else "`runs/baseline/issue.md`"
     report = f"""# Baseline Run — upstream mini-swe-agent
@@ -96,10 +70,11 @@ def extract(traj_path: Path, out_dir: Path, *, issue_path: Path | None = None) -
 - **Tests passed (post-fix):** {tests_passed}
 - **Repair rounds:** 1
 - **Submission field:** {"empty" if not submission else "present"}
+- **Patch source:** {patch_source}
 
 ## Fix summary
 
-Agent removed off-by-one bug in `SudokuGame.hint()`: changed `return row, col, value + 1` back to `return row, col, value`.
+{fix_summary}
 
 ## Tool call sequence
 
@@ -115,13 +90,13 @@ Agent removed off-by-one bug in `SudokuGame.hint()`: changed `return row, col, v
 |------|-------------|
 | `trajectory.traj.json` | Full mini-swe-agent run (raw) |
 | `baseline_test.log` | Pre/post-fix pytest output extracted from trajectory |
-| `baseline_patch.diff` | Reconstructed unified diff for the hint fix |
+| `baseline_patch.diff` | Unified diff reconstructed from trajectory |
 | `baseline_run.md` | This summary |
 
 ## Notes
 
-- `info.submission` was empty because the agent followed `mini.yaml` and ran `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT` alone.
-- `git diff` in the trajectory returned empty (files were untracked); patch was reconstructed from the agent's edit command.
+- Patch is taken from `git diff` in the trajectory when available; otherwise reconstructed from edit commands.
+- `baseline_*` files mirror legacy Phase 0 artifacts; prefer `trace.json` / `patch.diff` for eval harness work.
 """
     (out_dir / "baseline_run.md").write_text(report)
 

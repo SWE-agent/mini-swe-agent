@@ -64,7 +64,7 @@ def trace(
     ),
     task_id: str | None = typer.Option(None, "--task-id", help="Task id for the trace record"),
 ) -> None:
-    """Build trace.json / patch.diff / test.log / final_report.md from a trajectory."""
+    """Build trace.json / patch.diff / test.log / final_report.md / failure_reason.md from a trajectory."""
     trajectory = trajectory.resolve()
     if not trajectory.is_file():
         raise typer.BadParameter(f"Trajectory not found: {trajectory}")
@@ -79,6 +79,7 @@ def trace(
     typer.echo(f"  {artifacts.patch_diff.name}")
     typer.echo(f"  {artifacts.test_log.name}")
     typer.echo(f"  {artifacts.final_report.name}")
+    typer.echo(f"  {artifacts.failure_reason.name}")
 
 
 @eval_app.command("summary")

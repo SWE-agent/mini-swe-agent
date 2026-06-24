@@ -1,0 +1,165 @@
+"""Tests for trace v2 parsing and classification (Phase 3)."""
+
+from repopilot.trace.classify import build_failure_reason_md, classify_trace
+from repopilot.trace.parse import (
+    classify_command_stage,
+    extract_files_touched,
+    extract_patch_diff,
+    extract_pytest_log,
+    infer_step_stage,
+    parse_pytest_failures,
+)
+from repopilot.trace.parse import ToolCallRecord
+
+
+SAMPLE_PYTEST_LOG = """\
+============================= test session starts ==============================
+collected 5 items
+
+upstream/tests/run/test_eval_module.py::test_eval_left_to_right_no_precedence FAILED [ 40%]
+
+=================================== FAILURES ===================================
+__________________________ test_eval_basic_arithmetic __________________________
+
+    def test_eval_basic_arithmetic():
+>       assert eval_expr("4*5") == 20
+E       AssertionError: assert 9.0 == 20
+
+upstream/tests/run/test_eval_module.py:9: AssertionError
+========================= 2 failed, 3 passed in 0.02s ==========================
+"""
+
+
+def test_classify_command_stage():
+    assert classify_command_stage("python -m pytest tests/ -v") == "test"
+    assert classify_command_stage("path.write_text('x')") == "edit"
+    assert classify_command_stage("cat upstream/src/foo.py") == "read"
+    assert classify_command_stage("git diff") == "submit"
+
+
+def test_infer_step_stage():
+    calls = [
+        ToolCallRecord(command="pytest -v", returncode=1),
+        ToolCallRecord(command="cat foo.py", returncode=0),
+    ]
+    assert infer_step_stage(calls) == "test"
+
+
+def test_extract_files_touched():
+    cmd = "path = Path('upstream/src/minisweagent/run/eval_module.py')"
+    paths = extract_files_touched(cmd)
+    assert "upstream/src/minisweagent/run/eval_module.py" in paths
+
+
+def test_parse_pytest_failures():
+    failures = parse_pytest_failures(SAMPLE_PYTEST_LOG)
+    names = {f.test for f in failures}
+    assert "test_eval_basic_arithmetic" in names
+    arith = next(f for f in failures if f.test == "test_eval_basic_arithmetic")
+    assert "9.0" in arith.assertion or "4*5" in arith.assertion
+    assert arith.file_line.endswith(":9")
+
+
+def test_classify_trace_success():
+    result = classify_trace(
+        steps=[{"step": 1, "tool_calls": [{"command": "pytest", "returncode": 0}]}],
+        pytest_runs=[{"phase": "post_fix", "returncode": 0, "summary": "3 passed"}],
+        patch={"text": "diff --git", "source": "test"},
+        exit_status="Submitted",
+        tests_passed=True,
+    )
+    assert result["outcome"] == "success"
+    assert result["failure_category"] is None
+
+
+def test_classify_trace_tests_still_failing():
+    result = classify_trace(
+        steps=[
+            {"step": 1, "tool_calls": [{"command": "pytest -v", "returncode": 1}]},
+        ],
+        pytest_runs=[
+            {
+                "phase": "pre_fix",
+                "returncode": 1,
+                "summary": "1 failed",
+                "failed_tests": [{"test": "test_foo", "assertion": "AssertionError"}],
+            }
+        ],
+        patch={"text": "", "source": "none"},
+        exit_status="Submitted",
+        tests_passed=False,
+    )
+    assert result["outcome"] == "failure"
+    assert result["failure_category"] == "tests_still_failing"
+    assert result["failure_stage"] == "test"
+
+
+def test_build_failure_reason_md():
+    trace = {
+        "task_id": "task_test",
+        "outcome": "failure",
+        "failure_category": "tests_still_failing",
+        "failure_stage": "test",
+        "failed_step": 1,
+        "failure_message": "1 failed",
+        "metrics": {"tests_passed": False},
+        "pytest_runs": [
+            {
+                "phase": "pre_fix",
+                "returncode": 1,
+                "failed_tests": [{"test": "test_foo", "assertion": "AssertionError: x"}],
+            }
+        ],
+        "steps": [{"step": 1, "stage": "test", "files_touched": ["upstream/foo.py"], "reasoning": "run tests"}],
+    }
+    md = build_failure_reason_md(trace)
+    assert "# Failure Reason" in md
+    assert "test_foo" in md
+    assert "AssertionError" in md
+
+
+TRUNCATED_PROGRESS_LOG = """\
+============================= test session starts ==============================
+collected 5 items
+
+upstream/tests/run/test_eval_module.py::test_eval_basic_arithmetic FAILED [ 20%]
+upstream/tests/run/test_eval_module.py::test_eval_left_to_right_no_precedence FAILED [ 40%]
+upstream/tests/run/test_eval_module.py::test_eval_whitespace_and_decimals PASSED [ 60%]
+"""
+
+
+def test_parse_pytest_failures_from_progress_lines_only():
+    failures = parse_pytest_failures(TRUNCATED_PROGRESS_LOG)
+    names = {f.test for f in failures}
+    assert names == {"test_eval_basic_arithmetic", "test_eval_left_to_right_no_precedence"}
+    assert "20%]" not in names
+
+
+def test_extract_pytest_log_includes_failures_section():
+    mixed = "patched upstream/src/foo.py\n" + SAMPLE_PYTEST_LOG
+    log = extract_pytest_log(mixed)
+    assert "FAILURES" in log
+    assert "test_eval_basic_arithmetic" in log
+    assert "2 failed, 3 passed" in log
+    assert not log.startswith("patched")
+
+
+TASK_003_FIX_CMD = """\
+python - <<'PY'
+from pathlib import Path
+p = Path('upstream/src/minisweagent/run/expr/evaluate.py')
+text = p.read_text()
+old = '        elif op.operator == \"*\":\\n            result += num.number  # BUG: should multiply, not add\\n'
+new = '        elif op.operator == \"*\":\\n            result *= num.number\\n'
+p.write_text(text.replace(old, new))
+PY
+"""
+
+
+def test_extract_patch_from_replace_command():
+    patch, source = extract_patch_diff([(TASK_003_FIX_CMD, "", 0)])
+    assert source == "reconstructed from edit command"
+    assert "upstream/src/minisweagent/run/expr/evaluate.py" in patch
+    assert "result += num.number" in patch
+    assert "result *= num.number" in patch
+    assert "sudoku" not in patch.lower()

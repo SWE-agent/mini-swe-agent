@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import json
 import pytest
 
 from repopilot.trace import (
@@ -52,11 +53,13 @@ def test_record_trace_writes_artifacts(tmp_path):
     assert artifacts.patch_diff.is_file()
     assert artifacts.test_log.is_file()
     assert artifacts.final_report.is_file()
+    assert artifacts.failure_reason.is_file()
 
-    trace = artifacts.trace_json.read_text()
-    assert "task_001_sudoku" in trace
-    assert "api_calls" in trace
-    assert "steps" in trace
+    trace = json.loads(artifacts.trace_json.read_text())
+    assert trace["task_id"] == "task_001_sudoku"
+    assert trace["schema_version"] == "2.0"
+    assert "outcome" in trace
+    assert trace["steps"][0].get("stage") in {"read", "test", "edit", "submit", "other"}
 
     report = artifacts.final_report.read_text()
     assert "# RepoPilot Run Report" in report
