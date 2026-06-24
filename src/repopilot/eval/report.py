@@ -11,6 +11,7 @@ from repopilot.eval.failure_analysis import render_tag_breakdown, tag_breakdown
 from repopilot.eval.loader import RunRecord, load_all_runs, load_task_runs
 from repopilot.eval.metrics import aggregate_runs, run_records_table
 from repopilot.eval.trajectory_analysis import render_trajectory_analysis
+from repopilot.eval.visualize import render_failure_distribution_charts, write_run_view
 
 
 def _render_eval_report(
@@ -71,6 +72,9 @@ def _render_eval_report(
     lines.append("")
 
     if breakdown["failed_runs"]:
+        chart_section = render_failure_distribution_charts(breakdown)
+        if chart_section:
+            lines.extend([chart_section])
         lines.extend(["## Failure breakdown", ""])
         lines.append("### By category")
         lines.append("")
@@ -103,6 +107,7 @@ def _render_eval_report(
             "| `../compare/comparison_report.md` | Detailed comparison |",
             "| `{task_id}/run_summary.md` | Per-task drill-down |",
             "| `{task_id}/trajectory_analysis.md` | Steps / files touched |",
+            "| `{task_id}/view.html` | Interactive HTML run view |",
             "",
         ]
     )
@@ -213,6 +218,7 @@ def write_eval_summary(
         task_out.mkdir(parents=True, exist_ok=True)
         (task_out / "run_summary.md").write_text(_render_task_summary(record))
         (task_out / "trajectory_analysis.md").write_text(render_trajectory_analysis(record))
+        write_run_view(record, task_out / "view.html")
 
     return output_dir
 

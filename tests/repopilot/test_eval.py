@@ -148,6 +148,7 @@ def test_write_eval_summary(tmp_path, sample_run):
     assert (tmp_path / "eval" / "compare" / "comparison_report.md").is_file()
     assert (tmp_path / "eval" / "task_sample" / "run_summary.md").is_file()
     assert (tmp_path / "eval" / "task_sample" / "trajectory_analysis.md").is_file()
+    assert (tmp_path / "eval" / "task_sample" / "view.html").is_file()
 
 
 def test_trajectory_metrics(sample_run):

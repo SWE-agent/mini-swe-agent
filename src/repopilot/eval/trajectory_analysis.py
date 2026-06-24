@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from repopilot.eval.loader import RunRecord
+from repopilot.eval.visualize import render_mermaid_timeline
 from repopilot.trace.parse import is_edit_command
 
 
@@ -75,6 +76,9 @@ def render_trajectory_analysis(record: RunRecord) -> str:
     if record.difficulty:
         lines.append(f"- **Difficulty (tag):** `{record.difficulty}`")
     lines.append("")
+
+    if record.steps:
+        lines.extend(["## Trajectory timeline (Mermaid)", "", render_mermaid_timeline(record), ""])
 
     if metrics["stages"]:
         lines.extend(["## Step stages", "", " → ".join(f"`{s}`" for s in metrics["stages"]), ""])
