@@ -49,6 +49,8 @@ print(task.agent.resolve_output_trajectory(task.task_id))
 | ID | Description | base_commit | Notes |
 |----|-------------|-------------|-------|
 | `task_001_sudoku` | Fix hint off-by-one in sudoku | `179e790` | Uses `setup.patch` to plant bug |
+| `task_002_eval_module` | Fix multiplication bug in eval_expr | `61e468b` | Uses `setup.patch` to plant bug |
+| `task_003_expr_multi` | Fix multiplication bug in expr package | `61e468b` | Multi-file package; same bug as task_002 |
 
 ### task_001_sudoku
 
@@ -98,6 +100,38 @@ Pre-run check (manual):
 git checkout 179e790
 git apply benchmarks/task_001_sudoku/setup.patch
 python -m pytest upstream/tests/run/test_sudoku.py -v   # expect 1 failed
+git checkout -   # restore branch
+```
+
+### task_002_eval_module
+
+- **Repo:** this repository (`.`)
+- **Bug:** `setup.patch` changes `*` branch to use `+=` instead of `*=`
+- **Verify:** `python -m pytest upstream/tests/run/test_eval_module.py -v`
+- **Agent:** upstream `mini` in baseline mode
+
+Pre-run check (manual):
+
+```bash
+git checkout 61e468b
+git apply benchmarks/task_002_eval_module/setup.patch
+PYTHONPATH=upstream/src python -m pytest upstream/tests/run/test_eval_module.py -v   # expect 2 failed
+git checkout -   # restore branch
+```
+
+### task_003_expr_multi
+
+- **Repo:** this repository (`.`)
+- **Bug:** `setup.patch` changes `*` branch in `expr/evaluate.py` to use `+=` instead of `*=`
+- **Verify:** `python -m pytest upstream/tests/run/test_expr.py -v`
+- **Agent:** upstream `mini` in baseline mode; implementation split across `run/expr/` (`tokenize.py`, `evaluate.py`, …)
+
+Pre-run check (manual):
+
+```bash
+git checkout 61e468b
+git apply benchmarks/task_003_expr_multi/setup.patch
+PYTHONPATH=upstream/src python -m pytest upstream/tests/run/test_expr.py -v   # expect 2 failed
 git checkout -   # restore branch
 ```
 

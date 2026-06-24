@@ -91,13 +91,14 @@ def test_isolated_workspace_does_not_change_dev_branch():
     worktree = ROOT / "runs" / "_isolation_test" / ".workspace"
     with isolated_workspace(
         ROOT,
-        "ddd3785",
+        "61e468b",
         TASK_002 / "setup.patch",
         worktree_path=worktree,
     ) as workspace:
         assert workspace.is_dir()
         assert (workspace / "benchmarks" / "task_001_sudoku").is_dir()
         assert (workspace / "upstream" / "src" / "minisweagent" / "run" / "eval_module.py").is_file()
+        assert (workspace / "upstream" / "src" / "minisweagent" / "run" / "expr" / "evaluate.py").is_file()
     after = subprocess.run(
         ["git", "rev-parse", "--abbrev-ref", "HEAD"],
         cwd=ROOT,

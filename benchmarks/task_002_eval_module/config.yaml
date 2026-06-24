@@ -3,8 +3,12 @@ description: Fix multiplication bug in eval_expr()
 
 repo:
   path: .
-  base_commit: "ddd3785"
+  base_commit: "61e468b"
   setup_patch: setup.patch
+
+eval:
+  failure_mode: wrong_operator
+  difficulty: single_file
 
 issue_file: issue.md
 
