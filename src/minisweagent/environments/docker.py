@@ -3,7 +3,6 @@ import logging
 import os
 import platform
 import shlex
-import signal
 import subprocess
 import uuid
 from typing import Any

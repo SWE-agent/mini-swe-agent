@@ -16,7 +16,9 @@ def _docker_available(executable="docker"):
 
 
 env_params = [
-    pytest.param("docker", marks=pytest.mark.skipif(not _docker_available(), reason="Docker not available"), id="docker"),
+    pytest.param(
+        "docker", marks=pytest.mark.skipif(not _docker_available(), reason="Docker not available"), id="docker"
+    ),
     pytest.param(
         "podman",
         marks=pytest.mark.skipif(not _docker_available("podman"), reason="Podman not available"),
