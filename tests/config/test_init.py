@@ -83,6 +83,11 @@ class TestKeyValueSpecToNestedDict:
     def test_zero_float(self):
         assert _key_value_spec_to_nested_dict("value=0.0") == {"value": 0.0}
 
+    @pytest.mark.parametrize("config_spec", ["=value", "model..name=value", "model.=value"])
+    def test_empty_key_raises_value_error(self, config_spec):
+        with pytest.raises(ValueError, match="empty config key"):
+            _key_value_spec_to_nested_dict(config_spec)
+
 
 class TestGetConfigFromSpec:
     """Tests for get_config_from_spec function."""

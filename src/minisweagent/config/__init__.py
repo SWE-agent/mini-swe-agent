@@ -42,6 +42,8 @@ def _key_value_spec_to_nested_dict(config_spec: str) -> dict:
     except json.JSONDecodeError:
         pass
     keys = key.split(".")
+    if any(k == "" for k in keys):
+        raise ValueError(f"Invalid config spec {config_spec!r}: empty config key")
     result = {}
     current = result
     for k in keys[:-1]:
