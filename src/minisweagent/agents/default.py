@@ -71,6 +71,35 @@ class DefaultAgent:
         self.messages.extend(messages)
         return list(messages)
 
+    def _completed_tool_call_ids(self) -> set[str]:
+        completed_ids = set()
+        for message in self.messages:
+            if message.get("role") == "tool" and message.get("tool_call_id"):
+                completed_ids.add(message["tool_call_id"])
+            if message.get("type") == "function_call_output" and message.get("call_id"):
+                completed_ids.add(message["call_id"])
+        return completed_ids
+
+    def _validate_new_tool_call_ids(self, message: dict) -> None:
+        completed_ids = self._completed_tool_call_ids()
+        if not completed_ids:
+            return
+        repeated_ids = sorted(
+            {
+                action["tool_call_id"]
+                for action in message.get("extra", {}).get("actions", [])
+                if action.get("tool_call_id") in completed_ids
+            }
+        )
+        if repeated_ids:
+            raise FormatError(
+                self.model.format_message(
+                    role="user",
+                    content=(f"Tool call ID(s) already completed and must not be reused: {', '.join(repeated_ids)}"),
+                    extra={"interrupt_type": "FormatError"},
+                )
+            )
+
     def handle_uncaught_exception(self, e: Exception) -> list[dict]:
         return self.add_messages(
             self.model.format_message(
@@ -146,6 +175,7 @@ class DefaultAgent:
         self.n_calls += 1
         message = self.model.query(self.messages)
         self.cost += message.get("extra", {}).get("cost", 0.0)
+        self._validate_new_tool_call_ids(message)
         self.add_messages(message)
         return message
 
