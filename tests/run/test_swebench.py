@@ -118,6 +118,20 @@ def test_get_sb_environment_runs_startup_command_as_dict():
     fake_env.execute.assert_called_once_with({"command": "echo repo1__test1"})
 
 
+def test_get_sb_environment_does_not_mutate_shared_config():
+    """The config dict is shared across worker threads, so resolving the per-instance image must not mutate it."""
+    config = {"environment": {"environment_class": "docker"}}
+    instance = {"instance_id": "repo1__test1", "image_name": "custom/image:tag"}
+
+    with patch(
+        "minisweagent.run.benchmarks.swebench.get_environment", return_value=MagicMock()
+    ) as mock_get_environment:
+        get_sb_environment(config, instance)
+
+    assert mock_get_environment.call_args.args[0]["image"] == "custom/image:tag"
+    assert "image" not in config["environment"]
+
+
 def test_filter_instances_no_filters():
     """Test filter_instances with no filtering applied"""
     instances = [{"instance_id": "repo1__test1"}, {"instance_id": "repo2__test2"}, {"instance_id": "repo3__test3"}]
