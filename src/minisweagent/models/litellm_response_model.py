@@ -43,11 +43,13 @@ class LitellmResponseModel(LitellmModel):
                 model=self.config.model_name,
                 input=messages,
                 tools=[BASH_TOOL_RESPONSE_API],
-                **(self.config.model_kwargs | kwargs),
+                **self._model_kwargs(**kwargs),
             )
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
+        except Exception as e:
+            self._raise_provider_timeout(e)
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):

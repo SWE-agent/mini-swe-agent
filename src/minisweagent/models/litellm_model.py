@@ -7,9 +7,13 @@ from pathlib import Path
 from typing import Any, Literal
 
 import litellm
+import openai
+import requests
+from litellm.litellm_core_utils.streaming_handler import CustomStreamWrapper
+from litellm.types.utils import ChatCompletionMessageToolCall, Choices, Function, Message, ModelResponse
 from pydantic import BaseModel
 
-from minisweagent.exceptions import FormatError
+from minisweagent.exceptions import FormatError, ProviderTimeout
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
@@ -24,11 +28,27 @@ from minisweagent.models.utils.retry import retry
 logger = logging.getLogger("litellm_model")
 
 
+def _is_timeout_exception(e: Exception) -> bool:
+    if isinstance(
+        e,
+        (
+            TimeoutError,
+            litellm.exceptions.Timeout,
+            openai.APITimeoutError,
+            requests.exceptions.Timeout,
+        ),
+    ):
+        return True
+    return any("timeout" in cls.__name__.lower() for cls in type(e).mro()) or "timed out" in str(e).lower()
+
+
 class LitellmModelConfig(BaseModel):
     model_name: str
     """Model name. Highly recommended to include the provider in the model name, e.g., `anthropic/claude-sonnet-4-5-20250929`."""
     model_kwargs: dict[str, Any] = {}
     """Additional arguments passed to the API."""
+    provider_timeout: float | None = 5.0
+    """Default read timeout in seconds for streaming provider requests. Set to null to use the provider or LiteLLM default."""
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     """Model registry for cost tracking and model metadata. See the local model guide (https://mini-swe-agent.com/latest/models/local_models/) for more details."""
     set_cache_control: Literal["default_end"] | None = None
@@ -53,6 +73,7 @@ class LitellmModel:
         litellm.exceptions.PermissionDeniedError,
         litellm.exceptions.ContextWindowExceededError,
         litellm.exceptions.AuthenticationError,
+        ProviderTimeout,
         KeyboardInterrupt,
     ]
 
@@ -63,15 +84,97 @@ class LitellmModel:
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
-            return litellm.completion(
+            response = litellm.completion(
                 model=self.config.model_name,
                 messages=messages,
                 tools=[BASH_TOOL],
-                **(self.config.model_kwargs | kwargs),
+                **self._model_kwargs(**kwargs),
             )
+            return self._consume_stream_response(response) if isinstance(response, CustomStreamWrapper) else response
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
+        except Exception as e:
+            self._raise_provider_timeout(e)
+
+    def _model_kwargs(self, **kwargs) -> dict[str, Any]:
+        model_kwargs = self.config.model_kwargs | kwargs
+        if (
+            self.config.provider_timeout is not None
+            and model_kwargs.get("stream") is True
+            and not {"timeout", "request_timeout"} & model_kwargs.keys()
+        ):
+            model_kwargs["timeout"] = openai.Timeout(10.0, read=self.config.provider_timeout)
+        return model_kwargs
+
+    def _raise_provider_timeout(self, e: Exception) -> None:
+        if not _is_timeout_exception(e):
+            raise e
+        raise ProviderTimeout(
+            self.format_message(
+                role="exit",
+                content="ProviderTimeout: model provider did not respond within the configured timeout.",
+                extra={"exit_status": "ProviderTimeout", "submission": "", "exception_str": str(e)},
+            )
+        ) from e
+
+    def _consume_stream_response(self, stream: CustomStreamWrapper) -> ModelResponse:
+        content: list[str] = []
+        tool_calls_by_index: dict[int, dict[str, str]] = {}
+        finish_reason = None
+        response_id = None
+        model = self.config.model_name
+        created = None
+        usage = None
+        for chunk in stream:
+            response_id = getattr(chunk, "id", response_id)
+            model = getattr(chunk, "model", model)
+            created = getattr(chunk, "created", created)
+            usage = getattr(chunk, "usage", None) or usage
+            if not chunk.choices:
+                continue
+            choice = chunk.choices[0]
+            finish_reason = choice.finish_reason or finish_reason
+            delta = choice.delta
+            if delta.content:
+                content.append(delta.content)
+            for tool_call in delta.tool_calls or []:
+                index = int(tool_call.index or 0)
+                state = tool_calls_by_index.setdefault(
+                    index, {"id": "", "type": "function", "name": "", "arguments": ""}
+                )
+                if tool_call.id:
+                    state["id"] = tool_call.id
+                if tool_call.type:
+                    state["type"] = tool_call.type
+                if tool_call.function:
+                    if tool_call.function.name:
+                        state["name"] = tool_call.function.name
+                    if tool_call.function.arguments:
+                        state["arguments"] += tool_call.function.arguments
+        tool_calls = [
+            ChatCompletionMessageToolCall(
+                id=state["id"],
+                type=state["type"],
+                function=Function(name=state["name"], arguments=state["arguments"]),
+            )
+            for _, state in sorted(tool_calls_by_index.items())
+        ]
+        response = ModelResponse(
+            id=response_id,
+            created=created,
+            model=model,
+            usage=usage,
+            choices=[
+                Choices(
+                    finish_reason=finish_reason,
+                    message=Message(content="".join(content) or None, tool_calls=tool_calls or None),
+                )
+            ],
+        )
+        if usage is None:
+            response._mswea_streamed_without_usage = True
+        return response
 
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
         prepared = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
@@ -105,6 +208,8 @@ class LitellmModel:
         return message
 
     def _calculate_cost(self, response) -> dict[str, float]:
+        if getattr(response, "_mswea_streamed_without_usage", False) is True:
+            return {"cost": 0.0}
         try:
             cost = litellm.cost_calculator.completion_cost(response, model=self.config.model_name)
             if cost <= 0.0:

@@ -4,8 +4,10 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import litellm
+import openai
 import pytest
 
+from minisweagent.exceptions import ProviderTimeout
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.litellm_textbased_model import LitellmTextbasedModel
 
@@ -30,6 +32,24 @@ def test_authentication_error_enhanced_message():
 
         # Check that the error message was enhanced
         assert "You can permanently set your API key with `mini-extra config set KEY VALUE`." in str(exc_info.value)
+
+
+def test_query_includes_default_provider_timeout():
+    model = LitellmTextbasedModel(model_name="gpt-4", model_kwargs={"stream": True})
+
+    with patch("litellm.completion") as mock_completion:
+        model._query([{"role": "user", "content": "test"}])
+        assert isinstance(mock_completion.call_args.kwargs["timeout"], openai.Timeout)
+        assert mock_completion.call_args.kwargs["timeout"].read == 5.0
+
+
+def test_query_timeout_raises_provider_timeout():
+    model = LitellmTextbasedModel(model_name="gpt-4")
+
+    with patch("litellm.completion", side_effect=TimeoutError("request timed out")):
+        with pytest.raises(ProviderTimeout) as exc_info:
+            model._query([{"role": "user", "content": "test"}])
+    assert exc_info.value.messages[0]["extra"]["exit_status"] == "ProviderTimeout"
 
 
 def test_model_registry_loading():
