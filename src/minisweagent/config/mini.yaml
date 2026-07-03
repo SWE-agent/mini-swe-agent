@@ -4,7 +4,7 @@ agent:
   instance_template: |
     Please solve this issue: {{task}}
 
-    You can execute bash commands and edit files to implement the necessary changes.
+    You can execute shell commands and edit files to implement the necessary changes.
 
     ## Recommended Workflow
 
@@ -56,7 +56,7 @@ agent:
 
     ### Create a new file:
 
-    ```bash
+    ```
     cat <<'EOF' > newfile.py
     import numpy as np
     hello = "world"
@@ -72,7 +72,7 @@ agent:
     </important>
     {%- endif -%}
 
-    ```bash
+    ```
     # Replace all occurrences
     sed -i 's/old_string/new_string/g' filename.py
 
@@ -88,14 +88,14 @@ agent:
 
     ### View file content:
 
-    ```bash
+    ```
     # View specific lines with numbers
     nl -ba filename.py | sed -n '10,20p'
     ```
 
     ### Any other command you want to run
 
-    ```bash
+    ```
     anything
     ```
   step_limit: 0
