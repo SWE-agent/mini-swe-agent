@@ -5,7 +5,7 @@ import pytest
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_response_model import PortkeyResponseAPIModel
-from minisweagent.models.utils.actions_toolcall_response import BASH_TOOL_RESPONSE_API
+from minisweagent.models.utils.actions_toolcall_response import SHELL_TOOL_RESPONSE_API
 
 
 def test_response_api_model_basic_query():
@@ -22,7 +22,7 @@ def test_response_api_model_basic_query():
         mock_response = Mock()
         mock_response.id = "resp_123"
         mock_response.output = [
-            {"type": "function_call", "call_id": "call_abc", "name": "bash", "arguments": '{"command": "echo test"}'}
+            {"type": "function_call", "call_id": "call_abc", "name": "shell", "arguments": '{"command": "echo test"}'}
         ]
         mock_response.model_dump.return_value = {
             "id": "resp_123",
@@ -36,7 +36,7 @@ def test_response_api_model_basic_query():
 
         assert result["extra"]["actions"] == [{"command": "echo test", "tool_call_id": "call_abc"}]
         mock_client.responses.create.assert_called_once_with(
-            model="gpt-5-mini", input=messages, tools=[BASH_TOOL_RESPONSE_API]
+            model="gpt-5-mini", input=messages, tools=[SHELL_TOOL_RESPONSE_API]
         )
 
 
@@ -54,7 +54,7 @@ def test_response_api_model_stateless_flattens_response():
         mock_response = Mock()
         mock_response.id = "resp_456"
         mock_response.output = [
-            {"type": "function_call", "call_id": "call_2", "name": "bash", "arguments": '{"command": "echo second"}'}
+            {"type": "function_call", "call_id": "call_2", "name": "shell", "arguments": '{"command": "echo second"}'}
         ]
         mock_response.model_dump.return_value = {"id": "resp_456", "output": mock_response.output}
         mock_client.responses.create.return_value = mock_response
@@ -68,7 +68,7 @@ def test_response_api_model_stateless_flattens_response():
                     {
                         "type": "function_call",
                         "call_id": "call_1",
-                        "name": "bash",
+                        "name": "shell",
                         "arguments": '{"command": "echo first"}',
                     },
                 ],
@@ -83,7 +83,7 @@ def test_response_api_model_stateless_flattens_response():
         # Verify that response objects are flattened and extra is stripped
         expected_input = [
             {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "first"}]},
-            {"type": "function_call", "call_id": "call_1", "name": "bash", "arguments": '{"command": "echo first"}'},
+            {"type": "function_call", "call_id": "call_1", "name": "shell", "arguments": '{"command": "echo first"}'},
             {"type": "function_call_output", "call_id": "call_1", "output": "first"},
             {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "second"}]},
         ]
@@ -104,8 +104,8 @@ def test_response_api_model_multiple_tool_calls():
         mock_response = Mock()
         mock_response.id = "resp_789"
         mock_response.output = [
-            {"type": "function_call", "call_id": "call_1", "name": "bash", "arguments": '{"command": "echo first"}'},
-            {"type": "function_call", "call_id": "call_2", "name": "bash", "arguments": '{"command": "echo second"}'},
+            {"type": "function_call", "call_id": "call_1", "name": "shell", "arguments": '{"command": "echo first"}'},
+            {"type": "function_call", "call_id": "call_2", "name": "shell", "arguments": '{"command": "echo second"}'},
         ]
         mock_response.model_dump.return_value = {
             "id": "resp_789",
@@ -137,7 +137,7 @@ def test_response_api_model_cost_tracking():
         mock_response = Mock()
         mock_response.id = "resp_cost"
         mock_response.output = [
-            {"type": "function_call", "call_id": "call_cost", "name": "bash", "arguments": '{"command": "echo cost"}'}
+            {"type": "function_call", "call_id": "call_cost", "name": "shell", "arguments": '{"command": "echo cost"}'}
         ]
         mock_response.model_dump.return_value = {"id": "resp_cost", "output": mock_response.output}
         mock_client.responses.create.return_value = mock_response
@@ -166,7 +166,7 @@ def test_response_api_model_zero_cost_assertion():
         mock_response = Mock()
         mock_response.id = "resp_zero"
         mock_response.output = [
-            {"type": "function_call", "call_id": "call_zero", "name": "bash", "arguments": '{"command": "echo test"}'}
+            {"type": "function_call", "call_id": "call_zero", "name": "shell", "arguments": '{"command": "echo test"}'}
         ]
         mock_response.model_dump.return_value = {"id": "resp_zero", "output": mock_response.output}
         mock_client.responses.create.return_value = mock_response
@@ -192,7 +192,7 @@ def test_response_api_model_with_model_kwargs():
         mock_response = Mock()
         mock_response.id = "resp_kwargs"
         mock_response.output = [
-            {"type": "function_call", "call_id": "call_kw", "name": "bash", "arguments": '{"command": "echo kwargs"}'}
+            {"type": "function_call", "call_id": "call_kw", "name": "shell", "arguments": '{"command": "echo kwargs"}'}
         ]
         mock_response.model_dump.return_value = {"id": "resp_kwargs", "output": mock_response.output}
         mock_client.responses.create.return_value = mock_response
@@ -230,7 +230,7 @@ def test_response_api_model_retry_on_rate_limit():
                 {
                     "type": "function_call",
                     "call_id": "call_retry",
-                    "name": "bash",
+                    "name": "shell",
                     "arguments": '{"command": "echo Success after retry"}',
                 }
             ]

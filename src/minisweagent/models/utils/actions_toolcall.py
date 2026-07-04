@@ -8,10 +8,10 @@ from jinja2 import StrictUndefined, Template
 from minisweagent.exceptions import FormatError
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 
-BASH_TOOL = {
+SHELL_TOOL = {
     "type": "function",
     "function": {
-        "name": "bash",
+        "name": "shell",
         "description": "Execute a shell command",
         "parameters": {
             "type": "object",
@@ -57,10 +57,10 @@ def parse_toolcall_actions(
             args = json.loads(tool_call.function.arguments)
         except Exception as e:
             error_msg = f"Error parsing tool call arguments: {e}."
-        if tool_call.function.name != "bash":
+        if tool_call.function.name != "shell":
             error_msg += f"Unknown tool '{tool_call.function.name}'."
         if not isinstance(args, dict) or "command" not in args:
-            error_msg += "Missing 'command' argument in bash tool call."
+            error_msg += "Missing 'command' argument in shell tool call."
         if error_msg:
             raise FormatError(
                 {

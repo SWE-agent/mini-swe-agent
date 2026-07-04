@@ -8,9 +8,9 @@ from jinja2 import StrictUndefined, Template
 from minisweagent.exceptions import FormatError
 
 # OpenRouter/OpenAI Responses API uses a flat structure (no nested "function" key)
-BASH_TOOL_RESPONSE_API = {
+SHELL_TOOL_RESPONSE_API = {
     "type": "function",
-    "name": "bash",
+    "name": "shell",
     "description": "Execute a shell command",
     "parameters": {
         "type": "object",
@@ -62,7 +62,7 @@ def parse_toolcall_actions_response(
 
     Filters for function_call items and parses them.
     Response API format has name/arguments at top level with call_id:
-    {"type": "function_call", "call_id": "...", "name": "bash", "arguments": "..."}
+    {"type": "function_call", "call_id": "...", "name": "shell", "arguments": "..."}
 
     ``template_kwargs`` are extra variables exposed to ``format_error_template`` (e.g.
     ``{"finish_reason": ...}``), matching ``parse_toolcall_actions``.
@@ -90,10 +90,10 @@ def parse_toolcall_actions_response(
             args = json.loads(tool_call.get("arguments", "{}"))
         except Exception as e:
             error_msg = f"Error parsing tool call arguments: {e}."
-        if tool_call.get("name") != "bash":
+        if tool_call.get("name") != "shell":
             error_msg += f"Unknown tool '{tool_call.get('name')}'."
         if not isinstance(args, dict) or "command" not in args:
-            error_msg += "Missing 'command' argument in bash tool call."
+            error_msg += "Missing 'command' argument in shell tool call."
         if error_msg:
             error_text = Template(format_error_template, undefined=StrictUndefined).render(
                 error=error_msg.strip(), actions=[], **template_kwargs

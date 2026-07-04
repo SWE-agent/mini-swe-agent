@@ -6,7 +6,7 @@ import pytest
 
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.portkey_model import PortkeyModel, PortkeyModelConfig
-from minisweagent.models.utils.actions_toolcall import BASH_TOOL
+from minisweagent.models.utils.actions_toolcall import SHELL_TOOL
 
 
 def test_portkey_model_missing_api_key():
@@ -51,14 +51,16 @@ def test_portkey_model_query():
 
     # Response uses tool_calls
     mock_tool_call.id = "call_123"
-    mock_tool_call.function.name = "bash"
+    mock_tool_call.function.name = "shell"
     mock_tool_call.function.arguments = json.dumps({"command": "echo 'Hello!'"})
     mock_message.tool_calls = [mock_tool_call]
     mock_message.content = None
     mock_message.model_dump.return_value = {
         "role": "assistant",
         "content": None,
-        "tool_calls": [{"id": "call_123", "function": {"name": "bash", "arguments": '{"command": "echo \'Hello!\'"}'}}],
+        "tool_calls": [
+            {"id": "call_123", "function": {"name": "shell", "arguments": '{"command": "echo \'Hello!\'"}'}}
+        ],
     }
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
@@ -83,7 +85,7 @@ def test_portkey_model_query():
 
                 # Verify the API was called correctly with tools
                 mock_client.chat.completions.create.assert_called_once_with(
-                    model="gpt-4o", messages=messages, tools=[BASH_TOOL]
+                    model="gpt-4o", messages=messages, tools=[SHELL_TOOL]
                 )
                 # Verify cost calculation was called
                 mock_cost.assert_called_once_with(mock_response.model_copy(), model=None)
@@ -116,14 +118,14 @@ def test_portkey_model_cost_tracking_ignore_errors():
 
     # Response uses tool_calls
     mock_tool_call.id = "call_456"
-    mock_tool_call.function.name = "bash"
+    mock_tool_call.function.name = "shell"
     mock_tool_call.function.arguments = json.dumps({"command": "echo test"})
     mock_message.tool_calls = [mock_tool_call]
     mock_message.content = None
     mock_message.model_dump.return_value = {
         "role": "assistant",
         "content": None,
-        "tool_calls": [{"id": "call_456", "function": {"name": "bash", "arguments": '{"command": "echo test"}'}}],
+        "tool_calls": [{"id": "call_456", "function": {"name": "shell", "arguments": '{"command": "echo test"}'}}],
     }
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
@@ -161,7 +163,7 @@ def test_portkey_model_cost_validation_error():
     mock_tool_call = MagicMock()
 
     mock_tool_call.id = "call_789"
-    mock_tool_call.function.name = "bash"
+    mock_tool_call.function.name = "shell"
     mock_tool_call.function.arguments = json.dumps({"command": "echo test"})
     mock_message.tool_calls = [mock_tool_call]
     mock_message.content = None
