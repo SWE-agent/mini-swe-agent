@@ -58,7 +58,9 @@ def test_portkey_model_query():
     mock_message.model_dump.return_value = {
         "role": "assistant",
         "content": None,
-        "tool_calls": [{"id": "call_123", "function": {"name": "shell", "arguments": '{"command": "echo \'Hello!\'"}'}}],
+        "tool_calls": [
+            {"id": "call_123", "function": {"name": "shell", "arguments": '{"command": "echo \'Hello!\'"}'}}
+        ],
     }
     mock_choice.message = mock_message
     mock_response.choices = [mock_choice]
