@@ -4,7 +4,7 @@ import pytest
 
 from minisweagent.exceptions import FormatError
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
-from minisweagent.models.utils.actions_toolcall import BASH_TOOL
+from minisweagent.models.utils.actions_toolcall import SHELL_TOOL
 
 
 class TestLitellmModelConfig:
@@ -26,7 +26,7 @@ class TestLitellmModel:
     @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
     def test_query_includes_bash_tool(self, mock_cost, mock_completion):
         tool_call = MagicMock()
-        tool_call.function.name = "bash"
+        tool_call.function.name = "shell"
         tool_call.function.arguments = '{"command": "echo test"}'
         tool_call.id = "call_1"
         mock_completion.return_value = _mock_litellm_response([tool_call])
@@ -36,13 +36,13 @@ class TestLitellmModel:
         model.query([{"role": "user", "content": "test"}])
 
         mock_completion.assert_called_once()
-        assert mock_completion.call_args.kwargs["tools"] == [BASH_TOOL]
+        assert mock_completion.call_args.kwargs["tools"] == [SHELL_TOOL]
 
     @patch("minisweagent.models.litellm_model.litellm.completion")
     @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
     def test_parse_actions_valid_tool_call(self, mock_cost, mock_completion):
         tool_call = MagicMock()
-        tool_call.function.name = "bash"
+        tool_call.function.name = "shell"
         tool_call.function.arguments = '{"command": "ls -la"}'
         tool_call.id = "call_abc"
         mock_completion.return_value = _mock_litellm_response([tool_call])

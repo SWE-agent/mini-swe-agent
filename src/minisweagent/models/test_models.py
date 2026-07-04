@@ -61,7 +61,7 @@ def make_response_api_output(content: str | None, actions: list[dict]) -> dict:
             {
                 "type": "function_call",
                 "call_id": action["tool_call_id"],
-                "name": "bash",
+                "name": "shell",
                 "arguments": f'{{"command": "{action["command"]}"}}',
             }
         )

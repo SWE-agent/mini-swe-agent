@@ -6,6 +6,7 @@ import pytest
 from minisweagent.exceptions import FormatError
 from minisweagent.models.utils.actions_text import parse_regex_actions
 from minisweagent.models.utils.actions_toolcall_response import (
+    SHELL_TOOL_RESPONSE_API,
     finish_reason_from_responses_api,
     parse_toolcall_actions_response,
 )
@@ -54,6 +55,20 @@ class TestRegexActionsTemplateKwargs:
 
 
 class TestResponseActionsTemplateKwargs:
+    def test_shell_tool_call(self):
+        assert SHELL_TOOL_RESPONSE_API["name"] == "shell"
+        assert parse_toolcall_actions_response(
+            [
+                {
+                    "type": "function_call",
+                    "call_id": "call_1",
+                    "name": "shell",
+                    "arguments": '{"command": "echo hello"}',
+                }
+            ],
+            format_error_template="{{ error }}",
+        ) == [{"command": "echo hello", "tool_call_id": "call_1"}]
+
     def test_finish_reason_reported_on_no_tool_calls(self):
         with pytest.raises(FormatError) as exc:
             parse_toolcall_actions_response(

@@ -4,7 +4,7 @@ import pytest
 
 from minisweagent.exceptions import FormatError
 from minisweagent.models.utils.actions_toolcall import (
-    BASH_TOOL,
+    SHELL_TOOL,
     format_toolcall_observation_messages,
     parse_toolcall_actions,
 )
@@ -29,16 +29,16 @@ class TestParseToolcallActions:
         assert exc.value.messages[0]["content"] == "cut off"
         # bad-arguments path
         bad = MagicMock()
-        bad.function.name = "bash"
+        bad.function.name = "shell"
         bad.function.arguments = "{not json"
         bad.id = "call_1"
         with pytest.raises(FormatError) as exc:
             parse_toolcall_actions([bad], format_error_template=template, template_kwargs={"finish_reason": "length"})
         assert exc.value.messages[0]["content"] == "cut off"
 
-    def test_valid_bash_tool_call(self):
+    def test_valid_shell_tool_call(self):
         tool_call = MagicMock()
-        tool_call.function.name = "bash"
+        tool_call.function.name = "shell"
         tool_call.function.arguments = '{"command": "echo hello"}'
         tool_call.id = "call_123"
         assert parse_toolcall_actions([tool_call], format_error_template="{{ error }}") == [
@@ -49,7 +49,7 @@ class TestParseToolcallActions:
         calls = []
         for i in range(3):
             tc = MagicMock()
-            tc.function.name = "bash"
+            tc.function.name = "shell"
             tc.function.arguments = f'{{"command": "cmd{i}"}}'
             tc.id = f"call_{i}"
             calls.append(tc)
@@ -69,7 +69,7 @@ class TestParseToolcallActions:
 
     def test_invalid_json_raises_format_error(self):
         tool_call = MagicMock()
-        tool_call.function.name = "bash"
+        tool_call.function.name = "shell"
         tool_call.function.arguments = "not valid json"
         tool_call.id = "call_1"
         with pytest.raises(FormatError) as exc_info:
@@ -78,7 +78,7 @@ class TestParseToolcallActions:
 
     def test_missing_command_raises_format_error(self):
         tool_call = MagicMock()
-        tool_call.function.name = "bash"
+        tool_call.function.name = "shell"
         tool_call.function.arguments = '{"other_arg": "value"}'
         tool_call.id = "call_1"
         with pytest.raises(FormatError) as exc_info:
@@ -135,9 +135,9 @@ class TestFormatToolcallObservationMessages:
         assert result[0]["extra"]["detail"] == "more"
 
 
-class TestBashTool:
-    def test_bash_tool_structure(self):
-        assert BASH_TOOL["type"] == "function"
-        assert BASH_TOOL["function"]["name"] == "bash"
-        assert "command" in BASH_TOOL["function"]["parameters"]["properties"]
-        assert "command" in BASH_TOOL["function"]["parameters"]["required"]
+class TestShellTool:
+    def test_shell_tool_structure(self):
+        assert SHELL_TOOL["type"] == "function"
+        assert SHELL_TOOL["function"]["name"] == "shell"
+        assert "command" in SHELL_TOOL["function"]["parameters"]["properties"]
+        assert "command" in SHELL_TOOL["function"]["parameters"]["required"]
