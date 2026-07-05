@@ -86,7 +86,10 @@ def _run(command: str, cwd: str, env: dict[str, str], timeout: int) -> subproces
     try:
         stdout, _ = process.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
-        os.killpg(process.pid, signal.SIGKILL) if os.name == "posix" else process.kill()
+        try:
+            os.killpg(process.pid, signal.SIGKILL) if os.name == "posix" else process.kill()
+        except ProcessLookupError:
+            pass  # Process group already exited between timeout and kill.
         stdout, _ = process.communicate()
         raise subprocess.TimeoutExpired(command, timeout, output=stdout)
     return subprocess.CompletedProcess(command, process.returncode, stdout=stdout)

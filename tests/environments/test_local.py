@@ -135,6 +135,22 @@ def test_local_environment_timeout():
 
 
 @pytest.mark.skipif(os.name == "nt", reason="process groups are POSIX-specific")
+def test_local_environment_timeout_killpg_race_captures_output():
+    """When os.killpg raises ProcessLookupError (process group already exited
+    between the timeout and the kill), communicate() must still run so partial
+    output is captured and TimeoutExpired is raised (not ProcessLookupError)."""
+    import subprocess
+
+    from minisweagent.environments.local import _run
+
+    with patch("minisweagent.environments.local.os.killpg", side_effect=ProcessLookupError):
+        with pytest.raises(subprocess.TimeoutExpired) as exc_info:
+            _run("echo partial_output; sleep 5", os.getcwd(), dict(os.environ), timeout=1)
+
+    assert "partial_output" in (exc_info.value.output or "")
+
+
+@pytest.mark.skipif(os.name == "nt", reason="process groups are POSIX-specific")
 def test_local_environment_timeout_kills_child_process():
     """Test that timeout kills shell-spawned child processes."""
     with tempfile.TemporaryDirectory() as temp_dir:
