@@ -2857,7 +2857,7 @@ You can also press <code>Ctrl+C</code> to interrupt the agent at any time, allow
 <span class="w">    </span><span class="no">}</span>
 <span class="w">    </span><span class="no">{%- endif -%}</span>
 <span class="w">  </span><span class="nt">format_error_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">{% if finish_reason is defined and finish_reason in ["length", "tool_calls"] -%}</span>
+<span class="w">    </span><span class="no">{% if finish_reason is defined and (finish_reason == "length" or (finish_reason == "tool_calls" and not has_tool_calls)) -%}</span>
 <span class="w">    </span><span class="no">Your previous response reached the output token limit (finish_reason={{ finish_reason }}) before you produced a tool call, so it was cut off. Respond more concisely and finish with exactly one bash tool call. If you need to think more, do so briefly.</span>
 <span class="w">    </span><span class="no">{%- else -%}</span>
 <span class="w">    </span><span class="no">Tool call error:</span>
