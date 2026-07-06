@@ -44,6 +44,7 @@ def parse_toolcall_actions(
                 "content": Template(format_error_template, undefined=StrictUndefined).render(
                     error="No tool calls found in the response. Every response MUST include at least one tool call.",
                     actions=[],
+                    has_tool_calls=False,
                     **template_kwargs,
                 ),
                 "extra": {"interrupt_type": "FormatError"},
@@ -66,7 +67,7 @@ def parse_toolcall_actions(
                 {
                     "role": "user",
                     "content": Template(format_error_template, undefined=StrictUndefined).render(
-                        actions=[], error=error_msg.strip(), **template_kwargs
+                        actions=[], error=error_msg.strip(), has_tool_calls=True, **template_kwargs
                     ),
                     "extra": {"interrupt_type": "FormatError"},
                 }
