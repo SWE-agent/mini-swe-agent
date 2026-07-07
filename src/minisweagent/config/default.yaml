@@ -142,30 +142,23 @@ model:
   model_kwargs:
     drop_params: true
   format_error_template: |
-    {% if finish_reason is defined and finish_reason in ["length", "tool_calls"] -%}
-    Your previous response reached the output token limit (finish_reason={{ finish_reason }}) before you produced a complete action, so it was cut off. Respond more concisely and provide exactly one action in the required format. If you need to think more, do so briefly.
+    {% if finish_reason is defined and (finish_reason == "length" or (finish_reason == "tool_calls" and not has_tool_calls)) -%}
+    Your previous response reached the output token limit (finish_reason={{ finish_reason }}) before you produced a tool call, so it was cut off. Respond more concisely and finish with exactly one bash tool call. If you need to think more, do so briefly.
     {%- else -%}
-    Format error:
+    Tool call error:
 
     <error>
     {{error}}
     </error>
 
-    Here is general guidance on how to format your response:
+    Here is general guidance on how to submit correct toolcalls:
 
-    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
+    Every response needs to use the 'bash' tool at least once to execute commands.
+
+    Call the bash tool with your command as the argument:
+    - Tool: bash
+    - Arguments: {"command": "your_command_here"}
+
     If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
     without any other command.
-    Else, please format your response exactly as follows:
-
-    <response_example>
-    Here are some thoughts about why you want to perform the action.
-
-    ```mswea_bash_command
-    <action>
-    ```
-    </response_example>
-
-    Note: In rare cases, if you need to reference a similar format in your command, you might have
-    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```mswea_bash_command.
     {%- endif %}
