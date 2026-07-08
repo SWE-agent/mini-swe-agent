@@ -4,6 +4,8 @@
 
 # The minimal AI software engineering agent
 
+[![Listed on TakoAPI](https://takoapi.com/api/badge/swe-agent-mini-swe-agent)](https://takoapi.com/agents/swe-agent-mini-swe-agent)
+
 📣 [mini-swe-agent now powers Ramp SWE-Bench](https://labs.ramp.com/swebench)<br/>
 📣 [mini-swe-agent beats Claude Code and Codex on DeepSWE](https://deepswe.datacurve.ai/blog#evaluation-harness)<br/>
 📣 [Run mini-swe-agent on our new & extremely challenging benchmark, ProgramBench](https://mini-swe-agent.com/latest/usage/programbench/)<br/>
