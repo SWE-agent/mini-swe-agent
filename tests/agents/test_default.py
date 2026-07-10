@@ -57,9 +57,9 @@ def is_observation_message(msg: dict) -> bool:
 
 
 @pytest.fixture
-def default_config():
-    """Load default agent config from config/default.yaml"""
-    config_path = Path("src/minisweagent/config/default.yaml")
+def textbased_config():
+    """Load text-based agent config from config/mini_textbased.yaml"""
+    config_path = Path("src/minisweagent/config/mini_textbased.yaml")
     with open(config_path) as f:
         config = yaml.safe_load(f)
     return config["agent"]
@@ -114,10 +114,10 @@ def make_response_api_model(
 
 
 @pytest.fixture(params=["text", "toolcall", "response_api"])
-def model_factory(request, default_config, toolcall_config):
+def model_factory(request, textbased_config, toolcall_config):
     """Parametrized fixture that returns (factory_fn, config) for all three model types."""
     if request.param == "text":
-        return make_text_model, default_config
+        return make_text_model, textbased_config
     elif request.param == "toolcall":
         return make_tc_model, toolcall_config
     else:  # response_api
