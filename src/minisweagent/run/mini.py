@@ -12,7 +12,6 @@ from rich.console import Console
 
 from minisweagent import global_config_dir
 from minisweagent.agents import get_agent
-from minisweagent.agents.utils.prompt_user import _multiline_prompt
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments import get_environment
 from minisweagent.models import get_model
@@ -92,6 +91,8 @@ def main(
     config = recursive_merge(*configs)
 
     if (run_task := config.get("run", {}).get("task", UNSET)) is UNSET:
+        from minisweagent.agents.utils.prompt_user import _multiline_prompt
+
         console.print("[bold yellow]What do you want to do?")
         run_task = _multiline_prompt()
         console.print("[bold green]Got that, thanks![/bold green]")

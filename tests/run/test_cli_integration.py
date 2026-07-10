@@ -15,6 +15,22 @@ def strip_ansi_codes(text: str) -> str:
     return ansi_escape.sub("", text)
 
 
+def test_import_mini_does_not_load_prompt_toolkit():
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import sys; import minisweagent.run.mini; "
+            'print(any(name == "prompt_toolkit" or name.startswith("prompt_toolkit.") for name in sys.modules))',
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=True,
+    )
+    assert result.stdout.splitlines()[-1] == "False"
+
+
 def test_configure_if_first_time_called():
     """Test that configure_if_first_time is called when running mini main."""
     with (
@@ -98,7 +114,7 @@ def test_mini_calls_prompt_when_no_task_provided():
     """Test that mini calls prompt when no task is provided."""
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),
-        patch("minisweagent.run.mini._multiline_prompt") as mock_prompt,
+        patch("minisweagent.agents.utils.prompt_user._multiline_prompt") as mock_prompt,
         patch("minisweagent.run.mini.get_agent") as mock_get_agent,
         patch("minisweagent.run.mini.get_model") as mock_get_model,
         patch("minisweagent.run.mini.get_environment") as mock_get_env,
