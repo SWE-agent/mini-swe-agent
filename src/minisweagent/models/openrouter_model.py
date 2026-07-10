@@ -98,6 +98,7 @@ class OpenRouterModel:
         for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
             with attempt:
                 response = self._query(self._prepare_messages_for_api(messages), **kwargs)
+                self._validate_response(response)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
         try:
@@ -114,6 +115,16 @@ class OpenRouterModel:
             "timestamp": time.time(),
         }
         return message
+
+    def _validate_response(self, response: dict) -> None:
+        choices = response.get("choices") if isinstance(response, dict) else None
+        if (
+            not isinstance(choices, list)
+            or not choices
+            or not isinstance(choices[0], dict)
+            or not isinstance(choices[0].get("message"), dict)
+        ):
+            raise OpenRouterAPIError(f"Invalid chat completion response: {response}")
 
     def _calculate_cost(self, response) -> dict[str, float]:
         usage = response.get("usage", {})
