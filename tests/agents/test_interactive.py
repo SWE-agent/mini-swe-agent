@@ -837,11 +837,13 @@ def test_limits_exceeded_with_user_continuation(model_factory):
         },
     )
 
-    # Mock input() to provide new limits when prompted
-    with patch("builtins.input", side_effect=["10", "5.0"]):  # New step_limit=10, cost_limit=5.0
-        with mock_prompts([""]):  # No new task
-            with patch("minisweagent.agents.interactive.console.print"):  # Suppress console output
-                info = agent.run("Test limits exceeded with continuation")
+    # Mock input() to provide new limits when prompted (simulating an
+    # interactive terminal, so isatty() must report True).
+    with patch.object(InteractiveAgent, "_stdin_is_interactive", return_value=True):
+        with patch("builtins.input", side_effect=["10", "5.0"]):  # New step_limit=10, cost_limit=5.0
+            with mock_prompts([""]):  # No new task
+                with patch("minisweagent.agents.interactive.console.print"):  # Suppress console output
+                    info = agent.run("Test limits exceeded with continuation")
 
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "completed after limit increase\n"
@@ -880,17 +882,69 @@ def test_limits_exceeded_multiple_times_with_continuation(model_factory):
         },
     )
 
-    # Mock input() to provide new limits multiple times
+    # Mock input() to provide new limits multiple times (interactive terminal).
     # First limit increase: step_limit=2, then step_limit=10 when exceeded again
-    with patch("builtins.input", side_effect=["2", "100.0", "10", "100.0"]):
-        with mock_prompts([""]):  # No new task
-            with patch("minisweagent.agents.interactive.console.print"):
-                info = agent.run("Test multiple limit increases")
+    with patch.object(InteractiveAgent, "_stdin_is_interactive", return_value=True):
+        with patch("builtins.input", side_effect=["2", "100.0", "10", "100.0"]):
+            with mock_prompts([""]):  # No new task
+                with patch("minisweagent.agents.interactive.console.print"):
+                    info = agent.run("Test multiple limit increases")
 
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "completed after multiple increases\n"
     assert agent.n_calls == 5  # Should complete all 5 steps
     assert agent.config.step_limit == 10  # Should have final updated step limit
+
+
+def test_limits_exceeded_non_interactive_stops_cleanly(model_factory):
+    """Without a terminal (e.g. `--yolo` in CI / a sandbox), a breached limit must
+    stop cleanly with a LimitsExceeded exit status instead of crashing on EOFError
+    when trying to prompt for new limits."""
+    factory, config = model_factory
+    agent = InteractiveAgent(
+        model=factory(
+            [("Step 1", [{"command": "echo 'first step'"}])],
+            cost_per_call=0.6,  # exceeds cost_limit after the first call
+        ),
+        env=LocalEnvironment(),
+        **{
+            **config,
+            "step_limit": 10,
+            "cost_limit": 0.5,
+            "mode": "yolo",
+        },
+    )
+
+    with patch.object(InteractiveAgent, "_stdin_is_interactive", return_value=False):
+        with patch("builtins.input", side_effect=AssertionError("input() must not be called")) as mock_in:
+            with patch("minisweagent.agents.interactive.console.print"):
+                info = agent.run("Test non-interactive limit stop")
+
+    assert info["exit_status"] == "LimitsExceeded"
+    assert agent.n_calls == 1  # one model call happened, the next was blocked by the limit
+    mock_in.assert_not_called()
+
+
+def test_time_exceeded_never_prompts(model_factory):
+    """A wall-clock limit can't be lifted by raising step/cost limits, so it must
+    always stop cleanly -- even with an interactive terminal -- rather than prompt
+    (which would otherwise loop forever)."""
+    factory, config = model_factory
+    agent = InteractiveAgent(
+        model=factory([("Step 1", [{"command": "echo 'first step'"}])]),
+        env=LocalEnvironment(),
+        **{**config, "step_limit": 10, "cost_limit": 100.0, "wall_time_limit_seconds": 1, "mode": "yolo"},
+    )
+    agent._start_time = 0  # force the wall-clock budget to be already exhausted
+
+    with patch.object(InteractiveAgent, "_stdin_is_interactive", return_value=True):
+        with patch("builtins.input", side_effect=AssertionError("input() must not be called")) as mock_in:
+            with patch("minisweagent.agents.interactive.console.print"):
+                info = agent.run("Test time-exceeded clean stop")
+
+    assert info["exit_status"] == "TimeExceeded"
+    assert agent.n_calls == 0  # limit tripped before any model call
+    mock_in.assert_not_called()
 
 
 def test_continue_after_completion_with_new_task(model_factory):

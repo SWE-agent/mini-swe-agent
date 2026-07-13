@@ -10,6 +10,7 @@ from minisweagent.models.test_models import DeterministicModel, make_output
 from minisweagent.run.benchmarks.swebench import (
     _teardown_environment,
     filter_instances,
+    get_sb_environment,
     get_swebench_docker_image_name,
     main,
     remove_from_preds_file,
@@ -121,6 +122,34 @@ def test_get_image_name_with_complex_instance_id():
     instance = {"instance_id": "project__sub__module__version__1.2.3"}
     expected = "docker.io/swebench/sweb.eval.x86_64.project_1776_sub_1776_module_1776_version_1776_1.2.3:latest"
     assert get_swebench_docker_image_name(instance) == expected
+
+
+def test_get_sb_environment_runs_startup_command_as_dict():
+    """startup_command must be passed to env.execute() as a dict, not a bare string."""
+    fake_env = MagicMock()
+    fake_env.execute.return_value = {"returncode": 0, "output": ""}
+    instance = {"instance_id": "repo1__test1", "image_name": "custom/image:tag"}
+    # The startup_command with {{instance_id}} tested the Jinja render as well.
+    config = {"run": {"env_startup_command": "echo {{instance_id}}"}}
+
+    with patch("minisweagent.run.benchmarks.swebench.get_environment", return_value=fake_env):
+        get_sb_environment(config, instance)
+
+    fake_env.execute.assert_called_once_with({"command": "echo repo1__test1"})
+
+
+def test_get_sb_environment_does_not_mutate_shared_config():
+    """The config dict is shared across worker threads, so resolving the per-instance image must not mutate it."""
+    config = {"environment": {"environment_class": "docker"}}
+    instance = {"instance_id": "repo1__test1", "image_name": "custom/image:tag"}
+
+    with patch(
+        "minisweagent.run.benchmarks.swebench.get_environment", return_value=MagicMock()
+    ) as mock_get_environment:
+        get_sb_environment(config, instance)
+
+    assert mock_get_environment.call_args.args[0]["image"] == "custom/image:tag"
+    assert "image" not in config["environment"]
 
 
 def test_filter_instances_no_filters():

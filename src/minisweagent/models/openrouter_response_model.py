@@ -4,6 +4,7 @@ import time
 
 import requests
 
+from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.openrouter_model import (
     OpenRouterAPIError,
@@ -14,6 +15,7 @@ from minisweagent.models.openrouter_model import (
 )
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
+    finish_reason_from_responses_api,
     format_toolcall_observation_messages,
     parse_toolcall_actions_response,
 )
@@ -86,9 +88,14 @@ class OpenRouterResponseModel(OpenRouterModel):
                 response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        try:
+            actions = self._parse_actions(response)
+        except FormatError as e:
+            e.messages[0]["extra"]["response"] = dict(response)
+            raise
         message = dict(response)
         message["extra"] = {
-            "actions": self._parse_actions(response),
+            "actions": actions,
             **cost_output,
             "timestamp": time.time(),
         }
@@ -96,7 +103,9 @@ class OpenRouterResponseModel(OpenRouterModel):
 
     def _parse_actions(self, response: dict) -> list[dict]:
         return parse_toolcall_actions_response(
-            response.get("output", []), format_error_template=self.config.format_error_template
+            response.get("output", []),
+            format_error_template=self.config.format_error_template,
+            template_kwargs={"finish_reason": finish_reason_from_responses_api(response)},
         )
 
     def format_message(self, **kwargs) -> dict:

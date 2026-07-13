@@ -7,6 +7,7 @@ from typing import Any, Literal
 import requests
 from pydantic import BaseModel
 
+from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
@@ -99,9 +100,15 @@ class OpenRouterModel:
                 response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        try:
+            actions = self._parse_actions(response)
+        except FormatError as e:
+            # dict(response) is a shallow copy; the original response object is not mutated.
+            e.messages[0]["extra"]["response"] = dict(response)
+            raise
         message = dict(response["choices"][0]["message"])
         message["extra"] = {
-            "actions": self._parse_actions(response),
+            "actions": actions,
             "response": response,
             **cost_output,
             "timestamp": time.time(),
@@ -125,7 +132,11 @@ class OpenRouterModel:
         """Parse tool calls from the response. Raises FormatError if unknown tool."""
         tool_calls = response["choices"][0]["message"].get("tool_calls") or []
         tool_calls = [_DictToObj(tc) for tc in tool_calls]
-        return parse_toolcall_actions(tool_calls, format_error_template=self.config.format_error_template)
+        return parse_toolcall_actions(
+            tool_calls,
+            format_error_template=self.config.format_error_template,
+            template_kwargs={"finish_reason": response["choices"][0].get("finish_reason")},
+        )
 
     def format_message(self, **kwargs) -> dict:
         return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)

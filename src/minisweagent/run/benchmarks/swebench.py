@@ -17,11 +17,11 @@ from jinja2 import StrictUndefined, Template
 from rich.live import Live
 
 from minisweagent import Environment
-from minisweagent.agents.default import DefaultAgent
 from minisweagent.config import builtin_config_dir, get_config_from_spec
 from minisweagent.environments import get_environment
 from minisweagent.models import get_model
 from minisweagent.run.benchmarks.utils.batch_progress import RunBatchProgressManager
+from minisweagent.run.benchmarks.utils.common import ProgressTrackingAgent
 from minisweagent.utils.log import add_file_handler, logger
 from minisweagent.utils.serialize import UNSET, recursive_merge
 
@@ -65,20 +65,6 @@ app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 _OUTPUT_FILE_LOCK = threading.Lock()
 
 
-class ProgressTrackingAgent(DefaultAgent):
-    """Simple wrapper around DefaultAgent that provides progress updates."""
-
-    def __init__(self, *args, progress_manager: RunBatchProgressManager, instance_id: str = "", **kwargs):
-        super().__init__(*args, **kwargs)
-        self.progress_manager: RunBatchProgressManager = progress_manager
-        self.instance_id = instance_id
-
-    def step(self) -> dict:
-        """Override step to provide progress updates."""
-        self.progress_manager.update_instance_status(self.instance_id, f"Step {self.n_calls + 1:3d} (${self.cost:.2f})")
-        return super().step()
-
-
 def get_swebench_docker_image_name(instance: dict) -> str:
     """Get the image name for a SWEBench instance."""
     image_name = instance.get("image_name", None) or instance.get("docker_image", None)
@@ -91,7 +77,7 @@ def get_swebench_docker_image_name(instance: dict) -> str:
 
 
 def get_sb_environment(config: dict, instance: dict) -> Environment:
-    env_config = config.setdefault("environment", {})
+    env_config = {**config.get("environment", {})}
     env_config["environment_class"] = env_config.get("environment_class", "docker")
     image_name = get_swebench_docker_image_name(instance)
     if env_config["environment_class"] in ["docker", "swerex_modal", "e2b"]:
@@ -103,7 +89,7 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     if startup_command := config.get("run", {}).get("env_startup_command"):
         startup_command = Template(startup_command, undefined=StrictUndefined).render(**instance)
         try:
-            out = env.execute(startup_command)
+            out = env.execute({"command": startup_command})
             if out["returncode"] != 0:
                 raise RuntimeError(f"Error executing startup command: {out}")
         except BaseException:
