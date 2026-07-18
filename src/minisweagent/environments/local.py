@@ -28,11 +28,11 @@ class LocalEnvironment:
         cwd = cwd or self.config.cwd or os.getcwd()
         try:
             result = _run(
-                command, 
-                cwd, 
-                os.environ | self.config.env, 
+                command,
+                cwd,
+                os.environ | self.config.env,
                 timeout or self.config.timeout,
-                self.config.shell  # Pass the custom shell config to _run
+                self.config.shell,  # Pass the custom shell config to _run
             )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
         except Exception as e:
@@ -77,14 +77,14 @@ class LocalEnvironment:
 
 
 def _run(
-    command: str, 
-    cwd: str, 
-    env: dict[str, str], 
-    timeout: int, 
-    shell: str = ""  # New: Accept custom shell parameter
+    command: str,
+    cwd: str,
+    env: dict[str, str],
+    timeout: int,
+    shell: str = "",  # New: Accept custom shell parameter
 ) -> subprocess.CompletedProcess[str]:
     """Like subprocess.run, but kills the whole process group on timeout so no children are orphaned."""
-    
+
     # Determine execution method based on custom shell configuration
     if shell:
         # If a custom shell is specified, execute as a list to avoid double-parsing
