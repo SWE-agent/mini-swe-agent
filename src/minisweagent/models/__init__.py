@@ -76,6 +76,7 @@ def get_model_name(input_model_name: str | None = None, config: dict | None = No
 
 
 _MODEL_CLASS_MAPPING = {
+    "atlascloud": "minisweagent.models.atlascloud_model.AtlasCloudModel",
     "litellm": "minisweagent.models.litellm_model.LitellmModel",
     "litellm_textbased": "minisweagent.models.litellm_textbased_model.LitellmTextbasedModel",
     "litellm_response": "minisweagent.models.litellm_response_model.LitellmResponseModel",
@@ -106,6 +107,11 @@ def get_model_class(model_name: str, model_class: str = "") -> type:
         except (ValueError, ImportError, AttributeError):
             msg = f"Unknown model class: {model_class} (resolved to {full_path}, available: {_MODEL_CLASS_MAPPING})"
             raise ValueError(msg)
+
+    if model_name.startswith("atlascloud/"):
+        from minisweagent.models.atlascloud_model import AtlasCloudModel
+
+        return AtlasCloudModel
 
     # Default to LitellmModel
     from minisweagent.models.litellm_model import LitellmModel
