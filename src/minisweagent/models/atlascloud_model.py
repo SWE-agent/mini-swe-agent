@@ -19,7 +19,9 @@ class AtlasCloudModel(LitellmModel):
             msg = "ATLASCLOUD_API_KEY is required for Atlas Cloud models."
             raise ValueError(msg)
 
-        api_base = model_kwargs.pop("api_base", None) or os.getenv("ATLASCLOUD_API_BASE", "https://api.atlascloud.ai/v1")
+        api_base = model_kwargs.pop("api_base", None) or os.getenv(
+            "ATLASCLOUD_API_BASE", "https://api.atlascloud.ai/v1"
+        )
         kwargs["model_name"] = self._to_litellm_model_name(kwargs["model_name"])
         kwargs.setdefault("cost_tracking", "ignore_errors")
         kwargs["model_kwargs"] = {
