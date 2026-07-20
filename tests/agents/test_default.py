@@ -5,7 +5,7 @@ import yaml
 
 from minisweagent.agents.default import DefaultAgent
 from minisweagent.environments.local import LocalEnvironment
-from minisweagent.exceptions import FormatError
+from minisweagent.exceptions import FormatError, ProviderTimeout
 from minisweagent.models.test_models import (
     DeterministicModel,
     DeterministicResponseAPIToolcallModel,
@@ -477,6 +477,17 @@ class _FlakyToolcallModel(DeterministicToolcallModel):
         return output
 
 
+class _ProviderTimeoutModel(DeterministicToolcallModel):
+    def query(self, messages, **kwargs):
+        raise ProviderTimeout(
+            {
+                "role": "exit",
+                "content": "ProviderTimeout",
+                "extra": {"exit_status": "ProviderTimeout", "submission": ""},
+            }
+        )
+
+
 def test_repeated_format_errors_terminate_cleanly(toolcall_config):
     """With max_consecutive_format_errors set, a run that keeps producing no-tool-call / truncation
     turns stops cleanly with exit_status=RepeatedFormatError instead of looping until the budget is
@@ -490,6 +501,13 @@ def test_repeated_format_errors_terminate_cleanly(toolcall_config):
     info = agent.run("Test repeated format errors")
     assert info["exit_status"] == "RepeatedFormatError"
     assert agent.n_calls == 2  # stopped at the 2nd consecutive error, didn't burn all 5
+
+
+def test_provider_timeout_terminates_cleanly(toolcall_config):
+    agent = DefaultAgent(model=_ProviderTimeoutModel(outputs=[]), env=LocalEnvironment(), **toolcall_config)
+    info = agent.run("Test provider timeout")
+    assert info["exit_status"] == "ProviderTimeout"
+    assert agent.n_calls == 1
 
 
 def test_format_error_counter_resets_on_success(toolcall_config):

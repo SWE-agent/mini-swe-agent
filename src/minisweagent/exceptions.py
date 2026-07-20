@@ -18,6 +18,10 @@ class TimeExceeded(LimitsExceeded):
     """Raised when the agent has exceeded its wall-clock time limit."""
 
 
+class ProviderTimeout(InterruptAgentFlow):
+    """Raised when the model provider does not return within its timeout."""
+
+
 class UserInterruption(InterruptAgentFlow):
     """Raised when the user interrupts the agent."""
 
