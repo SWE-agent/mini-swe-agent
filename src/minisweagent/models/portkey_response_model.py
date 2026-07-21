@@ -102,6 +102,7 @@ class PortkeyResponseAPIModel:
         try:
             actions = self._parse_actions(response)
         except FormatError as e:
+            e.messages[0]["extra"].update(cost_output)
             # hasattr guard: Portkey returns a pydantic object, but tests may inject a plain dict.
             # Inner try: if serialization itself fails, repr() guarantees the key is always set.
             try:

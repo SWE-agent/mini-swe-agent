@@ -58,6 +58,7 @@ class LitellmResponseModel(LitellmModel):
         try:
             actions = self._parse_actions(response)
         except FormatError as e:
+            e.messages[0]["extra"].update(cost_output)
             # hasattr guard: litellm.responses() returns a pydantic object, but tests
             # may inject a plain dict; dict(response) is the correct fallback in that case.
             # Inner try: if serialization itself fails, repr() guarantees the key is always set.

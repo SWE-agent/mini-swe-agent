@@ -92,7 +92,7 @@ def test_litellm_model_format_error_persists_response() -> None:
 
     with (
         patch.object(LitellmModel, "_query", return_value=response),
-        patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.0}),
+        patch.object(LitellmModel, "_calculate_cost", return_value={"cost": 0.02}),
     ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
@@ -103,6 +103,7 @@ def test_litellm_model_format_error_persists_response() -> None:
     # model_dump(mode='json') was used: result must be JSON-serialisable
     json.dumps(extra["response"])
     response.model_dump.assert_any_call(mode="json")
+    assert extra["cost"] == 0.02
 
 
 # --------------------------------------------------------------------------- #
@@ -122,7 +123,7 @@ def test_litellm_response_model_format_error_persists_response_with_model_dump()
 
     with (
         patch.object(LitellmResponseModel, "_query", return_value=response),
-        patch.object(LitellmResponseModel, "_calculate_cost", return_value={"cost": 0.0}),
+        patch.object(LitellmResponseModel, "_calculate_cost", return_value={"cost": 0.02}),
     ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
@@ -131,6 +132,7 @@ def test_litellm_response_model_format_error_persists_response_with_model_dump()
     assert "response" in extra
     assert extra["response"] == serialized
     json.dumps(extra["response"])  # JSON-serialisable
+    assert extra["cost"] == 0.02
 
 
 def test_litellm_response_model_format_error_persists_response_plain_dict_fallback() -> None:
@@ -165,7 +167,7 @@ def test_openrouter_model_format_error_persists_response() -> None:
 
     with (
         patch.object(OpenRouterModel, "_query", return_value=response),
-        patch.object(OpenRouterModel, "_calculate_cost", return_value={"cost": 0.0}),
+        patch.object(OpenRouterModel, "_calculate_cost", return_value={"cost": 0.02}),
     ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
@@ -174,6 +176,7 @@ def test_openrouter_model_format_error_persists_response() -> None:
     assert "response" in extra
     assert extra["response"] == response  # plain dict round-trip
     assert extra["response"] is not response  # must be a copy, not the same object
+    assert extra["cost"] == 0.02
 
 
 # --------------------------------------------------------------------------- #
@@ -189,7 +192,7 @@ def test_openrouter_response_model_format_error_persists_response() -> None:
 
     with (
         patch.object(OpenRouterResponseModel, "_query", return_value=response),
-        patch.object(OpenRouterResponseModel, "_calculate_cost", return_value={"cost": 0.0}),
+        patch.object(OpenRouterResponseModel, "_calculate_cost", return_value={"cost": 0.02}),
     ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
@@ -198,6 +201,7 @@ def test_openrouter_response_model_format_error_persists_response() -> None:
     assert "response" in extra
     assert extra["response"] == response
     assert extra["response"] is not response  # must be a copy, not the same object
+    assert extra["cost"] == 0.02
 
 
 # --------------------------------------------------------------------------- #
@@ -220,7 +224,7 @@ def test_portkey_model_format_error_persists_response(monkeypatch: pytest.Monkey
 
     with (
         patch.object(PortkeyModel, "_query", return_value=response),
-        patch.object(PortkeyModel, "_calculate_cost", return_value={"cost": 0.0}),
+        patch.object(PortkeyModel, "_calculate_cost", return_value={"cost": 0.02}),
     ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
@@ -230,6 +234,7 @@ def test_portkey_model_format_error_persists_response(monkeypatch: pytest.Monkey
     assert extra["response"], "response payload empty — fix not applied"
     json.dumps(extra["response"])  # JSON-serialisable
     response.model_dump.assert_any_call(mode="json")
+    assert extra["cost"] == 0.02
 
 
 # --------------------------------------------------------------------------- #
@@ -253,7 +258,7 @@ def test_portkey_response_model_format_error_persists_response_with_model_dump(
 
     with (
         patch.object(PortkeyResponseAPIModel, "_query", return_value=response),
-        patch.object(PortkeyResponseAPIModel, "_calculate_cost", return_value={"cost": 0.0}),
+        patch.object(PortkeyResponseAPIModel, "_calculate_cost", return_value={"cost": 0.02}),
     ):
         with pytest.raises(FormatError) as excinfo:
             model.query([{"role": "user", "content": "hi"}])
@@ -262,6 +267,7 @@ def test_portkey_response_model_format_error_persists_response_with_model_dump(
     assert "response" in extra
     assert extra["response"] == serialized
     json.dumps(extra["response"])  # JSON-serialisable
+    assert extra["cost"] == 0.02
 
 
 # --------------------------------------------------------------------------- #
@@ -286,6 +292,7 @@ def test_requesty_model_format_error_persists_response() -> None:
     assert "response" in extra
     assert extra["response"] == response
     assert extra["response"] is not response  # must be a copy, not the same object
+    assert extra["cost"] == 0.01
 
 
 # --------------------------------------------------------------------------- #

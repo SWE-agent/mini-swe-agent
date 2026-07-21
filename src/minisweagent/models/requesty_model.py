@@ -108,6 +108,7 @@ class RequestyModel:
         try:
             actions = self._parse_actions(response)
         except FormatError as e:
+            e.messages[0]["extra"].update(cost_output)
             # dict(response) is a shallow copy; the original response object is not mutated.
             e.messages[0]["extra"]["response"] = dict(response)
             raise
