@@ -38,6 +38,38 @@ class TestLitellmModel:
         mock_completion.assert_called_once()
         assert mock_completion.call_args.kwargs["tools"] == [BASH_TOOL]
 
+    def test_tools_defaults_to_bash_tool(self):
+        model = LitellmModel(model_name="gpt-4")
+        assert model._tools() == [BASH_TOOL]
+
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    def test_tools_override_changes_tools_passed_to_completion(self, mock_cost, mock_completion):
+        custom_tool = {
+            "type": "function",
+            "function": {
+                "name": "custom",
+                "parameters": {"type": "object", "properties": {}, "required": []},
+            },
+        }
+
+        class CustomModel(LitellmModel):
+            def _tools(self):
+                return [BASH_TOOL, custom_tool]
+
+        tool_call = MagicMock()
+        tool_call.function.name = "bash"
+        tool_call.function.arguments = '{"command": "echo test"}'
+        tool_call.id = "call_1"
+        mock_completion.return_value = _mock_litellm_response([tool_call])
+        mock_cost.return_value = 0.001
+
+        model = CustomModel(model_name="gpt-4")
+        model.query([{"role": "user", "content": "test"}])
+
+        mock_completion.assert_called_once()
+        assert mock_completion.call_args.kwargs["tools"] == [BASH_TOOL, custom_tool]
+
     @patch("minisweagent.models.litellm_model.litellm.completion")
     @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
     def test_parse_actions_valid_tool_call(self, mock_cost, mock_completion):
