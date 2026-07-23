@@ -1,3 +1,4 @@
+import atexit
 import logging
 import os
 import platform
@@ -56,6 +57,8 @@ class DockerEnvironment:
         self.logger = logger or logging.getLogger("minisweagent.environment")
         self.container_id: str | None = None
         self.config = config_class(**kwargs)
+        self._cleaned = False
+        atexit.register(self.cleanup)
         self._start_container()
 
     def get_template_vars(self, **kwargs) -> dict[str, Any]:
@@ -152,7 +155,10 @@ class DockerEnvironment:
 
     def cleanup(self):
         """Stop and remove the Docker container."""
-        if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set
+        if self._cleaned:
+            return
+        self._cleaned = True
+        if getattr(self, "container_id", None) is not None:
             cmd = f"(timeout 60 {self.config.executable} stop {self.container_id} || {self.config.executable} rm -f {self.container_id}) >/dev/null 2>&1 &"
             subprocess.Popen(cmd, shell=True)
 
