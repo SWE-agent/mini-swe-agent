@@ -54,6 +54,21 @@ def is_observation_message(msg: dict) -> bool:
     return False
 
 
+class _RecordingEnvironment:
+    def __init__(self):
+        self.actions: list[dict] = []
+
+    def execute(self, action: dict) -> dict:
+        self.actions.append(action)
+        return {"output": action["command"], "returncode": 0, "exception_info": ""}
+
+    def get_template_vars(self) -> dict:
+        return {}
+
+    def serialize(self) -> dict:
+        return {}
+
+
 # --- Fixtures ---
 
 
@@ -385,6 +400,50 @@ def test_step_adds_messages(model_factory):
     assert "returncode" in get_observation_text(agent.messages[-1])
 
 
+def test_duplicate_completed_tool_call_id_is_not_executed_again(toolcall_config):
+    """Repeated provider tool-call IDs should not produce duplicate tool results."""
+
+    first_call = {
+        "id": "repeat_loop_initial",
+        "type": "function",
+        "function": {"name": "bash", "arguments": '{"command": "echo first"}'},
+    }
+    repeated_call = {
+        "id": "repeat_loop_initial",
+        "type": "function",
+        "function": {"name": "bash", "arguments": '{"command": "echo duplicate"}'},
+    }
+    env = _RecordingEnvironment()
+    agent = DefaultAgent(
+        model=DeterministicToolcallModel(
+            outputs=[
+                make_toolcall_output(
+                    None,
+                    [first_call],
+                    [{"command": "echo first", "tool_call_id": "repeat_loop_initial"}],
+                ),
+                make_toolcall_output(
+                    None,
+                    [repeated_call],
+                    [{"command": "echo duplicate", "tool_call_id": "repeat_loop_initial"}],
+                ),
+            ],
+        ),
+        env=env,
+        **toolcall_config,
+    )
+
+    agent.add_messages({"role": "system", "content": "system"}, {"role": "user", "content": "task"})
+    agent.step()
+
+    with pytest.raises(FormatError) as exc:
+        agent.step()
+
+    assert "already completed" in exc.value.messages[0]["content"]
+    assert env.actions == [{"command": "echo first", "tool_call_id": "repeat_loop_initial"}]
+    assert [msg.get("tool_call_id") for msg in agent.messages if msg.get("role") == "tool"] == ["repeat_loop_initial"]
+
+
 def test_observations_captured(model_factory):
     """Test intermediate outputs are captured correctly."""
     factory, config = model_factory
@@ -496,10 +555,14 @@ def test_repeated_format_errors_terminate_cleanly(toolcall_config):
 def test_format_error_counter_resets_on_success(toolcall_config):
     """A successful tool call between format errors resets the consecutive counter, so isolated
     errors don't accumulate to the termination threshold."""
-    good = make_tc_model([("listing", [{"command": "echo hello"}])]).config.outputs[0]
-    submit = make_tc_model(
-        [("done", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho ok"}])]
-    ).config.outputs[0]
+    tool_outputs = make_tc_model(
+        [
+            ("listing", [{"command": "echo hello"}]),
+            ("done", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'\necho ok"}]),
+        ]
+    ).config.outputs
+    good = tool_outputs[0]
+    submit = tool_outputs[1]
     # error, success (reset), error, submit -> never 2 in a row, so it must NOT terminate early.
     outputs = [{"_format_error": True}, good, {"_format_error": True}, submit]
     agent = DefaultAgent(
