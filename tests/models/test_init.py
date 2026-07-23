@@ -76,6 +76,13 @@ class TestGetModelClass:
 
         assert get_model_class("any-model", "litellm_response") == LitellmResponseModel
 
+    def test_atlascloud_model_selection(self):
+        """Test that atlascloud/* model names use the Atlas Cloud adapter."""
+        from minisweagent.models.atlascloud_model import AtlasCloudModel
+
+        assert get_model_class("atlascloud/qwen/qwen3.5-flash") == AtlasCloudModel
+        assert get_model_class("any-model", "atlascloud") == AtlasCloudModel
+
 
 class TestGetModel:
     def test_config_deep_copy(self):
