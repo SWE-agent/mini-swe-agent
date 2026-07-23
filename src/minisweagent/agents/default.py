@@ -98,6 +98,8 @@ class DefaultAgent:
                 self.step()
                 self.n_consecutive_format_errors = 0  # reset on any clean step
             except FormatError as e:
+                # The call was billed before parsing failed, so query() never got to charge it.
+                self.cost += e.messages[0].get("extra", {}).get("cost", 0.0)
                 self.n_consecutive_format_errors += 1
                 if 0 < self.config.max_consecutive_format_errors <= self.n_consecutive_format_errors:
                     self.add_messages(

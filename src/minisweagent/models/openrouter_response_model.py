@@ -91,6 +91,7 @@ class OpenRouterResponseModel(OpenRouterModel):
         try:
             actions = self._parse_actions(response)
         except FormatError as e:
+            e.messages[0]["extra"].update(cost_output)
             e.messages[0]["extra"]["response"] = dict(response)
             raise
         message = dict(response)

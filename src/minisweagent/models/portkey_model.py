@@ -110,6 +110,7 @@ class PortkeyModel:
         try:
             actions = self._parse_actions(response)
         except FormatError as e:
+            e.messages[0]["extra"].update(cost_output)
             try:
                 e.messages[0]["extra"]["response"] = response.model_dump(mode="json")
             except Exception:

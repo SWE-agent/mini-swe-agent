@@ -84,10 +84,11 @@ class LitellmModel:
                 response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         cost_output = self._calculate_cost(response)
         GLOBAL_MODEL_STATS.add(cost_output["cost"])
-        # Note: all model.query() implementations must persist the response on FormatError.
+        # Note: all model.query() implementations must persist the response and cost on FormatError.
         try:
             actions = self._parse_actions(response)
         except FormatError as e:
+            e.messages[0]["extra"].update(cost_output)
             try:
                 e.messages[0]["extra"]["response"] = response.model_dump(mode="json")
             except Exception:
