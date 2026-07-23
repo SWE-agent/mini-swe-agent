@@ -53,6 +53,21 @@ def test_docker_environment_config_defaults(executable):
     assert config.executable == executable
 
 
+def test_docker_cleanup_stops_or_kills_container():
+    """Test that cleanup leaves removal policy to the configured run args."""
+    env = DockerEnvironment.__new__(DockerEnvironment)
+    env.container_id = "minisweagent-test"
+    env.config = DockerEnvironmentConfig(image="python:3.11", executable="docker")
+
+    with patch("subprocess.Popen") as popen:
+        env.cleanup()
+
+    popen.assert_called_once_with(
+        "(timeout 60 docker stop minisweagent-test || docker kill minisweagent-test) >/dev/null 2>&1 &",
+        shell=True,
+    )
+
+
 @pytest.mark.slow
 @pytest.mark.parametrize("executable", environment_params)
 def test_docker_environment_basic_execution(executable):
