@@ -3185,6 +3185,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_actions</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">FormatError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"extra"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cost_output</span><span class="p">)</span>
             <span class="c1"># hasattr guard: Portkey returns a pydantic object, but tests may inject a plain dict.</span>
             <span class="c1"># Inner try: if serialization itself fails, repr() guarantees the key is always set.</span>
             <span class="k">try</span><span class="p">:</span>
@@ -3750,7 +3751,8 @@ the full conversation history. previous_response_id is not used.</p>
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">120</span>
+<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="n">retry</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">abort_exceptions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">abort_exceptions</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">attempt</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_messages_for_api</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -3759,6 +3761,7 @@ the full conversation history. previous_response_id is not used.</p>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_actions</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">FormatError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">e</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"extra"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cost_output</span><span class="p">)</span>
         <span class="c1"># hasattr guard: Portkey returns a pydantic object, but tests may inject a plain dict.</span>
         <span class="c1"># Inner try: if serialization itself fails, repr() guarantees the key is always set.</span>
         <span class="k">try</span><span class="p">:</span>
@@ -3797,15 +3800,15 @@ the full conversation history. previous_response_id is not used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/portkey_response_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
-<span class="normal">148</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
 <span class="normal">153</span>
 <span class="normal">154</span>
-<span class="normal">155</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">format_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">155</span>
+<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">format_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">role</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"role"</span><span class="p">,</span> <span class="s2">"user"</span><span class="p">)</span>
     <span class="n">content</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"content"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
     <span class="n">extra</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"extra"</span><span class="p">)</span>
@@ -3842,8 +3845,7 @@ the full conversation history. previous_response_id is not used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/portkey_response_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
-<span class="normal">158</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
@@ -3853,7 +3855,8 @@ the full conversation history. previous_response_id is not used.</p>
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span>
-<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">format_observation_messages</span><span class="p">(</span>
+<span class="normal">168</span>
+<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">format_observation_messages</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">template_vars</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Format execution outputs into tool result messages."""</span>
@@ -3887,8 +3890,8 @@ the full conversation history. previous_response_id is not used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/portkey_response_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">170</span>
-<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_template_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
 </code></pre></div></td></tr></tbody></table></div>
             </details>
@@ -3912,15 +3915,15 @@ the full conversation history. previous_response_id is not used.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/portkey_response_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">173</span>
-<span class="normal">174</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">174</span>
 <span class="normal">175</span>
 <span class="normal">176</span>
 <span class="normal">177</span>
 <span class="normal">178</span>
 <span class="normal">179</span>
 <span class="normal">180</span>
-<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">181</span>
+<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">"info"</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">"config"</span><span class="p">:</span> <span class="p">{</span>

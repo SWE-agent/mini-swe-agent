@@ -2842,6 +2842,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_actions</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">FormatError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"extra"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cost_output</span><span class="p">)</span>
             <span class="c1"># hasattr guard: litellm.responses() returns a pydantic object, but tests</span>
             <span class="c1"># may inject a plain dict; dict(response) is the correct fallback in that case.</span>
             <span class="c1"># Inner try: if serialization itself fails, repr() guarantees the key is always set.</span>
@@ -3095,7 +3096,8 @@
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
-<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="n">retry</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">abort_exceptions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">abort_exceptions</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">attempt</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_messages_for_api</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -3104,6 +3106,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_actions</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">FormatError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">e</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"extra"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cost_output</span><span class="p">)</span>
         <span class="c1"># hasattr guard: litellm.responses() returns a pydantic object, but tests</span>
         <span class="c1"># may inject a plain dict; dict(response) is the correct fallback in that case.</span>
         <span class="c1"># Inner try: if serialization itself fails, repr() guarantees the key is always set.</span>
@@ -3149,8 +3152,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/models/litellm_response_model.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">86</span>
-<span class="normal">87</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">87</span>
 <span class="normal">88</span>
 <span class="normal">89</span>
 <span class="normal">90</span>
@@ -3160,7 +3162,8 @@
 <span class="normal">94</span>
 <span class="normal">95</span>
 <span class="normal">96</span>
-<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">format_observation_messages</span><span class="p">(</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">format_observation_messages</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">template_vars</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Format execution outputs into tool result messages."""</span>

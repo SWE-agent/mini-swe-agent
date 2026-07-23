@@ -3466,6 +3466,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">n_consecutive_format_errors</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># reset on any clean step</span>
             <span class="k">except</span> <span class="n">FormatError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># The call was billed before parsing failed, so query() never got to charge it.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"extra"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cost"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">n_consecutive_format_errors</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_consecutive_format_errors</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_consecutive_format_errors</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_messages</span><span class="p">(</span>
@@ -4229,7 +4231,9 @@
 <span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
-<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">extra_template_vars</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"task"</span><span class="p">:</span> <span class="n">task</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
@@ -4242,6 +4246,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_consecutive_format_errors</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># reset on any clean step</span>
         <span class="k">except</span> <span class="n">FormatError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># The call was billed before parsing failed, so query() never got to charge it.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"extra"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cost"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_consecutive_format_errors</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_consecutive_format_errors</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_consecutive_format_errors</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_messages</span><span class="p">(</span>
@@ -4288,9 +4294,9 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/agents/default.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Query the LM, execute actions."""</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_actions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">())</span>
 </code></pre></div></td></tr></tbody></table></div>
@@ -4317,9 +4323,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/agents/default.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span>
 <span class="normal">133</span>
@@ -4339,7 +4343,9 @@
 <span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
-<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Query the model and return model messages. Override to add hooks."""</span>
     <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">step_limit</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_calls</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cost_limit</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">LimitsExceeded</span><span class="p">(</span>
@@ -4386,10 +4392,10 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/agents/default.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">execute_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">execute_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Execute actions in message, add observation messages, return them."""</span>
     <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">action</span><span class="p">)</span> <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"extra"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"actions"</span><span class="p">,</span> <span class="p">[])]</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_messages</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">format_observation_messages</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_template_vars</span><span class="p">()))</span>
@@ -4417,9 +4423,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/agents/default.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
@@ -4438,7 +4442,9 @@
 <span class="normal">175</span>
 <span class="normal">176</span>
 <span class="normal">177</span>
-<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_dicts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_dicts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Serialize agent state to a json-compatible nested dictionary for saving."""</span>
     <span class="n">last_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span> <span class="k">else</span> <span class="p">{}</span>
     <span class="n">last_extra</span> <span class="o">=</span> <span class="n">last_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"extra"</span><span class="p">,</span> <span class="p">{})</span>
@@ -4485,15 +4491,15 @@ You can pass additional dictionaries with extra data to be (recursively) merged 
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/minisweagent/agents/default.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
+              <div class="highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
 <span class="normal">183</span>
 <span class="normal">184</span>
 <span class="normal">185</span>
 <span class="normal">186</span>
 <span class="normal">187</span>
-<span class="normal">188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_dicts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_dicts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Save the trajectory of the agent to a file if path is given. Returns full serialized data.</span>
 <span class="sd">    You can pass additional dictionaries with extra data to be (recursively) merged into the output data.</span>
 <span class="sd">    """</span>
