@@ -17,6 +17,7 @@ from minisweagent.models.utils.actions_toolcall import (
 )
 from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
 from minisweagent.models.utils.cache_control import set_cache_control
+from minisweagent.models.utils.gemini_utils import _deduplicate_gemini_thought_signatures
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
 
@@ -99,6 +100,7 @@ class PortkeyModel:
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
         prepared = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
         prepared = _reorder_anthropic_thinking_blocks(prepared)
+        prepared = _deduplicate_gemini_thought_signatures(prepared)
         return set_cache_control(prepared, mode=self.config.set_cache_control)
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
