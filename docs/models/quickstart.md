@@ -243,11 +243,21 @@ Here are more examples of how to configure specific models:
             temperature: 0.0
     ```
 
-=== "Minimax (Openrouter)"
+=== "Minimax M3 (Openrouter)"
 
     ```yaml
     model:
-        model_name: "minimax/minimax-m2"
+        model_name: "minimax/minimax-m3"
+        model_class: openrouter
+        model_kwargs:
+            temperature: 0.0
+    ```
+
+=== "Minimax M2.7 (Openrouter)"
+
+    ```yaml
+    model:
+        model_name: "minimax/minimax-m2.7"
         model_class: openrouter
         model_kwargs:
             temperature: 0.0
