@@ -12,6 +12,7 @@ This page provides an overview of all available model classes in mini-SWE-agent.
 | [`OpenRouterModel`](openrouter.md) | `openrouter` | `/completion` | ✅ | [OpenRouter](https://openrouter.ai/) API integration |
 | [`OpenRouterTextbasedModel`](openrouter.md) | `openrouter_textbased` | `/completion` | ❌ | OpenRouter with text-based actions |
 | [`OpenRouterResponseModel`](openrouter.md) | `openrouter_response` | `/response` | ✅ | OpenRouter Responses API with native tool calling |
+| [`OrcaRouterModel`](orcarouter.md) | `orcarouter` | `/completion` | ✅ | [OrcaRouter](https://www.orcarouter.ai) API integration |
 | [`PortkeyModel`](portkey.md) | `portkey` | `/completion` | ✅ | [Portkey](https://portkey.ai/) AI gateway integration |
 | [`PortkeyResponseAPIModel`](portkey_response.md) | `portkey_response` | `/response` | ✅ | Portkey with Responses API support |
 | [`RequestyModel`](requesty.md) | `requesty` | `/completion` | ✅ | [Requesty](https://requesty.ai/) API integration |

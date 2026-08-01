@@ -44,6 +44,7 @@ requires_openai = pytest.mark.skipif(not os.environ.get("OPENAI_API_KEY"), reaso
 requires_openrouter = pytest.mark.skipif(not os.environ.get("OPENROUTER_API_KEY"), reason="OPENROUTER_API_KEY not set")
 requires_portkey = pytest.mark.skipif(not os.environ.get("PORTKEY_API_KEY"), reason="PORTKEY_API_KEY not set")
 requires_requesty = pytest.mark.skipif(not os.environ.get("REQUESTY_API_KEY"), reason="REQUESTY_API_KEY not set")
+requires_orcarouter = pytest.mark.skipif(not os.environ.get("ORCAROUTER_API_KEY"), reason="ORCAROUTER_API_KEY not set")
 
 
 def run_mini_command(extra_options: list[str]) -> subprocess.CompletedProcess:
@@ -156,4 +157,16 @@ def test_portkey_response():
 def test_requesty():
     """Test with requesty model class."""
     result = run_mini_command(["--model", "openai/gpt-5-mini", "--model-class", "requesty"])
+    assert result.returncode == 0
+
+
+# =============================================================================
+# OrcaRouter Models
+# =============================================================================
+
+
+@requires_orcarouter
+def test_orcarouter():
+    """Test with orcarouter model class."""
+    result = run_mini_command(["--model", "openai/gpt-5.6-terra", "--model-class", "orcarouter"])
     assert result.returncode == 0
