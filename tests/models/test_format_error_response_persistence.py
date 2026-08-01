@@ -296,6 +296,31 @@ def test_requesty_model_format_error_persists_response() -> None:
 
 
 # --------------------------------------------------------------------------- #
+# orcarouter_model.OrcaRouterModel
+# --------------------------------------------------------------------------- #
+
+
+def test_orcarouter_model_format_error_persists_response() -> None:
+    from minisweagent.models.orcarouter_model import OrcaRouterModel
+
+    response = _bad_chat_completion_dict()
+    model = OrcaRouterModel(model_name="test/model")
+
+    with (
+        patch.object(OrcaRouterModel, "_query", return_value=response),
+        patch.object(OrcaRouterModel, "_calculate_cost", return_value={"cost": 0.01}),
+    ):
+        with pytest.raises(FormatError) as excinfo:
+            model.query([{"role": "user", "content": "hi"}])
+
+    extra = excinfo.value.messages[0]["extra"]
+    assert "response" in extra
+    assert extra["response"] == response
+    assert extra["response"] is not response  # must be a copy, not the same object
+    assert extra["cost"] == 0.01
+
+
+# --------------------------------------------------------------------------- #
 # Trajectory log round-trip — the persisted response must JSON-serialise
 # --------------------------------------------------------------------------- #
 
