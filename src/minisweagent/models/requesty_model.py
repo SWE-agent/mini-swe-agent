@@ -15,6 +15,7 @@ from minisweagent.models.utils.actions_toolcall import (
     parse_toolcall_actions,
 )
 from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
+from minisweagent.models.utils.api_errors import is_context_length_error
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
@@ -44,6 +45,10 @@ class RequestyAPIError(Exception):
     pass
 
 
+class RequestyContextLengthError(RequestyAPIError):
+    """Custom exception for permanent context length errors."""
+
+
 class RequestyAuthenticationError(Exception):
     """Custom exception for Requesty authentication errors."""
 
@@ -57,7 +62,11 @@ class RequestyRateLimitError(Exception):
 
 
 class RequestyModel:
-    abort_exceptions: list[type[Exception]] = [RequestyAuthenticationError, KeyboardInterrupt]
+    abort_exceptions: list[type[Exception]] = [
+        RequestyAuthenticationError,
+        RequestyContextLengthError,
+        KeyboardInterrupt,
+    ]
 
     def __init__(self, **kwargs):
         self.config = RequestyModelConfig(**kwargs)
@@ -89,6 +98,8 @@ class RequestyModel:
                 raise RequestyAuthenticationError(error_msg) from e
             elif response.status_code == 429:
                 raise RequestyRateLimitError("Rate limit exceeded") from e
+            elif is_context_length_error(response.status_code, response.text):
+                raise RequestyContextLengthError(f"HTTP {response.status_code}: {response.text}") from e
             else:
                 raise RequestyAPIError(f"HTTP {response.status_code}: {response.text}") from e
         except requests.exceptions.RequestException as e:
