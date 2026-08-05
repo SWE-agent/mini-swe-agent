@@ -1,6 +1,6 @@
 # CCS Security Integration for mini-swe-agent
 
-This example demonstrates how to integrate [CCS (Credential & Compliance Standard)](https://github.com/Correctover/ccs-verifier) 
+This example demonstrates how to integrate [CCS (Credential & Compliance Standard)](https://github.com/Correctover/ccs-verifier)
 into mini-swe-agent for runtime command verification.
 
 ## What is CCS?
@@ -35,7 +35,7 @@ else:
 
 ## Integration with mini-swe-agent
 
-See `ccs_guard.py` for a complete implementation that wraps mini-swe-agent's 
+See `ccs_guard.py` for a complete implementation that wraps mini-swe-agent's
 `LocalEnvironment` with CCS validation.
 
 ## References
