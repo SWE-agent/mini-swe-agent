@@ -7,4 +7,4 @@
 
 ## Extras
 
-* `extra/swebench.py` - Benchmark the performance of the `default.py` agent.
+* `benchmarks/swebench.py` - Benchmark the performance of the `default.py` agent.
