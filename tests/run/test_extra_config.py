@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from minisweagent.run.utilities.config import app, configure_if_first_time, edit, set, setup, unset
+from minisweagent.run.utilities.config import _default_editor, app, configure_if_first_time, edit, set, setup, unset
 
 
 @pytest.fixture(autouse=True)
@@ -375,8 +375,12 @@ class TestConfigUnset:
 class TestConfigEdit:
     """Test the edit function."""
 
+    @pytest.mark.parametrize(("os_name", "expected"), [("nt", "notepad"), ("posix", "nano")])
+    def test_default_editor(self, os_name, expected):
+        assert _default_editor(os_name) == expected
+
     def test_edit_with_default_editor(self, tmp_path):
-        """Test edit function with default editor (nano)."""
+        """Test edit function with the platform default editor."""
         config_file = tmp_path / ".env"
         config_file.write_text("MSWEA_MODEL_NAME=test")
 
@@ -387,7 +391,7 @@ class TestConfigEdit:
         ):
             edit()
 
-            mock_run.assert_called_once_with(["nano", config_file])
+            mock_run.assert_called_once_with([_default_editor(os.name), config_file])
 
     def test_edit_with_custom_editor(self, tmp_path):
         """Test edit function with custom editor."""

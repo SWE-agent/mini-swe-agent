@@ -22,6 +22,10 @@ def _reload_config():
     load_dotenv(dotenv_path=global_config_file, override=True)
 
 
+def _default_editor(os_name: str) -> str:
+    return "notepad" if os_name == "nt" else "nano"
+
+
 app = Typer(
     help=__doc__.format(global_config_file=global_config_file),  # type: ignore
     no_args_is_help=True,
@@ -122,7 +126,7 @@ def unset(key: str | None = Argument(None, help="The key to unset")):
 @app.command()
 def edit():
     """Edit the global config file."""
-    editor = os.getenv("EDITOR", "nano")
+    editor = os.getenv("EDITOR", _default_editor(os.name))
     subprocess.run([editor, global_config_file])
     _reload_config()
 
