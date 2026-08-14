@@ -43,6 +43,7 @@ class DefaultAgent:
         self.model = model
         self.env = env
         self.extra_template_vars = {}
+        self._run_template_vars = {}
         self.logger = logging.getLogger("agent")
         self.cost = 0.0
         self.n_calls = 0
@@ -60,6 +61,7 @@ class DefaultAgent:
                 "elapsed_seconds": int(time.time() - self._start_time),
             },
             self.extra_template_vars,
+            self._run_template_vars,
             kwargs,
         )
 
@@ -87,7 +89,7 @@ class DefaultAgent:
 
     def run(self, task: str = "", **kwargs) -> dict:
         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
-        self.extra_template_vars |= {"task": task, **kwargs}
+        self._run_template_vars = {"task": task, **kwargs}
         self.messages = []
         self.add_messages(
             self.model.format_message(role="system", content=self._render_template(self.config.system_template)),

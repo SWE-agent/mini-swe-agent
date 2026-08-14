@@ -170,6 +170,43 @@ def test_step_limit_enforcement(model_factory):
     assert agent.n_calls == 1
 
 
+def test_run_resets_task_scoped_template_vars(model_factory):
+    """Reusing an agent gives each run independent template vars."""
+    factory, config = model_factory
+    agent = DefaultAgent(
+        model=factory(
+            [
+                ("First task", [{"command": "echo 'first'"}]),
+                ("Second task", [{"command": "echo 'second'"}]),
+            ]
+        ),
+        env=LocalEnvironment(),
+        **{**config, "step_limit": 1},
+    )
+
+    agent.run("First task", budget=5)
+    assert agent.get_template_vars()["budget"] == 5
+
+    agent.run("Second task")
+    assert agent.get_template_vars()["task"] == "Second task"
+    assert "budget" not in agent.get_template_vars()
+
+
+def test_externally_injected_template_vars_survive_run(model_factory):
+    """Template vars set on the agent before run() (e.g. benchmark instances) are preserved."""
+    factory, config = model_factory
+    agent = DefaultAgent(
+        model=factory([("Test", [{"command": "echo 'test'"}])]),
+        env=LocalEnvironment(),
+        **{**config, "step_limit": 1},
+    )
+    agent.extra_template_vars = {"instance": "repo__123"}
+
+    agent.run("Some task")
+
+    assert agent.get_template_vars()["instance"] == "repo__123"
+
+
 def test_cost_limit_enforcement(model_factory):
     """Test agent stops when cost limit is reached."""
     factory, config = model_factory
