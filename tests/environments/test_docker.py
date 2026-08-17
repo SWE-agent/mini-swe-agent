@@ -5,6 +5,7 @@ from unittest.mock import patch
 import pytest
 
 from minisweagent.environments.docker import DockerEnvironment, DockerEnvironmentConfig
+from minisweagent.exceptions import Submitted
 
 
 def is_docker_available():
@@ -228,3 +229,37 @@ def test_docker_environment_custom_container_timeout(executable):
             )
     finally:
         env.cleanup()
+
+
+def _check_finished(output: dict):
+    # _check_finished only reads the output dict, so no container is needed.
+    return DockerEnvironment.__new__(DockerEnvironment)._check_finished(output)
+
+
+@pytest.mark.parametrize(
+    ("stdout", "expected_submission"),
+    [
+        ("COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndiff --git a/f b/f\n", "diff --git a/f b/f\n"),
+        # Startup noise (e.g. a BASH_ENV sourcing a missing conda path) pushes the marker off line 0 (#938).
+        (
+            "/root/.bashrc: line 1: /opt/miniconda3/etc/profile.d/conda.sh: No such file or directory\n"
+            "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\ndiff --git a/f b/f\n",
+            "diff --git a/f b/f\n",
+        ),
+    ],
+)
+def test_check_finished_detects_marker_past_startup_noise(stdout, expected_submission):
+    with pytest.raises(Submitted) as exc_info:
+        _check_finished({"output": stdout, "returncode": 0})
+    assert exc_info.value.messages[0]["extra"]["submission"] == expected_submission
+
+
+@pytest.mark.parametrize(
+    ("stdout", "returncode"),
+    [
+        ("COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\npatch\n", 1),  # marker present but command failed
+        ("regular command output\nnothing to submit\n", 0),  # no marker
+    ],
+)
+def test_check_finished_does_not_submit(stdout, returncode):
+    assert _check_finished({"output": stdout, "returncode": returncode}) is None
