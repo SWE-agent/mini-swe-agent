@@ -183,6 +183,16 @@ class PortkeyModel:
                 f"Completion tokens are None for model {self.config.model_name}. Setting to 0. Full response: {response_for_cost_calc.model_dump()}"
             )
             completion_tokens = 0
+        if total_tokens is None or total_tokens == 0:
+            # Some providers omit total_tokens entirely, which litellm
+            # surfaces as None (TypeError below) or 0 (the consistency check
+            # would rewrite prompt_tokens to a negative number).  Inferring
+            # the total from the parts keeps the real usage instead of
+            # silently zeroing it (see #781/#779).
+            logger.warning(
+                f"Total tokens are None or 0 for model {self.config.model_name}. Inferring total from prompt + completion tokens. Full response: {response_for_cost_calc.model_dump()}"
+            )
+            total_tokens = prompt_tokens + completion_tokens
         if total_tokens - prompt_tokens - completion_tokens != 0:
             # This is most likely related to how portkey treats cached tokens: It doesn't count them towards the prompt tokens (?)
             logger.warning(
