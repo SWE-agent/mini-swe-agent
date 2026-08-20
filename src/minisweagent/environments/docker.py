@@ -141,6 +141,8 @@ class DockerEnvironment:
         """Raises Submitted if the output indicates task completion."""
         lines = output.get("output", "").splitlines(keepends=True)
         # Marker may not be on line 0: startup noise (e.g. a broken BASH_ENV) can precede it.
+        # Scans every line, so output that happens to echo the bare marker on its own line
+        # (e.g. `cat`ing a file containing it) is treated as the real submission marker too.
         marker = next(
             (i for i, line in enumerate(lines) if line.strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"), None
         )
