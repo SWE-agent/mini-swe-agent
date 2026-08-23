@@ -9,6 +9,7 @@ It is located at [bold green]{global_config_file}[/bold green].
 
 import os
 import subprocess
+import sys
 
 from dotenv import load_dotenv, set_key, unset_key
 from rich.console import Console
@@ -122,7 +123,7 @@ def unset(key: str | None = Argument(None, help="The key to unset")):
 @app.command()
 def edit():
     """Edit the global config file."""
-    editor = os.getenv("EDITOR", "nano")
+    editor = os.getenv("EDITOR") or ("notepad.exe" if sys.platform == "win32" else "nano")
     subprocess.run([editor, global_config_file])
     _reload_config()
 

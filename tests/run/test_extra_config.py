@@ -382,12 +382,28 @@ class TestConfigEdit:
 
         with (
             patch("minisweagent.run.utilities.config.global_config_file", config_file),
+            patch("minisweagent.run.utilities.config.sys.platform", "linux"),
             patch("subprocess.run") as mock_run,
             patch.dict(os.environ, {}, clear=True),  # Clear EDITOR env var
         ):
             edit()
 
             mock_run.assert_called_once_with(["nano", config_file])
+
+    def test_edit_with_default_editor_on_windows(self, tmp_path):
+        """Test edit function with the Windows default editor."""
+        config_file = tmp_path / ".env"
+        config_file.write_text("MSWEA_MODEL_NAME=test")
+
+        with (
+            patch("minisweagent.run.utilities.config.global_config_file", config_file),
+            patch("minisweagent.run.utilities.config.sys.platform", "win32"),
+            patch("subprocess.run") as mock_run,
+            patch.dict(os.environ, {}, clear=True),
+        ):
+            edit()
+
+            mock_run.assert_called_once_with(["notepad.exe", config_file])
 
     def test_edit_with_custom_editor(self, tmp_path):
         """Test edit function with custom editor."""
