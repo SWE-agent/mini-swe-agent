@@ -12,7 +12,7 @@ __version__ = "2.4.6"
 
 import os
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Protocol, TypedDict
 
 import dotenv
 from platformdirs import user_config_dir
@@ -40,12 +40,22 @@ dotenv.load_dotenv(dotenv_path=global_config_file)
 # You can ignore them unless you want static type checking.
 
 
+class TextGenerationResult(TypedDict):
+    """Normalized result of a tool-free model call."""
+
+    text: str
+    cost: float
+    response: Any
+
+
 class Model(Protocol):
     """Protocol for language models."""
 
     config: Any
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict: ...
+
+    def generate_text(self, messages: list[dict[str, str]], **kwargs) -> TextGenerationResult: ...
 
     def format_message(self, **kwargs) -> dict: ...
 
@@ -83,6 +93,7 @@ class Agent(Protocol):
 __all__ = [
     "Agent",
     "Model",
+    "TextGenerationResult",
     "Environment",
     "package_dir",
     "__version__",

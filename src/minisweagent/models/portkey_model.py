@@ -8,7 +8,8 @@ from typing import Any, Literal
 import litellm
 from pydantic import BaseModel
 
-from minisweagent.exceptions import FormatError
+from minisweagent import TextGenerationResult
+from minisweagent.exceptions import ContextWindowExceeded, FormatError, is_context_window_error
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
@@ -19,6 +20,7 @@ from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinkin
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
+from minisweagent.models.utils.text_generation import chat_text, request_kwargs, text_generation_result
 
 logger = logging.getLogger("portkey_model")
 
@@ -63,7 +65,7 @@ class PortkeyModelConfig(BaseModel):
 
 
 class PortkeyModel:
-    abort_exceptions: list[type[Exception]] = [KeyboardInterrupt, TypeError, ValueError]
+    abort_exceptions: list[type[Exception]] = [ContextWindowExceeded, KeyboardInterrupt, TypeError, ValueError]
 
     def __init__(self, *, config_class: type = PortkeyModelConfig, **kwargs):
         self.config = config_class(**kwargs)
@@ -88,13 +90,17 @@ class PortkeyModel:
 
         self.client = Portkey(**client_kwargs)
 
-    def _query(self, messages: list[dict[str, str]], **kwargs):
-        return self.client.chat.completions.create(
-            model=self.config.model_name,
-            messages=messages,
-            tools=[BASH_TOOL],
-            **(self.config.model_kwargs | kwargs),
-        )
+    def _query(self, messages: list[dict[str, str]], *, use_tools: bool = True, **kwargs):
+        try:
+            return self.client.chat.completions.create(
+                model=self.config.model_name,
+                messages=messages,
+                **request_kwargs(self.config.model_kwargs, kwargs, [BASH_TOOL] if use_tools else None),
+            )
+        except Exception as e:
+            if is_context_window_error(e):
+                raise ContextWindowExceeded(str(e)) from e
+            raise
 
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
         prepared = [{k: v for k, v in msg.items() if k != "extra"} for msg in messages]
@@ -126,6 +132,14 @@ class PortkeyModel:
             "timestamp": time.time(),
         }
         return message
+
+    def generate_text(self, messages: list[dict[str, str]], **kwargs) -> TextGenerationResult:
+        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+            with attempt:
+                response = self._query(self._prepare_messages_for_api(messages), use_tools=False, **kwargs)
+        cost_output = self._calculate_cost(response)
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        return text_generation_result(chat_text(response), response, cost_output["cost"])
 
     def _parse_actions(self, response) -> list[dict]:
         """Parse tool calls from the response. Raises FormatError if unknown tool."""

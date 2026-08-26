@@ -4,14 +4,13 @@ import time
 
 import requests
 
+from minisweagent import TextGenerationResult
 from minisweagent.exceptions import FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.openrouter_model import (
     OpenRouterAPIError,
-    OpenRouterAuthenticationError,
     OpenRouterModel,
     OpenRouterModelConfig,
-    OpenRouterRateLimitError,
 )
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
@@ -20,6 +19,12 @@ from minisweagent.models.utils.actions_toolcall_response import (
     parse_toolcall_actions_response,
 )
 from minisweagent.models.utils.retry import retry
+from minisweagent.models.utils.text_generation import (
+    request_kwargs,
+    responses_kwargs,
+    responses_text,
+    text_generation_result,
+)
 
 logger = logging.getLogger("openrouter_response_model")
 
@@ -41,7 +46,7 @@ class OpenRouterResponseModel(OpenRouterModel):
         self.config = OpenRouterResponseModelConfig(**kwargs)
         self._api_url = "https://openrouter.ai/api/v1/responses"
 
-    def _query(self, messages: list[dict[str, str]], **kwargs):
+    def _query(self, messages: list[dict[str, str]], *, use_tools: bool = True, **kwargs):
         headers = {
             "Authorization": f"Bearer {self._api_key}",
             "Content-Type": "application/json",
@@ -49,21 +54,18 @@ class OpenRouterResponseModel(OpenRouterModel):
         payload = {
             "model": self.config.model_name,
             "input": messages,
-            "tools": [BASH_TOOL_RESPONSE_API],
-            **(self.config.model_kwargs | kwargs),
+            **(
+                request_kwargs(self.config.model_kwargs, kwargs, [BASH_TOOL_RESPONSE_API])
+                if use_tools
+                else responses_kwargs(request_kwargs(self.config.model_kwargs, kwargs, None))
+            ),
         }
         try:
             response = requests.post(self._api_url, headers=headers, data=json.dumps(payload), timeout=60)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.HTTPError as e:
-            if response.status_code == 401:
-                error_msg = "Authentication failed. You can permanently set your API key with `mini-extra config set OPENROUTER_API_KEY YOUR_KEY`."
-                raise OpenRouterAuthenticationError(error_msg) from e
-            elif response.status_code == 429:
-                raise OpenRouterRateLimitError("Rate limit exceeded") from e
-            else:
-                raise OpenRouterAPIError(f"HTTP {response.status_code}: {response.text}") from e
+            self._raise_http_error(response, e)
         except requests.exceptions.RequestException as e:
             raise OpenRouterAPIError(f"Request failed: {e}") from e
 
@@ -101,6 +103,16 @@ class OpenRouterResponseModel(OpenRouterModel):
             "timestamp": time.time(),
         }
         return message
+
+    def generate_text(self, messages: list[dict[str, str]], **kwargs) -> TextGenerationResult:
+        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+            with attempt:
+                response = self._query(
+                    self._prepare_messages_for_api(messages), use_tools=False, **responses_kwargs(kwargs)
+                )
+        cost_output = self._calculate_cost(response)
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        return text_generation_result(responses_text(response), response, cost_output["cost"])
 
     def _parse_actions(self, response: dict) -> list[dict]:
         return parse_toolcall_actions_response(

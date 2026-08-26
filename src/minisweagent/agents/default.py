@@ -12,7 +12,20 @@ from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
 from minisweagent import Environment, Model, __version__
-from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
+from minisweagent.agents.compaction import (
+    CompactionConfig,
+    CompactionRecord,
+    CompactionState,
+    compactable_boundary,
+    compaction_threshold,
+    estimate_tokens,
+    fitting_summary_boundary,
+    render_summary_prompt,
+    requested_output_tokens,
+    resolve_context_limit,
+    summary_message,
+)
+from minisweagent.exceptions import ContextWindowExceeded, FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
 from minisweagent.utils.serialize import recursive_merge
 
 
@@ -33,6 +46,8 @@ class AgentConfig(BaseModel):
     """Exit after this many format errors in a row (0 = no limit)."""
     output_path: Path | None = None
     """Save the trajectory to this path."""
+    compaction: CompactionConfig = CompactionConfig()
+    """Conversation compaction settings."""
 
 
 class DefaultAgent:
@@ -46,7 +61,20 @@ class DefaultAgent:
         self.logger = logging.getLogger("agent")
         self.cost = 0.0
         self.n_calls = 0
+        self.n_compaction_calls = 0
         self.n_consecutive_format_errors = 0
+        self.compaction_state = CompactionState()
+        self.context_limit = (
+            resolve_context_limit(self.model.config.model_name, self.config.compaction.context_limit)
+            if self.config.compaction.enabled
+            else 0
+        )
+        if self.config.compaction.enabled and self.config.compaction.summary_max_tokens >= self.context_limit:
+            raise ValueError("agent.compaction.summary_max_tokens must be smaller than the model context limit.")
+        if self.config.compaction.enabled and not compaction_threshold(
+            self.context_limit, self.config.compaction.buffer, requested_output_tokens(self.model)
+        ):
+            raise ValueError("agent.compaction.buffer and the requested output must be smaller than the context limit.")
         self._start_time = time.time()
 
     def get_template_vars(self, **kwargs) -> dict:
@@ -56,6 +84,7 @@ class DefaultAgent:
             self.model.get_template_vars(),
             {
                 "n_model_calls": self.n_calls,
+                "n_compaction_calls": self.n_compaction_calls,
                 "model_cost": self.cost,
                 "elapsed_seconds": int(time.time() - self._start_time),
             },
@@ -89,6 +118,7 @@ class DefaultAgent:
         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
+        self.compaction_state = CompactionState()
         self.add_messages(
             self.model.format_message(role="system", content=self._render_template(self.config.system_template)),
             self.model.format_message(role="user", content=self._render_template(self.config.instance_template)),
@@ -129,6 +159,23 @@ class DefaultAgent:
 
     def query(self) -> dict:
         """Query the model and return model messages. Override to add hooks."""
+        self._check_limits()
+        if self.config.compaction.enabled and self.config.compaction.auto:
+            self._compact_until_fit("auto")
+            self._check_limits()
+        self.n_calls += 1
+        try:
+            message = self.model.query(self._messages_for_model())
+        except ContextWindowExceeded:
+            if not self.config.compaction.enabled or not self._compact_until_fit("overflow"):
+                raise
+            self._check_limits()
+            message = self.model.query(self._messages_for_model())
+        self.cost += message.get("extra", {}).get("cost", 0.0)
+        self.add_messages(message)
+        return message
+
+    def _check_limits(self) -> None:
         if 0 < self.config.step_limit <= self.n_calls or 0 < self.config.cost_limit <= self.cost:
             raise LimitsExceeded(
                 {
@@ -145,11 +192,81 @@ class DefaultAgent:
                     "extra": {"exit_status": "TimeExceeded", "submission": ""},
                 }
             )
-        self.n_calls += 1
-        message = self.model.query(self.messages)
-        self.cost += message.get("extra", {}).get("cost", 0.0)
-        self.add_messages(message)
-        return message
+
+    def _messages_for_model(self) -> list[dict]:
+        if not self.compaction_state.summary:
+            return self.messages
+        return [
+            self.messages[0],
+            summary_message(self.model, self.compaction_state.summary),
+            *self.messages[self.compaction_state.compacted_until :],
+        ]
+
+    def _compact_once(self, reason: str) -> bool:
+        boundary = compactable_boundary(
+            self.messages, self.compaction_state.compacted_until, self.config.compaction.keep_tokens
+        )
+        if boundary is None:
+            return False
+        boundary = fitting_summary_boundary(
+            self.messages,
+            self.compaction_state.compacted_until,
+            boundary,
+            previous_summary=self.compaction_state.summary,
+            template=self.config.compaction.summary_template,
+            input_limit=max(0, self.context_limit - self.config.compaction.summary_max_tokens),
+        )
+        if boundary is None:
+            return False
+        before = estimate_tokens(self._messages_for_model())
+        prompt = render_summary_prompt(
+            self.config.compaction.summary_template,
+            self.compaction_state.summary,
+            self.messages[self.compaction_state.compacted_until : boundary],
+        )
+        result = self.model.generate_text(
+            [
+                self.model.format_message(
+                    role="system", content="Return only the requested conversation checkpoint, without commentary."
+                ),
+                self.model.format_message(role="user", content=prompt),
+            ],
+            max_tokens=self.config.compaction.summary_max_tokens,
+        )
+        self.n_compaction_calls += 1
+        cost = result["cost"]
+        self.cost += cost
+        if not (summary := result["text"].strip()):
+            raise RuntimeError("Compaction model returned an empty checkpoint.")
+        self.compaction_state.summary = summary
+        self.compaction_state.compacted_until = boundary
+        after = estimate_tokens(self._messages_for_model())
+        self.compaction_state.records.append(
+            CompactionRecord(
+                summary=self.compaction_state.summary,
+                compacted_until=boundary,
+                reason=reason,
+                estimated_tokens_before=before,
+                estimated_tokens_after=after,
+                cost=cost,
+            )
+        )
+        return True
+
+    def _compact_until_fit(self, reason: str) -> bool:
+        compacted = False
+        threshold = compaction_threshold(
+            self.context_limit, self.config.compaction.buffer, requested_output_tokens(self.model)
+        )
+        if reason == "overflow" and estimate_tokens(self._messages_for_model()) <= threshold:
+            self._check_limits()
+            compacted = self._compact_once(reason)
+        while estimate_tokens(self._messages_for_model()) > threshold:
+            self._check_limits()
+            if not self._compact_once(reason):
+                break
+            compacted = True
+        return compacted
 
     def execute_actions(self, message: dict) -> list[dict]:
         """Execute actions in message, add observation messages, return them."""
@@ -164,7 +281,9 @@ class DefaultAgent:
             "info": {
                 "model_stats": {
                     "instance_cost": self.cost,
-                    "api_calls": self.n_calls,
+                    "api_calls": self.n_calls + self.n_compaction_calls,
+                    "task_calls": self.n_calls,
+                    "compaction_calls": self.n_compaction_calls,
                 },
                 "config": {
                     "agent": self.config.model_dump(mode="json"),
@@ -175,6 +294,11 @@ class DefaultAgent:
                 "submission": last_extra.get("submission", ""),
             },
             "messages": self.messages,
+            "compaction": {
+                **self.compaction_state.serialize(),
+                "active_estimated_tokens": estimate_tokens(self._messages_for_model()),
+                "context_limit": self.context_limit,
+            },
             "trajectory_format": "mini-swe-agent-1.1",
         }
         return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)

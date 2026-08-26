@@ -32,6 +32,32 @@ You can find the full list of options in the [API reference](../reference/agents
 To use a different agent class, you can set the `agent_class` key to the name of the agent class you want to use
 or even to an import path (to use your own custom agent class even if it is not yet part of the mini-SWE-agent package).
 
+### Conversation compaction
+
+Compaction replaces older model-facing messages with a generated checkpoint while preserving the complete trajectory.
+It is disabled by default because checkpoint generation is an additional billed model call. Enable the built-in preset
+alongside your normal config:
+
+```bash
+mini -c mini.yaml -c compaction.yaml
+```
+
+The preset uses model metadata to determine the context limit. Set it explicitly for unregistered models:
+
+```yaml
+agent:
+  compaction:
+    enabled: true
+    auto: true
+    context_limit: 128000
+    keep_tokens: 15000
+    buffer: 20000
+    summary_max_tokens: 4096
+```
+
+Automatic compaction runs before a request would enter the reserved buffer. A context-window error also triggers one
+forced compaction and one retry. The recent tail always ends on complete assistant/tool-result boundaries.
+
 ### Prompt templates
 
 We use [Jinja2](https://jinja.palletsprojects.com/) to render templates (e.g., the instance template).

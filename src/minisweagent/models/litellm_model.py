@@ -9,7 +9,8 @@ from typing import Any, Literal
 import litellm
 from pydantic import BaseModel
 
-from minisweagent.exceptions import FormatError
+from minisweagent import TextGenerationResult
+from minisweagent.exceptions import ContextWindowExceeded, FormatError
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall import (
     BASH_TOOL,
@@ -20,6 +21,7 @@ from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinkin
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
+from minisweagent.models.utils.text_generation import chat_text, request_kwargs, text_generation_result
 
 logger = logging.getLogger("litellm_model")
 
@@ -51,7 +53,7 @@ class LitellmModel:
         litellm.exceptions.UnsupportedParamsError,
         litellm.exceptions.NotFoundError,
         litellm.exceptions.PermissionDeniedError,
-        litellm.exceptions.ContextWindowExceededError,
+        ContextWindowExceeded,
         litellm.exceptions.AuthenticationError,
         KeyboardInterrupt,
     ]
@@ -61,14 +63,15 @@ class LitellmModel:
         if self.config.litellm_model_registry and Path(self.config.litellm_model_registry).is_file():
             litellm.utils.register_model(json.loads(Path(self.config.litellm_model_registry).read_text()))
 
-    def _query(self, messages: list[dict[str, str]], **kwargs):
+    def _query(self, messages: list[dict[str, str]], *, use_tools: bool = True, **kwargs):
         try:
             return litellm.completion(
                 model=self.config.model_name,
                 messages=messages,
-                tools=[BASH_TOOL],
-                **(self.config.model_kwargs | kwargs),
+                **request_kwargs(self.config.model_kwargs, kwargs, [BASH_TOOL] if use_tools else None),
             )
+        except litellm.exceptions.ContextWindowExceededError as e:
+            raise ContextWindowExceeded(str(e)) from e
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e
@@ -104,6 +107,14 @@ class LitellmModel:
             "timestamp": time.time(),
         }
         return message
+
+    def generate_text(self, messages: list[dict[str, str]], **kwargs) -> TextGenerationResult:
+        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+            with attempt:
+                response = self._query(self._prepare_messages_for_api(messages), use_tools=False, **kwargs)
+        cost_output = self._calculate_cost(response)
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        return text_generation_result(chat_text(response), response, cost_output["cost"])
 
     def _calculate_cost(self, response) -> dict[str, float]:
         try:

@@ -4,6 +4,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from minisweagent import TextGenerationResult
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_text import format_observation_messages
 from minisweagent.models.utils.actions_toolcall import format_toolcall_observation_messages
@@ -87,11 +88,20 @@ def _process_test_actions(actions: list[dict]) -> bool:
     return False
 
 
+def _generate_text(model) -> TextGenerationResult:
+    model.current_summary_index += 1
+    text = model.config.summary_outputs[model.current_summary_index]
+    response = {"text": text}
+    GLOBAL_MODEL_STATS.add(model.config.cost_per_call)
+    return {"text": text, "cost": model.config.cost_per_call, "response": response}
+
+
 class DeterministicModelConfig(BaseModel):
     outputs: list[dict]
     """List of exact output messages to return in sequence. Each dict should have 'role', 'content', and 'extra' (with 'actions')."""
     model_name: str = "deterministic"
     cost_per_call: float = 1.0
+    summary_outputs: list[str] = []
     observation_template: str = (
         "{% if output.exception_info %}<exception>{{output.exception_info}}</exception>\n{% endif %}"
         "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
@@ -106,6 +116,7 @@ class DeterministicModel:
         """Initialize with a list of output messages to return in sequence."""
         self.config = DeterministicModelConfig(**kwargs)
         self.current_index = -1
+        self.current_summary_index = -1
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         self.current_index += 1
@@ -114,6 +125,9 @@ class DeterministicModel:
             return self.query(messages, **kwargs)
         GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
         return output
+
+    def generate_text(self, messages: list[dict[str, str]], **kwargs) -> TextGenerationResult:
+        return _generate_text(self)
 
     def format_message(self, **kwargs) -> dict:
         return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)
@@ -148,6 +162,7 @@ class DeterministicToolcallModelConfig(BaseModel):
     """List of exact output messages with tool_calls to return in sequence."""
     model_name: str = "deterministic_toolcall"
     cost_per_call: float = 1.0
+    summary_outputs: list[str] = []
     observation_template: str = (
         "{% if output.exception_info %}<exception>{{output.exception_info}}</exception>\n{% endif %}"
         "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
@@ -162,6 +177,7 @@ class DeterministicToolcallModel:
         """Initialize with a list of toolcall output messages to return in sequence."""
         self.config = DeterministicToolcallModelConfig(**kwargs)
         self.current_index = -1
+        self.current_summary_index = -1
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         self.current_index += 1
@@ -170,6 +186,9 @@ class DeterministicToolcallModel:
             return self.query(messages, **kwargs)
         GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
         return output
+
+    def generate_text(self, messages: list[dict[str, str]], **kwargs) -> TextGenerationResult:
+        return _generate_text(self)
 
     def format_message(self, **kwargs) -> dict:
         return expand_multimodal_content(kwargs, pattern=self.config.multimodal_regex)
@@ -206,6 +225,7 @@ class DeterministicResponseAPIToolcallModelConfig(BaseModel):
     """List of exact Response API output messages to return in sequence."""
     model_name: str = "deterministic_response_api_toolcall"
     cost_per_call: float = 1.0
+    summary_outputs: list[str] = []
     observation_template: str = (
         "{% if output.exception_info %}<exception>{{output.exception_info}}</exception>\n{% endif %}"
         "<returncode>{{output.returncode}}</returncode>\n<output>\n{{output.output}}</output>"
@@ -222,6 +242,7 @@ class DeterministicResponseAPIToolcallModel:
         """Initialize with a list of Response API output messages to return in sequence."""
         self.config = DeterministicResponseAPIToolcallModelConfig(**kwargs)
         self.current_index = -1
+        self.current_summary_index = -1
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
         self.current_index += 1
@@ -230,6 +251,9 @@ class DeterministicResponseAPIToolcallModel:
             return self.query(messages, **kwargs)
         GLOBAL_MODEL_STATS.add(self.config.cost_per_call)
         return output
+
+    def generate_text(self, messages: list[dict[str, str]], **kwargs) -> TextGenerationResult:
+        return _generate_text(self)
 
     def format_message(self, **kwargs) -> dict:
         """Format message in Responses API format."""

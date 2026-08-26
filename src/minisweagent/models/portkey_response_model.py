@@ -8,7 +8,8 @@ from typing import Any, Literal
 import litellm
 from pydantic import BaseModel
 
-from minisweagent.exceptions import FormatError
+from minisweagent import TextGenerationResult
+from minisweagent.exceptions import ContextWindowExceeded, FormatError, is_context_window_error
 from minisweagent.models import GLOBAL_MODEL_STATS
 from minisweagent.models.utils.actions_toolcall_response import (
     BASH_TOOL_RESPONSE_API,
@@ -17,6 +18,12 @@ from minisweagent.models.utils.actions_toolcall_response import (
     parse_toolcall_actions_response,
 )
 from minisweagent.models.utils.retry import retry
+from minisweagent.models.utils.text_generation import (
+    request_kwargs,
+    responses_kwargs,
+    responses_text,
+    text_generation_result,
+)
 
 logger = logging.getLogger("portkey_response_model")
 
@@ -49,7 +56,7 @@ class PortkeyResponseAPIModel:
     the full conversation history. previous_response_id is not used.
     """
 
-    abort_exceptions: list[type[Exception]] = [KeyboardInterrupt, TypeError, ValueError]
+    abort_exceptions: list[type[Exception]] = [ContextWindowExceeded, KeyboardInterrupt, TypeError, ValueError]
 
     def __init__(self, **kwargs):
         self.config = PortkeyResponseAPIModelConfig(**kwargs)
@@ -71,13 +78,21 @@ class PortkeyResponseAPIModel:
 
         self.client = Portkey(**client_kwargs)
 
-    def _query(self, messages: list[dict[str, str]], **kwargs):
-        return self.client.responses.create(
-            model=self.config.model_name,
-            input=messages,
-            tools=[BASH_TOOL_RESPONSE_API],
-            **(self.config.model_kwargs | kwargs),
-        )
+    def _query(self, messages: list[dict[str, str]], *, use_tools: bool = True, **kwargs):
+        try:
+            return self.client.responses.create(
+                model=self.config.model_name,
+                input=messages,
+                **(
+                    request_kwargs(self.config.model_kwargs, kwargs, [BASH_TOOL_RESPONSE_API])
+                    if use_tools
+                    else responses_kwargs(request_kwargs(self.config.model_kwargs, kwargs, None))
+                ),
+            )
+        except Exception as e:
+            if is_context_window_error(e):
+                raise ContextWindowExceeded(str(e)) from e
+            raise
 
     def _prepare_messages_for_api(self, messages: list[dict]) -> list[dict]:
         """Prepare messages for Portkey's stateless Responses API.
@@ -119,6 +134,16 @@ class PortkeyResponseAPIModel:
             "timestamp": time.time(),
         }
         return message
+
+    def generate_text(self, messages: list[dict[str, str]], **kwargs) -> TextGenerationResult:
+        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+            with attempt:
+                response = self._query(
+                    self._prepare_messages_for_api(messages), use_tools=False, **responses_kwargs(kwargs)
+                )
+        cost_output = self._calculate_cost(response)
+        GLOBAL_MODEL_STATS.add(cost_output["cost"])
+        return text_generation_result(responses_text(response), response, cost_output["cost"])
 
     def _parse_actions(self, response) -> list[dict]:
         """Parse tool calls from the response API response."""
