@@ -12,8 +12,15 @@ from minisweagent.exceptions import FormatError
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 
 
-def parse_regex_actions(content: str, *, action_regex: str, format_error_template: str) -> list[dict]:
-    """Parse actions from text content using regex. Raises FormatError if not exactly one action."""
+def parse_regex_actions(
+    content: str, *, action_regex: str, format_error_template: str, template_kwargs: dict | None = None
+) -> list[dict]:
+    """Parse actions from text content using regex. Raises FormatError if not exactly one action.
+
+    ``template_kwargs`` are extra variables exposed to ``format_error_template`` (e.g.
+    ``{"finish_reason": ...}`` so a template can report a ``max_tokens`` truncation -- which shows
+    up here as zero parsed actions -- instead of a generic format error).
+    """
     actions = [a.strip() for a in re.findall(action_regex, content, re.DOTALL)]
     if len(actions) != 1:
         error_msg = f"Expected exactly 1 action, found {len(actions)}."
@@ -21,7 +28,7 @@ def parse_regex_actions(content: str, *, action_regex: str, format_error_templat
             {
                 "role": "user",
                 "content": Template(format_error_template, undefined=StrictUndefined).render(
-                    actions=actions, error=error_msg
+                    actions=actions, error=error_msg, **(template_kwargs or {})
                 ),
                 "extra": {
                     "interrupt_type": "FormatError",

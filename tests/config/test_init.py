@@ -1,5 +1,9 @@
 """Tests for minisweagent.config.__init__."""
 
+import os
+import subprocess
+import sys
+
 import pytest
 
 from minisweagent.config import (
@@ -83,6 +87,11 @@ class TestKeyValueSpecToNestedDict:
     def test_zero_float(self):
         assert _key_value_spec_to_nested_dict("value=0.0") == {"value": 0.0}
 
+    @pytest.mark.parametrize("config_spec", ["=value", "model..name=value", "model.=value"])
+    def test_empty_key_raises_value_error(self, config_spec):
+        with pytest.raises(ValueError, match="empty config key"):
+            _key_value_spec_to_nested_dict(config_spec)
+
 
 class TestGetConfigFromSpec:
     """Tests for get_config_from_spec function."""
@@ -100,6 +109,25 @@ class TestGetConfigFromSpec:
         config_file.write_text("key: value\nnumber: 42")
         result = get_config_from_spec(config_file)
         assert result == {"key": "value", "number": 42}
+
+    def test_loads_utf8_yaml_regardless_of_locale(self, tmp_path):
+        # subprocess under a C/ascii locale: read_text() with no encoding= would crash or garble a UTF-8 config
+        config_file = tmp_path / "unicode.yaml"
+        config_file.write_text("system_template: a — b", encoding="utf-8")
+        env = {
+            **os.environ,
+            "LC_ALL": "C",
+            "LANG": "C",
+            "PYTHONUTF8": "0",
+            "PYTHONCOERCECLOCALE": "0",
+            "MSWEA_SILENT_STARTUP": "1",
+        }
+        code = (
+            "from minisweagent.config import get_config_from_spec; "
+            f"assert len(get_config_from_spec(r'{config_file}')['system_template']) == 5"
+        )
+        result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
+        assert result.returncode == 0, result.stderr
 
 
 _ALL_BUILTIN_CONFIGS = list(builtin_config_dir.rglob("*.yaml"))

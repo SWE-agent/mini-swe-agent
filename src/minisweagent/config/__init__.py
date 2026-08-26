@@ -42,6 +42,8 @@ def _key_value_spec_to_nested_dict(config_spec: str) -> dict:
     except json.JSONDecodeError:
         pass
     keys = key.split(".")
+    if any(k == "" for k in keys):
+        raise ValueError(f"Invalid config spec {config_spec!r}: empty config key")
     result = {}
     current = result
     for k in keys[:-1]:
@@ -56,7 +58,7 @@ def get_config_from_spec(config_spec: str | Path) -> dict:
     if isinstance(config_spec, str) and "=" in config_spec:
         return _key_value_spec_to_nested_dict(config_spec)
     path = get_config_path(config_spec)
-    return yaml.safe_load(path.read_text())
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
 __all__ = ["builtin_config_dir", "get_config_path", "get_config_from_spec", "_key_value_spec_to_nested_dict"]

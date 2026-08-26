@@ -14,6 +14,10 @@ class LimitsExceeded(InterruptAgentFlow):
     """Raised when the agent has exceeded its cost or step limit."""
 
 
+class TimeExceeded(LimitsExceeded):
+    """Raised when the agent has exceeded its wall-clock time limit."""
+
+
 class UserInterruption(InterruptAgentFlow):
     """Raised when the user interrupts the agent."""
 

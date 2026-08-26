@@ -61,7 +61,10 @@ class OpenRouterTextbasedModel(OpenRouterModel):
         """Parse actions from the model response. Raises FormatError if not exactly one action."""
         content = response["choices"][0]["message"]["content"] or ""
         return parse_regex_actions(
-            content, action_regex=self.config.action_regex, format_error_template=self.config.format_error_template
+            content,
+            action_regex=self.config.action_regex,
+            format_error_template=self.config.format_error_template,
+            template_kwargs={"finish_reason": response["choices"][0].get("finish_reason")},
         )
 
     def format_observation_messages(

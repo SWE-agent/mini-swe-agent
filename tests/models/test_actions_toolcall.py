@@ -21,6 +21,21 @@ class TestParseToolcallActions:
             parse_toolcall_actions(None, format_error_template="{{ error }}")
         assert "No tool calls found" in exc_info.value.messages[0]["content"]
 
+    def test_template_kwargs_exposed_to_format_error_template(self):
+        template = "{% if finish_reason == 'length' %}cut off{% else %}{{ error }}{% endif %}"
+        # no-tool-call path
+        with pytest.raises(FormatError) as exc:
+            parse_toolcall_actions([], format_error_template=template, template_kwargs={"finish_reason": "length"})
+        assert exc.value.messages[0]["content"] == "cut off"
+        # bad-arguments path
+        bad = MagicMock()
+        bad.function.name = "bash"
+        bad.function.arguments = "{not json"
+        bad.id = "call_1"
+        with pytest.raises(FormatError) as exc:
+            parse_toolcall_actions([bad], format_error_template=template, template_kwargs={"finish_reason": "length"})
+        assert exc.value.messages[0]["content"] == "cut off"
+
     def test_valid_bash_tool_call(self):
         tool_call = MagicMock()
         tool_call.function.name = "bash"

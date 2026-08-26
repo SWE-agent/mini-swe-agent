@@ -62,6 +62,24 @@ class TestLitellmModel:
         with pytest.raises(FormatError):
             model.query([{"role": "user", "content": "test"}])
 
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    def test_finish_reason_threaded_into_format_error_template(self, mock_cost, mock_completion):
+        """The response finish_reason is exposed to format_error_template via template_kwargs, so a
+        config can report a max_tokens truncation instead of the misleading "no tool call" error."""
+        response = _mock_litellm_response(None)
+        response.choices[0].finish_reason = "length"
+        mock_completion.return_value = response
+        mock_cost.return_value = 0.001
+
+        model = LitellmModel(
+            model_name="gpt-4",
+            format_error_template="{% if finish_reason == 'length' %}cut off{% else %}{{ error }}{% endif %}",
+        )
+        with pytest.raises(FormatError) as exc:
+            model.query([{"role": "user", "content": "test"}])
+        assert exc.value.messages[0]["content"] == "cut off"
+
     def test_format_observation_messages(self):
         model = LitellmModel(model_name="gpt-4", observation_template="{{ output.output }}")
         message = {"extra": {"actions": [{"command": "echo test", "tool_call_id": "call_1"}]}}
