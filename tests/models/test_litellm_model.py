@@ -12,8 +12,9 @@ class TestLitellmModelConfig:
         assert LitellmModelConfig(model_name="test").format_error_template == "{{ error }}"
 
 
-def _mock_litellm_response(tool_calls):
+def _mock_litellm_response(tool_calls, hidden_params: dict | None = None):
     mock_response = MagicMock()
+    mock_response._hidden_params = hidden_params or {}
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.tool_calls = tool_calls
     mock_response.choices[0].message.model_dump.return_value = {"role": "assistant", "content": None}
@@ -79,6 +80,35 @@ class TestLitellmModel:
         with pytest.raises(FormatError) as exc:
             model.query([{"role": "user", "content": "test"}])
         assert exc.value.messages[0]["content"] == "cut off"
+
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    def test_cost_prefers_provider_reported_response_cost(self, mock_cost, mock_completion):
+        """A provider-reported cost in _hidden_params (e.g. from OpenRouter via litellm) is used
+        as-is, even for models missing from litellm's price map, without calling completion_cost."""
+        tool_call = MagicMock()
+        tool_call.function.name = "bash"
+        tool_call.function.arguments = '{"command": "echo test"}'
+        tool_call.id = "call_1"
+        mock_completion.return_value = _mock_litellm_response([tool_call], hidden_params={"response_cost": 0.4038})
+
+        model = LitellmModel(model_name="openrouter/some/unmapped-model")
+        assert model.query([{"role": "user", "content": "test"}])["extra"]["cost"] == 0.4038
+        mock_cost.assert_not_called()
+
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    def test_cost_falls_back_to_completion_cost(self, mock_cost, mock_completion):
+        tool_call = MagicMock()
+        tool_call.function.name = "bash"
+        tool_call.function.arguments = '{"command": "echo test"}'
+        tool_call.id = "call_1"
+        mock_completion.return_value = _mock_litellm_response([tool_call])
+        mock_cost.return_value = 0.002
+
+        model = LitellmModel(model_name="gpt-4")
+        assert model.query([{"role": "user", "content": "test"}])["extra"]["cost"] == 0.002
+        mock_cost.assert_called_once()
 
     def test_format_observation_messages(self):
         model = LitellmModel(model_name="gpt-4", observation_template="{{ output.output }}")
