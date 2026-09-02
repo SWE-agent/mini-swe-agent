@@ -147,6 +147,25 @@ model:
 
 ## Concrete examples
 
+### Hosted OpenAI-compatible APIs
+
+Hosted services that expose an OpenAI-compatible Chat Completions API can be used through LiteLLM.
+Prefix the service's model ID with `openai/` so LiteLLM routes the request through its OpenAI-compatible provider.
+Set `api_base` to the API root, including `/v1` when required, rather than to the full `/chat/completions` endpoint.
+
+```yaml
+model:
+  model_name: "openai/<model-id>"
+  cost_tracking: "ignore_errors"
+  model_kwargs:
+    custom_llm_provider: "openai"
+    api_base: "https://example.com/v1"
+    api_key: "<api-key>"
+```
+
+Instead of storing the API key in YAML, you can set `OPENAI_API_KEY` in your environment.
+If the model is not in LiteLLM's cost registry, keep `cost_tracking: "ignore_errors"` as shown above or add the model to a custom registry using the instructions above.
+
 ### Generating SWE-bench trajectories with vLLM
 
 This example shows how to generate SWE-bench trajectories using [vLLM](https://docs.vllm.ai/en/latest/) as the local inference engine.
