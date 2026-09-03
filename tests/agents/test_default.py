@@ -170,6 +170,38 @@ def test_step_limit_enforcement(model_factory):
     assert agent.n_calls == 1
 
 
+def test_run_resets_task_scoped_limits(model_factory):
+    """Reusing an agent gives each run independent counters and timing."""
+    factory, config = model_factory
+    model = factory(
+        [
+            ("First command", [{"command": "echo first"}]),
+            ("Second command", [{"command": "echo second"}]),
+        ],
+    )
+    agent = DefaultAgent(
+        model=model,
+        env=LocalEnvironment(),
+        **{
+            **config,
+            "step_limit": 1,
+            "wall_time_limit_seconds": 1,
+        },
+    )
+
+    assert agent.run("First task")["exit_status"] == "LimitsExceeded"
+    agent.cost = 100.0
+    agent.n_consecutive_format_errors = 2
+    agent._start_time = 0
+
+    assert agent.run("Second task")["exit_status"] == "LimitsExceeded"
+    assert agent.n_calls == 1
+    assert agent.cost < 100.0
+    assert agent.n_consecutive_format_errors == 0
+    assert agent._start_time > 0
+    assert model.current_index == 1
+
+
 def test_cost_limit_enforcement(model_factory):
     """Test agent stops when cost limit is reached."""
     factory, config = model_factory

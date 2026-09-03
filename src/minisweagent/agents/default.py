@@ -87,6 +87,10 @@ class DefaultAgent:
 
     def run(self, task: str = "", **kwargs) -> dict:
         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
+        self.cost = 0.0
+        self.n_calls = 0
+        self.n_consecutive_format_errors = 0
+        self._start_time = time.time()
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
         self.add_messages(
