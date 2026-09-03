@@ -5,12 +5,11 @@ import requests
 
 from minisweagent.models.openrouter_model import (
     OpenRouterAPIError,
-    OpenRouterAuthenticationError,
     OpenRouterModel,
     OpenRouterModelConfig,
-    OpenRouterRateLimitError,
 )
 from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
+from minisweagent.models.utils.text_generation import request_kwargs
 
 logger = logging.getLogger("openrouter_textbased_model")
 
@@ -29,7 +28,7 @@ class OpenRouterTextbasedModel(OpenRouterModel):
         super().__init__(**kwargs)
         self.config = OpenRouterTextbasedModelConfig(**kwargs)
 
-    def _query(self, messages: list[dict[str, str]], **kwargs):
+    def _query(self, messages: list[dict[str, str]], *, use_tools: bool = False, **kwargs):
         headers = {
             "Authorization": f"Bearer {self._api_key}",
             "Content-Type": "application/json",
@@ -39,7 +38,7 @@ class OpenRouterTextbasedModel(OpenRouterModel):
             "model": self.config.model_name,
             "messages": messages,
             "usage": {"include": True},
-            **(self.config.model_kwargs | kwargs),
+            **request_kwargs(self.config.model_kwargs, kwargs, None),
         }
 
         try:
@@ -47,13 +46,7 @@ class OpenRouterTextbasedModel(OpenRouterModel):
             response.raise_for_status()
             return response.json()
         except requests.exceptions.HTTPError as e:
-            if response.status_code == 401:
-                error_msg = "Authentication failed. You can permanently set your API key with `mini-extra config set OPENROUTER_API_KEY YOUR_KEY`."
-                raise OpenRouterAuthenticationError(error_msg) from e
-            elif response.status_code == 429:
-                raise OpenRouterRateLimitError("Rate limit exceeded") from e
-            else:
-                raise OpenRouterAPIError(f"HTTP {response.status_code}: {response.text}") from e
+            self._raise_http_error(response, e)
         except requests.exceptions.RequestException as e:
             raise OpenRouterAPIError(f"Request failed: {e}") from e
 

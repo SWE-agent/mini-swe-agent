@@ -2,7 +2,7 @@ import random
 
 from pydantic import BaseModel
 
-from minisweagent import Model
+from minisweagent import Model, TextGenerationResult
 from minisweagent.models import get_model
 
 
@@ -31,6 +31,23 @@ class RouletteModel:
         response = model.query(*args, **kwargs)
         response["model_name"] = model.config.model_name
         return response
+
+    def generate_text(self, *args, **kwargs) -> TextGenerationResult:
+        model = self.select_model()
+        self._n_calls += 1
+        return model.generate_text(*args, **kwargs)
+
+    def format_message(self, **kwargs) -> dict:
+        return self.models[0].format_message(**kwargs)
+
+    def format_observation_messages(
+        self, message: dict, outputs: list[dict], template_vars: dict | None = None
+    ) -> list[dict]:
+        model = next(
+            (model for model in self.models if model.config.model_name == message.get("model_name")),
+            self.models[0],
+        )
+        return model.format_observation_messages(message, outputs, template_vars)
 
     def serialize(self) -> dict:
         return {

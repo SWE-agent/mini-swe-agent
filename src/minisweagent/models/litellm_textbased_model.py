@@ -1,7 +1,9 @@
 import litellm
 
+from minisweagent.exceptions import ContextWindowExceeded
 from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
 from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
+from minisweagent.models.utils.text_generation import request_kwargs
 
 
 class LitellmTextbasedModelConfig(LitellmModelConfig):
@@ -17,11 +19,15 @@ class LitellmTextbasedModel(LitellmModel):
     def __init__(self, **kwargs):
         super().__init__(config_class=LitellmTextbasedModelConfig, **kwargs)
 
-    def _query(self, messages: list[dict[str, str]], **kwargs):
+    def _query(self, messages: list[dict[str, str]], *, use_tools: bool = False, **kwargs):
         try:
             return litellm.completion(
-                model=self.config.model_name, messages=messages, **(self.config.model_kwargs | kwargs)
+                model=self.config.model_name,
+                messages=messages,
+                **request_kwargs(self.config.model_kwargs, kwargs, None),
             )
+        except litellm.exceptions.ContextWindowExceededError as e:
+            raise ContextWindowExceeded(str(e)) from e
         except litellm.exceptions.AuthenticationError as e:
             e.message += " You can permanently set your API key with `mini-extra config set KEY VALUE`."
             raise e

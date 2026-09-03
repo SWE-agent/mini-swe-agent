@@ -1,0 +1,125 @@
+# source: https://github.com/scaleapi/SWE-Atlas/blob/main/run_config/tw/mswea_tw_config.yaml
+agent:
+  system_template: |
+    You are a helpful assistant that can interact with a computer to solve tasks.
+  instance_template: |
+    {{task}}
+
+    You can execute bash commands to explore the codebase, write tests, and run them.
+
+    ## Command Execution Rules
+
+    You are operating in an environment where
+
+    1. You issue at least one command
+    2. The system executes the command(s) in a subshell
+    3. You see the result(s)
+    4. You write your next command(s)
+
+    Each response should include:
+
+    1. **Reasoning text** where you explain your analysis and plan
+    2. At least one tool call with your command
+
+    **CRITICAL REQUIREMENTS:**
+
+    - Your response SHOULD include reasoning text explaining what you're doing
+    - Your response MUST include AT LEAST ONE bash tool call
+    - Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
+    - However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
+    - When you are confident your test suite is complete, you MUST first write your test manifest, then submit:
+      1. First, write your manifest to /logs/agent/manifest.txt with <<TEST_MANIFEST>> tags:
+         ```bash
+         mkdir -p /logs/agent
+         cat <<'MANIFEST_EOF' > /logs/agent/manifest.txt
+         <<TEST_MANIFEST>>
+         - file: path/to/test_file
+           tests:
+             - TestName1
+             - TestName2
+         <<TEST_MANIFEST>>
+         MANIFEST_EOF
+         ```
+      2. Then, in a SEPARATE follow-up command, submit: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
+      <important>You MUST write /logs/agent/manifest.txt with <<TEST_MANIFEST>> tags BEFORE submitting. After the submit command, you cannot continue working on this task.</important>
+
+    Example of a CORRECT response:
+    <example_response>
+    I need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.
+
+    [Makes bash tool call with {"command": "ls -la"} as arguments]
+    </example_response>
+
+    <system_information>
+    {{system}} {{release}} {{version}} {{machine}}
+    </system_information>
+
+    ## Useful command examples
+
+    ### View file content:
+
+    ```bash
+    # View specific lines with numbers
+    nl -ba filename.py | sed -n '10,20p'
+    ```
+
+    ### Search for patterns:
+
+    ```bash
+    grep -rn "pattern" /app/src/
+    ```
+
+    ### Explore directory structure:
+
+    ```bash
+    find /app -type f -name "*.py" | head -20
+    ```
+  step_limit: 250
+  cost_limit: 0.
+environment:
+  cwd: /app
+  timeout: 1800
+  env:
+    PAGER: cat
+    MANPAGER: cat
+    LESS: -R
+    PIP_PROGRESS_BAR: 'off'
+    TQDM_DISABLE: '1'
+model:
+  observation_template: |
+    {%- if output.output | length < 10000 -%}
+    {
+      "returncode": {{ output.returncode }},
+      "output": {{ output.output | tojson }}
+      {%- if output.exception_info %}, "exception_info": {{ output.exception_info | tojson }}{% endif %}
+    }
+    {%- else -%}
+    {
+      "returncode": {{ output.returncode }},
+      "output_head": {{ output.output[:5000] | tojson }},
+      "output_tail": {{ output.output[-5000:] | tojson }},
+      "elided_chars": {{ output.output | length - 10000 }},
+      "warning": "Output too long."
+      {%- if output.exception_info %}, "exception_info": {{ output.exception_info | tojson }}{% endif %}
+    }
+    {%- endif -%}
+  format_error_template: |
+    Tool call error:
+
+    <error>
+    {{error}}
+    </error>
+
+    Here is general guidance on how to submit correct toolcalls:
+
+    Every response needs to use the 'bash' tool at least once to execute commands.
+
+    Call the bash tool with your command as the argument:
+    - Tool: bash
+    - Arguments: {"command": "your_command_here"}
+
+    If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
+    without any other command.
+  cost_tracking: ignore_errors
+  model_kwargs:
+    drop_params: true

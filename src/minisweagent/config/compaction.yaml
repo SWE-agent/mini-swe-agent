@@ -1,0 +1,7 @@
+agent:
+  compaction:
+    enabled: true
+    auto: true
+    keep_tokens: 15000
+    buffer: 20000
+    summary_max_tokens: 4096
