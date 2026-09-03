@@ -6,11 +6,13 @@ import requests
 from minisweagent.models.openrouter_model import (
     OpenRouterAPIError,
     OpenRouterAuthenticationError,
+    OpenRouterContextLengthError,
     OpenRouterModel,
     OpenRouterModelConfig,
     OpenRouterRateLimitError,
 )
 from minisweagent.models.utils.actions_text import format_observation_messages, parse_regex_actions
+from minisweagent.models.utils.api_errors import is_context_length_error
 
 logger = logging.getLogger("openrouter_textbased_model")
 
@@ -52,6 +54,8 @@ class OpenRouterTextbasedModel(OpenRouterModel):
                 raise OpenRouterAuthenticationError(error_msg) from e
             elif response.status_code == 429:
                 raise OpenRouterRateLimitError("Rate limit exceeded") from e
+            elif is_context_length_error(response.status_code, response.text):
+                raise OpenRouterContextLengthError(f"HTTP {response.status_code}: {response.text}") from e
             else:
                 raise OpenRouterAPIError(f"HTTP {response.status_code}: {response.text}") from e
         except requests.exceptions.RequestException as e:
