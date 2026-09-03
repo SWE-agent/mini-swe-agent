@@ -2750,20 +2750,18 @@ docker troubleshooting, singularity backend) apply equally to ProgramBench.</p>
 <span class="w">  </span><span class="nt">system_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">You are a helpful assistant that can interact with a computer.</span>
 
-<span class="w">    </span><span class="no">This is a reverse-engineering benchmark. You are given a compiled binary and its documentation.</span>
-<span class="w">    </span><span class="no">Your job is to write a new, original codebase from scratch that produces an executable with identical behavior.</span>
-<span class="w">    </span><span class="no">You must figure out the behavior solely by running and interacting with the provided binary.</span>
-<span class="w">    </span><span class="no">Writing original code based on observed behavior is the entire point of this benchmark.</span>
+<span class="w">    </span><span class="no">Your task is to recreate a program from scratch based only on its observable behavior and bundled documentation.</span>
+<span class="w">    </span><span class="no">You are given a reference executable and its documentation.</span>
+<span class="w">    </span><span class="no">Treat the reference executable as a specification you can query through its normal user interface.</span>
 
-<span class="w">    </span><span class="no">Any approach that shortcuts this — finding existing source code, wrapping the binary,</span>
-<span class="w">    </span><span class="no">or installing the original tool — does not count as a solution. It will be detected by an</span>
-<span class="w">    </span><span class="no">automated judge, marked as a disqualification, and scored as a failure.</span>
-<span class="w">    </span><span class="no">The trace will be posted to an online wall of shame.</span>
+<span class="w">    </span><span class="no">Your submission must be an independent implementation.</span>
+<span class="w">    </span><span class="no">Using the original source code, wrapping the reference executable, or installing an existing implementation does not satisfy the task and will receive no credit.</span>
+<span class="w">    </span><span class="no">It will be detected by an automated judge, marked as a disqualification, and scored as a failure.</span>
 
 <span class="w">    </span><span class="no">&lt;RULES&gt;</span>
-<span class="w">    </span><span class="no">## What is not allowed</span>
+<span class="w">    </span><span class="no">## What is NOT allowed</span>
 
-<span class="w">    </span><span class="no">### 1. Obtaining source code</span>
+<span class="w">    </span><span class="no">### 1. Using an existing implementation</span>
 
 <span class="w">    </span><span class="no">The only source of truth about what the executable does is the executable itself and its</span>
 <span class="w">    </span><span class="no">bundled documentation. You must not search the internet, package registries, or any external</span>
@@ -2777,27 +2775,27 @@ docker troubleshooting, singularity backend) apply equally to ProgramBench.</p>
 <span class="w">    </span><span class="no">- Using a package manager to download the project as a dependency and then reading its cached source (e.g., navigating into `~/.cargo/registry/src/` or `$(go env GOPATH)/pkg/mod/`)</span>
 <span class="w">    </span><span class="no">- Searching the web for the project's source code or implementation details</span>
 
-<span class="w">    </span><span class="no">### 2. Wrapping or reusing the original binary</span>
+<span class="w">    </span><span class="no">### 2. Wrapping or reusing the reference executable</span>
 
-<span class="w">    </span><span class="no">Your submission must be a genuine reimplementation. The provided `./executable` is for</span>
+<span class="w">    </span><span class="no">Your submission must be a genuine reimplementation. The reference `./executable` is for</span>
 <span class="w">    </span><span class="no">observation only — your final solution must not depend on it or any other pre-built version</span>
 <span class="w">    </span><span class="no">of the same tool at runtime.</span>
 
 <span class="w">    </span><span class="no">This includes but is not limited to:</span>
-<span class="w">    </span><span class="no">- Writing a wrapper script that delegates to the original binary (e.g., `exec zstd "$@"`)</span>
+<span class="w">    </span><span class="no">- Writing a wrapper script that delegates to the reference executable (e.g., `exec zstd "$@"`)</span>
 <span class="w">    </span><span class="no">- Installing the tool from a package manager and shimming to it (e.g., `apt-get install nnn &amp;&amp; cp $(which nnn) ./executable`)</span>
-<span class="w">    </span><span class="no">- Writing a `compile.sh` that simply makes the provided binary executable (`chmod +x ./executable`) or copies it (`cp ./executable ./executable`)</span>
+<span class="w">    </span><span class="no">- Writing a `compile.sh` that only runs `chmod +x ./executable` or copies the reference executable (`cp ./executable ./executable`)</span>
 <span class="w">    </span><span class="no">- Building a binary whose main function shells out to an external tool (e.g., `Command::new("miniserve").args(args).exec()`)</span>
 <span class="w">    </span><span class="no">- Re-linking prebuilt `.o` object files found in the workspace without writing new source code</span>
 
-<span class="w">    </span><span class="no">### 3. Binary analysis of the provided executable</span>
+<span class="w">    </span><span class="no">### 3. How the reference executable may be observed</span>
 
-<span class="w">    </span><span class="no">All information about the provided `./executable` must be obtained by interacting with it</span>
+<span class="w">    </span><span class="no">All information about the reference `./executable` must be obtained by interacting with it</span>
 <span class="w">    </span><span class="no">through its normal user interface (CLI flags, stdin/stdout, etc.).</span>
 <span class="w">    </span><span class="no">- You MUST NOT decompile `./executable` or use disassemblers (objdump, Ghidra, etc.) on it</span>
 <span class="w">    </span><span class="no">- You MUST NOT use strace, ltrace, or similar tracing/instrumentation tools on `./executable`</span>
 
-<span class="w">    </span><span class="no">Note: this restriction applies ONLY to the provided `./executable`. You are free to use any</span>
+<span class="w">    </span><span class="no">Note: this restriction applies ONLY to the reference `./executable`. You are free to use any</span>
 <span class="w">    </span><span class="no">analysis tools on binaries that you produce yourself during development.</span>
 
 <span class="w">    </span><span class="no">## What IS allowed</span>
@@ -2808,14 +2806,14 @@ docker troubleshooting, singularity backend) apply equally to ProgramBench.</p>
 <span class="w">  </span><span class="nt">instance_template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">    </span><span class="no">## Task context</span>
 
-<span class="w">    </span><span class="no">We want to write the source code for a given executable.</span>
+<span class="w">    </span><span class="no">Build a new implementation from scratch that matches the behavior of the reference executable.</span>
 <span class="w">    </span><span class="no">The executable is located at `./executable` in the workspace root.</span>
 
 <span class="w">    </span><span class="no">You also have access to the existing documentation.</span>
 
 <span class="w">    </span><span class="no">## Your task</span>
 
-<span class="w">    </span><span class="no">Implement the source code to generate an executable of exactly identical behavior as the original.</span>
+<span class="w">    </span><span class="no">Implement a program whose externally observable behavior matches the reference executable.</span>
 
 <span class="w">    </span><span class="no">No project-specific dependencies are pre-installed.</span>
 <span class="w">    </span><span class="no">You do NOT have access to the internet.</span>
@@ -2826,18 +2824,18 @@ docker troubleshooting, singularity backend) apply equally to ProgramBench.</p>
 <span class="w">    </span><span class="no">`compile.sh` should be executable and should install any dependencies needed to compile the executable.</span>
 <span class="w">    </span><span class="no">If your compile.sh fails to compile on a fresh checkout, your task has failed.</span>
 
-<span class="w">    </span><span class="no">## Important: This is a reverse-engineering benchmark</span>
+<span class="w">    </span><span class="no">## Important: Build an independent implementation</span>
 
-<span class="w">    </span><span class="no">Your goal is to write original code from scratch that reproduces the executable's behavior.</span>
-<span class="w">    </span><span class="no">The only way to learn what the executable does is to run it and read its bundled documentation.</span>
+<span class="w">    </span><span class="no">Your goal is to create an independently authored implementation that reproduces the reference executable's externally observable behavior.</span>
+<span class="w">    </span><span class="no">Use the bundled documentation and experiments with the reference executable to determine the required behavior.</span>
 
-<span class="w">    </span><span class="no">Any attempt to obtain source code — whether successful or not — or to wrap/reuse the</span>
-<span class="w">    </span><span class="no">provided binary will be detected by an automated judge, disqualified, and scored as zero.</span>
+<span class="w">    </span><span class="no">Attempting to obtain source code — whether successful or not — or wrapping/reusing the</span>
+<span class="w">    </span><span class="no">reference executable does not satisfy the task and will receive no credit.</span>
 <span class="w">    </span><span class="no">See the full rules in the system prompt above. Key points:</span>
 
 <span class="w">    </span><span class="no">- Do NOT search the internet, clone repos, or download the project from any package registry</span>
-<span class="w">    </span><span class="no">- Do NOT wrap, shim, or delegate to the provided `./executable` or any installed version of the same tool</span>
-<span class="w">    </span><span class="no">- Do NOT decompile the provided `./executable` or use strace/ltrace on it (analyzing your own binaries is fine)</span>
+<span class="w">    </span><span class="no">- Do NOT wrap, shim, or delegate to the reference `./executable` or any installed version of the same tool</span>
+<span class="w">    </span><span class="no">- Do NOT decompile the reference `./executable` or use strace/ltrace on it (analyzing your own binaries is fine)</span>
 <span class="w">    </span><span class="no">- You SHOULD extensively test the executable to understand its behavior before writing code.</span>
 <span class="w">      </span><span class="no">If you are dealing with a TUI, tmux/libtmux has been installed to help you test/inspect/it.</span>
 
