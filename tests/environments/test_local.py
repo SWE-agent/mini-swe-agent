@@ -19,6 +19,7 @@ def test_local_environment_config_defaults():
     assert config.cwd == ""
     assert config.env == {}
     assert config.timeout == 30
+    assert config.timeout_duration is None
 
 
 def test_local_environment_basic_execution():
@@ -132,6 +133,17 @@ def test_local_environment_timeout():
     assert result["returncode"] == -1
     assert "timed out" in result["exception_info"]
     assert result["extra"]["exception_type"] == "TimeoutExpired"
+
+
+def test_local_environment_timeout_reports_model_facing_duration():
+    """Test timeout output reports its model-facing duration, not the execution limit."""
+    env = LocalEnvironment(timeout=1, timeout_duration=5)
+
+    result = env.execute({"command": "sleep 2"})
+
+    assert result["returncode"] == -1
+    assert "timed out after 5 seconds" in result["exception_info"]
+    assert result["extra"]["exception"] == "Command 'sleep 2' timed out after 5 seconds"
 
 
 @pytest.mark.skipif(os.name == "nt", reason="process groups are POSIX-specific")

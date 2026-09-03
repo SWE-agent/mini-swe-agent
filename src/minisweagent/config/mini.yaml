@@ -102,6 +102,8 @@ agent:
   cost_limit: 3.
   mode: confirm
 environment:
+  timeout: 30
+  timeout_duration: 5
   env:
     PAGER: cat
     MANPAGER: cat

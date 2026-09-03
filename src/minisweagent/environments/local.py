@@ -14,6 +14,9 @@ class LocalEnvironmentConfig(BaseModel):
     cwd: str = ""
     env: dict[str, str] = {}
     timeout: int = 30
+    """Timeout for executing commands."""
+    timeout_duration: int | None = None
+    """Optional timeout duration reported to the model after a command times out."""
 
 
 class LocalEnvironment:
@@ -25,19 +28,23 @@ class LocalEnvironment:
         """Execute a command in the local environment and return the result as a dict."""
         command = action.get("command", "")
         cwd = cwd or self.config.cwd or os.getcwd()
+        actual_timeout = timeout or self.config.timeout
         try:
-            result = _run(command, cwd, os.environ | self.config.env, timeout or self.config.timeout)
+            result = _run(command, cwd, os.environ | self.config.env, actual_timeout)
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
         except Exception as e:
             raw_output = getattr(e, "output", None)
             raw_output = (
                 raw_output.decode("utf-8", errors="replace") if isinstance(raw_output, bytes) else (raw_output or "")
             )
+            if isinstance(e, subprocess.TimeoutExpired):
+                e.timeout = self.config.timeout_duration or e.timeout
+            exception = str(e)
             output = {
                 "output": raw_output,
                 "returncode": -1,
-                "exception_info": f"An error occurred while executing the command: {e}",
-                "extra": {"exception_type": type(e).__name__, "exception": str(e)},
+                "exception_info": f"An error occurred while executing the command: {exception}",
+                "extra": {"exception_type": type(e).__name__, "exception": exception},
             }
         self._check_finished(output)
         return output
