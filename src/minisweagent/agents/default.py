@@ -89,6 +89,10 @@ class DefaultAgent:
         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
+        self.cost = 0.0
+        self.n_calls = 0
+        self.n_consecutive_format_errors = 0
+        self._start_time = time.time()
         self.add_messages(
             self.model.format_message(role="system", content=self._render_template(self.config.system_template)),
             self.model.format_message(role="user", content=self._render_template(self.config.instance_template)),
