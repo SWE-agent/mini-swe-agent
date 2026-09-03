@@ -247,7 +247,7 @@ Here are more examples of how to configure specific models:
 
     ```yaml
     model:
-        model_name: "minimax/minimax-m2"
+        model_name: "minimax/minimax-m3"
         model_class: openrouter
         model_kwargs:
             temperature: 0.0
@@ -308,4 +308,3 @@ On top, there's a few more exotic model classes that you can use:
 As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the mini-SWE-agent package).
 
 --8<-- "docs/_footer.md"
-
