@@ -52,7 +52,7 @@ class InteractiveAgent(DefaultAgent):
                 )
             else:
                 console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
-            console.print(content, highlight=False, markup=False)
+            console.print(content, highlight=False, markup=False, emoji=False)
         return super().add_messages(*messages)
 
     def query(self) -> dict:
