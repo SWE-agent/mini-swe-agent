@@ -93,6 +93,7 @@ def test_litellm_model_cost_tracking_ignore_errors():
             "role": "assistant",
             "content": "```mswea_bash_command\necho test\n```",
         }
+        mock_response._hidden_params = {}
         mock_response.choices = [Mock(message=mock_message)]
         mock_response.model_dump.return_value = {"test": "response"}
         mock_completion.return_value = mock_response
@@ -112,6 +113,7 @@ def test_litellm_model_cost_validation_zero_cost():
 
     with patch("litellm.completion") as mock_completion:
         mock_response = Mock()
+        mock_response._hidden_params = {}
         mock_response.choices = [Mock(message=Mock(content="Test response"))]
         mock_response.model_dump.return_value = {"test": "response"}
         mock_completion.return_value = mock_response

@@ -11,6 +11,7 @@ from minisweagent.models import get_model
 def _mock_litellm_completion(response_content="```mswea_bash_command\necho test\n```"):
     """Helper to create consistent litellm mocks. Response must include bash block for parse_action."""
     mock_response = MagicMock()
+    mock_response._hidden_params = {}
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = response_content
     mock_response.model_dump.return_value = {"mock": "response"}
