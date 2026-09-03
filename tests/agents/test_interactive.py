@@ -1254,3 +1254,22 @@ def test_submission_enter_quits(model_factory):
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "completed\n"
     assert agent.n_calls == 1
+
+
+def test_emoji_shortcodes_in_content_are_not_substituted(model_factory, capsys):
+    """Rich substitutes `:shortcode:` with emoji independently of markup, mangling messages."""
+    factory, config = model_factory
+    with mock_prompts([""]):  # At submission prompt: Enter to quit
+        agent = InteractiveAgent(
+            model=factory(
+                [
+                    ("Checking the dependency", [{"command": "echo 'androidx.test:runner:1.6.1'"}]),
+                    ("androidx.test:runner:1.6.1", [{"command": "echo 'COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT'"}]),
+                ]
+            ),
+            env=LocalEnvironment(),
+            **{**config, "mode": "yolo"},
+        )
+        agent.run("Solve the issue")
+    # Once for the command output, once for the assistant message
+    assert capsys.readouterr().out.count("androidx.test:runner:1.6.1") >= 2
