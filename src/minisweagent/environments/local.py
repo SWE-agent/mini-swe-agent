@@ -14,6 +14,7 @@ class LocalEnvironmentConfig(BaseModel):
     cwd: str = ""
     env: dict[str, str] = {}
     timeout: int = 30
+    shell: str = ""  # New: Allow users to specify a custom shell (e.g., "pwsh", "bash")
 
 
 class LocalEnvironment:
@@ -26,7 +27,13 @@ class LocalEnvironment:
         command = action.get("command", "")
         cwd = cwd or self.config.cwd or os.getcwd()
         try:
-            result = _run(command, cwd, os.environ | self.config.env, timeout or self.config.timeout)
+            result = _run(
+                command,
+                cwd,
+                os.environ | self.config.env,
+                timeout or self.config.timeout,
+                self.config.shell,  # Pass the custom shell config to _run
+            )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
         except Exception as e:
             raw_output = getattr(e, "output", None)
@@ -69,11 +76,28 @@ class LocalEnvironment:
         }
 
 
-def _run(command: str, cwd: str, env: dict[str, str], timeout: int) -> subprocess.CompletedProcess[str]:
+def _run(
+    command: str,
+    cwd: str,
+    env: dict[str, str],
+    timeout: int,
+    shell: str = "",  # New: Accept custom shell parameter
+) -> subprocess.CompletedProcess[str]:
     """Like subprocess.run, but kills the whole process group on timeout so no children are orphaned."""
+
+    # Determine execution method based on custom shell configuration
+    if shell:
+        # If a custom shell is specified, execute as a list to avoid double-parsing
+        cmd_args = [shell, "-c", command]
+        use_shell_flag = False
+    else:
+        # Default behavior: use system default shell
+        cmd_args = command
+        use_shell_flag = True
+
     process = subprocess.Popen(
-        command,
-        shell=True,
+        cmd_args,
+        shell=use_shell_flag,
         text=True,
         cwd=cwd,
         env=env,
