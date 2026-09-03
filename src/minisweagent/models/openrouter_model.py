@@ -15,6 +15,7 @@ from minisweagent.models.utils.actions_toolcall import (
     parse_toolcall_actions,
 )
 from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
+from minisweagent.models.utils.api_errors import is_context_window_error
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
@@ -44,6 +45,10 @@ class OpenRouterAPIError(Exception):
     """Custom exception for OpenRouter API errors."""
 
 
+class OpenRouterContextWindowError(OpenRouterAPIError):
+    """OpenRouter rejected a request that exceeds the model context window."""
+
+
 class OpenRouterAuthenticationError(Exception):
     """Custom exception for OpenRouter authentication errors."""
 
@@ -53,7 +58,11 @@ class OpenRouterRateLimitError(Exception):
 
 
 class OpenRouterModel:
-    abort_exceptions: list[type[Exception]] = [OpenRouterAuthenticationError, KeyboardInterrupt]
+    abort_exceptions: list[type[Exception]] = [
+        OpenRouterAuthenticationError,
+        OpenRouterContextWindowError,
+        KeyboardInterrupt,
+    ]
 
     def __init__(self, **kwargs):
         self.config = OpenRouterModelConfig(**kwargs)
@@ -84,6 +93,8 @@ class OpenRouterModel:
                 raise OpenRouterAuthenticationError(error_msg) from e
             elif response.status_code == 429:
                 raise OpenRouterRateLimitError("Rate limit exceeded") from e
+            elif is_context_window_error(response):
+                raise OpenRouterContextWindowError(f"HTTP {response.status_code}: {response.text}") from e
             else:
                 raise OpenRouterAPIError(f"HTTP {response.status_code}: {response.text}") from e
         except requests.exceptions.RequestException as e:
