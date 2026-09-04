@@ -12,13 +12,13 @@ BASH_TOOL = {
     "type": "function",
     "function": {
         "name": "bash",
-        "description": "Execute a bash command",
+        "description": "Execute a shell command",
         "parameters": {
             "type": "object",
             "properties": {
                 "command": {
                     "type": "string",
-                    "description": "The bash command to execute",
+                    "description": "The shell command to execute",
                 }
             },
             "required": ["command"],
