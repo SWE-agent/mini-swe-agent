@@ -568,8 +568,7 @@ def test_output_file_is_created(tmp_path):
 
     # Create a temporary config file
     config_file = tmp_path / "test_config.yaml"
-    default_config_path = Path("src/minisweagent/config/default.yaml")
-    config_file.write_text(default_config_path.read_text())
+    config_file.write_text(Path("src/minisweagent/config/mini_textbased.yaml").read_text())
 
     with (
         patch("minisweagent.run.mini.configure_if_first_time"),

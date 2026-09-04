@@ -11,13 +11,13 @@ def test_agent_save_includes_class_names():
     """Test that agent.save includes the full class names with import paths."""
     import yaml
 
-    config_path = Path("src/minisweagent/config/default.yaml")
+    config_path = Path("src/minisweagent/config/mini_textbased.yaml")
     with open(config_path) as f:
-        default_config = yaml.safe_load(f)["agent"]
+        agent_config = yaml.safe_load(f)["agent"]
 
     model = DeterministicModel(outputs=[make_output("echo 'test'", [])])
     env = LocalEnvironment()
-    agent = DefaultAgent(model, env, **default_config)
+    agent = DefaultAgent(model, env, **agent_config)
 
     agent.add_messages({"role": "system", "content": "test system message"})
     agent.add_messages({"role": "user", "content": "test user message"})
@@ -52,13 +52,13 @@ def test_agent_serialize():
     """Test that agent.serialize returns the correct structure."""
     import yaml
 
-    config_path = Path("src/minisweagent/config/default.yaml")
+    config_path = Path("src/minisweagent/config/mini_textbased.yaml")
     with open(config_path) as f:
-        default_config = yaml.safe_load(f)["agent"]
+        agent_config = yaml.safe_load(f)["agent"]
 
     model = DeterministicModel(outputs=[make_output("echo 'test'", [])])
     env = LocalEnvironment()
-    agent = DefaultAgent(model, env, **default_config)
+    agent = DefaultAgent(model, env, **agent_config)
 
     agent.add_messages({"role": "system", "content": "test system message"})
     agent.add_messages({"role": "user", "content": "test user message"})

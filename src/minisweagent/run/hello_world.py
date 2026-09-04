@@ -32,7 +32,7 @@ def main(
     agent = DefaultAgent(
         LitellmModel(model_name=model_name),
         LocalEnvironment(),
-        **yaml.safe_load(Path(package_dir / "config" / "default.yaml").read_text())["agent"],
+        **yaml.safe_load(Path(package_dir / "config" / "mini.yaml").read_text())["agent"],
     )
     agent.run(task)
     return agent
