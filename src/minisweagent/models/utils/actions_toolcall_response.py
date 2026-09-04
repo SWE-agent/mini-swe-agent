@@ -6,6 +6,7 @@ import time
 from jinja2 import StrictUndefined, Template
 
 from minisweagent.exceptions import FormatError
+from minisweagent.models.utils.observations import bounded_observation_output
 
 # OpenRouter/OpenAI Responses API uses a flat structure (no nested "function" key)
 BASH_TOOL_RESPONSE_API = {
@@ -117,8 +118,9 @@ def format_toolcall_observation_messages(
     padded_outputs = outputs + [not_executed] * (len(actions) - len(outputs))
     results = []
     for action, output in zip(actions, padded_outputs):
+        bounded_output = bounded_observation_output(output)
         content = Template(observation_template, undefined=StrictUndefined).render(
-            output=output, **(template_vars or {})
+            output=bounded_output, **(template_vars or {})
         )
         msg: dict = {
             "extra": {

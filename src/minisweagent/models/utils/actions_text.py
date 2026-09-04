@@ -9,6 +9,7 @@ import time
 from jinja2 import StrictUndefined, Template
 
 from minisweagent.exceptions import FormatError
+from minisweagent.models.utils.observations import bounded_observation_output
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 
 
@@ -50,8 +51,9 @@ def format_observation_messages(
     """Format execution outputs into user observation messages."""
     results = []
     for output in outputs:
+        bounded_output = bounded_observation_output(output)
         content = Template(observation_template, undefined=StrictUndefined).render(
-            output=output, **(template_vars or {})
+            output=bounded_output, **(template_vars or {})
         )
         msg: dict = {
             "role": "user",
