@@ -13,6 +13,7 @@ _ENVIRONMENT_MAPPING = {
     "swerex_modal": "minisweagent.environments.extra.swerex_modal.SwerexModalEnvironment",
     "bubblewrap": "minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment",
     "contree": "minisweagent.environments.extra.contree.ContreeEnvironment",
+    "e2b": "minisweagent.environments.extra.e2b.E2BEnvironment",
 }
 
 

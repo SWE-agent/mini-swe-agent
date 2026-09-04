@@ -80,7 +80,7 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     env_config = {**config.get("environment", {})}
     env_config["environment_class"] = env_config.get("environment_class", "docker")
     image_name = get_swebench_docker_image_name(instance)
-    if env_config["environment_class"] in ["docker", "swerex_modal"]:
+    if env_config["environment_class"] in ["docker", "swerex_modal", "e2b"]:
         env_config["image"] = image_name
     elif env_config["environment_class"] in ["singularity", "contree"]:
         env_config["image"] = "docker://" + image_name
@@ -88,9 +88,15 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     env = get_environment(env_config)
     if startup_command := config.get("run", {}).get("env_startup_command"):
         startup_command = Template(startup_command, undefined=StrictUndefined).render(**instance)
-        out = env.execute({"command": startup_command})
-        if out["returncode"] != 0:
-            raise RuntimeError(f"Error executing startup command: {out}")
+        try:
+            out = env.execute({"command": startup_command})
+            if out["returncode"] != 0:
+                raise RuntimeError(f"Error executing startup command: {out}")
+        except BaseException:
+            # The caller has no reference to env yet, so release it here to avoid
+            # leaking the container / cloud sandbox on startup-command failure.
+            _teardown_environment(env)
+            raise
     return env
 
 
@@ -119,6 +125,20 @@ def remove_from_preds_file(output_path: Path, instance_id: str):
             output_path.write_text(json.dumps(output_data, indent=2))
 
 
+def _teardown_environment(env: Environment | None) -> None:
+    """Release the per-instance environment resource (container / cloud sandbox).
+
+    Environments expose teardown as either ``cleanup()`` (docker, singularity,
+    bubblewrap) or ``stop()`` (swerex_modal); call whichever exists.
+    """
+    if env is None:
+        return
+    for teardown_name in ("cleanup", "stop"):
+        if callable(teardown := getattr(env, teardown_name, None)):
+            teardown()
+            break
+
+
 def process_instance(
     instance: dict,
     output_dir: Path,
@@ -142,6 +162,7 @@ def process_instance(
     result = None
     extra_info = {}
 
+    env = None
     try:
         env = get_sb_environment(config, instance)
         agent = ProgressTrackingAgent(
@@ -159,22 +180,28 @@ def process_instance(
         exit_status, result = type(e).__name__, ""
         extra_info = {"traceback": traceback.format_exc(), "exception_str": str(e)}
     finally:
-        if agent is not None:
-            traj_path = instance_dir / f"{instance_id}.traj.json"
-            agent.save(
-                traj_path,
-                {
-                    "info": {
-                        "exit_status": exit_status,
-                        "submission": result,
-                        **extra_info,
+        # Teardown lives in its own finally so the environment (container / cloud
+        # sandbox) is always released even if saving the trajectory or updating
+        # the predictions file raises.
+        try:
+            if agent is not None:
+                traj_path = instance_dir / f"{instance_id}.traj.json"
+                agent.save(
+                    traj_path,
+                    {
+                        "info": {
+                            "exit_status": exit_status,
+                            "submission": result,
+                            **extra_info,
+                        },
+                        "instance_id": instance_id,
                     },
-                    "instance_id": instance_id,
-                },
-            )
-            logger.info(f"Saved trajectory to '{traj_path}'")
-        update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
-        progress_manager.on_instance_end(instance_id, exit_status)
+                )
+                logger.info(f"Saved trajectory to '{traj_path}'")
+            update_preds_file(output_dir / "preds.json", instance_id, model.config.model_name, result)
+            progress_manager.on_instance_end(instance_id, exit_status)
+        finally:
+            _teardown_environment(env)
 
 
 def filter_instances(
