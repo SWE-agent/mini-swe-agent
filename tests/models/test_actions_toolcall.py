@@ -1,6 +1,8 @@
+import json
 from unittest.mock import MagicMock
 
 import pytest
+from litellm.types.utils import ChatCompletionMessageToolCall
 
 from minisweagent.exceptions import FormatError
 from minisweagent.models.utils.actions_toolcall import (
@@ -8,6 +10,42 @@ from minisweagent.models.utils.actions_toolcall import (
     format_toolcall_observation_messages,
     parse_toolcall_actions,
 )
+from minisweagent.models.utils.actions_toolcall_response import parse_toolcall_actions_response
+
+
+@pytest.mark.parametrize(
+    ("command", "response_api"),
+    [
+        (command, response_api)
+        for command in [None, 42, True, ["echo hello"], {"text": "echo hello"}]
+        for response_api in [False, True]
+    ],
+)
+def test_non_string_command_raises_format_error(command: object, response_api: bool):
+    calls = [
+        {"type": "function_call", "call_id": "call_valid", "name": "bash", "arguments": '{"command": "echo hello"}'},
+        {
+            "type": "function_call",
+            "call_id": "call_invalid",
+            "name": "bash",
+            "arguments": json.dumps({"command": command}),
+        },
+    ]
+    if not response_api:
+        calls = [
+            ChatCompletionMessageToolCall(
+                id=call["call_id"], type="function", function={"name": call["name"], "arguments": call["arguments"]}
+            )
+            for call in calls
+        ]
+    with pytest.raises(FormatError) as exc_info:
+        (parse_toolcall_actions_response if response_api else parse_toolcall_actions)(
+            calls, format_error_template="{{ error }}"
+        )
+    message = exc_info.value.messages[0]
+    content = message["content"][0]["text"] if response_api else message["content"]
+    assert "'command' argument must be a string" in content
+    assert message["extra"]["interrupt_type"] == "FormatError"
 
 
 class TestParseToolcallActions:
