@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/environments/singularity.py"
+        --8 < --"src/minisweagent/environments/singularity.py"
         ```
 
 ::: minisweagent.environments.singularity

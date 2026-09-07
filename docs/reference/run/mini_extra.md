@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/run/utilities/mini_extra.py"
+        --8 < --"src/minisweagent/run/utilities/mini_extra.py"
         ```
 
 Central entry point for all extra commands from mini-swe-agent.
