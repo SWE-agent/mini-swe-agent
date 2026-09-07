@@ -95,6 +95,8 @@ def parse_toolcall_actions_response(
             error_msg += f"Unknown tool '{tool_call.get('name')}'."
         if not isinstance(args, dict) or "command" not in args:
             error_msg += "Missing 'command' argument in bash tool call."
+        elif not isinstance(args["command"], str):
+            error_msg += "'command' argument must be a string."
         if error_msg:
             error_text = Template(format_error_template, undefined=StrictUndefined).render(
                 error=error_msg.strip(), actions=[], has_tool_calls=True, **template_kwargs
