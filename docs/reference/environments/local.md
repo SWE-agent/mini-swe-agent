@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/environments/local.py"
+        --8 < --"src/minisweagent/environments/local.py"
         ```
 
 ::: minisweagent.environments.local

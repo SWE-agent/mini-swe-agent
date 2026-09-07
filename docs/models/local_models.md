@@ -28,11 +28,7 @@ This is done with the `model_kwargs` dictionary which is directly passed to `lit
 In other words, this is how we invoke litellm:
 
 ```python
-litellm.completion(
-    model=model_name,
-    messages=messages,
-    **model_kwargs
-)
+litellm.completion(model=model_name, messages=messages, **model_kwargs)
 ```
 
 You can set `model_kwargs` in an agent config file like the following one:
@@ -69,7 +65,7 @@ If this is not enough, our model class should be simple to modify:
     - [API reference](../reference/models/litellm.md)
 
     ```python
-    --8<-- "src/minisweagent/models/litellm_model.py"
+    --8 < --"src/minisweagent/models/litellm_model.py"
     ```
 
 The other part that you most likely need to figure out are costs.

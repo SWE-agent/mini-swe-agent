@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/models/openrouter_model.py"
+        --8 < --"src/minisweagent/models/openrouter_model.py"
         ```
 
 !!! tip "Guide"
