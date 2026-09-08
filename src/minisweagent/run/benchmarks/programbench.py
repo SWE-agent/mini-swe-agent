@@ -35,6 +35,7 @@ class ProgramBenchAgent(ProgressTrackingAgent):
 
     def serialize(self, *extra_dicts) -> dict:
         data = super().serialize(*extra_dicts)
+        data["messages"] = copy.deepcopy(data["messages"])
         for msg in data.get("messages", []):
             extra = msg.get("extra", {})
             extra.pop("raw_output", None)
