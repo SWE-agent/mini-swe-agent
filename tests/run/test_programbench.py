@@ -8,6 +8,7 @@ package to be installed so we verify API compatibility with what programbench
 actually ships — they're skipped via ``pytest.importorskip`` when not available.
 """
 
+import copy
 import json
 import tarfile
 from unittest.mock import MagicMock, patch
@@ -18,12 +19,44 @@ from pydantic import BaseModel
 
 from minisweagent import package_dir
 from minisweagent.environments.docker import DockerEnvironment
+from minisweagent.environments.local import LocalEnvironment
 from minisweagent.exceptions import Submitted
-from minisweagent.run.benchmarks.programbench import copy_submission, main
+from minisweagent.models.test_models import DeterministicModel
+from minisweagent.run.benchmarks.programbench import ProgramBenchAgent, copy_submission, main
+from minisweagent.run.benchmarks.utils.batch_progress import RunBatchProgressManager
 
 # Lightweight image used for the real-docker tests. Already cached on machines
 # that run mini-swe-agent's docker test suite (see tests/environments/test_docker.py).
 _TEST_IMAGE = "python:3.11"
+
+
+@pytest.mark.parametrize(
+    ("extra", "saved_extra"),
+    [
+        ({"raw_output": "command output", "returncode": 0}, {"returncode": 0}),
+        (
+            {"observations": [{"raw_output": "command output", "returncode": 0}]},
+            {"observations": [{"returncode": 0}]},
+        ),
+    ],
+)
+def test_save_prunes_raw_output_without_changing_live_messages(tmp_path, extra, saved_extra):
+    agent = ProgramBenchAgent(
+        DeterministicModel(outputs=[]),
+        LocalEnvironment(),
+        progress_manager=RunBatchProgressManager(1),
+        system_template="",
+        instance_template="",
+    )
+    agent.add_messages({"role": "tool", "content": "command output", "extra": extra})
+    messages = copy.deepcopy(agent.messages)
+
+    agent.save(tmp_path / "trajectory.json")
+
+    assert agent.messages == messages
+    assert json.loads((tmp_path / "trajectory.json").read_text())["messages"] == [
+        {"role": "tool", "content": "command output", "extra": saved_extra}
+    ]
 
 
 @pytest.fixture
