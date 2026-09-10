@@ -176,6 +176,12 @@ cd mini-swe-agent && pip install -e .
 mini  # run the CLI
 ```
 
+**Option 4:** Run with [Nix](https://nixos.org/) (flake, nothing to install)
+
+```bash
+nix run github:SWE-agent/mini-swe-agent#mini-swe-agent  # run the CLI
+```
+
 Read more in our [documentation](https://mini-swe-agent.com/latest/):
 
 * [Quick start guide](https://mini-swe-agent.com/latest/quickstart/)

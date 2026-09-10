@@ -1,5 +1,5 @@
 .cursor/rules/_*
-uv.lock
+result
 patch.txt
 exit_statuses*.yaml
 preds.json
