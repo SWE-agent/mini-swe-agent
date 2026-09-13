@@ -3,6 +3,7 @@ import shlex
 import signal
 import sys
 import tempfile
+import threading
 import time
 from pathlib import Path
 from unittest.mock import patch
@@ -165,6 +166,30 @@ def test_local_environment_timeout_kills_child_process():
             assert _process_exited(child_pid)
         finally:
             _kill_process_if_running(child_pid)
+
+
+@pytest.mark.skipif(os.name == "nt", reason="process groups are POSIX-specific")
+def test_local_environment_interrupt_kills_child_process():
+    """Test that KeyboardInterrupt kills shell-spawned child processes."""
+    with tempfile.TemporaryDirectory() as temp_dir:
+        pid_file = Path(temp_dir) / "child.pid"
+
+        def interrupt_after_child_starts():
+            _read_pid(pid_file)
+            os.kill(os.getpid(), signal.SIGINT)
+
+        interrupter = threading.Thread(target=interrupt_after_child_starts, daemon=True)
+        interrupter.start()
+        try:
+            with pytest.raises(KeyboardInterrupt):
+                LocalEnvironment(cwd=temp_dir).execute(
+                    {"command": f"sleep 30 & echo $! > {shlex.quote(str(pid_file))}; wait"}
+                )
+            assert _process_exited(_read_pid(pid_file))
+        finally:
+            interrupter.join(timeout=1)
+            if pid_file.is_file():
+                _kill_process_if_running(_read_pid(pid_file))
 
 
 def _read_pid(pid_file: Path) -> int:
