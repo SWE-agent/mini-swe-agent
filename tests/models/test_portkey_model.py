@@ -191,3 +191,40 @@ def test_portkey_model_cost_validation_error():
 
                 assert "Error calculating cost" in str(exc_info.value)
                 assert "MSWEA_COST_TRACKING='ignore_errors'" in str(exc_info.value)
+
+
+def test_portkey_model_calculate_cost_total_tokens_none():
+    """Regression guard: `usage.total_tokens=None` must not crash cost tracking.
+
+    Portkey sometimes omits ``total_tokens`` for a provider response, and
+    ``_calculate_cost`` would run ``None - prompt - completion`` and raise
+    ``TypeError``.  Unlike setting the value to 0 (rejected in #781/#779
+    because it would make cost limits unreachable), inferring the total from
+    prompt + completion tokens keeps the real usage while avoiding the crash.
+    """
+    from types import SimpleNamespace
+
+    from litellm import ModelResponse, Usage
+
+    response = ModelResponse(
+        model="gpt-4o",
+        usage=Usage(prompt_tokens=10, completion_tokens=5, total_tokens=None),
+    )
+    model = PortkeyModel.__new__(PortkeyModel)
+    model.config = SimpleNamespace(
+        litellm_model_name_override="",
+        cost_tracking="default",
+        model_name="gpt-4o",
+    )
+
+    with patch("minisweagent.models.portkey_model.litellm.cost_calculator.completion_cost") as mock_cost:
+        mock_cost.return_value = 0.01
+
+        result = model._calculate_cost(response)
+
+        assert result == {"cost": 0.01}
+        # The inferred total (10 + 5) matches the parts, so the
+        # "total != prompt + completion" rewrite branch must not trigger.
+        passed = mock_cost.call_args.args[0]
+        assert passed.usage.prompt_tokens == 10
+        assert passed.usage.completion_tokens == 5
