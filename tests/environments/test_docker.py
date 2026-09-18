@@ -89,7 +89,7 @@ def test_default_networks_isolate_concurrent_environments(container_executable):
         for _ in range(30):
             local = envs[0].execute(
                 {
-                    "command": "python -c \"import urllib.request; "
+                    "command": 'python -c "import urllib.request; '
                     "print(urllib.request.urlopen('http://127.0.0.1:18080/marker').read().decode())\""
                 }
             )

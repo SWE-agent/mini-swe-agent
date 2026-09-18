@@ -78,7 +78,9 @@ class DockerEnvironment:
         """Start the Docker container and return the container ID."""
         container_name = f"minisweagent-{uuid.uuid4().hex[:8]}"
         network_args = []
-        has_network_arg = any(arg in {"--network", "--net"} or arg.startswith(("--network=", "--net=")) for arg in self.config.run_args)
+        has_network_arg = any(
+            arg in {"--network", "--net"} or arg.startswith(("--network=", "--net=")) for arg in self.config.run_args
+        )
         if self.config.isolate_network and not has_network_arg:
             self.network_name = f"{container_name}-network"
             subprocess.run(
