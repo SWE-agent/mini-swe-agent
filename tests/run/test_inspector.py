@@ -521,6 +521,30 @@ async def test_trajectory_inspector_ansi_content(sample_ansi_trajectory):
             assert "\x00" not in content
 
 
+async def test_trajectory_inspector_tool_result_content_blocks(tmp_path):
+    trajectory_file = tmp_path / "tool-result.traj.json"
+    trajectory_file.write_text(
+        json.dumps(
+            [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "tool_result",
+                            "tool_use_id": "toolu_1",
+                            "content": [{"type": "text", "text": "Tests passed: 3"}],
+                        }
+                    ],
+                }
+            ]
+        )
+    )
+    app = TrajectoryInspector([trajectory_file])
+    async with app.run_test() as pilot:
+        await pilot.pause()
+        assert "Tests passed: 3" in get_screen_text(app)
+
+
 @patch("minisweagent.run.utilities.inspector.TrajectoryInspector.run")
 def test_main_with_single_file(mock_run, temp_trajectory_files):
     """Test main function with a single trajectory file."""
