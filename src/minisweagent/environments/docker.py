@@ -182,21 +182,24 @@ class DockerEnvironment:
     def cleanup(self):
         """Stop and remove the Docker container."""
         if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set
+            remove_container = any(arg in {"--rm", "--rm=true"} for arg in self.config.run_args)
             subprocess.run(
-                [self.config.executable, "rm", "-f", self.container_id],
+                [self.config.executable, "rm", "-f", self.container_id]
+                if remove_container
+                else [self.config.executable, "stop", self.container_id],
                 capture_output=True,
                 timeout=60,
                 check=False,
             )
-            if self.network_name:
+            if self.network_name and remove_container:
                 subprocess.run(
                     [self.config.executable, "network", "rm", self.network_name],
                     capture_output=True,
                     timeout=60,
                     check=False,
                 )
+                self.network_name = None
             self.container_id = None
-            self.network_name = None
 
     def __del__(self):
         """Cleanup container when object is destroyed."""

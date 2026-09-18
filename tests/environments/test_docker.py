@@ -119,6 +119,27 @@ def test_default_networks_isolate_concurrent_environments(container_executable):
 
 
 @pytest.mark.slow
+def test_cleanup_preserves_container_without_rm(container_executable):
+    env = DockerEnvironment(
+        image="python:3.12-slim", executable=container_executable, cwd="/tmp", run_args=[]
+    )
+    container_id = env.container_id
+    network_name = env.network_name
+    try:
+        env.cleanup()
+        inspect = subprocess.run(
+            [container_executable, "inspect", container_id], capture_output=True, text=True, check=True
+        )
+        assert json.loads(inspect.stdout)[0]["State"]["Status"] == "exited"
+        assert subprocess.run(
+            [container_executable, "network", "inspect", network_name], capture_output=True
+        ).returncode == 0
+    finally:
+        subprocess.run([container_executable, "rm", container_id], capture_output=True)
+        subprocess.run([container_executable, "network", "rm", network_name], capture_output=True)
+
+
+@pytest.mark.slow
 @pytest.mark.parametrize("executable", environment_params)
 def test_docker_environment_basic_execution(executable):
     """Test basic command execution in Docker container."""
