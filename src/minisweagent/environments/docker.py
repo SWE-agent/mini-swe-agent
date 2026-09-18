@@ -31,6 +31,8 @@ class DockerEnvironmentConfig(BaseModel):
     """Additional arguments to pass to the docker/container executable.
     Default is ["--rm"], which removes the container after it exits.
     """
+    isolate_network: bool = True
+    """Create a private bridge unless run_args already select a network."""
     container_timeout: str = "2h"
     """Max duration to keep container running. Uses the same format as the sleep command."""
     pull_timeout: int = 120
@@ -55,6 +57,7 @@ class DockerEnvironment:
         """
         self.logger = logger or logging.getLogger("minisweagent.environment")
         self.container_id: str | None = None
+        self.network_name: str | None = None
         self.config = config_class(**kwargs)
         self._start_container()
 
@@ -74,6 +77,18 @@ class DockerEnvironment:
     def _start_container(self):
         """Start the Docker container and return the container ID."""
         container_name = f"minisweagent-{uuid.uuid4().hex[:8]}"
+        network_args = []
+        has_network_arg = any(arg in {"--network", "--net"} or arg.startswith(("--network=", "--net=")) for arg in self.config.run_args)
+        if self.config.isolate_network and not has_network_arg:
+            self.network_name = f"{container_name}-network"
+            subprocess.run(
+                [self.config.executable, "network", "create", self.network_name],
+                capture_output=True,
+                text=True,
+                timeout=self.config.pull_timeout,
+                check=True,
+            )
+            network_args = ["--network", self.network_name]
         cmd = [
             self.config.executable,
             "run",
@@ -82,19 +97,31 @@ class DockerEnvironment:
             container_name,
             "-w",
             self.config.cwd,
+            *network_args,
             *self.config.run_args,
             self.config.image,
             "sleep",
             self.config.container_timeout,
         ]
         self.logger.debug(f"Starting container with command: {shlex.join(cmd)}")
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=self.config.pull_timeout,  # docker pull might take a while
-            check=True,
-        )
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=self.config.pull_timeout,  # docker pull might take a while
+                check=True,
+            )
+        except BaseException:
+            if self.network_name:
+                subprocess.run(
+                    [self.config.executable, "network", "rm", self.network_name],
+                    capture_output=True,
+                    timeout=60,
+                    check=False,
+                )
+                self.network_name = None
+            raise
         self.logger.info(f"Started container {container_name} with ID {result.stdout.strip()}")
         self.container_id = result.stdout.strip()
 
@@ -153,8 +180,21 @@ class DockerEnvironment:
     def cleanup(self):
         """Stop and remove the Docker container."""
         if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set
-            cmd = f"(timeout 60 {self.config.executable} stop {self.container_id} || {self.config.executable} rm -f {self.container_id}) >/dev/null 2>&1 &"
-            subprocess.Popen(cmd, shell=True)
+            subprocess.run(
+                [self.config.executable, "rm", "-f", self.container_id],
+                capture_output=True,
+                timeout=60,
+                check=False,
+            )
+            if self.network_name:
+                subprocess.run(
+                    [self.config.executable, "network", "rm", self.network_name],
+                    capture_output=True,
+                    timeout=60,
+                    check=False,
+                )
+            self.container_id = None
+            self.network_name = None
 
     def __del__(self):
         """Cleanup container when object is destroyed."""
