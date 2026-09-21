@@ -1,5 +1,7 @@
+import json
 import os
 import subprocess
+import time
 from unittest.mock import patch
 
 import pytest
@@ -51,6 +53,89 @@ def test_docker_environment_config_defaults(executable):
     assert config.forward_env == []
     assert config.timeout == 30
     assert config.executable == executable
+    assert config.isolate_network
+
+
+@pytest.mark.slow
+def test_default_networks_isolate_concurrent_environments(container_executable):
+    envs = [DockerEnvironment(image="python:3.12-slim", executable=container_executable, cwd="/tmp") for _ in range(2)]
+    network_names = [env.network_name for env in envs]
+    try:
+        assert network_names[0] and network_names[1] and network_names[0] != network_names[1]
+        inspect = subprocess.run(
+            [container_executable, "inspect", envs[0].container_id, envs[1].container_id],
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        container_info = json.loads(inspect)
+        assert [set(info["NetworkSettings"]["Networks"]) for info in container_info] == [
+            {network_names[0]},
+            {network_names[1]},
+        ]
+        network_info = json.loads(
+            subprocess.run(
+                [container_executable, "network", "inspect", *network_names],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout
+        )
+        assert all(not info["Internal"] for info in network_info)
+
+        envs[0].execute({"command": "echo private > marker; python -m http.server 18080 >/tmp/http.log 2>&1 &"})
+        first_ip = container_info[0]["NetworkSettings"]["Networks"][network_names[0]]["IPAddress"]
+        local = None
+        for _ in range(30):
+            local = envs[0].execute(
+                {
+                    "command": 'python -c "import urllib.request; '
+                    "print(urllib.request.urlopen('http://127.0.0.1:18080/marker').read().decode())\""
+                }
+            )
+            if local["returncode"] == 0:
+                break
+            time.sleep(0.1)
+        assert local and local["output"].strip() == "private"
+        probe = envs[1].execute(
+            {"command": f"python -c \"import socket; socket.create_connection(('{first_ip}',18080),timeout=2)\""}
+        )
+        assert probe["returncode"] != 0
+        assert envs[1].execute({"command": "test ! -e /tmp/marker"})["returncode"] == 0
+    finally:
+        for env in envs:
+            env.cleanup()
+        for _ in range(50):
+            if all(
+                subprocess.run([container_executable, "network", "inspect", name], capture_output=True).returncode != 0
+                for name in network_names
+            ):
+                break
+            time.sleep(0.1)
+        assert all(
+            subprocess.run([container_executable, "network", "inspect", name], capture_output=True).returncode != 0
+            for name in network_names
+        )
+
+
+@pytest.mark.slow
+def test_cleanup_preserves_container_without_rm(container_executable):
+    env = DockerEnvironment(image="python:3.12-slim", executable=container_executable, cwd="/tmp", run_args=[])
+    container_id = env.container_id
+    network_name = env.network_name
+    try:
+        env.cleanup()
+        inspect = subprocess.run(
+            [container_executable, "inspect", container_id], capture_output=True, text=True, check=True
+        )
+        assert json.loads(inspect.stdout)[0]["State"]["Status"] == "exited"
+        assert (
+            subprocess.run([container_executable, "network", "inspect", network_name], capture_output=True).returncode
+            == 0
+        )
+    finally:
+        subprocess.run([container_executable, "rm", container_id], capture_output=True)
+        subprocess.run([container_executable, "network", "rm", network_name], capture_output=True)
 
 
 @pytest.mark.slow
