@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/models/test_models.py"
+        --8 < --"src/minisweagent/models/test_models.py"
         ```
 
 ::: minisweagent.models.test_models
