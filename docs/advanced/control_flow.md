@@ -53,7 +53,7 @@ And here is the code that implements it:
     - [API reference](../reference/agents/default.md)
 
     ```python
-    --8<-- "src/minisweagent/agents/default.py"
+    --8 < --"src/minisweagent/agents/default.py"
     ```
 
 Essentially, `DefaultAgent.run` calls `DefaultAgent.step` in a loop until the agent has finished its task.
