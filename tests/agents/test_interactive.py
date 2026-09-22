@@ -808,7 +808,17 @@ def test_complex_mode_switching_sequence(model_factory):
     assert agent.config.mode == "confirm"  # Should end in confirm mode
 
 
-def test_limits_exceeded_with_user_continuation(model_factory):
+@pytest.mark.parametrize(
+    ("limit_inputs", "expected_limits"),
+    [
+        (["10", "5.0"], (10, 5.0)),
+        (["10", "$5", "5.0"], (10, 5.0)),
+        (["ten", "10", "5.0"], (10, 5.0)),
+        (["", "1.5", "10", "", "$5", "five", "5.0"], (10, 5.0)),
+        (["0", "0"], (0, 0.0)),
+    ],
+)
+def test_limits_exceeded_with_user_continuation(model_factory, limit_inputs, expected_limits):
     """Test that when limits are exceeded, user can provide new limits and execution continues."""
     factory, config = model_factory
     # Create agent with very low limits that will be exceeded
@@ -840,7 +850,7 @@ def test_limits_exceeded_with_user_continuation(model_factory):
     # Mock input() to provide new limits when prompted (simulating an
     # interactive terminal, so isatty() must report True).
     with patch.object(InteractiveAgent, "_stdin_is_interactive", return_value=True):
-        with patch("builtins.input", side_effect=["10", "5.0"]):  # New step_limit=10, cost_limit=5.0
+        with patch("builtins.input", side_effect=limit_inputs):
             with mock_prompts([""]):  # No new task
                 with patch("minisweagent.agents.interactive.console.print"):  # Suppress console output
                     info = agent.run("Test limits exceeded with continuation")
@@ -848,8 +858,7 @@ def test_limits_exceeded_with_user_continuation(model_factory):
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "completed after limit increase\n"
     assert agent.n_calls == 3  # Should complete all 3 steps
-    assert agent.config.step_limit == 10  # Should have updated step limit
-    assert agent.config.cost_limit == 5.0  # Should have updated cost limit
+    assert (agent.config.step_limit, agent.config.cost_limit) == expected_limits
 
 
 def test_limits_exceeded_multiple_times_with_continuation(model_factory):
