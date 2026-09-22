@@ -11,6 +11,7 @@ import sys
 from typing import Literal, NoReturn
 
 from rich.console import Console
+from rich.prompt import FloatPrompt, IntPrompt
 from rich.rule import Rule
 
 from minisweagent.agents.default import AgentConfig, DefaultAgent
@@ -89,8 +90,8 @@ class InteractiveAgent(DefaultAgent):
                 f"Limits exceeded. Limits: {self.config.step_limit} steps, ${self.config.cost_limit}.\n"
                 f"Current spend: {self.n_calls} steps, ${self.cost:.2f}."
             )
-            self.config.step_limit = int(input("New step limit: "))
-            self.config.cost_limit = float(input("New cost limit: "))
+            self.config.step_limit = IntPrompt.ask("New step limit", console=console)
+            self.config.cost_limit = FloatPrompt.ask("New cost limit", console=console)
             return super().query()
 
     @staticmethod
