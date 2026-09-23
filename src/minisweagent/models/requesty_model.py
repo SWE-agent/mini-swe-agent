@@ -124,10 +124,10 @@ class RequestyModel:
     def _calculate_cost(self, response) -> dict[str, float]:
         usage = response.get("usage", {})
         cost = usage.get("cost", 0.0)
-        if cost == 0.0:
+        if cost <= 0.0:
             raise RequestyAPIError(
-                f"No cost information available from Requesty API for model {self.config.model_name}. "
-                "Cost tracking is required but not provided by the API response."
+                f"No cost information available from Requesty API for model {self.config.model_name}: "
+                f"usage cost is {cost!r}. Cost tracking is required and cost must be > 0.0."
             )
         return {"cost": cost}
 
