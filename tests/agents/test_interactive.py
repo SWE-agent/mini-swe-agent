@@ -1,9 +1,16 @@
+import sys
 from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 import yaml
+
+if sys.platform == "win32":
+    pytest.skip(
+        "Scripted agent tests use POSIX shell commands, but LocalEnvironment uses cmd.exe on Windows",
+        allow_module_level=True,
+    )
 
 from minisweagent.agents.interactive import InteractiveAgent
 from minisweagent.environments.local import LocalEnvironment

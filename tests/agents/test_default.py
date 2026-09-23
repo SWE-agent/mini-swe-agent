@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import pytest
@@ -14,6 +15,11 @@ from minisweagent.models.test_models import (
     make_output,
     make_response_api_output,
     make_toolcall_output,
+)
+
+pytestmark = pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Scripted agent tests use POSIX shell commands, but LocalEnvironment uses cmd.exe on Windows",
 )
 
 # --- Helper functions to abstract message format differences ---

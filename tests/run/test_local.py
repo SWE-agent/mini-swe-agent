@@ -1,5 +1,14 @@
 import re
+import sys
 from unittest.mock import patch
+
+import pytest
+
+if sys.platform == "win32":
+    pytest.skip(
+        "Local runner tests script POSIX shell commands through LocalEnvironment on Windows",
+        allow_module_level=True,
+    )
 
 from minisweagent.models.test_models import DeterministicModel, make_output
 from minisweagent.run.mini import DEFAULT_CONFIG_FILE, main
