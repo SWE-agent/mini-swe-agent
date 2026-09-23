@@ -296,6 +296,48 @@ def test_requesty_model_format_error_persists_response() -> None:
 
 
 # --------------------------------------------------------------------------- #
+# opper_model.OpperModel
+# --------------------------------------------------------------------------- #
+
+
+def test_opper_model_format_error_persists_response() -> None:
+    from minisweagent.models.opper_model import OpperModel
+
+    response = _bad_chat_completion_dict()
+    model = OpperModel(model_name="claude-sonnet-4-6")
+
+    with (
+        patch.object(OpperModel, "_query", return_value=response),
+        patch.object(OpperModel, "_calculate_cost", return_value={"cost": 0.01}),
+    ):
+        with pytest.raises(FormatError) as excinfo:
+            model.query([{"role": "user", "content": "hi"}])
+
+    extra = excinfo.value.messages[0]["extra"]
+    assert "response" in extra
+    assert extra["response"] == response
+    assert extra["response"] is not response  # must be a copy, not the same object
+    assert extra["cost"] == 0.01
+
+
+def test_opper_model_reads_cost_from_the_response_header() -> None:
+    """Opper reports execution cost in the X-Opper-Cost header, not the usage body."""
+    from minisweagent.models.opper_model import OpperModel
+
+    model = OpperModel(model_name="claude-sonnet-4-6")
+
+    http_response = MagicMock()
+    http_response.headers = {"X-Opper-Cost": "0.0042"}
+    http_response.json.return_value = {"choices": [], "usage": {"prompt_tokens": 1}}
+
+    with patch("minisweagent.models.opper_model.requests.post", return_value=http_response):
+        parsed = model._query([{"role": "user", "content": "hi"}])
+
+    assert parsed["usage"]["cost"] == 0.0042
+    assert model._calculate_cost(parsed) == {"cost": 0.0042}
+
+
+# --------------------------------------------------------------------------- #
 # Trajectory log round-trip — the persisted response must JSON-serialise
 # --------------------------------------------------------------------------- #
 

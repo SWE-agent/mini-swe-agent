@@ -15,6 +15,7 @@ This page provides an overview of all available model classes in mini-SWE-agent.
 | [`PortkeyModel`](portkey.md) | `portkey` | `/completion` | ✅ | [Portkey](https://portkey.ai/) AI gateway integration |
 | [`PortkeyResponseAPIModel`](portkey_response.md) | `portkey_response` | `/response` | ✅ | Portkey with Responses API support |
 | [`RequestyModel`](requesty.md) | `requesty` | `/completion` | ✅ | [Requesty](https://requesty.ai/) API integration |
+| [`OpperModel`](opper.md) | `opper` | `/completion` | ✅ | [Opper](https://opper.ai/) EU-hosted gateway integration |
 | [`DeterministicModel`](test_models.md) | `deterministic` | N/A | ❌ | Returns predefined outputs (for testing) |
 | [`RouletteModel`](extra.md) | — | Meta | ❌ | Randomly selects from multiple models |
 | [`InterleavingModel`](extra.md) | — | Meta | ❌ | Alternates between models in sequence |
