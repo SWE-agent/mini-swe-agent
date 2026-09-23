@@ -11,6 +11,11 @@ import pytest
 
 from minisweagent.environments.local import LocalEnvironment, LocalEnvironmentConfig
 
+_posix_shell_only = pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="LocalEnvironment uses cmd.exe on Windows, but this test uses POSIX shell syntax",
+)
+
 
 def test_local_environment_config_defaults():
     """Test that LocalEnvironmentConfig has correct default values."""
@@ -30,6 +35,7 @@ def test_local_environment_basic_execution():
     assert "hello world" in result["output"]
 
 
+@_posix_shell_only
 def test_local_environment_set_env_variables():
     """Test setting environment variables in the local environment."""
     env = LocalEnvironment(env={"TEST_VAR": "test_value", "ANOTHER_VAR": "another_value"})
@@ -45,6 +51,7 @@ def test_local_environment_set_env_variables():
     assert "test_value another_value" in result["output"]
 
 
+@_posix_shell_only
 def test_local_environment_existing_env_variables():
     """Test that existing environment variables are preserved and merged."""
     with patch.dict(os.environ, {"EXISTING_VAR": "existing_value"}):
@@ -56,6 +63,7 @@ def test_local_environment_existing_env_variables():
         assert "existing_value new_value" in result["output"]
 
 
+@_posix_shell_only
 def test_local_environment_env_variable_override():
     """Test that config env variables override existing ones."""
     with patch.dict(os.environ, {"CONFLICT_VAR": "original_value"}):
@@ -66,6 +74,7 @@ def test_local_environment_env_variable_override():
         assert "override_value" in result["output"]
 
 
+@_posix_shell_only
 def test_local_environment_custom_cwd():
     """Test executing commands in a custom working directory."""
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -76,6 +85,7 @@ def test_local_environment_custom_cwd():
         assert temp_dir in result["output"]
 
 
+@_posix_shell_only
 def test_local_environment_cwd_parameter_override():
     """Test that the cwd parameter in execute() overrides the config cwd."""
     with tempfile.TemporaryDirectory() as temp_dir1, tempfile.TemporaryDirectory() as temp_dir2:
@@ -87,6 +97,7 @@ def test_local_environment_cwd_parameter_override():
         assert temp_dir2 in result["output"]
 
 
+@_posix_shell_only
 def test_local_environment_default_cwd():
     """Test that commands use os.getcwd() when no cwd is specified."""
     env = LocalEnvironment()
@@ -124,6 +135,7 @@ def test_local_environment_stderr_capture():
     assert "error message" in result["output"]
 
 
+@_posix_shell_only
 def test_local_environment_timeout():
     """Test timeout functionality returns structured output instead of raising."""
     env = LocalEnvironment(timeout=1)
@@ -216,6 +228,7 @@ def test_local_environment_return_codes(command, expected_returncode):
     assert result["returncode"] == expected_returncode
 
 
+@_posix_shell_only
 def test_local_environment_multiline_output():
     """Test handling of multiline command output."""
     env = LocalEnvironment()
@@ -229,6 +242,7 @@ def test_local_environment_multiline_output():
     assert "line3" in output_lines[2]
 
 
+@_posix_shell_only
 def test_local_environment_file_operations():
     """Test file operations in the local environment."""
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -249,6 +263,7 @@ def test_local_environment_file_operations():
         assert test_file.read_text().strip() == "test content"
 
 
+@_posix_shell_only
 def test_local_environment_shell_features():
     """Test that shell features like pipes and redirects work."""
     env = LocalEnvironment()

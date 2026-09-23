@@ -6,6 +6,12 @@ from unittest.mock import Mock, patch
 
 import pytest
 
+if sys.platform == "win32":
+    pytest.skip(
+        "CLI integration tests import the Windows-incompatible prompt session and exercise POSIX shell commands",
+        allow_module_level=True,
+    )
+
 from minisweagent.run.mini import DEFAULT_CONFIG_FILE, app, main
 
 
