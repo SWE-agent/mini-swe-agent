@@ -319,17 +319,19 @@ def test_mini_help():
     assert "--output" in clean_output
 
 
-def test_mini_help_with_typer_runner():
+@pytest.mark.parametrize("args", [["--help"], ["-h"]])
+def test_mini_help_with_typer_runner(args):
     """Test help functionality using typer's test runner."""
     from typer.testing import CliRunner
 
     runner = CliRunner()
-    result = runner.invoke(app, ["--help"])
+    result = runner.invoke(app, args)
 
     assert result.exit_code == 0
     # Strip ANSI color codes for reliable text matching
     clean_output = strip_ansi_codes(result.stdout)
     assert "Run mini-SWE-agent in your local environment." in clean_output
+    assert "-h" in clean_output
     assert "--help" in clean_output
     assert "--config" in clean_output
     assert "--model" in clean_output
