@@ -47,7 +47,10 @@ Examples:
 """
 
 console = Console(highlight=False)
-app = typer.Typer(rich_markup_mode="rich", context_settings={"help_option_names": ["-h", "--help"]})
+app = typer.Typer(
+    rich_markup_mode="rich",
+    context_settings={"help_option_names": ["-h", "--help"]},
+)
 
 
 # fmt: off
