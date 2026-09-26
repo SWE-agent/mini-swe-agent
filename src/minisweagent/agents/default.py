@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from minisweagent import Environment, Model, __version__
 from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
 from minisweagent.utils.serialize import recursive_merge
+from minisweagent.utils.superfast import shadow_gate
 
 
 class AgentConfig(BaseModel):
@@ -146,6 +147,9 @@ class DefaultAgent:
                 }
             )
         self.n_calls += 1
+        # Shadow mode only: classify the pending turn off-thread and log the route.
+        # Adds no latency and never changes routing or the model call below.
+        shadow_gate(self.messages, self.logger)
         message = self.model.query(self.messages)
         self.cost += message.get("extra", {}).get("cost", 0.0)
         self.add_messages(message)
