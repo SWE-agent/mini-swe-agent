@@ -132,6 +132,20 @@ def test_get_sb_environment_does_not_mutate_shared_config():
     assert "image" not in config["environment"]
 
 
+def test_get_sb_environment_sets_image_for_swerex_docker():
+    config = {"environment": {"environment_class": "swerex_docker"}}
+    instance = {"instance_id": "repo1__test1", "image_name": "custom/image:tag"}
+
+    with patch(
+        "minisweagent.run.benchmarks.swebench.get_environment",
+        return_value=MagicMock(),
+    ) as mock_get_environment:
+        get_sb_environment(config, instance)
+
+    assert mock_get_environment.call_args.args[0]["image"] == "custom/image:tag"
+    assert "image" not in config["environment"]
+
+
 def test_filter_instances_no_filters():
     """Test filter_instances with no filtering applied"""
     instances = [{"instance_id": "repo1__test1"}, {"instance_id": "repo2__test2"}, {"instance_id": "repo3__test3"}]
