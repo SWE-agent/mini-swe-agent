@@ -58,7 +58,7 @@ You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to 
     - [API reference](../reference/run/mini.md)
 
     ```python
-    --8<-- "src/minisweagent/run/mini.py"
+    --8 < --"src/minisweagent/run/mini.py"
     ```
 
 ??? note "Agent class"
@@ -67,7 +67,7 @@ You can also press `Ctrl+C` to interrupt the agent at any time, allowing you to 
     - [API reference](../reference/agents/interactive.md)
 
     ```python
-    --8<-- "src/minisweagent/agents/interactive.py"
+    --8 < --"src/minisweagent/agents/interactive.py"
     ```
 
 {% include-markdown "../_footer.md" %}

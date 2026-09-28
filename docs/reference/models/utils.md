@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/models/__init__.py"
+        --8 < --"src/minisweagent/models/__init__.py"
         ```
 
 Convenience functions for selecting and configuring models.

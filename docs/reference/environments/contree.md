@@ -8,7 +8,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/environments/extra/contree.py"
+        --8 < --"src/minisweagent/environments/extra/contree.py"
         ```
 
 ::: minisweagent.environments.extra.contree

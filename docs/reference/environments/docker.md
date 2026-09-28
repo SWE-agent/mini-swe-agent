@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/environments/docker.py"
+        --8 < --"src/minisweagent/environments/docker.py"
         ```
 
 ::: minisweagent.environments.docker
