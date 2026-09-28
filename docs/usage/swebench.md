@@ -212,7 +212,7 @@ See [this guide](../advanced/environments.md) for more details.
     - [API reference](../reference/run/swebench.md)
 
     ```python
-    --8<-- "src/minisweagent/run/benchmarks/swebench.py"
+    --8 < --"src/minisweagent/run/benchmarks/swebench.py"
     ```
 
 ??? note "`swebench_single.py` run script"
@@ -221,7 +221,7 @@ See [this guide](../advanced/environments.md) for more details.
     - [API reference](../reference/run/swebench_single.md)
 
     ```python
-    --8<-- "src/minisweagent/run/benchmarks/swebench_single.py"
+    --8 < --"src/minisweagent/run/benchmarks/swebench_single.py"
     ```
 
 {% include-markdown "../_footer.md" %}

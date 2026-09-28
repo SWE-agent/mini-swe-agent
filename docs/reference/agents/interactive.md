@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/agents/interactive.py"
+        --8 < --"src/minisweagent/agents/interactive.py"
         ```
 
 !!! tip "See also"
