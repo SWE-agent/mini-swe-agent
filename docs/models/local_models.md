@@ -72,6 +72,41 @@ If this is not enough, our model class should be simple to modify:
     --8<-- "src/minisweagent/models/litellm_model.py"
     ```
 
+### Text actions without tool calling
+
+The default `litellm` model class sends a bash tool definition. For a chat-completions
+endpoint or model that does not support tool calling, use `litellm_textbased` with
+the matching `mini_textbased.yaml` prompts. It extracts the bash action from the
+assistant's text response.
+
+Save an overlay such as `local-text.yaml`:
+
+```yaml
+agent:
+  step_limit: 20
+model:
+  model_class: litellm_textbased
+  model_name: openai/my-chat-model
+  cost_tracking: ignore_errors
+  model_kwargs:
+    api_base: http://localhost:8000/v1
+    max_tokens: 4096
+    drop_params: false
+```
+
+Set `OPENAI_API_KEY` to the endpoint's key (or a placeholder if the local server
+does not require authentication), then run:
+
+```bash
+mini -c mini_textbased.yaml -c local-text.yaml
+```
+
+Replace the model name, base URL and output limit with values supported by your
+endpoint. This model class uses non-streaming chat completions. With
+`cost_tracking: ignore_errors`, missing price metadata prevents reliable dollar
+limits; the example bounds the number of steps instead. Add a model registry
+as described below before relying on monetary limits.
+
 The other part that you most likely need to figure out are costs.
 There are two ways to do this with `litellm`:
 
