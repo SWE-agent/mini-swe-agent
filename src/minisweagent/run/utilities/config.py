@@ -8,6 +8,8 @@ It is located at [bold green]{global_config_file}[/bold green].
 """
 
 import os
+import shlex
+import shutil
 import subprocess
 
 from dotenv import load_dotenv, set_key, unset_key
@@ -123,7 +125,8 @@ def unset(key: str | None = Argument(None, help="The key to unset")):
 def edit():
     """Edit the global config file."""
     editor = os.getenv("EDITOR", "nano")
-    subprocess.run([editor, global_config_file])
+    editor_command = [editor] if os.name == "nt" or not editor.strip() or shutil.which(editor) else shlex.split(editor)
+    subprocess.run([*editor_command, global_config_file])
     _reload_config()
 
 
