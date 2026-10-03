@@ -1,4 +1,8 @@
+import json
 import os
+import shlex
+import subprocess
+import sys
 from unittest.mock import patch
 
 import pytest
@@ -374,6 +378,70 @@ class TestConfigUnset:
 
 class TestConfigEdit:
     """Test the edit function."""
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX editor command syntax")
+    @pytest.mark.parametrize(
+        ("editor_name", "args", "quote_path", "use_path"),
+        [
+            ("editor", [], False, False),
+            ("editor", ["--wait"], False, False),
+            ("editor with spaces", ["--wait"], True, False),
+            ("editor with spaces", [], False, False),
+            ("editor with spaces", [], False, True),
+        ],
+    )
+    def test_edit_runs_editor_command(self, tmp_path, editor_name, args, quote_path, use_path):
+        editor = tmp_path / editor_name
+        editor.write_text(
+            f"#!{sys.executable}\n"
+            "import json, sys\n"
+            "from pathlib import Path\n"
+            "config = Path(sys.argv[-1])\n"
+            "config.write_text('EDITOR_TEST_VALUE=edited\\n')\n"
+            "(config.parent / 'args.json').write_text(json.dumps(sys.argv[1:]))\n",
+            encoding="utf-8",
+        )
+        editor.chmod(0o755)
+        config_dir = tmp_path / "config with spaces"
+        editor_spec = editor_name if use_path else str(editor)
+        if quote_path:
+            editor_spec = shlex.quote(editor_spec)
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "import os; from minisweagent.run.utilities.config import edit; "
+                "edit(); assert os.getenv('EDITOR_TEST_VALUE') == 'edited'",
+            ],
+            env={
+                **os.environ,
+                "MSWEA_GLOBAL_CONFIG_DIR": str(config_dir),
+                "MSWEA_SILENT_STARTUP": "1",
+                "EDITOR": " ".join([editor_spec, *args]),
+                "PATH": f"{tmp_path}{os.pathsep}{os.environ.get('PATH', '')}",
+            },
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, result.stderr
+        assert json.loads((config_dir / "args.json").read_text()) == [*args, str(config_dir / ".env")]
+
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX editor command syntax")
+    def test_edit_with_blank_editor(self, tmp_path):
+        for editor in ("", " \t\n"):
+            result = subprocess.run(
+                [sys.executable, "-c", "from minisweagent.run.utilities.config import edit; edit()"],
+                env={
+                    **os.environ,
+                    "MSWEA_GLOBAL_CONFIG_DIR": str(tmp_path),
+                    "MSWEA_SILENT_STARTUP": "1",
+                    "EDITOR": editor,
+                },
+                capture_output=True,
+                text=True,
+            )
+            assert result.returncode != 0
+            assert f": {editor!r}" in result.stderr
 
     def test_edit_with_default_editor(self, tmp_path):
         """Test edit function with default editor (nano)."""
