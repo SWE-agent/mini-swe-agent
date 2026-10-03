@@ -51,7 +51,8 @@ def copy_submission(env, dest: Path, *, src: str = "/workspace") -> None:
         raise RuntimeError("copy_submission requires a Docker environment with container_id")
     dest.parent.mkdir(parents=True, exist_ok=True)
     container_tar = "/tmp/_submission.tar.gz"
-    env.execute({"command": f"tar -czf {container_tar} -C {src} ."})
+    if (out := env.execute({"command": f"tar -czf {container_tar} -C {src} ."}))["returncode"] != 0:
+        raise RuntimeError(f"Error creating submission archive: {out}")
     subprocess.run(
         [executable, "cp", f"{container_id}:{container_tar}", str(dest)],
         check=True,

@@ -82,6 +82,35 @@ def test_copy_submission_real_container(tmp_path, docker_env):
     assert contents["./other.txt"].strip() == "world"
 
 
+@pytest.mark.slow
+@pytest.mark.parametrize(
+    ("setup", "src"),
+    [
+        ("true", "/missing-workspace"),
+        ("touch /tmp/workspace-file", "/tmp/workspace-file"),
+        ("mkdir -p /workspace /tmp/_submission.tar.gz", "/workspace"),
+    ],
+)
+def test_copy_submission_rejects_failed_archive(tmp_path, docker_env, setup, src):
+    assert docker_env.execute({"command": setup})["returncode"] == 0
+    dest = tmp_path / "submission.tar.gz"
+
+    with pytest.raises(RuntimeError, match="Error creating submission archive"):
+        copy_submission(docker_env, dest, src=src)
+
+    assert not dest.exists()
+
+
+@pytest.mark.slow
+def test_copy_submission_empty_workspace(tmp_path, docker_env):
+    assert docker_env.execute({"command": "mkdir -p /workspace"})["returncode"] == 0
+    dest = tmp_path / "submission.tar.gz"
+    copy_submission(docker_env, dest)
+
+    with tarfile.open(dest, "r:gz") as archive:
+        assert archive.getnames() == ["."]
+
+
 def test_copy_submission_rejects_non_docker_env(tmp_path):
     """No live container needed for this guardrail check."""
     env = MagicMock(spec=["execute"])
