@@ -158,6 +158,66 @@ def test_openrouter_model_free_model_zero_cost(mock_response_no_cost):
             assert GLOBAL_MODEL_STATS.cost == initial_cost
 
 
+@pytest.mark.parametrize(
+    ("usage"),
+    [
+        ({"cost": 0}),
+        ({"cost": 0.0, "cost_details": {"upstream_inference_cost": None}}),
+        ({"cost": None}),
+    ],
+)
+def test_openrouter_model_invalid_cost_still_raises(usage):
+    """Regression for #977: cost 0/None without a usable upstream cost must still raise."""
+    response = {
+        "choices": [{"message": {"content": "```mswea_bash_command\necho '2+2 equals 4'\n```"}}],
+        "usage": usage,
+    }
+    with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
+        model = OpenRouterTextbasedModel(model_name="z-ai/glm-5.3")
+
+        with patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 200
+            mock_post.return_value.json.return_value = response
+            mock_post.return_value.raise_for_status.return_value = None
+
+            with pytest.raises(RuntimeError, match="No valid cost information available"):
+                model.query([{"role": "user", "content": "test"}])
+
+
+def test_openrouter_model_zero_cost_with_upstream_cost_details():
+    """Regression for #977: OpenRouter can report cost 0 for a billed call but tracks the actual
+    spend in usage.cost_details.upstream_inference_cost; that value should be used."""
+    response = {
+        "choices": [{"message": {"content": "```mswea_bash_command\necho '2+2 equals 4'\n```"}}],
+        "usage": {
+            "prompt_tokens": 16,
+            "completion_tokens": 13,
+            "total_tokens": 29,
+            "cost": 0,
+            "is_byok": False,
+            "cost_details": {
+                "upstream_inference_cost": 0.23420328,
+                "upstream_inference_prompt_cost": 0.2335902,
+                "upstream_inference_completions_cost": 0.00061308,
+            },
+        },
+    }
+    with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
+        model = OpenRouterTextbasedModel(model_name="z-ai/glm-5.3")
+
+        initial_cost = GLOBAL_MODEL_STATS.cost
+
+        with patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 200
+            mock_post.return_value.json.return_value = response
+            mock_post.return_value.raise_for_status.return_value = None
+
+            result = model.query([{"role": "user", "content": "test"}])
+
+            assert result["extra"]["cost"] == 0.23420328
+            assert GLOBAL_MODEL_STATS.cost == pytest.approx(initial_cost + 0.23420328)
+
+
 def test_openrouter_model_config():
     """Test OpenRouter model configuration."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
