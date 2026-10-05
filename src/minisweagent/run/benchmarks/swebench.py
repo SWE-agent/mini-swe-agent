@@ -234,6 +234,8 @@ def main(
 
     logger.info(f"Building agent config from specs: {config_spec}")
     configs = [get_config_from_spec(spec) for spec in config_spec]
+    if dataset_path == DATASET_MAPPING["smith"]:
+        configs.insert(0, {"run": {"env_startup_command": "git checkout {{instance_id}} --"}})
     configs.append({
         "environment": {"environment_class": environment_class or UNSET},
         "model": {"model_name": model or UNSET, "model_class": model_class or UNSET},
