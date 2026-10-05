@@ -27,6 +27,8 @@ class RequestyModelConfig(BaseModel):
     model_kwargs: dict[str, Any] = {}
     set_cache_control: Literal["default_end"] | None = None
     """Set explicit cache control markers, for example for Anthropic models"""
+    cost_tracking: Literal["default", "ignore_errors"] = os.getenv("MSWEA_COST_TRACKING", "default")
+    """Cost tracking mode. Use "ignore_errors" to allow missing cost information."""
     format_error_template: str = "{{ error }}"
     """Template used when the LM's output is not in the expected format."""
     observation_template: str = (
@@ -124,10 +126,11 @@ class RequestyModel:
     def _calculate_cost(self, response) -> dict[str, float]:
         usage = response.get("usage", {})
         cost = usage.get("cost", 0.0)
-        if cost == 0.0:
+        if cost == 0.0 and self.config.cost_tracking != "ignore_errors":
             raise RequestyAPIError(
                 f"No cost information available from Requesty API for model {self.config.model_name}. "
-                "Cost tracking is required but not provided by the API response."
+                "Cost tracking is required but not provided by the API response. "
+                "Set cost_tracking: 'ignore_errors' or export MSWEA_COST_TRACKING='ignore_errors' to ignore this error."
             )
         return {"cost": cost}
 
