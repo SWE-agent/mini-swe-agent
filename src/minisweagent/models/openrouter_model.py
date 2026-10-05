@@ -118,7 +118,17 @@ class OpenRouterModel:
 
     def _calculate_cost(self, response) -> dict[str, float]:
         usage = response.get("usage", {})
-        cost = usage.get("cost", 0.0)
+        cost = usage.get("cost") or 0.0
+        if cost <= 0.0:
+            # OpenRouter sometimes reports cost 0 for billed calls (e.g. BYOK), but tracks
+            # the actual spend in usage.cost_details.upstream_inference_cost.
+            upstream_cost = (usage.get("cost_details") or {}).get("upstream_inference_cost") or 0.0
+            if upstream_cost > 0.0:
+                logger.warning(
+                    f"OpenRouter reported cost {cost} for model {self.config.model_name}, but "
+                    f"usage.cost_details.upstream_inference_cost is {upstream_cost}. Using the upstream cost."
+                )
+                cost = upstream_cost
         if cost <= 0.0 and self.config.cost_tracking != "ignore_errors":
             raise RuntimeError(
                 f"No valid cost information available from OpenRouter API for model {self.config.model_name}: "
