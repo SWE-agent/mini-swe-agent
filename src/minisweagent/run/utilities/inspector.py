@@ -159,7 +159,7 @@ class TrajectoryInspector(App):
 
         trajectory_file = self.trajectory_files[self.i_trajectory]
         try:
-            data = json.loads(trajectory_file.read_text())
+            data = json.loads(trajectory_file.read_text(encoding="utf-8"))
 
             if isinstance(data, list):
                 self.messages = data

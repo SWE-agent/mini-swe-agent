@@ -1,4 +1,7 @@
 import json
+import os
+import subprocess
+import sys
 import tempfile
 from pathlib import Path
 from unittest.mock import patch
@@ -584,3 +587,27 @@ def test_main_with_current_directory_default(mock_run, temp_trajectory_files):
         mock_run.assert_called_once()
     finally:
         os.chdir(original_cwd)
+
+
+def test_utf8_trajectories_without_utf8_mode(tmp_path):
+    messages = [{"role": "user", "content": "\u4fee\u590d\u6d4b\u8bd5 \U0001f680 \u00e9"}]
+    for name, data in (("messages.json", messages), ("trajectory.json", {"messages": messages})):
+        (tmp_path / name).write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import json, sys; from pathlib import Path; "
+            "from minisweagent.run.utilities.inspector import TrajectoryInspector; "
+            "paths = sorted(Path(sys.argv[1]).glob('*.json')); "
+            "apps = [TrajectoryInspector([path]) for path in paths]; "
+            "data = [json.loads(path.read_text(encoding='utf-8')) for path in paths]; "
+            "assert all(app.messages == (value if isinstance(value, list) else value['messages']) "
+            "for app, value in zip(apps, data))",
+            str(tmp_path),
+        ],
+        env=os.environ | {"PYTHONUTF8": "0", "PYTHONCOERCECLOCALE": "0", "LC_ALL": "C"},
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
