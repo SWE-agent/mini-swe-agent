@@ -131,6 +131,15 @@ class InteractiveAgent(DefaultAgent):
             for action in actions:
                 outputs.append(self.env.execute(action))
         except Submitted as e:
+            # Tool call results get padded as "not executed"; record the submit command's real result instead
+            if "tool_call_id" in actions[len(outputs)]:
+                outputs.append(
+                    {
+                        "output": "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n" + e.messages[0]["content"],
+                        "returncode": 0,
+                        "exception_info": "",
+                    }
+                )
             self._check_for_new_task_or_submit(e)
         finally:
             result = self.add_messages(
