@@ -1254,3 +1254,46 @@ def test_submission_enter_quits(model_factory):
     assert info["exit_status"] == "Submitted"
     assert info["submission"] == "completed\n"
     assert agent.n_calls == 1
+
+
+@pytest.mark.parametrize("factory", [make_tc_model, make_response_api_model])
+def test_submit_command_output_is_not_reported_as_not_executed(factory, toolcall_config):
+    """The submit command ran successfully; only actions after it were skipped."""
+    agent = InteractiveAgent(
+        model=factory(
+            [
+                (
+                    "Finish",
+                    [
+                        {"command": "echo before"},
+                        {"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"},
+                        {"command": "echo after"},
+                    ],
+                )
+            ]
+        ),
+        env=LocalEnvironment(),
+        **{**toolcall_config, "mode": "yolo", "confirm_exit": False},
+    )
+
+    assert agent.run("Test submit output")["exit_status"] == "Submitted"
+    observations = [m["extra"] for m in agent.messages if "returncode" in m.get("extra", {})]
+    assert [o["returncode"] for o in observations] == [0, 0, -1]
+    assert observations[1]["raw_output"] == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT\n"
+    assert observations[2]["exception_info"] == "action was not executed"
+
+
+def test_submit_command_text_model_observations_unchanged(default_config):
+    """Text-based models don't pad unexecuted actions, so nothing is added for the submit command."""
+    agent = InteractiveAgent(
+        model=make_text_model(
+            [("Finish", [{"command": "echo before"}, {"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"}])]
+        ),
+        env=LocalEnvironment(),
+        **{**default_config, "mode": "yolo", "confirm_exit": False},
+    )
+
+    assert agent.run("Test submit output")["exit_status"] == "Submitted"
+    observations = [m["extra"] for m in agent.messages if "returncode" in m.get("extra", {})]
+    assert [o["raw_output"] for o in observations] == ["before\n"]
+    assert agent.messages[-1]["role"] == "exit"
