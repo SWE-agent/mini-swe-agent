@@ -284,3 +284,11 @@ dev = [
     "pytest-asyncio>=1.3.0",
     "pytest-cov>=7.0.0",
 ]
+# Agent Observatory dashboard (examples/agent_dashboard); installed by a plain `uv sync`.
+dashboard = [
+    "fastapi",
+    "uvicorn[standard]",
+]
+
+[tool.uv]
+default-groups = ["dev", "dashboard"]

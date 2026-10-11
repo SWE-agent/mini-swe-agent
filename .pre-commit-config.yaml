@@ -1,6 +1,9 @@
 ci:
   autoupdate_commit_msg: "chore: update pre-commit hooks"
 
+# Generated, self-contained Archify export: regenerate it instead of letting hooks rewrite it.
+exclude: ^examples/agent_dashboard/static/agent-architecture\.html$
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v6.0.0"
