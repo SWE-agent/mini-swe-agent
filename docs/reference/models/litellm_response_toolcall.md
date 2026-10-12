@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/models/litellm_response_model.py"
+        --8 < --"src/minisweagent/models/litellm_response_model.py"
         ```
 
 !!! tip "When to use this model"

@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/run/mini.py"
+        --8 < --"src/minisweagent/run/mini.py"
         ```
 
 ::: minisweagent.run.mini
