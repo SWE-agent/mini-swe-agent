@@ -4,10 +4,12 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from pydantic import BaseModel
+from typer.testing import CliRunner
 
 from minisweagent import package_dir
 from minisweagent.models.test_models import DeterministicModel, make_output
 from minisweagent.run.benchmarks.swebench import (
+    app,
     filter_instances,
     get_sb_environment,
     get_swebench_docker_image_name,
@@ -15,6 +17,74 @@ from minisweagent.run.benchmarks.swebench import (
     remove_from_preds_file,
     update_preds_file,
 )
+
+
+@pytest.mark.parametrize(
+    ("environment_class", "from_config"),
+    [
+        ("bubblewrap", False),
+        ("bubblewrap", True),
+        ("minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment", False),
+        ("minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment", True),
+    ],
+)
+def test_swebench_rejects_parallel_bubblewrap_shared_cwd(tmp_path, environment_class, from_config):
+    args = [
+        "--subset",
+        str(tmp_path / "missing-dataset"),
+        "--output",
+        str(tmp_path / "output"),
+        "--workers",
+        "2",
+        "-c",
+        "swebench.yaml",
+    ]
+    if from_config:
+        args += ["-c", f"environment.environment_class={environment_class}"]
+    else:
+        args += ["--environment-class", environment_class]
+
+    result = CliRunner().invoke(app, args)
+
+    assert result.exit_code == 2
+    assert "Bubblewrap shares" in result.output
+    assert "environment.cwd" in result.output
+    assert "--workers 1" in result.output
+    assert not (tmp_path / "output" / "preds.json").exists()
+
+
+@pytest.mark.parametrize(
+    ("environment_class", "cwd", "workers"),
+    [("bubblewrap", "/testbed", 1), ("bubblewrap", "", 2), ("local", "/testbed", 2)],
+)
+def test_swebench_allows_other_worker_configurations(tmp_path, environment_class, cwd, workers):
+    dataset = tmp_path / "dataset"
+    dataset.mkdir()
+    (dataset / "train.jsonl").write_text(
+        json.dumps({"instance_id": "test__repo-1", "problem_statement": "test"}) + "\n"
+    )
+    config = tmp_path / "config.yaml"
+    config.write_text(json.dumps({"environment": {"environment_class": environment_class, "cwd": cwd}}))
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "--subset",
+            str(dataset),
+            "--split",
+            "train",
+            "--slice",
+            "0:0",
+            "--output",
+            str(tmp_path / "output"),
+            "--workers",
+            str(workers),
+            "-c",
+            str(config),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
 
 
 def _make_model_from_fixture(text_outputs: list[str], cost_per_call: float = 1.0, **kwargs) -> DeterministicModel:

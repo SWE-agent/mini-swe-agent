@@ -18,7 +18,8 @@ from rich.live import Live
 
 from minisweagent import Environment
 from minisweagent.config import builtin_config_dir, get_config_from_spec
-from minisweagent.environments import get_environment
+from minisweagent.environments import get_environment, get_environment_class
+from minisweagent.environments.extra.bubblewrap import BubblewrapEnvironment
 from minisweagent.models import get_model
 from minisweagent.run.benchmarks.utils.batch_progress import RunBatchProgressManager
 from minisweagent.run.benchmarks.utils.common import ProgressTrackingAgent
@@ -214,6 +215,24 @@ def main(
     environment_class: str | None = typer.Option(None, "--environment-class", help="Environment type to use. Recommended are docker or singularity", rich_help_panel="Advanced"),
 ) -> None:
     # fmt: on
+    logger.info(f"Building agent config from specs: {config_spec}")
+    configs = [get_config_from_spec(spec) for spec in config_spec]
+    configs.append({
+        "environment": {"environment_class": environment_class or UNSET},
+        "model": {"model_name": model or UNSET, "model_class": model_class or UNSET},
+    })
+    config = recursive_merge(*configs)
+    env_config = config.get("environment", {})
+    if (
+        workers > 1
+        and env_config.get("cwd")
+        and issubclass(get_environment_class(env_config.get("environment_class", "docker")), BubblewrapEnvironment)
+    ):
+        raise typer.BadParameter(
+            "Bubblewrap shares environment.cwd across instances. Use --workers 1 or an isolated environment such as Docker.",
+            param_hint="--workers",
+        )
+
     output_path = Path(output)
     output_path.mkdir(parents=True, exist_ok=True)
     logger.info(f"Results will be saved to {output_path}")
@@ -231,14 +250,6 @@ def main(
         logger.info(f"Skipping {len(existing_instances)} existing instances")
         instances = [instance for instance in instances if instance["instance_id"] not in existing_instances]
     logger.info(f"Running on {len(instances)} instances...")
-
-    logger.info(f"Building agent config from specs: {config_spec}")
-    configs = [get_config_from_spec(spec) for spec in config_spec]
-    configs.append({
-        "environment": {"environment_class": environment_class or UNSET},
-        "model": {"model_name": model or UNSET, "model_class": model_class or UNSET},
-    })
-    config = recursive_merge(*configs)
 
     progress_manager = RunBatchProgressManager(len(instances), output_path / f"exit_statuses_{time.time()}.yaml")
 

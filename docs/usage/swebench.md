@@ -63,6 +63,11 @@
 
         - `--environment-class` - Environment type to use (recommended: `docker` or `singularity`)
 
+        Bubblewrap with a configured `environment.cwd` requires `--workers 1`: the directory is
+        bind-mounted from the host and shared across instances. Use Docker or Singularity for
+        parallel runs with isolated checkouts. For sequential Bubblewrap runs, your startup command
+        must still prepare/reset the checkout for each instance.
+
     === "Single instance (for debugging)"
 
         Single instance mode runs on a single task instance with interactivity. This is meant for debugging, and so unlike the batch mode command above, this will not produce a preds.json file.
