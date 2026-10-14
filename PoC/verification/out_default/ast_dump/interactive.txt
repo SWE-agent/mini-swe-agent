@@ -1,0 +1,1443 @@
+Module(
+  body=[
+    Expr(
+      value=Constant(value='A small generalization of the default agent that puts the user in the loop.\n\nThere are three modes:\n- human: commands issued by the user are executed immediately\n- confirm: commands issued by the LM but not whitelisted are confirmed by the user\n- yolo: commands issued by the LM are executed immediately without confirmation\n')),
+    Import(
+      names=[
+        alias(name='re')]),
+    Import(
+      names=[
+        alias(name='sys')]),
+    ImportFrom(
+      module='typing',
+      names=[
+        alias(name='Literal'),
+        alias(name='NoReturn')],
+      level=0),
+    ImportFrom(
+      module='rich.console',
+      names=[
+        alias(name='Console')],
+      level=0),
+    ImportFrom(
+      module='rich.rule',
+      names=[
+        alias(name='Rule')],
+      level=0),
+    ImportFrom(
+      module='minisweagent.agents.default',
+      names=[
+        alias(name='AgentConfig'),
+        alias(name='DefaultAgent')],
+      level=0),
+    ImportFrom(
+      module='minisweagent.agents.utils.prompt_user',
+      names=[
+        alias(name='_multiline_prompt'),
+        alias(name='prompt_session')],
+      level=0),
+    ImportFrom(
+      module='minisweagent.exceptions',
+      names=[
+        alias(name='LimitsExceeded'),
+        alias(name='Submitted'),
+        alias(name='TimeExceeded'),
+        alias(name='UserInterruption')],
+      level=0),
+    ImportFrom(
+      module='minisweagent.models.utils.content_string',
+      names=[
+        alias(name='get_content_string')],
+      level=0),
+    Assign(
+      targets=[
+        Name(id='console', ctx=Store())],
+      value=Call(
+        func=Name(id='Console', ctx=Load()),
+        args=[],
+        keywords=[
+          keyword(
+            arg='highlight',
+            value=Constant(value=False))])),
+    ClassDef(
+      name='InteractiveAgentConfig',
+      bases=[
+        Name(id='AgentConfig', ctx=Load())],
+      keywords=[],
+      body=[
+        AnnAssign(
+          target=Name(id='mode', ctx=Store()),
+          annotation=Subscript(
+            value=Name(id='Literal', ctx=Load()),
+            slice=Tuple(
+              elts=[
+                Constant(value='human'),
+                Constant(value='confirm'),
+                Constant(value='yolo')],
+              ctx=Load()),
+            ctx=Load()),
+          value=Constant(value='confirm'),
+          simple=1),
+        Expr(
+          value=Constant(value='Whether to confirm actions.')),
+        AnnAssign(
+          target=Name(id='whitelist_actions', ctx=Store()),
+          annotation=Subscript(
+            value=Name(id='list', ctx=Load()),
+            slice=Name(id='str', ctx=Load()),
+            ctx=Load()),
+          value=List(elts=[], ctx=Load()),
+          simple=1),
+        Expr(
+          value=Constant(value='Never confirm actions that match these regular expressions.')),
+        AnnAssign(
+          target=Name(id='confirm_exit', ctx=Store()),
+          annotation=Name(id='bool', ctx=Load()),
+          value=Constant(value=True),
+          simple=1),
+        Expr(
+          value=Constant(value='If the agent wants to finish, do we ask for confirmation from user?'))],
+      decorator_list=[],
+      type_params=[]),
+    ClassDef(
+      name='InteractiveAgent',
+      bases=[
+        Name(id='DefaultAgent', ctx=Load())],
+      keywords=[],
+      body=[
+        Assign(
+          targets=[
+            Name(id='_MODE_COMMANDS_MAPPING', ctx=Store())],
+          value=Dict(
+            keys=[
+              Constant(value='/u'),
+              Constant(value='/c'),
+              Constant(value='/y')],
+            values=[
+              Constant(value='human'),
+              Constant(value='confirm'),
+              Constant(value='yolo')])),
+        FunctionDef(
+          name='__init__',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self')],
+            vararg=arg(arg='args'),
+            kwonlyargs=[
+              arg(arg='config_class')],
+            kw_defaults=[
+              Name(id='InteractiveAgentConfig', ctx=Load())],
+            kwarg=arg(arg='kwargs'),
+            defaults=[]),
+          body=[
+            Expr(
+              value=Call(
+                func=Attribute(
+                  value=Call(
+                    func=Name(id='super', ctx=Load()),
+                    args=[],
+                    keywords=[]),
+                  attr='__init__',
+                  ctx=Load()),
+                args=[
+                  Starred(
+                    value=Name(id='args', ctx=Load()),
+                    ctx=Load())],
+                keywords=[
+                  keyword(
+                    arg='config_class',
+                    value=Name(id='config_class', ctx=Load())),
+                  keyword(
+                    value=Name(id='kwargs', ctx=Load()))])),
+            Assign(
+              targets=[
+                Attribute(
+                  value=Name(id='self', ctx=Load()),
+                  attr='cost_last_confirmed',
+                  ctx=Store())],
+              value=Constant(value=0.0))],
+          decorator_list=[],
+          type_params=[]),
+        FunctionDef(
+          name='_interrupt',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self'),
+              arg(
+                arg='content',
+                annotation=Name(id='str', ctx=Load()))],
+            kwonlyargs=[
+              arg(
+                arg='itype',
+                annotation=Name(id='str', ctx=Load()))],
+            kw_defaults=[
+              Constant(value='UserInterruption')],
+            defaults=[]),
+          body=[
+            Raise(
+              exc=Call(
+                func=Name(id='UserInterruption', ctx=Load()),
+                args=[
+                  Dict(
+                    keys=[
+                      Constant(value='role'),
+                      Constant(value='content'),
+                      Constant(value='extra')],
+                    values=[
+                      Constant(value='user'),
+                      Name(id='content', ctx=Load()),
+                      Dict(
+                        keys=[
+                          Constant(value='interrupt_type')],
+                        values=[
+                          Name(id='itype', ctx=Load())])])],
+                keywords=[]))],
+          decorator_list=[],
+          returns=Name(id='NoReturn', ctx=Load()),
+          type_params=[]),
+        FunctionDef(
+          name='add_messages',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self')],
+            vararg=arg(
+              arg='messages',
+              annotation=Name(id='dict', ctx=Load())),
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[]),
+          body=[
+            For(
+              target=Name(id='msg', ctx=Store()),
+              iter=Name(id='messages', ctx=Load()),
+              body=[
+                Assign(
+                  targets=[
+                    Tuple(
+                      elts=[
+                        Name(id='role', ctx=Store()),
+                        Name(id='content', ctx=Store())],
+                      ctx=Store())],
+                  value=Tuple(
+                    elts=[
+                      BoolOp(
+                        op=Or(),
+                        values=[
+                          Call(
+                            func=Attribute(
+                              value=Name(id='msg', ctx=Load()),
+                              attr='get',
+                              ctx=Load()),
+                            args=[
+                              Constant(value='role')],
+                            keywords=[]),
+                          Call(
+                            func=Attribute(
+                              value=Name(id='msg', ctx=Load()),
+                              attr='get',
+                              ctx=Load()),
+                            args=[
+                              Constant(value='type'),
+                              Constant(value='unknown')],
+                            keywords=[])]),
+                      Call(
+                        func=Name(id='get_content_string', ctx=Load()),
+                        args=[
+                          Name(id='msg', ctx=Load())],
+                        keywords=[])],
+                    ctx=Load())),
+                If(
+                  test=Compare(
+                    left=Name(id='role', ctx=Load()),
+                    ops=[
+                      Eq()],
+                    comparators=[
+                      Constant(value='assistant')]),
+                  body=[
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='console', ctx=Load()),
+                          attr='print',
+                          ctx=Load()),
+                        args=[
+                          JoinedStr(
+                            values=[
+                              Constant(value='\n[red][bold]mini-swe-agent[/bold] (step [bold]'),
+                              FormattedValue(
+                                value=Attribute(
+                                  value=Name(id='self', ctx=Load()),
+                                  attr='n_calls',
+                                  ctx=Load()),
+                                conversion=-1),
+                              Constant(value='[/bold], [bold]$'),
+                              FormattedValue(
+                                value=Attribute(
+                                  value=Name(id='self', ctx=Load()),
+                                  attr='cost',
+                                  ctx=Load()),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                  values=[
+                                    Constant(value='.2f')])),
+                              Constant(value='[/bold]):[/red]\n')])],
+                        keywords=[
+                          keyword(
+                            arg='end',
+                            value=Constant(value='')),
+                          keyword(
+                            arg='highlight',
+                            value=Constant(value=False))]))],
+                  orelse=[
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='console', ctx=Load()),
+                          attr='print',
+                          ctx=Load()),
+                        args=[
+                          JoinedStr(
+                            values=[
+                              Constant(value='\n[bold green]'),
+                              FormattedValue(
+                                value=Call(
+                                  func=Attribute(
+                                    value=Name(id='role', ctx=Load()),
+                                    attr='capitalize',
+                                    ctx=Load()),
+                                  args=[],
+                                  keywords=[]),
+                                conversion=-1),
+                              Constant(value='[/bold green]:\n')])],
+                        keywords=[
+                          keyword(
+                            arg='end',
+                            value=Constant(value='')),
+                          keyword(
+                            arg='highlight',
+                            value=Constant(value=False))]))]),
+                Expr(
+                  value=Call(
+                    func=Attribute(
+                      value=Name(id='console', ctx=Load()),
+                      attr='print',
+                      ctx=Load()),
+                    args=[
+                      Name(id='content', ctx=Load())],
+                    keywords=[
+                      keyword(
+                        arg='highlight',
+                        value=Constant(value=False)),
+                      keyword(
+                        arg='markup',
+                        value=Constant(value=False))]))],
+              orelse=[]),
+            Return(
+              value=Call(
+                func=Attribute(
+                  value=Call(
+                    func=Name(id='super', ctx=Load()),
+                    args=[],
+                    keywords=[]),
+                  attr='add_messages',
+                  ctx=Load()),
+                args=[
+                  Starred(
+                    value=Name(id='messages', ctx=Load()),
+                    ctx=Load())],
+                keywords=[]))],
+          decorator_list=[],
+          returns=Subscript(
+            value=Name(id='list', ctx=Load()),
+            slice=Name(id='dict', ctx=Load()),
+            ctx=Load()),
+          type_params=[]),
+        FunctionDef(
+          name='query',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self')],
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[]),
+          body=[
+            If(
+              test=Compare(
+                left=Attribute(
+                  value=Attribute(
+                    value=Name(id='self', ctx=Load()),
+                    attr='config',
+                    ctx=Load()),
+                  attr='mode',
+                  ctx=Load()),
+                ops=[
+                  Eq()],
+                comparators=[
+                  Constant(value='human')]),
+              body=[
+                Match(
+                  subject=NamedExpr(
+                    target=Name(id='command', ctx=Store()),
+                    value=Call(
+                      func=Attribute(
+                        value=Name(id='self', ctx=Load()),
+                        attr='_prompt_and_handle_slash_commands',
+                        ctx=Load()),
+                      args=[
+                        Constant(value='[bold yellow]>[/bold yellow] ')],
+                      keywords=[])),
+                  cases=[
+                    match_case(
+                      pattern=MatchOr(
+                        patterns=[
+                          MatchValue(
+                            value=Constant(value='/y')),
+                          MatchValue(
+                            value=Constant(value='/c'))]),
+                      body=[
+                        Pass()]),
+                    match_case(
+                      pattern=MatchAs(),
+                      body=[
+                        Assign(
+                          targets=[
+                            Name(id='msg', ctx=Store())],
+                          value=Dict(
+                            keys=[
+                              Constant(value='role'),
+                              Constant(value='content'),
+                              Constant(value='extra')],
+                            values=[
+                              Constant(value='user'),
+                              JoinedStr(
+                                values=[
+                                  Constant(value='User command: \n```bash\n'),
+                                  FormattedValue(
+                                    value=Name(id='command', ctx=Load()),
+                                    conversion=-1),
+                                  Constant(value='\n```')]),
+                              Dict(
+                                keys=[
+                                  Constant(value='actions')],
+                                values=[
+                                  List(
+                                    elts=[
+                                      Dict(
+                                        keys=[
+                                          Constant(value='command')],
+                                        values=[
+                                          Name(id='command', ctx=Load())])],
+                                    ctx=Load())])])),
+                        Expr(
+                          value=Call(
+                            func=Attribute(
+                              value=Name(id='self', ctx=Load()),
+                              attr='add_messages',
+                              ctx=Load()),
+                            args=[
+                              Name(id='msg', ctx=Load())],
+                            keywords=[])),
+                        Return(
+                          value=Name(id='msg', ctx=Load()))])])],
+              orelse=[]),
+            Try(
+              body=[
+                With(
+                  items=[
+                    withitem(
+                      context_expr=Call(
+                        func=Attribute(
+                          value=Name(id='console', ctx=Load()),
+                          attr='status',
+                          ctx=Load()),
+                        args=[
+                          Constant(value='Waiting for the LM to respond...')],
+                        keywords=[]))],
+                  body=[
+                    Return(
+                      value=Call(
+                        func=Attribute(
+                          value=Call(
+                            func=Name(id='super', ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                          attr='query',
+                          ctx=Load()),
+                        args=[],
+                        keywords=[]))])],
+              handlers=[
+                ExceptHandler(
+                  type=Name(id='TimeExceeded', ctx=Load()),
+                  body=[
+                    Raise()]),
+                ExceptHandler(
+                  type=Name(id='LimitsExceeded', ctx=Load()),
+                  body=[
+                    If(
+                      test=UnaryOp(
+                        op=Not(),
+                        operand=Call(
+                          func=Attribute(
+                            value=Name(id='self', ctx=Load()),
+                            attr='_stdin_is_interactive',
+                            ctx=Load()),
+                          args=[],
+                          keywords=[])),
+                      body=[
+                        Raise()],
+                      orelse=[]),
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='console', ctx=Load()),
+                          attr='print',
+                          ctx=Load()),
+                        args=[
+                          JoinedStr(
+                            values=[
+                              Constant(value='Limits exceeded. Limits: '),
+                              FormattedValue(
+                                value=Attribute(
+                                  value=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='config',
+                                    ctx=Load()),
+                                  attr='step_limit',
+                                  ctx=Load()),
+                                conversion=-1),
+                              Constant(value=' steps, $'),
+                              FormattedValue(
+                                value=Attribute(
+                                  value=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='config',
+                                    ctx=Load()),
+                                  attr='cost_limit',
+                                  ctx=Load()),
+                                conversion=-1),
+                              Constant(value='.\nCurrent spend: '),
+                              FormattedValue(
+                                value=Attribute(
+                                  value=Name(id='self', ctx=Load()),
+                                  attr='n_calls',
+                                  ctx=Load()),
+                                conversion=-1),
+                              Constant(value=' steps, $'),
+                              FormattedValue(
+                                value=Attribute(
+                                  value=Name(id='self', ctx=Load()),
+                                  attr='cost',
+                                  ctx=Load()),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                  values=[
+                                    Constant(value='.2f')])),
+                              Constant(value='.')])],
+                        keywords=[])),
+                    Assign(
+                      targets=[
+                        Attribute(
+                          value=Attribute(
+                            value=Name(id='self', ctx=Load()),
+                            attr='config',
+                            ctx=Load()),
+                          attr='step_limit',
+                          ctx=Store())],
+                      value=Call(
+                        func=Name(id='int', ctx=Load()),
+                        args=[
+                          Call(
+                            func=Name(id='input', ctx=Load()),
+                            args=[
+                              Constant(value='New step limit: ')],
+                            keywords=[])],
+                        keywords=[])),
+                    Assign(
+                      targets=[
+                        Attribute(
+                          value=Attribute(
+                            value=Name(id='self', ctx=Load()),
+                            attr='config',
+                            ctx=Load()),
+                          attr='cost_limit',
+                          ctx=Store())],
+                      value=Call(
+                        func=Name(id='float', ctx=Load()),
+                        args=[
+                          Call(
+                            func=Name(id='input', ctx=Load()),
+                            args=[
+                              Constant(value='New cost limit: ')],
+                            keywords=[])],
+                        keywords=[])),
+                    Return(
+                      value=Call(
+                        func=Attribute(
+                          value=Call(
+                            func=Name(id='super', ctx=Load()),
+                            args=[],
+                            keywords=[]),
+                          attr='query',
+                          ctx=Load()),
+                        args=[],
+                        keywords=[]))])],
+              orelse=[],
+              finalbody=[])],
+          decorator_list=[],
+          returns=Name(id='dict', ctx=Load()),
+          type_params=[]),
+        FunctionDef(
+          name='_stdin_is_interactive',
+          args=arguments(
+            posonlyargs=[],
+            args=[],
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[]),
+          body=[
+            Expr(
+              value=Constant(value='Whether an interactive terminal is available to prompt the user.\n\n        Returns False for unattended runs (e.g. `--yolo` in CI, or inside a\n        sandbox with stdin redirected from /dev/null), where calling ``input()``\n        would raise ``EOFError`` and crash the run.\n        ')),
+            Try(
+              body=[
+                Return(
+                  value=BoolOp(
+                    op=And(),
+                    values=[
+                      Compare(
+                        left=Attribute(
+                          value=Name(id='sys', ctx=Load()),
+                          attr='stdin',
+                          ctx=Load()),
+                        ops=[
+                          IsNot()],
+                        comparators=[
+                          Constant(value=None)]),
+                      Call(
+                        func=Attribute(
+                          value=Attribute(
+                            value=Name(id='sys', ctx=Load()),
+                            attr='stdin',
+                            ctx=Load()),
+                          attr='isatty',
+                          ctx=Load()),
+                        args=[],
+                        keywords=[])]))],
+              handlers=[
+                ExceptHandler(
+                  type=Tuple(
+                    elts=[
+                      Name(id='ValueError', ctx=Load()),
+                      Name(id='OSError', ctx=Load())],
+                    ctx=Load()),
+                  body=[
+                    Return(
+                      value=Constant(value=False))])],
+              orelse=[],
+              finalbody=[])],
+          decorator_list=[
+            Name(id='staticmethod', ctx=Load())],
+          returns=Name(id='bool', ctx=Load()),
+          type_params=[]),
+        FunctionDef(
+          name='step',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self')],
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[]),
+          body=[
+            Try(
+              body=[
+                Expr(
+                  value=Call(
+                    func=Attribute(
+                      value=Name(id='console', ctx=Load()),
+                      attr='print',
+                      ctx=Load()),
+                    args=[
+                      Call(
+                        func=Name(id='Rule', ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                    keywords=[])),
+                Return(
+                  value=Call(
+                    func=Attribute(
+                      value=Call(
+                        func=Name(id='super', ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                      attr='step',
+                      ctx=Load()),
+                    args=[],
+                    keywords=[]))],
+              handlers=[
+                ExceptHandler(
+                  type=Name(id='KeyboardInterrupt', ctx=Load()),
+                  body=[
+                    Assign(
+                      targets=[
+                        Name(id='interruption_message', ctx=Store())],
+                      value=Call(
+                        func=Attribute(
+                          value=Call(
+                            func=Attribute(
+                              value=Name(id='self', ctx=Load()),
+                              attr='_prompt_and_handle_slash_commands',
+                              ctx=Load()),
+                            args=[
+                              Constant(value='\n\n[bold yellow]Interrupted.[/bold yellow] [green]Type a comment/command[/green] (/h for available commands)\n[bold yellow]>[/bold yellow] ')],
+                            keywords=[]),
+                          attr='strip',
+                          ctx=Load()),
+                        args=[],
+                        keywords=[])),
+                    If(
+                      test=BoolOp(
+                        op=Or(),
+                        values=[
+                          UnaryOp(
+                            op=Not(),
+                            operand=Name(id='interruption_message', ctx=Load())),
+                          Compare(
+                            left=Name(id='interruption_message', ctx=Load()),
+                            ops=[
+                              In()],
+                            comparators=[
+                              Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='_MODE_COMMANDS_MAPPING',
+                                ctx=Load())])]),
+                      body=[
+                        Assign(
+                          targets=[
+                            Name(id='interruption_message', ctx=Store())],
+                          value=Constant(value='Temporary interruption caught.'))],
+                      orelse=[]),
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='_interrupt',
+                          ctx=Load()),
+                        args=[
+                          JoinedStr(
+                            values=[
+                              Constant(value='Interrupted by user: '),
+                              FormattedValue(
+                                value=Name(id='interruption_message', ctx=Load()),
+                                conversion=-1)])],
+                        keywords=[]))])],
+              orelse=[],
+              finalbody=[])],
+          decorator_list=[],
+          returns=Subscript(
+            value=Name(id='list', ctx=Load()),
+            slice=Name(id='dict', ctx=Load()),
+            ctx=Load()),
+          type_params=[]),
+        FunctionDef(
+          name='execute_actions',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self'),
+              arg(
+                arg='message',
+                annotation=Name(id='dict', ctx=Load()))],
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[]),
+          body=[
+            Assign(
+              targets=[
+                Name(id='actions', ctx=Store())],
+              value=Call(
+                func=Attribute(
+                  value=Call(
+                    func=Attribute(
+                      value=Name(id='message', ctx=Load()),
+                      attr='get',
+                      ctx=Load()),
+                    args=[
+                      Constant(value='extra'),
+                      Dict(keys=[], values=[])],
+                    keywords=[]),
+                  attr='get',
+                  ctx=Load()),
+                args=[
+                  Constant(value='actions'),
+                  List(elts=[], ctx=Load())],
+                keywords=[])),
+            Assign(
+              targets=[
+                Name(id='commands', ctx=Store())],
+              value=ListComp(
+                elt=Subscript(
+                  value=Name(id='action', ctx=Load()),
+                  slice=Constant(value='command'),
+                  ctx=Load()),
+                generators=[
+                  comprehension(
+                    target=Name(id='action', ctx=Store()),
+                    iter=Name(id='actions', ctx=Load()),
+                    ifs=[],
+                    is_async=0)])),
+            Assign(
+              targets=[
+                Name(id='outputs', ctx=Store())],
+              value=List(elts=[], ctx=Load())),
+            Try(
+              body=[
+                Expr(
+                  value=Call(
+                    func=Attribute(
+                      value=Name(id='self', ctx=Load()),
+                      attr='_ask_confirmation_or_interrupt',
+                      ctx=Load()),
+                    args=[
+                      Name(id='commands', ctx=Load())],
+                    keywords=[])),
+                For(
+                  target=Name(id='action', ctx=Store()),
+                  iter=Name(id='actions', ctx=Load()),
+                  body=[
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='outputs', ctx=Load()),
+                          attr='append',
+                          ctx=Load()),
+                        args=[
+                          Call(
+                            func=Attribute(
+                              value=Name(id='self', ctx=Load()),
+                              attr='execute_action',
+                              ctx=Load()),
+                            args=[
+                              Name(id='action', ctx=Load())],
+                            keywords=[])],
+                        keywords=[]))],
+                  orelse=[])],
+              handlers=[
+                ExceptHandler(
+                  type=Name(id='Submitted', ctx=Load()),
+                  name='e',
+                  body=[
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='_check_for_new_task_or_submit',
+                          ctx=Load()),
+                        args=[
+                          Name(id='e', ctx=Load())],
+                        keywords=[]))])],
+              orelse=[],
+              finalbody=[
+                Assign(
+                  targets=[
+                    Name(id='result', ctx=Store())],
+                  value=Call(
+                    func=Attribute(
+                      value=Name(id='self', ctx=Load()),
+                      attr='add_messages',
+                      ctx=Load()),
+                    args=[
+                      Starred(
+                        value=Call(
+                          func=Attribute(
+                            value=Attribute(
+                              value=Name(id='self', ctx=Load()),
+                              attr='model',
+                              ctx=Load()),
+                            attr='format_observation_messages',
+                            ctx=Load()),
+                          args=[
+                            Name(id='message', ctx=Load()),
+                            Name(id='outputs', ctx=Load()),
+                            Call(
+                              func=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='get_template_vars',
+                                ctx=Load()),
+                              args=[],
+                              keywords=[])],
+                          keywords=[]),
+                        ctx=Load())],
+                    keywords=[]))]),
+            Return(
+              value=Name(id='result', ctx=Load()))],
+          decorator_list=[],
+          returns=Subscript(
+            value=Name(id='list', ctx=Load()),
+            slice=Name(id='dict', ctx=Load()),
+            ctx=Load()),
+          type_params=[]),
+        FunctionDef(
+          name='_add_observation_messages',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self'),
+              arg(
+                arg='message',
+                annotation=Name(id='dict', ctx=Load())),
+              arg(
+                arg='outputs',
+                annotation=Subscript(
+                  value=Name(id='list', ctx=Load()),
+                  slice=Name(id='dict', ctx=Load()),
+                  ctx=Load()))],
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[]),
+          body=[
+            Return(
+              value=Call(
+                func=Attribute(
+                  value=Name(id='self', ctx=Load()),
+                  attr='add_messages',
+                  ctx=Load()),
+                args=[
+                  Starred(
+                    value=Call(
+                      func=Attribute(
+                        value=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='model',
+                          ctx=Load()),
+                        attr='format_observation_messages',
+                        ctx=Load()),
+                      args=[
+                        Name(id='message', ctx=Load()),
+                        Name(id='outputs', ctx=Load()),
+                        Call(
+                          func=Attribute(
+                            value=Name(id='self', ctx=Load()),
+                            attr='get_template_vars',
+                            ctx=Load()),
+                          args=[],
+                          keywords=[])],
+                      keywords=[]),
+                    ctx=Load())],
+                keywords=[]))],
+          decorator_list=[],
+          returns=Subscript(
+            value=Name(id='list', ctx=Load()),
+            slice=Name(id='dict', ctx=Load()),
+            ctx=Load()),
+          type_params=[]),
+        FunctionDef(
+          name='_check_for_new_task_or_submit',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self'),
+              arg(
+                arg='e',
+                annotation=Name(id='Submitted', ctx=Load()))],
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[]),
+          body=[
+            Expr(
+              value=Constant(value='Check if user wants to add a new task or submit.')),
+            If(
+              test=Attribute(
+                value=Attribute(
+                  value=Name(id='self', ctx=Load()),
+                  attr='config',
+                  ctx=Load()),
+                attr='confirm_exit',
+                ctx=Load()),
+              body=[
+                Assign(
+                  targets=[
+                    Name(id='message', ctx=Store())],
+                  value=Constant(value='[bold yellow]Agent wants to finish.[/bold yellow] [bold green]Type new task[/bold green] or [bold]Enter[/bold] to quit ([bold]/h[/bold] for commands)\n[bold yellow]>[/bold yellow] ')),
+                Assign(
+                  targets=[
+                    Name(id='user_input', ctx=Store())],
+                  value=Call(
+                    func=Attribute(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='_prompt_and_handle_slash_commands',
+                          ctx=Load()),
+                        args=[
+                          Name(id='message', ctx=Load())],
+                        keywords=[]),
+                      attr='strip',
+                      ctx=Load()),
+                    args=[],
+                    keywords=[])),
+                If(
+                  test=Compare(
+                    left=Name(id='user_input', ctx=Load()),
+                    ops=[
+                      Eq()],
+                    comparators=[
+                      Constant(value='/u')]),
+                  body=[
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='_interrupt',
+                          ctx=Load()),
+                        args=[
+                          Constant(value='Switched to human mode.')],
+                        keywords=[]))],
+                  orelse=[
+                    If(
+                      test=Compare(
+                        left=Name(id='user_input', ctx=Load()),
+                        ops=[
+                          In()],
+                        comparators=[
+                          Attribute(
+                            value=Name(id='self', ctx=Load()),
+                            attr='_MODE_COMMANDS_MAPPING',
+                            ctx=Load())]),
+                      body=[
+                        Return(
+                          value=Call(
+                            func=Attribute(
+                              value=Name(id='self', ctx=Load()),
+                              attr='_check_for_new_task_or_submit',
+                              ctx=Load()),
+                            args=[
+                              Name(id='e', ctx=Load())],
+                            keywords=[]))],
+                      orelse=[
+                        If(
+                          test=Name(id='user_input', ctx=Load()),
+                          body=[
+                            Expr(
+                              value=Call(
+                                func=Attribute(
+                                  value=Name(id='self', ctx=Load()),
+                                  attr='_interrupt',
+                                  ctx=Load()),
+                                args=[
+                                  JoinedStr(
+                                    values=[
+                                      Constant(value='The user added a new task: '),
+                                      FormattedValue(
+                                        value=Name(id='user_input', ctx=Load()),
+                                        conversion=-1)])],
+                                keywords=[
+                                  keyword(
+                                    arg='itype',
+                                    value=Constant(value='UserNewTask'))]))],
+                          orelse=[])])])],
+              orelse=[]),
+            Raise(
+              exc=Name(id='e', ctx=Load()))],
+          decorator_list=[],
+          returns=Name(id='NoReturn', ctx=Load()),
+          type_params=[]),
+        FunctionDef(
+          name='_should_ask_confirmation',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self'),
+              arg(
+                arg='action',
+                annotation=Name(id='str', ctx=Load()))],
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[]),
+          body=[
+            Return(
+              value=BoolOp(
+                op=And(),
+                values=[
+                  Compare(
+                    left=Attribute(
+                      value=Attribute(
+                        value=Name(id='self', ctx=Load()),
+                        attr='config',
+                        ctx=Load()),
+                      attr='mode',
+                      ctx=Load()),
+                    ops=[
+                      Eq()],
+                    comparators=[
+                      Constant(value='confirm')]),
+                  UnaryOp(
+                    op=Not(),
+                    operand=Call(
+                      func=Name(id='any', ctx=Load()),
+                      args=[
+                        GeneratorExp(
+                          elt=Call(
+                            func=Attribute(
+                              value=Name(id='re', ctx=Load()),
+                              attr='match',
+                              ctx=Load()),
+                            args=[
+                              Name(id='r', ctx=Load()),
+                              Name(id='action', ctx=Load())],
+                            keywords=[]),
+                          generators=[
+                            comprehension(
+                              target=Name(id='r', ctx=Store()),
+                              iter=Attribute(
+                                value=Attribute(
+                                  value=Name(id='self', ctx=Load()),
+                                  attr='config',
+                                  ctx=Load()),
+                                attr='whitelist_actions',
+                                ctx=Load()),
+                              ifs=[],
+                              is_async=0)])],
+                      keywords=[]))]))],
+          decorator_list=[],
+          returns=Name(id='bool', ctx=Load()),
+          type_params=[]),
+        FunctionDef(
+          name='_ask_confirmation_or_interrupt',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self'),
+              arg(
+                arg='commands',
+                annotation=Subscript(
+                  value=Name(id='list', ctx=Load()),
+                  slice=Name(id='str', ctx=Load()),
+                  ctx=Load()))],
+            kwonlyargs=[],
+            kw_defaults=[],
+            defaults=[]),
+          body=[
+            If(
+              test=UnaryOp(
+                op=Not(),
+                operand=Call(
+                  func=Name(id='any', ctx=Load()),
+                  args=[
+                    GeneratorExp(
+                      elt=Call(
+                        func=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='_should_ask_confirmation',
+                          ctx=Load()),
+                        args=[
+                          Name(id='c', ctx=Load())],
+                        keywords=[]),
+                      generators=[
+                        comprehension(
+                          target=Name(id='c', ctx=Store()),
+                          iter=Name(id='commands', ctx=Load()),
+                          ifs=[],
+                          is_async=0)])],
+                  keywords=[])),
+              body=[
+                Return()],
+              orelse=[]),
+            Assign(
+              targets=[
+                Name(id='prompt', ctx=Store())],
+              value=JoinedStr(
+                values=[
+                  Constant(value='[bold yellow]Execute '),
+                  FormattedValue(
+                    value=Call(
+                      func=Name(id='len', ctx=Load()),
+                      args=[
+                        Name(id='commands', ctx=Load())],
+                      keywords=[]),
+                    conversion=-1),
+                  Constant(value=' action(s)?[/] [green][bold]Enter[/] to confirm[/], [red]type [bold]comment[/] to reject[/], or [blue][bold]/h[/] to show available commands[/]\n[bold yellow]>[/bold yellow] ')])),
+            Match(
+              subject=NamedExpr(
+                target=Name(id='user_input', ctx=Store()),
+                value=Call(
+                  func=Attribute(
+                    value=Call(
+                      func=Attribute(
+                        value=Name(id='self', ctx=Load()),
+                        attr='_prompt_and_handle_slash_commands',
+                        ctx=Load()),
+                      args=[
+                        Name(id='prompt', ctx=Load())],
+                      keywords=[]),
+                    attr='strip',
+                    ctx=Load()),
+                  args=[],
+                  keywords=[])),
+              cases=[
+                match_case(
+                  pattern=MatchOr(
+                    patterns=[
+                      MatchValue(
+                        value=Constant(value='')),
+                      MatchValue(
+                        value=Constant(value='/y'))]),
+                  body=[
+                    Pass()]),
+                match_case(
+                  pattern=MatchValue(
+                    value=Constant(value='/u')),
+                  body=[
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='_interrupt',
+                          ctx=Load()),
+                        args=[
+                          Constant(value='Commands not executed. Switching to human mode')],
+                        keywords=[
+                          keyword(
+                            arg='itype',
+                            value=Constant(value='UserRejection'))]))]),
+                match_case(
+                  pattern=MatchAs(),
+                  body=[
+                    Expr(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='_interrupt',
+                          ctx=Load()),
+                        args=[
+                          JoinedStr(
+                            values=[
+                              Constant(value='Commands not executed. The user rejected your commands with the following message: '),
+                              FormattedValue(
+                                value=Name(id='user_input', ctx=Load()),
+                                conversion=-1)])],
+                        keywords=[
+                          keyword(
+                            arg='itype',
+                            value=Constant(value='UserRejection'))]))])])],
+          decorator_list=[],
+          returns=Constant(value=None),
+          type_params=[]),
+        FunctionDef(
+          name='_prompt_and_handle_slash_commands',
+          args=arguments(
+            posonlyargs=[],
+            args=[
+              arg(arg='self'),
+              arg(
+                arg='prompt',
+                annotation=Name(id='str', ctx=Load()))],
+            kwonlyargs=[
+              arg(
+                arg='_multiline',
+                annotation=Name(id='bool', ctx=Load()))],
+            kw_defaults=[
+              Constant(value=False)],
+            defaults=[]),
+          body=[
+            Expr(
+              value=Constant(value='Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input.')),
+            Expr(
+              value=Call(
+                func=Attribute(
+                  value=Name(id='console', ctx=Load()),
+                  attr='print',
+                  ctx=Load()),
+                args=[
+                  Name(id='prompt', ctx=Load())],
+                keywords=[
+                  keyword(
+                    arg='end',
+                    value=Constant(value=''))])),
+            If(
+              test=Name(id='_multiline', ctx=Load()),
+              body=[
+                Return(
+                  value=Call(
+                    func=Name(id='_multiline_prompt', ctx=Load()),
+                    args=[],
+                    keywords=[]))],
+              orelse=[]),
+            Assign(
+              targets=[
+                Name(id='user_input', ctx=Store())],
+              value=Call(
+                func=Attribute(
+                  value=Name(id='prompt_session', ctx=Load()),
+                  attr='prompt',
+                  ctx=Load()),
+                args=[
+                  Constant(value='')],
+                keywords=[])),
+            If(
+              test=Compare(
+                left=Name(id='user_input', ctx=Load()),
+                ops=[
+                  Eq()],
+                comparators=[
+                  Constant(value='/m')]),
+              body=[
+                Return(
+                  value=Call(
+                    func=Attribute(
+                      value=Name(id='self', ctx=Load()),
+                      attr='_prompt_and_handle_slash_commands',
+                      ctx=Load()),
+                    args=[
+                      Name(id='prompt', ctx=Load())],
+                    keywords=[
+                      keyword(
+                        arg='_multiline',
+                        value=Constant(value=True))]))],
+              orelse=[]),
+            If(
+              test=Compare(
+                left=Name(id='user_input', ctx=Load()),
+                ops=[
+                  Eq()],
+                comparators=[
+                  Constant(value='/h')]),
+              body=[
+                Expr(
+                  value=Call(
+                    func=Attribute(
+                      value=Name(id='console', ctx=Load()),
+                      attr='print',
+                      ctx=Load()),
+                    args=[
+                      JoinedStr(
+                        values=[
+                          Constant(value='Current mode: [bold green]'),
+                          FormattedValue(
+                            value=Attribute(
+                              value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='config',
+                                ctx=Load()),
+                              attr='mode',
+                              ctx=Load()),
+                            conversion=-1),
+                          Constant(value='[/bold green]\n[bold green]/y[/bold green] to switch to [bold yellow]yolo[/bold yellow] mode (execute LM commands without confirmation)\n[bold green]/c[/bold green] to switch to [bold yellow]confirmation[/bold yellow] mode (ask for confirmation before executing LM commands)\n[bold green]/u[/bold green] to switch to [bold yellow]human[/bold yellow] mode (execute commands issued by the user)\n[bold green]/m[/bold green] to enter multiline comment')])],
+                    keywords=[])),
+                Return(
+                  value=Call(
+                    func=Attribute(
+                      value=Name(id='self', ctx=Load()),
+                      attr='_prompt_and_handle_slash_commands',
+                      ctx=Load()),
+                    args=[
+                      Name(id='prompt', ctx=Load())],
+                    keywords=[]))],
+              orelse=[]),
+            If(
+              test=Compare(
+                left=Name(id='user_input', ctx=Load()),
+                ops=[
+                  In()],
+                comparators=[
+                  Attribute(
+                    value=Name(id='self', ctx=Load()),
+                    attr='_MODE_COMMANDS_MAPPING',
+                    ctx=Load())]),
+              body=[
+                If(
+                  test=Compare(
+                    left=Attribute(
+                      value=Attribute(
+                        value=Name(id='self', ctx=Load()),
+                        attr='config',
+                        ctx=Load()),
+                      attr='mode',
+                      ctx=Load()),
+                    ops=[
+                      Eq()],
+                    comparators=[
+                      Subscript(
+                        value=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='_MODE_COMMANDS_MAPPING',
+                          ctx=Load()),
+                        slice=Name(id='user_input', ctx=Load()),
+                        ctx=Load())]),
+                  body=[
+                    Return(
+                      value=Call(
+                        func=Attribute(
+                          value=Name(id='self', ctx=Load()),
+                          attr='_prompt_and_handle_slash_commands',
+                          ctx=Load()),
+                        args=[
+                          JoinedStr(
+                            values=[
+                              Constant(value='[bold red]Already in '),
+                              FormattedValue(
+                                value=Attribute(
+                                  value=Attribute(
+                                    value=Name(id='self', ctx=Load()),
+                                    attr='config',
+                                    ctx=Load()),
+                                  attr='mode',
+                                  ctx=Load()),
+                                conversion=-1),
+                              Constant(value=' mode.[/bold red]\n'),
+                              FormattedValue(
+                                value=Name(id='prompt', ctx=Load()),
+                                conversion=-1)])],
+                        keywords=[]))],
+                  orelse=[]),
+                Assign(
+                  targets=[
+                    Attribute(
+                      value=Attribute(
+                        value=Name(id='self', ctx=Load()),
+                        attr='config',
+                        ctx=Load()),
+                      attr='mode',
+                      ctx=Store())],
+                  value=Subscript(
+                    value=Attribute(
+                      value=Name(id='self', ctx=Load()),
+                      attr='_MODE_COMMANDS_MAPPING',
+                      ctx=Load()),
+                    slice=Name(id='user_input', ctx=Load()),
+                    ctx=Load())),
+                Expr(
+                  value=Call(
+                    func=Attribute(
+                      value=Name(id='console', ctx=Load()),
+                      attr='print',
+                      ctx=Load()),
+                    args=[
+                      JoinedStr(
+                        values=[
+                          Constant(value='Switched to [bold green]'),
+                          FormattedValue(
+                            value=Attribute(
+                              value=Attribute(
+                                value=Name(id='self', ctx=Load()),
+                                attr='config',
+                                ctx=Load()),
+                              attr='mode',
+                              ctx=Load()),
+                            conversion=-1),
+                          Constant(value='[/bold green] mode.')])],
+                    keywords=[])),
+                Return(
+                  value=Name(id='user_input', ctx=Load()))],
+              orelse=[]),
+            Return(
+              value=Name(id='user_input', ctx=Load()))],
+          decorator_list=[],
+          returns=Name(id='str', ctx=Load()),
+          type_params=[])],
+      decorator_list=[],
+      type_params=[])],
+  type_ignores=[])

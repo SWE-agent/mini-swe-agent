@@ -1,0 +1,190 @@
+Module(
+  body=[
+    Expr(
+      value=Constant(value='Agent implementations for mini-SWE-agent.')),
+    Import(
+      names=[
+        alias(name='copy')]),
+    Import(
+      names=[
+        alias(name='importlib')]),
+    ImportFrom(
+      module='minisweagent',
+      names=[
+        alias(name='Agent'),
+        alias(name='Environment'),
+        alias(name='Model')],
+      level=0),
+    Assign(
+      targets=[
+        Name(id='_AGENT_MAPPING', ctx=Store())],
+      value=Dict(
+        keys=[
+          Constant(value='default'),
+          Constant(value='interactive')],
+        values=[
+          Constant(value='minisweagent.agents.default.DefaultAgent'),
+          Constant(value='minisweagent.agents.interactive.InteractiveAgent')])),
+    FunctionDef(
+      name='get_agent_class',
+      args=arguments(
+        posonlyargs=[],
+        args=[
+          arg(
+            arg='spec',
+            annotation=Name(id='str', ctx=Load()))],
+        kwonlyargs=[],
+        kw_defaults=[],
+        defaults=[]),
+      body=[
+        Assign(
+          targets=[
+            Name(id='full_path', ctx=Store())],
+          value=Call(
+            func=Attribute(
+              value=Name(id='_AGENT_MAPPING', ctx=Load()),
+              attr='get',
+              ctx=Load()),
+            args=[
+              Name(id='spec', ctx=Load()),
+              Name(id='spec', ctx=Load())],
+            keywords=[])),
+        Try(
+          body=[
+            Assign(
+              targets=[
+                Tuple(
+                  elts=[
+                    Name(id='module_name', ctx=Store()),
+                    Name(id='class_name', ctx=Store())],
+                  ctx=Store())],
+              value=Call(
+                func=Attribute(
+                  value=Name(id='full_path', ctx=Load()),
+                  attr='rsplit',
+                  ctx=Load()),
+                args=[
+                  Constant(value='.'),
+                  Constant(value=1)],
+                keywords=[])),
+            Assign(
+              targets=[
+                Name(id='module', ctx=Store())],
+              value=Call(
+                func=Attribute(
+                  value=Name(id='importlib', ctx=Load()),
+                  attr='import_module',
+                  ctx=Load()),
+                args=[
+                  Name(id='module_name', ctx=Load())],
+                keywords=[])),
+            Return(
+              value=Call(
+                func=Name(id='getattr', ctx=Load()),
+                args=[
+                  Name(id='module', ctx=Load()),
+                  Name(id='class_name', ctx=Load())],
+                keywords=[]))],
+          handlers=[
+            ExceptHandler(
+              type=Tuple(
+                elts=[
+                  Name(id='ValueError', ctx=Load()),
+                  Name(id='ImportError', ctx=Load()),
+                  Name(id='AttributeError', ctx=Load())],
+                ctx=Load()),
+              body=[
+                Assign(
+                  targets=[
+                    Name(id='msg', ctx=Store())],
+                  value=JoinedStr(
+                    values=[
+                      Constant(value='Unknown agent type: '),
+                      FormattedValue(
+                        value=Name(id='spec', ctx=Load()),
+                        conversion=-1),
+                      Constant(value=' (resolved to '),
+                      FormattedValue(
+                        value=Name(id='full_path', ctx=Load()),
+                        conversion=-1),
+                      Constant(value=', available: '),
+                      FormattedValue(
+                        value=Name(id='_AGENT_MAPPING', ctx=Load()),
+                        conversion=-1),
+                      Constant(value=')')])),
+                Raise(
+                  exc=Call(
+                    func=Name(id='ValueError', ctx=Load()),
+                    args=[
+                      Name(id='msg', ctx=Load())],
+                    keywords=[]))])],
+          orelse=[],
+          finalbody=[])],
+      decorator_list=[],
+      returns=Subscript(
+        value=Name(id='type', ctx=Load()),
+        slice=Name(id='Agent', ctx=Load()),
+        ctx=Load()),
+      type_params=[]),
+    FunctionDef(
+      name='get_agent',
+      args=arguments(
+        posonlyargs=[],
+        args=[
+          arg(
+            arg='model',
+            annotation=Name(id='Model', ctx=Load())),
+          arg(
+            arg='env',
+            annotation=Name(id='Environment', ctx=Load())),
+          arg(
+            arg='config',
+            annotation=Name(id='dict', ctx=Load()))],
+        kwonlyargs=[
+          arg(
+            arg='default_type',
+            annotation=Name(id='str', ctx=Load()))],
+        kw_defaults=[
+          Constant(value='')],
+        defaults=[]),
+      body=[
+        Assign(
+          targets=[
+            Name(id='config', ctx=Store())],
+          value=Call(
+            func=Attribute(
+              value=Name(id='copy', ctx=Load()),
+              attr='deepcopy',
+              ctx=Load()),
+            args=[
+              Name(id='config', ctx=Load())],
+            keywords=[])),
+        Assign(
+          targets=[
+            Name(id='agent_class', ctx=Store())],
+          value=Call(
+            func=Name(id='get_agent_class', ctx=Load()),
+            args=[
+              Call(
+                func=Attribute(
+                  value=Name(id='config', ctx=Load()),
+                  attr='pop',
+                  ctx=Load()),
+                args=[
+                  Constant(value='agent_class'),
+                  Name(id='default_type', ctx=Load())],
+                keywords=[])],
+            keywords=[])),
+        Return(
+          value=Call(
+            func=Name(id='agent_class', ctx=Load()),
+            args=[
+              Name(id='model', ctx=Load()),
+              Name(id='env', ctx=Load())],
+            keywords=[
+              keyword(
+                value=Name(id='config', ctx=Load()))]))],
+      decorator_list=[],
+      returns=Name(id='Agent', ctx=Load()),
+      type_params=[])],
+  type_ignores=[])
