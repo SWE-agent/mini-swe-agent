@@ -9,6 +9,7 @@ usage:
       [--mark TEXT ...]            # highlight call-graph nodes whose name contains TEXT
       [--cfg TEXT ...]             # only draw CFGs of functions whose qualname contains TEXT (default: all)
       [--exclude TEXT ...]         # drop functions whose qualname contains TEXT from all outputs
+      [--only PATH ...]            # only scan these files (relative to src_root) instead of every *.py
 """
 
 import argparse
@@ -58,9 +59,13 @@ astor.to_source = lambda node: ast.unparse(node) + "\n"  # astor predates `match
 
 
 # ---------- 1. AST ----------
-def scan(root: Path):
+def sources(root: Path, only: list[str]) -> list[Path]:
+    return [root / p for p in only] if only else sorted(root.rglob("*.py"))
+
+
+def scan(root: Path, only: list[str]):
     funcs, classes = {}, {}
-    for f in sorted(root.rglob("*.py")):
+    for f in sources(root, only):
         rel = f.relative_to(root).as_posix()
         tree = ast.parse(f.read_text(encoding="utf-8"))
         for node in tree.body:
@@ -78,7 +83,7 @@ def scan(root: Path):
     return funcs, classes
 
 
-def write_ast(root: Path, funcs, classes, out: Path):
+def write_ast(root: Path, only: list[str], funcs, classes, out: Path):
     lines, by_file = [], {}
     for q, info in funcs.items():
         by_file.setdefault(info["file"], []).append(info)
@@ -90,7 +95,7 @@ def write_ast(root: Path, funcs, classes, out: Path):
             lines.append(f"  {owner}def {n.name}  L{n.lineno}-{n.end_lineno}")
             lines += [f"      L{c.lineno:<4} {ast.unparse(c.func)}()" for c in info["calls"]]
     (out / "ast_tree.txt").write_text("\n".join(lines), encoding="utf-8")
-    for f in sorted(root.rglob("*.py")):
+    for f in sources(root, only):
         dst = out / "ast_dump" / f.relative_to(root).with_suffix(".txt")
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.write_text(ast.dump(ast.parse(f.read_text(encoding="utf-8")), indent=2, include_attributes=False), encoding="utf-8")
@@ -187,11 +192,12 @@ if __name__ == "__main__":
     p.add_argument("--mark", nargs="*", default=[])
     p.add_argument("--cfg", nargs="*", default=[])
     p.add_argument("--exclude", nargs="*", default=[])
+    p.add_argument("--only", nargs="*", default=[])
     a = p.parse_args()
     a.out_dir.mkdir(parents=True, exist_ok=True)
-    funcs, classes = scan(a.src_root)
+    funcs, classes = scan(a.src_root, a.only)
     funcs = {q: info for q, info in funcs.items() if not any(x in q for x in a.exclude)}
-    write_ast(a.src_root, funcs, classes, a.out_dir)
+    write_ast(a.src_root, a.only, funcs, classes, a.out_dir)
     es = edges(funcs, classes)
     draw_callgraph(funcs, es, a.out_dir, "callgraph_full", a.mark)
     if a.entry:
