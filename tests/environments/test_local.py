@@ -183,12 +183,12 @@ def _read_pid(pid_file: Path) -> int:
 def _process_exited(pid: int) -> bool:
     if os.name == "nt":
         result = subprocess.run(
-            ["tasklist", "/FI", f"PID eq {pid}", "/FO", "CSV", "/NH"],
+            ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
             capture_output=True,
             text=True,
             check=False,
         )
-        return f'"{pid}"' not in result.stdout
+        return all(str(pid) not in line.split() for line in result.stdout.splitlines())
     for _ in range(20):
         try:
             os.kill(pid, 0)
