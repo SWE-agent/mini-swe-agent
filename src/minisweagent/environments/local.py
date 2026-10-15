@@ -28,6 +28,30 @@ class LocalEnvironment:
         try:
             result = _run(command, cwd, os.environ | self.config.env, timeout or self.config.timeout)
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
+        except subprocess.TimeoutExpired as e:
+            raw_output = e.output
+            raw_output = (
+                raw_output.decode("utf-8", errors="replace") if isinstance(raw_output, bytes) else (raw_output or "")
+            )
+            info = f"An error occurred while executing the command: {e}. "
+            if getattr(e, "process_tree_terminated", False):
+                info += (
+                    "The foreground command was terminated; running sleep afterward will not resume it. "
+                    "Check partial output and side effects before retrying. For longer work, start a detached "
+                    "process with stdin, stdout, and stderr redirected, then poll its saved output and status."
+                )
+            else:
+                info += "Child-process termination could not be confirmed; check whether it is still running and inspect side effects before retrying."
+            output = {
+                "output": raw_output,
+                "returncode": -1,
+                "exception_info": info,
+                "extra": {
+                    "exception_type": type(e).__name__,
+                    "exception": str(e),
+                    "process_tree_terminated": getattr(e, "process_tree_terminated", False),
+                },
+            }
         except Exception as e:
             raw_output = getattr(e, "output", None)
             raw_output = (
@@ -36,7 +60,7 @@ class LocalEnvironment:
             output = {
                 "output": raw_output,
                 "returncode": -1,
-                "exception_info": f"An error occurred while executing the command: {e}",
+                "exception_info": f"An error occurred while executing the command: {e}.",
                 "extra": {"exception_type": type(e).__name__, "exception": str(e)},
             }
         self._check_finished(output)
@@ -70,7 +94,7 @@ class LocalEnvironment:
 
 
 def _run(command: str, cwd: str, env: dict[str, str], timeout: int) -> subprocess.CompletedProcess[str]:
-    """Like subprocess.run, but kills the whole process group on timeout so no children are orphaned."""
+    """Like subprocess.run, but terminates the process tree on timeout when possible."""
     process = subprocess.Popen(
         command,
         shell=True,
@@ -86,7 +110,45 @@ def _run(command: str, cwd: str, env: dict[str, str], timeout: int) -> subproces
     try:
         stdout, _ = process.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
-        os.killpg(process.pid, signal.SIGKILL) if os.name == "posix" else process.kill()
-        stdout, _ = process.communicate()
-        raise subprocess.TimeoutExpired(command, timeout, output=stdout)
+        tree_terminated = _terminate_process_tree(process)
+        try:
+            stdout, _ = process.communicate(timeout=5)
+        except subprocess.TimeoutExpired as e:
+            tree_terminated = False
+            if process.poll() is None:
+                process.kill()
+            stdout = e.output or ""
+            if process.stdout:
+                process.stdout.close()
+        error = subprocess.TimeoutExpired(command, timeout, output=stdout)
+        error.process_tree_terminated = tree_terminated
+        raise error
     return subprocess.CompletedProcess(command, process.returncode, stdout=stdout)
+
+
+def _terminate_process_tree(process: subprocess.Popen[str]) -> bool:
+    if os.name == "posix":
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        return True
+
+    try:
+        result = subprocess.run(
+            ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=5,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        result = None
+    if result is not None and result.returncode == 0:
+        return True
+    if process.poll() is None:
+        try:
+            process.kill()
+        except ProcessLookupError:
+            pass
+    return False

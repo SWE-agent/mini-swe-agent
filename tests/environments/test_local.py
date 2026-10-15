@@ -1,6 +1,7 @@
 import os
 import shlex
 import signal
+import subprocess
 import sys
 import tempfile
 import time
@@ -128,15 +129,19 @@ def test_local_environment_timeout():
     """Test timeout functionality returns structured output instead of raising."""
     env = LocalEnvironment(timeout=1)
 
-    result = env.execute({"command": "sleep 2"})
+    result = env.execute({"command": f'"{sys.executable}" -c "import time; time.sleep(2)"'})
     assert result["returncode"] == -1
     assert "timed out" in result["exception_info"]
+    if result["extra"].get("process_tree_terminated", True):
+        assert "running sleep afterward will not resume it" in result["exception_info"]
+        assert "stdin, stdout, and stderr redirected" in result["exception_info"]
+    else:
+        assert "termination could not be confirmed" in result["exception_info"]
     assert result["extra"]["exception_type"] == "TimeoutExpired"
 
 
-@pytest.mark.skipif(os.name == "nt", reason="process groups are POSIX-specific")
 def test_local_environment_timeout_kills_child_process():
-    """Test that timeout kills shell-spawned child processes."""
+    """Test that a timeout terminates the shell-spawned process tree."""
     with tempfile.TemporaryDirectory() as temp_dir:
         pid_file = Path(temp_dir) / "child.pid"
         script = Path(temp_dir) / "child.py"
@@ -155,9 +160,9 @@ def test_local_environment_timeout_kills_child_process():
         )
 
         env = LocalEnvironment(timeout=1)
-        result = env.execute(
-            {"command": f"{shlex.quote(sys.executable)} {shlex.quote(str(script))} {shlex.quote(str(pid_file))}"}
-        )
+        command = [sys.executable, str(script), str(pid_file)]
+        command = subprocess.list2cmdline(command) if os.name == "nt" else shlex.join(command)
+        result = env.execute({"command": command})
 
         assert result["returncode"] == -1
         child_pid = _read_pid(pid_file)
@@ -176,6 +181,14 @@ def _read_pid(pid_file: Path) -> int:
 
 
 def _process_exited(pid: int) -> bool:
+    if os.name == "nt":
+        result = subprocess.run(
+            ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return all(str(pid) not in line.split() for line in result.stdout.splitlines())
     for _ in range(20):
         try:
             os.kill(pid, 0)
@@ -186,10 +199,27 @@ def _process_exited(pid: int) -> bool:
 
 
 def _kill_process_if_running(pid: int) -> None:
+    if os.name == "nt":
+        subprocess.run(
+            ["taskkill", "/PID", str(pid), "/T", "/F"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        return
     try:
         os.kill(pid, signal.SIGKILL)
     except ProcessLookupError:
         pass
+
+
+def test_local_environment_start_failure_does_not_recommend_retry(tmp_path):
+    result = LocalEnvironment().execute({"command": "echo should-not-run"}, cwd=str(tmp_path / "missing"))
+
+    assert result["returncode"] == -1
+    assert result["extra"]["exception_type"] in {"FileNotFoundError", "NotADirectoryError"}
+    assert "running sleep afterward" not in result["exception_info"]
+    assert "retrying" not in result["exception_info"]
 
 
 def test_local_environment_custom_timeout():
