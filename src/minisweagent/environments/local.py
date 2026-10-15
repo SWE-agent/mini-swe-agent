@@ -36,7 +36,9 @@ class LocalEnvironment:
             output = {
                 "output": raw_output,
                 "returncode": -1,
-                "exception_info": f"An error occurred while executing the command: {e}",
+                "exception_info": f"An error occurred while executing the command: {e}. "
+                "The foreground command did not complete; running sleep afterward will not resume it. "
+                "Retry in shorter steps, or launch it in the background before polling.",
                 "extra": {"exception_type": type(e).__name__, "exception": str(e)},
             }
         self._check_finished(output)

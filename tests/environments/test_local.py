@@ -8,7 +8,6 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
 from minisweagent.environments.local import LocalEnvironment, LocalEnvironmentConfig
 
 
@@ -128,9 +127,10 @@ def test_local_environment_timeout():
     """Test timeout functionality returns structured output instead of raising."""
     env = LocalEnvironment(timeout=1)
 
-    result = env.execute({"command": "sleep 2"})
+    result = env.execute({"command": f'"{sys.executable}" -c "import time; time.sleep(2)"'})
     assert result["returncode"] == -1
     assert "timed out" in result["exception_info"]
+    assert "running sleep afterward will not resume it" in result["exception_info"]
     assert result["extra"]["exception_type"] == "TimeoutExpired"
 
 
