@@ -28,8 +28,9 @@ class _G:
             lines = range(stmt.lineno, (stmt.end_lineno or stmt.lineno) + 1)
             if any(l in self.llm_lines for l in lines):
                 kind = "llm"
-            elif any(isinstance(x, ast.Constant) and isinstance(x.value, str) and LOG_TAG in x.value
-                     for x in ast.walk(stmt)):
+            elif any(
+                isinstance(x, ast.Constant) and isinstance(x.value, str) and LOG_TAG in x.value for x in ast.walk(stmt)
+            ):
                 kind = "log"
         n = {"id": f"b{len(self.nodes)}", "label": label, "kind": kind, "line": line}
         self.nodes.append(n)
@@ -59,9 +60,9 @@ def _has_call(node):
 class _Builder:
     def __init__(self, g):
         self.g = g
-        self.loops = []      # (header_id, break_ends list)
-        self.handlers = []   # stack of [(handler_entry_id, exc_label)]
-        self.finals = []     # stack of finally entry ids (or None)
+        self.loops = []  # (header_id, break_ends list)
+        self.handlers = []  # stack of [(handler_entry_id, exc_label)]
+        self.finals = []  # stack of finally entry ids (or None)
         self.exit = g.node("EXIT (return)", "exit")
         self.raise_exit = g.node("RAISE (exception leaves the function)", "raise")
         self.used_raise = False
@@ -102,8 +103,13 @@ class _Builder:
             f = self.block(s.orelse, [(h, "F")]) if s.orelse else [(h, "F")]
             return t + f
         if isinstance(s, (ast.For, ast.AsyncFor, ast.While)):
-            head = ("while " + _src(s.test)) if isinstance(s, ast.While) else \
-                   (("async for " if isinstance(s, ast.AsyncFor) else "for ") + _src(s.target) + " in " + _src(s.iter))
+            head = (
+                ("while " + _src(s.test))
+                if isinstance(s, ast.While)
+                else (
+                    ("async for " if isinstance(s, ast.AsyncFor) else "for ") + _src(s.target) + " in " + _src(s.iter)
+                )
+            )
             h = g.node(L + head, "cond", s.lineno, s.test if isinstance(s, ast.While) else s.iter)
             g.link(ends, h)
             self._exc_edges(h, s.test if isinstance(s, ast.While) else s.iter)
@@ -132,8 +138,10 @@ class _Builder:
             if not hs and fin:  # try/finally: an exception goes through finally (then re-raised)
                 hs_edges = [(fin, "exception", True)]
             else:
-                hs_edges = [(hid, typ, hd.type is None or _src(hd.type) in ("Exception", "BaseException"))
-                            for hid, typ, hd in hs]
+                hs_edges = [
+                    (hid, typ, hd.type is None or _src(hd.type) in ("Exception", "BaseException"))
+                    for hid, typ, hd in hs
+                ]
             self.handlers.append(hs_edges)
             self.finals.append(fin)
             body_ends = self.block(s.body, [(h, "")])
@@ -199,7 +207,12 @@ def build(func: ast.AST, llm_lines=(), title=""):
     b = _Builder(g)
     entry = g.node(f"L{func.lineno}  {title or func.name}()", "entry", func.lineno)
     body = func.body
-    if body and isinstance(body[0], ast.Expr) and isinstance(body[0].value, ast.Constant) and isinstance(body[0].value.value, str):
+    if (
+        body
+        and isinstance(body[0], ast.Expr)
+        and isinstance(body[0].value, ast.Constant)
+        and isinstance(body[0].value.value, str)
+    ):
         body = body[1:]  # docstring
     ends = b.block(body, [(entry, "")])
     g.link(ends, b.exit, "end")
@@ -223,16 +236,19 @@ STYLE = {
 
 def to_dot(nodes, edges, name="cfg"):
     esc = lambda s: s.replace("\\", "\\\\").replace('"', '\\"')  # noqa: E731
-    out = [f'digraph "{esc(name)}" {{', "rankdir=TB; nodesep=0.3; ranksep=0.35;",
-           'node [fontname="Menlo, Consolas, monospace", fontsize=10, margin="0.12,0.05"]; edge [fontsize=9, color="#777777"];']
+    out = [
+        f'digraph "{esc(name)}" {{',
+        "rankdir=TB; nodesep=0.3; ranksep=0.35;",
+        'node [fontname="Menlo, Consolas, monospace", fontsize=10, margin="0.12,0.05"]; edge [fontsize=9, color="#777777"];',
+    ]
     for n in nodes:
         out.append(f'{n["id"]} [label="{esc(n["label"])}", {STYLE[n["kind"]]}];')
     for a, b, lab, kind in edges:
         attrs = [f'label="{esc(lab)}"'] if lab else []
         if kind == "exception":
-            attrs += ['style=dashed', 'color="#d00000"', 'fontcolor="#d00000"']
+            attrs += ["style=dashed", 'color="#d00000"', 'fontcolor="#d00000"']
         elif lab == "loop" or lab == "continue":
-            attrs += ['constraint=false', 'color="#999999"']
-        out.append(f'{a} -> {b} [{", ".join(attrs)}];')
+            attrs += ["constraint=false", 'color="#999999"']
+        out.append(f"{a} -> {b} [{', '.join(attrs)}];")
     out.append("}")
     return "\n".join(out)

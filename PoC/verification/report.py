@@ -14,7 +14,7 @@ def _svg(path: Path):
     if not path.exists():
         return None
     s = path.read_text(encoding="utf-8")
-    s = s[s.find("<svg"):]
+    s = s[s.find("<svg") :]
     s = re.sub(r'<svg([^>]*?)\swidth="[^"]*"', r"<svg\1", s, count=1)
     s = re.sub(r'<svg([^>]*?)\sheight="[^"]*"', r"<svg\1", s, count=1)
     return s
@@ -29,10 +29,14 @@ def write(out_dir: Path, title: str, summary: dict, nodes: dict, nid_to_key: dic
             if svg:
                 cfgs[k] = svg
     data = {"summary": summary, "nodes": nodes, "nid": nid_to_key, "cfgs": cfgs}
-    graph = _svg(out_dir / "wrapper_targets.svg") or "<p class='empty'>Graphviz가 없어 호출 그래프를 그리지 못했어요.</p>"
-    page = (TEMPLATE.replace("__TITLE__", html.escape(title))
-            .replace("__GRAPH__", graph)
-            .replace("__DATA__", json.dumps(data, ensure_ascii=False).replace("</", "<\\/")))
+    graph = (
+        _svg(out_dir / "wrapper_targets.svg") or "<p class='empty'>Graphviz가 없어 호출 그래프를 그리지 못했어요.</p>"
+    )
+    page = (
+        TEMPLATE.replace("__TITLE__", html.escape(title))
+        .replace("__GRAPH__", graph)
+        .replace("__DATA__", json.dumps(data, ensure_ascii=False).replace("</", "<\\/"))
+    )
     (out_dir / "report.html").write_text(page, encoding="utf-8")
 
 

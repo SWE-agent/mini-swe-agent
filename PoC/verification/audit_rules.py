@@ -83,8 +83,17 @@ def find_sites(root, files, funcs, classes, imports, cls_nodes):
         strings = class_strings(info["cls"], classes, cls_nodes)
         body = [info["node"]] if info.get("node") is not None else []
         for c, rule, hit in _hits(body, info["calls"], imports[info["file"]], strings):
-            sites.append({"func": q, "file": info["file"], "line": c.lineno, "rule": rule,
-                          "pattern": hit[1], "detail": hit[2], "ext": f"ext: {ast.unparse(c.func)}"})
+            sites.append(
+                {
+                    "func": q,
+                    "file": info["file"],
+                    "line": c.lineno,
+                    "rule": rule,
+                    "pattern": hit[1],
+                    "detail": hit[2],
+                    "ext": f"ext: {ast.unparse(c.func)}",
+                }
+            )
     # audit.py only scans def bodies: calls at module level / in class bodies would be invisible -> report them
     for f in files:
         rel = f.relative_to(root).as_posix()
@@ -95,8 +104,17 @@ def find_sites(root, files, funcs, classes, imports, cls_nodes):
         for c, rule, hit in _hits(body, calls, imports[rel], {}):
             q = f"{rel}#<module>"
             funcs.setdefault(q, {"file": rel, "cls": None, "calls": [], "node": None, "line": 1})
-            sites.append({"func": q, "file": rel, "line": c.lineno, "rule": rule, "pattern": hit[1],
-                          "detail": hit[2], "ext": f"ext: {ast.unparse(c.func)}"})
+            sites.append(
+                {
+                    "func": q,
+                    "file": rel,
+                    "line": c.lineno,
+                    "rule": rule,
+                    "pattern": hit[1],
+                    "detail": hit[2],
+                    "ext": f"ext: {ast.unparse(c.func)}",
+                }
+            )
     uniq = {(s["func"], s["line"], s["rule"].removesuffix("-ref"), s["detail"]): s for s in sites}
     return sorted(uniq.values(), key=lambda s: (s["file"], s["line"]))
 
@@ -111,7 +129,7 @@ def bridge_edges(es, funcs, imports):
     for caller, callee, line, kind in es:
         if kind != "external":
             continue
-        chain = callee[len("ext: "):].split("(")[0].split(".")
+        chain = callee[len("ext: ") :].split("(")[0].split(".")
         root_pkg = imports.get(funcs[caller]["file"], {}).get(chain[0])
         if root_pkg and root_pkg != PACKAGE:
             continue
@@ -139,8 +157,11 @@ def reverse_closure(start, es):
 
 
 def draw(name, out: Path, funcs, es, sites, site_funcs, targets, entries, keep=None):
-    g = graphviz.Digraph(name, graph_attr={"rankdir": "LR", "fontname": "Helvetica"},
-                         node_attr={"fontsize": "10", "shape": "box", "fontname": "Helvetica"})
+    g = graphviz.Digraph(
+        name,
+        graph_attr={"rankdir": "LR", "fontname": "Helvetica"},
+        node_attr={"fontsize": "10", "shape": "box", "fontname": "Helvetica"},
+    )
     es = [e for e in es if keep is None or (e[0] in keep and e[1] in keep)]
     site_ext = {s["ext"] for s in sites}
     nodes = {n for e in es for n in e[:2]} | (keep or set())
@@ -155,7 +176,13 @@ def draw(name, out: Path, funcs, es, sites, site_funcs, targets, entries, keep=N
         if n.startswith("ext: "):
             attrs = {"shape": "plaintext", "fontcolor": "gray30"}
         elif n in site_funcs:
-            attrs = {"style": "filled", "fillcolor": "#ffd6d6", "color": "#d00000", "penwidth": "3", "fontcolor": "#a00000"}
+            attrs = {
+                "style": "filled",
+                "fillcolor": "#ffd6d6",
+                "color": "#d00000",
+                "penwidth": "3",
+                "fontcolor": "#a00000",
+            }
             label = "LLM CALL INSIDE\n" + label
         elif n in targets:
             weak = targets[n] >= 2
@@ -168,21 +195,53 @@ def draw(name, out: Path, funcs, es, sites, site_funcs, targets, entries, keep=N
         if s["func"] not in ids:
             continue
         sid = f"s{k}"
-        g.node(sid, label=f"{s['rule']}\n{s['pattern']}\n{s['detail'][:60]}\nL{s['line']}".replace("\\", "\\\\"),
-               shape="ellipse", peripheries="2", color="#d00000", penwidth="2.5", fontcolor="#a00000", fontsize="9")
+        g.node(
+            sid,
+            label=f"{s['rule']}\n{s['pattern']}\n{s['detail'][:60]}\nL{s['line']}".replace("\\", "\\\\"),
+            shape="ellipse",
+            peripheries="2",
+            color="#d00000",
+            penwidth="2.5",
+            fontcolor="#a00000",
+            fontsize="9",
+        )
         g.edge(ids[s["func"]], sid, color="#d00000", penwidth="2", label=f"L{s['line']}", fontsize="8")
     for a, b, line, kind in sorted(set(es)):
         if a in ids and b in ids and b not in site_ext:
             g.edge(ids[a], ids[b], label=f"L{line}", fontsize="8", **EDGE_STYLE[kind])
     with g.subgraph(name="cluster_legend") as lg:
         lg.attr(label="legend", fontsize="10", color="gray")
-        lg.node("lg1", "LLM call (rule hit)", shape="ellipse", peripheries="2", color="#d00000", fontcolor="#a00000", fontsize="9")
-        lg.node("lg2", "contains an LLM call\n(CFG target)", style="filled", fillcolor="#ffd6d6", color="#d00000", penwidth="3", fontsize="9")
+        lg.node(
+            "lg1",
+            "LLM call (rule hit)",
+            shape="ellipse",
+            peripheries="2",
+            color="#d00000",
+            fontcolor="#a00000",
+            fontsize="9",
+        )
+        lg.node(
+            "lg2",
+            "contains an LLM call\n(CFG target)",
+            style="filled",
+            fillcolor="#ffd6d6",
+            color="#d00000",
+            penwidth="3",
+            fontsize="9",
+        )
         lg.node("lg3", "reaches an LLM call\n(CFG target)", style="dashed", color="#d00000", penwidth="2", fontsize="9")
-        lg.node("lg3b", "reaches via 2+ same-name links\n(weaker evidence, check the path)", style="dashed", color="#f0a0a0", fontsize="9")
+        lg.node(
+            "lg3b",
+            "reaches via 2+ same-name links\n(weaker evidence, check the path)",
+            style="dashed",
+            color="#f0a0a0",
+            fontsize="9",
+        )
         lg.node("lg4", "entry", style="filled", fillcolor="#dbe6ff", fontsize="9")
-        lg.edge("lg1", "lg2", style="invis"); lg.edge("lg2", "lg3", style="invis")  # noqa: E702
-        lg.edge("lg3", "lg3b", style="invis"); lg.edge("lg3b", "lg4", style="invis")  # noqa: E702
+        lg.edge("lg1", "lg2", style="invis")
+        lg.edge("lg2", "lg3", style="invis")  # noqa: E702
+        lg.edge("lg3", "lg3b", style="invis")
+        lg.edge("lg3b", "lg4", style="invis")  # noqa: E702
     g.render(out / name, format="svg", cleanup=True)
     g.render(out / name, format="png", cleanup=True)
 
@@ -197,8 +256,12 @@ def main():
     p.add_argument("--entry", nargs="*", default=[])
     p.add_argument("--rules", default="R1,R2,R3")
     p.add_argument("--cfg", action="store_true", help="also draw CFGs of the CFG targets")
-    p.add_argument("--view-max-links", type=int, default=None,
-                   help="callgraph_rules_targets: hide targets needing more name-links than this (view only; the TSV keeps all)")
+    p.add_argument(
+        "--view-max-links",
+        type=int,
+        default=None,
+        help="callgraph_rules_targets: hide targets needing more name-links than this (view only; the TSV keeps all)",
+    )
     p.add_argument("--exclude", nargs="*", default=[])
     p.add_argument("--only", nargs="*", default=[])
     a = p.parse_args()
@@ -233,17 +296,27 @@ def main():
     draw("callgraph_rules_targets", a.out_dir, funcs, es, sites, site_funcs, targets, entries, keep=shown)
     if a.entry:
         reach = audit.reachable(a.entry, es)
-        draw("callgraph_rules_entry", a.out_dir, funcs, [e for e in es if e[0] in reach], sites, site_funcs,
-             targets, entries)
+        draw(
+            "callgraph_rules_entry",
+            a.out_dir,
+            funcs,
+            [e for e in es if e[0] in reach],
+            sites,
+            site_funcs,
+            targets,
+            entries,
+        )
         missing = sorted(site_funcs - reach)
         if missing:
             print("WARNING: LLM calls not reachable from --entry:", ", ".join(missing))
     if a.cfg:
         audit.draw_cfgs({q: funcs[q] for q in targets if funcs[q].get("node") is not None}, a.out_dir, [])
 
-    print(f"functions={len(funcs)} llm_calls={len(sites)} cfg_targets={len(targets)} "
-          f"(contain={len(site_funcs)}, reach with <=1 name-link={sum(1 for v in targets.values() if v <= 1) - len(site_funcs)}, "
-          f"reach only with 2+ name-links={sum(1 for v in targets.values() if v >= 2)})")
+    print(
+        f"functions={len(funcs)} llm_calls={len(sites)} cfg_targets={len(targets)} "
+        f"(contain={len(site_funcs)}, reach with <=1 name-link={sum(1 for v in targets.values() if v <= 1) - len(site_funcs)}, "
+        f"reach only with 2+ name-links={sum(1 for v in targets.values() if v >= 2)})"
+    )
 
 
 if __name__ == "__main__":

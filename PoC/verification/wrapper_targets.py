@@ -49,13 +49,20 @@ LOG_TAG = "[LLM_"
 
 # ---------------------------------------------------------------- scan (file-qualified keys)
 def scan(root: Path):
-    trees = {f.relative_to(root).as_posix(): ast.parse(f.read_text(encoding="utf-8")) for f in sorted(root.rglob("*.py"))}
+    trees = {
+        f.relative_to(root).as_posix(): ast.parse(f.read_text(encoding="utf-8")) for f in sorted(root.rglob("*.py"))
+    }
     classes = {}
     for rel, tree in trees.items():
         for c in (n for n in tree.body if isinstance(n, ast.ClassDef)):
-            classes.setdefault(c.name, []).append({"file": rel, "bases": [ast.unparse(b).split(".")[-1] for b in c.bases],
-                                                   "methods": [m.name for m in c.body if isinstance(m, FUNC)],
-                                                   "strings": llm_rules.self_string_attrs(c)})
+            classes.setdefault(c.name, []).append(
+                {
+                    "file": rel,
+                    "bases": [ast.unparse(b).split(".")[-1] for b in c.bases],
+                    "methods": [m.name for m in c.body if isinstance(m, FUNC)],
+                    "strings": llm_rules.self_string_attrs(c),
+                }
+            )
     funcs, sites = {}, []
     for rel, tree in trees.items():
         imports = llm_rules.imported_roots(tree)
@@ -71,10 +78,21 @@ def scan(root: Path):
         for cls, name, line, body in units:
             q = f"{rel}::{cls}.{name}" if cls else f"{rel}::{name}"
             calls = [c for b in body for c in ast.walk(b) if isinstance(c, ast.Call)]
-            logs = any(isinstance(x, ast.Constant) and isinstance(x.value, str) and LOG_TAG in x.value
-                       for c in calls for x in ast.walk(c))
-            funcs[q] = {"file": rel, "line": line, "cls": cls, "name": name, "calls": calls, "imports": imports, "logs": logs,
-                        "node": body[0] if name != "<module>" else None}
+            logs = any(
+                isinstance(x, ast.Constant) and isinstance(x.value, str) and LOG_TAG in x.value
+                for c in calls
+                for x in ast.walk(c)
+            )
+            funcs[q] = {
+                "file": rel,
+                "line": line,
+                "cls": cls,
+                "name": name,
+                "calls": calls,
+                "imports": imports,
+                "logs": logs,
+                "node": body[0] if name != "<module>" else None,
+            }
             strings = {}
             for k in reversed(mro(cls, classes)) if cls else []:
                 for rec in classes[k]:
@@ -84,7 +102,9 @@ def scan(root: Path):
                     sites.append({"func": q, "line": c.lineno, "rule": hit[0], "pattern": hit[1], "detail": hit[2]})
             for c in (r for b in body for r in llm_rules.references(b)):
                 if (hit := llm_rules.classify(c, imports, strings)) and hit[0] != "R3-http":
-                    sites.append({"func": q, "line": c.lineno, "rule": hit[0] + "-ref", "pattern": hit[1], "detail": hit[2]})
+                    sites.append(
+                        {"func": q, "line": c.lineno, "rule": hit[0] + "-ref", "pattern": hit[1], "detail": hit[2]}
+                    )
     return funcs, classes, sorted(sites, key=lambda s: (funcs[s["func"]]["file"], s["line"]))
 
 
@@ -124,8 +144,13 @@ def edges(funcs, classes, local):
                 tgts = method_keys(cls, ch[1], classes, info["file"])
                 if tgts:
                     out |= {(q, t, 0) for t in tgts}
-                    out |= {(q, t, 1) for sub in classes if sub != cls and cls in mro(sub, classes)
-                            for t in method_keys(sub, ch[1], classes) if t.split("::")[1].startswith(sub + ".")}
+                    out |= {
+                        (q, t, 1)
+                        for sub in classes
+                        if sub != cls and cls in mro(sub, classes)
+                        for t in method_keys(sub, ch[1], classes)
+                        if t.split("::")[1].startswith(sub + ".")
+                    }
                     continue
             if cls and ch[0] == "super()" and len(ch) == 2:  # super().m(): base classes only
                 bases = [b for rec in classes.get(cls, []) if rec["file"] == info["file"] for b in rec["bases"]]
@@ -173,8 +198,11 @@ def render(dot_path: Path):
         return True
     try:
         import graphviz
+
         for fmt in ("svg", "png"):
-            graphviz.Source(dot_path.read_text(encoding="utf-8")).render(dot_path.with_suffix(""), format=fmt, cleanup=True)
+            graphviz.Source(dot_path.read_text(encoding="utf-8")).render(
+                dot_path.with_suffix(""), format=fmt, cleanup=True
+            )
         return True
     except Exception:
         return False
@@ -186,29 +214,40 @@ def main():
     p.add_argument("out_dir", type=Path)
     p.add_argument("--entry", nargs="*", default=[], help="e.g. DefaultAgent.run (adds grey context paths)")
     p.add_argument("--rules", default="R1,R2,R3")
-    p.add_argument("--through", nargs="*", default=[],
-                   help="scope: keep only LLM calls reachable FROM these functions (e.g. Agent.get_model_output), "
-                        "and judge coverage only on paths that pass through them")
-    p.add_argument("--cfg", action="store_true",
-                   help="also draw CFGs (audit.py's renderer, needs py2cfg) of the wrap targets and of the "
-                        "[LLM_*]-logging functions on their paths -> out_dir/cfg, listed in cfg_targets.tsv")
+    p.add_argument(
+        "--through",
+        nargs="*",
+        default=[],
+        help="scope: keep only LLM calls reachable FROM these functions (e.g. Agent.get_model_output), "
+        "and judge coverage only on paths that pass through them",
+    )
+    p.add_argument(
+        "--cfg",
+        action="store_true",
+        help="also draw CFGs (audit.py's renderer, needs py2cfg) of the wrap targets and of the "
+        "[LLM_*]-logging functions on their paths -> out_dir/cfg, listed in cfg_targets.tsv",
+    )
     a = p.parse_args()
     llm_rules.RULES = set(a.rules.split(","))
     a.out_dir.mkdir(parents=True, exist_ok=True)
-    local = {a.src_root.resolve().name} | {x.stem for x in a.src_root.rglob("*.py")} | {x.name for x in a.src_root.rglob("*") if x.is_dir()}
+    local = (
+        {a.src_root.resolve().name}
+        | {x.stem for x in a.src_root.rglob("*.py")}
+        | {x.name for x in a.src_root.rglob("*") if x.is_dir()}
+    )
 
     funcs, classes, sites = scan(a.src_root)
     es = edges(funcs, classes, local)
 
     if a.through:  # scope restriction: only LLM calls that these functions can reach
-        thr = [k for spec in a.through for k in find(spec, funcs, classes)]
-        if not thr:
+        the = [k for spec in a.through for k in find(spec, funcs, classes)]
+        if not the:
             sys.exit(f"--through not found: {a.through}")
         in_scope = set()
-        for t in thr:
+        for t in the:
             in_scope |= set(shortest_paths(t, es))
         sites = [s for s in sites if s["func"] in in_scope]
-        print(f"scope (--through {', '.join(x.split('::')[1] for x in thr)}): {len(sites)} LLM calls kept")
+        print(f"scope (--through {', '.join(x.split('::')[1] for x in the)}): {len(sites)} LLM calls kept")
 
     targets = sorted({s["func"] for s in sites})
     direct_log = {q for q, i in funcs.items() if i["logs"]}
@@ -229,7 +268,7 @@ def main():
     logged = (direct_log - helpers) | via_helper
 
     entries = []
-    for spec in (a.entry + a.through if a.through else a.entry):
+    for spec in a.entry + a.through if a.through else a.entry:
         m = find(spec, funcs, classes)
         if not m:
             sys.exit(f"entry not found: {spec}")
@@ -241,7 +280,7 @@ def main():
         prev = shortest_paths(e, es)
         for t in targets:
             n = t
-            while n in prev and prev[n]:
+            while prev.get(n):
                 context.add((prev[n], n))
                 n = prev[n]
         reach_without_log = shortest_paths(e, es, blocked=frozenset(logged - {e}))
@@ -251,22 +290,29 @@ def main():
                 covered[t] = covered.get(t, True) and ok
                 if not ok and t not in bypass:
                     path, n = [], t
-                    while n in reach_without_log and reach_without_log[n]:
+                    while reach_without_log.get(n):
                         path.append(n.split("::")[1])
                         n = reach_without_log[n]
                     bypass[t] = " <- ".join(path + [n.split("::")[1]])
 
     with open(a.out_dir / "wrapper_targets.tsv", "w", encoding="utf-8") as fh:
-        fh.write("location\tfunction\trule\tpattern\tdetail\thas_own_LLM_log\tLLM_log_on_every_path_from_entry\tpath_without_log\n")
+        fh.write(
+            "location\tfunction\trule\tpattern\tdetail\thas_own_LLM_log\tLLM_log_on_every_path_from_entry\tpath_without_log\n"
+        )
         for s in sites:
             f = funcs[s["func"]]
             cov = {True: "yes", False: "NO"}.get(covered.get(s["func"]), "-")
-            fh.write(f"{f['file']}:{s['line']}\t{s['func']}\t{s['rule']}\t{s['pattern']}\t{s['detail']}\t"
-                     f"{'yes' if s['func'] in logged else 'no'}\t{cov}\t{bypass.get(s['func'], '')}\n")
+            fh.write(
+                f"{f['file']}:{s['line']}\t{s['func']}\t{s['rule']}\t{s['pattern']}\t{s['detail']}\t"
+                f"{'yes' if s['func'] in logged else 'no'}\t{cov}\t{bypass.get(s['func'], '')}\n"
+            )
 
     ids = {}
     nid = lambda n: ids.setdefault(n, f"n{len(ids)}")  # noqa: E731
-    g = ["digraph W {", 'rankdir=LR; nodesep=0.25; node [fontname=Helvetica, fontsize=10, shape=box]; edge [color="#999999"];']
+    g = [
+        "digraph W {",
+        'rankdir=LR; nodesep=0.25; node [fontname=Helvetica, fontsize=10, shape=box]; edge [color="#999999"];',
+    ]
     nodes = set(targets) | {x for e in context for x in e}
     for n in sorted(nodes):
         f = funcs[n]
@@ -286,12 +332,18 @@ def main():
         g.append(f"{nid(a_)} -> {nid(b_)};")
     for k, s in enumerate(sites):
         detail = s["detail"].replace('"', "'").replace("\\", "\\\\")[:70]
-        g.append(f's{k} [shape=ellipse, peripheries=2, color="#d00000", penwidth=2.5, fontcolor="#a00000", fontsize=9, '
-                 f'label="{s["rule"]}  L{s["line"]}\\n{s["pattern"]}\\n{detail}"];')
+        g.append(
+            f's{k} [shape=ellipse, peripheries=2, color="#d00000", penwidth=2.5, fontcolor="#a00000", fontsize=9, '
+            f'label="{s["rule"]}  L{s["line"]}\\n{s["pattern"]}\\n{detail}"];'
+        )
         g.append(f'{nid(s["func"])} -> s{k} [color="#d00000", penwidth=2];')
     g.append('subgraph cluster_legend { label="legend"; fontsize=10; color="#cccccc";')
-    g.append('l1 [label="LLM call (R1/R2/R3)", shape=ellipse, peripheries=2, color="#d00000", fontcolor="#a00000", fontsize=9];')
-    g.append('l2 [label="WRAP TARGET\\n(function making the call)", style="filled,bold", fillcolor="#ffe0e0", color="#d00000", penwidth=3, fontsize=9];')
+    g.append(
+        'l1 [label="LLM call (R1/R2/R3)", shape=ellipse, peripheries=2, color="#d00000", fontcolor="#a00000", fontsize=9];'
+    )
+    g.append(
+        'l2 [label="WRAP TARGET\\n(function making the call)", style="filled,bold", fillcolor="#ffe0e0", color="#d00000", penwidth=3, fontsize=9];'
+    )
     g.append('l3 [label="already logs [LLM_*]", peripheries=2, color="#1a9e3a", fontsize=9];')
     g.append('l4 [label="path from entry", color="#bbbbbb", fontsize=9]; l1 -> l2 -> l3 -> l4 [style=invis]; }')
     g.append("}")
@@ -300,11 +352,18 @@ def main():
     drawn = render(dot)
 
     # safety net: third-party imports that no rule covers -> a person decides (no silent miss for a new SDK)
-    covered_libs = llm_rules.RULE_LIBS | set(llm_rules.LIB_RULES) | set(llm_rules.HTTP_LIBS) | llm_rules.REVIEWED_NON_LLM
+    covered_libs = (
+        llm_rules.RULE_LIBS | set(llm_rules.LIB_RULES) | set(llm_rules.HTTP_LIBS) | llm_rules.REVIEWED_NON_LLM
+    )
     unreviewed = {}
     for q, i in funcs.items():
         for name, root_pkg in i["imports"].items():
-            if root_pkg and root_pkg not in local and root_pkg not in sys.stdlib_module_names and root_pkg not in covered_libs:
+            if (
+                root_pkg
+                and root_pkg not in local
+                and root_pkg not in sys.stdlib_module_names
+                and root_pkg not in covered_libs
+            ):
                 unreviewed.setdefault(root_pkg, set()).add(i["file"])
     with open(a.out_dir / "unreviewed_imports.tsv", "w", encoding="utf-8") as fh:
         fh.write("library\tfiles\n")
@@ -319,6 +378,7 @@ def main():
             if not entries or q in on_paths:
                 roles[q] = roles.get(q, "") + (" + " if q in roles else "") + "existing wrapper ([LLM_*] log)"
         import cfg_builder  # noqa: E402  (same folder; draws exception edges, which py2cfg does not)
+
         drawable = {q: funcs[q] for q in roles if funcs[q]["node"] is not None}
         safe = {q: q.replace("::", "__").replace("/", "_").replace("<", "").replace(">", "") for q in drawable}
         failed = {}
@@ -333,6 +393,7 @@ def main():
                     subprocess.run(["dot", "-Tsvg", str(p_dot), "-o", str(p_dot.with_suffix(".svg"))], check=True)
                 else:
                     import graphviz
+
                     graphviz.Source(dot_src).render(p_dot.with_suffix(""), format="svg", cleanup=True)
             except Exception as ex:  # noqa: BLE001
                 failed[q] = f"CFG failed: {type(ex).__name__}"
@@ -340,38 +401,62 @@ def main():
             fh.write("function\tlocation\trole\tcfg_file\n")
             for q in sorted(roles, key=lambda q: (not roles[q].startswith("wrap"), q)):
                 f = funcs[q]
-                cfg_file = (failed[q] if q in failed else f"cfg/{safe[q]}.svg") if q in safe else "(module-level code: no CFG)"
+                cfg_file = (
+                    (failed[q] if q in failed else f"cfg/{safe[q]}.svg") if q in safe else "(module-level code: no CFG)"
+                )
                 cfg_files[q] = f"cfg/{safe[q]}.svg" if q in safe and q not in failed else (failed.get(q) or False)
                 fh.write(f"{q}\t{f['file']}:{f['line']}\t{roles[q]}\t{cfg_file}\n")
         if failed:
             print(f"CFG could not be drawn for {len(failed)} function(s): " + ", ".join(failed))
-        print(f"CFGs drawn: {len(drawable) - len(failed)} (wrap targets {sum(1 for r in roles.values() if r.startswith('wrap'))}, "
-              f"existing wrappers {sum(1 for r in roles.values() if 'existing' in r)}) -> cfg/, cfg_targets.tsv")
+        print(
+            f"CFGs drawn: {len(drawable) - len(failed)} (wrap targets {sum(1 for r in roles.values() if r.startswith('wrap'))}, "
+            f"existing wrappers {sum(1 for r in roles.values() if 'existing' in r)}) -> cfg/, cfg_targets.tsv"
+        )
 
     # interactive report: click a node -> CFG + verdict
     import report  # noqa: E402  (same folder)
+
     rep_nodes = {}
     for q in sorted(set(nodes) | set(roles)):
         f = funcs[q]
-        rep_nodes[q] = {"label": q.split("::")[1], "file": f["file"], "line": f["line"],
-                        "kind": "target" if q in targets else ("wrapper" if q in logged else "path"),
-                        "logged": q in logged, "covered": covered.get(q) if q in targets else None,
-                        "bypass": bypass.get(q, ""), "cfg": cfg_files.get(q),
-                        "sites": [{"line": s["line"], "rule": s["rule"], "pattern": s["pattern"], "detail": s["detail"]}
-                                  for s in sites if s["func"] == q]}
+        rep_nodes[q] = {
+            "label": q.split("::")[1],
+            "file": f["file"],
+            "line": f["line"],
+            "kind": "target" if q in targets else ("wrapper" if q in logged else "path"),
+            "logged": q in logged,
+            "covered": covered.get(q) if q in targets else None,
+            "bypass": bypass.get(q, ""),
+            "cfg": cfg_files.get(q),
+            "sites": [
+                {"line": s["line"], "rule": s["rule"], "pattern": s["pattern"], "detail": s["detail"]}
+                for s in sites
+                if s["func"] == q
+            ],
+        }
     nid_to_key = {v: k for k, v in ids.items()} | {f"s{k}": s["func"] for k, s in enumerate(sites)}
-    report.write(a.out_dir, f"Wrapper targets · {a.src_root.resolve().name}",
-                 {"sites": len(sites), "targets": len(targets), "entry": ", ".join(x.split("::")[1] for x in entries),
-                  "covered": sum(1 for t in targets if covered.get(t) is True),
-                  "not_covered": sum(1 for t in targets if covered.get(t) is False)},
-                 rep_nodes, nid_to_key)
+    report.write(
+        a.out_dir,
+        f"Wrapper targets · {a.src_root.resolve().name}",
+        {
+            "sites": len(sites),
+            "targets": len(targets),
+            "entry": ", ".join(x.split("::")[1] for x in entries),
+            "covered": sum(1 for t in targets if covered.get(t) is True),
+            "not_covered": sum(1 for t in targets if covered.get(t) is False),
+        },
+        rep_nodes,
+        nid_to_key,
+    )
 
     print(f"LLM calls: {len(sites)}   wrapper targets (functions): {len(targets)}")
     print(f"third-party libraries not covered by any rule (review unreviewed_imports.tsv): {len(unreviewed)}")
     if entries:
         miss = [t for t in targets if covered.get(t) is False]
-        print(f"targets reachable from entry: {len(covered)}   covered by an [LLM_*] log on every path: "
-              f"{sum(covered.values())}   NOT covered: {len(miss)}")
+        print(
+            f"targets reachable from entry: {len(covered)}   covered by an [LLM_*] log on every path: "
+            f"{sum(covered.values())}   NOT covered: {len(miss)}"
+        )
     if not drawn:
         print("Graphviz not found: open wrapper_targets.dot with any Graphviz viewer")
 

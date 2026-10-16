@@ -98,7 +98,9 @@ def write_ast(root: Path, only: list[str], funcs, classes, out: Path):
     for f in sources(root, only):
         dst = out / "ast_dump" / f.relative_to(root).with_suffix(".txt")
         dst.parent.mkdir(parents=True, exist_ok=True)
-        dst.write_text(ast.dump(ast.parse(f.read_text(encoding="utf-8")), indent=2, include_attributes=False), encoding="utf-8")
+        dst.write_text(
+            ast.dump(ast.parse(f.read_text(encoding="utf-8")), indent=2, include_attributes=False), encoding="utf-8"
+        )
 
 
 # ---------- 2. Call graph ----------
@@ -132,7 +134,12 @@ def edges(funcs, classes):
                         if sub != cls and cls in mro(sub, classes) and f"{sub}.{f.attr}" in funcs
                     ]
                     continue
-            if cls and isinstance(f, ast.Attribute) and isinstance(f.value, ast.Call) and ast.unparse(f.value) == "super()":
+            if (
+                cls
+                and isinstance(f, ast.Attribute)
+                and isinstance(f.value, ast.Call)
+                and ast.unparse(f.value) == "super()"
+            ):
                 tgt = next((t for b in mro(cls, classes)[1:] if (t := resolve(b, f.attr, classes))), None)
                 if tgt:
                     out.append((q, tgt, c.lineno, "super"))

@@ -16,29 +16,74 @@ import re
 #     Source: sdk_inventory (anthropic 1.13.0, openai 3.31.0, google-genai 2.30.1) + legacy names.
 SDK_CHAINS = {
     "anthropic": [
-        "messages.create", "messages.stream", "messages.parse", "messages.count_tokens",
-        "messages.batches.create", "messages.tool_runner",
-        "sessions.create", "sessions.events.send", "sessions.events.stream", "sessions.events.list",
-        "sessions.events.tool_runner", "sessions.threads.events.stream", "sessions.threads.events.list",
-        "deployments.run", "environments.work.poller", "environments.work.worker",
+        "messages.create",
+        "messages.stream",
+        "messages.parse",
+        "messages.count_tokens",
+        "messages.batches.create",
+        "messages.tool_runner",
+        "sessions.create",
+        "sessions.events.send",
+        "sessions.events.stream",
+        "sessions.events.list",
+        "sessions.events.tool_runner",
+        "sessions.threads.events.stream",
+        "sessions.threads.events.list",
+        "deployments.run",
+        "environments.work.poller",
+        "environments.work.worker",
         "completions.create",
     ],
     "google-genai": [
-        "models.generate_content", "models.generate_content_stream", "chats.create",
-        "send_message", "send_message_stream", "live.connect", "send_client_content",
-        "send_realtime_input", "send_tool_response", "interactions.create", "batches.create",
-        "generate_content", "start_chat",  # legacy google-generativeai / vertexai
+        "models.generate_content",
+        "models.generate_content_stream",
+        "chats.create",
+        "send_message",
+        "send_message_stream",
+        "live.connect",
+        "send_client_content",
+        "send_realtime_input",
+        "send_tool_response",
+        "interactions.create",
+        "batches.create",
+        "generate_content",
+        "start_chat",  # legacy google-generativeai / vertexai
     ],
     "openai": [
-        "responses.create", "responses.stream", "responses.parse", "responses.compact", "responses.connect",
-        "chat.completions.create", "chat.completions.parse", "chat.completions.stream", "completions.create",
-        "threads.create_and_run", "threads.create_and_run_poll", "threads.create_and_run_stream",
-        "runs.create", "runs.create_and_poll", "runs.create_and_stream", "runs.stream", "runs.poll",
-        "runs.submit_tool_outputs", "runs.submit_tool_outputs_and_poll", "runs.submit_tool_outputs_stream",
-        "realtime.connect", "realtime.calls.create", "realtime.calls.accept", "client_secrets.create",
-        "realtime.sessions.create", "live.connect", "agents.sessions.create", "agents.sessions.stream",
-        "sessions.events.create", "sessions.turns", "chatkit.sessions.create", "evals.runs.create",
-        "ChatCompletion.create", "Completion.create",  # v0
+        "responses.create",
+        "responses.stream",
+        "responses.parse",
+        "responses.compact",
+        "responses.connect",
+        "chat.completions.create",
+        "chat.completions.parse",
+        "chat.completions.stream",
+        "completions.create",
+        "threads.create_and_run",
+        "threads.create_and_run_poll",
+        "threads.create_and_run_stream",
+        "runs.create",
+        "runs.create_and_poll",
+        "runs.create_and_stream",
+        "runs.stream",
+        "runs.poll",
+        "runs.submit_tool_outputs",
+        "runs.submit_tool_outputs_and_poll",
+        "runs.submit_tool_outputs_stream",
+        "realtime.connect",
+        "realtime.calls.create",
+        "realtime.calls.accept",
+        "client_secrets.create",
+        "realtime.sessions.create",
+        "live.connect",
+        "agents.sessions.create",
+        "agents.sessions.stream",
+        "sessions.events.create",
+        "sessions.turns",
+        "chatkit.sessions.create",
+        "evals.runs.create",
+        "ChatCompletion.create",
+        "Completion.create",  # v0
     ],
 }
 IGNORED_SEGMENTS = {"with_raw_response", "with_streaming_response", "aio", "beta"}
@@ -56,7 +101,7 @@ LIB_RULES = {
     "boto3": ["invoke_model", "invoke_model_with_response_stream", "converse", "converse_stream"],
     "huggingface_hub": ["chat_completion", "text_generation"],
     "oci": ["chat", "generate_text"],  # Oracle Cloud Generative AI
-    "groq": ["create"],                # groq SDK is OpenAI-shaped; R1 usually catches it already
+    "groq": ["create"],  # groq SDK is OpenAI-shaped; R1 usually catches it already
     # local inference (no network, still an LLM call)
     "transformers": ["generate", "__call__"],
     "vllm": ["generate", "chat"],
@@ -116,7 +161,9 @@ def self_string_attrs(cls: ast.ClassDef | None) -> dict[str, str]:
             targets = n.targets if isinstance(n, ast.Assign) else [n.target]
             for t in targets:
                 if isinstance(t, ast.Attribute) and isinstance(t.value, ast.Name) and t.value.id == "self":
-                    s = " ".join(x.value for x in ast.walk(n.value) if isinstance(x, ast.Constant) and isinstance(x.value, str))
+                    s = " ".join(
+                        x.value for x in ast.walk(n.value) if isinstance(x, ast.Constant) and isinstance(x.value, str)
+                    )
                     if s:
                         out[t.attr] = s
     return out
@@ -143,14 +190,18 @@ def classify(call: ast.Call, imports: dict[str, str], cls_strings: dict[str, str
     if not ch:
         return None
     dotted = ".".join(ch)
-    hits = [(len(c.split(".")), sdk, c) for sdk, chains in SDK_CHAINS.items() for c in chains
-            if ch[-len(c.split(".")):] == c.split(".")]
+    hits = [
+        (len(c.split(".")), sdk, c)
+        for sdk, chains in SDK_CHAINS.items()
+        for c in chains
+        if ch[-len(c.split(".")) :] == c.split(".")
+    ]
     if hits and "R1" in RULES:
         best = max(h[0] for h in hits)
         top = sorted({(sdk, c) for n, sdk, c in hits if n == best})
         return ("R1-sdk", "/".join(sdk for sdk, _ in top) + ":" + top[0][1], dotted)
     root_lib = imports.get(ch[0])
-    for lib, names in (LIB_RULES.items() if "R2" in RULES else []):
+    for lib, names in LIB_RULES.items() if "R2" in RULES else []:
         if ch[-1] in names and (root_lib == lib or lib in imports.values()):
             if root_lib == lib or len(ch) > 1:
                 return ("R2-lib", f"{lib}:{ch[-1]}", dotted)

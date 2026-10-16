@@ -52,17 +52,28 @@ def main():
     p.add_argument("--mark", nargs="*", default=[])
     p.add_argument("--exclude", nargs="*", default=[])
     p.add_argument("--only", nargs="*", default=[], help="same as audit.py --only (files relative to colleague_root)")
-    p.add_argument("--through", nargs="*", default=[],
-                   help="limit the red marks to LLM calls made THROUGH these functions (the colleague's wrappers): "
-                        "entry -> wrapper -> LLM call. 'auto' = every function in the colleague's graph that logs "
-                        "[LLM_*] itself or through a pure log helper (e.g. smolagents' _log_llm_query)")
-    p.add_argument("--show-outside", action="store_true",
-                   help="also attach, outside the colleague's scope, the functions that make the LLM calls and the calls "
-                        "themselves (red dashed box). Default: off = only the colleague's own nodes and edges, coloured")
+    p.add_argument(
+        "--through",
+        nargs="*",
+        default=[],
+        help="limit the red marks to LLM calls made THROUGH these functions (the colleague's wrappers): "
+        "entry -> wrapper -> LLM call. 'auto' = every function in the colleague's graph that logs "
+        "[LLM_*] itself or through a pure log helper (e.g. smolagents' _log_llm_query)",
+    )
+    p.add_argument(
+        "--show-outside",
+        action="store_true",
+        help="also attach, outside the colleague's scope, the functions that make the LLM calls and the calls "
+        "themselves (red dashed box). Default: off = only the colleague's own nodes and edges, coloured",
+    )
     p.add_argument("--rules", default="R1,R2,R3")
-    p.add_argument("--max-links", type=int, default=1,
-                   help="red only when the LLM call is reached with at most this many same-name (guessed) links; "
-                        "weaker ones are light pink (default 1 = typical dynamic dispatch like self.model.query)")
+    p.add_argument(
+        "--max-links",
+        type=int,
+        default=1,
+        help="red only when the LLM call is reached with at most this many same-name (guessed) links; "
+        "weaker ones are light pink (default 1 = typical dynamic dispatch like self.model.query)",
+    )
     a = p.parse_args()
     llm_rules.RULES = set(a.rules.split(","))
     a.out_dir.mkdir(parents=True, exist_ok=True)
@@ -87,8 +98,10 @@ def main():
                 clash.setdefault(n.name, []).append(f.relative_to(a.pkg_root).as_posix())
     clash = {k: v for k, v in clash.items() if len(v) > 1 and any((a.pkg_root / x).resolve() in col_files for x in v)}
     if clash:
-        print("class-name clashes resolved in favour of the colleague's files: "
-              + "; ".join(f"{k} ({', '.join(v)})" for k, v in sorted(clash.items())))
+        print(
+            "class-name clashes resolved in favour of the colleague's files: "
+            + "; ".join(f"{k} ({', '.join(v)})" for k, v in sorted(clash.items()))
+        )
     files_p = audit.sources(a.pkg_root, rel_order)
     funcs_p, classes_p = audit.scan(a.pkg_root, rel_order)
     imports, cls_nodes = audit_rules.module_info(a.pkg_root, files_p)
@@ -118,9 +131,15 @@ def main():
         return sorted(seen & site_funcs)
 
     # [LLM_*] logs in the colleague's graph; a caller of a pure log helper counts as the wrapper
-    direct = {q for q, i in funcs_c.items()
-              if any(isinstance(x, ast.Constant) and isinstance(x.value, str) and LOG_TAG in x.value
-                     for c in i["calls"] for x in ast.walk(c))}
+    direct = {
+        q
+        for q, i in funcs_c.items()
+        if any(
+            isinstance(x, ast.Constant) and isinstance(x.value, str) and LOG_TAG in x.value
+            for c in i["calls"]
+            for x in ast.walk(c)
+        )
+    }
     helpers = {q for q in direct if to_pkg(q) not in reach}  # logs, but reaches no LLM call itself
     via_helper = {x for x, y, _, k in es_c if k != "external" and y in helpers}
     wrappers = (direct - helpers) | via_helper
@@ -147,10 +166,10 @@ def main():
         return seen
 
     if through:
-        down = closure(through, adj_c)    # wrappers and what they call (inside the colleague's graph)
-        up = closure(through, radj_c)     # who calls the wrappers
+        down = closure(through, adj_c)  # wrappers and what they call (inside the colleague's graph)
+        up = closure(through, radj_c)  # who calls the wrappers
         in_scope_sites = set()
-        for t in through:                 # LLM calls the wrappers can reach in the whole package
+        for t in through:  # LLM calls the wrappers can reach in the whole package
             in_scope_sites |= set(llm_funcs_from(to_pkg(t)))
         reach = audit_rules.reverse_closure(in_scope_sites, internal)
         site_funcs_scope = in_scope_sites
@@ -166,15 +185,21 @@ def main():
         if not on_path(q):
             continue
         if pq in site_funcs_scope:
-            why[q] = ("contains", ", ".join(f"L{s['line']} {s['rule']} {s['pattern']}" for s in sites if s["func"] == pq))
+            why[q] = (
+                "contains",
+                ", ".join(f"L{s['line']} {s['rule']} {s['pattern']}" for s in sites if s["func"] == pq),
+            )
         elif q in through or (through and q in up):
             why[q] = ("reaches", "the colleague's wrapper" if q in through else "calls the colleague's wrapper")
         elif pq in reach:
             fs = [f for f in llm_funcs_from(pq) if f in site_funcs_scope]
             strong = [f for f in fs if f in strong_sites]
-            why[q] = ("reaches" if reach[pq] <= a.max_links and strong else "weak",
-                      f"name-links={reach[pq]}; LLM calls: " + ", ".join(fs)
-                      + ("" if strong else " (only raw HTTP to an unknown host)"))
+            why[q] = (
+                "reaches" if reach[pq] <= a.max_links and strong else "weak",
+                f"name-links={reach[pq]}; LLM calls: "
+                + ", ".join(fs)
+                + ("" if strong else " (only raw HTTP to an unknown host)"),
+            )
     ext_reach = {}  # strong external node -> {LLM-calling function outside the scope: via which function}
     for caller, callee, line, kind in es_c:
         if kind != "external" or callee in why or caller not in down:
@@ -185,8 +210,10 @@ def main():
         if hit:
             d = 1 + min(reach[t] for t in hit)  # the bridge itself is one name-link
             llm = sorted({f for t in hit for f in llm_of(t)})
-            why[callee] = ("external" if d <= a.max_links else "weak-external",
-                           f"name-links={d}; from {caller} L{line} -> {', '.join(hit)}; LLM calls: {', '.join(llm)}")
+            why[callee] = (
+                "external" if d <= a.max_links else "weak-external",
+                f"name-links={d}; from {caller} L{line} -> {', '.join(hit)}; LLM calls: {', '.join(llm)}",
+            )
             if d <= a.max_links:
                 cls_of = lambda q: q.split("#")[-1].rsplit(".", 1)[0]  # noqa: E731
                 for f in llm:  # "via": the landing function of the same class first, then the closest one
@@ -202,11 +229,27 @@ def main():
                 attrs = {"shape": "plaintext", "fontcolor": "gray30", **attrs}
             w = why.get(n, (None,))[0]
             if w == "contains":
-                attrs.update({"style": "filled", "fillcolor": "#ffd6d6", "color": "#d00000", "penwidth": "3", "fontcolor": "#a00000"})
+                attrs.update(
+                    {
+                        "style": "filled",
+                        "fillcolor": "#ffd6d6",
+                        "color": "#d00000",
+                        "penwidth": "3",
+                        "fontcolor": "#a00000",
+                    }
+                )
             elif w == "reaches":
                 attrs.update({"color": "#d00000", "penwidth": "2.5", "fontcolor": "#a00000"})
             elif w == "external":
-                attrs.update({"shape": "ellipse", "peripheries": "2", "color": "#d00000", "penwidth": "2", "fontcolor": "#a00000"})
+                attrs.update(
+                    {
+                        "shape": "ellipse",
+                        "peripheries": "2",
+                        "color": "#d00000",
+                        "penwidth": "2",
+                        "fontcolor": "#a00000",
+                    }
+                )
             elif w in ("weak", "weak-external"):
                 attrs.update({"color": "#f0a0a0", "style": "dashed"})
             if n in logged:
@@ -216,15 +259,23 @@ def main():
             label = f"{n}\n{funcs_c[n]['file']}:{funcs_c[n]['node'].lineno}" if n in funcs_c else n
             g.node(i, label=label.replace("\\", "\\\\"), **attrs)
         for x, y, line, kind in sorted(set(es)):
-            red = why.get(y, (None,))[0] in ("contains", "reaches", "external") and why.get(x, (None,))[0] in ("contains", "reaches")
+            red = why.get(y, (None,))[0] in ("contains", "reaches", "external") and why.get(x, (None,))[0] in (
+                "contains",
+                "reaches",
+            )
             extra = {"color": "#d00000", "penwidth": "1.6"} if red else {}
             g.edge(ids[x], ids[y], label=f"L{line}", fontsize="8", **{**audit.STYLE[kind], **extra})
         # outside the colleague's scope: the functions that make the LLM calls, hung off the red external node
         shown = {e: r for e, r in ext_reach.items() if e in ids} if a.show_outside else {}
         if shown:
             with g.subgraph(name="cluster_outside") as c:
-                c.attr(label=f"outside the colleague's scope ({a.colleague_root.name}/): where the LLM calls are",
-                       fontsize="10", color="#d00000", style="dashed", fontcolor="#a00000")
+                c.attr(
+                    label=f"outside the colleague's scope ({a.colleague_root.name}/): where the LLM calls are",
+                    fontsize="10",
+                    color="#d00000",
+                    style="dashed",
+                    fontcolor="#a00000",
+                )
                 done, xid = set(), {}
                 for e, fs in shown.items():
                     for f, via in sorted(fs.items()):
@@ -234,18 +285,47 @@ def main():
                             info = funcs_p.get(f, {})
                             ln = info["node"].lineno if info.get("node") is not None else 1
                             if f in strong_sites:
-                                c.node(fid, label=f"LLM CALL INSIDE\n{f}\n{info.get('file', '')}:{ln}",
-                                       style="filled", fillcolor="#ffd6d6", color="#d00000", penwidth="3", fontcolor="#a00000")
+                                c.node(
+                                    fid,
+                                    label=f"LLM CALL INSIDE\n{f}\n{info.get('file', '')}:{ln}",
+                                    style="filled",
+                                    fillcolor="#ffd6d6",
+                                    color="#d00000",
+                                    penwidth="3",
+                                    fontcolor="#a00000",
+                                )
                             else:  # raw HTTP to a host we could not resolve: may or may not be an LLM API
-                                c.node(fid, label=f"HTTP, HOST UNKNOWN\n{f}\n{info.get('file', '')}:{ln}",
-                                       style="filled,dashed", fillcolor="#fff0f0", color="#e08080", penwidth="2", fontcolor="#a05050")
+                                c.node(
+                                    fid,
+                                    label=f"HTTP, HOST UNKNOWN\n{f}\n{info.get('file', '')}:{ln}",
+                                    style="filled,dashed",
+                                    fillcolor="#fff0f0",
+                                    color="#e08080",
+                                    penwidth="2",
+                                    fontcolor="#a05050",
+                                )
                             for k, st in enumerate(x for x in sites if x["func"] == f):
                                 sid = f"{fid}_{k}"
-                                c.node(sid, label=f"{st['rule']}  L{st['line']}\n{st['pattern']}", shape="ellipse",
-                                       peripheries="2", color="#d00000", penwidth="2", fontcolor="#a00000", fontsize="9")
+                                c.node(
+                                    sid,
+                                    label=f"{st['rule']}  L{st['line']}\n{st['pattern']}",
+                                    shape="ellipse",
+                                    peripheries="2",
+                                    color="#d00000",
+                                    penwidth="2",
+                                    fontcolor="#a00000",
+                                    fontsize="9",
+                                )
                                 c.edge(fid, sid, color="#d00000", penwidth="1.6")
-                        g.edge(ids[e], fid, style="dotted", color="#d00000", fontcolor="#a00000", fontsize="8",
-                               label="" if via == f else f"via {via}")
+                        g.edge(
+                            ids[e],
+                            fid,
+                            style="dotted",
+                            color="#d00000",
+                            fontcolor="#a00000",
+                            fontsize="8",
+                            label="" if via == f else f"via {via}",
+                        )
         g.render(a.out_dir / name, format="svg", cleanup=True)
         g.render(a.out_dir / name, format="png", cleanup=True)
 
@@ -259,12 +339,18 @@ def main():
         order = {"contains": 0, "external": 1, "reaches": 2, "weak-external": 3, "weak": 4}
         for n, (w, d) in sorted(why.items(), key=lambda kv: (order[kv[1][0]], kv[0])):
             fh.write(f"{n}\t{w}\t{d}\t{'yes' if n in logged else 'no'}\n")
-    print(f"colleague graph: {len(funcs_c)} functions | red: contains={sum(1 for v in why.values() if v[0] == 'contains')} "
-          f"reaches={sum(1 for v in why.values() if v[0] == 'reaches')} external->LLM={sum(1 for v in why.values() if v[0] == 'external')} "
-          f"| light pink (only via {a.max_links + 1}+ guessed links): {sum(1 for v in why.values() if v[0].startswith('weak'))} "
-          f"| green ([LLM_*] log): {len(logged)} | LLM-calling functions outside the scope: "
-          f"{len({f for r in ext_reach.values() for f in r})}"
-          + (" (attached: --show-outside)" if a.show_outside else " (listed in marked_nodes.tsv; --show-outside draws them)"))
+    print(
+        f"colleague graph: {len(funcs_c)} functions | red: contains={sum(1 for v in why.values() if v[0] == 'contains')} "
+        f"reaches={sum(1 for v in why.values() if v[0] == 'reaches')} external->LLM={sum(1 for v in why.values() if v[0] == 'external')} "
+        f"| light pink (only via {a.max_links + 1}+ guessed links): {sum(1 for v in why.values() if v[0].startswith('weak'))} "
+        f"| green ([LLM_*] log): {len(logged)} | LLM-calling functions outside the scope: "
+        f"{len({f for r in ext_reach.values() for f in r})}"
+        + (
+            " (attached: --show-outside)"
+            if a.show_outside
+            else " (listed in marked_nodes.tsv; --show-outside draws them)"
+        )
+    )
 
 
 if __name__ == "__main__":
