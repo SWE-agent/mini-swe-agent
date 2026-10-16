@@ -1,10 +1,80 @@
+import copy
+
 import pytest
 
+from minisweagent.models import get_model
 from minisweagent.models.utils.openai_multimodal import (
     DEFAULT_MULTIMODAL_REGEX,
     _expand_content_string,
     expand_multimodal_content,
 )
+
+
+@pytest.mark.parametrize(
+    ("model_class", "cache_enabled"),
+    [
+        (model_class, cache_enabled)
+        for model_class in ["litellm", "litellm_textbased", "openrouter", "openrouter_textbased"]
+        for cache_enabled in [True, False]
+    ],
+)
+def test_prepare_multimodal_messages_with_cache_control(model_class, cache_enabled):
+    config = {"model_class": model_class, "multimodal_regex": DEFAULT_MULTIMODAL_REGEX}
+    if not cache_enabled:
+        config["set_cache_control"] = None
+    model = get_model("anthropic/claude-sonnet-4-5", config=config)
+    messages = [
+        model.format_message(
+            role="user",
+            content="Before <MSWEA_MULTIMODAL_CONTENT><CONTENT_TYPE>image_url</CONTENT_TYPE>https://example.com/image.png</MSWEA_MULTIMODAL_CONTENT> after",
+            extra={"timestamp": 1},
+        )
+    ]
+    original = copy.deepcopy(messages)
+    expected = [{"role": "user", "content": copy.deepcopy(messages[0]["content"])}]
+    assert [block["type"] for block in expected[0]["content"]] == ["text", "image_url", "text"]
+    if cache_enabled:
+        expected[0]["content"][-1]["cache_control"] = {"type": "ephemeral"}
+
+    assert model._prepare_messages_for_api(messages) == expected
+    assert messages == original
+    expected.append({"role": "user", "content": "Next turn"})
+    if cache_enabled:
+        expected[0]["content"][-1].pop("cache_control")
+        expected[-1]["content"] = [{"type": "text", "text": "Next turn", "cache_control": {"type": "ephemeral"}}]
+    assert model._prepare_messages_for_api([*messages, {"role": "user", "content": "Next turn"}]) == expected
+
+
+@pytest.mark.parametrize(
+    ("model_class", "cache_mode"),
+    [("litellm", "default_end"), ("litellm", None), ("openrouter", "default_end"), ("openrouter", None)],
+)
+def test_prepare_thinking_messages_with_cache_control(model_class, cache_mode):
+    model = get_model(
+        "anthropic/claude-sonnet-4-5", config={"model_class": model_class, "set_cache_control": cache_mode}
+    )
+    messages = [
+        {
+            "role": "assistant",
+            "content": [
+                {"type": "text", "text": "Answer"},
+                {"type": "thinking", "thinking": "Reasoning", "signature": "signature"},
+                {"type": "redacted_thinking", "data": "redacted"},
+            ],
+            "extra": {"timestamp": 1},
+        }
+    ]
+    original = copy.deepcopy(messages)
+    expected_text = {"type": "text", "text": "Answer"}
+    if cache_mode:
+        expected_text["cache_control"] = {"type": "ephemeral"}
+    assert model._prepare_messages_for_api(messages) == [
+        {
+            "role": "assistant",
+            "content": [*messages[0]["content"][1:], expected_text],
+        }
+    ]
+    assert messages == original
 
 
 @pytest.mark.parametrize(
