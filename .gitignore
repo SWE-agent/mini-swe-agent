@@ -186,3 +186,6 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
+
+# Agent dashboard run traces and workspaces
+examples/agent_dashboard/runs/

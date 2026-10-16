@@ -1,0 +1,85 @@
+Module(
+  body=[
+    ImportFrom(
+      module='prompt_toolkit.formatted_text.html',
+      names=[
+        alias(name='HTML')],
+      level=0),
+    ImportFrom(
+      module='prompt_toolkit.history',
+      names=[
+        alias(name='FileHistory')],
+      level=0),
+    ImportFrom(
+      module='prompt_toolkit.shortcuts',
+      names=[
+        alias(name='PromptSession')],
+      level=0),
+    ImportFrom(
+      module='minisweagent',
+      names=[
+        alias(name='global_config_dir')],
+      level=0),
+    Assign(
+      targets=[
+        Name(id='_history', ctx=Store())],
+      value=Call(
+        func=Name(id='FileHistory', ctx=Load()),
+        args=[
+          BinOp(
+            left=Name(id='global_config_dir', ctx=Load()),
+            op=Div(),
+            right=Constant(value='interactive_history.txt'))],
+        keywords=[])),
+    Assign(
+      targets=[
+        Name(id='prompt_session', ctx=Store())],
+      value=Call(
+        func=Name(id='PromptSession', ctx=Load()),
+        args=[],
+        keywords=[
+          keyword(
+            arg='history',
+            value=Name(id='_history', ctx=Load()))])),
+    Assign(
+      targets=[
+        Name(id='_multiline_prompt_session', ctx=Store())],
+      value=Call(
+        func=Name(id='PromptSession', ctx=Load()),
+        args=[],
+        keywords=[
+          keyword(
+            arg='history',
+            value=Name(id='_history', ctx=Load())),
+          keyword(
+            arg='multiline',
+            value=Constant(value=True))])),
+    FunctionDef(
+      name='_multiline_prompt',
+      args=arguments(
+        posonlyargs=[],
+        args=[],
+        kwonlyargs=[],
+        kw_defaults=[],
+        defaults=[]),
+      body=[
+        Return(
+          value=Call(
+            func=Attribute(
+              value=Name(id='_multiline_prompt_session', ctx=Load()),
+              attr='prompt',
+              ctx=Load()),
+            args=[
+              Constant(value='')],
+            keywords=[
+              keyword(
+                arg='bottom_toolbar',
+                value=Call(
+                  func=Name(id='HTML', ctx=Load()),
+                  args=[
+                    Constant(value="Submit message: <b fg='yellow' bg='black'>Esc, then Enter</b> | Navigate history: <b fg='yellow' bg='black'>Arrow Up/Down</b> | Search history: <b fg='yellow' bg='black'>Ctrl+R</b>")],
+                  keywords=[]))]))],
+      decorator_list=[],
+      returns=Name(id='str', ctx=Load()),
+      type_params=[])],
+  type_ignores=[])

@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Observatory</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#020617;--panel:#0b1222;--panel-2:#0f172a;--line:#1e293b;--line-2:#27354d;
+  --text:#e2e8f0;--muted:#8a9ab3;--faint:#55657e;
+  --llm:#5ad1e6;--llm-bg:rgba(90,209,230,.08);
+  --tool:#f5c35b;--tool-bg:rgba(245,195,91,.08);
+  --plan:#a78bfa;
+  --ok:#4ade80;--err:#fb7185;--err-bg:rgba(251,113,133,.09);
+  --accent:#38bdf8;--accent-ink:#04121c;
+  --mono:"SFMono-Regular",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  color-scheme:light;
+  --bg:#f8fafc;--panel:#ffffff;--panel-2:#f1f5f9;--line:#e2e8f0;--line-2:#cbd5e1;
+  --text:#0f172a;--muted:#55657e;--faint:#94a3b8;
+  --llm:#0e7490;--llm-bg:rgba(14,116,144,.07);
+  --tool:#a16207;--tool-bg:rgba(161,98,7,.07);
+  --plan:#6d28d9;
+  --ok:#15803d;--err:#be123c;--err-bg:rgba(190,18,60,.06);
+  --accent:#0284c7;--accent-ink:#ffffff;
+}}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}
+header{height:56px;display:flex;align-items:center;gap:16px;padding:0 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+h1{font-size:15px;margin:0;font-weight:650;letter-spacing:.01em;white-space:nowrap}
+.pill{font:600 11px/1 var(--mono);padding:5px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pill.running{color:var(--accent);border-color:var(--accent)}
+.pill.finished{color:var(--ok);border-color:var(--ok)}
+.pill.failed{color:var(--err);border-color:var(--err)}
+.stats{display:flex;gap:14px;margin-left:auto;color:var(--muted);font:12px var(--mono);white-space:nowrap}
+.stats b{color:var(--text);font-weight:600}
+.layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);height:calc(100vh - 56px)}
+section{min-width:0;min-height:0;display:flex;flex-direction:column}
+.diagram{border-right:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--muted)}
+.bar strong{color:var(--text);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:650}
+iframe{flex:1;width:100%;border:0;background:var(--bg)}
+form{display:grid;grid-template-columns:1fr 64px minmax(0,170px) auto;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+input,select,button{font:inherit;color:var(--text);background:var(--panel-2);border:1px solid var(--line-2);border-radius:7px;padding:8px 10px;min-width:0}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+button{cursor:pointer;white-space:nowrap}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:650}
+button:disabled{opacity:.45;cursor:not-allowed}
+.notice{margin:0;padding:9px 14px;font-size:12px;color:var(--err);background:var(--err-bg);border-bottom:1px solid var(--line)}
+.notice[hidden]{display:none}
+.tabs{display:flex;gap:2px;margin-right:auto}
+.tabs button{border:0;background:none;padding:6px 10px;color:var(--muted);border-radius:6px;font-size:12px}
+.tabs button[aria-selected="true"]{background:var(--panel-2);color:var(--text)}
+.ghost{background:none;font-size:12px;padding:5px 9px}
+.scroll{flex:1;overflow:auto;padding:14px}
+.empty{color:var(--muted);padding:28px 6px;text-align:center}
+.task{font-size:13px;color:var(--muted);margin:0 0 12px;padding:10px 12px;border:1px dashed var(--line-2);border-radius:8px}
+.task b{color:var(--text);font-weight:600}
+.step{border:1px solid var(--line);border-radius:10px;background:var(--panel);margin-bottom:12px;overflow:hidden}
+.step.err{border-color:color-mix(in srgb,var(--err) 45%,var(--line))}
+.step-head{display:flex;align-items:baseline;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+.step-head .n{font:650 12px var(--mono)}
+.step-head .url{flex:1;min-width:0;color:var(--muted);font:12px var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.step-head .dur{color:var(--faint);font:12px var(--mono)}
+.badge{font:600 10.5px/1 var(--mono);padding:3px 6px;border-radius:5px;border:1px solid var(--ok);color:var(--ok);text-transform:uppercase;letter-spacing:.05em}
+.goal{padding:8px 12px 0;font-size:12.5px;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
+.goal b{color:var(--text);font-weight:600}
+.goal.plan b{color:var(--plan)}
+.row{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:start;margin:8px 12px;padding:8px 10px;border-radius:7px}
+.row.llm{background:var(--llm-bg)}
+.row.tool{background:var(--tool-bg)}
+.row.error{background:var(--err-bg)}
+.tag{font:700 10.5px/20px var(--mono);letter-spacing:.06em}
+.row.llm .tag{color:var(--llm)}
+.row.tool .tag{color:var(--tool)}
+.row.error .tag{color:var(--err)}
+.main{min-width:0}
+.title{font:600 12.5px var(--mono);overflow-wrap:anywhere}
+.detail{margin-top:3px;font:12px/1.55 var(--mono);color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
+.detail.err{color:var(--err)}
+details.detail summary{cursor:pointer;color:var(--faint)}
+pre.code{margin:6px 0 0;padding:8px 10px;border-radius:6px;background:var(--panel-2);border:1px solid var(--line);font:12px/1.55 var(--mono);color:var(--text);white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto}
+.meta{font:12px var(--mono);color:var(--faint);white-space:nowrap;text-align:right}
+.status{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:6px;background:var(--faint);vertical-align:1px}
+.status.ok{background:var(--ok)}.status.err{background:var(--err)}.status.pending{background:var(--accent);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.final{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel);font-size:13px}
+.final.ok{border-color:color-mix(in srgb,var(--ok) 50%,var(--line))}
+.final.err{border-color:color-mix(in srgb,var(--err) 50%,var(--line))}
+.final.warn{border-color:color-mix(in srgb,var(--tool) 50%,var(--line))}
+.final .why{display:block;margin-top:2px;font-size:12px;color:var(--muted)}
+.final pre{margin:6px 0 0;white-space:pre-wrap;font:12px/1.55 var(--mono);color:var(--muted)}
+.log{display:grid;grid-template-columns:70px 56px 1fr;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);font:12px/1.55 var(--mono)}
+.log .t{color:var(--faint)}.log .k{font-weight:700;color:var(--muted)}
+.log .k.llm{color:var(--llm)}.log .k.tool{color:var(--tool)}.log.error .m{color:var(--err)}
+.log .m{white-space:pre-wrap;overflow-wrap:anywhere}
+@media (max-width:980px){
+  header{height:auto;flex-wrap:wrap;padding:10px 16px;gap:8px 12px}
+  .stats{margin-left:0;flex-wrap:wrap}
+  .layout{grid-template-columns:1fr;height:auto}
+  .diagram{border-right:0;border-bottom:1px solid var(--line)}
+  iframe{height:60vh;flex:none}
+  .runtime{min-height:80vh}
+  form{grid-template-columns:72px 1fr;padding:12px 16px}
+  form #task,form #model,form button{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>mini-swe-agent · Agent Observatory</h1>
+  <span id="status" class="pill">idle</span>
+  <div class="stats">
+    <span>steps <b id="s-steps">0</b></span>
+    <span>LLM <b id="s-llm">0</b></span>
+    <span>tools <b id="s-tools">0</b></span>
+    <span>cost <b id="s-cost">$0.000</b></span>
+    <span>errors <b id="s-errors">0</b></span>
+  </div>
+</header>
+<main class="layout">
+  <section class="diagram">
+    <div class="bar"><strong>Architecture</strong><span>Archify · agent loop & call boundaries</span></div>
+    <iframe src="/architecture" title="mini-swe-agent architecture"></iframe>
+  </section>
+  <section class="runtime">
+    <form id="run-form">
+      <input id="task" aria-label="Task" value="fib.py를 만들어서 처음 10개의 피보나치 수를 출력하게 하고, 실행해서 결과를 제출해줘">
+      <input id="steps" aria-label="Max steps" type="number" min="1" max="100" value="15">
+      <input id="model" aria-label="Model" value="claude-sonnet-5">
+      <button id="run" class="primary" type="submit">Run</button>
+    </form>
+    <p id="notice" class="notice" hidden></p>
+    <div class="bar">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-view="timeline">Call history</button>
+        <button role="tab" aria-selected="false" data-view="raw">Raw log</button>
+      </div>
+      <a id="export" href="/api/runs/current/trace.json" download><button class="ghost" type="button" tabindex="-1">Export JSON</button></a>
+    </div>
+    <div id="timeline" class="scroll"><div class="empty">Run을 누르면 step마다 LLM 호출과 tool 실행 이력이 여기에 쌓입니다.</div></div>
+    <div id="raw" class="scroll" hidden></div>
+  </section>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const timelineEl = $('#timeline'), rawEl = $('#raw'), runBtn = $('#run'), notice = $('#notice');
+const EMPTY = 'Run을 누르면 step마다 LLM 호출과 tool 실행 이력이 여기에 쌓입니다.';
+let state = null;
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+const fmtDur = s => s == null ? '' : s < 1 ? `${Math.round(s * 1000)}ms` : `${s.toFixed(2)}s`;
+const fmtTime = iso => new Date(iso).toLocaleTimeString('ko-KR', {hour12: false});
+const short = (v, n = 220) => { const s = typeof v === 'string' ? v : JSON.stringify(v); return s.length > n ? s.slice(0, n) + '…' : s; };
+
+function resetState(run) {
+  state = {runId: run?.id ?? null, task: run?.task ?? null, seen: new Set(), steps: new Map(), order: [], final: null,
+           counts: {llm: 0, tool: 0, errors: 0, cost: 0}, raw: []};
+  setStatus(run?.status ?? 'idle');
+  render();
+}
+
+function stepOf(n) {
+  const key = n ?? 0;
+  if (!state.steps.has(key)) {
+    state.steps.set(key, {n: key, llm: [], tools: [], thought: null, observations: [], interrupts: [], exit: null});
+    state.order.push(key);
+  }
+  return state.steps.get(key);
+}
+
+function apply(ev) {
+  if (ev.run_id !== state.runId) resetState({id: ev.run_id});
+  if (state.seen.has(ev.seq)) return;
+  state.seen.add(ev.seq);
+  state.raw.push(ev);
+  const d = ev.data || {};
+  switch (ev.kind) {
+    case 'run':
+      if (d.task) state.task = d.task;
+      if (/^Run (finished|failed)/.test(ev.message)) {
+        state.final = {tone: ev.level === 'ERROR' ? 'err' : d.success === true ? 'ok' : 'warn', exitStatus: d.exit_status, message: ev.message, result: d.final_result};
+        setStatus(ev.level === 'ERROR' ? 'failed' : 'finished');
+      } else setStatus('running');
+      break;
+    case 'llm_query':
+      state.counts.llm++;
+      stepOf(ev.step).llm.push({query: ev, response: null, error: null});
+      break;
+    case 'llm_response': case 'llm_error': {
+      const call = stepOf(ev.step).llm.findLast(c => !c.response && !c.error);
+      if (call) call[ev.kind === 'llm_error' ? 'error' : 'response'] = ev;
+      if (ev.kind === 'llm_error') state.counts.errors++;
+      state.counts.cost += d.cost || 0;
+      break;
+    }
+    case 'tool_start':
+      state.counts.tool++;
+      stepOf(ev.step).tools.push({start: ev, end: null});
+      break;
+    case 'tool_end': case 'tool_error': {
+      const t = stepOf(ev.step).tools.findLast(x => !x.end && x.start.data.action === d.action);
+      if (t) t.end = ev;
+      if (ev.kind === 'tool_error' && d.error_type !== 'Submitted') state.counts.errors++;
+      break;
+    }
+    case 'step': {
+      const s = stepOf(ev.step);
+      if (d.type === 'thought') s.thought = d.content;
+      else if (d.type === 'observation') s.observations.push(d.content);
+      else if (d.type === 'interrupt') s.interrupts.push(d);
+      else if (d.type === 'exit') s.exit = d;
+      break;
+    }
+  }
+  scheduleRender();
+}
+
+let pending = false;
+function scheduleRender() { if (!pending) { pending = true; requestAnimationFrame(() => { pending = false; render(); }); } }
+
+function setStatus(s) { const p = $('#status'); p.textContent = s; p.className = `pill ${s}`; runBtn.disabled = s === 'running'; }
+
+function render() {
+  $('#s-steps').textContent = state.order.filter(k => k > 0).length;
+  $('#s-llm').textContent = state.counts.llm;
+  $('#s-tools').textContent = state.counts.tool;
+  $('#s-cost').textContent = `$${state.counts.cost.toFixed(3)}`;
+  $('#s-errors').textContent = state.counts.errors;
+  const stick = timelineEl.scrollHeight - timelineEl.scrollTop - timelineEl.clientHeight < 40;
+  timelineEl.replaceChildren();
+  if (!state.runId) timelineEl.append(el('div', 'empty', EMPTY));
+  else {
+    if (state.task) { const t = el('p', 'task'); t.append(el('b', null, 'Task '), state.task); timelineEl.append(t); }
+    for (const key of state.order) timelineEl.append(renderStep(state.steps.get(key)));
+    if (state.final) {
+      const f = el('div', `final ${state.final.tone}`, state.final.message);
+      if (state.final.exitStatus === 'LimitsExceeded') f.append(el('span', 'why', 'step 제한(또는 비용 제한)에 도달해서 제출하지 못하고 끝났습니다.'));
+      else if (state.final.tone === 'warn') f.append(el('span', 'why', '작업을 제출하지 못하고 끝났습니다.'));
+      if (state.final.result) f.append(el('pre', null, state.final.result));
+      timelineEl.append(f);
+    }
+  }
+  if (stick) timelineEl.scrollTop = timelineEl.scrollHeight;
+  renderRaw();
+}
+
+function llmRow(c) {
+  const d = c.response?.data, r = el('div', `row ${c.error ? 'error' : 'llm'}`), main = el('div', 'main');
+  main.append(el('div', 'title', c.query.message));
+  for (const command of d?.commands || []) main.append(el('pre', 'code', command));
+  if (d && !d.commands.length) main.append(el('div', 'detail', '→ no action'));
+  if (c.error) main.append(el('div', 'detail err', c.error.message));
+  const cost = d && d.cost ? `$${d.cost.toFixed(4)} · ` : '';
+  const meta = el('div', 'meta', d ? cost + fmtDur(d.duration_seconds) : c.error ? fmtDur(c.error.data.duration_seconds) : '');
+  meta.append(el('span', `status ${c.response ? 'ok' : c.error || state.final ? 'err' : 'pending'}`));
+  r.append(el('span', 'tag', 'LLM'), main, meta);
+  return r;
+}
+
+function toolRow(t) {
+  const end = t.end?.data, submitted = end?.error_type === 'Submitted';
+  const failed = (t.end?.kind === 'tool_error' && !submitted) || (end?.returncode != null && end.returncode !== 0);
+  const r = el('div', `row ${failed ? 'error' : 'tool'}`), main = el('div', 'main');
+  main.append(el('div', 'title', t.start.data.action), el('pre', 'code', t.start.data.command));
+  if (submitted) main.append(el('div', 'detail', '→ submitted (COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT)'));
+  else if (t.end?.kind === 'tool_error') main.append(el('div', 'detail err', end.error_type));
+  else if (end) main.append(el('div', `detail${failed ? ' err' : ''}`, `→ exit ${end.returncode}`));
+  const meta = el('div', 'meta', end ? fmtDur(end.duration_seconds) : '');
+  meta.append(el('span', `status ${failed ? 'err' : t.end ? 'ok' : state.final ? 'err' : 'pending'}`));
+  r.append(el('span', 'tag', 'TOOL'), main, meta);
+  return r;
+}
+
+function renderStep(s) {
+  const failed = s.llm.some(c => c.error) || s.interrupts.length > 0;
+  const box = el('div', `step${failed ? ' err' : ''}`);
+  const head = el('div', 'step-head');
+  head.append(el('span', 'n', s.n === 0 ? 'Before step 1' : `Step ${s.n}`), el('span', 'url', ''));
+  if (s.exit?.exit_status === 'Submitted') head.append(el('span', 'badge', 'submitted'));
+  box.append(head);
+  if (s.thought) { const g = el('div', 'goal'); g.append(el('b', null, 'Thought · '), short(s.thought, 500)); box.append(g); }
+  for (const c of s.llm) box.append(llmRow(c));
+  for (const t of s.tools) box.append(toolRow(t));
+  for (const i of s.interrupts) {
+    const r = el('div', 'row error'), main = el('div', 'main');
+    main.append(el('div', 'title', i.interrupt_type), el('div', 'detail err', short(i.content, 800)));
+    r.append(el('span', 'tag', 'STEP'), main, el('div', 'meta'));
+    box.append(r);
+  }
+  if (s.exit && s.exit.exit_status !== 'Submitted') {
+    const r = el('div', 'row error'), main = el('div', 'main');
+    main.append(el('div', 'title', `Exit: ${s.exit.exit_status}`));
+    r.append(el('span', 'tag', 'EXIT'), main, el('div', 'meta'));
+    box.append(r);
+  }
+  for (const o of s.observations) {
+    const obs = el('details', 'detail'); obs.style.margin = '0 12px 10px';
+    obs.append(el('summary', null, 'Observation'), el('div', null, short(o, 1500)));
+    box.append(obs);
+  }
+  return box;
+}
+
+function renderRaw() {
+  if (rawEl.hidden) return;
+  rawEl.replaceChildren(...state.raw.map(ev => {
+    const kind = ev.kind.startsWith('llm') ? 'llm' : ev.kind.startsWith('tool') ? 'tool' : ev.kind;
+    const row = el('div', `log${ev.level === 'ERROR' ? ' error' : ''}`);
+    const body = `${ev.kind}${ev.step != null ? ` step=${ev.step}` : ''} ${ev.message}${Object.keys(ev.data || {}).length ? '\n' + JSON.stringify(ev.data) : ''}`;
+    row.append(el('span', 't', fmtTime(ev.timestamp)), el('span', `k ${kind}`, kind.toUpperCase()), el('span', 'm', body));
+    return row;
+  }));
+}
+
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  timelineEl.hidden = b.dataset.view !== 'timeline';
+  rawEl.hidden = b.dataset.view !== 'raw';
+  render();
+}));
+
+function showNotice(msg) { notice.textContent = msg; notice.hidden = !msg; }
+
+$('#run-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  runBtn.disabled = true;
+  showNotice('');
+  const res = await fetch('/api/run', {method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({task: $('#task').value, max_steps: Number($('#steps').value), model: $('#model').value})});
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) { showNotice(typeof body.detail === 'string' ? body.detail : 'Failed to start run'); runBtn.disabled = false; return; }
+  resetState({id: body.run_id, status: 'running'});
+});
+
+fetch('/api/status').then(r => r.json()).then(s => {
+  if (s.missing_api_key) showNotice(`${s.missing_api_key}가 없습니다. 저장소 루트 .env에 키를 넣고 서버를 다시 시작하세요.`);
+});
+
+resetState(null);
+const stream = new EventSource('/api/events');
+stream.addEventListener('snapshot', e => { const run = JSON.parse(e.data); if (run && run.id !== state.runId) resetState(run); });
+stream.onmessage = e => apply(JSON.parse(e.data));
+stream.onerror = () => showNotice('이벤트 스트림이 끊겼습니다. 재연결 중…');
+stream.onopen = () => { if (notice.textContent.startsWith('이벤트')) showNotice(''); };
+</script>
+</body>
+</html>

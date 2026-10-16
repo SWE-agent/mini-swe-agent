@@ -146,15 +146,53 @@ class DefaultAgent:
                 }
             )
         self.n_calls += 1
-        message = self.model.query(self.messages)
+        self.logger.debug(
+            "[LLM_QUERY] step=%s model=%s messages=%s",
+            self.n_calls,
+            getattr(self.model.config, "model_name", None),
+            len(self.messages),
+        )
+        try:
+            message = self.model.query(self.messages)
+        except Exception as e:
+            self.logger.debug("[LLM_ERROR] step=%s error_type=%s", self.n_calls, type(e).__name__)
+            raise
         self.cost += message.get("extra", {}).get("cost", 0.0)
+        self.logger.debug(
+            "[LLM_RESPONSE] step=%s actions=%s cost=%s",
+            self.n_calls,
+            message.get("extra", {}).get("actions", []),
+            message.get("extra", {}).get("cost", 0.0),
+        )
         self.add_messages(message)
         return message
 
     def execute_actions(self, message: dict) -> list[dict]:
         """Execute actions in message, add observation messages, return them."""
-        outputs = [self.env.execute(action) for action in message.get("extra", {}).get("actions", [])]
+        outputs = [self.execute_action(action) for action in message.get("extra", {}).get("actions", [])]
         return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))
+
+    def execute_action(self, action: dict) -> dict:
+        """Execute a single action in the environment. Every agent runs its actions through here."""
+        self.logger.debug("[TOOL_EXECUTION_START] action=%s params=%s", "bash", action)
+        start_time = time.time()
+        try:
+            output = self.env.execute(action)
+        except Exception as e:
+            self.logger.debug(
+                "[TOOL_EXECUTION_ERROR] action=%s error_type=%s duration_seconds=%.3f",
+                "bash",
+                type(e).__name__,
+                time.time() - start_time,
+            )
+            raise
+        self.logger.debug(
+            "[TOOL_EXECUTION_END] action=%s returncode=%s duration_seconds=%.3f",
+            "bash",
+            output.get("returncode"),
+            time.time() - start_time,
+        )
+        return output
 
     def serialize(self, *extra_dicts) -> dict:
         """Serialize agent state to a json-compatible nested dictionary for saving."""
