@@ -16,6 +16,7 @@ from minisweagent.models.test_models import (
     make_response_api_output,
     make_toolcall_output,
 )
+from minisweagent.models.utils.actions_toolcall_response import parse_toolcall_actions_response
 
 
 def test_basic_functionality_and_cost_tracking(reset_global_stats):
@@ -174,6 +175,37 @@ def test_response_api_model_basic(reset_global_stats):
     assert result["output"][0]["type"] == "message"
     assert result["output"][1]["type"] == "function_call"
     assert result["output"][1]["call_id"] == "call_resp_123"
+
+
+@pytest.mark.parametrize(
+    ("content", "command"),
+    [
+        (content, command)
+        for content in [None, "I'll run these commands"]
+        for command in [
+            "echo hello",
+            'echo "hello world"',
+            r"printf '\n'",
+            r"ls \workspace",
+            "echo first\necho second",
+            "printf 'hello\tworld'",
+            "echo calf\u00e9 \U0001f680",
+            "",
+        ]
+    ],
+)
+def test_response_api_output_round_trips_commands(content, command):
+    actions = [
+        {"command": command, "tool_call_id": "call_1"},
+        {"command": "echo done", "tool_call_id": "call_2"},
+    ]
+    response = make_response_api_output(content, actions)
+
+    assert (
+        parse_toolcall_actions_response(response["output"], format_error_template="{{ error }}")
+        == response["extra"]["actions"]
+        == actions
+    )
 
 
 def test_response_api_model_format_observation(reset_global_stats):
