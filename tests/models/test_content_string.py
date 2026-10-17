@@ -74,6 +74,32 @@ class TestGetContentString:
         msg = {"content": [{"type": "tool_use", "id": "t1", "name": "bash", "input": {"command": "cat /etc/hosts"}}]}
         assert get_content_string(msg).strip() != ""
 
+    @pytest.mark.parametrize(
+        ("content", "expected"),
+        [
+            ("plain output", "plain output"),
+            ([{"type": "text", "text": "first"}, {"type": "text", "text": "second"}], "first\n\nsecond"),
+            (
+                [
+                    {"type": "text", "text": "image description"},
+                    {"type": "image", "source": {"type": "url", "url": "https://example.com/image.png"}},
+                ],
+                "image description",
+            ),
+            ([], ""),
+        ],
+    )
+    def test_anthropic_tool_result_content(self, content, expected):
+        assert get_content_string(
+            {
+                "content": [
+                    {"type": "text", "text": "before"},
+                    {"type": "tool_result", "tool_use_id": "t1", "content": content},
+                    {"type": "text", "text": "after"},
+                ]
+            }
+        ) == "\n\n".join(text for text in ["before", expected, "after"] if text)
+
     def test_empty_message(self):
         assert get_content_string({}) == ""
 

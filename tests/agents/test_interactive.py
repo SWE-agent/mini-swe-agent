@@ -33,6 +33,21 @@ def mock_prompts(side_effect):
             yield
 
 
+def test_prints_anthropic_tool_result_blocks(capsys):
+    agent = InteractiveAgent(
+        DeterministicModel(outputs=[]), LocalEnvironment(), system_template="", instance_template=""
+    )
+    message = {
+        "role": "user",
+        "content": [
+            {"type": "tool_result", "tool_use_id": "t1", "content": [{"type": "text", "text": "tool output visible"}]}
+        ],
+    }
+    agent.add_messages(message)
+    assert "tool output visible" in capsys.readouterr().out
+    assert agent.messages == [message]
+
+
 # --- Helper functions to abstract message format differences ---
 
 
