@@ -37,7 +37,7 @@ def get_content_string(message: dict) -> str:
     - Traditional chat: {"content": "text"}
     - Multimodal chat: {"content": [{"type": "text", "text": "..."}]}
     - Anthropic tool use: {"content": [{"type": "tool_use", "input": {...}}]}
-    - Anthropic tool result: {"content": [{"type": "tool_result", "content": "..."}]}
+    - Anthropic tool result: {"content": [{"type": "tool_result", "content": "..." or [...]}]}
     - Observation messages: {"content": "{\"returncode\": 0, \"output\": \"...\"}"}
     - Traditional tool calls: {"tool_calls": [{"function": {"name": "...", "arguments": "..."}}]}
     - Responses API: {"output": [{"type": "message", "content": [...]}]}
@@ -55,9 +55,7 @@ def get_content_string(message: dict) -> str:
             if item.get("type") == "tool_use":
                 texts.append(_format_tool_call(json.dumps(item.get("input", {}))))
             elif item.get("type") == "tool_result":
-                rc = item.get("content", "")
-                if isinstance(rc, str):
-                    texts.append(_format_observation(rc))
+                texts.append(get_content_string(item))
             elif text := item.get("text"):
                 texts.append(text)
 
