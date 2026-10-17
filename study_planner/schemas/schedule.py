@@ -1,6 +1,7 @@
 # study_planner/schemas/schedule.py
 
 from datetime import datetime
+
 from pydantic import BaseModel
 
 
