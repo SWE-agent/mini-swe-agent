@@ -88,6 +88,7 @@ def test_schedule_contains_blocks():
 
     assert len(schedule.blocks) == 1
 
+
 def test_study_block_rejects_invalid_range():
     with pytest.raises(ValidationError):
         StudyBlock(
