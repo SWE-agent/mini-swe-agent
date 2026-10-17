@@ -1,8 +1,6 @@
-# study_planner/schemas/task.py
-
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Task(BaseModel):
@@ -10,5 +8,5 @@ class Task(BaseModel):
     name: str
     course: str | None = None
     deadline: datetime
-    estimated_minutes: int
-    priority: int
+    estimated_minutes: int = Field(gt=0)
+    priority: int = Field(ge=1, le=3)
