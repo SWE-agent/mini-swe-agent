@@ -1,0 +1,7 @@
+location	function	category	rule	pattern	detail	counted
+agent.py:66	ToyAgent.ask_user	INPUT	I1-input	input	input	True
+llm.py:16	LLM.chat	LLM	R1-sdk	anthropic:messages.create	self.client.messages.create	True
+llm.py:37	LLM.parse	EXTRACT	E1-field	'tool_use'	'tool_use'	True
+tools.py:9	tools.py#bash	TOOL	T1-process	subprocess:run	subprocess.run	True
+tools.py:14	tools.py#python	TOOL	T2-code	exec	exec	True
+tools.py:25	Registry.run	TOOL	T4-dispatch	x[name](...)	self.tools[name]	True

@@ -30,7 +30,8 @@
   .tabs button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
   input[type=search] { border: 1px solid var(--line); background: var(--bg); color: var(--text); border-radius: 6px; padding: 5px 10px; font: inherit; font-size: 13px; width: 220px; }
   main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 420px; min-height: 0; }
-  .pz { position: relative; overflow: hidden; cursor: grab; touch-action: none; }
+  .pz { position: relative; overflow: hidden; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .pz * { user-select: none; -webkit-user-select: none; }
   .pz.drag { cursor: grabbing; }
   .pz > svg, .pz > img { position: absolute; left: 0; top: 0; transform-origin: 0 0; max-width: none; }
   #graph { background: var(--graph-bg); }
@@ -41,6 +42,13 @@
   #graph g.node.sel text { font-weight: 700; }
   #graph g.node.hit polygon { fill: var(--hit); }
   #graph g.node.hit text { text-decoration: underline; }
+  .legend { position: absolute; left: 12px; top: 12px; z-index: 2; background: rgba(255,255,255,.95); color: #1d2330; border: 1px solid #dde1e8; border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.4; max-width: 300px; box-shadow: 0 2px 8px rgba(0,0,0,.08); cursor: default; }
+  .legend h4 { margin: 8px 0 4px; font-size: 12px; color: #5d6677; font-weight: 600; }
+  .legend h4:first-child { margin-top: 0; }
+  .legend .row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+  .legend .box { flex: none; width: 26px; height: 14px; border: 2px solid; border-radius: 2px; box-sizing: border-box; }
+  .legend .oval { flex: none; width: 26px; height: 14px; border: 2px solid #555; border-radius: 50%; box-sizing: border-box; }
+  .legend .line { flex: none; width: 26px; height: 0; border-top-width: 2px; }
   .hint { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: #5d6677; background: rgba(255,255,255,.85); padding: 2px 8px; border-radius: 4px; pointer-events: none; }
   aside { border-left: 1px solid var(--line); background: var(--panel); overflow: auto; padding: 16px; }
   aside h2 { font-size: 16px; margin: 0 0 4px; word-break: break-all; font-family: ui-monospace, Consolas, monospace; }
@@ -58,6 +66,31 @@
   ul.rows .nm.jump { color: var(--text); cursor: pointer; text-decoration: underline dotted; }
   ul.rows .kind { margin-left: auto; flex: none; font-size: 11px; color: var(--muted); }
   .empty { color: var(--muted); font-size: 13px; }
+  .back { font-size: 12px; color: var(--accent); cursor: pointer; display: inline-block; margin-bottom: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 4px; }
+  .chip { border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 999px; padding: 2px 10px; font: inherit; font-size: 12px; cursor: pointer; }
+  .chip.on { border-color: var(--accent); background: var(--accent-soft); }
+  .badge { flex: none; font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 4px; color: #fff; }
+  .st-bypass { background: #c62828; } .st-covered { background: #2e7d32; } .st-outside { background: #757575; }
+  .check { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; font-size: 13px; }
+  .check.done { opacity: .55; }
+  .check .top { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .check .cat { font-size: 11px; color: var(--muted); }
+  .check .what { font-family: ui-monospace, Consolas, monospace; font-size: 12px; word-break: break-all; }
+  .check .sub { margin-top: 4px; font-size: 12px; color: var(--muted); word-break: break-all; }
+  .check .sub .jump { color: var(--text); }
+  .check select { margin-top: 6px; font: inherit; font-size: 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--text); }
+  .summary { font-size: 13px; color: var(--muted); }
+  .check .pick { margin: 0 2px 0 0; width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+  .check.picked { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .chip.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .chip:disabled { opacity: .45; cursor: default; }
+  .req textarea { width: 100%; height: 340px; font: 12px/1.45 ui-monospace, Consolas, monospace; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--text); padding: 8px; resize: vertical; }
+  .req ol { padding-left: 18px; font-size: 13px; }
+  .req code { font-family: ui-monospace, Consolas, monospace; font-size: 12px; background: var(--accent-soft); padding: 1px 4px; border-radius: 3px; word-break: break-all; }
+  .req .btns { display: flex; gap: 6px; margin: 8px 0; }
+  .req .btns button { border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 4px 10px; border-radius: 6px; cursor: pointer; font: inherit; font-size: 13px; }
+  .req .warn { font-size: 12px; color: #b26a00; }
   @media (max-width: 800px) {
     main { grid-template-columns: 1fr; grid-template-rows: 55vh auto; }
     aside { border-left: 0; border-top: 1px solid var(--line); }
@@ -72,7 +105,7 @@
   <span class="spacer"></span>
   <div class="tabs" id="tabs"></div>
   <input type="search" id="q" placeholder="노드 검색 (Enter로 이동)">
-  <div class="tools"><button id="fit" title="전체 보기">전체 보기</button></div>
+  <div class="tools"><button id="legendBtn" hidden>범례</button> <button id="checksBtn" hidden>검증 목록</button> <button id="fit" title="전체 보기">전체 보기</button></div>
 </header>
 <main>
   <div id="graph" class="pz"><div class="hint">휠: 확대/축소 · 드래그: 이동 · 노드 클릭: 상세</div></div>
@@ -80,7 +113,7 @@
 </main>
 <script>
 const DATA = __DATA__;
-const KIND = { static: "직접", super: "super()", dispatch: "override", external: "외부" };
+const KIND = { static: "직접", super: "super()", dispatch: "override", external: "외부", name: "이름 연결", ref: "등록 함수", LLM: "LLM", EXTRACT: "추출", TOOL: "Tool 실행", INPUT: "사용자 입력" };
 const graphEl = document.getElementById("graph"), side = document.getElementById("side");
 let cur = null, svg = null, selected = null, gpz = null;
 
@@ -98,7 +131,7 @@ function panzoom(box, el, w, h, onClick) {
   };
   const zoomAt = (k, mx, my) => { k = Math.min(8, Math.max(0.02, k)); v.x = mx - (mx - v.x) * k / v.k; v.y = my - (my - v.y) * k / v.k; v.k = k; apply(); };
   let drag = null;
-  box.onpointerdown = e => { drag = { x: e.clientX, y: e.clientY, vx: v.x, vy: v.y, moved: false }; box.setPointerCapture(e.pointerId); };
+  box.onpointerdown = e => { e.preventDefault(); drag = { x: e.clientX, y: e.clientY, vx: v.x, vy: v.y, moved: false }; box.setPointerCapture(e.pointerId); };
   box.onpointermove = e => {
     if (!drag) return;
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
@@ -162,7 +195,7 @@ function jumpName(n) {
 
 function render(name) {
   const info = DATA.nodes[name], rel = DATA.rel[name] || { in: [], out: [] };
-  let h = `<h2>${esc(name)}</h2>`;
+  let h = (DATA.checks?.length ? `<span class="back" id="toChecks">← 검증 목록</span>` : "") + `<h2>${esc(name)}</h2>`;
   if (info) {
     h += `<div class="loc">${esc(info.file)} : ${info.line}–${info.end}</div><a class="open" href="${esc(info.uri)}">VS Code에서 열기</a>`;
     h += `<h3>CFG</h3>` + (info.cfg
@@ -177,6 +210,7 @@ function render(name) {
     `<li><span class="ln">${link(r.uri, "L" + r.line)}</span>${jumpName(r.name)}<span class="kind">${KIND[r.kind]}</span></li>`);
   side.innerHTML = h;
   side.querySelectorAll(".jump").forEach(s => s.addEventListener("click", () => select(s.dataset.n, true)));
+  side.querySelector("#toChecks")?.addEventListener("click", renderChecks);
   const img = side.querySelector(".cfg img");
   if (img) img.onload = () => {
     const pz = panzoom(img.parentElement, img, img.naturalWidth, img.naturalHeight);
@@ -185,7 +219,7 @@ function render(name) {
 }
 
 // tabs
-const LABEL = { entry: "진입점 기준", full: "전체" };
+const LABEL = { entry: "진입점 기준", full: "전체", io: "I/O" };
 for (const k of Object.keys(DATA.graphs)) {
   const b = document.createElement("button"); b.textContent = LABEL[k] || k; b.dataset.k = k;
   b.onclick = () => load(k); document.getElementById("tabs").append(b);
@@ -208,7 +242,138 @@ q.addEventListener("keydown", e => {
   select(cur.ids[m[i].querySelector("title").textContent], true);
 });
 
+// verification list: the tool's verdict per I/O call + the reviewer's decision (kept in this browser, exportable)
+const STATUS = { bypass: "우회 경로", covered: "래퍼 통과", outside: "진입점 밖" };
+const CAT = { LLM: "LLM", EXTRACT: "추출", TOOL: "Tool 실행", INPUT: "사용자 입력" };
+const REVIEW = { "": "미검토", ok: "확인함", fix: "수정 필요", fp: "오탐", scope: "범위 밖" };
+const filt = { status: "", cat: "", todo: false };
+const picked = new Set();
+const rkey = c => `io-review:${DATA.root}:${c.id}`;
+function getReview(c) { try { return localStorage.getItem(rkey(c)) || ""; } catch { return ""; } }
+function setReview(c, v) { try { v ? localStorage.setItem(rkey(c), v) : localStorage.removeItem(rkey(c)); } catch {} }
+
+function renderChecks() {
+  const all = DATA.checks, count = (k, v) => all.filter(c => c[k] === v).length;
+  const shown = all.filter(c => (!filt.status || c.status === filt.status) && (!filt.cat || c.cat === filt.cat) && (!filt.todo || !getReview(c)));
+  const order = { bypass: 0, covered: 1, outside: 2 };
+  shown.sort((a, b) => order[a.status] - order[b.status] || a.cat.localeCompare(b.cat) || a.file.localeCompare(b.file) || a.line - b.line);
+  const chip = (k, v, label) => `<button class="chip ${filt[k] === v ? "on" : ""}" data-k="${k}" data-v="${v}">${label}</button>`;
+  const names = ns => ns.map(n => `<span class="nm jump" data-n="${esc(n)}">${esc(n)}</span>`).join(" → ");
+  let h = `<h2>검증 목록</h2><div class="summary">I/O 호출 ${all.length}개 · 우회 ${count("status", "bypass")} · 통과 ${count("status", "covered")} · 진입점 밖 ${count("status", "outside")} · 검토 완료 ${all.filter(getReview).length}</div>`;
+  h += `<div class="chips">${chip("status", "", "전체")}${Object.keys(STATUS).map(s => chip("status", s, `${STATUS[s]} ${count("status", s)}`)).join("")}</div>`;
+  h += `<div class="chips">${chip("cat", "", "모든 범주")}${Object.keys(CAT).filter(c => count("cat", c)).map(c => chip("cat", c, `${CAT[c]} ${count("cat", c)}`)).join("")}<button class="chip ${filt.todo ? "on" : ""}" id="todo">미검토만</button><button class="chip" id="export">검토 결과 내보내기</button></div>`;
+  if (DATA.request) h += `<div class="chips"><button class="chip" id="pickShown">보이는 항목 선택</button><button class="chip" id="pickNone">선택 해제</button>`
+    + `<button class="chip primary" id="makeReq" ${picked.size ? "" : "disabled"}>선택 ${picked.size}개로 래퍼 요청 만들기</button></div>`;
+  h += shown.map(c => {
+    const r = getReview(c);
+    let sub = c.status === "bypass" ? `래퍼 없이 도달: ${names(c.path)}`
+      : c.status === "covered" ? `래퍼: ${names(c.via)} <span>(래퍼의 CFG에서 모든 경로 확인)</span>`
+      : "진입점에서 도달하지 않음: 루프 밖 동작인지 확인";
+    const box = DATA.request ? `<input type="checkbox" class="pick" data-id="${esc(c.id)}" ${picked.has(c.id) ? "checked" : ""} title="래퍼 요청에 포함">` : "";
+    return `<div class="check ${r ? "done" : ""} ${picked.has(c.id) ? "picked" : ""}"><div class="top">${box}<span class="badge st-${c.status}">${STATUS[c.status]}</span><span class="cat">${CAT[c.cat]} · ${esc(c.rule)}</span><span class="ln">${link(c.uri, c.file + ":" + c.line)}</span></div>`
+      + `<div class="what">${esc(c.pattern)} &nbsp;in <span class="nm jump" data-n="${esc(c.func)}">${esc(c.func)}</span></div><div class="sub">${sub}</div>`
+      + `<select data-id="${esc(c.id)}">${Object.entries(REVIEW).map(([v, l]) => `<option value="${v}" ${v === r ? "selected" : ""}>${l}</option>`).join("")}</select></div>`;
+  }).join("") || `<p class="empty">조건에 맞는 항목이 없습니다.</p>`;
+  side.innerHTML = h; side.scrollTop = 0;
+  side.querySelectorAll(".chip[data-k]").forEach(b => b.onclick = () => { filt[b.dataset.k] = b.dataset.v; renderChecks(); });
+  side.querySelector("#todo").onclick = () => { filt.todo = !filt.todo; renderChecks(); };
+  side.querySelector("#export").onclick = exportReview;
+  side.querySelectorAll(".jump").forEach(s => s.addEventListener("click", () => select(s.dataset.n, true)));
+  side.querySelectorAll("select[data-id]").forEach(sel => sel.onchange = () => { setReview(all.find(c => c.id === sel.dataset.id), sel.value); renderChecks(); });
+  if (!DATA.request) return;
+  const rerender = () => { const top = side.scrollTop; renderChecks(); side.scrollTop = top; };
+  side.querySelectorAll(".pick").forEach(cb => cb.onchange = () => { cb.checked ? picked.add(cb.dataset.id) : picked.delete(cb.dataset.id); rerender(); });
+  side.querySelector("#pickShown").onclick = () => { shown.forEach(c => picked.add(c.id)); rerender(); };
+  side.querySelector("#pickNone").onclick = () => { picked.clear(); rerender(); };
+  side.querySelector("#makeReq").onclick = renderRequest;
+}
+
+// wrapper request: the picked checks as a prompt that follows the kit's rules (observatory/prompt/task.md)
+function requestText() {
+  const R = DATA.request, items = DATA.checks.filter(c => picked.has(c.id));
+  const how = { bypass: "no wrapper on the path below", outside: "not reachable from the entry", covered: "already covered: re-check the wrapper" };
+  const rows = items.map((c, i) => {
+    const where = c.status === "bypass" ? `path: ${c.path.join(" -> ")}` : c.status === "covered" ? `wrappers: ${c.via.join(", ")}` : "callers: none from the entry";
+    const note = getReview(c) ? ` reviewer: ${REVIEW[getReview(c)]}.` : "";
+    return `${i + 1}. [${c.status}] ${c.cat} ${c.rule} \`${c.pattern}\` at ${c.file}:${c.line} in \`${c.func}\` (${how[c.status]}; ${where}).${note}`;
+  });
+  return `# Wrapper request from the I/O verification
+
+Connect these I/O calls of this agent to the Agent Observatory logger. Follow \`observatory/prompt/task.md\`, Part 1, exactly: copy \`observatory/observatory_log.py\` unchanged into the agent package if it is not there yet, keep the existing wiring, report a normal outcome raised as an exception with \`tool_end\`, change no behavior, follow AGENTS.md. The kit has no input events: report user input as the tool action "user_input" (\`tool_start\` / \`tool_end\`).
+
+Source paths below are relative to the analysed package (${DATA.root}).
+
+## Calls to cover
+The static verification (call graph, io_audit.py) flagged these. Make each one covered: every call path from the agent entry to it must pass a function that emits the matching events (LLM and EXTRACT: \`llm_query\` / \`llm_response\` / \`llm_error\` around the model call; TOOL: \`tool_start\` / \`tool_end\` / \`tool_error\`; INPUT: \`tool_start\` / \`tool_end\` with action "user_input"). Prefer the one place that all paths go through over wiring each call.
+
+${rows.join("\n")}
+
+If an item is not part of the agent's work (environment setup or teardown, display-only code, tests, developer tools) or is a false positive of the rules, do not wire it: list it with the reason in your final message.
+
+## Check
+When done, re-run the verification and confirm the items above are now "covered" (or explained):
+
+    ${R.audit_cmd}
+`;
+}
+
+function renderRequest() {
+  const text = requestText(), n = picked.size;
+  side.innerHTML = `<span class="back" id="toChecks">← 검증 목록</span><div class="req"><h2>래퍼 요청 (${n}개)</h2>`
+    + (DATA.request.kit_found ? "" : `<p class="warn">이 리포지토리에서 키트(observatory/prompt/task.md)를 찾지 못했습니다. 키트를 리포지토리 루트의 observatory/에 설치한 뒤 보내세요.</p>`)
+    + `<div class="btns"><button id="copyReq">복사</button><button id="saveReq">wrap_request.md로 저장</button></div>`
+    + `<textarea id="reqText" spellcheck="false"></textarea>`
+    + `<h3>보내는 방법</h3><ol>`
+    + `<li><b>키트 방식</b>: 저장한 파일을 리포지토리 루트로 옮기고<br><code>uv run --python 3.12 PoC/verification/request_wrappers.py wrap_request.md</code><br>키트의 run.py와 같은 설정으로 Claude Code가 코드를 고칩니다 (파일 편집·uv run·git diff만 허용, 커밋 안 함, 예산 상한).</li>`
+    + `<li><b>직접</b>: 복사해서 Claude Code에 붙여 넣기</li>`
+    + `<li>끝나면 <code>git diff</code>로 바뀐 코드를 검토하고, 이 페이지를 다시 생성해서 결과를 확인</li></ol>`
+    + `<p class="warn">Claude Code가 실행되고 비용이 듭니다. 요청 내용은 아래에서 고쳐서 보낼 수 있습니다.</p></div>`;
+  const ta = side.querySelector("#reqText");
+  ta.value = text;
+  side.querySelector("#toChecks").onclick = renderChecks;
+  side.querySelector("#copyReq").onclick = async e => {
+    try { await navigator.clipboard.writeText(ta.value); } catch { ta.select(); document.execCommand("copy"); }
+    e.target.textContent = "복사됨";
+  };
+  side.querySelector("#saveReq").onclick = () => {
+    const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([ta.value], { type: "text/markdown" })), download: "wrap_request.md" });
+    a.click(); URL.revokeObjectURL(a.href);
+  };
+}
+
+function exportReview() {
+  const head = ["review", "status", "category", "rule", "pattern", "location", "function", "wrappers", "bypass_path"];
+  const lines = [head, ...DATA.checks.map(c => [REVIEW[getReview(c)], STATUS[c.status], CAT[c.cat], c.rule, c.pattern, `${c.file}:${c.line}`, c.func, c.via.join(","), c.path.join(" -> ")])];
+  const blob = new Blob(["﻿" + lines.map(l => l.join("\t")).join("\n")], { type: "text/tab-separated-values" });
+  const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: "io_review.tsv" });
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+// legend: categories (colours the graph was drawn with), node shapes, edge styles
+function renderLegend() {
+  const L = DATA.legend, row = (sw, label) => `<div class="row">${sw}<span>${esc(label)}</span></div>`;
+  const el = document.createElement("div");
+  el.className = "legend"; el.id = "legend";
+  el.innerHTML = `<h4>범주 (채운 상자·타원 색)</h4>`
+    + L.categories.map(c => row(`<span class="box" style="background:${c.fill};border-color:${c.color}"></span>`, c.label)).join("")
+    + `<h4>모양</h4>`
+    + row(`<span class="box" style="background:#dbe6ff;border-color:#000"></span>`, "진입점 (--entry)")
+    + row(`<span class="box" style="background:#eee;border-color:#666;border-width:3px"></span>`, "I/O 호출을 직접 포함한 함수 (○○ INSIDE)")
+    + row(`<span class="box" style="border-style:dashed;border-color:#666"></span>`, "I/O에 도달 가능한 길목 (reaches)")
+    + row(`<span class="oval"></span>`, "실제 I/O 호출 지점 (규칙·줄 번호)")
+    + `<h4>화살표 (A → B: A가 B를 호출, 숫자는 A의 줄 번호)</h4>`
+    + L.edges.map(e => row(`<span class="line" style="border-top-style:${e.style};border-top-color:${e.color}"></span>`, e.label)).join("");
+  ["pointerdown", "wheel"].forEach(t => el.addEventListener(t, e => e.stopPropagation()));
+  graphEl.append(el);
+  const b = document.getElementById("legendBtn"); b.hidden = false;
+  b.onclick = () => { el.hidden = !el.hidden; };
+}
+
 load(Object.keys(DATA.graphs)[0]);
+if (DATA.legend) renderLegend();
+if (DATA.checks?.length) {
+  const b = document.getElementById("checksBtn"); b.hidden = false; b.onclick = renderChecks; renderChecks();
+}
 </script>
 </body>
 </html>

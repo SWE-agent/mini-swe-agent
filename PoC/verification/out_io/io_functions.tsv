@@ -1,0 +1,82 @@
+function	file	own	reaches	name_links	kept	from_entry
+BubblewrapEnvironment.execute	environments/extra/bubblewrap.py	TOOL	TOOL	0	True	True
+ContreeEnvironment.__init__	environments/extra/contree.py		LLM,EXTRACT,TOOL,INPUT	0	False	False
+ContreeEnvironment.execute	environments/extra/contree.py	TOOL	LLM,EXTRACT,TOOL,INPUT	0	True	True
+DefaultAgent.execute_actions	agents/default.py	TOOL	LLM,EXTRACT,TOOL,INPUT	0	True	True
+DefaultAgent.handle_uncaught_exception	agents/default.py		EXTRACT	0	True	True
+DefaultAgent.query	agents/default.py		LLM,EXTRACT,INPUT	0	True	True
+DefaultAgent.run	agents/default.py		LLM,EXTRACT,TOOL,INPUT	0	True	True
+DefaultAgent.step	agents/default.py		LLM,EXTRACT,TOOL,INPUT	0	True	True
+DockerEnvironment.__del__	environments/docker.py		TOOL	0	False	False
+DockerEnvironment.__init__	environments/docker.py		TOOL	0	False	False
+DockerEnvironment._start_container	environments/docker.py	TOOL	TOOL	0	False	False
+DockerEnvironment.cleanup	environments/docker.py	TOOL	TOOL	0	False	False
+DockerEnvironment.execute	environments/docker.py	TOOL	TOOL	0	True	True
+InteractiveAgent._add_observation_messages	agents/interactive.py		EXTRACT	0	False	False
+InteractiveAgent._ask_confirmation_or_interrupt	agents/interactive.py		INPUT	0	True	True
+InteractiveAgent._check_for_new_task_or_submit	agents/interactive.py		INPUT	0	True	True
+InteractiveAgent._prompt_and_handle_slash_commands	agents/interactive.py	INPUT	INPUT	0	True	True
+InteractiveAgent.add_messages	agents/interactive.py		EXTRACT	0	True	True
+InteractiveAgent.execute_actions	agents/interactive.py	TOOL	LLM,EXTRACT,TOOL,INPUT	0	True	True
+InteractiveAgent.query	agents/interactive.py	INPUT	LLM,EXTRACT,INPUT	0	True	True
+InteractiveAgent.step	agents/interactive.py		LLM,EXTRACT,TOOL,INPUT	0	True	True
+LitellmModel._parse_actions	models/litellm_model.py	EXTRACT	EXTRACT	0	True	True
+LitellmModel._query	models/litellm_model.py	LLM	LLM	0	True	True
+LitellmModel.query	models/litellm_model.py		LLM,EXTRACT	0	True	True
+LitellmResponseModel._parse_actions	models/litellm_response_model.py		EXTRACT	0	True	True
+LitellmResponseModel._query	models/litellm_response_model.py	LLM	LLM	0	True	True
+LitellmResponseModel.query	models/litellm_response_model.py		LLM,EXTRACT	0	True	True
+LitellmTextbasedModel._parse_actions	models/litellm_textbased_model.py		EXTRACT	0	True	True
+LitellmTextbasedModel._query	models/litellm_textbased_model.py	LLM	LLM	0	True	True
+LocalEnvironment.execute	environments/local.py		TOOL	0	True	True
+OpenRouterModel._parse_actions	models/openrouter_model.py	EXTRACT	EXTRACT	0	True	True
+OpenRouterModel._query	models/openrouter_model.py	LLM	LLM	0	True	True
+OpenRouterModel.query	models/openrouter_model.py		LLM,EXTRACT	0	True	True
+OpenRouterResponseModel._parse_actions	models/openrouter_response_model.py		EXTRACT	0	True	True
+OpenRouterResponseModel._query	models/openrouter_response_model.py	LLM	LLM	0	True	True
+OpenRouterResponseModel.query	models/openrouter_response_model.py		LLM,EXTRACT	0	True	True
+OpenRouterTextbasedModel._parse_actions	models/openrouter_textbased_model.py		EXTRACT	0	True	True
+OpenRouterTextbasedModel._query	models/openrouter_textbased_model.py	LLM	LLM	0	True	True
+PortkeyModel._parse_actions	models/portkey_model.py	EXTRACT	EXTRACT	0	True	True
+PortkeyModel._query	models/portkey_model.py	LLM	LLM	0	True	True
+PortkeyModel.query	models/portkey_model.py		LLM,EXTRACT	0	True	True
+PortkeyResponseAPIModel._parse_actions	models/portkey_response_model.py		EXTRACT	0	True	True
+PortkeyResponseAPIModel._query	models/portkey_response_model.py	LLM	LLM	0	True	True
+PortkeyResponseAPIModel.query	models/portkey_response_model.py		LLM,EXTRACT	0	True	True
+ProgressTrackingAgent.step	run/benchmarks/utils/common.py		LLM,EXTRACT,TOOL,INPUT	0	True	True
+RequestyModel._parse_actions	models/requesty_model.py	EXTRACT	EXTRACT	0	True	True
+RequestyModel._query	models/requesty_model.py	LLM	LLM	0	True	True
+RequestyModel.query	models/requesty_model.py		LLM,EXTRACT	0	True	True
+SingularityEnvironment.__init__	environments/singularity.py		TOOL	0	False	False
+SingularityEnvironment._build_sandbox	environments/singularity.py	TOOL	TOOL	0	False	False
+SingularityEnvironment.execute	environments/singularity.py	TOOL	TOOL	0	True	True
+SwerexDockerEnvironment.execute	environments/extra/swerex_docker.py	TOOL	LLM,EXTRACT,TOOL,INPUT	0	True	True
+SwerexModalEnvironment.execute	environments/extra/swerex_modal.py	TOOL	LLM,EXTRACT,TOOL,INPUT	0	True	True
+TrajectoryInspector._open_in_jless	run/utilities/inspector.py	TOOL	TOOL	0	False	False
+TrajectoryInspector.action_open_in_jless	run/utilities/inspector.py		TOOL	0	False	False
+TrajectoryInspector.action_open_in_jless_all	run/utilities/inspector.py		TOOL	0	False	False
+TrajectoryInspector.action_reload	run/utilities/inspector.py		EXTRACT	0	False	False
+TrajectoryInspector.action_toggle_reasoning	run/utilities/inspector.py		EXTRACT	0	False	False
+TrajectoryInspector.i_step	run/utilities/inspector.py		EXTRACT	0	False	False
+TrajectoryInspector.i_trajectory	run/utilities/inspector.py		EXTRACT	0	False	False
+TrajectoryInspector.on_mount	run/utilities/inspector.py		EXTRACT	0	False	False
+TrajectoryInspector.update_content	run/utilities/inspector.py		EXTRACT	0	False	False
+agents/utils/prompt_user.py#_multiline_prompt	agents/utils/prompt_user.py	INPUT	INPUT	0	True	True
+environments/local.py#_run	environments/local.py	TOOL	TOOL	0	True	True
+models/test_models.py#make_response_api_output	models/test_models.py	EXTRACT	EXTRACT	0	False	False
+models/test_models.py#make_toolcall_output	models/test_models.py	EXTRACT	EXTRACT	0	False	False
+models/utils/actions_text.py#parse_regex_actions	models/utils/actions_text.py	EXTRACT	EXTRACT	0	True	True
+models/utils/actions_toolcall.py#parse_toolcall_actions	models/utils/actions_toolcall.py	EXTRACT	EXTRACT	0	True	True
+models/utils/actions_toolcall_response.py#parse_toolcall_actions_response	models/utils/actions_toolcall_response.py	EXTRACT	EXTRACT	0	True	True
+models/utils/content_string.py#get_content_string	models/utils/content_string.py	EXTRACT	EXTRACT	0	True	True
+run/benchmarks/programbench.py#copy_submission	run/benchmarks/programbench.py	TOOL	LLM,EXTRACT,TOOL,INPUT	0	False	False
+run/benchmarks/programbench.py#process_instance	run/benchmarks/programbench.py		LLM,EXTRACT,TOOL,INPUT	0	False	False
+run/mini.py#main	run/mini.py		LLM,EXTRACT,TOOL,INPUT	0	False	False
+run/utilities/config.py#edit	run/utilities/config.py	TOOL	TOOL	0	False	False
+DefaultAgent.execute_action	agents/default.py		LLM,EXTRACT,TOOL,INPUT	1	True	True
+RouletteModel.query	models/extra/roulette.py		LLM,EXTRACT,INPUT	1	True	True
+run/benchmarks/swebench.py#get_sb_environment	run/benchmarks/swebench.py		LLM,EXTRACT,TOOL,INPUT	1	False	False
+run/benchmarks/swebench.py#process_instance	run/benchmarks/swebench.py		LLM,EXTRACT,TOOL,INPUT	1	False	False
+run/benchmarks/swebench_single.py#main	run/benchmarks/swebench_single.py		LLM,EXTRACT,TOOL,INPUT	1	False	False
+run/hello_world.py#main	run/hello_world.py		LLM,EXTRACT,TOOL,INPUT	1	False	False
+run/utilities/inspector.py#main	run/utilities/inspector.py		LLM,EXTRACT,TOOL,INPUT	1	False	False

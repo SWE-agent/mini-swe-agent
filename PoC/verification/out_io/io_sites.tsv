@@ -1,0 +1,57 @@
+location	function	category	rule	pattern	detail	counted
+agents/default.py:181	DefaultAgent.execute_actions	TOOL	T3-toolcall	execute_action	self.execute_action	True
+agents/interactive.py:94	InteractiveAgent.query	INPUT	I1-input	input	input	True
+agents/interactive.py:95	InteractiveAgent.query	INPUT	I1-input	input	input	True
+agents/interactive.py:137	InteractiveAgent.execute_actions	TOOL	T3-toolcall	execute_action	self.execute_action	True
+agents/interactive.py:168	InteractiveAgent._should_ask_confirmation	EXTRACT	E2-parse	re:match	re.match	False
+agents/interactive.py:193	InteractiveAgent._prompt_and_handle_slash_commands	INPUT	I1-input	*session*.prompt	prompt_session.prompt	True
+agents/utils/prompt_user.py:13	agents/utils/prompt_user.py#_multiline_prompt	INPUT	I1-input	prompt_toolkit:prompt	_multiline_prompt_session.prompt	True
+config/__init__.py:41	config/__init__.py#_key_value_spec_to_nested_dict	EXTRACT	E2-parse	json:loads	json.loads	False
+config/__init__.py:61	config/__init__.py#get_config_from_spec	EXTRACT	E2-parse	yaml:safe_load	yaml.safe_load	False
+environments/docker.py:91	DockerEnvironment._start_container	TOOL	T1-process	subprocess:run	subprocess.run	True
+environments/docker.py:116	DockerEnvironment.execute	TOOL	T1-process	subprocess:run	subprocess.run	True
+environments/docker.py:157	DockerEnvironment.cleanup	TOOL	T1-process	subprocess:Popen	subprocess.Popen	True
+environments/extra/bubblewrap.py:95	BubblewrapEnvironment.execute	TOOL	T1-process	subprocess:run	subprocess.run	True
+environments/extra/contree.py:94	ContreeEnvironment.execute	TOOL	T1-remote	contree_sdk:run	self.session.run	True
+environments/extra/swerex_docker.py:34	SwerexDockerEnvironment.execute	TOOL	T1-remote	swerex:execute	self.deployment.runtime.execute	True
+environments/extra/swerex_modal.py:68	SwerexModalEnvironment.execute	TOOL	T1-remote	swerex:execute	self.deployment.runtime.execute	True
+environments/local.py:74	environments/local.py#_run	TOOL	T1-process	subprocess:Popen	subprocess.Popen	True
+environments/singularity.py:52	SingularityEnvironment._build_sandbox	TOOL	T1-process	subprocess:run	subprocess.run	True
+environments/singularity.py:97	SingularityEnvironment.execute	TOOL	T1-process	subprocess:run	subprocess.run	True
+models/litellm_model.py:62	LitellmModel.__init__	EXTRACT	E2-parse	json:loads	json.loads	False
+models/litellm_model.py:66	LitellmModel._query	LLM	R2-lib	litellm:completion	litellm.completion	True
+models/litellm_model.py:130	LitellmModel._parse_actions	EXTRACT	E1-field	.tool_calls	response.choices[0].message.tool_calls	True
+models/litellm_response_model.py:42	LitellmResponseModel._query	LLM	R2-lib	litellm:responses	litellm.responses	True
+models/litellm_textbased_model.py:22	LitellmTextbasedModel._query	LLM	R2-lib	litellm:completion	litellm.completion	True
+models/openrouter_model.py:78	OpenRouterModel._query	LLM	R3-http	post (LLM host)	requests.post  url=https://openrouter.ai/api/v1/chat/completions	True
+models/openrouter_model.py:134	OpenRouterModel._parse_actions	EXTRACT	E1-field	'tool_calls'	'tool_calls'	True
+models/openrouter_response_model.py:56	OpenRouterResponseModel._query	LLM	R3-http	post (LLM host)	requests.post  url=https://openrouter.ai/api/v1/responses	True
+models/openrouter_textbased_model.py:46	OpenRouterTextbasedModel._query	LLM	R3-http	post (LLM host)	requests.post  url=https://openrouter.ai/api/v1/chat/completions	True
+models/portkey_model.py:71	PortkeyModel.__init__	EXTRACT	E2-parse	json:loads	json.loads	False
+models/portkey_model.py:92	PortkeyModel._query	LLM	R1-sdk	openai:chat.completions.create	self.client.chat.completions.create	True
+models/portkey_model.py:132	PortkeyModel._parse_actions	EXTRACT	E1-field	.tool_calls	response.choices[0].message.tool_calls	True
+models/portkey_response_model.py:57	PortkeyResponseAPIModel.__init__	EXTRACT	E2-parse	json:loads	json.loads	False
+models/portkey_response_model.py:75	PortkeyResponseAPIModel._query	LLM	R1-sdk	openai:responses.create	self.client.responses.create	True
+models/requesty_model.py:83	RequestyModel._query	LLM	R3-http	post (LLM host)	requests.post  url=https://router.requesty.ai/v1/chat/completions	True
+models/requesty_model.py:136	RequestyModel._parse_actions	EXTRACT	E1-field	'tool_calls'	'tool_calls'	True
+models/test_models.py:42	models/test_models.py#make_toolcall_output	EXTRACT	E1-field	'tool_calls'	'tool_calls'	True
+models/test_models.py:62	models/test_models.py#make_response_api_output	EXTRACT	E1-field	'function_call'	'function_call'	True
+models/utils/actions_text.py:24	models/utils/actions_text.py#parse_regex_actions	EXTRACT	E2-parse	re:findall	re.findall	True
+models/utils/actions_toolcall.py:58	models/utils/actions_toolcall.py#parse_toolcall_actions	EXTRACT	E2-parse	json:loads	json.loads	True
+models/utils/actions_toolcall_response.py:74	models/utils/actions_toolcall_response.py#parse_toolcall_actions_response	EXTRACT	E1-field	'function_call'	'function_call'	True
+models/utils/actions_toolcall_response.py:91	models/utils/actions_toolcall_response.py#parse_toolcall_actions_response	EXTRACT	E2-parse	json:loads	json.loads	True
+models/utils/content_string.py:9	models/utils/content_string.py#_format_tool_call	EXTRACT	E2-parse	json:loads	json.loads	False
+models/utils/content_string.py:20	models/utils/content_string.py#_format_observation	EXTRACT	E2-parse	json:loads	json.loads	False
+models/utils/content_string.py:55	models/utils/content_string.py#get_content_string	EXTRACT	E1-field	'tool_use'	'tool_use'	True
+models/utils/content_string.py:65	models/utils/content_string.py#get_content_string	EXTRACT	E1-field	'tool_calls'	'tool_calls'	True
+models/utils/content_string.py:84	models/utils/content_string.py#get_content_string	EXTRACT	E1-field	'function_call'	'function_call'	True
+models/utils/openai_multimodal.py:14	models/utils/openai_multimodal.py#_expand_content_string	EXTRACT	E2-parse	re:finditer	re.finditer	False
+run/benchmarks/programbench.py:55	run/benchmarks/programbench.py#copy_submission	TOOL	T1-process	subprocess:run	subprocess.run	True
+run/benchmarks/swebench.py:102	run/benchmarks/swebench.py#update_preds_file	EXTRACT	E2-parse	json:loads	json.loads	False
+run/benchmarks/swebench.py:116	run/benchmarks/swebench.py#remove_from_preds_file	EXTRACT	E2-parse	json:loads	json.loads	False
+run/benchmarks/swebench.py:189	run/benchmarks/swebench.py#filter_instances	EXTRACT	E2-parse	re:match	re.match	False
+run/benchmarks/swebench.py:230	run/benchmarks/swebench.py#main	EXTRACT	E2-parse	json:loads	json.loads	False
+run/hello_world.py:35	run/hello_world.py#main	EXTRACT	E2-parse	yaml:safe_load	yaml.safe_load	False
+run/utilities/config.py:126	run/utilities/config.py#edit	TOOL	T1-process	subprocess:run	subprocess.run	True
+run/utilities/inspector.py:162	TrajectoryInspector._load_current_trajectory	EXTRACT	E2-parse	json:loads	json.loads	False
+run/utilities/inspector.py:259	TrajectoryInspector._open_in_jless	TOOL	T1-process	subprocess:run	subprocess.run	True

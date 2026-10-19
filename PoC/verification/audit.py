@@ -1,10 +1,15 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = ["astor", "graphviz", "py2cfg"]
+# ///
 """Dump AST, call graph and CFGs of a Python package for manual review.
 
 The tool does not decide what is an LLM call, a tool call or a log statement.
 It renders the structure as-is; the reviewer chooses what to look at via --entry / --mark / --cfg.
+Needs the Graphviz `dot` executable on PATH.
 
 usage:
-  python audit.py <src_root> <out_dir>
+  uv run audit.py <src_root> <out_dir>
       [--entry Class.method ...]   # also draw the call graph reachable from these functions
       [--mark TEXT ...]            # highlight call-graph nodes whose name contains TEXT
       [--cfg TEXT ...]             # only draw CFGs of functions whose qualname contains TEXT (default: all)
@@ -59,6 +64,19 @@ def _visit_call(self, node):
 _B.visit_Raise = _visit_raise
 _B.visit_Call = _visit_call
 astor.to_source = lambda node: ast.unparse(node) + "\n"  # astor predates `match`
+_orig_render = graphviz.Digraph.render
+
+
+def _render(self, *args, **kwargs):
+    # py2cfg hardcodes "DejaVu Sans Mono", missing on Windows/macOS: dot then warns once per CFG
+    font = lambda s: s.replace("DejaVu Sans Mono", "Courier New")
+    self.body = [font(line) for line in self.body]
+    for attrs in (self.graph_attr, self.node_attr, self.edge_attr):
+        attrs.update({k: font(v) for k, v in attrs.items()})
+    return _orig_render(self, *args, **kwargs)
+
+
+graphviz.Digraph.render = _render
 
 
 # ---------- 1. AST ----------
@@ -200,7 +218,7 @@ def draw_cfgs(funcs, out: Path, filters: list[str]):
 
 
 # ---------- 4. Viewer ----------
-def write_viewer(root: Path, funcs, es, graphs: dict, out: Path):
+def write_viewer(root: Path, funcs, es, graphs: dict, out: Path, extra: dict | None = None):
     def loc(file: str, line: int) -> dict:
         return {"file": file, "line": line, "uri": f"vscode://file/{(root / file).resolve().as_posix()}:{line}"}
 
@@ -220,7 +238,7 @@ def write_viewer(root: Path, funcs, es, graphs: dict, out: Path):
         rel.setdefault(b, {"in": [], "out": []})["in"].append(
             {"name": a, "line": line, "kind": kind, **loc(funcs[a]["file"], line)}
         )
-    data = {"root": root.resolve().as_posix(), "graphs": graphs, "nodes": nodes, "rel": rel}
+    data = {"root": root.resolve().as_posix(), "graphs": graphs, "nodes": nodes, "rel": rel, **(extra or {})}
     html = (Path(__file__).parent / "viewer.html").read_text(encoding="utf-8")
     (out / "index.html").write_text(html.replace("__DATA__", json.dumps(data).replace("</", r"<\/")), encoding="utf-8")
 

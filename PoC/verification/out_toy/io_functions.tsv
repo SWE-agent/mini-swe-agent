@@ -1,0 +1,11 @@
+function	file	own	reaches	name_links	kept	from_entry
+LLM.chat	llm.py	LLM	LLM,EXTRACT	0	True	True
+LLM.parse	llm.py	EXTRACT	EXTRACT	0	True	True
+Registry.run	tools.py	TOOL	TOOL	0	True	True
+ToyAgent.ask_user	agent.py	INPUT	INPUT	0	True	True
+ToyAgent.confirm	agent.py		INPUT	0	True	True
+ToyAgent.run	agent.py		LLM,EXTRACT,TOOL,INPUT	0	True	True
+tools.py#bash	tools.py	TOOL	TOOL	0	True	True
+tools.py#python	tools.py	TOOL	TOOL	0	True	True
+ToyAgent.fallback_query	agent.py		LLM,EXTRACT	1	True	True
+ToyAgent.step	agent.py		LLM,EXTRACT,TOOL,INPUT	1	True	True

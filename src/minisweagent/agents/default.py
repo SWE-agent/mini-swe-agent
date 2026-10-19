@@ -11,8 +11,8 @@ from pathlib import Path
 from jinja2 import StrictUndefined, Template
 from pydantic import BaseModel
 
-from minisweagent import Environment, Model, __version__
-from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
+from minisweagent import Environment, Model, __version__, observatory_log
+from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, Submitted, TimeExceeded
 from minisweagent.utils.serialize import recursive_merge
 
 
@@ -152,10 +152,14 @@ class DefaultAgent:
             getattr(self.model.config, "model_name", None),
             len(self.messages),
         )
+        observatory_log.llm_query(
+            self.n_calls, model=getattr(self.model.config, "model_name", None), messages=len(self.messages)
+        )
         try:
             message = self.model.query(self.messages)
         except Exception as e:
             self.logger.debug("[LLM_ERROR] step=%s error_type=%s", self.n_calls, type(e).__name__)
+            observatory_log.llm_error(self.n_calls, e)
             raise
         self.cost += message.get("extra", {}).get("cost", 0.0)
         self.logger.debug(
@@ -163,6 +167,11 @@ class DefaultAgent:
             self.n_calls,
             message.get("extra", {}).get("actions", []),
             message.get("extra", {}).get("cost", 0.0),
+        )
+        observatory_log.llm_response(
+            self.n_calls,
+            actions=[a.get("command") for a in message.get("extra", {}).get("actions", [])],
+            cost=message.get("extra", {}).get("cost", 0.0),
         )
         self.add_messages(message)
         return message
@@ -176,6 +185,7 @@ class DefaultAgent:
         """Execute a single action in the environment. Every agent runs its actions through here."""
         self.logger.debug("[TOOL_EXECUTION_START] action=%s params=%s", "bash", action)
         start_time = time.time()
+        start = observatory_log.tool_start("bash", action.get("command"), step=self.n_calls)
         try:
             output = self.env.execute(action)
         except Exception as e:
@@ -185,12 +195,19 @@ class DefaultAgent:
                 type(e).__name__,
                 time.time() - start_time,
             )
+            if isinstance(e, Submitted):
+                observatory_log.tool_end(start, "bash", result="submitted", step=self.n_calls)
+            else:
+                observatory_log.tool_error(start, "bash", e, step=self.n_calls)
             raise
         self.logger.debug(
             "[TOOL_EXECUTION_END] action=%s returncode=%s duration_seconds=%.3f",
             "bash",
             output.get("returncode"),
             time.time() - start_time,
+        )
+        observatory_log.tool_end(
+            start, "bash", result=output.get("output", "")[:500], returncode=output.get("returncode"), step=self.n_calls
         )
         return output
 
