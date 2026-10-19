@@ -217,7 +217,9 @@ def write_viewer(root: Path, funcs, es, graphs: dict, out: Path):
     rel = {}
     for a, b, line, kind in sorted(set(es)):
         rel.setdefault(a, {"in": [], "out": []})["out"].append({"name": b, "line": line, "kind": kind})
-        rel.setdefault(b, {"in": [], "out": []})["in"].append({"name": a, "line": line, "kind": kind, **loc(funcs[a]["file"], line)})
+        rel.setdefault(b, {"in": [], "out": []})["in"].append(
+            {"name": a, "line": line, "kind": kind, **loc(funcs[a]["file"], line)}
+        )
     data = {"root": root.resolve().as_posix(), "graphs": graphs, "nodes": nodes, "rel": rel}
     html = (Path(__file__).parent / "viewer.html").read_text(encoding="utf-8")
     (out / "index.html").write_text(html.replace("__DATA__", json.dumps(data).replace("</", r"<\/")), encoding="utf-8")
