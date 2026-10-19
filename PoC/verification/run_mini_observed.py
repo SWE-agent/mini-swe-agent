@@ -30,5 +30,7 @@ agent = DefaultAgent(
     **{k: v for k, v in config["agent"].items() if k != "mode"} | {"step_limit": steps},
 )
 info = agent.run(task)
-print(f"workspace: {workspace}\nexit_status: {info.get('exit_status')}  steps: {agent.n_calls}  cost: ${agent.cost:.4f}")
+print(
+    f"workspace: {workspace}\nexit_status: {info.get('exit_status')}  steps: {agent.n_calls}  cost: ${agent.cost:.4f}"
+)
 print(f"submission: {info.get('submission', '')[:500]}")

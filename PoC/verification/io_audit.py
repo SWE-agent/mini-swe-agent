@@ -48,8 +48,17 @@ import io_rules  # noqa: E402
 
 # category -> (string tag, observatory_log functions). EXTRACT parses the LLM reply, so the LLM wrapper covers it.
 # The kit has no input events: user input is reported as the tool action "user_input" and counts as INPUT only.
-KIT_LLM, KIT_TOOL, KIT_INPUT_ACTION = {"llm_query", "llm_response", "llm_error"}, {"tool_start", "tool_end", "tool_error"}, "user_input"
-WRAPPERS = {"LLM": ("[LLM_", KIT_LLM), "EXTRACT": ("[LLM_", KIT_LLM), "TOOL": ("[TOOL_", KIT_TOOL), "INPUT": ("[INPUT_", set())}
+KIT_LLM, KIT_TOOL, KIT_INPUT_ACTION = (
+    {"llm_query", "llm_response", "llm_error"},
+    {"tool_start", "tool_end", "tool_error"},
+    "user_input",
+)
+WRAPPERS = {
+    "LLM": ("[LLM_", KIT_LLM),
+    "EXTRACT": ("[LLM_", KIT_LLM),
+    "TOOL": ("[TOOL_", KIT_TOOL),
+    "INPUT": ("[INPUT_", set()),
+}
 ROOT = Path(".")
 REF_STYLE = {"style": "dashed", "color": "#00897b"}  # T4 dispatch -> function registered by reference
 TAB, NL = "\t", "\n"
@@ -59,8 +68,12 @@ FILL = {"LLM": "#ffd6d6", "EXTRACT": "#eadcf7", "TOOL": "#ffe3c4", "INPUT": "#d3
 LEGEND = {
     "categories": [
         {"color": COLOR[c], "fill": FILL[c], "label": label}
-        for c, label in [("LLM", "LLM 호출"), ("EXTRACT", "LLM 응답에서 Tool 정보 추출"), ("TOOL", "Tool 실행"),
-                         ("INPUT", "사용자 입력")]
+        for c, label in [
+            ("LLM", "LLM 호출"),
+            ("EXTRACT", "LLM 응답에서 Tool 정보 추출"),
+            ("TOOL", "Tool 실행"),
+            ("INPUT", "사용자 입력"),
+        ]
     ],
     "edges": [
         {"color": "#000000", "style": "solid", "label": "확실한 호출 (self.x())"},
@@ -80,11 +93,29 @@ def find_sites(funcs, classes, imports, cls_nodes):
         strings = audit_rules.class_strings(info["cls"], classes, cls_nodes)
         for c in info["calls"]:
             if hit := io_rules.classify(c, imp, strings):
-                sites.append({"func": q, "file": info["file"], "line": c.lineno, "cat": hit[0], "rule": hit[1],
-                              "pattern": hit[2], "detail": hit[3]})
+                sites.append(
+                    {
+                        "func": q,
+                        "file": info["file"],
+                        "line": c.lineno,
+                        "cat": hit[0],
+                        "rule": hit[1],
+                        "pattern": hit[2],
+                        "detail": hit[3],
+                    }
+                )
         for n, pat in io_rules.extract_fields(info["node"]):
-            sites.append({"func": q, "file": info["file"], "line": n.lineno, "cat": "EXTRACT", "rule": "E1-field",
-                          "pattern": pat, "detail": ast.unparse(n)})
+            sites.append(
+                {
+                    "func": q,
+                    "file": info["file"],
+                    "line": n.lineno,
+                    "cat": "EXTRACT",
+                    "rule": "E1-field",
+                    "pattern": pat,
+                    "detail": ast.unparse(n),
+                }
+            )
     uniq = {(s["func"], s["line"], s["rule"], s["pattern"]): s for s in sites}
     return sorted(uniq.values(), key=lambda s: (s["file"], s["line"]))
 
@@ -178,15 +209,30 @@ def checks(sites, funcs, func_es, entries, from_entry):
             status, path = "covered", []
             via = sorted(w for w in ws if w in from_entry and bypass_path([w], s["func"], adj, set()) is not None)
         uri = f"vscode://file/{(ROOT / s['file']).resolve().as_posix()}:{s['line']}"
-        out.append({"id": f"{s['file']}:{s['line']}:{s['rule']}:{s['pattern']}", "cat": s["cat"], "rule": s["rule"],
-                    "pattern": s["pattern"], "detail": s["detail"], "func": s["func"], "file": s["file"],
-                    "line": s["line"], "uri": uri, "status": status, "path": path, "via": via})
+        out.append(
+            {
+                "id": f"{s['file']}:{s['line']}:{s['rule']}:{s['pattern']}",
+                "cat": s["cat"],
+                "rule": s["rule"],
+                "pattern": s["pattern"],
+                "detail": s["detail"],
+                "func": s["func"],
+                "file": s["file"],
+                "line": s["line"],
+                "uri": uri,
+                "status": status,
+                "path": path,
+                "via": via,
+            }
+        )
     return out
 
 
 def find_kit(src_root: Path) -> Path | None:
     """agent_observatory_kit installed as <repo>/observatory, found by walking up from the analysed package."""
-    return next((d / "observatory" for d in src_root.resolve().parents if (d / "observatory/prompt/task.md").exists()), None)
+    return next(
+        (d / "observatory" for d in src_root.resolve().parents if (d / "observatory/prompt/task.md").exists()), None
+    )
 
 
 def site_name(s: dict) -> str:
@@ -213,8 +259,15 @@ def draw(out: Path, funcs, es, sites, own, reach, dist, entries):
             g.node(ids[n], label=label.replace("\\", "\\\\"), **attrs)
     for s in sites:
         n = site_name(s)
-        g.node(ids[n], label=f"{s['cat']}  {s['rule']}\n{s['pattern']}\nL{s['line']}".replace("\\", "\\\\"),
-               shape="ellipse", color=COLOR[s["cat"]], fontcolor=COLOR[s["cat"]], fontsize="9", penwidth="2")
+        g.node(
+            ids[n],
+            label=f"{s['cat']}  {s['rule']}\n{s['pattern']}\nL{s['line']}".replace("\\", "\\\\"),
+            shape="ellipse",
+            color=COLOR[s["cat"]],
+            fontcolor=COLOR[s["cat"]],
+            fontsize="9",
+            penwidth="2",
+        )
     for a, b, line, kind in sorted(set(es)):
         if a in ids and b in ids:
             style = {"color": COLOR[kind]} if kind in COLOR else audit_rules.EDGE_STYLE.get(kind, REF_STYLE)
@@ -278,21 +331,33 @@ def main():
     with open(a.out_dir / "io_sites.tsv", "w", encoding="utf-8") as fh:
         fh.write("location\tfunction\tcategory\trule\tpattern\tdetail\tcounted\n")
         for s in sites:
-            fh.write(f"{s['file']}:{s['line']}\t{s['func']}\t{s['cat']}\t{s['rule']}\t{s['pattern']}\t"
-                     f"{s['detail'][:120]}\t{s['counted']}\n")
+            fh.write(
+                f"{s['file']}:{s['line']}\t{s['func']}\t{s['cat']}\t{s['rule']}\t{s['pattern']}\t"
+                f"{s['detail'][:120]}\t{s['counted']}\n"
+            )
     with open(a.out_dir / "io_functions.tsv", "w", encoding="utf-8") as fh:
         fh.write("function\tfile\town\treaches\tname_links\tkept\tfrom_entry\n")
         for q in sorted(dist, key=lambda q: (dist[q], q)):
-            fh.write(f"{q}\t{funcs[q]['file']}\t{','.join(own.get(q, []))}\t"
-                     f"{','.join(c for c in io_rules.CATEGORIES if c in reach.get(q, ()))}\t{dist[q]}\t"
-                     f"{q in keep}\t{q in from_entry}\n")
+            fh.write(
+                f"{q}\t{funcs[q]['file']}\t{','.join(own.get(q, []))}\t"
+                f"{','.join(c for c in io_rules.CATEGORIES if c in reach.get(q, ()))}\t{dist[q]}\t"
+                f"{q in keep}\t{q in from_entry}\n"
+            )
 
     found = checks(counted, funcs, func_es, a.entry, from_entry) if a.entry else []
     with open(a.out_dir / "io_checks.tsv", "w", encoding="utf-8") as fh:
         cols = ["status", "category", "rule", "pattern", "location", "function", "wrappers", "bypass_path"]
         rows = [cols] + [
-            [c['status'], c['cat'], c['rule'], c['pattern'], f"{c['file']}:{c['line']}", c['func'],
-             ','.join(c['via']), ' -> '.join(c['path'])]
+            [
+                c["status"],
+                c["cat"],
+                c["rule"],
+                c["pattern"],
+                f"{c['file']}:{c['line']}",
+                c["func"],
+                ",".join(c["via"]),
+                " -> ".join(c["path"]),
+            ]
             for c in found
         ]
         fh.writelines(TAB.join(r) + NL for r in rows)
@@ -302,8 +367,10 @@ def main():
     extra = {"checks": found, "legend": LEGEND, "request": request}
     audit.write_viewer(a.src_root, funcs, graph_es + site_es, {"io": graph}, a.out_dir, extra)
     by_cat = {c: sum(1 for s in kept_sites if s["cat"] == c) for c in io_rules.CATEGORIES}
-    print(f"functions={len(funcs)} kept={len(keep)} io_calls_shown={by_cat} "
-          f"rule_hits={len(sites)} (E2 not counted: {sum(1 for s in sites if not s['counted'])})")
+    print(
+        f"functions={len(funcs)} kept={len(keep)} io_calls_shown={by_cat} "
+        f"rule_hits={len(sites)} (E2 not counted: {sum(1 for s in sites if not s['counted'])})"
+    )
     if found:
         print("checks:", {k: sum(1 for c in found if c["status"] == k) for k in ("covered", "bypass", "outside")})
 

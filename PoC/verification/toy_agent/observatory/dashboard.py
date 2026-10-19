@@ -57,8 +57,18 @@ class Stream:
 
 
 def list_runs(directory: Path) -> list[dict]:
-    files = sorted(directory.glob("*.jsonl"), key=lambda p: p.stat().st_mtime, reverse=True) if directory.exists() else []
-    return [{"id": p.stem, "events": len(p.read_bytes().splitlines()), "modified": p.stat().st_mtime, "live": time.time() - p.stat().st_mtime < LIVE_SECONDS} for p in files]
+    files = (
+        sorted(directory.glob("*.jsonl"), key=lambda p: p.stat().st_mtime, reverse=True) if directory.exists() else []
+    )
+    return [
+        {
+            "id": p.stem,
+            "events": len(p.read_bytes().splitlines()),
+            "modified": p.stat().st_mtime,
+            "live": time.time() - p.stat().st_mtime < LIVE_SECONDS,
+        }
+        for p in files
+    ]
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -93,8 +103,17 @@ class Handler(BaseHTTPRequestHandler):
             if match is None:
                 self.reply(404, "application/json", b'{"detail": "No such run"}')
             elif url.path == "/api/trace":
-                body = json.dumps({"run": match["id"], "events": Stream(self.runs_dir / f"{match['id']}.jsonl").poll()}, ensure_ascii=False, indent=2)
-                self.reply(200, "application/json", body.encode(), {"Content-Disposition": f'attachment; filename="trace-{match["id"]}.json"'})
+                body = json.dumps(
+                    {"run": match["id"], "events": Stream(self.runs_dir / f"{match['id']}.jsonl").poll()},
+                    ensure_ascii=False,
+                    indent=2,
+                )
+                self.reply(
+                    200,
+                    "application/json",
+                    body.encode(),
+                    {"Content-Disposition": f'attachment; filename="trace-{match["id"]}.json"'},
+                )
             else:
                 self.stream(self.runs_dir / f"{match['id']}.jsonl")
         else:
@@ -131,7 +150,9 @@ def make_server(runs_dir: Path, port: int) -> ThreadingHTTPServer:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--runs", type=Path, default=KIT / "runs", help="directory of run files (default: observatory/runs)")
+    parser.add_argument(
+        "--runs", type=Path, default=KIT / "runs", help="directory of run files (default: observatory/runs)"
+    )
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
     try:

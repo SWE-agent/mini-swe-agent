@@ -41,7 +41,15 @@ def test_logger_writes_one_line_per_event(tmp: Path) -> None:
     log.llm_error(2, ValueError("bad"))
     (file,) = (tmp / "runs").glob("*.jsonl")
     events = read(file)
-    assert [(e["kind"], e["step"]) for e in events] == [("llm_query", 1), ("llm_response", 1), ("tool_start", None), ("tool_end", None), ("tool_start", None), ("tool_error", None), ("llm_error", 2)]
+    assert [(e["kind"], e["step"]) for e in events] == [
+        ("llm_query", 1),
+        ("llm_response", 1),
+        ("tool_start", None),
+        ("tool_end", None),
+        ("tool_start", None),
+        ("tool_error", None),
+        ("llm_error", 2),
+    ]
     assert events[0]["data"] == {"model": "m", "messages": 2, "purpose": "action"}
     assert events[1]["data"]["actions"] == [{"bash": {"command": "ls"}}] and events[1]["data"]["cost"] == 0.01
     assert events[3]["data"]["result"] == "exit 0" and events[3]["data"]["duration_seconds"] >= 0
@@ -62,11 +70,19 @@ def test_logger_scrubs_secrets_and_truncates(tmp: Path) -> None:
 
 def test_stream_numbers_events_and_assigns_steps(tmp: Path) -> None:
     path = tmp / "s.jsonl"
-    lines = [{"t": 10.0, "kind": "llm_query", "step": 3, "data": {}}, {"t": 10.5, "kind": "tool_start", "step": None, "data": {"action": "a"}}, {"t": 11.0, "kind": "llm_response", "step": 3, "data": {"actions": []}}]
+    lines = [
+        {"t": 10.0, "kind": "llm_query", "step": 3, "data": {}},
+        {"t": 10.5, "kind": "tool_start", "step": None, "data": {"action": "a"}},
+        {"t": 11.0, "kind": "llm_response", "step": 3, "data": {"actions": []}},
+    ]
     path.write_text("\n".join(json.dumps(x) for x in lines) + "\n{not json}\n" + '{"t": 12, "kind": "llm_qu')
     stream = dashboard.Stream(path)
     events = stream.poll()
-    assert [(e["seq"], e["kind"], e["step"]) for e in events] == [(0, "llm_query", 3), (1, "tool_start", 3), (2, "llm_response", 3)]
+    assert [(e["seq"], e["kind"], e["step"]) for e in events] == [
+        (0, "llm_query", 3),
+        (1, "tool_start", 3),
+        (2, "llm_response", 3),
+    ]
     assert events[2]["data"]["duration_seconds"] == 1.0
     with path.open("a") as file:
         file.write('ery", "step": 4, "data": {}}\n')
@@ -76,7 +92,9 @@ def test_stream_numbers_events_and_assigns_steps(tmp: Path) -> None:
 def test_server(tmp: Path) -> None:
     runs = tmp / "srv"
     runs.mkdir()
-    (runs / "20260101-000000-1.jsonl").write_text(json.dumps({"t": 1.0, "kind": "llm_query", "step": 1, "data": {"model": "m"}}) + "\n")
+    (runs / "20260101-000000-1.jsonl").write_text(
+        json.dumps({"t": 1.0, "kind": "llm_query", "step": 1, "data": {"model": "m"}}) + "\n"
+    )
     server = dashboard.make_server(runs, 0)
     port = server.server_address[1]
     threading.Thread(target=server.serve_forever, daemon=True).start()

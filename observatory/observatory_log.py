@@ -31,7 +31,11 @@ _files: dict[str, Path] = {}
 
 
 def _secrets() -> list[str]:
-    return [v for k, v in os.environ.items() if len(v) >= 6 and any(w in k.upper() for w in ("KEY", "TOKEN", "SECRET", "PASSWORD"))]
+    return [
+        v
+        for k, v in os.environ.items()
+        if len(v) >= 6 and any(w in k.upper() for w in ("KEY", "TOKEN", "SECRET", "PASSWORD"))
+    ]
 
 
 def _clean(value, secrets: list[str]):
@@ -56,7 +60,9 @@ def _emit(kind: str, step: int | None, data: dict) -> None:
         if runs not in _files:
             Path(runs).mkdir(parents=True, exist_ok=True)
             _files[runs] = Path(runs) / f"{time.strftime('%Y%m%d-%H%M%S')}-{os.getpid()}.jsonl"
-        line = json.dumps(_clean({"t": time.time(), "kind": kind, "step": step, "data": data}, _secrets()), ensure_ascii=False)
+        line = json.dumps(
+            _clean({"t": time.time(), "kind": kind, "step": step, "data": data}, _secrets()), ensure_ascii=False
+        )
         with _files[runs].open("a", encoding="utf-8") as file:
             file.write(line + "\n")
 
@@ -79,8 +85,22 @@ def tool_start(action: str, params=None, step: int | None = None) -> float:
 
 
 def tool_end(start: float, action: str, result=None, step: int | None = None, **fields) -> None:
-    _emit("tool_end", step, {"action": action, "result": result, "duration_seconds": round(time.perf_counter() - start, 3), **fields})
+    _emit(
+        "tool_end",
+        step,
+        {"action": action, "result": result, "duration_seconds": round(time.perf_counter() - start, 3), **fields},
+    )
 
 
 def tool_error(start: float, action: str, error: BaseException, step: int | None = None, **fields) -> None:
-    _emit("tool_error", step, {"action": action, "error_type": type(error).__name__, "error": str(error), "duration_seconds": round(time.perf_counter() - start, 3), **fields})
+    _emit(
+        "tool_error",
+        step,
+        {
+            "action": action,
+            "error_type": type(error).__name__,
+            "error": str(error),
+            "duration_seconds": round(time.perf_counter() - start, 3),
+            **fields,
+        },
+    )

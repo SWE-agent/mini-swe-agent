@@ -94,7 +94,10 @@ class InteractiveAgent(DefaultAgent):
             self.config.step_limit = int(input("New step limit: "))
             self.config.cost_limit = float(input("New cost limit: "))
             observatory_log.tool_end(
-                start, "user_input", result=f"{self.config.step_limit} steps, ${self.config.cost_limit}", step=self.n_calls
+                start,
+                "user_input",
+                result=f"{self.config.step_limit} steps, ${self.config.cost_limit}",
+                step=self.n_calls,
             )
             return super().query()
 

@@ -40,4 +40,7 @@ class LLM:
 
     @staticmethod
     def results_message(results: list[tuple[str, str]]) -> dict:
-        return {"role": "user", "content": [{"type": "tool_result", "tool_use_id": i, "content": out} for i, out in results]}
+        return {
+            "role": "user",
+            "content": [{"type": "tool_result", "tool_use_id": i, "content": out} for i, out in results],
+        }

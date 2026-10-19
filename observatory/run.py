@@ -36,8 +36,14 @@ DIAGRAM = KIT / "diagram/agent-architecture.html"
 RUNS = KIT / "runs"
 # The Claude Code slot: a fresh, memoryless session that may edit files and run uv/git diff. The prompt arrives on stdin.
 CLAUDE_ARGS = [
-    "-p", "--no-session-persistence", "--setting-sources", "project", "--strict-mcp-config", "--disable-slash-commands",
-    "--permission-mode", "acceptEdits",
+    "-p",
+    "--no-session-persistence",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--disable-slash-commands",
+    "--permission-mode",
+    "acceptEdits",
 ]
 CLAUDE_TOOLS = ["Read", "Edit", "Write", "Grep", "Glob", "Bash(uv run:*)", "Bash(git diff:*)"]
 
@@ -47,8 +53,12 @@ def step(message: str) -> None:
 
 
 def find_claude() -> str:
-    vscode = sorted(Path.home().glob(".vscode/extensions/anthropic.claude-code-*/resources/native-binary/claude"), reverse=True)
-    if found := next((c for c in [os.environ.get("CLAUDE_BIN"), shutil.which("claude"), *vscode] if c and Path(c).exists()), None):
+    vscode = sorted(
+        Path.home().glob(".vscode/extensions/anthropic.claude-code-*/resources/native-binary/claude"), reverse=True
+    )
+    if found := next(
+        (c for c in [os.environ.get("CLAUDE_BIN"), shutil.which("claude"), *vscode] if c and Path(c).exists()), None
+    ):
         return str(found)
     raise SystemExit("Claude Code CLI not found. Put `claude` on PATH or set CLAUDE_BIN.")
 
@@ -57,8 +67,22 @@ def claude(prompt: str, model: str, budget: float, archify_dir: Path | None) -> 
     tools = [*CLAUDE_TOOLS, f"Bash(node {archify_dir}/bin/archify.mjs validate:*)"] if archify_dir else CLAUDE_TOOLS
     allow_archify = ["--add-dir", str(archify_dir)] if archify_dir else []
     result = subprocess.run(
-        [find_claude(), *CLAUDE_ARGS, *allow_archify, "--allowedTools", *tools, "--model", model, "--max-budget-usd", str(budget)],
-        input=prompt, cwd=REPO, text=True, capture_output=True, env={**os.environ, "OBSERVATORY_RUNS": str(RUNS)},
+        [
+            find_claude(),
+            *CLAUDE_ARGS,
+            *allow_archify,
+            "--allowedTools",
+            *tools,
+            "--model",
+            model,
+            "--max-budget-usd",
+            str(budget),
+        ],
+        input=prompt,
+        cwd=REPO,
+        text=True,
+        capture_output=True,
+        env={**os.environ, "OBSERVATORY_RUNS": str(RUNS)},
     )
     print(result.stdout.strip())
     if result.returncode:
@@ -67,7 +91,11 @@ def claude(prompt: str, model: str, budget: float, archify_dir: Path | None) -> 
 
 def prompt_text(archify_dir: Path | None) -> str:
     wiring, diagram = (KIT / "prompt/task.md").read_text().split("<!-- diagram -->")
-    return (wiring + (diagram if archify_dir else "")).replace("{kit}", str(KIT.relative_to(REPO))).replace("{archify_dir}", str(archify_dir))
+    return (
+        (wiring + (diagram if archify_dir else ""))
+        .replace("{kit}", str(KIT.relative_to(REPO)))
+        .replace("{archify_dir}", str(archify_dir))
+    )
 
 
 def git(*args: str, env: dict | None = None) -> str:
@@ -77,21 +105,36 @@ def git(*args: str, env: dict | None = None) -> str:
 def check_wiring() -> None:
     """Restore any edited copy of the logger, then report what is wired."""
     exclude = f":!{KIT.relative_to(REPO)}"
-    copies = [REPO / p for p in git("ls-files", "-co", "--exclude-standard", "--", "*observatory_log.py", exclude).splitlines()]
+    copies = [
+        REPO / p
+        for p in git("ls-files", "-co", "--exclude-standard", "--", "*observatory_log.py", exclude).splitlines()
+    ]
     for copy in copies:
         if copy.read_text() != LOGGER.read_text():
             shutil.copy(LOGGER, copy)
             print(f"restored {copy.relative_to(REPO)}: the logger must stay identical to {LOGGER.relative_to(REPO)}")
-    users = [f for f in git("grep", "--untracked", "-l", "observatory_log", "--", ".", exclude).splitlines() if REPO / f not in copies]
+    users = [
+        f
+        for f in git("grep", "--untracked", "-l", "observatory_log", "--", ".", exclude).splitlines()
+        if REPO / f not in copies
+    ]
     if copies and users:
         print(f"logger: {', '.join(str(c.relative_to(REPO)) for c in copies)}\ncalled from: {', '.join(users)}")
     else:
-        print("warning: nothing calls the logger yet" if copies else "warning: Claude did not copy observatory_log.py into the agent package")
+        print(
+            "warning: nothing calls the logger yet"
+            if copies
+            else "warning: Claude did not copy observatory_log.py into the agent package"
+        )
 
 
 def check_trace() -> None:
     kinds = Counter(json.loads(line)["kind"] for run in RUNS.glob("*.jsonl") for line in run.read_text().splitlines())
-    print(f"events from Claude's own check run: {dict(kinds)}" if kinds else f"warning: no events in {RUNS.relative_to(REPO)}: run your agent with OBSERVATORY_RUNS to see the history")
+    print(
+        f"events from Claude's own check run: {dict(kinds)}"
+        if kinds
+        else f"warning: no events in {RUNS.relative_to(REPO)}: run your agent with OBSERVATORY_RUNS to see the history"
+    )
 
 
 def check_spec_sources() -> list[str]:
@@ -114,23 +157,41 @@ def current_revision() -> str:
     if not git("status", "--porcelain"):
         return git("rev-parse", "HEAD")
     with tempfile.TemporaryDirectory() as tmp:
-        env = {**os.environ, "GIT_INDEX_FILE": f"{tmp}/index", "GIT_AUTHOR_NAME": "observatory", "GIT_AUTHOR_EMAIL": "o@o", "GIT_COMMITTER_NAME": "observatory", "GIT_COMMITTER_EMAIL": "o@o"}
+        env = {
+            **os.environ,
+            "GIT_INDEX_FILE": f"{tmp}/index",
+            "GIT_AUTHOR_NAME": "observatory",
+            "GIT_AUTHOR_EMAIL": "o@o",
+            "GIT_COMMITTER_NAME": "observatory",
+            "GIT_COMMITTER_EMAIL": "o@o",
+        }
         git("read-tree", "HEAD", env=env)
         git("add", "-A", env=env)
-        return git("commit-tree", git("write-tree", env=env), "-p", "HEAD", "-m", "observatory work tree snapshot", env=env)
+        return git(
+            "commit-tree", git("write-tree", env=env), "-p", "HEAD", "-m", "observatory work tree snapshot", env=env
+        )
 
 
 def pin_repository() -> None:
     """Point the spec's source links to this checkout: its origin URL and the current revision."""
     text = SPEC.read_text()
     text = re.sub(r'("revision":\s*")[0-9a-f]{40}(")', rf"\g<1>{current_revision()}\2", text)
-    if match := re.match(r"(?:git@github\.com:|https://github\.com/)(.+?)(?:\.git)?$", git("remote", "get-url", "origin")):
-        text = re.sub(r'("url":\s*")https://github\.com/[^"]+(")', rf"\g<1>https://github.com/{match[1]}\2", text, count=1)
+    if match := re.match(
+        r"(?:git@github\.com:|https://github\.com/)(.+?)(?:\.git)?$", git("remote", "get-url", "origin")
+    ):
+        text = re.sub(
+            r'("url":\s*")https://github\.com/[^"]+(")', rf"\g<1>https://github.com/{match[1]}\2", text, count=1
+        )
     SPEC.write_text(text)
 
 
 def archify(archify_dir: Path, model: str, budget: float) -> None:
-    node = lambda *args, **kwargs: subprocess.run(["node", "bin/archify.mjs", *args, "--quality", "showcase", "--repo-root", REPO], cwd=archify_dir, text=True, **kwargs)
+    node = lambda *args, **kwargs: subprocess.run(
+        ["node", "bin/archify.mjs", *args, "--quality", "showcase", "--repo-root", REPO],
+        cwd=archify_dir,
+        text=True,
+        **kwargs,
+    )
     for attempt in range(3):
         pin_repository()
         validation = node("validate", "architecture", SPEC, capture_output=True)
@@ -142,13 +203,18 @@ def archify(archify_dir: Path, model: str, budget: float) -> None:
             f"`{SPEC.relative_to(REPO)}` fails Archify validation. Fix only what the errors point to; keep everything else and the "
             "file formatting as it is. Do not create HTML. The `line` values must match the files in the work tree as they are now: "
             f"never move them to fit another revision.\n\n{validation.stdout}{validation.stderr}",
-            model, budget, archify_dir,
+            model,
+            budget,
+            archify_dir,
         )
     delivery = node("deliver", "architecture", SPEC, DIAGRAM, "--json", capture_output=True)
     if delivery.returncode:
         raise SystemExit(f"Archify failed to generate the diagram:\n{delivery.stdout}{delivery.stderr}")
     print(f"diagram regenerated: {DIAGRAM.relative_to(REPO)}")
-    for receipt in (SPEC.parent / "agent-architecture.delivery.json", DIAGRAM.parent / "agent-architecture.delivery.json"):
+    for receipt in (
+        SPEC.parent / "agent-architecture.delivery.json",
+        DIAGRAM.parent / "agent-architecture.delivery.json",
+    ):
         receipt.unlink(missing_ok=True)
 
 
@@ -160,11 +226,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--model", default="sonnet", help="Claude Code model")
     parser.add_argument("--budget", type=float, default=3.0, help="max USD per Claude Code session")
-    parser.add_argument("--archify-dir", default=os.environ.get("ARCHIFY_DIR"), help="Archify's `archify/` directory (default: ../archify/archify)")
+    parser.add_argument(
+        "--archify-dir",
+        default=os.environ.get("ARCHIFY_DIR"),
+        help="Archify's `archify/` directory (default: ../archify/archify)",
+    )
     parser.add_argument("--serve", action="store_true", help="start the dashboard when done")
     parser.add_argument("--serve-only", action="store_true", help="only start the dashboard")
     parser.add_argument("--port", type=int, default=8000)
-    parser.add_argument("--no-claude", action="store_true", help="skip the Claude Code session (the agent is already wired)")
+    parser.add_argument(
+        "--no-claude", action="store_true", help="skip the Claude Code session (the agent is already wired)"
+    )
     parser.add_argument("--archify-only", action="store_true", help="only re-pin the spec and regenerate the diagram")
     parser.add_argument("--test", help="a command to run in the repository at the end, for example 'uv run pytest -q'")
     args = parser.parse_args()
@@ -179,7 +251,11 @@ if __name__ == "__main__":
         subprocess.run([sys.executable, KIT / "selftest.py"], check=True, capture_output=True)
         print("logger and dashboard self-test passed")
         if not args.no_claude:
-            step("Claude Code: connecting the agent to the logger" + (" and drawing the diagram" if archify_dir else "") + " (takes a few minutes)")
+            step(
+                "Claude Code: connecting the agent to the logger"
+                + (" and drawing the diagram" if archify_dir else "")
+                + " (takes a few minutes)"
+            )
             claude(prompt_text(archify_dir), args.model, args.budget, archify_dir)
         step("Checking the result")
         check_wiring()
@@ -190,7 +266,17 @@ if __name__ == "__main__":
         step("Archify: validating the spec and generating the diagram")
         archify(archify_dir, args.model, args.budget)
     else:
-        print("\n(no diagram: " + ("the spec was not written" if archify_dir else "Archify not found. Put the archify repo next to this checkout or set --archify-dir / $ARCHIFY_DIR") + ")")
+        print(
+            "\n(no diagram: "
+            + (
+                "the spec was not written"
+                if archify_dir
+                else "Archify not found. Put the archify repo next to this checkout or set --archify-dir / $ARCHIFY_DIR"
+            )
+            + ")"
+        )
     tests = subprocess.run(shlex.split(args.test), cwd=REPO).returncode if args.test and not args.archify_only else 0
-    print(f"\nDashboard:  uv run {KIT.relative_to(REPO)}/dashboard.py\nRun your agent with:  OBSERVATORY_RUNS={RUNS} <your agent command>")
+    print(
+        f"\nDashboard:  uv run {KIT.relative_to(REPO)}/dashboard.py\nRun your agent with:  OBSERVATORY_RUNS={RUNS} <your agent command>"
+    )
     raise SystemExit((serve(args.port) if args.serve else 0) or tests)

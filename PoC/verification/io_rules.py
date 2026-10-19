@@ -33,9 +33,18 @@ import llm_rules
 E1_ATTRS = {"tool_calls", "function_call", "function_calls", "tool_use"}
 E1_STRINGS = {"tool_use", "function_call", "tool_calls", "tool_call"}
 E2_CALLS = {  # (module root, last name)
-    ("re", "findall"), ("re", "finditer"), ("re", "search"), ("re", "match"), ("re", "fullmatch"),
-    ("json", "loads"), ("yaml", "safe_load"), ("yaml", "load"), ("yaml", "full_load"),
-    ("xml", "fromstring"), ("xml", "parse"), ("xmltodict", "parse"),
+    ("re", "findall"),
+    ("re", "finditer"),
+    ("re", "search"),
+    ("re", "match"),
+    ("re", "fullmatch"),
+    ("json", "loads"),
+    ("yaml", "safe_load"),
+    ("yaml", "load"),
+    ("yaml", "full_load"),
+    ("xml", "fromstring"),
+    ("xml", "parse"),
+    ("xmltodict", "parse"),
 }
 E3_KEYWORDS = {"response_format", "output_format", "output_type", "response_model", "text_format"}
 E3_METHODS = {"with_structured_output", "model_validate_json", "parse_raw"}
@@ -43,9 +52,28 @@ E3_METHODS = {"with_structured_output", "model_validate_json", "parse_raw"}
 # ---------------------------------------------------------------- TOOL
 T1_CALLS = {
     "subprocess": {"run", "Popen", "call", "check_call", "check_output", "getoutput", "getstatusoutput"},
-    "os": {"system", "popen", "execv", "execve", "execvp", "execvpe", "execl", "execle", "execlp", "execlpe",
-           "spawnv", "spawnve", "spawnvp", "spawnvpe", "spawnl", "spawnle", "spawnlp", "spawnlpe", "posix_spawn",
-           "posix_spawnp"},
+    "os": {
+        "system",
+        "popen",
+        "execv",
+        "execve",
+        "execvp",
+        "execvpe",
+        "execl",
+        "execle",
+        "execlp",
+        "execlpe",
+        "spawnv",
+        "spawn",
+        "spawnvp",
+        "spawnvpe",
+        "spawnl",
+        "spawnle",
+        "spawnlp",
+        "spawnlpe",
+        "posix_spawn",
+        "posix_spawnp",
+    },
     "asyncio": {"create_subprocess_exec", "create_subprocess_shell"},
     "pexpect": {"spawn", "run", "popen_spawn"},
     "pty": {"spawn"},
