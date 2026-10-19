@@ -1,0 +1,374 @@
+{
+ "schema_version": 1,
+ "diagram_type": "architecture",
+ "meta": {
+  "title": "mini-swe-agent Agent Loop",
+  "output": "static/agent-architecture.html",
+  "quality_profile": "showcase",
+  "viewBox": [
+   1240,
+   720
+  ],
+  "repository": {
+   "url": "https://github.com/NiceGuy1313/mini-swe-agent",
+   "provider": "github",
+   "link_mode": "web",
+   "revision": "76c6dc53b44f2ba50734ac95d5640c5a60b6af43"
+  }
+ },
+ "components": [
+  {
+   "id": "task",
+   "type": "external",
+   "label": "Task",
+   "sublabel": "dashboard input",
+   "pos": [
+    20,
+    310
+   ],
+   "size": [
+    130,
+    64
+   ]
+  },
+  {
+   "id": "run",
+   "type": "backend",
+   "label": "DefaultAgent.run",
+   "sublabel": "step loop + exit routing",
+   "pos": [
+    180,
+    310
+   ],
+   "size": [
+    170,
+    64
+   ],
+   "sources": [
+    {
+     "path": "src/minisweagent/agents/default.py",
+     "line": 88,
+     "label": "step loop"
+    },
+    {
+     "path": "src/minisweagent/agents/default.py",
+     "line": 115,
+     "label": "InterruptAgentFlow"
+    }
+   ]
+  },
+  {
+   "id": "messages",
+   "type": "database",
+   "label": "messages",
+   "sublabel": "system, task, history",
+   "pos": [
+    400,
+    110
+   ],
+   "size": [
+    200,
+    72
+   ],
+   "sources": [
+    {
+     "path": "src/minisweagent/agents/default.py",
+     "line": 69,
+     "label": "add_messages"
+    }
+   ]
+  },
+  {
+   "id": "query",
+   "type": "cloud",
+   "label": "DefaultAgent.query",
+   "sublabel": "limits check, then model.query",
+   "pos": [
+    400,
+    300
+   ],
+   "size": [
+    200,
+    72
+   ],
+   "tag": "llm_query llm_response llm_error",
+   "sources": [
+    {
+     "path": "src/minisweagent/agents/default.py",
+     "line": 130,
+     "end_line": 177,
+     "label": "LLM boundary"
+    }
+   ]
+  },
+  {
+   "id": "model",
+   "type": "messagebus",
+   "label": "Model.query",
+   "sublabel": "LiteLLM + bash tool call",
+   "pos": [
+    660,
+    300
+   ],
+   "size": [
+    210,
+    72
+   ],
+   "sources": [
+    {
+     "path": "src/minisweagent/models/litellm_model.py",
+     "line": 81,
+     "label": "model call"
+    },
+    {
+     "path": "src/minisweagent/models/litellm_model.py",
+     "line": 128,
+     "label": "parse actions"
+    }
+   ]
+  },
+  {
+   "id": "actions",
+   "type": "backend",
+   "label": "execute_actions",
+   "sublabel": "each action in order",
+   "pos": [
+    930,
+    215
+   ],
+   "size": [
+    240,
+    72
+   ],
+   "sources": [
+    {
+     "path": "src/minisweagent/agents/default.py",
+     "line": 179,
+     "label": "actions loop"
+    }
+   ]
+  },
+  {
+   "id": "action",
+   "type": "security",
+   "label": "DefaultAgent.execute_action",
+   "sublabel": "DefaultAgent + InteractiveAgent",
+   "pos": [
+    930,
+    385
+   ],
+   "size": [
+    240,
+    72
+   ],
+   "tag": "tool_start tool_end tool_error",
+   "sources": [
+    {
+     "path": "src/minisweagent/agents/default.py",
+     "line": 184,
+     "end_line": 212,
+     "label": "tool boundary"
+    }
+   ]
+  },
+  {
+   "id": "env",
+   "type": "frontend",
+   "label": "Environment.execute",
+   "sublabel": "LocalEnvironment: bash subprocess",
+   "pos": [
+    930,
+    560
+   ],
+   "size": [
+    240,
+    72
+   ],
+   "sources": [
+    {
+     "path": "src/minisweagent/environments/local.py",
+     "line": 24,
+     "label": "run command"
+    },
+    {
+     "path": "src/minisweagent/environments/local.py",
+     "line": 45,
+     "label": "Submitted check"
+    }
+   ]
+  },
+  {
+   "id": "observation",
+   "type": "messagebus",
+   "label": "Observation",
+   "sublabel": "format_observation_messages",
+   "pos": [
+    620,
+    560
+   ],
+   "size": [
+    200,
+    72
+   ],
+   "sources": [
+    {
+     "path": "src/minisweagent/models/utils/actions_toolcall.py",
+     "line": 79,
+     "label": "observation format"
+    }
+   ]
+  },
+  {
+   "id": "exit",
+   "type": "frontend",
+   "label": "Exit",
+   "sublabel": "Submitted · LimitsExceeded",
+   "pos": [
+    160,
+    560
+   ],
+   "size": [
+    190,
+    72
+   ],
+   "sources": [
+    {
+     "path": "src/minisweagent/exceptions.py",
+     "line": 9,
+     "label": "Submitted"
+    },
+    {
+     "path": "src/minisweagent/exceptions.py",
+     "line": 13,
+     "label": "LimitsExceeded"
+    }
+   ]
+  }
+ ],
+ "boundaries": [
+  {
+   "kind": "region",
+   "label": "one step",
+   "wraps": [
+    "messages",
+    "query",
+    "model",
+    "actions",
+    "action",
+    "env",
+    "observation"
+   ],
+   "pad": 24
+  }
+ ],
+ "connections": [
+  {
+   "from": "task",
+   "to": "run",
+   "label": "start",
+   "variant": "emphasis"
+  },
+  {
+   "from": "run",
+   "to": "messages",
+   "label": "each step",
+   "variant": "emphasis"
+  },
+  {
+   "from": "messages",
+   "to": "query",
+   "label": "messages",
+   "variant": "emphasis",
+   "fromSide": "bottom",
+   "toSide": "top"
+  },
+  {
+   "from": "query",
+   "to": "model",
+   "variant": "emphasis"
+  },
+  {
+   "from": "model",
+   "to": "actions",
+   "label": "actions",
+   "variant": "emphasis",
+   "fromSide": "right",
+   "toSide": "left",
+   "via": [
+    [
+     900,
+     336
+    ],
+    [
+     900,
+     251
+    ]
+   ]
+  },
+  {
+   "from": "actions",
+   "to": "action",
+   "label": "one by one",
+   "variant": "emphasis",
+   "fromSide": "bottom",
+   "toSide": "top"
+  },
+  {
+   "from": "action",
+   "to": "env",
+   "label": "env.execute",
+   "variant": "emphasis",
+   "fromSide": "bottom",
+   "toSide": "top"
+  },
+  {
+   "from": "env",
+   "to": "observation",
+   "label": "output",
+   "variant": "emphasis"
+  },
+  {
+   "from": "observation",
+   "to": "messages",
+   "label": "next step",
+   "variant": "dashed"
+  },
+  {
+   "from": "run",
+   "to": "exit",
+   "label": "Submitted / limits",
+   "variant": "emphasis",
+   "fromSide": "bottom",
+   "toSide": "top"
+  }
+ ],
+ "cards": [
+  {
+   "dot": "cyan",
+   "title": "LLM 경계",
+   "items": [
+    "step마다 DefaultAgent.query가 model.query를 한 번 호출",
+    "llm_query → llm_response(bash 액션, 비용) / 실패 시 llm_error",
+    "InteractiveAgent.query도 super().query()를 거침"
+   ]
+  },
+  {
+   "dot": "amber",
+   "title": "tool = bash 한 가지",
+   "items": [
+    "모든 액션은 DefaultAgent.execute_action을 통과",
+    "Submitted는 tool_end(result=submitted)로 기록",
+    "InteractiveAgent의 사용자 입력은 user_input tool로 기록"
+   ]
+  },
+  {
+   "dot": "emerald",
+   "title": "관측 지점",
+   "items": [
+    "agents/default.py: llm_query / llm_response / llm_error",
+    "agents/default.py: tool_start / tool_end / tool_error",
+    "agents/interactive.py: user_input tool_start / tool_end"
+   ]
+  }
+ ]
+}
