@@ -10,10 +10,13 @@ usage:
       [--cfg TEXT ...]             # only draw CFGs of functions whose qualname contains TEXT (default: all)
       [--exclude TEXT ...]         # drop functions whose qualname contains TEXT from all outputs
       [--only PATH ...]            # only scan these files (relative to src_root) instead of every *.py
+
+Also writes <out_dir>/index.html: click a call-graph node to see its CFG, callers/callees and jump to the code in VS Code.
 """
 
 import argparse
 import ast
+import json
 import textwrap
 from pathlib import Path
 
@@ -166,6 +169,7 @@ def draw_callgraph(funcs, es, out: Path, name: str, marks: list[str]):
     for a, b, line, kind in sorted(set(es)):
         g.edge(ids[a], ids[b], label=f"L{line}", fontsize="8", **STYLE[kind])
     g.render(out / name, format="svg", cleanup=True)
+    return {"svg": (out / f"{name}.svg").read_text(encoding="utf-8"), "ids": {i: n for n, i in ids.items()}}
 
 
 def reachable(start: list[str], es) -> set[str]:
@@ -181,6 +185,10 @@ def reachable(start: list[str], es) -> set[str]:
 
 
 # ---------- 3. CFG ----------
+def cfg_name(q: str) -> str:
+    return q.replace("#", "__").replace("/", "_")
+
+
 def draw_cfgs(funcs, out: Path, filters: list[str]):
     (out / "cfg").mkdir(exist_ok=True)
     for q, info in funcs.items():
@@ -188,7 +196,31 @@ def draw_cfgs(funcs, out: Path, filters: list[str]):
             continue
         cfg = CFGBuilder().build_from_src(q, textwrap.dedent(ast.unparse(info["node"])))
         fn = next(iter(cfg.functioncfgs.values()))
-        fn.build_visual(str(out / "cfg" / q.replace("#", "__").replace("/", "_")), "svg", show=False, cleanup=True)
+        fn.build_visual(str(out / "cfg" / cfg_name(q)), "svg", show=False, cleanup=True)
+
+
+# ---------- 4. Viewer ----------
+def write_viewer(root: Path, funcs, es, graphs: dict, out: Path):
+    def loc(file: str, line: int) -> dict:
+        return {"file": file, "line": line, "uri": f"vscode://file/{(root / file).resolve().as_posix()}:{line}"}
+
+    nodes = {}
+    for q, info in funcs.items():
+        n = info["node"]
+        cfg = out / "cfg" / f"{cfg_name(q)}.svg"
+        nodes[q] = {
+            **loc(info["file"], n.lineno),
+            "end": n.end_lineno,
+            "cfg": cfg.relative_to(out).as_posix() if cfg.exists() else None,
+            "calls": [{**loc(info["file"], c.lineno), "text": f"{ast.unparse(c.func)}()"} for c in info["calls"]],
+        }
+    rel = {}
+    for a, b, line, kind in sorted(set(es)):
+        rel.setdefault(a, {"in": [], "out": []})["out"].append({"name": b, "line": line, "kind": kind})
+        rel.setdefault(b, {"in": [], "out": []})["in"].append({"name": a, "line": line, "kind": kind, **loc(funcs[a]["file"], line)})
+    data = {"root": root.resolve().as_posix(), "graphs": graphs, "nodes": nodes, "rel": rel}
+    html = (Path(__file__).parent / "viewer.html").read_text(encoding="utf-8")
+    (out / "index.html").write_text(html.replace("__DATA__", json.dumps(data).replace("</", r"<\/")), encoding="utf-8")
 
 
 if __name__ == "__main__":
@@ -206,8 +238,10 @@ if __name__ == "__main__":
     funcs = {q: info for q, info in funcs.items() if not any(x in q for x in a.exclude)}
     write_ast(a.src_root, a.only, funcs, classes, a.out_dir)
     es = edges(funcs, classes)
-    draw_callgraph(funcs, es, a.out_dir, "callgraph_full", a.mark)
+    graphs = {}
     if a.entry:
         keep = reachable(a.entry, es)
-        draw_callgraph(funcs, [e for e in es if e[0] in keep], a.out_dir, "callgraph_entry", a.mark)
+        graphs["entry"] = draw_callgraph(funcs, [e for e in es if e[0] in keep], a.out_dir, "callgraph_entry", a.mark)
+    graphs["full"] = draw_callgraph(funcs, es, a.out_dir, "callgraph_full", a.mark)
     draw_cfgs(funcs, a.out_dir, a.cfg)
+    write_viewer(a.src_root, funcs, es, graphs, a.out_dir)

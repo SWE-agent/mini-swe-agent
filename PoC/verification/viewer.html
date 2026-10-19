@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Call Graph Viewer</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #ffffff; --text: #1d2330; --muted: #5d6677; --line: #dde1e8;
+    --accent: #2f6fde; --accent-soft: #e5eefc; --hit: #ffd84d; --graph-bg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14171c; --panel: #1c2027; --text: #e4e7ec; --muted: #9aa3b2; --line: #2e343e;
+      --accent: #6c9cff; --accent-soft: #1f2b44; --hit: #a8871a; --graph-bg: #f4f5f7;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14171c; --panel: #1c2027; --text: #e4e7ec; --muted: #9aa3b2; --line: #2e343e;
+    --accent: #6c9cff; --accent-soft: #1f2b44; --hit: #a8871a; --graph-bg: #f4f5f7;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--bg); color: var(--text); font: 14px/1.5 system-ui, "Segoe UI", "Malgun Gothic", sans-serif; display: flex; flex-direction: column; }
+  header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); flex-wrap: wrap; }
+  header h1 { font-size: 15px; margin: 0; font-weight: 600; }
+  header .root { color: var(--muted); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
+  .spacer { flex: 1; }
+  .tabs button, .tools button { border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 4px 10px; border-radius: 6px; cursor: pointer; font: inherit; font-size: 13px; }
+  .tabs button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  input[type=search] { border: 1px solid var(--line); background: var(--bg); color: var(--text); border-radius: 6px; padding: 5px 10px; font: inherit; font-size: 13px; width: 220px; }
+  main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 420px; min-height: 0; }
+  .pz { position: relative; overflow: hidden; cursor: grab; touch-action: none; }
+  .pz.drag { cursor: grabbing; }
+  .pz > svg, .pz > img { position: absolute; left: 0; top: 0; transform-origin: 0 0; max-width: none; }
+  #graph { background: var(--graph-bg); }
+  #graph g.node { cursor: pointer; }
+  #graph.has-sel g.node, #graph.has-sel g.edge { opacity: .18; }
+  #graph.has-sel g.node.near, #graph.has-sel g.edge.near { opacity: 1; }
+  #graph g.node.sel polygon, #graph g.node.sel ellipse { stroke: var(--accent); stroke-width: 3; }
+  #graph g.node.sel text { font-weight: 700; }
+  #graph g.node.hit polygon { fill: var(--hit); }
+  #graph g.node.hit text { text-decoration: underline; }
+  .hint { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: #5d6677; background: rgba(255,255,255,.85); padding: 2px 8px; border-radius: 4px; pointer-events: none; }
+  aside { border-left: 1px solid var(--line); background: var(--panel); overflow: auto; padding: 16px; }
+  aside h2 { font-size: 16px; margin: 0 0 4px; word-break: break-all; font-family: ui-monospace, Consolas, monospace; }
+  aside h3 { font-size: 13px; margin: 20px 0 6px; color: var(--muted); font-weight: 600; }
+  .loc { font-size: 12px; color: var(--muted); font-family: ui-monospace, Consolas, monospace; }
+  a.open { display: inline-block; margin-top: 8px; background: var(--accent); color: #fff; text-decoration: none; padding: 5px 12px; border-radius: 6px; font-size: 13px; }
+  .cfg { margin-top: 8px; border: 1px solid var(--line); border-radius: 6px; background: #fff; height: 380px; }
+  .cfg-actions { font-size: 12px; margin-top: 4px; }
+  .cfg-actions a { color: var(--accent); }
+  ul.rows { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  ul.rows li { display: flex; gap: 8px; align-items: baseline; padding: 3px 0; border-bottom: 1px dashed var(--line); }
+  ul.rows .ln { flex: none; width: 48px; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+  ul.rows .ln a { color: var(--accent); text-decoration: none; }
+  ul.rows .nm { font-family: ui-monospace, Consolas, monospace; word-break: break-all; }
+  ul.rows .nm.jump { color: var(--text); cursor: pointer; text-decoration: underline dotted; }
+  ul.rows .kind { margin-left: auto; flex: none; font-size: 11px; color: var(--muted); }
+  .empty { color: var(--muted); font-size: 13px; }
+  @media (max-width: 800px) {
+    main { grid-template-columns: 1fr; grid-template-rows: 55vh auto; }
+    aside { border-left: 0; border-top: 1px solid var(--line); }
+    input[type=search] { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Call Graph Viewer</h1>
+  <span class="root" id="root"></span>
+  <span class="spacer"></span>
+  <div class="tabs" id="tabs"></div>
+  <input type="search" id="q" placeholder="노드 검색 (Enter로 이동)">
+  <div class="tools"><button id="fit" title="전체 보기">전체 보기</button></div>
+</header>
+<main>
+  <div id="graph" class="pz"><div class="hint">휠: 확대/축소 · 드래그: 이동 · 노드 클릭: 상세</div></div>
+  <aside id="side"><p class="empty">왼쪽 그래프에서 노드를 클릭하세요.</p></aside>
+</main>
+<script>
+const DATA = __DATA__;
+const KIND = { static: "직접", super: "super()", dispatch: "override", external: "외부" };
+const graphEl = document.getElementById("graph"), side = document.getElementById("side");
+let cur = null, svg = null, selected = null, gpz = null;
+
+document.getElementById("root").textContent = DATA.root;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const link = (uri, text) => `<a href="${esc(uri)}" title="VS Code에서 열기">${esc(text)}</a>`;
+
+// pan/zoom for a container holding one <svg> or <img>; onClick gets clicks that were not drags
+function panzoom(box, el, w, h, onClick) {
+  const v = { x: 0, y: 0, k: 1 };
+  const apply = () => el.style.transform = `translate(${v.x}px,${v.y}px) scale(${v.k})`;
+  const fit = () => {
+    v.k = Math.min(box.clientWidth / w, box.clientHeight / h) * 0.95;
+    v.x = (box.clientWidth - w * v.k) / 2; v.y = (box.clientHeight - h * v.k) / 2; apply();
+  };
+  const zoomAt = (k, mx, my) => { k = Math.min(8, Math.max(0.02, k)); v.x = mx - (mx - v.x) * k / v.k; v.y = my - (my - v.y) * k / v.k; v.k = k; apply(); };
+  let drag = null;
+  box.onpointerdown = e => { drag = { x: e.clientX, y: e.clientY, vx: v.x, vy: v.y, moved: false }; box.setPointerCapture(e.pointerId); };
+  box.onpointermove = e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 3) { drag.moved = true; box.classList.add("drag"); }
+    v.x = drag.vx + dx; v.y = drag.vy + dy; apply();
+  };
+  box.onpointerup = e => {
+    if (drag && !drag.moved && onClick) { box.releasePointerCapture(e.pointerId); onClick(document.elementFromPoint(e.clientX, e.clientY)); }
+    drag = null; box.classList.remove("drag");
+  };
+  box.onwheel = e => { e.preventDefault(); const r = box.getBoundingClientRect(); zoomAt(v.k * Math.exp(-e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top); };
+  const centerOn = node => {
+    const c = box.getBoundingClientRect();
+    if (v.k < 0.8) zoomAt(0.8, c.width / 2, c.height / 2);
+    const r = node.getBoundingClientRect();
+    v.x += c.left + c.width / 2 - (r.left + r.width / 2); v.y += c.top + c.height / 2 - (r.top + r.height / 2); apply();
+  };
+  fit();
+  return { fit, centerOn };
+}
+function nodeEl(name) {
+  const id = Object.keys(cur.ids).find(i => cur.ids[i] === name);
+  return id && [...svg.querySelectorAll("g.node")].find(g => g.querySelector("title").textContent === id);
+}
+
+function load(key) {
+  cur = DATA.graphs[key];
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.k === key));
+  graphEl.querySelector("svg")?.remove();
+  graphEl.insertAdjacentHTML("afterbegin", cur.svg.slice(cur.svg.indexOf("<svg")));
+  svg = graphEl.querySelector("svg");
+  const vb = svg.viewBox.baseVal; svg.setAttribute("width", vb.width); svg.setAttribute("height", vb.height);
+  gpz = panzoom(graphEl, svg, vb.width, vb.height, t => { const g = t?.closest("g.node"); if (g) select(cur.ids[g.querySelector("title").textContent]); });
+  if (selected && nodeEl(selected)) select(selected); else { selected = null; graphEl.classList.remove("has-sel"); }
+}
+
+function select(name, center) {
+  selected = name;
+  const id = Object.keys(cur.ids).find(i => cur.ids[i] === name);
+  graphEl.classList.toggle("has-sel", !!id);
+  svg.querySelectorAll(".sel,.near").forEach(e => e.classList.remove("sel", "near"));
+  if (id) {
+    const near = new Set([id]);
+    svg.querySelectorAll("g.edge").forEach(e => {
+      const [a, b] = e.querySelector("title").textContent.split("->");
+      if (a === id || b === id) { e.classList.add("near"); near.add(a); near.add(b); }
+    });
+    svg.querySelectorAll("g.node").forEach(g => {
+      const t = g.querySelector("title").textContent;
+      if (near.has(t)) g.classList.add("near");
+      if (t === id) { g.classList.add("sel"); if (center) gpz.centerOn(g); }
+    });
+  }
+  render(name);
+}
+
+function rows(items, fn) { return items.length ? `<ul class="rows">${items.map(fn).join("")}</ul>` : `<p class="empty">없음</p>`; }
+function jumpName(n) {
+  return nodeEl(n) ? `<span class="nm jump" data-n="${esc(n)}">${esc(n)}</span>` : `<span class="nm">${esc(n)}</span>`;
+}
+
+function render(name) {
+  const info = DATA.nodes[name], rel = DATA.rel[name] || { in: [], out: [] };
+  let h = `<h2>${esc(name)}</h2>`;
+  if (info) {
+    h += `<div class="loc">${esc(info.file)} : ${info.line}–${info.end}</div><a class="open" href="${esc(info.uri)}">VS Code에서 열기</a>`;
+    h += `<h3>CFG</h3>` + (info.cfg
+      ? `<div class="cfg pz"><img src="${esc(info.cfg)}" alt="CFG of ${esc(name)}" draggable="false"></div><div class="cfg-actions">휠/드래그로 확대·이동 · <a href="#" id="cfgfit">맞추기</a> · <a href="${esc(info.cfg)}" target="_blank">새 탭에서 보기</a></div>`
+      : `<p class="empty">CFG가 생성되지 않았습니다 (--cfg 필터 확인).</p>`);
+    h += `<h3>이 함수가 호출하는 것 (${rel.out.length})</h3>` + rows(rel.out, r =>
+      `<li><span class="ln">${link(info.uri.replace(/:\d+$/, ":" + r.line), "L" + r.line)}</span>${jumpName(r.name)}<span class="kind">${KIND[r.kind]}</span></li>`);
+  } else {
+    h += `<div class="loc">정적으로 대상을 알 수 없는 호출 (외부 노드)</div>`;
+  }
+  h += `<h3>이 함수를 호출하는 곳 (${rel.in.length})</h3>` + rows(rel.in, r =>
+    `<li><span class="ln">${link(r.uri, "L" + r.line)}</span>${jumpName(r.name)}<span class="kind">${KIND[r.kind]}</span></li>`);
+  side.innerHTML = h;
+  side.querySelectorAll(".jump").forEach(s => s.addEventListener("click", () => select(s.dataset.n, true)));
+  const img = side.querySelector(".cfg img");
+  if (img) img.onload = () => {
+    const pz = panzoom(img.parentElement, img, img.naturalWidth, img.naturalHeight);
+    side.querySelector("#cfgfit").onclick = e => { e.preventDefault(); pz.fit(); };
+  };
+}
+
+// tabs
+const LABEL = { entry: "진입점 기준", full: "전체" };
+for (const k of Object.keys(DATA.graphs)) {
+  const b = document.createElement("button"); b.textContent = LABEL[k] || k; b.dataset.k = k;
+  b.onclick = () => load(k); document.getElementById("tabs").append(b);
+}
+
+document.getElementById("fit").onclick = () => gpz.fit();
+window.addEventListener("resize", () => gpz.fit());
+
+// search
+const q = document.getElementById("q");
+function matches() {
+  const t = q.value.trim().toLowerCase();
+  return t ? [...svg.querySelectorAll("g.node")].filter(g => cur.ids[g.querySelector("title").textContent].toLowerCase().includes(t)) : [];
+}
+q.addEventListener("input", () => { svg.querySelectorAll(".hit").forEach(g => g.classList.remove("hit")); matches().forEach(g => g.classList.add("hit")); });
+q.addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const m = matches(); if (!m.length) return;
+  const i = (m.findIndex(g => cur.ids[g.querySelector("title").textContent] === selected) + 1) % m.length;
+  select(cur.ids[m[i].querySelector("title").textContent], true);
+});
+
+load(Object.keys(DATA.graphs)[0]);
+</script>
+</body>
+</html>
