@@ -1,7 +1,0 @@
-status	category	rule	pattern	location	function	wrappers	bypass_path
-covered	INPUT	I1-input	input	agent.py:66	ToyAgent.ask_user	ToyAgent.ask_user
-covered	LLM	R1-sdk	anthropic:messages.create	llm.py:16	LLM.chat	LLM.chat
-covered	EXTRACT	E1-field	'tool_use'	llm.py:37	LLM.parse	LLM.chat
-covered	TOOL	T1-process	subprocess:run	tools.py:9	tools.py#bash	Registry.run,ToyAgent.run
-covered	TOOL	T2-code	exec	tools.py:14	tools.py#python	Registry.run,ToyAgent.run
-covered	TOOL	T4-dispatch	x[name](...)	tools.py:25	Registry.run	Registry.run

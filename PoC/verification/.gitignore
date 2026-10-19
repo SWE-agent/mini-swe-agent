@@ -1,4 +1,3 @@
-out_pipeline/
-out_rules/
-out_wrapper/
+out_*/
+mini_workspaces/
 __pycache__/
