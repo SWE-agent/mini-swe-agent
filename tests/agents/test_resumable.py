@@ -2,6 +2,7 @@
 # AGENTS.md requires tuple parameter names, including single-parameter cases.
 
 import json
+import shlex
 import signal
 import subprocess
 import sys
@@ -227,6 +228,46 @@ def test_interrupted_commands_are_not_resumable(tmp_path, command):
     agent.config.output_path.write_text(json.dumps(data))
     with pytest.raises(ValueError, match="missing or interrupted action results"):
         load_checkpoint(agent.run_dir)
+
+
+@pytest.mark.parametrize(
+    ("command", "returncode"),
+    [
+        ("exit 1", 1),
+        ("exit 137", 137),
+        pytest.param(
+            f"{shlex.quote(sys.executable)} -c 'import os, signal; os.kill(os.getpid(), signal.SIGKILL)'; "
+            'status=$?; exit "$status"',
+            137,
+            marks=pytest.mark.skipif(sys.platform == "win32", reason="Requires POSIX shell signal status"),
+        ),
+    ],
+)
+def test_positive_shell_status_allows_batch_completion_and_resume(tmp_path, command, returncode):
+    agent = agent_for(
+        tmp_path,
+        toolcalls=True,
+        commands=[
+            f"printf 'A\\n' >> effects.txt; {command}",
+            "printf 'B\\n' >> effects.txt",
+            "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT",
+        ],
+        pause_after=1,
+    )
+    first, second, submit = agent.model.config.outputs
+    first["extra"]["actions"] += second["extra"]["actions"]
+    first["tool_calls"] += second["tool_calls"]
+    agent.model.config.outputs = [first, submit]
+    assert agent.run("Observe shell exit status", marker="kept")["exit_status"] == "Paused"
+    paused, _ = load_checkpoint(agent.run_dir)
+    assert [message["extra"]["returncode"] for message in paused["messages"][3:5]] == [returncode, 0]
+    assert not any(message["extra"].get("exception_info") for message in paused["messages"][3:5])
+    assert (tmp_path / "work/effects.txt").read_text() == "A\nB\n"
+    original = agent.config.output_path.read_bytes()
+    resumed = continuation(agent.run_dir)
+    assert resumed.resume()["exit_status"] == "Submitted"
+    assert (resumed.n_calls, resumed.cost, (tmp_path / "work/effects.txt").read_text()) == (2, 2, "A\nB\n")
+    assert agent.config.output_path.read_bytes() == original
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Requires SIGKILL")

@@ -54,10 +54,15 @@ Only checkpoints produced by this runner, marked `paused` after a controlled sto
 are accepted. The stop may be an explicit pause or a call, cost, or active-time limit
 reached before the next request. All actions in a multi-action response must have
 matching results. Legacy trajectories, incomplete histories, interrupted requests,
-command timeouts, signal-terminated commands, ordinary exceptions, and completed
+command timeouts, detected execution interruptions, ordinary exceptions, and completed
 tasks cannot be resumed.
-An interrupted command stops its batch; remaining tool calls are recorded as not
-executed. An ordinary nonzero exit code is a completed observation and can be resumed.
+A reported execution exception or a negative command-shell return code stops the
+batch; remaining tool calls are recorded as not executed. Positive exit codes are
+completed observations and do not prevent a later controlled pause or resume.
+The shell may report a child terminated by a signal as a positive code such as `137`,
+or a wrapper may hide that failure. These cases do not stop the batch and are not
+detected as interruptions. A controlled pause does not guarantee that child processes
+completed successfully.
 
 Keep the original run directory and working directory. The loader checks the recorded
 paths and configuration, but does not snapshot or verify working-directory contents.
