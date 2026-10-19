@@ -13,6 +13,7 @@ from rich.console import Console
 subcommands = [
     ("minisweagent.run.utilities.config", ["config"], "Manage the global config file"),
     ("minisweagent.run.utilities.inspector", ["inspect", "i", "inspector"], "Run inspector (browse trajectories)"),
+    ("minisweagent.run.extra.resumable", ["resumable"], "Start or resume a controlled local run"),
     ("minisweagent.run.benchmarks.swebench", ["swebench"], "Evaluate on SWE-bench (batch mode)"),
     ("minisweagent.run.benchmarks.swebench_single", ["swebench-single"], "Evaluate on SWE-bench (single instance)"),
     ("minisweagent.run.benchmarks.programbench", ["programbench"], "Run on ProgramBench (batch mode)"),
