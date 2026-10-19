@@ -182,12 +182,15 @@ Config options like `--config-class` also take full import classes, so you can p
 
 ```python
 # Removed attributes
-cost: float      # moved to Agent
-n_calls: int     # moved to Agent
+cost: float  # moved to Agent
+n_calls: int  # moved to Agent
+
 
 # New methods
 def format_message(self, **kwargs) -> dict: ...
-def format_observation_messages(self, message: dict, outputs: list[dict], template_vars: dict | None = None) -> list[dict]: ...
+def format_observation_messages(
+    self, message: dict, outputs: list[dict], template_vars: dict | None = None
+) -> list[dict]: ...
 def serialize(self) -> dict: ...
 ```
 
@@ -196,6 +199,7 @@ def serialize(self) -> dict: ...
 ```python
 # Changed signature
 def execute(self, action: dict, cwd: str = "") -> dict[str, Any]: ...  # was: (command: str) -> dict[str, str]
+
 
 # New method
 def serialize(self) -> dict: ...
@@ -209,8 +213,10 @@ model: Model
 env: Environment
 messages: list[dict]
 
+
 # Changed return type
 def run(self, task: str, **kwargs) -> dict: ...  # was: tuple[str, str]
+
 
 # New method
 def save(self, path: Path | None, *extra_dicts) -> dict: ...
