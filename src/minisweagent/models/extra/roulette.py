@@ -17,6 +17,7 @@ class RouletteModel:
         """This "meta"-model randomly selects one of the models at every call"""
         self.config = config_class(**kwargs)
         self.models = [get_model(config=config) for config in self.config.model_kwargs]
+        self._current_model = self.models[0]
         self._n_calls = 0
 
     def get_template_vars(self, **kwargs) -> dict:
@@ -26,11 +27,19 @@ class RouletteModel:
         return random.choice(self.models)
 
     def query(self, *args, **kwargs) -> dict:
-        model = self.select_model()
+        self._current_model = self.select_model()
         self._n_calls += 1
-        response = model.query(*args, **kwargs)
-        response["model_name"] = model.config.model_name
+        response = self._current_model.query(*args, **kwargs)
+        response.setdefault("extra", {})["model_name"] = self._current_model.config.model_name
         return response
+
+    def format_message(self, **kwargs) -> dict:
+        return self.models[0].format_message(**kwargs)
+
+    def format_observation_messages(
+        self, message: dict, outputs: list[dict], template_vars: dict | None = None
+    ) -> list[dict]:
+        return self._current_model.format_observation_messages(message, outputs, template_vars)
 
     def serialize(self) -> dict:
         return {
