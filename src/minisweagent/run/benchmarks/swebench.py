@@ -183,8 +183,7 @@ def filter_instances(
     """Filter and slice a list of SWEBench instances."""
     if shuffle:
         instances = sorted(instances.copy(), key=lambda x: x["instance_id"])
-        random.seed(42)
-        random.shuffle(instances)
+        random.Random(42).shuffle(instances)
     before_filter = len(instances)
     instances = [instance for instance in instances if re.match(filter_spec, instance["instance_id"])]
     if (after_filter := len(instances)) != before_filter:

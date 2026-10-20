@@ -1,4 +1,5 @@
 import json
+import random
 import re
 from unittest.mock import MagicMock, patch
 
@@ -194,12 +195,30 @@ def test_filter_instances_shuffle():
     """Test filter_instances with shuffle enabled produces deterministic results"""
     instances = [{"instance_id": f"repo{i:02d}__test{i}"} for i in range(10)]
     # Test that shuffle produces same result with same seed
-    result1 = filter_instances(instances.copy(), filter_spec="", slice_spec="", shuffle=True)
-    result2 = filter_instances(instances.copy(), filter_spec="", slice_spec="", shuffle=True)
+    result1 = filter_instances(instances, filter_spec="", slice_spec="", shuffle=True)
+    result2 = filter_instances(instances, filter_spec="", slice_spec="", shuffle=True)
     assert result1 == result2
+    assert result1 == [instances[i] for i in [7, 3, 2, 8, 5, 6, 9, 4, 0, 1]]
     # Test that shuffled result is different from original order
-    result_no_shuffle = filter_instances(instances.copy(), filter_spec="", slice_spec="", shuffle=False)
+    result_no_shuffle = filter_instances(instances, filter_spec="", slice_spec="", shuffle=False)
     assert result1 != result_no_shuffle
+    assert instances == [{"instance_id": f"repo{i:02d}__test{i}"} for i in range(10)]
+
+
+@pytest.mark.parametrize(("n_instances", "seed"), [(0, 123), (10, 456)])
+def test_filter_instances_shuffle_preserves_random_state(n_instances, seed):
+    original_state = random.getstate()
+    try:
+        random.seed(seed)
+        expected_state = random.getstate()
+        filter_instances(
+            [{"instance_id": f"repo{i:02d}__test{i}"} for i in range(n_instances)],
+            filter_spec="",
+            shuffle=True,
+        )
+        assert random.getstate() == expected_state
+    finally:
+        random.setstate(original_state)
 
 
 def test_filter_instances_empty_list():
