@@ -110,6 +110,16 @@ class TestGetConfigFromSpec:
         result = get_config_from_spec(config_file)
         assert result == {"key": "value", "number": 42}
 
+    @pytest.mark.parametrize(("yaml_sibling",), [(False,), (True,)])  # noqa: PT006
+    def test_loads_requested_yml_file(self, tmp_path, yaml_sibling):
+        config_file = tmp_path / "custom.yml"
+        config_file.write_text("model:\n  model_name: requested-model\n", encoding="utf-8")
+        if yaml_sibling:
+            config_file.with_suffix(".yaml").write_text("model:\n  model_name: wrong-model\n", encoding="utf-8")
+
+        assert get_config_path(str(config_file)) == config_file
+        assert get_config_from_spec(str(config_file)) == {"model": {"model_name": "requested-model"}}
+
     def test_loads_utf8_yaml_regardless_of_locale(self, tmp_path):
         # subprocess under a C/ascii locale: read_text() with no encoding= would crash or garble a UTF-8 config
         config_file = tmp_path / "unicode.yaml"
