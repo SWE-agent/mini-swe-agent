@@ -40,7 +40,6 @@ sys.path.insert(0, str(HERE))
 import audit  # noqa: E402
 import flow_audit  # noqa: E402
 
-
 LEGEND = {
     **flow_audit.LEGEND,
     "edges": [
@@ -60,7 +59,9 @@ def find_codeql(given: str | None) -> str:
 
 
 def run(cmd: list, **kwargs) -> subprocess.CompletedProcess:
-    result = subprocess.run([str(c) for c in cmd], capture_output=True, text=True, encoding="utf-8", errors="replace", **kwargs)
+    result = subprocess.run(
+        [str(c) for c in cmd], capture_output=True, text=True, encoding="utf-8", errors="replace", **kwargs
+    )
     if result.returncode:
         raise SystemExit(f"failed: {' '.join(map(str, cmd[:4]))} ...\n{result.stdout[-2000:]}{result.stderr[-2000:]}")
     return result
@@ -130,8 +131,11 @@ def layout(paths, full: bool) -> set:
     (the earliest such point); from there one dashed edge to the log and one dotted edge to the use, the steps in
     between counted, not drawn. A use reached without any log is drawn in full: that is what needs checking."""
     if full:
-        return {(a, b, "log" if kind == "log" and b == steps[-1] else "flow", 0)
-                for _, kind, steps in paths for a, b in zip(steps, steps[1:])}
+        return {
+            (a, b, "log" if kind == "log" and b == steps[-1] else "flow", 0)
+            for _, kind, steps in paths
+            for a, b in zip(steps, steps[1:])
+        }
     logs = {}
     for _, kind, steps in paths:
         if kind == "log":
@@ -161,15 +165,27 @@ def draw(out: Path, paths, nodes, code, full: bool):
     edges = layout(paths, full)
     shown = {n for a, b, _, _ in edges for n in (a, b)}
     font = "Malgun Gothic"
-    g = graphviz.Digraph("codeql", graph_attr={"rankdir": "LR", "fontname": font},
-                         node_attr={"fontsize": "10", "fontname": font}, edge_attr={"fontname": font})
+    g = graphviz.Digraph(
+        "codeql",
+        graph_attr={"rankdir": "LR", "fontname": font},
+        node_attr={"fontsize": "10", "fontname": font},
+        edge_attr={"fontname": font},
+    )
     ids = {n: f"n{i}" for i, n in enumerate(sorted(shown))}
     for n, i in ids.items():
         info, (kind, what) = nodes[n], kinds.get(n, ("step", ""))
         where = f"{info['func']} : L{info['line']}"
         if kind == "source":
             label = f"[{flow_audit.SOURCE[what]}] {info['text']}\n{where}"
-            g.node(i, label, shape="ellipse", style="filled", fillcolor=flow_audit.FILL[what], color=flow_audit.COLOR[what], penwidth="2")
+            g.node(
+                i,
+                label,
+                shape="ellipse",
+                style="filled",
+                fillcolor=flow_audit.FILL[what],
+                color=flow_audit.COLOR[what],
+                penwidth="2",
+            )
         elif kind == "use":
             line = code(info["file"], info["line"]).replace("\\", "\\\\")
             g.node(i, f"[{what}] {info['text']}\n{line}\n{where}", shape="doubleoctagon", color="#333333")
@@ -178,12 +194,20 @@ def draw(out: Path, paths, nodes, code, full: bool):
             g.node(i, f"[LOG] {line}\n{where}", shape="note", style="filled", fillcolor="#e6f4ea", color="#2e7d32")
         else:
             g.node(i, f"{info['text']}\n{where}", shape="box", style="rounded")
-    style = {"flow": {}, "log": {"color": "#2e7d32", "style": "dashed"}, "skip": {"color": "#888888", "style": "dotted"}}
+    style = {
+        "flow": {},
+        "log": {"color": "#2e7d32", "style": "dashed"},
+        "skip": {"color": "#888888", "style": "dotted"},
+    }
     for a, b, kind, skipped in sorted(edges):
         label = f"… {skipped}단계" if skipped > 0 else ""
         g.edge(ids[a], ids[b], label=label, fontsize="8", **style[kind])
     g.render(out / "codeql", format="svg", cleanup=True)
-    return {"svg": (out / "codeql.svg").read_text(encoding="utf-8"), "ids": {i: n for n, i in ids.items()}}, kinds, edges
+    return (
+        {"svg": (out / "codeql.svg").read_text(encoding="utf-8"), "ids": {i: n for n, i in ids.items()}},
+        kinds,
+        edges,
+    )
 
 
 def checks(paths, nodes, rows, src_root: Path):
@@ -203,23 +227,38 @@ def checks(paths, nodes, rows, src_root: Path):
             out.append((src, cat, kind, steps, "covered" if via else "bypass", via))
     for r in rows:  # sources with no use at all (from the table query)
         if r["use"] == "(no use)":
-            out.append((f"{r['col1'].replace('ControlFlowNode for ', '')} @ {r['col2']}", r["cat"], "", [], "outside", []))
+            out.append(
+                (f"{r['col1'].replace('ControlFlowNode for ', '')} @ {r['col2']}", r["cat"], "", [], "outside", [])
+            )
     result = []
     for src, cat, kind, steps, status, via in out:
         file, line = src.rsplit(" @ ", 1)[1].rsplit(":", 1)
         at = lambda n: {"file": nodes[n]["file"], "line": nodes[n]["line"]}  # noqa: E731
-        result.append({
-            "id": f"{src} -> {kind}:{steps[-1] if steps else ''}", "cat": cat, "rule": kind or "사용 지점 없음",
-            "pattern": src.split(" @ ")[0], "detail": "", "func": src, "file": file, "line": int(line),
-            "uri": f"vscode://file/{(src_root / file).resolve().as_posix()}:{line}",
-            "status": status, "path": steps, "via": via,
-            # the three questions: where the value is created, where a log records it, where it is used
-            "src_at": {"file": file, "line": int(line)},
-            "logs_at": sorted({(nodes[s[-1]]["file"], nodes[s[-1]]["line"]) for _, _, s in logs.get(src, [])}) if steps else [],
-            "use_at": at(steps[-1]) if steps else None, "use_kind": kind,
-            # everything this flow touches (viewer): the use path and the source's paths to log calls
-            "nodes": sorted(set(steps) | {n for _, _, s in logs.get(src, []) for n in s}) if steps else [],
-        })
+        result.append(
+            {
+                "id": f"{src} -> {kind}:{steps[-1] if steps else ''}",
+                "cat": cat,
+                "rule": kind or "사용 지점 없음",
+                "pattern": src.split(" @ ")[0],
+                "detail": "",
+                "func": src,
+                "file": file,
+                "line": int(line),
+                "uri": f"vscode://file/{(src_root / file).resolve().as_posix()}:{line}",
+                "status": status,
+                "path": steps,
+                "via": via,
+                # the three questions: where the value is created, where a log records it, where it is used
+                "src_at": {"file": file, "line": int(line)},
+                "logs_at": sorted({(nodes[s[-1]]["file"], nodes[s[-1]]["line"]) for _, _, s in logs.get(src, [])})
+                if steps
+                else [],
+                "use_at": at(steps[-1]) if steps else None,
+                "use_kind": kind,
+                # everything this flow touches (viewer): the use path and the source's paths to log calls
+                "nodes": sorted(set(steps) | {n for _, _, s in logs.get(src, []) for n in s}) if steps else [],
+            }
+        )
         result[-1]["logs_at"] = [{"file": f, "line": n} for f, n in result[-1]["logs_at"]]
     return result
 
@@ -229,20 +268,43 @@ def write_viewer(out: Path, src_root: Path, graph, nodes, edges, found, code: di
     for n, info in nodes.items():
         uri = f"vscode://file/{(src_root / info['file']).resolve().as_posix()}:{info['line']}"
         cfg = out / "cfg" / f"{audit.cfg_name(info['func'])}.svg"
-        view_nodes[n] = {"file": info["file"], "line": info["line"], "end": info["line"], "uri": uri,
-                         "cfg": cfg.relative_to(out).as_posix() if cfg.exists() else None, "calls": []}
+        view_nodes[n] = {
+            "file": info["file"],
+            "line": info["line"],
+            "end": info["line"],
+            "uri": uri,
+            "cfg": cfg.relative_to(out).as_posix() if cfg.exists() else None,
+            "calls": [],
+        }
     for a, b, *_ in sorted(edges):
         rel.setdefault(a, {"in": [], "out": []})["out"].append({"name": b, "line": nodes[b]["line"], "kind": "flow"})
         rel.setdefault(b, {"in": [], "out": []})["in"].append(
-            {"name": a, "line": nodes[a]["line"], "kind": "flow", "file": nodes[a]["file"], "uri": view_nodes[a]["uri"]})
+            {"name": a, "line": nodes[a]["line"], "kind": "flow", "file": nodes[a]["file"], "uri": view_nodes[a]["uri"]}
+        )
     labels = {
         "items": "CodeQL 값의 흐름 (출발점 → 사용 지점)",
         "status": {"bypass": "기록 안 됨", "covered": "기록됨", "outside": "사용 안 됨"},
-        "cat": flow_audit.SOURCE, "kind": {"flow": "데이터 흐름"}, "tab": {"codeql": "CodeQL 흐름"},
-        "sub": {"bypass": "로그 없이 흐른 경로", "covered": "이 값이 닿는 로그 (함수)", "outside": "어떤 사용 지점에도 닿지 않음"},
+        "cat": flow_audit.SOURCE,
+        "kind": {"flow": "데이터 흐름"},
+        "tab": {"codeql": "CodeQL 흐름"},
+        "sub": {
+            "bypass": "로그 없이 흐른 경로",
+            "covered": "이 값이 닿는 로그 (함수)",
+            "outside": "어떤 사용 지점에도 닿지 않음",
+        },
     }
-    data = {"root": src_root.resolve().as_posix(), "graphs": {"codeql": graph}, "nodes": view_nodes, "rel": rel,
-            "checks": found, "legend": LEGEND, "labels": labels, "prune": True, "cards": True, "code": code}
+    data = {
+        "root": src_root.resolve().as_posix(),
+        "graphs": {"codeql": graph},
+        "nodes": view_nodes,
+        "rel": rel,
+        "checks": found,
+        "legend": LEGEND,
+        "labels": labels,
+        "prune": True,
+        "cards": True,
+        "code": code,
+    }
     html = (HERE / "viewer.html").read_text(encoding="utf-8")
     (out / "index.html").write_text(html.replace("__DATA__", json.dumps(data).replace("</", r"<\/")), encoding="utf-8")
 
@@ -261,25 +323,49 @@ def main():
     work = Path(tempfile.gettempdir()) / "io_codeql" / a.src_root.resolve().name
     shutil.rmtree(work, ignore_errors=True)
     src, pack, db = work / "src", work / "pack", work / "db"
-    rels = a.only or [f.relative_to(a.src_root).as_posix() for f in a.src_root.rglob("*.py") if "__pycache__" not in f.parts]
+    rels = a.only or [
+        f.relative_to(a.src_root).as_posix() for f in a.src_root.rglob("*.py") if "__pycache__" not in f.parts
+    ]
     for r in rels:
         (src / r).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(a.src_root / r, src / r)
     shutil.copytree(HERE / "codeql", pack)
     cls, method = a.entry.rsplit(".", 1)
-    (pack / "Entry.qll").write_text(f'predicate entry(string cls, string method) {{ cls = "{cls}" and method = "{method}" }}\n')
+    (pack / "Entry.qll").write_text(
+        f'predicate entry(string cls, string method) {{ cls = "{cls}" and method = "{method}" }}\n'
+    )
 
     env = {**os.environ, "PATH": str(Path(sys.executable).parent) + os.pathsep + os.environ["PATH"]}
     print(f"codeql: {codeql}\ndatabase: {db} ({len(rels)} files)")
-    run([codeql, "database", "create", db, "--language=python", f"--source-root={src}",
-         "--extractor-option=python.python_executable_name=python"], env=env)
+    run(
+        [
+            codeql,
+            "database",
+            "create",
+            db,
+            "--language=python",
+            f"--source-root={src}",
+            "--extractor-option=python.python_executable_name=python",
+        ],
+        env=env,
+    )
     run([codeql, "pack", "install", pack])
     a.out_dir.mkdir(parents=True, exist_ok=True)
     run([codeql, "query", "run", pack / "io_flow.ql", "-d", db, "-o", work / "flows.bqrs"])
     run([codeql, "bqrs", "decode", "--format=csv", f"--output={a.out_dir / 'codeql_flows.csv'}", work / "flows.bqrs"])
     print(run([codeql, "bqrs", "decode", "--format=text", work / "flows.bqrs"]).stdout)
-    run([codeql, "database", "analyze", db, pack / "io_paths.ql", "--format=sarif-latest",
-         f"--output={a.out_dir / 'paths.sarif'}", "--rerun"])
+    run(
+        [
+            codeql,
+            "database",
+            "analyze",
+            db,
+            pack / "io_paths.ql",
+            "--format=sarif-latest",
+            f"--output={a.out_dir / 'paths.sarif'}",
+            "--rerun",
+        ]
+    )
 
     funcs, _ = audit.scan(src, [])
     rows = list(csv.DictReader(open(a.out_dir / "codeql_flows.csv", encoding="utf-8")))
@@ -288,12 +374,18 @@ def main():
     audit.draw_cfgs({q: funcs[q] for q in {n["func"] for n in nodes.values()} if q in funcs}, a.out_dir, [])
     found = checks(paths, nodes, rows, a.src_root)
     line_of = code_at(src, 200)
-    code = {f"{loc['file']}:{loc['line']}": line_of(loc["file"], loc["line"])
-            for c in found for loc in [c["src_at"], *c["logs_at"], c["use_at"]] if loc}
+    code = {
+        f"{loc['file']}:{loc['line']}": line_of(loc["file"], loc["line"])
+        for c in found
+        for loc in [c["src_at"], *c["logs_at"], c["use_at"]]
+        if loc
+    }
     write_viewer(a.out_dir, a.src_root, graph, nodes, edges, found, code)
-    print(f"paths={len(paths)} steps={len(nodes)} checks="
-          f"{ {k: sum(1 for c in found if c['status'] == k) for k in ('covered', 'bypass', 'outside')} }"
-          f"\nviewer: {a.out_dir / 'index.html'}")
+    print(
+        f"paths={len(paths)} steps={len(nodes)} checks="
+        f"{ {k: sum(1 for c in found if c['status'] == k) for k in ('covered', 'bypass', 'outside')} }"
+        f"\nviewer: {a.out_dir / 'index.html'}"
+    )
 
 
 if __name__ == "__main__":

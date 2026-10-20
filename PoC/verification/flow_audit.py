@@ -60,7 +60,9 @@ class Flow:
             for i in funcs.values()
             if i["cls"]
             for s in ast.walk(i["node"])
-            if isinstance(s, ast.Assign) and isinstance(s.value, ast.Call) and isinstance(s.value.func, ast.Name)
+            if isinstance(s, ast.Assign)
+            and isinstance(s.value, ast.Call)
+            and isinstance(s.value.func, ast.Name)
             and s.value.func.id in classes
             for t in s.targets
             if isinstance(t, ast.Attribute) and isinstance(t.value, ast.Name) and t.value.id == "self"
@@ -103,7 +105,9 @@ class Flow:
         self.q, self.cls, self.file = q, self.funcs[q]["cls"], self.funcs[q]["file"]
         a = self.funcs[q]["node"].args
         for p in [*a.posonlyargs, *a.args, *a.kwonlyargs][1 if self.cls else 0 :]:
-            src = self.node(f"[User Input] {p.arg} (entry parameter) @ {self.file}:{p.lineno}", "source", p.lineno, cat="INPUT")
+            src = self.node(
+                f"[User Input] {p.arg} (entry parameter) @ {self.file}:{p.lineno}", "source", p.lineno, cat="INPUT"
+            )
             self.sources.add(src)
             self.edge({src}, self.local(q, p.arg, p.lineno), p.lineno)
         out = self.node(f"[{SINK_OUT}] return of {q}", "sink", self.funcs[q]["node"].lineno)
@@ -123,7 +127,11 @@ class Flow:
             for t in s.targets:
                 self.bind(t, v, s.lineno)
         elif isinstance(s, (ast.AugAssign, ast.AnnAssign)) and s.value is not None:
-            self.bind(s.target, self.reads(s.value) | (self.reads(s.target) if isinstance(s, ast.AugAssign) else set()), s.lineno)
+            self.bind(
+                s.target,
+                self.reads(s.value) | (self.reads(s.target) if isinstance(s, ast.AugAssign) else set()),
+                s.lineno,
+            )
         elif isinstance(s, ast.Return) and s.value is not None:
             self.edge(self.reads(s.value), self.ret(self.q), s.lineno)
         elif isinstance(s, (ast.For, ast.AsyncFor)):
@@ -151,7 +159,12 @@ class Flow:
     def bind(self, target, srcs, line):
         if isinstance(target, ast.Name):
             self.edge(srcs, self.local(self.q, target.id, line), line)
-        elif isinstance(target, ast.Attribute) and isinstance(target.value, ast.Name) and target.value.id == "self" and self.cls:
+        elif (
+            isinstance(target, ast.Attribute)
+            and isinstance(target.value, ast.Name)
+            and target.value.id == "self"
+            and self.cls
+        ):
             self.edge(srcs, self.field(self.cls, target.attr, line), line)
         elif isinstance(target, (ast.Tuple, ast.List)):
             for e in target.elts:
@@ -245,10 +258,19 @@ class Flow:
             v = f.value
             if isinstance(v, ast.Name) and v.id == "self" and self.cls:
                 t = audit.resolve(self.cls, f.attr, self.classes)
-                subs = [f"{s}.{f.attr}" for s in self.classes if s != self.cls and self.cls in audit.mro(s, self.classes)]
+                subs = [
+                    f"{s}.{f.attr}" for s in self.classes if s != self.cls and self.cls in audit.mro(s, self.classes)
+                ]
                 return [x for x in [t, *subs] if x in self.funcs]
             if isinstance(v, ast.Attribute) and isinstance(v.value, ast.Name) and v.value.id == "self" and self.cls:
-                typ = next((self.field_types[(k, v.attr)] for k in audit.mro(self.cls, self.classes) if (k, v.attr) in self.field_types), None)
+                typ = next(
+                    (
+                        self.field_types[(k, v.attr)]
+                        for k in audit.mro(self.cls, self.classes)
+                        if (k, v.attr) in self.field_types
+                    ),
+                    None,
+                )
                 if typ:
                     t = audit.resolve(typ, f.attr, self.classes)
                     return [t] if t in self.funcs else []
@@ -316,14 +338,16 @@ class Flow:
             for k in sinks or [None]:
                 on_path = down & reach(k, back) if k else down
                 logged = sorted({m for n in on_path for m in fwd.get(n, ()) if m in self.logs})
-                rows.append({
-                    "source": s,
-                    "sink": k,
-                    "status": "outside" if k is None else ("covered" if logged else "bypass"),
-                    "path": path(s, k) if k else [],
-                    "via": logged,
-                    "nodes": sorted(on_path | set(logged)) if k else [],  # everything this flow touches (viewer)
-                })
+                rows.append(
+                    {
+                        "source": s,
+                        "sink": k,
+                        "status": "outside" if k is None else ("covered" if logged else "bypass"),
+                        "path": path(s, k) if k else [],
+                        "via": logged,
+                        "nodes": sorted(on_path | set(logged)) if k else [],  # everything this flow touches (viewer)
+                    }
+                )
         return rows
 
 
@@ -347,7 +371,15 @@ def draw(flow, out: Path, rows):
         info, kind = flow.info[n], flow.info[n]["kind"]
         if kind == "source":
             cat = info["cat"]
-            g.node(i, n.replace(" @ ", "\n"), shape="ellipse", style="filled", fillcolor=FILL[cat], color=COLOR[cat], penwidth="2")
+            g.node(
+                i,
+                n.replace(" @ ", "\n"),
+                shape="ellipse",
+                style="filled",
+                fillcolor=FILL[cat],
+                color=COLOR[cat],
+                penwidth="2",
+            )
         elif kind == "sink":
             g.node(i, n.replace(" @ ", "\n"), shape="doubleoctagon", color="#333333")
         elif kind == "log":
@@ -359,7 +391,13 @@ def draw(flow, out: Path, rows):
     for a, b, line in sorted(flow.edges):
         if a in ids and b in ids:
             log = flow.info[b]["kind"] == "log"
-            g.edge(ids[a], ids[b], label=f"L{line}", fontsize="8", **({"color": "#2e7d32", "style": "dashed"} if log else {}))
+            g.edge(
+                ids[a],
+                ids[b],
+                label=f"L{line}",
+                fontsize="8",
+                **({"color": "#2e7d32", "style": "dashed"} if log else {}),
+            )
     g.render(out / "flow", format="svg", cleanup=True)
     return {"svg": (out / "flow.svg").read_text(encoding="utf-8"), "ids": {i: n for n, i in ids.items()}}
 
@@ -367,10 +405,16 @@ def draw(flow, out: Path, rows):
 LEGEND = {
     "categories": [{"color": COLOR[c], "fill": FILL[c], "label": SOURCE[c]} for c in SOURCE],
     "shapes": [
-        {"style": "background:#eee;border-color:#666;border-radius:50%", "label": "출발점 (source): 값이 처음 생기는 호출"},
+        {
+            "style": "background:#eee;border-color:#666;border-radius:50%",
+            "label": "출발점 (source): 값이 처음 생기는 호출",
+        },
         {"style": "border-color:#666;border-radius:6px", "label": "값이 지나가는 변수 · 매개변수 · 반환값"},
         {"style": "border-color:#000;border-width:3px;border-radius:6px", "label": "self.필드 (굵은 테두리)"},
-        {"style": "border-color:#333;border-style:double;border-width:4px", "label": "사용 지점 (sink): LLM 입력 · Tool 입력 · 최종 출력"},
+        {
+            "style": "border-color:#333;border-style:double;border-width:4px",
+            "label": "사용 지점 (sink): LLM 입력 · Tool 입력 · 최종 출력",
+        },
         {"style": "background:#e6f4ea;border-color:#2e7d32", "label": "로그 호출 (값을 인자로 받음)"},
     ],
     "edges": [
@@ -385,12 +429,21 @@ def write_viewer(flow, out: Path, graph, rows):
     for n, info in flow.info.items():
         uri = f"vscode://file/{(flow.root / info['file']).resolve().as_posix()}:{info['line']}"
         cfg = out / "cfg" / f"{audit.cfg_name(info['func'])}.svg"
-        nodes[n] = {"file": info["file"], "line": info["line"], "end": info["line"], "uri": uri,
-                    "cfg": cfg.relative_to(out).as_posix() if cfg.exists() else None, "calls": []}
+        nodes[n] = {
+            "file": info["file"],
+            "line": info["line"],
+            "end": info["line"],
+            "uri": uri,
+            "cfg": cfg.relative_to(out).as_posix() if cfg.exists() else None,
+            "calls": [],
+        }
     for a, b, line in sorted(flow.edges):
         uri = nodes[a]["uri"].rsplit(":", 1)[0] + f":{line}"
         rel.setdefault(a, {"in": [], "out": []})["out"].append({"name": b, "line": line, "kind": "flow"})
-        rel.setdefault(b, {"in": [], "out": []})["in"].append({"name": a, "line": line, "kind": "flow", "file": nodes[a]["file"], "uri": uri})
+        rel.setdefault(b, {"in": [], "out": []})["in"].append(
+            {"name": a, "line": line, "kind": "flow", "file": nodes[a]["file"], "uri": uri}
+        )
+
     def at(name, path=()):
         """Where a node is in the code. The final output points at the entry's return statement that mentions a
         variable or function of the flow's path (an entry can have several returns)."""
@@ -398,30 +451,50 @@ def write_viewer(flow, out: Path, graph, rows):
         line = info["line"]
         if name.startswith(f"[{SINK_OUT}]"):
             returns = [r for r in ast.walk(flow.funcs[info["func"]]["node"]) if isinstance(r, ast.Return) and r.value]
-            words = {w for n in path for w in (n.rpartition(" : ")[2], n.rpartition(" : ")[0].split(".")[-1]) if w and w != "<return>"}
+            words = {
+                w
+                for n in path
+                for w in (n.rpartition(" : ")[2], n.rpartition(" : ")[0].split(".")[-1])
+                if w and w != "<return>"
+            }
             line = next((r.lineno for r in returns if any(w in ast.unparse(r.value) for w in words)), returns[0].lineno)
         return {"file": info["file"], "line": line}
 
     checks, code = [], {}
     for r in rows:
         info = flow.info[r["source"]]
-        checks.append({
-            "id": f"{r['source']} -> {r['sink']}", "cat": info["cat"], "rule": r["sink"] or "사용 지점 없음",
-            "pattern": r["source"].split("] ", 1)[1].split(" @ ")[0], "detail": "", "func": r["source"],
-            "file": info["file"], "line": info["line"], "uri": nodes[r["source"]]["uri"],
-            "status": r["status"], "path": r["path"], "via": r["via"],
-            # the three questions: where the value is created, where a log records it, where it is used
-            "src_at": at(r["source"]), "logs_at": [at(v) for v in r["via"]] if r["sink"] else [],
-            "use_at": at(r["sink"], r["path"]) if r["sink"] else None,
-            "use_kind": r["sink"].split("]", 1)[0].lstrip("[") if r["sink"] else "",
-            "nodes": r["nodes"],
-        })
+        checks.append(
+            {
+                "id": f"{r['source']} -> {r['sink']}",
+                "cat": info["cat"],
+                "rule": r["sink"] or "사용 지점 없음",
+                "pattern": r["source"].split("] ", 1)[1].split(" @ ")[0],
+                "detail": "",
+                "func": r["source"],
+                "file": info["file"],
+                "line": info["line"],
+                "uri": nodes[r["source"]]["uri"],
+                "status": r["status"],
+                "path": r["path"],
+                "via": r["via"],
+                # the three questions: where the value is created, where a log records it, where it is used
+                "src_at": at(r["source"]),
+                "logs_at": [at(v) for v in r["via"]] if r["sink"] else [],
+                "use_at": at(r["sink"], r["path"]) if r["sink"] else None,
+                "use_kind": r["sink"].split("]", 1)[0].lstrip("[") if r["sink"] else "",
+                "nodes": r["nodes"],
+            }
+        )
         for loc in [checks[-1]["src_at"], *checks[-1]["logs_at"], checks[-1]["use_at"]]:
             if loc:
                 lines = (flow.root / loc["file"]).read_text(encoding="utf-8").splitlines()
                 code[f"{loc['file']}:{loc['line']}"] = lines[loc["line"] - 1].strip()
     data = {
-        "root": flow.root.resolve().as_posix(), "graphs": {"flow": graph}, "nodes": nodes, "rel": rel, "checks": checks,
+        "root": flow.root.resolve().as_posix(),
+        "graphs": {"flow": graph},
+        "nodes": nodes,
+        "rel": rel,
+        "checks": checks,
         "legend": LEGEND,
         "prune": True,
         "cards": True,
@@ -432,7 +505,11 @@ def write_viewer(flow, out: Path, graph, rows):
             "cat": SOURCE,
             "kind": {"flow": "데이터 흐름"},
             "tab": {"flow": "데이터 흐름"},
-            "sub": {"bypass": "로그 없이 흐른 경로", "covered": "값을 기록한 로그", "outside": "어떤 사용 지점에도 닿지 않음"},
+            "sub": {
+                "bypass": "로그 없이 흐른 경로",
+                "covered": "값을 기록한 로그",
+                "outside": "어떤 사용 지점에도 닿지 않음",
+            },
         },
     }
     html = (Path(audit.__file__).parent / "viewer.html").read_text(encoding="utf-8")
@@ -455,14 +532,20 @@ def main():
     flow = Flow(a.src_root, funcs, classes, imports, cls_nodes, a.entry)
     rows = flow.verdicts()
     graph = draw(flow, a.out_dir, rows)
-    audit.draw_cfgs({q: funcs[q] for q in {flow.info[n]["func"] for n in graph["ids"].values()} if q in funcs}, a.out_dir, [])
+    audit.draw_cfgs(
+        {q: funcs[q] for q in {flow.info[n]["func"] for n in graph["ids"].values()} if q in funcs}, a.out_dir, []
+    )
     write_viewer(flow, a.out_dir, graph, rows)
     with open(a.out_dir / "flow_checks.tsv", "w", encoding="utf-8") as fh:
         fh.write(TAB.join(["status", "source", "sink", "logs", "path"]) + NL)
         for r in rows:
-            fh.write(TAB.join([r["status"], r["source"], r["sink"] or "", ", ".join(r["via"]), " -> ".join(r["path"])]) + NL)
-    print(f"sources={len(flow.sources)} sinks={len(flow.sinks)} logs={len(flow.logs)} edges={len(flow.edges)} "
-          f"checks={ {k: sum(1 for r in rows if r['status'] == k) for k in ('covered', 'bypass', 'outside')} }")
+            fh.write(
+                TAB.join([r["status"], r["source"], r["sink"] or "", ", ".join(r["via"]), " -> ".join(r["path"])]) + NL
+            )
+    print(
+        f"sources={len(flow.sources)} sinks={len(flow.sinks)} logs={len(flow.logs)} edges={len(flow.edges)} "
+        f"checks={ {k: sum(1 for r in rows if r['status'] == k) for k in ('covered', 'bypass', 'outside')} }"
+    )
 
 
 if __name__ == "__main__":
