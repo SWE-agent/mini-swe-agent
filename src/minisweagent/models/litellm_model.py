@@ -19,7 +19,7 @@ from minisweagent.models.utils.actions_toolcall import (
 from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
 from minisweagent.models.utils.cache_control import set_cache_control
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
-from minisweagent.models.utils.retry import retry
+from minisweagent.models.utils.retry import RetrySettings, retry
 
 logger = logging.getLogger("litellm_model")
 
@@ -29,6 +29,8 @@ class LitellmModelConfig(BaseModel):
     """Model name. Highly recommended to include the provider in the model name, e.g., `anthropic/claude-sonnet-4-5-20250929`."""
     model_kwargs: dict[str, Any] = {}
     """Additional arguments passed to the API."""
+    retry: RetrySettings = RetrySettings()
+    """Retry policy for model queries."""
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     """Model registry for cost tracking and model metadata. See the local model guide (https://mini-swe-agent.com/latest/models/local_models/) for more details."""
     set_cache_control: Literal["default_end"] | None = None
@@ -79,7 +81,7 @@ class LitellmModel:
         return set_cache_control(prepared, mode=self.config.set_cache_control)
 
     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
-        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions, settings=self.config.retry):
             with attempt:
                 response = self._query(self._prepare_messages_for_api(messages), **kwargs)
         cost_output = self._calculate_cost(response)
