@@ -40,6 +40,8 @@ class ToyAgent:
         self.messages: list[dict] = []
 
     def run(self, task: str, max_steps: int = 10) -> str:
+        start = observatory_log.tool_start("user_input", {"task": task})
+        observatory_log.tool_end(start, "user_input", result=task)
         self.messages = [{"role": "user", "content": task}]
         for n in range(1, max_steps + 1):
             reply = self.step(n)
