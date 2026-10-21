@@ -1,3 +1,7 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
 """Static verification of an agent's logging, driven by the anchors the architecture step wrote (verify-anchors.json).
 
 Starting from the anchors, follow the three values the logging must capture:
@@ -23,7 +27,7 @@ An external call outside every anchored wrapper (not in a wrapper's lines, not i
 blind spot: the architecture step did not see that the value can leave the agent there.
 
 usage (repo root):
-  python PoC/verification/flow_verify.py PoC/verification/toy_agent \\
+  uv run PoC/verification/flow_verify.py PoC/verification/toy_agent \\
       PoC/verification/toy_agent/observatory/diagram/verify-anchors.json PoC/verification/out_verify \\
       --only agent.py llm.py tools.py
 outputs: report.md, report.json

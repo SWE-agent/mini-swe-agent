@@ -18,7 +18,7 @@ LLM이 에이전트에 심은 로그(래퍼)가 **User Input, LLM Response, Tool
 ## 실행
 
 ```bash
-python PoC/verification/flow_verify.py PoC/verification/toy_agent \
+uv run PoC/verification/flow_verify.py PoC/verification/toy_agent \
     PoC/verification/toy_agent/observatory/diagram/verify-anchors.json PoC/verification/out_verify \
     --only agent.py llm.py tools.py
 open PoC/verification/out_verify/report.html
