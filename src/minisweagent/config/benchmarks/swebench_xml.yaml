@@ -225,5 +225,6 @@ model:
     If you have completed your assignment, please consult the first message about how to
     submit your solution (you will not be able to continue working on this task after that).
     {%- endif %}
-  model_name: "minimax/minimax-m2"
+  model_name: "minimax/minimax-m3.1-flash:free"
   model_class: openrouter
+  cost_tracking: ignore_errors

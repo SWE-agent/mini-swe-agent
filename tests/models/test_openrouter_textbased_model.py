@@ -1,11 +1,13 @@
 import json
 import os
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
 import requests
+import yaml
 
-from minisweagent.models import GLOBAL_MODEL_STATS
+from minisweagent.models import GLOBAL_MODEL_STATS, get_model
 from minisweagent.models.openrouter_model import (
     OpenRouterAuthenticationError,
 )
@@ -88,6 +90,84 @@ def test_openrouter_model_successful_query(mock_response):
 
             # Verify cost tracking
             assert GLOBAL_MODEL_STATS.cost == initial_cost + 0.000243
+
+
+def test_minimax_flash_payload_preserves_model_options_and_multimodal_messages(mock_response):
+    """Verify the configured OpenRouter Flash route reaches the HTTP payload unchanged."""
+    with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
+        model = OpenRouterTextbasedModel(
+            model_name="minimax/minimax-m3.1-flash:free",
+            model_kwargs={"reasoning_effort": "max", "temperature": 0.0},
+        )
+
+        with patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 200
+            mock_post.return_value.json.return_value = mock_response
+            mock_post.return_value.raise_for_status.return_value = None
+
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "Inspect this image."},
+                        {"type": "image_url", "image_url": {"url": "https://example.test/image.png"}},
+                    ],
+                }
+            ]
+            model.query(messages)
+
+            payload = json.loads(mock_post.call_args.kwargs["data"])
+            assert payload["model"] == "minimax/minimax-m3.1-flash:free"
+            assert payload["reasoning_effort"] == "max"
+            assert payload["temperature"] == 0.0
+            assert payload["messages"] == messages
+
+
+@pytest.mark.parametrize(
+    "model_name",
+    [None, "minimax/minimax-m3", "minimax/minimax-m2", "custom/model"],
+)
+def test_minimax_benchmark_http_payload(model_name, monkeypatch):
+    config = yaml.safe_load(
+        (Path(__file__).parents[2] / "src/minisweagent/config/benchmarks/swebench_xml.yaml").read_text()
+    )["model"]
+    monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
+    model = get_model(model_name, config)
+    messages = [{"role": "user", "content": "Run a command."}]
+    response = requests.Response()
+    response.status_code = 200
+    response._content = json.dumps(
+        {
+            "choices": [
+                {
+                    "message": {
+                        "role": "assistant",
+                        "content": "",
+                        "tool_calls": [
+                            {
+                                "id": "call_1",
+                                "type": "function",
+                                "function": {"name": "bash", "arguments": '{"command":"pwd"}'},
+                            }
+                        ],
+                    }
+                }
+            ],
+            "usage": {"cost": 0},
+        }
+    ).encode()
+    with patch("requests.sessions.Session.send", return_value=response) as send:
+        assert model.query(messages)["extra"]["actions"] == [{"command": "pwd", "tool_call_id": "call_1"}]
+        request = send.call_args.args[0]
+        payload = json.loads(request.body)
+        assert request.url == "https://openrouter.ai/api/v1/chat/completions"
+        assert payload["model"] == (model_name or "minimax/minimax-m3.1-flash:free")
+        assert payload["messages"] == messages
+        assert payload["tools"][0]["function"]["name"] == "bash"
+        assert "service_tier" not in payload
+        assert "thinking" not in payload
+    saved = model.serialize()["info"]["config"]["model"]
+    assert get_model(config=saved | {"model_class": config["model_class"]}).config.model_name == payload["model"]
 
 
 def test_openrouter_model_authentication_error():

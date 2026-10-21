@@ -243,15 +243,19 @@ Here are more examples of how to configure specific models:
             temperature: 0.0
     ```
 
-=== "Minimax (Openrouter)"
+=== "MiniMax M3.1 Flash (OpenRouter)"
 
     ```yaml
     model:
-        model_name: "minimax/minimax-m2"
+        model_name: "minimax/minimax-m3.1-flash:free"
         model_class: openrouter
+        cost_tracking: ignore_errors
         model_kwargs:
             temperature: 0.0
     ```
+
+    The free route reports zero cost, so this example uses `cost_tracking: ignore_errors`.
+    To use MiniMax M3 instead, set `model_name: "minimax/minimax-m3"` and `cost_tracking: default`.
 
 ## Model classes
 
@@ -308,4 +312,3 @@ On top, there's a few more exotic model classes that you can use:
 As with the last two, you can also specify any import path to your own custom model class (even if it is not yet part of the mini-SWE-agent package).
 
 --8<-- "docs/_footer.md"
-
