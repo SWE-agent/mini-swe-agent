@@ -162,7 +162,7 @@ class DockerEnvironment:
         return (
             f"setsid bash -lc {quoted_command} & "
             f"child=$!; printf '%s' \"$child\" > {quoted_pidfile}; "
-            f"wait \"$child\"; status=$?; rm -f {quoted_pidfile}; exit \"$status\""
+            f'wait "$child"; status=$?; rm -f {quoted_pidfile}; exit "$status"'
         )
 
     def _terminate_process_group(self, pidfile: str) -> None:
