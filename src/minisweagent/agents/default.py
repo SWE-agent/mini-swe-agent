@@ -93,6 +93,10 @@ class DefaultAgent:
             self.model.format_message(role="system", content=self._render_template(self.config.system_template)),
             self.model.format_message(role="user", content=self._render_template(self.config.instance_template)),
         )
+        return self._run_loop()
+
+    def _run_loop(self) -> dict:
+        """Continue from the current messages without initializing a new task."""
         while True:
             try:
                 self.step()

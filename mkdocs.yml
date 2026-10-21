@@ -80,6 +80,7 @@ nav:
       - "Basic Python bindings": usage/python_bindings.md
       - "Understanding the agent": advanced/control_flow.md
       - "Subclassing and more": advanced/cookbook.md
+      - "Controlled local resume": advanced/controlled_resume.md
       - "Environments": advanced/environments.md
       - "v2 migration guide": advanced/v2_migration.md
     - "FAQ": faq.md
