@@ -2,7 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = []
 # ///
-"""Static verification of an agent's logging, driven by the anchors the architecture step wrote (verify-anchors.json).
+"""Static verification of an agent's logging, driven by the anchors the logger-wiring step wrote (verify-anchors.json).
 
 Starting from the anchors, follow the three values the logging must capture:
   User Input     the entry function's input parameters, and the anchored user-input calls
@@ -23,8 +23,6 @@ Verdict per (value, use), over every path between them:
   검증 완료  every path passes a value that a log call records whole
   일부만 기록  some path does not, and only parts of the value reach a log on it
   누락        some path does not, and no log call touches the value
-An external call outside every anchored wrapper (not in a wrapper's lines, not in a function called from one) is a
-blind spot: the architecture step did not see that the value can leave the agent there.
 
 usage (repo root):
   uv run PoC/verification/flow_verify.py PoC/verification/toy_agent \\
@@ -59,14 +57,14 @@ class Verifier:
     def __init__(self, root: Path, files: list[Path], anchors: dict):
         self.root, self.anchors, self.logger = root, anchors, anchors.get("logger", "observatory_log")
         self.trees = {f.relative_to(root).as_posix(): ast.parse(f.read_text(encoding="utf-8")) for f in files}
-        self.modules = {Path(f).stem for f in self.trees}
+        self.modules = {self.module_id(f) for f in self.trees}
         self.funcs, self.classes, self.module_funcs, self.imports = {}, {}, {}, {}
         for file, tree in self.trees.items():
             self.scan(file, tree)
         self.edges, self.info, self.partial = set(), {}, set()
         self.sources, self.sinks, self.logs = set(), set(), set()
-        self.calls: dict[str, set] = {}  # function -> {(file, line, target function)}
         self.var_types, self.field_types = {}, {}
+        self.passed = set()  # (caller node, parameter) when the call passes the caller's value itself
         self.found = set()  # matched source anchors
         self.return_lines = {}  # (function, node returned) -> line of that return statement
         for q, f in self.funcs.items():  # types of self.<field> first: calls through fields resolve with them
@@ -84,24 +82,36 @@ class Verifier:
             raise SystemExit(f"anchors not found in the code: {missing}")
 
     # ---------------------------------------------------------------- project structure
+    @staticmethod
+    def module_id(file: str) -> str:
+        """A project module by its path: `pkg/agent/views` for pkg/agent/views.py, `pkg` for pkg/__init__.py."""
+        return Path(file).with_suffix("").as_posix().removesuffix("/__init__")
+
+    def resolve(self, file: str, module: str, level: int) -> str | None:
+        """The analyzed module an import names (`.memory` from `file`, or `pkg.agent.views`), if any."""
+        base = Path(file).parent.parts[: len(Path(file).parent.parts) - level + 1] if level else ()
+        target = "/".join([*base, *filter(None, module.split("."))])
+        return next((m for m in self.modules if m == target or (not level and m.endswith(f"/{target}"))), None)
+
     def scan(self, file: str, tree: ast.Module) -> None:
-        module, imports = Path(file).stem, {}
+        module, imports = self.module_id(file), {}
         for n in ast.walk(tree):
             if isinstance(n, ast.Import):
                 for a in n.names:
-                    top = a.name.split(".")[0]
-                    kind = "logger" if a.name == self.logger else "module" if a.name in self.modules else "ext"
-                    imports[a.asname or top] = (kind, a.name)
-            elif isinstance(n, ast.ImportFrom) and n.module:
+                    found = self.resolve(file, a.name, 0) if a.asname or "." not in a.name else None
+                    kind = "logger" if a.name.split(".")[-1] == self.logger else "module" if found else "ext"
+                    imports[a.asname or a.name.split(".")[0]] = (kind, found or a.name)
+            elif isinstance(n, ast.ImportFrom):
                 for a in n.names:
-                    kind = (
-                        "logger"
-                        if self.logger in (n.module, a.name)
-                        else "project"
-                        if n.module in self.modules
-                        else "ext"
-                    )
-                    imports[a.asname or a.name] = (kind, f"{n.module}.{a.name}")
+                    full = f"{n.module}.{a.name}" if n.module else a.name
+                    if self.logger in ((n.module or "").split(".")[-1], a.name):
+                        imports[a.asname or a.name] = ("logger", a.name)
+                    elif sub := self.resolve(file, full, n.level):
+                        imports[a.asname or a.name] = ("module", sub)
+                    elif target := self.resolve(file, n.module or "", n.level):
+                        imports[a.asname or a.name] = ("project", f"{target}.{a.name}")
+                    else:
+                        imports[a.asname or a.name] = ("ext", full)
         self.imports[file] = imports
         for node in tree.body:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -137,7 +147,7 @@ class Verifier:
 
     def global_name(self, name: str):
         """What a module-level name refers to: ("funcs", [q]), ("class", C), ("ext", dotted), ("logger",)."""
-        module = Path(self.file).stem
+        module = self.module_id(self.file)
         if (module, name) in self.module_funcs:
             return ("funcs", [self.module_funcs[(module, name)]])
         if name in self.classes and self.classes[name]["module"] == module:
@@ -394,7 +404,6 @@ class Verifier:
             targets = kind[1] if kind[0] == "funcs" else self.method(kind[1], "__init__")
             for t in targets:
                 self.bind_args(t, c, pos, kws)
-                self.calls.setdefault(self.q, set()).add((self.file, c.lineno, t))
             result = {self.ret(t) for t in targets} if kind[0] == "funcs" else set()
         elif kind[0] == "ext" or (anchor and kind[0] == "value"):  # an anchored call on an object of unknown type
             use = USE[anchor["kind"]] if anchor else "외부 호출"
@@ -425,6 +434,9 @@ class Verifier:
         if self.funcs[t]["cls"] and params and params[0] in ("self", "cls"):
             params = params[1:]
         names = params + [p.arg for p in a.kwonlyargs]
+        given = [(params[i], arg) for i, arg in enumerate(c.args[: len(params)])]
+        given += [(k.arg, k.value) for k in c.keywords if k.arg in names]
+        self.passed |= {(n, self.local(t, p, c.lineno)) for p, arg in given for n in self.whole(arg)}
         for i, r in enumerate(pos):
             if i < len(params):
                 self.edge(r, self.local(t, params[i], c.lineno))
@@ -440,30 +452,14 @@ class Verifier:
                 self.edge(r, self.local(t, a.kwarg.arg, c.lineno))
 
     # ---------------------------------------------------------------- verdicts
-    def inside(self, file: str, line: int) -> bool:
-        return any(w["path"] == file and w["line"] <= line <= w["end_line"] for w in self.anchors["wrappers"])
-
-    def wrapped(self) -> set[str]:
-        """Functions that run inside an anchored wrapper: called from a wrapper's lines, then everything they call."""
-        todo = [t for calls in self.calls.values() for file, line, t in calls if self.inside(file, line)]
-        seen = set()
-        while todo:
-            q = todo.pop()
-            if q not in seen:
-                seen.add(q)
-                todo += [t for _, _, t in self.calls.get(q, ())]
-        return seen
-
-    def in_wrapper(self, sink: str, wrapped: set[str]) -> bool:
-        info = self.info[sink]
-        return info["use"] == "최종 출력" or info["func"] in wrapped or self.inside(info["file"], info["line"])
-
     def verdicts(self) -> list[dict]:
         fwd, back = {}, {}
         for a, b in self.edges:
             fwd.setdefault(a, set()).add(b)
             back.setdefault(b, set()).add(a)
         recorded = {a for a, b in self.edges if b in self.logs and (a, b) not in self.partial}
+        while new := {n for n, param in self.passed if param in recorded} - recorded:  # logged by a helper function
+            recorded |= new
 
         def reach(start, adj, avoid=frozenset()):
             seen, todo = {start}, [] if start in avoid else [start]
@@ -499,7 +495,7 @@ class Verifier:
                 "logs": [self.at(m) | {"log": m, "whole": (n, m) not in self.partial} for m in logs],
             }
 
-        wrapped, rows = self.wrapped(), []
+        rows = []
         for s in sorted(self.sources, key=lambda n: (list(KIND).index(self.info[n]["cat"]), n)):
             down = reach(s, fwd)
             for k in sorted(k for k in self.sinks if k in down):
@@ -523,7 +519,6 @@ class Verifier:
                         "sink_at": {x: steps[-1][x] for x in ("file", "line", "code", "uri")},
                         "status": status,
                         "steps": steps,
-                        "blind_spot": not self.in_wrapper(k, wrapped),
                     }
                 )
         return rows
@@ -556,12 +551,12 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 16px 0; }
 .tile { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
 .tile b { display: block; font-size: 26px; line-height: 1.2; } .tile.ok b { color: var(--ok); } .tile.partial b { color: var(--part); }
-.tile.bypass b, .tile.blind b { color: var(--miss); }
+.tile.bypass b { color: var(--miss); }
 .card { background: var(--panel); border: 1px solid var(--line); border-left: 5px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
 .card.covered { border-left-color: var(--ok); } .card.partial { border-left-color: var(--part); } .card.bypass { border-left-color: var(--miss); }
 .head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-weight: 600; margin-bottom: 10px; }
 .badge { font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; color: #fff; }
-.badge.covered { background: var(--ok); } .badge.partial { background: var(--part); } .badge.bypass, .badge.blind { background: var(--miss); }
+.badge.covered { background: var(--ok); } .badge.partial { background: var(--part); } .badge.bypass { background: var(--miss); }
 .chain { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 4px; }
 .arrow { color: var(--muted); padding-top: 8px; }
 .step { display: flex; flex-direction: column; gap: 4px; max-width: 230px; }
@@ -578,9 +573,6 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; }
 .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; border: 1.5px solid; }
 .legend .l-ok::before { background: var(--ok-bg); border-color: var(--ok); } .legend .l-part::before { border-style: dashed; border-color: var(--part); }
 .legend .l-miss::before { background: var(--miss-bg); border-color: var(--miss); }
-table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; } th { font-size: 12px; color: var(--muted); }
-a.code { color: inherit; }
 @media (max-width: 600px) { .step { max-width: 100%; } .arrow { padding-top: 0; } }
 """
 
@@ -594,7 +586,6 @@ def step_label(n: str) -> str:
 def report_html(rows: list[dict], anchors_path: Path) -> str:
     e = html.escape
     count = {s: sum(r["status"] == s for r in rows) for s in STATUS}
-    blind = sorted({r["sink"] for r in rows if r["blind_spot"]})
     cat = {v: k for k, v in KIND.items()}
 
     def chip(st: dict, r: dict, last: bool) -> str:
@@ -623,10 +614,9 @@ def report_html(rows: list[dict], anchors_path: Path) -> str:
         chain = '<span class="arrow">→</span>'.join(
             chip(st, r, i == len(r["steps"]) - 1) for i, st in enumerate(r["steps"])
         )
-        blind_badge = '<span class="badge blind">사각지대</span>' if r["blind_spot"] else ""
         return (
             f'<div class="card {r["status"]}"><div class="head"><span class="badge {r["status"]}">{STATUS[r["status"]]}</span>'
-            f"{blind_badge}<span>{e(step_label(r['source']))} → {e(r['use'])}: <code>{e(step_label(r['sink']))}</code></span></div>"
+            f"<span>{e(step_label(r['source']))} → {e(r['use'])}: <code>{e(step_label(r['sink']))}</code></span></div>"
             f'<div class="chain">{chain}</div></div>'
         )
 
@@ -635,19 +625,7 @@ def report_html(rows: list[dict], anchors_path: Path) -> str:
         f'<div class="tile ok"><span class="muted">검증 완료</span><b>{count["covered"]}</b></div>'
         f'<div class="tile partial"><span class="muted">일부만 기록</span><b>{count["partial"]}</b></div>'
         f'<div class="tile bypass"><span class="muted">누락</span><b>{count["bypass"]}</b></div>'
-        f'<div class="tile blind"><span class="muted">사각지대</span><b>{len(blind)}</b></div>'
     )
-    if blind:
-        trs = "".join(
-            f'<tr><td><a class="code" href="{e(r["sink_at"]["uri"])}"><code>{e(r["sink_at"]["file"])}:{r["sink_at"]["line"]}</code></a></td>'
-            f"<td><code>{e(r['sink_at']['code'])}</code></td>"
-            f"<td>{e(', '.join(sorted({x['value'] for x in rows if x['sink'] == k})))}</td></tr>"
-            for k in blind
-            for r in [next(x for x in rows if x["sink"] == k)]
-        )
-        blind_html = f"<table><tr><th>위치</th><th>호출</th><th>들어가는 값</th></tr>{trs}</table>"
-    else:
-        blind_html = '<p class="muted">없음. 세 값이 외부로 나가는 호출은 모두 기준점의 래퍼 안에 있습니다.</p>'
     order = list(STATUS)
     sections = "".join(
         f"<h2>{e(value)}</h2>"
@@ -662,8 +640,6 @@ def report_html(rows: list[dict], anchors_path: Path) -> str:
 <div class="muted">기준점: <code>{e(str(anchors_path))}</code> · 칸을 누르면 그 코드 줄이 열립니다</div>
 <div class="tiles">{tiles}</div>
 <div class="legend"><span class="l-ok">값을 통째로 기록</span><span class="l-part">값의 일부만 기록</span><span class="l-miss">기록 없이 쓰임</span></div>
-<h2>사각지대 <span class="muted" style="font-size:13px;font-weight:400">래퍼 밖에서 값이 외부로 나가는 호출</span></h2>
-{blind_html}
 {sections}
 </main></body></html>
 """
@@ -684,8 +660,7 @@ def main() -> None:
     (a.out_dir / "report.json").write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
     (a.out_dir / "report.html").write_text(report_html(rows, a.anchors), encoding="utf-8")
     for r in rows:
-        flag = "  [사각지대]" if r["blind_spot"] else ""
-        print(f"{STATUS[r['status']]:<6} {r['value']:<13} {short(r['source'])} → {short(r['sink'])}{flag}")
+        print(f"{STATUS[r['status']]:<6} {r['value']:<13} {short(r['source'])} → {short(r['sink'])}")
     print(f"wrote {a.out_dir / 'report.html'} and report.json")
 
 

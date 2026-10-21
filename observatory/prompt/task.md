@@ -36,15 +36,11 @@ This session is non-interactive: nobody can answer questions, so never ask; carr
        {"kind": "llm_response", "path": "pkg/agent.py", "line": 1, "call": "self.model.query", "label": "model call"},
        {"kind": "tool_response", "path": "pkg/agent.py", "line": 1, "call": "self.env.execute", "label": "tool call"},
        {"kind": "user_input", "path": "pkg/agent.py", "line": 1, "call": "input", "label": "prompt"}
-     ],
-     "wrappers": [
-       {"label": "Class.method", "events": ["llm_query", "llm_response", "llm_error"], "path": "pkg/agent.py", "line": 1, "end_line": 9}
      ]
    }
    ```
    - `entry`: the agent's run function and its parameters that carry the user's task.
    - `sources`: every call whose return value is a model reply, a tool or action output, or text the user typed. `call` is the called expression exactly as written in the source (`ast.unparse` of the call's function) on that `line`.
-   - `wrappers`: the line range of every function you put logger calls in, with the events it emits.
 
 <!-- diagram -->
 ## Part 2: the architecture diagram (left panel of the dashboard)

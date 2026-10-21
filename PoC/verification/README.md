@@ -32,7 +32,6 @@ open PoC/verification/out_verify/report.html
 |---|---|
 | `entry` | 진입 함수와, 그 인자 중 사용자 입력(`inputs`) |
 | `sources` | 세 값이 생기는 호출: `kind`(`user_input` / `llm_response` / `tool_response`), `path`, `line`, `call`(호출식 그대로) |
-| `wrappers` | 래퍼 구간(`path`, `line`~`end_line`)과 남기는 이벤트 |
 | `logger` | 로그 모듈 이름 (기본 `observatory_log`) |
 
 `call`이 코드에서 안 찾아지면 바로 멈춥니다(기준점이 코드와 어긋났다는 뜻).
@@ -53,14 +52,13 @@ open PoC/verification/out_verify/report.html
    | 일부만 기록 | 기록 없이 도착하는 경로가 있고, 그 경로엔 일부만 받는 로그뿐 |
    | 누락 | 기록 없이 도착하는 경로가 있고, 로그가 전혀 없음 |
 
-   **사각지대**: 사용 지점이 어떤 래퍼 구간 안에도, 래퍼 구간에서 불리는 함수 안에도 없음. 구조도 단계가 못 본 출구입니다.
 4. **리포트**: 흐름별로 생김 · 기록 · 쓰임 위치와 기록 없이 지나는 경로.
 
 ## toy 에이전트 결과
 
-흐름 8개: 검증 완료 8, 일부만 기록 0, 누락 0, 사각지대 0.
+흐름 8개: 검증 완료 8, 일부만 기록 0, 누락 0.
 
-- 시험: `os.popen(reply["content"])`를 부르는 메서드를 심으면 사각지대로, `agent.py:43-44`의 task 로그를 지우면 task → LLM 입력이 누락으로 나옵니다.
+- 시험: `agent.py:43-44`의 task 로그를 지우면 task → LLM 입력이 누락으로 나옵니다.
 
 ## toy 에이전트 직접 실행
 
