@@ -227,3 +227,4 @@ model:
     {%- endif %}
   model_name: "minimax/minimax-m3.1-flash:free"
   model_class: openrouter
+  cost_tracking: ignore_errors

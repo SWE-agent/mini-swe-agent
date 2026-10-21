@@ -249,9 +249,13 @@ Here are more examples of how to configure specific models:
     model:
         model_name: "minimax/minimax-m3.1-flash:free"
         model_class: openrouter
+        cost_tracking: ignore_errors
         model_kwargs:
             temperature: 0.0
     ```
+
+    The free route reports zero cost, so this example uses `cost_tracking: ignore_errors`.
+    To use MiniMax M3 instead, set `model_name: "minimax/minimax-m3"` and `cost_tracking: default`.
 
 ## Model classes
 
