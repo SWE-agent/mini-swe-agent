@@ -1,0 +1,2646 @@
+[
+  {
+    "value": "User Input",
+    "source": "[User Input] input @ src/minisweagent/agents/interactive.py:94",
+    "use": "외부 호출",
+    "sink": "[외부 호출] re.match @ src/minisweagent/agents/interactive.py:170",
+    "sink_at": {
+      "file": "src/minisweagent/agents/interactive.py",
+      "line": 170,
+      "code": "return self.config.mode == \"confirm\" and not any(re.match(r, action) for r in self.config.whitelist_actions)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:170"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 94,
+        "code": "step_limit_input = input(\"New step limit: \")",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:94",
+        "name": "[User Input] input @ src/minisweagent/agents/interactive.py:94",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 94,
+        "code": "step_limit_input = input(\"New step limit: \")",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:94",
+        "name": "InteractiveAgent.query:step_limit_input",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/interactive.py",
+            "line": 98,
+            "code": "observatory_log.tool_end(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:98",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/interactive.py:98",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 61,
+        "code": "if self.config.mode == \"human\":",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:61",
+        "name": "InteractiveAgent.config",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 170,
+        "code": "return self.config.mode == \"confirm\" and not any(re.match(r, action) for r in self.config.whitelist_actions)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:170",
+        "name": "InteractiveAgent._should_ask_confirmation:r",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 170,
+        "code": "return self.config.mode == \"confirm\" and not any(re.match(r, action) for r in self.config.whitelist_actions)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:170",
+        "name": "[외부 호출] re.match @ src/minisweagent/agents/interactive.py:170",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "source": "[User Input] prompt_session.prompt @ src/minisweagent/agents/interactive.py:195",
+    "use": "외부 호출",
+    "sink": "[외부 호출] UserInterruption @ src/minisweagent/agents/interactive.py:42",
+    "sink_at": {
+      "file": "src/minisweagent/agents/interactive.py",
+      "line": 42,
+      "code": "raise UserInterruption({\"role\": \"user\", \"content\": content, \"extra\": {\"interrupt_type\": itype}})",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:42"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 195,
+        "code": "user_input = _multiline_prompt() if _multiline else prompt_session.prompt(\"\")",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:195",
+        "name": "[User Input] prompt_session.prompt @ src/minisweagent/agents/interactive.py:195",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 195,
+        "code": "user_input = _multiline_prompt() if _multiline else prompt_session.prompt(\"\")",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:195",
+        "name": "InteractiveAgent._prompt_and_handle_slash_commands:user_input",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/interactive.py",
+            "line": 196,
+            "code": "observatory_log.tool_end(start, \"user_input\", result=user_input, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:196",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/interactive.py:196",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 191,
+        "code": "def _prompt_and_handle_slash_commands(self, prompt: str, *, _multiline: bool = False) -> str:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:191",
+        "name": "InteractiveAgent._prompt_and_handle_slash_commands:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 160,
+        "code": "user_input = self._prompt_and_handle_slash_commands(message).strip()",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:160",
+        "name": "InteractiveAgent._check_for_new_task_or_submit:user_input",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 42,
+        "code": "raise UserInterruption({\"role\": \"user\", \"content\": content, \"extra\": {\"interrupt_type\": itype}})",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:42",
+        "name": "InteractiveAgent._interrupt:content",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 42,
+        "code": "raise UserInterruption({\"role\": \"user\", \"content\": content, \"extra\": {\"interrupt_type\": itype}})",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:42",
+        "name": "[외부 호출] UserInterruption @ src/minisweagent/agents/interactive.py:42",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "source": "[User Input] task (entry parameter)",
+    "use": "LLM 입력",
+    "sink": "[LLM 입력] self.model.query @ src/minisweagent/agents/default.py:161",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 161,
+      "code": "message = self.model.query(self.messages)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 91,
+            "code": "observatory_log.tool_end(start, \"user_input\", result=task)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:91",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:91",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 45,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:45",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 52,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:52",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM 입력] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "source": "[User Input] task (entry parameter)",
+    "use": "외부 호출",
+    "sink": "[외부 호출] Template(template, undefined=StrictUndefined).render @ src/minisweagent/agents/default.py:67",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 67,
+      "code": "return Template(template, undefined=StrictUndefined).render(**self.get_template_vars())",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:67"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 91,
+            "code": "observatory_log.tool_end(start, \"user_input\", result=task)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:91",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:91",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 45,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:45",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 52,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:52",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 67,
+        "code": "return Template(template, undefined=StrictUndefined).render(**self.get_template_vars())",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:67",
+        "name": "[외부 호출] Template(template, undefined=StrictUndefined).render @ src/minisweagent/agents/default.py:67",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "source": "[User Input] task (entry parameter)",
+    "use": "외부 호출",
+    "sink": "[외부 호출] get_content_string @ src/minisweagent/agents/interactive.py:47",
+    "sink_at": {
+      "file": "src/minisweagent/agents/interactive.py",
+      "line": 47,
+      "code": "role, content = msg.get(\"role\") or msg.get(\"type\", \"unknown\"), get_content_string(msg)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:47"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 91,
+            "code": "observatory_log.tool_end(start, \"user_input\", result=task)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:91",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:91",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 45,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:45",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 52,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:52",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 75,
+        "code": "return self.add_messages(",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:75",
+        "name": "InteractiveAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 46,
+        "code": "for msg in messages:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:46",
+        "name": "InteractiveAgent.add_messages:msg",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 47,
+        "code": "role, content = msg.get(\"role\") or msg.get(\"type\", \"unknown\"), get_content_string(msg)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:47",
+        "name": "[외부 호출] get_content_string @ src/minisweagent/agents/interactive.py:47",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "source": "[User Input] task (entry parameter)",
+    "use": "외부 호출",
+    "sink": "[외부 호출] json.dumps @ src/minisweagent/agents/default.py:245",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 245,
+      "code": "path.write_text(json.dumps(data, indent=2))",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:245"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 91,
+            "code": "observatory_log.tool_end(start, \"user_input\", result=task)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:91",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:91",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 45,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:45",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 52,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:52",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 219,
+        "code": "agent_data = {",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:219",
+        "name": "DefaultAgent.serialize:agent_data",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 215,
+        "code": "def serialize(self, *extra_dicts) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:215",
+        "name": "DefaultAgent.serialize:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 242,
+        "code": "data = self.serialize(*extra_dicts)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:242",
+        "name": "DefaultAgent.save:data",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 245,
+        "code": "path.write_text(json.dumps(data, indent=2))",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:245",
+        "name": "[외부 호출] json.dumps @ src/minisweagent/agents/default.py:245",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "source": "[User Input] task (entry parameter)",
+    "use": "외부 호출",
+    "sink": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:236",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 236,
+      "code": "return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:236"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 91,
+            "code": "observatory_log.tool_end(start, \"user_input\", result=task)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:91",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:91",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 45,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:45",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 52,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:52",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 219,
+        "code": "agent_data = {",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:219",
+        "name": "DefaultAgent.serialize:agent_data",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 236,
+        "code": "return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:236",
+        "name": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:236",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "source": "[User Input] task (entry parameter)",
+    "use": "외부 호출",
+    "sink": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:53",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 53,
+      "code": "return recursive_merge(",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:53"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 91,
+            "code": "observatory_log.tool_end(start, \"user_input\", result=task)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:91",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:91",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 45,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:45",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 53,
+        "code": "return recursive_merge(",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:53",
+        "name": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:53",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "source": "[User Input] task (entry parameter)",
+    "use": "외부 호출",
+    "sink": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:70",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 70,
+      "code": "self.logger.debug(messages)  # set log level to debug to see",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 91,
+            "code": "observatory_log.tool_end(start, \"user_input\", result=task)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:91",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:91",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 45,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:45",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 52,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:52",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:70",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "source": "[User Input] task (entry parameter)",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of DefaultAgent.run",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 126,
+      "code": "return self.messages[-1].get(\"extra\", {})",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:126"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 91,
+            "code": "observatory_log.tool_end(start, \"user_input\", result=task)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:91",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:91",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 45,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:45",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 52,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:52",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 126,
+        "code": "return self.messages[-1].get(\"extra\", {})",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:126",
+        "name": "[최종 출력] return of DefaultAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "LLM 입력",
+    "sink": "[LLM 입력] self.model.query @ src/minisweagent/agents/default.py:161",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 161,
+      "code": "message = self.model.query(self.messages)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM 입력] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "Tool 입력",
+    "sink": "[Tool 입력] self.env.execute @ src/minisweagent/agents/default.py:193",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 193,
+      "code": "output = self.env.execute(action)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 132,
+        "code": "def query(self) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:132",
+        "name": "DefaultAgent.query:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 130,
+        "code": "return self.execute_actions(self.query())",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:130",
+        "name": "DefaultAgent.execute_actions:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_actions:action",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_action:action",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 191,
+            "code": "start = observatory_log.tool_start(\"bash\", action, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:191",
+            "log": "[LOG] observatory_log.tool_start @ src/minisweagent/agents/default.py:191",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "[Tool 입력] self.env.execute @ src/minisweagent/agents/default.py:193",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "외부 호출",
+    "sink": "[외부 호출] Template(template, undefined=StrictUndefined).render @ src/minisweagent/agents/default.py:67",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 67,
+      "code": "return Template(template, undefined=StrictUndefined).render(**self.get_template_vars())",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:67"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 47,
+        "code": "self.cost = 0.0",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:47",
+        "name": "DefaultAgent.cost",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 52,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:52",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 67,
+        "code": "return Template(template, undefined=StrictUndefined).render(**self.get_template_vars())",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:67",
+        "name": "[외부 호출] Template(template, undefined=StrictUndefined).render @ src/minisweagent/agents/default.py:67",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "외부 호출",
+    "sink": "[외부 호출] get_content_string @ src/minisweagent/agents/interactive.py:47",
+    "sink_at": {
+      "file": "src/minisweagent/agents/interactive.py",
+      "line": 47,
+      "code": "role, content = msg.get(\"role\") or msg.get(\"type\", \"unknown\"), get_content_string(msg)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:47"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 75,
+        "code": "return self.add_messages(",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:75",
+        "name": "InteractiveAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 46,
+        "code": "for msg in messages:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:46",
+        "name": "InteractiveAgent.add_messages:msg",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 47,
+        "code": "role, content = msg.get(\"role\") or msg.get(\"type\", \"unknown\"), get_content_string(msg)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:47",
+        "name": "[외부 호출] get_content_string @ src/minisweagent/agents/interactive.py:47",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "외부 호출",
+    "sink": "[외부 호출] json.dumps @ src/minisweagent/agents/default.py:245",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 245,
+      "code": "path.write_text(json.dumps(data, indent=2))",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:245"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 47,
+        "code": "self.cost = 0.0",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:47",
+        "name": "DefaultAgent.cost",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 219,
+        "code": "agent_data = {",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:219",
+        "name": "DefaultAgent.serialize:agent_data",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 215,
+        "code": "def serialize(self, *extra_dicts) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:215",
+        "name": "DefaultAgent.serialize:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 242,
+        "code": "data = self.serialize(*extra_dicts)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:242",
+        "name": "DefaultAgent.save:data",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 245,
+        "code": "path.write_text(json.dumps(data, indent=2))",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:245",
+        "name": "[외부 호출] json.dumps @ src/minisweagent/agents/default.py:245",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "외부 호출",
+    "sink": "[외부 호출] re.match @ src/minisweagent/agents/interactive.py:170",
+    "sink_at": {
+      "file": "src/minisweagent/agents/interactive.py",
+      "line": 170,
+      "code": "return self.config.mode == \"confirm\" and not any(re.match(r, action) for r in self.config.whitelist_actions)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:170"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 132,
+        "code": "def query(self) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:132",
+        "name": "DefaultAgent.query:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 130,
+        "code": "return self.execute_actions(self.query())",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:130",
+        "name": "InteractiveAgent.execute_actions:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 133,
+        "code": "actions = message.get(\"extra\", {}).get(\"actions\", [])",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:133",
+        "name": "InteractiveAgent.execute_actions:actions",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 134,
+        "code": "commands = [action[\"command\"] for action in actions]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:134",
+        "name": "InteractiveAgent.execute_actions:action",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 134,
+        "code": "commands = [action[\"command\"] for action in actions]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:134",
+        "name": "InteractiveAgent.execute_actions:commands",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 137,
+        "code": "self._ask_confirmation_or_interrupt(commands)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:137",
+        "name": "InteractiveAgent._ask_confirmation_or_interrupt:commands",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 173,
+        "code": "if not any(self._should_ask_confirmation(c) for c in commands):",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:173",
+        "name": "InteractiveAgent._ask_confirmation_or_interrupt:c",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 170,
+        "code": "return self.config.mode == \"confirm\" and not any(re.match(r, action) for r in self.config.whitelist_actions)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:170",
+        "name": "InteractiveAgent._should_ask_confirmation:action",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 170,
+        "code": "return self.config.mode == \"confirm\" and not any(re.match(r, action) for r in self.config.whitelist_actions)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:170",
+        "name": "[외부 호출] re.match @ src/minisweagent/agents/interactive.py:170",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "외부 호출",
+    "sink": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:236",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 236,
+      "code": "return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:236"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 47,
+        "code": "self.cost = 0.0",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:47",
+        "name": "DefaultAgent.cost",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 219,
+        "code": "agent_data = {",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:219",
+        "name": "DefaultAgent.serialize:agent_data",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 236,
+        "code": "return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:236",
+        "name": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:236",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "외부 호출",
+    "sink": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:53",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 53,
+      "code": "return recursive_merge(",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:53"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 47,
+        "code": "self.cost = 0.0",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:47",
+        "name": "DefaultAgent.cost",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 53,
+        "code": "return recursive_merge(",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:53",
+        "name": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:53",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "외부 호출",
+    "sink": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:167",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 167,
+      "code": "self.logger.debug(",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:167"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 167,
+        "code": "self.logger.debug(",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:167",
+        "name": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:167",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "외부 호출",
+    "sink": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:189",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 189,
+      "code": "self.logger.debug(\"[TOOL_EXECUTION_START] action=%s params=%s\", \"bash\", action)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:189"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 132,
+        "code": "def query(self) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:132",
+        "name": "DefaultAgent.query:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 130,
+        "code": "return self.execute_actions(self.query())",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:130",
+        "name": "DefaultAgent.execute_actions:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_actions:action",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_action:action",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 191,
+            "code": "start = observatory_log.tool_start(\"bash\", action, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:191",
+            "log": "[LOG] observatory_log.tool_start @ src/minisweagent/agents/default.py:191",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 189,
+        "code": "self.logger.debug(\"[TOOL_EXECUTION_START] action=%s params=%s\", \"bash\", action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:189",
+        "name": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:189",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "외부 호출",
+    "sink": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:70",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 70,
+      "code": "self.logger.debug(messages)  # set log level to debug to see",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:70",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "source": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of DefaultAgent.run",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 126,
+      "code": "return self.messages[-1].get(\"extra\", {})",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:126"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM Response] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 173,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:173",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:173",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 126,
+        "code": "return self.messages[-1].get(\"extra\", {})",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:126",
+        "name": "[최종 출력] return of DefaultAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "source": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+    "use": "LLM 입력",
+    "sink": "[LLM 입력] self.model.query @ src/minisweagent/agents/default.py:161",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 161,
+      "code": "message = self.model.query(self.messages)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "DefaultAgent.execute_action:output",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 212,
+            "code": "observatory_log.tool_end(start, \"bash\", result=output, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:212",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:212",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 187,
+        "code": "def execute_action(self, action: dict) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:187",
+        "name": "DefaultAgent.execute_action:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_actions:outputs",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 161,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:161",
+        "name": "[LLM 입력] self.model.query @ src/minisweagent/agents/default.py:161",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "source": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+    "use": "외부 호출",
+    "sink": "[외부 호출] get_content_string @ src/minisweagent/agents/interactive.py:47",
+    "sink_at": {
+      "file": "src/minisweagent/agents/interactive.py",
+      "line": 47,
+      "code": "role, content = msg.get(\"role\") or msg.get(\"type\", \"unknown\"), get_content_string(msg)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:47"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "DefaultAgent.execute_action:output",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 212,
+            "code": "observatory_log.tool_end(start, \"bash\", result=output, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:212",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:212",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 187,
+        "code": "def execute_action(self, action: dict) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:187",
+        "name": "DefaultAgent.execute_action:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_actions:outputs",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 75,
+        "code": "return self.add_messages(",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:75",
+        "name": "InteractiveAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 46,
+        "code": "for msg in messages:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:46",
+        "name": "InteractiveAgent.add_messages:msg",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/interactive.py",
+        "line": 47,
+        "code": "role, content = msg.get(\"role\") or msg.get(\"type\", \"unknown\"), get_content_string(msg)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/interactive.py:47",
+        "name": "[외부 호출] get_content_string @ src/minisweagent/agents/interactive.py:47",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "source": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+    "use": "외부 호출",
+    "sink": "[외부 호출] json.dumps @ src/minisweagent/agents/default.py:245",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 245,
+      "code": "path.write_text(json.dumps(data, indent=2))",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:245"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "DefaultAgent.execute_action:output",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 212,
+            "code": "observatory_log.tool_end(start, \"bash\", result=output, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:212",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:212",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 187,
+        "code": "def execute_action(self, action: dict) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:187",
+        "name": "DefaultAgent.execute_action:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_actions:outputs",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 219,
+        "code": "agent_data = {",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:219",
+        "name": "DefaultAgent.serialize:agent_data",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 215,
+        "code": "def serialize(self, *extra_dicts) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:215",
+        "name": "DefaultAgent.serialize:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 242,
+        "code": "data = self.serialize(*extra_dicts)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:242",
+        "name": "DefaultAgent.save:data",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 245,
+        "code": "path.write_text(json.dumps(data, indent=2))",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:245",
+        "name": "[외부 호출] json.dumps @ src/minisweagent/agents/default.py:245",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "source": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+    "use": "외부 호출",
+    "sink": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:236",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 236,
+      "code": "return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:236"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "DefaultAgent.execute_action:output",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 212,
+            "code": "observatory_log.tool_end(start, \"bash\", result=output, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:212",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:212",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 187,
+        "code": "def execute_action(self, action: dict) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:187",
+        "name": "DefaultAgent.execute_action:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_actions:outputs",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 219,
+        "code": "agent_data = {",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:219",
+        "name": "DefaultAgent.serialize:agent_data",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 236,
+        "code": "return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:236",
+        "name": "[외부 호출] recursive_merge @ src/minisweagent/agents/default.py:236",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "source": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+    "use": "외부 호출",
+    "sink": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:206",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 206,
+      "code": "self.logger.debug(",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:206"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "DefaultAgent.execute_action:output",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 212,
+            "code": "observatory_log.tool_end(start, \"bash\", result=output, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:212",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:212",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 206,
+        "code": "self.logger.debug(",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:206",
+        "name": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:206",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "source": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+    "use": "외부 호출",
+    "sink": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:70",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 70,
+      "code": "self.logger.debug(messages)  # set log level to debug to see",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "DefaultAgent.execute_action:output",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 212,
+            "code": "observatory_log.tool_end(start, \"bash\", result=output, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:212",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:212",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 187,
+        "code": "def execute_action(self, action: dict) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:187",
+        "name": "DefaultAgent.execute_action:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_actions:outputs",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "[외부 호출] self.logger.debug @ src/minisweagent/agents/default.py:70",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "source": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of DefaultAgent.run",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 126,
+      "code": "return self.messages[-1].get(\"extra\", {})",
+      "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:126"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "[Tool Response] self.env.execute @ src/minisweagent/agents/default.py:193",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 193,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:193",
+        "name": "DefaultAgent.execute_action:output",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 212,
+            "code": "observatory_log.tool_end(start, \"bash\", result=output, step=self.n_calls)",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:212",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:212",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 187,
+        "code": "def execute_action(self, action: dict) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:187",
+        "name": "DefaultAgent.execute_action:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:184",
+        "name": "DefaultAgent.execute_actions:outputs",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 70,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:70",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 42,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:42",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 157,
+            "code": "observatory_log.llm_query(",
+            "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:157",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:157",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 88,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:88",
+        "name": "DefaultAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 126,
+        "code": "return self.messages[-1].get(\"extra\", {})",
+        "uri": "vscode://file/C:/Users/USER/Developments/mini-swe-agent/src/minisweagent/agents/default.py:126",
+        "name": "[최종 출력] return of DefaultAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  }
+]
