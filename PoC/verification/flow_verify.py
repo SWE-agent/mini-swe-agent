@@ -94,7 +94,13 @@ class Verifier:
                     imports[a.asname or top] = (kind, a.name)
             elif isinstance(n, ast.ImportFrom) and n.module:
                 for a in n.names:
-                    kind = "logger" if self.logger in (n.module, a.name) else "project" if n.module in self.modules else "ext"
+                    kind = (
+                        "logger"
+                        if self.logger in (n.module, a.name)
+                        else "project"
+                        if n.module in self.modules
+                        else "ext"
+                    )
                     imports[a.asname or a.name] = (kind, f"{n.module}.{a.name}")
         self.imports[file] = imports
         for node in tree.body:
