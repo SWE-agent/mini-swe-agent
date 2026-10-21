@@ -40,6 +40,16 @@ class DockerEnvironmentConfig(BaseModel):
     The actual command will be appended as argument to this. Override this to e.g., modify shell flags
     (e.g., to remove the `-l` flag to disable login shell) or to use python instead of bash to interpret commands.
     """
+    terminate_process_group_on_timeout: bool = True
+    """Terminate the complete container-side process group after a host-side command timeout.
+
+    This protection currently applies to the default ``bash -lc`` interpreter. Custom interpreters retain
+    the previous behavior because mini-swe-agent cannot safely assume how to wrap their command argument.
+    """
+    termination_grace_period: float = 1.0
+    """Seconds to wait between TERM and KILL when cleaning up a timed-out command."""
+    cleanup_timeout: int = 15
+    """Maximum seconds to wait while stopping or force-removing the task container."""
 
 
 class DockerEnvironment:
@@ -103,6 +113,11 @@ class DockerEnvironment:
         command = action.get("command", "")
         cwd = cwd or self.config.cwd
         assert self.container_id, "Container not started"
+        pidfile: str | None = None
+
+        if self.config.terminate_process_group_on_timeout and self.config.interpreter == ["bash", "-lc"]:
+            pidfile = f"/tmp/minisweagent-exec-{uuid.uuid4().hex}.pid"
+            command = self._wrap_command_with_process_group(command, pidfile)
 
         cmd = [self.config.executable, "exec", "-w", cwd]
         for key in self.config.forward_env:
@@ -124,6 +139,8 @@ class DockerEnvironment:
             )
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
         except Exception as e:
+            if isinstance(e, subprocess.TimeoutExpired) and pidfile is not None:
+                self._terminate_process_group(pidfile)
             raw_output = getattr(e, "output", None)
             raw_output = (
                 raw_output.decode("utf-8", errors="replace") if isinstance(raw_output, bytes) else (raw_output or "")
@@ -137,11 +154,49 @@ class DockerEnvironment:
         self._check_finished(output)
         return output
 
+    @staticmethod
+    def _wrap_command_with_process_group(command: str, pidfile: str) -> str:
+        """Run a command in a new session and persist its process-group ID for timeout cleanup."""
+        quoted_command = shlex.quote(command)
+        quoted_pidfile = shlex.quote(pidfile)
+        return (
+            f"setsid bash -lc {quoted_command} & "
+            f"child=$!; printf '%s' \"$child\" > {quoted_pidfile}; "
+            f'wait "$child"; status=$?; rm -f {quoted_pidfile}; exit "$status"'
+        )
+
+    def _terminate_process_group(self, pidfile: str) -> None:
+        """Best-effort termination of the process group created for one ``docker exec`` command."""
+        if not self.container_id:
+            return
+        quoted_pidfile = shlex.quote(pidfile)
+        grace_period = max(0.0, self.config.termination_grace_period)
+        cleanup_script = (
+            f"if [ -s {quoted_pidfile} ]; then "
+            f"pid=$(cat {quoted_pidfile}); "
+            'kill -TERM -- "-$pid" 2>/dev/null || true; '
+            f"sleep {grace_period}; "
+            'kill -KILL -- "-$pid" 2>/dev/null || true; '
+            f"rm -f {quoted_pidfile}; "
+            "fi"
+        )
+        try:
+            subprocess.run(
+                [self.config.executable, "exec", self.container_id, "bash", "-lc", cleanup_script],
+                capture_output=True,
+                text=True,
+                timeout=max(5.0, grace_period + 3.0),
+            )
+        except Exception as e:
+            self.logger.warning("Failed to terminate timed-out command process group: %s", e)
+
     def _check_finished(self, output: dict):
         """Raises Submitted if the output indicates task completion."""
         lines = output.get("output", "").lstrip().splitlines(keepends=True)
-        if lines and lines[0].strip() == "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT" and output["returncode"] == 0:
-            submission = "".join(lines[1:])
+        marker = "COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"
+        marker_index = next((index for index, line in enumerate(lines) if line.strip() == marker), None)
+        if marker_index is not None and output["returncode"] == 0:
+            submission = "".join(lines[marker_index + 1 :])
             raise Submitted(
                 {
                     "role": "exit",
@@ -152,9 +207,33 @@ class DockerEnvironment:
 
     def cleanup(self):
         """Stop and remove the Docker container."""
-        if getattr(self, "container_id", None) is not None:  # if init fails early, container_id might not be set
-            cmd = f"(timeout 60 {self.config.executable} stop {self.container_id} || {self.config.executable} rm -f {self.container_id}) >/dev/null 2>&1 &"
-            subprocess.Popen(cmd, shell=True)
+        container_id = getattr(self, "container_id", None)
+        if container_id is None:  # if init fails early, container_id might not be set
+            return
+
+        # Clear first so an explicit cleanup followed by __del__ is idempotent even if Docker is slow or fails.
+        self.container_id = None
+        try:
+            result = subprocess.run(
+                [self.config.executable, "stop", "--time", "10", container_id],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=self.config.cleanup_timeout,
+            )
+            if result.returncode == 0:
+                return
+        except Exception as e:
+            self.logger.debug("Graceful container stop failed for %s: %s", container_id, e)
+
+        try:
+            subprocess.run(
+                [self.config.executable, "rm", "-f", container_id],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=self.config.cleanup_timeout,
+            )
+        except Exception as e:
+            self.logger.warning("Failed to force-remove container %s: %s", container_id, e)
 
     def __del__(self):
         """Cleanup container when object is destroyed."""
