@@ -91,13 +91,12 @@ class InteractiveAgent(DefaultAgent):
                 f"Current spend: {self.n_calls} steps, ${self.cost:.2f}."
             )
             start = observatory_log.tool_start("user_input", "new step and cost limits", step=self.n_calls)
-            self.config.step_limit = int(input("New step limit: "))
-            self.config.cost_limit = float(input("New cost limit: "))
+            step_limit_input = input("New step limit: ")
+            cost_limit_input = input("New cost limit: ")
+            self.config.step_limit = int(step_limit_input)
+            self.config.cost_limit = float(cost_limit_input)
             observatory_log.tool_end(
-                start,
-                "user_input",
-                result=f"{self.config.step_limit} steps, ${self.config.cost_limit}",
-                step=self.n_calls,
+                start, "user_input", result=[step_limit_input, cost_limit_input], step=self.n_calls
             )
             return super().query()
 

@@ -87,6 +87,8 @@ class DefaultAgent:
 
     def run(self, task: str = "", **kwargs) -> dict:
         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
+        start = observatory_log.tool_start("user_input", "task")
+        observatory_log.tool_end(start, "user_input", result=task)
         self.extra_template_vars |= {"task": task, **kwargs}
         self.messages = []
         self.add_messages(
@@ -153,7 +155,7 @@ class DefaultAgent:
             len(self.messages),
         )
         observatory_log.llm_query(
-            self.n_calls, model=getattr(self.model.config, "model_name", None), messages=len(self.messages)
+            self.n_calls, model=getattr(self.model.config, "model_name", None), messages=self.messages
         )
         try:
             message = self.model.query(self.messages)
@@ -172,6 +174,7 @@ class DefaultAgent:
             self.n_calls,
             actions=[a.get("command") for a in message.get("extra", {}).get("actions", [])],
             cost=message.get("extra", {}).get("cost", 0.0),
+            response=message,
         )
         self.add_messages(message)
         return message
@@ -185,7 +188,7 @@ class DefaultAgent:
         """Execute a single action in the environment. Every agent runs its actions through here."""
         self.logger.debug("[TOOL_EXECUTION_START] action=%s params=%s", "bash", action)
         start_time = time.time()
-        start = observatory_log.tool_start("bash", action.get("command"), step=self.n_calls)
+        start = observatory_log.tool_start("bash", action, step=self.n_calls)
         try:
             output = self.env.execute(action)
         except Exception as e:
@@ -206,9 +209,7 @@ class DefaultAgent:
             output.get("returncode"),
             time.time() - start_time,
         )
-        observatory_log.tool_end(
-            start, "bash", result=output.get("output", "")[:500], returncode=output.get("returncode"), step=self.n_calls
-        )
+        observatory_log.tool_end(start, "bash", result=output, step=self.n_calls)
         return output
 
     def serialize(self, *extra_dicts) -> dict:
