@@ -90,6 +90,37 @@ def test_openrouter_model_successful_query(mock_response):
             assert GLOBAL_MODEL_STATS.cost == initial_cost + 0.000243
 
 
+def test_minimax_flash_payload_preserves_model_options_and_multimodal_messages(mock_response):
+    """Verify the configured OpenRouter Flash route reaches the HTTP payload unchanged."""
+    with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
+        model = OpenRouterTextbasedModel(
+            model_name="minimax/minimax-m3.1-flash:free",
+            model_kwargs={"reasoning_effort": "max", "temperature": 0.0},
+        )
+
+        with patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 200
+            mock_post.return_value.json.return_value = mock_response
+            mock_post.return_value.raise_for_status.return_value = None
+
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "Inspect this image."},
+                        {"type": "image_url", "image_url": {"url": "https://example.test/image.png"}},
+                    ],
+                }
+            ]
+            model.query(messages)
+
+            payload = json.loads(mock_post.call_args.kwargs["data"])
+            assert payload["model"] == "minimax/minimax-m3.1-flash:free"
+            assert payload["reasoning_effort"] == "max"
+            assert payload["temperature"] == 0.0
+            assert payload["messages"] == messages
+
+
 def test_openrouter_model_authentication_error():
     """Test authentication error handling."""
     with patch.dict(os.environ, {"OPENROUTER_API_KEY": "invalid-key"}):
