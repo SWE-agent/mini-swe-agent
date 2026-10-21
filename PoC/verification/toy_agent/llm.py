@@ -11,7 +11,7 @@ class LLM:
         self.system = system
 
     def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:
-        observatory_log.llm_query(step, model=self.model, messages=len(messages))
+        observatory_log.llm_query(step, model=self.model, messages=messages)
         try:
             response = self.client.messages.create(
                 model=self.model,
@@ -26,10 +26,12 @@ class LLM:
         reply = self.parse(response)
         observatory_log.llm_response(
             step,
+            reply=reply,
             actions=[c["name"] for c in reply["calls"]],
             stop_reason=response.stop_reason,
             input_tokens=response.usage.input_tokens,
             output_tokens=response.usage.output_tokens,
+            response=response,
         )
         return reply
 

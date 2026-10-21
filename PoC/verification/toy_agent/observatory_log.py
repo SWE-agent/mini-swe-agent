@@ -9,7 +9,7 @@ OBSERVATORY_RUNS is set to a directory (one file per process is created in it).
     llm_response(step, actions=None, **fields)                after the reply was parsed into actions (a list; [] if none)
     llm_error(step, error, **fields)                          when the model call raised
     start = tool_start(action, params=None, step=None)        right before one tool/action runs; keep the return value
-    tool_end(start, action, result=None, step=None, **fields) after it returned; `result` is a short outcome
+    tool_end(start, action, result=None, step=None, **fields) after it returned; `result` is the whole output
     tool_error(start, action, error, step=None, **fields)     when it raised
 
 `step` is the agent's own step counter. A tool event without `step` belongs to the latest llm_query. Any extra keyword
@@ -25,7 +25,7 @@ import threading
 import time
 from pathlib import Path
 
-MAX_CHARS = 4000
+MAX_CHARS = 20000
 _lock = threading.Lock()
 _files: dict[str, Path] = {}
 
@@ -49,6 +49,8 @@ def _clean(value, secrets: list[str]):
         return [_clean(v, secrets) for v in value]
     if value is None or isinstance(value, (bool, int, float)):
         return value
+    if hasattr(value, "model_dump"):  # pydantic objects such as SDK responses: keep their structure
+        return _clean(value.model_dump(mode="json"), secrets)
     return _clean(str(value), secrets)
 
 

@@ -6,7 +6,7 @@ import observatory_log
 
 
 def bash(command: str) -> str:
-    return subprocess.run(command, shell=True, capture_output=True, text=True).stdout
+    return subprocess.run(command, shell=True, capture_output=True, text=True, errors="replace").stdout
 
 
 def python(code: str) -> str:
@@ -26,5 +26,5 @@ class Registry:
         except Exception as e:
             observatory_log.tool_error(start, name, e)
             raise
-        observatory_log.tool_end(start, name, result=out[:200])
+        observatory_log.tool_end(start, name, result=out)
         return out

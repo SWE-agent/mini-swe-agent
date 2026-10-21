@@ -1,0 +1,380 @@
+{
+ "schema_version": 1,
+ "diagram_type": "architecture",
+ "meta": {
+  "title": "Toy Agent Loop",
+  "output": "static/agent-architecture.html",
+  "quality_profile": "showcase",
+  "viewBox": [
+   1240,
+   720
+  ],
+  "repository": {
+   "url": "https://github.com/NiceGuy1313/mini-swe-agent",
+   "provider": "github",
+   "link_mode": "local-only",
+   "revision": "49910902873f6888d7cfd223e6c92abae01125f6"
+  }
+ },
+ "components": [
+  {
+   "id": "task",
+   "type": "external",
+   "label": "Task",
+   "sublabel": "dashboard input / argv",
+   "pos": [
+    20,
+    310
+   ],
+   "size": [
+    130,
+    64
+   ]
+  },
+  {
+   "id": "run",
+   "type": "backend",
+   "label": "ToyAgent.run",
+   "sublabel": "step loop + confirm",
+   "pos": [
+    180,
+    310
+   ],
+   "size": [
+    170,
+    64
+   ],
+   "tag": "tool_start tool_end (user_input)",
+   "sources": [
+    {
+     "path": "PoC/verification/toy_agent/agent.py",
+     "line": 42,
+     "end_line": 50,
+     "label": "run loop"
+    },
+    {
+     "path": "PoC/verification/toy_agent/agent.py",
+     "line": 43,
+     "end_line": 44,
+     "label": "task as user_input"
+    }
+   ]
+  },
+  {
+   "id": "messages",
+   "type": "database",
+   "label": "ToyAgent.messages",
+   "sublabel": "task, replies, tool results",
+   "pos": [
+    400,
+    110
+   ],
+   "size": [
+    200,
+    72
+   ],
+   "sources": [
+    {
+     "path": "PoC/verification/toy_agent/agent.py",
+     "line": 45,
+     "label": "init"
+    },
+    {
+     "path": "PoC/verification/toy_agent/agent.py",
+     "line": 57,
+     "end_line": 60,
+     "label": "append"
+    }
+   ]
+  },
+  {
+   "id": "chat",
+   "type": "cloud",
+   "label": "LLM.chat",
+   "sublabel": "logging wrapper for the model call",
+   "pos": [
+    400,
+    300
+   ],
+   "size": [
+    200,
+    72
+   ],
+   "tag": "llm_query llm_response llm_error",
+   "sources": [
+    {
+     "path": "PoC/verification/toy_agent/llm.py",
+     "line": 13,
+     "end_line": 36,
+     "label": "LLM boundary"
+    }
+   ]
+  },
+  {
+   "id": "claude",
+   "type": "messagebus",
+   "label": "messages.create",
+   "sublabel": "Claude API + LLM.parse",
+   "pos": [
+    660,
+    300
+   ],
+   "size": [
+    210,
+    72
+   ],
+   "sources": [
+    {
+     "path": "PoC/verification/toy_agent/llm.py",
+     "line": 16,
+     "label": "model call"
+    },
+    {
+     "path": "PoC/verification/toy_agent/llm.py",
+     "line": 38,
+     "label": "parse tool_use"
+    }
+   ]
+  },
+  {
+   "id": "registry",
+   "type": "security",
+   "label": "Registry.run",
+   "sublabel": "one tool call",
+   "pos": [
+    930,
+    300
+   ],
+   "size": [
+    240,
+    72
+   ],
+   "tag": "tool_start tool_end tool_error",
+   "sources": [
+    {
+     "path": "PoC/verification/toy_agent/tools.py",
+     "line": 22,
+     "end_line": 30,
+     "label": "tool boundary"
+    }
+   ]
+  },
+  {
+   "id": "tools",
+   "type": "frontend",
+   "label": "bash / python",
+   "sublabel": "subprocess.run / exec",
+   "pos": [
+    930,
+    560
+   ],
+   "size": [
+    240,
+    72
+   ],
+   "sources": [
+    {
+     "path": "PoC/verification/toy_agent/tools.py",
+     "line": 8,
+     "end_line": 9,
+     "label": "bash"
+    },
+    {
+     "path": "PoC/verification/toy_agent/tools.py",
+     "line": 12,
+     "end_line": 15,
+     "label": "python"
+    }
+   ]
+  },
+  {
+   "id": "results",
+   "type": "messagebus",
+   "label": "LLM.results_message",
+   "sublabel": "tool_result blocks",
+   "pos": [
+    620,
+    560
+   ],
+   "size": [
+    210,
+    72
+   ],
+   "sources": [
+    {
+     "path": "PoC/verification/toy_agent/llm.py",
+     "line": 44,
+     "label": "tool results"
+    }
+   ]
+  },
+  {
+   "id": "user",
+   "type": "frontend",
+   "label": "ToyAgent.ask_user",
+   "sublabel": "confirm / What next?",
+   "pos": [
+    160,
+    560
+   ],
+   "size": [
+    190,
+    72
+   ],
+   "tag": "tool_start tool_end (user_input)",
+   "sources": [
+    {
+     "path": "PoC/verification/toy_agent/agent.py",
+     "line": 66,
+     "end_line": 73,
+     "label": "input()"
+    }
+   ]
+  }
+ ],
+ "boundaries": [
+  {
+   "kind": "region",
+   "label": "one step",
+   "wraps": [
+    "messages",
+    "chat",
+    "claude",
+    "registry",
+    "tools",
+    "results"
+   ],
+   "pad": 24
+  }
+ ],
+ "connections": [
+  {
+   "from": "task",
+   "to": "run",
+   "label": "start",
+   "variant": "emphasis"
+  },
+  {
+   "from": "run",
+   "to": "messages",
+   "label": "each step",
+   "variant": "emphasis",
+   "fromSide": "top",
+   "toSide": "top",
+   "via": [
+    [
+     265,
+     80
+    ],
+    [
+     500,
+     80
+    ]
+   ],
+   "labelAt": [
+    380,
+    66
+   ]
+  },
+  {
+   "from": "messages",
+   "to": "chat",
+   "label": "messages",
+   "variant": "emphasis",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    500,
+    240
+   ]
+  },
+  {
+   "from": "chat",
+   "to": "claude",
+   "variant": "emphasis"
+  },
+  {
+   "from": "claude",
+   "to": "registry",
+   "label": "tool calls",
+   "variant": "emphasis"
+  },
+  {
+   "from": "registry",
+   "to": "tools",
+   "label": "run",
+   "variant": "emphasis",
+   "fromSide": "bottom",
+   "toSide": "top",
+   "labelAt": [
+    1050,
+    466
+   ]
+  },
+  {
+   "from": "tools",
+   "to": "results",
+   "label": "output",
+   "variant": "emphasis"
+  },
+  {
+   "from": "results",
+   "to": "messages",
+   "label": "next step",
+   "variant": "dashed",
+   "fromSide": "left",
+   "toSide": "left",
+   "via": [
+    [
+     375,
+     596
+    ],
+    [
+     375,
+     146
+    ]
+   ],
+   "labelAt": [
+    440,
+    610
+   ]
+  },
+  {
+   "from": "run",
+   "to": "user",
+   "label": "no tool calls",
+   "variant": "emphasis",
+   "fromSide": "bottom",
+   "toSide": "top"
+  }
+ ],
+ "cards": [
+  {
+   "dot": "cyan",
+   "title": "LLM 호출",
+   "items": [
+    "step마다 LLM.chat이 Claude messages.create를 한 번 호출",
+    "llm_query(messages) → llm_response(reply, response)",
+    "fallback_query도 LLM.chat을 거침"
+   ]
+  },
+  {
+   "dot": "amber",
+   "title": "tool = bash / python",
+   "items": [
+    "LLM의 tool_use를 Registry.run이 하나씩 실행",
+    "tool_start(args) → tool_end(result 전체)",
+    "tool 호출이 없으면 ask_user로 확인"
+   ]
+  },
+  {
+   "dot": "emerald",
+   "title": "로거 호출",
+   "items": [
+    "llm.py: llm_query / llm_response / llm_error",
+    "tools.py: tool_start / tool_end / tool_error",
+    "agent.py: task와 input()을 user_input tool로 기록"
+   ]
+  }
+ ]
+}

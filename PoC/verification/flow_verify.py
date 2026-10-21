@@ -30,7 +30,7 @@ usage (repo root):
   uv run PoC/verification/flow_verify.py PoC/verification/toy_agent \\
       PoC/verification/toy_agent/observatory/diagram/verify-anchors.json PoC/verification/out_verify \\
       --only agent.py llm.py tools.py
-outputs: report.md, report.json
+outputs: report.html, report.json
 """
 
 import argparse
@@ -94,7 +94,7 @@ class Verifier:
                     imports[a.asname or top] = (kind, a.name)
             elif isinstance(n, ast.ImportFrom) and n.module:
                 for a in n.names:
-                    kind = "logger" if n.module == self.logger else "project" if n.module in self.modules else "ext"
+                    kind = "logger" if self.logger in (n.module, a.name) else "project" if n.module in self.modules else "ext"
                     imports[a.asname or a.name] = (kind, f"{n.module}.{a.name}")
         self.imports[file] = imports
         for node in tree.body:
@@ -390,7 +390,7 @@ class Verifier:
                 self.bind_args(t, c, pos, kws)
                 self.calls.setdefault(self.q, set()).add((self.file, c.lineno, t))
             result = {self.ret(t) for t in targets} if kind[0] == "funcs" else set()
-        elif kind[0] == "ext":
+        elif kind[0] == "ext" or (anchor and kind[0] == "value"):  # an anchored call on an object of unknown type
             use = USE[anchor["kind"]] if anchor else "외부 호출"
             sink = self.node(f"[{use}] {ast.unparse(c.func)} @ {loc}", "sink", c.lineno, use=use)
             self.sinks.add(sink)
@@ -434,12 +434,12 @@ class Verifier:
                 self.edge(r, self.local(t, a.kwarg.arg, c.lineno))
 
     # ---------------------------------------------------------------- verdicts
+    def inside(self, file: str, line: int) -> bool:
+        return any(w["path"] == file and w["line"] <= line <= w["end_line"] for w in self.anchors["wrappers"])
+
     def wrapped(self) -> set[str]:
         """Functions that run inside an anchored wrapper: called from a wrapper's lines, then everything they call."""
-        inside = lambda file, line: any(  # noqa: E731
-            w["path"] == file and w["line"] <= line <= w["end_line"] for w in self.anchors["wrappers"]
-        )
-        todo = [t for calls in self.calls.values() for file, line, t in calls if inside(file, line)]
+        todo = [t for calls in self.calls.values() for file, line, t in calls if self.inside(file, line)]
         seen = set()
         while todo:
             q = todo.pop()
@@ -450,11 +450,7 @@ class Verifier:
 
     def in_wrapper(self, sink: str, wrapped: set[str]) -> bool:
         info = self.info[sink]
-        if info["use"] == "최종 출력":
-            return True
-        return info["func"] in wrapped or any(
-            w["path"] == info["file"] and w["line"] <= info["line"] <= w["end_line"] for w in self.anchors["wrappers"]
-        )
+        return info["use"] == "최종 출력" or info["func"] in wrapped or self.inside(info["file"], info["line"])
 
     def verdicts(self) -> list[dict]:
         fwd, back = {}, {}
@@ -502,8 +498,8 @@ class Verifier:
             down = reach(s, fwd)
             for k in sorted(k for k in self.sinks if k in down):
                 on_path = down & reach(k, back)
-                full = sorted({m for n in on_path & recorded for m in fwd.get(n, ()) if m in self.logs})
-                pieces = sorted({m for n in on_path for m in fwd.get(n, ()) if m in self.logs} - set(full))
+                full = {m for n in on_path & recorded for m in fwd.get(n, ()) if m in self.logs}
+                pieces = {m for n in on_path for m in fwd.get(n, ()) if m in self.logs} - full
                 gap = k in reach(s, fwd, recorded)  # a path on which nothing is recorded whole
                 status = "covered" if not gap else "partial" if pieces else "bypass"
                 p = path(s, k, recorded) if gap else path(s, k)
@@ -516,16 +512,10 @@ class Verifier:
                     {
                         "value": KIND[self.info[s]["cat"]],
                         "source": s,
-                        "source_at": self.at(s),
                         "use": self.info[k]["use"],
                         "sink": k,
                         "sink_at": {x: steps[-1][x] for x in ("file", "line", "code", "uri")},
                         "status": status,
-                        "logs": [self.at(m) | {"log": m} for m in sorted(full, key=lambda m: self.info[m]["line"])],
-                        "partial_logs": [
-                            self.at(m) | {"log": m} for m in sorted(pieces, key=lambda m: self.info[m]["line"])
-                        ],
-                        "path": p,
                         "steps": steps,
                         "blind_spot": not self.in_wrapper(k, wrapped),
                     }
@@ -543,52 +533,6 @@ class Verifier:
 
 def short(n: str) -> str:
     return n.split(" @ ")[0]
-
-
-def report(rows: list[dict], anchors_path: Path) -> str:
-    count = {s: sum(r["status"] == s for r in rows) for s in STATUS}
-    blind = [r for r in rows if r["blind_spot"]]
-    lines = [
-        "# 래퍼 검증 리포트",
-        "",
-        f"기준점: `{anchors_path}`",
-        "",
-        f"흐름 {len(rows)}개: **검증 완료 {count['covered']}** · **일부만 기록 {count['partial']}** · "
-        f"**누락 {count['bypass']}** · 사각지대 {len({r['sink'] for r in blind})}곳",
-        "",
-        "## 사각지대 (래퍼 밖에서 값이 외부로 나가는 호출)",
-        "",
-    ]
-    if blind:
-        lines += ["| 위치 | 호출 | 들어가는 값 |", "|---|---|---|"]
-        for sink in sorted({r["sink"] for r in blind}):
-            r = next(r for r in blind if r["sink"] == sink)
-            values = ", ".join(sorted({x["value"] for x in blind if x["sink"] == sink}))
-            lines.append(f"| `{r['sink_at']['file']}:{r['sink_at']['line']}` | `{r['sink_at']['code']}` | {values} |")
-    else:
-        lines.append("없음. 세 값이 외부로 나가는 호출은 모두 기준점의 래퍼 안에 있습니다.")
-    for value in KIND.values():
-        mine = [r for r in rows if r["value"] == value]
-        if not mine:
-            continue
-        lines += ["", f"## {value}", ""]
-        for r in sorted(mine, key=lambda r: (list(STATUS).index(r["status"]), r["sink"])):
-            mark = {"covered": "✅", "partial": "⚠️", "bypass": "❌"}[r["status"]]
-            src, use = r["source_at"], r["sink_at"]
-            lines.append(f"### {mark} {STATUS[r['status']]}: {short(r['source'])} → {short(r['sink'])}")
-            lines.append("")
-            lines.append(f"- 생김: `{src['file']}:{src['line']}` `{src['code']}`")
-            for log in r["logs"]:
-                lines.append(f"- 기록: `{log['file']}:{log['line']}` `{log['code']}`")
-            for log in r["partial_logs"]:
-                lines.append(f"- 일부만 기록: `{log['file']}:{log['line']}` `{log['code']}`")
-            lines.append(f"- 쓰임 ({r['use']}): `{use['file']}:{use['line']}` `{use['code']}`")
-            if r["status"] != "covered":
-                lines.append(f"- 기록 없이 지나는 경로: {' → '.join(short(n) for n in r['path'])}")
-            if r["blind_spot"]:
-                lines.append("- **사각지대**: 이 호출은 기준점의 어떤 래퍼 안에도 없습니다.")
-            lines.append("")
-    return "\n".join(lines)
 
 
 CSS = """
@@ -624,7 +568,6 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; }
 .chip.sink.bypass { background: var(--miss-bg); border-color: var(--miss); }
 .log { display: block; font-size: 11px; padding: 2px 7px; border-radius: 6px; text-decoration: none; border: 1px dashed; }
 .log.whole { color: var(--ok); border-color: var(--ok); } .log.piece { color: var(--part); border-color: var(--part); }
-.note { margin-top: 10px; font-size: 13px; color: var(--muted); }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 8px; }
 .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; border: 1.5px solid; }
 .legend .l-ok::before { background: var(--ok-bg); border-color: var(--ok); } .legend .l-part::before { border-style: dashed; border-color: var(--part); }
@@ -674,16 +617,11 @@ def report_html(rows: list[dict], anchors_path: Path) -> str:
         chain = '<span class="arrow">→</span>'.join(
             chip(st, r, i == len(r["steps"]) - 1) for i, st in enumerate(r["steps"])
         )
-        note = {
-            "covered": "모든 경로가 값을 통째로 기록하는 로그를 지납니다. 위는 그 중 가장 짧은 경로입니다.",
-            "partial": "위 경로에서는 값의 일부(필드, 슬라이스, 가공값)만 로그에 들어갑니다.",
-            "bypass": "위 경로에서는 어떤 로그도 값을 받지 않습니다.",
-        }[r["status"]]
         blind_badge = '<span class="badge blind">사각지대</span>' if r["blind_spot"] else ""
         return (
             f'<div class="card {r["status"]}"><div class="head"><span class="badge {r["status"]}">{STATUS[r["status"]]}</span>'
             f"{blind_badge}<span>{e(step_label(r['source']))} → {e(r['use'])}: <code>{e(step_label(r['sink']))}</code></span></div>"
-            f'<div class="chain">{chain}</div><div class="note">{note}</div></div>'
+            f'<div class="chain">{chain}</div></div>'
         )
 
     tiles = (
@@ -738,12 +676,11 @@ def main() -> None:
     rows = v.verdicts()
     a.out_dir.mkdir(parents=True, exist_ok=True)
     (a.out_dir / "report.json").write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
-    (a.out_dir / "report.md").write_text(report(rows, a.anchors), encoding="utf-8")
     (a.out_dir / "report.html").write_text(report_html(rows, a.anchors), encoding="utf-8")
     for r in rows:
         flag = "  [사각지대]" if r["blind_spot"] else ""
         print(f"{STATUS[r['status']]:<6} {r['value']:<13} {short(r['source'])} → {short(r['sink'])}{flag}")
-    print(f"wrote {a.out_dir / 'report.md'} and report.html")
+    print(f"wrote {a.out_dir / 'report.html'} and report.json")
 
 
 if __name__ == "__main__":

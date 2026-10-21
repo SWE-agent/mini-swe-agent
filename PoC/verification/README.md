@@ -1,9 +1,9 @@
 # 래퍼 누락 검증
 
-LLM이 에이전트에 심은 로그(래퍼)가 **User Input, LLM Response, Tool Response** 세 값을 빠짐없이 기록하는지 정적으로 검증합니다. 구조도 단계(Archify + LLM)가 넘겨준 기준점에서 출발해 세 값이 흘러가는 경로만 따라가고, 흐름별 판정을 리포트로 냅니다. 검증 자체에는 LLM이 들어가지 않습니다.
+LLM이 에이전트에 심은 로그(래퍼)가 **User Input, LLM Response, Tool Response** 세 값을 빠짐없이 기록하는지 정적으로 검증합니다. 로거 연결 단계(`observatory/run.py`의 Claude 세션)가 래퍼를 심으면서 함께 써 준 기준점에서 출발해 세 값이 흘러가는 경로만 따라가고, 흐름별 판정을 리포트로 냅니다. 검증 자체에는 LLM이 들어가지 않습니다.
 
 ```
-구조도 단계 (Archify + LLM) ──▶ verify-anchors.json ──▶ flow_verify.py ──▶ report.md / report.html
+로거 연결 단계 (observatory/run.py) ──▶ verify-anchors.json ──▶ flow_verify.py ──▶ report.html
 ```
 
 ## 구성
@@ -24,7 +24,7 @@ uv run PoC/verification/flow_verify.py PoC/verification/toy_agent \
 open PoC/verification/out_verify/report.html
 ```
 
-결과(`out_verify/`, git에 안 올라감): `report.html`(카드와 경로 체인, 칸을 누르면 VS Code에서 그 줄이 열림), `report.md`, `report.json`.
+결과(`out_verify/`, git에 안 올라감): `report.html`(카드와 경로 체인, 칸을 누르면 VS Code에서 그 줄이 열림), `report.json`.
 
 ## 기준점 파일 (`verify-anchors.json`)
 
@@ -58,10 +58,20 @@ open PoC/verification/out_verify/report.html
 
 ## toy 에이전트 결과
 
-흐름 8개: 검증 완료 5, 일부만 기록 3, 누락 0, 사각지대 0.
+흐름 8개: 검증 완료 8, 일부만 기록 0, 누락 0, 사각지대 0.
 
-- 일부만 기록: `llm.py:27`의 `llm_response`가 tool 이름만 남겨서 LLM 응답 → 다음 LLM 입력, 최종 출력. `tools.py:29`의 `tool_end`가 `out[:200]`만 남겨서 Tool 응답 → LLM 입력.
 - 시험: `os.popen(reply["content"])`를 부르는 메서드를 심으면 사각지대로, `agent.py:43-44`의 task 로그를 지우면 task → LLM 입력이 누락으로 나옵니다.
+
+## toy 에이전트 직접 실행
+
+```bash
+uv run --env-file .env --with anthropic python PoC/verification/toy_agent/agent.py "What is 6 * 7?"
+uv run observatory/dashboard.py --runs PoC/verification/toy_agent/observatory/runs --port 8001     --agent "uv run --env-file .env --with anthropic python PoC/verification/toy_agent/agent.py"
+```
+
+로그는 `toy_agent/observatory/runs/`에 쌓이고, 대시보드에 실시간으로 뜹니다. 실제 Claude API를 호출합니다.
+`--agent`를 주면 대시보드 우측 상단에 task 입력창이 생기고, Run을 누르면 `<명령> <task>`를 실행합니다(확인 질문에는 자동으로 y).
+왼쪽 구조도는 `toy_agent/observatory/diagram/agent-architecture.json`(Archify spec)에서 만든 `.html`입니다.
 
 ## 런타임 추적 (`flow_trace.py`)
 

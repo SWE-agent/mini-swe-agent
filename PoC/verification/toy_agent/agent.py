@@ -71,3 +71,15 @@ class ToyAgent:
 
     def confirm(self, answer: str) -> bool:
         return self.ask_user(f"Accept '{answer[:40]}'? [y/N]").lower() == "y"
+
+
+if __name__ == "__main__":
+    import io
+    import os
+    import sys
+    from pathlib import Path
+
+    if not sys.stdin.isatty():  # no terminal (started from the dashboard): answer "y" instead of waiting
+        sys.stdin = io.StringIO("y\n")
+    os.environ.setdefault("OBSERVATORY_RUNS", str(Path(__file__).resolve().parent / "observatory/runs"))
+    print(ToyAgent().run(" ".join(sys.argv[1:]) or input("Task: ")))
