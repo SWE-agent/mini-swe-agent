@@ -11,6 +11,7 @@
   --text:#e2e8f0;--muted:#8a9ab3;--faint:#55657e;
   --llm:#5ad1e6;--llm-bg:rgba(90,209,230,.08);
   --tool:#f5c35b;--tool-bg:rgba(245,195,91,.08);
+  --user:#a78bfa;--user-bg:rgba(167,139,250,.09);
   --ok:#4ade80;--err:#fb7185;--err-bg:rgba(251,113,133,.09);
   --accent:#38bdf8;
   --mono:"SFMono-Regular",ui-monospace,Menlo,Consolas,monospace;
@@ -21,6 +22,7 @@
   --text:#0f172a;--muted:#55657e;--faint:#94a3b8;
   --llm:#0e7490;--llm-bg:rgba(14,116,144,.07);
   --tool:#a16207;--tool-bg:rgba(161,98,7,.07);
+  --user:#6d28d9;--user-bg:rgba(109,40,217,.06);
   --ok:#15803d;--err:#be123c;--err-bg:rgba(190,18,60,.06);
   --accent:#0284c7;
 }}
@@ -33,6 +35,8 @@ h1{font-size:15px;margin:0;font-weight:650;letter-spacing:.01em;white-space:nowr
 .pill.live{color:var(--accent);border-color:var(--accent)}
 .stats{display:flex;gap:14px;margin-left:auto;color:var(--muted);font:12px var(--mono);white-space:nowrap}
 .stats b{color:var(--text);font-weight:600}
+#task-form{display:flex;gap:6px;min-width:0}
+#task-form input{font:inherit;font-size:12px;color:var(--text);background:var(--panel-2);border:1px solid var(--line-2);border-radius:7px;padding:5px 9px;width:280px;min-width:0}
 .layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);height:calc(100vh - 56px)}
 section{min-width:0;min-height:0;display:flex;flex-direction:column}
 .diagram{border-right:1px solid var(--line)}
@@ -55,15 +59,20 @@ button{cursor:pointer;white-space:nowrap}
 .row{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:start;margin:8px 12px;padding:8px 10px;border-radius:7px}
 .row.llm{background:var(--llm-bg)}
 .row.tool{background:var(--tool-bg)}
+.row.user{background:var(--user-bg)}
 .row.error{background:var(--err-bg)}
 .tag{font:700 10.5px/20px var(--mono);letter-spacing:.06em}
 .row.llm .tag{color:var(--llm)}
 .row.tool .tag{color:var(--tool)}
+.row.user .tag{color:var(--user)}
 .row.error .tag{color:var(--err)}
 .main{min-width:0}
 .title{font:600 12.5px var(--mono);overflow-wrap:anywhere}
 .detail{margin-top:3px;font:12px/1.55 var(--mono);color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
 .detail.err{color:var(--err)}
+details.field{margin-top:4px}
+details.field summary{cursor:pointer;font:12px var(--mono);color:var(--muted)}
+details.field pre.code{max-height:70vh;resize:vertical}
 pre.code{margin:6px 0 0;padding:8px 10px;border-radius:6px;background:var(--panel-2);border:1px solid var(--line);font:12px/1.55 var(--mono);color:var(--text);white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto}
 .meta{font:12px var(--mono);color:var(--faint);white-space:nowrap;text-align:right}
 .status{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:6px;background:var(--faint);vertical-align:1px}
@@ -71,7 +80,7 @@ pre.code{margin:6px 0 0;padding:8px 10px;border-radius:6px;background:var(--pane
 @keyframes pulse{50%{opacity:.3}}
 .log{display:grid;grid-template-columns:70px 56px 1fr;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);font:12px/1.55 var(--mono)}
 .log .t{color:var(--faint)}.log .k{font-weight:700;color:var(--muted)}
-.log .k.llm{color:var(--llm)}.log .k.tool{color:var(--tool)}.log.error .m{color:var(--err)}
+.log .k.llm{color:var(--llm)}.log .k.tool{color:var(--tool)}.log .k.user{color:var(--user)}.log.error .m{color:var(--err)}
 .log .m{white-space:pre-wrap;overflow-wrap:anywhere}
 @media (max-width:980px){
   header{height:auto;flex-wrap:wrap;padding:10px 16px;gap:8px 12px}
@@ -91,9 +100,14 @@ pre.code{margin:6px 0 0;padding:8px 10px;border-radius:6px;background:var(--pane
     <span>steps <b id="s-steps">0</b></span>
     <span>LLM <b id="s-llm">0</b></span>
     <span>tools <b id="s-tools">0</b></span>
+    <span>user <b id="s-user">0</b></span>
     <span>cost <b id="s-cost">$0.000</b></span>
     <span>errors <b id="s-errors">0</b></span>
   </div>
+  <form id="task-form" hidden>
+    <input id="task" placeholder="Task for the agent" aria-label="Task" required>
+    <button type="submit">Run</button>
+  </form>
 </header>
 <main class="layout">
   <section class="diagram">
@@ -117,7 +131,9 @@ pre.code{margin:6px 0 0;padding:8px 10px;border-radius:6px;background:var(--pane
 const $ = s => document.querySelector(s);
 const timelineEl = $('#timeline'), rawEl = $('#raw'), runSel = $('#run');
 const EMPTY = '에이전트를 OBSERVATORY_RUNS 환경변수와 함께 실행하면 step마다 LLM 호출과 tool 실행 이력이 여기에 쌓입니다.';
+const USER = 'user_input';  // agents report user input as this tool action
 let state = null, stream = null, followLatest = true;
+const opened = new Set();  // expanded fields, kept across re-renders
 
 function el(tag, cls, text) {
   const n = document.createElement(tag);
@@ -129,11 +145,25 @@ const fmtDur = s => s == null ? '' : s < 1 ? `${Math.round(s * 1000)}ms` : `${s.
 const fmtTime = t => new Date(t * 1000).toLocaleTimeString('ko-KR', {hour12: false});
 const text = v => typeof v === 'string' ? v : JSON.stringify(v, null, 2);
 const short = (v, n = 160) => { const s = typeof v === 'string' ? v : JSON.stringify(v); return s.length > n ? s.slice(0, n) + '…' : s; };
-// key=value chips for the fields of an event that have no dedicated place in the row
-const extras = (data, skip) => Object.entries(data).filter(([k, v]) => !skip.includes(k) && v != null && v !== '').map(([k, v]) => `${k}=${short(v, 80)}`).join('  ');
+
+// small fields as key=value chips, large ones (objects, long text) as expandable full JSON
+function fields(main, ev, skip) {
+  const chips = [];
+  for (const [k, v] of Object.entries(ev.data)) {
+    if (skip.includes(k) || v == null || v === '') continue;
+    const s = text(v);
+    if (typeof v !== 'object' && s.length <= 120) { chips.push(`${k}=${s}`); continue; }
+    const key = `${ev.seq}:${k}`, d = el('details', 'field');
+    d.open = opened.has(key);
+    d.addEventListener('toggle', () => d.open ? opened.add(key) : opened.delete(key));
+    d.append(el('summary', null, `${k}${Array.isArray(v) ? ` (${v.length})` : ''} · ${s.length.toLocaleString()} chars`), el('pre', 'code', s));
+    main.append(d);
+  }
+  if (chips.length) main.append(el('div', 'detail', chips.join('  ')));
+}
 
 function resetState(id) {
-  state = {id, steps: new Map(), order: [], raw: [], counts: {llm: 0, tool: 0, errors: 0, cost: 0}};
+  state = {id, steps: new Map(), order: [], raw: [], counts: {llm: 0, tool: 0, user: 0, errors: 0, cost: 0}};
   render();
 }
 
@@ -152,7 +182,7 @@ function apply(ev) {
     if (call) call[ev.kind === 'llm_error' ? 'error' : 'response'] = ev;
     if (ev.kind === 'llm_error') state.counts.errors++;
     if (typeof d.cost === 'number') state.counts.cost += d.cost;
-  } else if (ev.kind === 'tool_start') { state.counts.tool++; stepOf(ev.step).tools.push({start: ev, end: null}); }
+  } else if (ev.kind === 'tool_start') { state.counts[d.action === USER ? 'user' : 'tool']++; stepOf(ev.step).tools.push({start: ev, end: null}); }
   else if (ev.kind === 'tool_end' || ev.kind === 'tool_error') {
     const t = stepOf(ev.step).tools.findLast(x => !x.end && x.start.data.action === d.action);
     if (t) t.end = ev;
@@ -168,6 +198,7 @@ function render() {
   $('#s-steps').textContent = state.order.filter(k => state.steps.get(k).llm.length).length;
   $('#s-llm').textContent = state.counts.llm;
   $('#s-tools').textContent = state.counts.tool;
+  $('#s-user').textContent = state.counts.user;
   $('#s-cost').textContent = `$${state.counts.cost.toFixed(3)}`;
   $('#s-errors').textContent = state.counts.errors;
   const stick = timelineEl.scrollHeight - timelineEl.scrollTop - timelineEl.clientHeight < 40;
@@ -188,18 +219,17 @@ function actionView(a) {
 
 function llmRow(c) {
   const q = c.query.data, r = c.response?.data, row = el('div', `row ${c.error ? 'error' : 'llm'}`), main = el('div', 'main');
-  const head = [q.model, q.messages != null ? `${q.messages} messages` : null].filter(Boolean).join(' · ');
+  const count = Array.isArray(q.messages) ? q.messages.length : q.messages;
+  const head = [q.model, count != null ? `${count} messages` : null].filter(Boolean).join(' · ');
   main.append(el('div', 'title', head || 'model call'));
-  const qx = extras(q, ['model', 'messages']);
-  if (qx) main.append(el('div', 'detail', qx));
+  fields(main, c.query, ['model']);
   for (const a of r?.actions || []) {
     const [name, args] = actionView(a);
     if (name) main.append(el('div', 'title', name));
     if (args) main.append(el('pre', 'code', args));
   }
   if (r && !r.actions.length) main.append(el('div', 'detail', '→ no action'));
-  const rx = r ? extras(r, ['actions', 'cost', 'duration_seconds']) : '';
-  if (rx) main.append(el('div', 'detail', rx));
+  if (r) fields(main, c.response, ['actions', 'cost', 'duration_seconds']);
   if (c.error) main.append(el('div', 'detail err', `${c.error.data.error_type}: ${short(c.error.data.error, 400)}`));
   const cost = r && typeof r.cost === 'number' && r.cost ? `$${r.cost.toFixed(4)} · ` : '';
   const meta = el('div', 'meta', r ? cost + fmtDur(r.duration_seconds) : c.error ? fmtDur(c.error.data.duration_seconds) : '');
@@ -210,18 +240,18 @@ function llmRow(c) {
 
 function toolRow(t) {
   const s = t.start.data, e = t.end?.data, failed = t.end?.kind === 'tool_error';
-  const row = el('div', `row ${failed ? 'error' : 'tool'}`), main = el('div', 'main');
+  const user = s.action === USER, row = el('div', `row ${failed ? 'error' : user ? 'user' : 'tool'}`), main = el('div', 'main');
   main.append(el('div', 'title', s.action));
   const p = s.params, keys = p && typeof p === 'object' ? Object.keys(p) : [];
   const shown = p == null ? '' : keys.length === 1 && typeof p[keys[0]] === 'string' ? p[keys[0]] : text(p);
   if (shown) main.append(el('pre', 'code', shown));
   if (failed) main.append(el('div', 'detail err', `${e.error_type}: ${short(e.error, 400)}`));
   else if (e && e.result != null) main.append(el('div', 'detail', `→ ${short(e.result, 400)}`));
-  const ex = e ? extras(e, ['action', 'result', 'duration_seconds', 'error', 'error_type']) : '';
-  if (ex) main.append(el('div', 'detail', ex));
+  if (e && !failed && text(e.result ?? '').length > 400) fields(main, {seq: t.end.seq, data: {result: e.result}}, []);
+  if (e) fields(main, t.end, ['action', 'result', 'duration_seconds', 'error', 'error_type']);
   const meta = el('div', 'meta', e ? fmtDur(e.duration_seconds) : '');
   meta.append(el('span', `status ${failed ? 'err' : t.end ? 'ok' : 'pending'}`));
-  row.append(el('span', 'tag', 'TOOL'), main, meta);
+  row.append(el('span', 'tag', user ? 'USER' : 'TOOL'), main, meta);
   return row;
 }
 
@@ -238,7 +268,7 @@ function renderStep(s) {
 function renderRaw() {
   if (rawEl.hidden) return;
   rawEl.replaceChildren(...state.raw.map(ev => {
-    const kind = ev.kind.startsWith('llm') ? 'llm' : 'tool';
+    const kind = ev.kind.startsWith('llm') ? 'llm' : ev.data?.action === USER ? 'user' : 'tool';
     const row = el('div', `log${ev.kind.endsWith('error') ? ' error' : ''}`);
     row.append(el('span', 't', fmtTime(ev.t)), el('span', `k ${kind}`, kind.toUpperCase()), el('span', 'm', `${ev.kind}${ev.step != null ? ` step=${ev.step}` : ''}\n${JSON.stringify(ev.data)}`));
     return row;
@@ -274,6 +304,13 @@ async function refreshRuns() {
 }
 
 runSel.addEventListener('change', () => { followLatest = runSel.selectedIndex === 0; openRun(runSel.value); });
+$('#task-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  await fetch('/api/run', {method: 'POST', body: JSON.stringify({task: $('#task').value})});
+  $('#task').value = '';
+  followLatest = true;
+});
+fetch('/api/agent').then(r => r.json()).then(a => { $('#task-form').hidden = !a.enabled; });
 resetState(null);
 refreshRuns();
 setInterval(refreshRuns, 2000);

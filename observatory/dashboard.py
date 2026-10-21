@@ -9,11 +9,16 @@
 It knows nothing about any agent. It only reads the run files (JSON lines) that observatory_log.py appends to the
 directory named by OBSERVATORY_RUNS, so start the agent as usual with that variable set, e.g.
 `OBSERVATORY_RUNS=$PWD/observatory/runs <your agent command>`, and watch the history appear live.
-The left panel shows observatory/diagram/agent-architecture.html when it exists.
+With --agent "<command>", the header gets a task box: each task starts `<command> <task>` with OBSERVATORY_RUNS set.
+The left panel shows diagram/agent-architecture.html next to the runs directory when it exists.
 """
 
 import argparse
 import json
+import os
+import shlex
+import subprocess
+import sys
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -73,6 +78,7 @@ def list_runs(directory: Path) -> list[dict]:
 
 class Handler(BaseHTTPRequestHandler):
     runs_dir = KIT / "runs"
+    agent: list[str] = []
 
     def log_message(self, *args) -> None:
         pass
@@ -93,8 +99,10 @@ class Handler(BaseHTTPRequestHandler):
         if url.path == "/":
             self.reply(200, "text/html; charset=utf-8", (KIT / "static/index.html").read_bytes())
         elif url.path == "/architecture":
-            diagram = KIT / "diagram/agent-architecture.html"
+            diagram = self.runs_dir.parent / "diagram/agent-architecture.html"
             self.reply(200, "text/html; charset=utf-8", diagram.read_bytes() if diagram.exists() else NO_DIAGRAM)
+        elif url.path == "/api/agent":
+            self.reply(200, "application/json", json.dumps({"enabled": bool(self.agent)}).encode())
         elif url.path == "/api/runs":
             self.reply(200, "application/json", json.dumps(list_runs(self.runs_dir)).encode())
         elif url.path in ("/api/events", "/api/trace"):
@@ -119,6 +127,18 @@ class Handler(BaseHTTPRequestHandler):
         else:
             self.reply(404, "text/plain", b"Not found")
 
+    def do_POST(self) -> None:
+        if urlparse(self.path).path != "/api/run" or not self.agent:
+            self.reply(404, "text/plain", b"Not found")
+            return
+        task = json.loads(self.rfile.read(int(self.headers["Content-Length"])))["task"]
+        # drop this script's own uv environment so that the agent command resolves its own Python
+        env = {k: v for k, v in os.environ.items() if k not in ("VIRTUAL_ENV", "PYTHONHOME", "PYTHONPATH")}
+        path = [p for p in env.get("PATH", "").split(os.pathsep) if not p.startswith(sys.prefix)]
+        env |= {"PATH": os.pathsep.join(path), "OBSERVATORY_RUNS": str(self.runs_dir)}
+        subprocess.Popen([*self.agent, task], env=env, stdin=subprocess.PIPE).stdin.close()
+        self.reply(202, "application/json", b"{}")
+
     def stream(self, path: Path) -> None:
         """Server-sent events: replay the run so far, then send new events as they are appended."""
         self.send_response(200)
@@ -137,12 +157,12 @@ class Handler(BaseHTTPRequestHandler):
                         self.wfile.write(b": keepalive\n\n")
                     self.wfile.flush()
                 time.sleep(0.3)
-        except (BrokenPipeError, ConnectionResetError):
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             pass  # the browser tab closed
 
 
-def make_server(runs_dir: Path, port: int) -> ThreadingHTTPServer:
-    handler = type("RunsHandler", (Handler,), {"runs_dir": runs_dir})
+def make_server(runs_dir: Path, port: int, agent: list[str] | None = None) -> ThreadingHTTPServer:
+    handler = type("RunsHandler", (Handler,), {"runs_dir": runs_dir, "agent": agent or []})
     server = ThreadingHTTPServer(("127.0.0.1", port), handler)
     server.daemon_threads = True
     return server
@@ -154,9 +174,10 @@ if __name__ == "__main__":
         "--runs", type=Path, default=KIT / "runs", help="directory of run files (default: observatory/runs)"
     )
     parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--agent", type=shlex.split, help="command that runs the agent; the task is appended to it")
     args = parser.parse_args()
     try:
-        server = make_server(args.runs.resolve(), args.port)
+        server = make_server(args.runs.resolve(), args.port, args.agent)
     except OSError as error:
         raise SystemExit(f"Cannot listen on port {args.port} ({error}): pick a free one with --port.")
     print(f"Dashboard: http://127.0.0.1:{args.port}  (Ctrl-C to stop)")
