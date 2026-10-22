@@ -2,6 +2,8 @@
 
 Copied from the session scratchpad. Each run: `changes.patch` (what the model changed, against the clean agent), the files the model added, `observatory/diagram/verify-anchors.json`, `observatory/verify/` (report.html, report.json, graph.json, loop.mmd) and `run.log`.
 
+How the SLMs were run, and the toy agent run shown on the dashboard: [setup/](setup/README.md).
+
 ## 01_oneshot_nvidia_budget3
 
 one session does everything (old task.md), NVIDIA, Claude Code budget 3 USD
