@@ -1,0 +1,220 @@
+diff --git a/src/minisweagent/models/litellm_model.py b/src/minisweagent/models/litellm_model.py
+index 84b5d54..7c5fbbc 100644
+--- a/src/minisweagent/models/litellm_model.py
++++ b/src/minisweagent/models/litellm_model.py
+@@ -11,6 +11,7 @@ from pydantic import BaseModel
+ 
+ from minisweagent.exceptions import FormatError
+ from minisweagent.models import GLOBAL_MODEL_STATS
++from minisweagent.agents.observatory_log import llm_query, llm_response, llm_error
+ from minisweagent.models.utils.actions_toolcall import (
+     BASH_TOOL,
+     format_toolcall_observation_messages,
+@@ -79,9 +80,14 @@ class LitellmModel:
+         return set_cache_control(prepared, mode=self.config.set_cache_control)
+ 
+     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+-        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+-            with attempt:
+-                response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        llm_query(None, model=self.config.model_name, messages=messages)
++        try:
++            for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
++                with attempt:
++                    response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        except Exception as error:
++            llm_error(None, error)
++            raise
+         cost_output = self._calculate_cost(response)
+         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+         # Note: all model.query() implementations must persist the response and cost on FormatError.
+@@ -103,6 +109,7 @@ class LitellmModel:
+             **cost_output,
+             "timestamp": time.time(),
+         }
++        llm_response(None, actions=[a.get("name") for a in actions], reply=message, response=response)
+         return message
+ 
+     def _calculate_cost(self, response) -> dict[str, float]:
+diff --git a/src/minisweagent/models/litellm_response_model.py b/src/minisweagent/models/litellm_response_model.py
+index 456f426..9e99620 100644
+--- a/src/minisweagent/models/litellm_response_model.py
++++ b/src/minisweagent/models/litellm_response_model.py
+@@ -7,6 +7,7 @@ import litellm
+ from minisweagent.exceptions import FormatError
+ from minisweagent.models import GLOBAL_MODEL_STATS
+ from minisweagent.models.litellm_model import LitellmModel, LitellmModelConfig
++from minisweagent.agents.observatory_log import llm_query, llm_response, llm_error
+ from minisweagent.models.utils.actions_toolcall_response import (
+     BASH_TOOL_RESPONSE_API,
+     finish_reason_from_responses_api,
+@@ -50,9 +51,14 @@ class LitellmResponseModel(LitellmModel):
+             raise e
+ 
+     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+-        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+-            with attempt:
+-                response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        llm_query(None, model=self.config.model_name, messages=messages)
++        try:
++            for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
++                with attempt:
++                    response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        except Exception as error:
++            llm_error(None, error)
++            raise
+         cost_output = self._calculate_cost(response)
+         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+         try:
+@@ -75,6 +81,7 @@ class LitellmResponseModel(LitellmModel):
+             **cost_output,
+             "timestamp": time.time(),
+         }
++        llm_response(None, actions=[a.get("name") for a in actions], reply=message, response=response)
+         return message
+ 
+     def _parse_actions(self, response) -> list[dict]:
+diff --git a/src/minisweagent/models/openrouter_model.py b/src/minisweagent/models/openrouter_model.py
+index 314c86f..d7f85e7 100644
+--- a/src/minisweagent/models/openrouter_model.py
++++ b/src/minisweagent/models/openrouter_model.py
+@@ -9,6 +9,7 @@ from pydantic import BaseModel
+ 
+ from minisweagent.exceptions import FormatError
+ from minisweagent.models import GLOBAL_MODEL_STATS
++from minisweagent.agents.observatory_log import llm_query, llm_response, llm_error
+ from minisweagent.models.utils.actions_toolcall import (
+     BASH_TOOL,
+     format_toolcall_observation_messages,
+@@ -95,9 +96,14 @@ class OpenRouterModel:
+         return set_cache_control(prepared, mode=self.config.set_cache_control)
+ 
+     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+-        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+-            with attempt:
+-                response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        llm_query(None, model=self.config.model_name, messages=messages)
++        try:
++            for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
++                with attempt:
++                    response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        except Exception as error:
++            llm_error(None, error)
++            raise
+         cost_output = self._calculate_cost(response)
+         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+         try:
+@@ -114,6 +120,7 @@ class OpenRouterModel:
+             **cost_output,
+             "timestamp": time.time(),
+         }
++        llm_response(None, actions=[a.get("name") for a in actions], reply=message, response=response)
+         return message
+ 
+     def _calculate_cost(self, response) -> dict[str, float]:
+diff --git a/src/minisweagent/models/openrouter_response_model.py b/src/minisweagent/models/openrouter_response_model.py
+index 8df9a60..d29d2d0 100644
+--- a/src/minisweagent/models/openrouter_response_model.py
++++ b/src/minisweagent/models/openrouter_response_model.py
+@@ -6,6 +6,7 @@ import requests
+ 
+ from minisweagent.exceptions import FormatError
+ from minisweagent.models import GLOBAL_MODEL_STATS
++from minisweagent.agents.observatory_log import llm_query, llm_response, llm_error
+ from minisweagent.models.openrouter_model import (
+     OpenRouterAPIError,
+     OpenRouterAuthenticationError,
+@@ -83,9 +84,14 @@ class OpenRouterResponseModel(OpenRouterModel):
+         return result
+ 
+     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+-        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+-            with attempt:
+-                response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        llm_query(None, model=self.config.model_name, messages=messages)
++        try:
++            for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
++                with attempt:
++                    response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        except Exception as error:
++            llm_error(None, error)
++            raise
+         cost_output = self._calculate_cost(response)
+         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+         try:
+@@ -100,6 +106,7 @@ class OpenRouterResponseModel(OpenRouterModel):
+             **cost_output,
+             "timestamp": time.time(),
+         }
++        llm_response(None, actions=[a.get("name") for a in actions], reply=message, response=response)
+         return message
+ 
+     def _parse_actions(self, response: dict) -> list[dict]:
+diff --git a/src/minisweagent/models/portkey_model.py b/src/minisweagent/models/portkey_model.py
+index ee495a5..a63b8d5 100644
+--- a/src/minisweagent/models/portkey_model.py
++++ b/src/minisweagent/models/portkey_model.py
+@@ -10,6 +10,7 @@ from pydantic import BaseModel
+ 
+ from minisweagent.exceptions import FormatError
+ from minisweagent.models import GLOBAL_MODEL_STATS
++from minisweagent.agents.observatory_log import llm_query, llm_response, llm_error
+ from minisweagent.models.utils.actions_toolcall import (
+     BASH_TOOL,
+     format_toolcall_observation_messages,
+@@ -102,9 +103,14 @@ class PortkeyModel:
+         return set_cache_control(prepared, mode=self.config.set_cache_control)
+ 
+     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+-        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+-            with attempt:
+-                response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        llm_query(None, model=self.config.model_name, messages=messages)
++        try:
++            for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
++                with attempt:
++                    response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        except Exception as error:
++            llm_error(None, error)
++            raise
+         cost_output = self._calculate_cost(response)
+         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+         try:
+@@ -125,6 +131,7 @@ class PortkeyModel:
+             **cost_output,
+             "timestamp": time.time(),
+         }
++        llm_response(None, actions=[a.get("name") for a in actions], reply=message, response=response)
+         return message
+ 
+     def _parse_actions(self, response) -> list[dict]:
+diff --git a/src/minisweagent/models/portkey_response_model.py b/src/minisweagent/models/portkey_response_model.py
+index f91f550..54b7572 100644
+--- a/src/minisweagent/models/portkey_response_model.py
++++ b/src/minisweagent/models/portkey_response_model.py
+@@ -10,6 +10,7 @@ from pydantic import BaseModel
+ 
+ from minisweagent.exceptions import FormatError
+ from minisweagent.models import GLOBAL_MODEL_STATS
++from minisweagent.agents.observatory_log import llm_query, llm_response, llm_error
+ from minisweagent.models.utils.actions_toolcall_response import (
+     BASH_TOOL_RESPONSE_API,
+     finish_reason_from_responses_api,
+@@ -94,9 +95,14 @@ class PortkeyResponseAPIModel:
+         return result
+ 
+     def query(self, messages: list[dict[str, str]], **kwargs) -> dict:
+-        for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
+-            with attempt:
+-                response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        llm_query(None, model=self.config.model_name, messages=messages)
++        try:
++            for attempt in retry(logger=logger, abort_exceptions=self.abort_exceptions):
++                with attempt:
++                    response = self._query(self._prepare_messages_for_api(messages), **kwargs)
++        except Exception as error:
++            llm_error(None, error)
++            raise
+         cost_output = self._calculate_cost(response)
+         GLOBAL_MODEL_STATS.add(cost_output["cost"])
+         try:

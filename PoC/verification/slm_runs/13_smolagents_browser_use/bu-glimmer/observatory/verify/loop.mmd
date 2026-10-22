@@ -1,0 +1,41 @@
+flowchart LR
+  nsummary_llm_ainvoke___browser_use_agent_service_py_2975(["summary_llm.ainvoke"])
+  nAgent__generate_rerun_summary["Agent._generate_rerun_summary<br/>[LOG] llm_query @ browser_use/agent/service.py:2973<br/>[LOG] llm_error @ browser_use/agent/service.py:2977<br/>[LOG] llm_response @ browser_use/agent/service.py:2980<br/>[LOG] llm_query @ browser_use/agent/service.py:2988<br/>[LOG] llm_error @ browser_use/agent/service.py:2992<br/>[LOG] llm_response @ browser_use/agent/service.py:2995"]
+  npattern_sub___browser_use_utils_py_121[["pattern.sub"]]
+  style npattern_sub___browser_use_utils_py_121 stroke:#be123c,stroke-dasharray:4 3
+  nAgent_run["Agent.run<br/>[LOG] user_input @ browser_use/agent/service.py:2526"]
+  nAgent__judge_trace["Agent._judge_trace<br/>[LOG] llm_query @ browser_use/agent/service.py:1622<br/>[LOG] llm_error @ browser_use/agent/service.py:1626<br/>[LOG] llm_response @ browser_use/agent/service.py:1629"]
+  style nAgent__judge_trace stroke:#be123c,stroke-dasharray:4 3
+  nsummary_llm_ainvoke___browser_use_agent_service_py_2990(["summary_llm.ainvoke"])
+  njson_dumps___browser_use_agent_views_py_896[["json.dumps"]]
+  style njson_dumps___browser_use_agent_views_py_896 stroke:#be123c,stroke-dasharray:4 3
+  nself_llm_ainvoke___browser_use_agent_service_py_1965(["self.llm.ainvoke"])
+  style nself_llm_ainvoke___browser_use_agent_service_py_1965 stroke:#be123c,stroke-dasharray:4 3
+  nAgent_get_model_output["Agent.get_model_output<br/>[LOG] llm_query @ browser_use/agent/service.py:1963<br/>[LOG] llm_error @ browser_use/agent/service.py:1967<br/>[LOG] llm_response @ browser_use/agent/service.py:1971"]
+  style nAgent_get_model_output stroke:#be123c,stroke-dasharray:4 3
+  nself_registry_execute_action___browser_use_tools_service_py_2221[["self.registry.execute_action"]]
+  style nself_registry_execute_action___browser_use_tools_service_py_2221 stroke:#be123c,stroke-dasharray:4 3
+  nself_judge_llm_ainvoke___browser_use_agent_service_py_1624(["self.judge_llm.ainvoke"])
+  style nself_judge_llm_ainvoke___browser_use_agent_service_py_1624 stroke:#be123c,stroke-dasharray:4 3
+  nAgent_step["Agent.step"]
+  nPath___browser_use_agent_judge_py_24[["Path"]]
+  style nPath___browser_use_agent_judge_py_24 stroke:#be123c,stroke-dasharray:4 3
+  nAgent__execute_ai_step["Agent._execute_ai_step<br/>[LOG] llm_query @ browser_use/agent/service.py:3103<br/>[LOG] llm_error @ browser_use/agent/service.py:3107<br/>[LOG] llm_response @ browser_use/agent/service.py:3110"]
+  nRegistry_execute_action["Registry.execute_action<br/>[LOG] tool_start @ browser_use/tools/registry/service.py:396<br/>[LOG] tool_end @ browser_use/tools/registry/service.py:399<br/>[LOG] tool_error @ browser_use/tools/registry/service.py:402"]
+  nAgent__generate_rerun_summary -->|kwargs, messages| nsummary_llm_ainvoke___browser_use_agent_service_py_2975
+  nsummary_llm_ainvoke___browser_use_agent_service_py_2975 -.->|kwargs, messages| nAgent__generate_rerun_summary
+  nAgent__generate_rerun_summary -->|messages| nsummary_llm_ainvoke___browser_use_agent_service_py_2990
+  nsummary_llm_ainvoke___browser_use_agent_service_py_2990 -.->|messages| nAgent__generate_rerun_summary
+  nAgent__judge_trace -->|agent_steps, final_result| nPath___browser_use_agent_judge_py_24
+  nPath___browser_use_agent_judge_py_24 -.->|path| nAgent__judge_trace
+  nAgent__judge_trace -->|actions_list| njson_dumps___browser_use_agent_views_py_896
+  njson_dumps___browser_use_agent_views_py_896 -.->|action_json, actions_list| nAgent__judge_trace
+  nAgent__judge_trace -->|input_messages| nself_judge_llm_ainvoke___browser_use_agent_service_py_1624
+  nAgent_get_model_output --> nAgent_get_model_output
+  nAgent_get_model_output -->|input_messages, kwargs| nself_llm_ainvoke___browser_use_agent_service_py_1965
+  nself_llm_ainvoke___browser_use_agent_service_py_1965 -.->|kwargs, response| nAgent_get_model_output
+  nAgent_run -->|current_step, step_info| nAgent_step
+  nAgent_run -.->|_message_manager, actions_list| njson_dumps___browser_use_agent_views_py_896
+  nAgent_step -->|input_messages, retry_messages| nAgent_get_model_output
+  nAgent_step -->|compaction_input, item| npattern_sub___browser_use_utils_py_121
+  nAgent_step -->|action, action_name| nself_registry_execute_action___browser_use_tools_service_py_2221

@@ -1,0 +1,12 @@
+{"t": 1792658107.931354, "kind": "tool_start", "step": null, "data": {"action": "user_input", "params": "Task: "}}
+{"t": 1792658107.9318247, "kind": "tool_end", "step": null, "data": {"action": "user_input", "result": "say hi", "duration_seconds": 0.0}}
+{"t": 1792658107.9321299, "kind": "tool_start", "step": null, "data": {"action": "user_input", "params": "say hi"}}
+{"t": 1792658107.9323845, "kind": "tool_end", "step": null, "data": {"action": "user_input", "result": "say hi", "duration_seconds": 0.0}}
+{"t": 1792658107.9326382, "kind": "llm_query", "step": 1, "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "say hi"}], "purpose": "chat"}}
+{"t": 1792658107.9331644, "kind": "llm_response", "step": 1, "data": {"actions": ["bash"], "reply": {"content": "", "calls": [{"id": "t1", "name": "bash", "args": {"command": "echo hi"}}], "message": {"role": "assistant", "content": ["<__main__.ToolUse object at 0x0000014331DF6E40>"]}}, "response": "<__main__.Response object at 0x0000014331DF70E0>"}}
+{"t": 1792658107.933479, "kind": "tool_start", "step": null, "data": {"action": "bash", "params": {"command": "echo hi"}}}
+{"t": 1792658107.9569075, "kind": "tool_end", "step": null, "data": {"action": "bash", "result": "hi\n", "duration_seconds": 0.023}}
+{"t": 1792658107.957283, "kind": "llm_query", "step": 2, "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "say hi"}, {"role": "assistant", "content": ["<__main__.ToolUse object at 0x0000014331DF6E40>"]}, {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "t1", "content": "hi\n"}]}], "purpose": "chat"}}
+{"t": 1792658107.9576201, "kind": "llm_response", "step": 2, "data": {"actions": [], "reply": {"content": "done", "calls": [], "message": {"role": "assistant", "content": ["<__main__.Text object at 0x0000014331DF7230>"]}}, "response": "<__main__.Response object at 0x0000014332029310>"}}
+{"t": 1792658107.9579642, "kind": "tool_start", "step": null, "data": {"action": "user_input", "params": "Accept 'done'? [y/N]"}}
+{"t": 1792658107.9582725, "kind": "tool_end", "step": null, "data": {"action": "user_input", "result": "y", "duration_seconds": 0.0}}

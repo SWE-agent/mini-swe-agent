@@ -1,0 +1,113 @@
+diff --git a/agent.py b/agent.py
+index 5c08a88..aa7b291 100644
+--- a/agent.py
++++ b/agent.py
+@@ -2,6 +2,7 @@
+ 
+ from llm import LLM
+ from tools import Registry
++import observatory_log
+ 
+ SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
+ TOOLS = [
+@@ -24,6 +25,8 @@ class ToyAgent:
+         self.messages: list[dict] = []
+ 
+     def run(self, task: str, max_steps: int = 10) -> str:
++        start = observatory_log.tool_start("user_input", params={"source": "run"})
++        observatory_log.tool_end(start, "user_input", result=task)
+         self.messages = [{"role": "user", "content": task}]
+         for n in range(1, max_steps + 1):
+             reply = self.step(n)
+@@ -46,7 +49,9 @@ class ToyAgent:
+         return self.llm.chat(self.messages, [], n)
+ 
+     def ask_user(self, question: str) -> str:
++        start = observatory_log.tool_start("user_input", params={"prompt": question})
+         answer = input(f"{question} ")
++        observatory_log.tool_end(start, "user_input", result=answer)
+         return answer
+ 
+     def confirm(self, answer: str) -> bool:
+@@ -61,4 +66,10 @@ if __name__ == "__main__":
+ 
+     if not sys.stdin.isatty():  # no terminal (started from the dashboard): answer "y" instead of waiting
+         sys.stdin = io.StringIO("y\n")
+-    print(ToyAgent().run(" ".join(sys.argv[1:]) or input("Task: ")))
++    if sys.argv[1:]:
++        task_str = " ".join(sys.argv[1:])
++    else:
++        start = observatory_log.tool_start("user_input", params={"prompt": "Task: "})
++        task_str = input("Task: ")
++        observatory_log.tool_end(start, "user_input", result=task_str)
++    print(ToyAgent().run(task_str))
+diff --git a/llm.py b/llm.py
+index c83ed41..89f357e 100644
+--- a/llm.py
++++ b/llm.py
+@@ -1,6 +1,7 @@
+ """LLM client wrapper (Claude)."""
+ 
+ import anthropic
++import observatory_log
+ 
+ 
+ class LLM:
+@@ -10,15 +11,22 @@ class LLM:
+         self.system = system
+ 
+     def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:
+-        response = self.client.messages.create(
+-            model=self.model,
+-            max_tokens=16000,
+-            system=self.system,
+-            messages=messages,
+-            **({"tools": tools} if tools else {}),
+-        )
+-        reply = self.parse(response)
+-        return reply
++        observatory_log.llm_query(step, model=self.model, messages=messages)
++        try:
++            response = self.client.messages.create(
++                model=self.model,
++                max_tokens=16000,
++                system=self.system,
++                messages=messages,
++                **({"tools": tools} if tools else {}),
++            )
++            reply = self.parse(response)
++            actions = [c["name"] for c in reply["calls"]]
++            observatory_log.llm_response(step, actions=actions, reply=reply, response=response)
++            return reply
++        except Exception as e:
++            observatory_log.llm_error(step, error=e)
++            raise
+ 
+     def parse(self, response) -> dict:
+         calls = [{"id": b.id, "name": b.name, "args": b.input} for b in response.content if b.type == "tool_use"]
+diff --git a/tools.py b/tools.py
+index e94c727..aaef4a4 100644
+--- a/tools.py
++++ b/tools.py
+@@ -1,6 +1,7 @@
+ """Tools and their registry."""
+ 
+ import subprocess
++import observatory_log
+ 
+ 
+ 
+@@ -19,5 +20,11 @@ class Registry:
+         self.tools = {"bash": bash, "python": python}
+ 
+     def run(self, name: str, args: dict) -> str:
+-        out = self.tools[name](**args)
+-        return out
++        start = observatory_log.tool_start(name, params=args)
++        try:
++            out = self.tools[name](**args)
++            observatory_log.tool_end(start, name, result=out)
++            return out
++        except Exception as e:
++            observatory_log.tool_error(start, name, error=e)
++            raise

@@ -1,0 +1,163 @@
+diff --git a/src/smolagents/agents.py b/src/smolagents/agents.py
+index a8f6e52..3fd1daf 100644
+--- a/src/smolagents/agents.py
++++ b/src/smolagents/agents.py
+@@ -94,6 +94,7 @@ from .utils import (
+     parse_code_blobs,
+     truncate_content,
+ )
++import observatory_log
+ 
+ 
+ logger = getLogger(__name__)
+@@ -467,6 +468,7 @@ class MultiStepAgent(ABC):
+         """
+         max_steps = max_steps or self.max_steps
+         self.task = task
++        observatory_log.user_input(task)
+         self.interrupt_switch = False
+         if additional_args:
+             self.state.update(additional_args)
+@@ -669,7 +671,13 @@ You have been provided with these additional arguments, that you can access dire
+                                 output_tokens += event.token_usage.output_tokens
+                         yield event
+             else:
+-                plan_message = self.model.generate(input_messages, stop_sequences=["<end_plan>"])
++                observatory_log.llm_query(step, model=self.model, messages=input_messages)
++                try:
++                    plan_message = self.model.generate(input_messages, stop_sequences=["<end_plan>"])
++                except Exception as error:
++                    observatory_log.llm_error(step, error)
++                    raise
++                observatory_log.llm_response(step, actions=[], reply=plan_message, response=plan_message)
+                 plan_message_content = plan_message.content
+                 input_tokens, output_tokens = 0, 0
+                 if plan_message.token_usage:
+@@ -727,7 +735,13 @@ You have been provided with these additional arguments, that you can access dire
+                                 output_tokens += event.token_usage.output_tokens
+                         yield event
+             else:
+-                plan_message = self.model.generate(input_messages, stop_sequences=["<end_plan>"])
++                observatory_log.llm_query(step, model=self.model, messages=input_messages)
++                try:
++                    plan_message = self.model.generate(input_messages, stop_sequences=["<end_plan>"])
++                except Exception as error:
++                    observatory_log.llm_error(step, error)
++                    raise
++                observatory_log.llm_response(step, actions=[], reply=plan_message, response=plan_message)
+                 plan_message_content = plan_message.content
+                 input_tokens, output_tokens = 0, 0
+                 if plan_message.token_usage:
+@@ -843,14 +857,17 @@ You have been provided with these additional arguments, that you can access dire
+                 ],
+             )
+         )
++        observatory_log.llm_query(step=None, model=self.model, messages=messages)
+         try:
+             chat_message: ChatMessage = self.model.generate(messages)
+-            return chat_message
+-        except Exception as e:
++        except Exception as error:
++            observatory_log.llm_error(step, error)
+             return ChatMessage(
+                 role=MessageRole.ASSISTANT,
+-                content=[{"type": "text", "text": f"Error in generating final LLM output: {e}"}],
++                content=[{"type": "text", "text": f"Error in generating final LLM output: {error}"}],
+             )
++        observatory_log.llm_response(step, actions=[], reply=chat_message, response=chat_message)
++        return chat_message
+ 
+     def visualize(self):
+         """Creates a rich tree visualization of the agent's structure."""
+@@ -1306,11 +1323,17 @@ class ToolCallingAgent(MultiStepAgent):
+                         yield event
+                 chat_message = agglomerate_stream_deltas(chat_message_stream_deltas)
+             else:
+-                chat_message: ChatMessage = self.model.generate(
+-                    input_messages,
+-                    stop_sequences=["Observation:", "Calling tools:"],
+-                    tools_to_call_from=self.tools_and_managed_agents,
+-                )
++                observatory_log.llm_query(step, model=self.model, messages=input_messages)
++                try:
++                    chat_message: ChatMessage = self.model.generate(
++                        input_messages,
++                        stop_sequences=["Observation:", "Calling tools:"],
++                        tools_to_call_from=self.tools_and_managed_agents,
++                    )
++                except Exception as error:
++                    observatory_log.llm_error(step, error)
++                    raise
++                observatory_log.llm_response(step, actions=[c["name"] for c in chat_message.tool_calls] if chat_message.tool_calls else [], reply=chat_message, response=chat_message)
+                 self.logger.log_markdown(
+                     content=str(chat_message.content or chat_message.raw or ""),
+                     title="Output message of the LLM:",
+@@ -1480,26 +1503,17 @@ class ToolCallingAgent(MultiStepAgent):
+             error_msg = f"Error executing tool '{tool_name}' with arguments {str(arguments)}: {type(e).__name__}: {e}"
+             raise AgentToolExecutionError(error_msg, self.logger) from e
+ 
++        start = observatory_log.tool_start(name, arguments)
+         try:
+             # Call tool with appropriate arguments
+             if isinstance(arguments, dict):
+-                return tool(**arguments) if is_managed_agent else tool(**arguments, sanitize_inputs_outputs=True)
++                out = tool(**arguments) if is_managed_agent else tool(**arguments, sanitize_inputs_outputs=True)
+             else:
+-                return tool(arguments) if is_managed_agent else tool(arguments, sanitize_inputs_outputs=True)
+-
+-        except Exception as e:
+-            # Handle execution errors
+-            if is_managed_agent:
+-                error_msg = (
+-                    f"Error executing request to team member '{tool_name}' with arguments {str(arguments)}: {e}\n"
+-                    "Please try again or request to another team member"
+-                )
+-            else:
+-                error_msg = (
+-                    f"Error executing tool '{tool_name}' with arguments {str(arguments)}: {type(e).__name__}: {e}\n"
+-                    "Please try again or use another tool"
+-                )
+-            raise AgentToolExecutionError(error_msg, self.logger) from e
++                out = tool(arguments) if is_managed_agent else tool(arguments, sanitize_inputs_outputs=True)
++        except Exception as error:
++            observatory_log.tool_error(start, name, error)
++            raise
++        observatory_log.tool_end(start, name, result=out)
+ 
+ 
+ class CodeAgent(MultiStepAgent):
+@@ -1674,11 +1688,17 @@ class CodeAgent(MultiStepAgent):
+                 memory_step.model_output_message = chat_message
+                 output_text = chat_message.content
+             else:
+-                chat_message: ChatMessage = self.model.generate(
+-                    input_messages,
+-                    stop_sequences=stop_sequences,
+-                    **additional_args,
+-                )
++                observatory_log.llm_query(step, model=self.model, messages=input_messages)
++                try:
++                    chat_message: ChatMessage = self.model.generate(
++                        input_messages,
++                        stop_sequences=stop_sequences,
++                        **additional_args,
++                    )
++                except Exception as error:
++                    observatory_log.llm_error(step, error)
++                    raise
++                observatory_log.llm_response(step, actions=[], reply=chat_message, response=chat_message)
+                 memory_step.model_output_message = chat_message
+                 output_text = chat_message.content
+                 self.logger.log_markdown(
+diff --git a/src/smolagents/default_tools.py b/src/smolagents/default_tools.py
+index c72679d..c87de4d 100644
+--- a/src/smolagents/default_tools.py
++++ b/src/smolagents/default_tools.py
+@@ -98,6 +98,7 @@ class UserInputTool(Tool):
+ 
+     def forward(self, question):
+         user_input = input(f"{question} => Type your answer here:")
++        observatory_log.user_input(user_input, prompt=question)
+         return user_input
+ 
+ 

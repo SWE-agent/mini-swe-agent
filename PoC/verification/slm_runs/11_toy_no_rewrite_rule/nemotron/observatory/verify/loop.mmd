@@ -1,0 +1,39 @@
+flowchart LR
+  nToyAgent_step["ToyAgent.step"]
+  style nToyAgent_step stroke:#be123c,stroke-dasharray:4 3
+  nToyAgent_messages[("ToyAgent.messages")]
+  style nToyAgent_messages stroke:#be123c,stroke-dasharray:4 3
+  nLLM_chat["LLM.chat"]
+  style nLLM_chat stroke:#be123c,stroke-dasharray:4 3
+  nToyAgent_run["ToyAgent.run"]
+  style nToyAgent_run stroke:#be123c,stroke-dasharray:4 3
+  nexec___tools_py_13[["exec"]]
+  style nexec___tools_py_13 stroke:#be123c,stroke-dasharray:4 3
+  nself_client_messages_create___llm_py_13(["self.client.messages.create"])
+  style nself_client_messages_create___llm_py_13 stroke:#be123c,stroke-dasharray:4 3
+  ninput___agent_py_49[/"input"/]
+  style ninput___agent_py_49 stroke:#be123c,stroke-dasharray:4 3
+  n_User_Input__task__entry_parameter_[/"task"/]
+  style n_User_Input__task__entry_parameter_ stroke:#be123c,stroke-dasharray:4 3
+  nRegistry_run["Registry.run"]
+  style nRegistry_run stroke:#be123c,stroke-dasharray:4 3
+  nsubprocess_run___tools_py_8[["subprocess.run"]]
+  style nsubprocess_run___tools_py_8 stroke:#be123c,stroke-dasharray:4 3
+  nLLM_chat -->|messages| nself_client_messages_create___llm_py_13
+  nself_client_messages_create___llm_py_13 -.->|response| nLLM_chat
+  nRegistry_run -->|args, code| nexec___tools_py_13
+  nexec___tools_py_13 -.->|scope| nRegistry_run
+  nRegistry_run -->|args, command| nsubprocess_run___tools_py_8
+  nsubprocess_run___tools_py_8 -.-> nRegistry_run
+  nToyAgent_messages -.->|messages| nLLM_chat
+  nToyAgent_run -.->|task| nToyAgent_messages
+  nToyAgent_run --> nToyAgent_step
+  nToyAgent_step -.-> nToyAgent_run
+  nToyAgent_run -->|answer, question| ninput___agent_py_49
+  ninput___agent_py_49 -.->|answer| nToyAgent_run
+  nToyAgent_step --> nLLM_chat
+  nLLM_chat -.-> nToyAgent_step
+  nToyAgent_step -->|call| nRegistry_run
+  nRegistry_run -.-> nToyAgent_step
+  nToyAgent_step -.->|reply, results| nToyAgent_messages
+  n_User_Input__task__entry_parameter_ -.->|task| nToyAgent_run

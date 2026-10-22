@@ -1,0 +1,3 @@
+{"t": 1792683924.5865536, "kind": "user_input", "step": null, "at": "agent.py:28", "data": {"prompt": null, "answer": "Run a simple command"}}
+{"t": 1792683924.58725, "kind": "llm_query", "step": 1, "at": "llm.py:14", "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "Run a simple command"}]}}
+{"t": 1792683924.587804, "kind": "llm_error", "step": 1, "at": "llm.py:24", "data": {"error_type": "NameError", "error": "name '_MockMessages' is not defined"}}

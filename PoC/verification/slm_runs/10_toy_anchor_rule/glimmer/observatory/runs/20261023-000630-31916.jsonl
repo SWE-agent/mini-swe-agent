@@ -1,0 +1,8 @@
+{"t": 1792681590.84484, "kind": "tool_start", "step": null, "at": "agent.py:28", "data": {"action": "user_input", "params": {"task": "Test task for logging verification"}}}
+{"t": 1792681590.8454497, "kind": "tool_end", "step": null, "at": "agent.py:29", "data": {"action": "user_input", "result": "Test task for logging verification", "duration_seconds": 0.0}}
+{"t": 1792681590.8459733, "kind": "llm_query", "step": 1, "at": "observatory/runs/check_run.py:31", "data": {"model": "fake-model", "messages": 1}}
+{"t": 1792681590.8464289, "kind": "llm_response", "step": 1, "at": "observatory/runs/check_run.py:44", "data": {"actions": ["bash"], "reply": {"content": "I need to run a tool to proceed.", "calls": [{"id": "call-1", "name": "bash", "args": {"command": "echo hello"}}], "message": {"role": "assistant", "content": "tool call"}}}}
+{"t": 1792681590.8469832, "kind": "tool_start", "step": null, "at": "tools.py:23", "data": {"action": "bash", "params": {"command": "echo hello"}}}
+{"t": 1792681590.8699644, "kind": "tool_end", "step": null, "at": "tools.py:29", "data": {"action": "bash", "result": "hello\n", "duration_seconds": 0.022}}
+{"t": 1792681590.8705106, "kind": "llm_query", "step": 2, "at": "observatory/runs/check_run.py:31", "data": {"model": "fake-model", "messages": 3}}
+{"t": 1792681590.8709812, "kind": "llm_response", "step": 2, "at": "observatory/runs/check_run.py:44", "data": {"actions": [], "reply": {"content": "Final answer.", "calls": [], "message": {"role": "assistant", "content": "final"}}}}

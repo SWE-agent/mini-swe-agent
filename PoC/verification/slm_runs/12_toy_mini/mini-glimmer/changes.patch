@@ -1,0 +1,88 @@
+diff --git a/src/minisweagent/agents/default.py b/src/minisweagent/agents/default.py
+index 32ddee5..4769050 100644
+--- a/src/minisweagent/agents/default.py
++++ b/src/minisweagent/agents/default.py
+@@ -12,8 +12,9 @@ from jinja2 import StrictUndefined, Template
+ from pydantic import BaseModel
+ 
+ from minisweagent import Environment, Model, __version__
+-from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
++from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, Submitted, TimeExceeded
+ from minisweagent.utils.serialize import recursive_merge
++from minisweagent.agents import observatory_log
+ 
+ 
+ class AgentConfig(BaseModel):
+@@ -87,6 +88,7 @@ class DefaultAgent:
+ 
+     def run(self, task: str = "", **kwargs) -> dict:
+         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
++        observatory_log.user_input(task)
+         self.extra_template_vars |= {"task": task, **kwargs}
+         self.messages = []
+         self.add_messages(
+@@ -152,11 +154,14 @@ class DefaultAgent:
+             getattr(self.model.config, "model_name", None),
+             len(self.messages),
+         )
++        observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)
+         try:
+             message = self.model.query(self.messages)
+         except Exception as e:
+             self.logger.debug("[LLM_ERROR] step=%s error_type=%s", self.n_calls, type(e).__name__)
++            observatory_log.llm_error(self.n_calls, e)
+             raise
++        observatory_log.llm_response(self.n_calls, actions=[a.get("command") for a in message.get("extra", {}).get("actions", [])], reply=message, response=message)
+         self.cost += message.get("extra", {}).get("cost", 0.0)
+         self.logger.debug(
+             "[LLM_RESPONSE] step=%s actions=%s cost=%s",
+@@ -176,9 +181,14 @@ class DefaultAgent:
+         """Execute a single action in the environment. Every agent runs its actions through here."""
+         self.logger.debug("[TOOL_EXECUTION_START] action=%s params=%s", "bash", action)
+         start_time = time.time()
++        start = observatory_log.tool_start("bash", action, step=self.n_calls)
+         try:
+             output = self.env.execute(action)
+         except Exception as e:
++            if isinstance(e, Submitted):
++                observatory_log.tool_end(start, "bash", result="submitted", step=self.n_calls)
++            else:
++                observatory_log.tool_error(start, "bash", e, step=self.n_calls)
+             self.logger.debug(
+                 "[TOOL_EXECUTION_ERROR] action=%s error_type=%s duration_seconds=%.3f",
+                 "bash",
+@@ -186,6 +196,7 @@ class DefaultAgent:
+                 time.time() - start_time,
+             )
+             raise
++        observatory_log.tool_end(start, "bash", result=output, step=self.n_calls)
+         self.logger.debug(
+             "[TOOL_EXECUTION_END] action=%s returncode=%s duration_seconds=%.3f",
+             "bash",
+diff --git a/src/minisweagent/agents/utils/prompt_user.py b/src/minisweagent/agents/utils/prompt_user.py
+index 31aeb68..e90c5e5 100644
+--- a/src/minisweagent/agents/utils/prompt_user.py
++++ b/src/minisweagent/agents/utils/prompt_user.py
+@@ -3,6 +3,7 @@ from prompt_toolkit.history import FileHistory
+ from prompt_toolkit.shortcuts import PromptSession
+ 
+ from minisweagent import global_config_dir
++from minisweagent.agents import observatory_log
+ 
+ _history = FileHistory(global_config_dir / "interactive_history.txt")
+ prompt_session = PromptSession(history=_history)
+@@ -10,7 +11,7 @@ _multiline_prompt_session = PromptSession(history=_history, multiline=True)
+ 
+ 
+ def _multiline_prompt() -> str:
+-    return _multiline_prompt_session.prompt(
++    answer = _multiline_prompt_session.prompt(
+         "",
+         bottom_toolbar=HTML(
+             "Submit message: <b fg='yellow' bg='black'>Esc, then Enter</b> | "
+@@ -18,3 +19,5 @@ def _multiline_prompt() -> str:
+             "Search history: <b fg='yellow' bg='black'>Ctrl+R</b>"
+         ),
+     )
++    observatory_log.user_input(answer, prompt="")
++    return answer

@@ -1,0 +1,88 @@
+diff --git a/browser_use/agent/service.py b/browser_use/agent/service.py
+index 7838897..1fc31cc 100644
+--- a/browser_use/agent/service.py
++++ b/browser_use/agent/service.py
+@@ -28,6 +28,7 @@ from browser_use.llm.base import BaseChatModel
+ from browser_use.llm.exceptions import ModelOutputTruncatedError, ModelProviderError, ModelRateLimitError
+ from browser_use.llm.messages import BaseMessage, ContentPartImageParam, ContentPartTextParam, UserMessage
+ from browser_use.tokens.service import TokenCost
++from browser_use.agent.observatory_log import observatory_log
+ 
+ load_dotenv()
+ 
+@@ -1952,9 +1953,14 @@ class Agent(Generic[Context, AgentStructuredOutput]):
+ 		kwargs: dict = {'output_format': self.AgentOutput, 'session_id': self.session_id}
+ 
+ 		try:
++			observatory_log.llm_query(None, model=self.model, messages=input_messages)
+ 			response = await self.llm.ainvoke(input_messages, **kwargs)
+ 			parsed: AgentOutput = response.completion  # type: ignore[assignment]
+ 
++			# Log the LLM response with actions
++			actions = [c.name for c in parsed.action] if hasattr(parsed, 'action') and parsed.action else []
++			observatory_log.llm_response(None, actions=actions, reply=response, response=response)
++
+ 			# Replace any shortened URLs in the LLM response back to original URLs
+ 			if urls_replaced:
+ 				self._recursive_process_all_strings_inside_pydantic_model(parsed, urls_replaced)
+@@ -1970,9 +1976,11 @@ class Agent(Generic[Context, AgentStructuredOutput]):
+ 			self._log_next_action_summary(parsed)
+ 			return parsed
+ 		except ValidationError:
++			observatory_log.llm_error(None, None)
+ 			# Just re-raise - Pydantic's validation errors are already descriptive
+ 			raise
+ 		except (ModelRateLimitError, ModelProviderError) as e:
++			observatory_log.llm_error(None, e)
+ 			# Check if we can switch to a fallback LLM
+ 			if not self._try_switch_to_fallback_llm(e):
+ 				# No fallback available, re-raise the original error
+@@ -2537,6 +2545,9 @@ class Agent(Generic[Context, AgentStructuredOutput]):
+ 		try:
+ 			await self._log_agent_run()
+ 
++			# Log the user input task for observatory
++			observatory_log.user_input(self.task)
++
+ 			self.logger.debug(
+ 				f'🔧 Agent setup: Agent Session ID {self.session_id[-4:]}, Task ID {self.task_id[-4:]}, Browser Session ID {self.browser_session.id[-4:] if self.browser_session else "None"} {"(connecting via CDP)" if (self.browser_session and self.browser_session.cdp_url) else "(launching local browser)"}'
+ 			)
+diff --git a/browser_use/tools/registry/service.py b/browser_use/tools/registry/service.py
+index 1f4e783..e6c0390 100644
+--- a/browser_use/tools/registry/service.py
++++ b/browser_use/tools/registry/service.py
+@@ -24,6 +24,7 @@ from browser_use.tools.registry.views import (
+ 	SpecialActionParameters,
+ )
+ from browser_use.utils import is_new_tab_page, match_url_with_domain_pattern, time_execution_async
++from browser_use.agent.observatory_log import tool_start, tool_end, tool_error
+ 
+ Context = TypeVar('Context')
+ 
+@@ -344,12 +345,14 @@ class Registry(Generic[Context]):
+ 			raise ValueError(f'Action {action_name} not found')
+ 
+ 		action = self.registry.actions[action_name]
++		start = tool_start(action_name, params)
+ 		try:
+ 			# Create the validated Pydantic model
+ 			try:
+ 				validated_params = action.param_model(**params)
+ 			except Exception as e:
+-				raise ValueError(f'Invalid parameters {params} for action {action_name}: {type(e)}: {e}') from e
++				observatory_log.tool_error(start, action_name, e)
++				raise
+ 
+ 			if sensitive_data:
+ 				# Get current URL if browser_session is provided
+@@ -392,7 +395,9 @@ class Registry(Generic[Context]):
+ 			# All functions are now normalized to accept kwargs only
+ 			# Call with params and unpacked special context
+ 			try:
+-				return await action.function(params=validated_params, **special_context)
++				result = await action.function(params=validated_params, **special_context)
++				observatory_log.tool_end(start, action_name, result=result)
++				return result
+ 			except Exception as e:
+ 				raise
+ 

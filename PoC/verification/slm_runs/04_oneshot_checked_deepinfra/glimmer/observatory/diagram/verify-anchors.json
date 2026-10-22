@@ -1,0 +1,1 @@
+{"logger":"observatory_log","entry":{"function":"ToyAgent.run","path":"agent.py","line":27,"inputs":["task"]},"sources":[{"kind":"llm_response","path":"llm.py","line":16,"call":"self.client.messages.create","label":"model call"},{"kind":"user_input","path":"agent.py","line":53,"call":"input","label":"prompt"}]}

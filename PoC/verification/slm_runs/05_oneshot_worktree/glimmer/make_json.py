@@ -1,0 +1,49 @@
+import json
+data = {
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Toy Agent Architecture",
+    "output": "observatory/diagram/agent-architecture.html",
+    "quality_profile": "showcase",
+    "viewBox": [1200, 800],
+    "repository": {
+      "url": "https://github.com/NiceGuy1313/mini-swe-agent",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "d1e5d998862f8df5d86a5ab1c8dc14bddf9b63f2"
+    }
+  },
+  "components": [
+    {"id": "task", "type": "external", "label": "Task", "sublabel": "entry parameter", "sources": [{"path": "agent.py", "line": 27}], "pos": [20, 300], "size": [130, 64]},
+    {"id": "run", "type": "backend", "label": "ToyAgent.run", "sublabel": "step loop + exit routing", "tag": "tool_start tool_end", "sources": [{"path": "agent.py", "line": 27, "end_line": 35}, {"path": "agent.py", "line": 28}, {"path": "agent.py", "line": 29}], "pos": [180, 300], "size": [170, 64]},
+    {"id": "messages", "type": "database", "label": "ToyAgent.messages", "sublabel": "system, task, history", "sources": [{"path": "agent.py", "line": 25}], "pos": [400, 150], "size": [200, 72]},
+    {"id": "step", "type": "backend", "label": "ToyAgent.step", "sublabel": "LLM call + tool execution", "sources": [{"path": "agent.py", "line": 37, "end_line": 46}], "pos": [400, 300], "size": [200, 72]},
+    {"id": "llm_chat", "type": "cloud", "label": "LLM.chat", "sublabel": "model call + parse", "tag": "llm_query llm_response llm_error", "sources": [{"path": "llm.py", "line": 13, "end_line": 36}, {"path": "llm.py", "line": 14}, {"path": "llm.py", "line": 27}], "pos": [650, 300], "size": [200, 72]},
+    {"id": "model_api", "type": "external", "label": "Anthropic API", "sublabel": "messages.create", "sources": [{"path": "llm.py", "line": 16}], "pos": [900, 300], "size": [210, 72]},
+    {"id": "registry", "type": "security", "label": "Registry.run", "sublabel": "tool dispatch", "tag": "tool_start tool_end tool_error", "sources": [{"path": "tools.py", "line": 23, "end_line": 31}, {"path": "tools.py", "line": 24}, {"path": "tools.py", "line": 30}], "pos": [900, 450], "size": [210, 72]},
+    {"id": "ask_user", "type": "frontend", "label": "ToyAgent.ask_user", "sublabel": "user input query", "tag": "tool_start tool_end", "sources": [{"path": "agent.py", "line": 51, "end_line": 55}, {"path": "agent.py", "line": 52}, {"path": "agent.py", "line": 54}], "pos": [180, 450], "size": [170, 64]},
+    {"id": "user_input", "type": "external", "label": "User Input", "sublabel": "input() prompt", "sources": [{"path": "agent.py", "line": 53}], "pos": [20, 450], "size": [130, 64]},
+    {"id": "final_output", "type": "external", "label": "Result", "sublabel": "return of ToyAgent.run", "sources": [{"path": "agent.py", "line": 27}]}
+  ],
+  "connections": [
+    {"from": "task", "to": "run", "label": "task"},
+    {"from": "run", "to": "messages", "label": "task"},
+    {"from": "messages", "to": "llm_chat", "label": "messages"},
+    {"from": "llm_chat", "to": "model_api", "label": "messages"},
+    {"from": "model_api", "to": "llm_chat", "label": "response"},
+    {"from": "llm_chat", "to": "step", "label": "reply"},
+    {"from": "step", "to": "registry", "label": "tool call"},
+    {"from": "registry", "to": "step", "label": "result"},
+    {"from": "step", "to": "messages", "label": "reply"},
+    {"from": "step", "to": "run", "label": "return"},
+    {"from": "run", "to": "final_output", "label": "return"},
+    {"from": "run", "to": "ask_user", "label": "confirm?"},
+    {"from": "ask_user", "to": "user_input", "label": "question"},
+    {"from": "user_input", "to": "ask_user", "label": "answer"},
+    {"from": "ask_user", "to": "run", "label": "return"}
+  ],
+  "cards": []
+}
+with open('observatory/diagram/agent-architecture.json', 'w') as f:
+    json.dump(data, f)

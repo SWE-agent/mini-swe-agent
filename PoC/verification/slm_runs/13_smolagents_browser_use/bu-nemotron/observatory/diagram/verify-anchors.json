@@ -1,0 +1,8 @@
+{
+  "logger": "observatory_log",
+  "entry": {"function": "Agent.run", "path": "browser_use/agent/service.py", "line": 2503, "inputs": ["task"]},
+  "sources": [
+    {"kind": "llm_response", "path": "browser_use/agent/service.py", "line": 1955, "call": "self.llm.ainvoke", "label": "model call"},
+    {"kind": "user_input", "path": "browser_use/agent/service.py", "line": 138, "call": "task", "label": "user task"}
+  ]
+}

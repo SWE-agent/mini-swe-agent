@@ -1,0 +1,10 @@
+{"t": 1792670770.2221377, "kind": "tool_start", "step": null, "at": "agent.py:28", "data": {"action": "user_input", "params": {"source": "run"}}}
+{"t": 1792670770.2229364, "kind": "tool_end", "step": null, "at": "agent.py:29", "data": {"action": "user_input", "result": "test task", "duration_seconds": 0.0}}
+{"t": 1792670770.2236352, "kind": "llm_query", "step": 1, "at": "test_logging2.py:19", "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "test task"}]}}
+{"t": 1792670770.224162, "kind": "llm_response", "step": 1, "at": "test_logging2.py:27", "data": {"actions": ["bash"], "reply": {"content": "Test answer", "calls": [{"id": "1", "name": "bash", "args": {"command": "echo hi"}}], "message": {"role": "assistant", "content": "fake"}}, "response": "<__main__.fake_chat.<locals>.DummyResp object at 0x000001EC1B12E510>"}}
+{"t": 1792670770.22479, "kind": "tool_start", "step": null, "at": "tools.py:23", "data": {"action": "bash", "params": {"command": "echo hi"}}}
+{"t": 1792670770.2470565, "kind": "tool_end", "step": null, "at": "tools.py:26", "data": {"action": "bash", "result": "hi\n", "duration_seconds": 0.022}}
+{"t": 1792670770.2475898, "kind": "llm_query", "step": 2, "at": "test_logging2.py:19", "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "test task"}, {"role": "assistant", "content": "fake"}, {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "1", "content": "hi\n"}]}]}}
+{"t": 1792670770.248086, "kind": "llm_response", "step": 2, "at": "test_logging2.py:27", "data": {"actions": ["bash"], "reply": {"content": "Test answer", "calls": [{"id": "1", "name": "bash", "args": {"command": "echo hi"}}], "message": {"role": "assistant", "content": "fake"}}, "response": "<__main__.fake_chat.<locals>.DummyResp object at 0x000001EC1B12E510>"}}
+{"t": 1792670770.248558, "kind": "tool_start", "step": null, "at": "tools.py:23", "data": {"action": "bash", "params": {"command": "echo hi"}}}
+{"t": 1792670770.2660058, "kind": "tool_end", "step": null, "at": "tools.py:26", "data": {"action": "bash", "result": "hi\n", "duration_seconds": 0.017}}

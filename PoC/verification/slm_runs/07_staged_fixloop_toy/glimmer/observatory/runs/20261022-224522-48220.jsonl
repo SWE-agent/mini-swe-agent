@@ -1,0 +1,10 @@
+{"t": 1792676722.2718053, "kind": "tool_start", "step": null, "at": "agent.py:28", "data": {"action": "user_input", "params": {"task": "test task"}}}
+{"t": 1792676722.2726135, "kind": "tool_end", "step": null, "at": "agent.py:29", "data": {"action": "user_input", "result": "test task", "duration_seconds": 0.0}}
+{"t": 1792676722.2731335, "kind": "llm_query", "step": 1, "at": "observatory/runs/check_run.py:35", "data": {"model": "scripted", "messages": [{"role": "user", "content": "test task"}]}}
+{"t": 1792676722.2735815, "kind": "llm_response", "step": 1, "at": "observatory/runs/check_run.py:50", "data": {"actions": ["bash"], "reply": {"content": "I will run a command.", "calls": [{"id": "call_1", "name": "bash", "args": {"command": "echo hello"}}], "message": {"role": "assistant", "content": []}}}}
+{"t": 1792676722.2741966, "kind": "tool_start", "step": null, "at": "tools.py:24", "data": {"action": "bash", "params": {"command": "echo hello"}}}
+{"t": 1792676722.2967513, "kind": "tool_end", "step": null, "at": "tools.py:30", "data": {"action": "bash", "result": "hello\n", "duration_seconds": 0.022}}
+{"t": 1792676722.2972941, "kind": "llm_query", "step": 2, "at": "observatory/runs/check_run.py:35", "data": {"model": "scripted", "messages": [{"role": "user", "content": "test task"}, {"role": "assistant", "content": []}, {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "call_1", "content": "hello\n"}]}]}}
+{"t": 1792676722.2977579, "kind": "llm_response", "step": 2, "at": "observatory/runs/check_run.py:50", "data": {"actions": [], "reply": {"content": "Done", "calls": [], "message": {"role": "assistant", "content": []}}}}
+{"t": 1792676722.2981894, "kind": "tool_start", "step": null, "at": "agent.py:52", "data": {"action": "user_input", "params": {"prompt": "Accept 'Done'? [y/N]"}}}
+{"t": 1792676722.298632, "kind": "tool_end", "step": null, "at": "agent.py:54", "data": {"action": "user_input", "result": "y", "duration_seconds": 0.0}}

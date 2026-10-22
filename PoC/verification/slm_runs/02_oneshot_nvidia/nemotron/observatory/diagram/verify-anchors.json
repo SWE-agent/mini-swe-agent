@@ -1,0 +1,9 @@
+{
+  "logger": "observatory_log",
+  "entry": {"function": "ToyAgent.run", "path": "agent.py", "line": 27, "inputs": ["task"]},
+  "sources": [
+    {"kind": "llm_response", "path": "agent.py", "line": 39, "call": "observatory_log.llm_query(step=n, model=self.llm.model, messages=self.messages)", "label": "model call"},
+    {"kind": "tool_response", "path": "agent.py", "line": 49, "call": "observatory_log.tool_start(call[\"name\"], call[\"args\"], step=n)", "label": "tool call"},
+    {"kind": "user_input", "path": "agent.py", "line": 29, "call": 'observatory_log.tool_start("user_input", {\"prompt\": task})', "label": "prompt"}
+  ]
+}

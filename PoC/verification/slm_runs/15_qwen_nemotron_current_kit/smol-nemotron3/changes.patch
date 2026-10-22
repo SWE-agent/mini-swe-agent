@@ -1,0 +1,86 @@
+diff --git a/src/smolagents/agents.py b/src/smolagents/agents.py
+index a8f6e52..8588b47 100644
+--- a/src/smolagents/agents.py
++++ b/src/smolagents/agents.py
+@@ -30,6 +30,8 @@ from logging import getLogger
+ from pathlib import Path
+ from typing import TYPE_CHECKING, Any, Literal, Type, TypeAlias, TypedDict, Union
+ 
++from .observatory_log import llm_error, llm_query, llm_response, tool_end, tool_error, tool_start
++
+ import yaml
+ from huggingface_hub import create_repo, metadata_update, snapshot_download, upload_folder
+ from jinja2 import StrictUndefined, Template
+@@ -1480,15 +1482,18 @@ class ToolCallingAgent(MultiStepAgent):
+             error_msg = f"Error executing tool '{tool_name}' with arguments {str(arguments)}: {type(e).__name__}: {e}"
+             raise AgentToolExecutionError(error_msg, self.logger) from e
+ 
++        start = tool_start(tool_name, arguments)
+         try:
+             # Call tool with appropriate arguments
+             if isinstance(arguments, dict):
+-                return tool(**arguments) if is_managed_agent else tool(**arguments, sanitize_inputs_outputs=True)
++                out = tool(**arguments) if is_managed_agent else tool(**arguments, sanitize_inputs_outputs=True)
+             else:
+-                return tool(arguments) if is_managed_agent else tool(arguments, sanitize_inputs_outputs=True)
+-
++                out = tool(arguments) if is_managed_agent else tool(arguments, sanitize_inputs_outputs=True)
++            tool_end(start, tool_name, result=out)
++            return out
+         except Exception as e:
+             # Handle execution errors
++            tool_error(start, tool_name, e)
+             if is_managed_agent:
+                 error_msg = (
+                     f"Error executing request to team member '{tool_name}' with arguments {str(arguments)}: {e}\n"
+@@ -1652,7 +1657,8 @@ class CodeAgent(MultiStepAgent):
+         if self.code_block_tags[1] not in self.code_block_tags[0]:
+             # If the closing tag is contained in the opening tag, adding it as a stop sequence would cut short any code generation
+             stop_sequences.append(self.code_block_tags[1])
+-        try:
++        observatory_log.llm_query(step=memory_step.step_number, model=self.model, messages=input_messages)
++try:
+             additional_args: dict[str, Any] = {}
+             if self._use_structured_outputs_internally:
+                 additional_args["response_format"] = CODEAGENT_RESPONSE_FORMAT
+@@ -1686,6 +1692,12 @@ class CodeAgent(MultiStepAgent):
+                     title="Output message of the LLM:",
+                     level=LogLevel.DEBUG,
+                 )
++            observatory_log.llm_response(
++                step=memory_step.step_number,
++                actions=[],
++                reply=output_text,
++                response=chat_message,
++            )
+ 
+             if not self._use_structured_outputs_internally:
+                 # This adds the end code sequence (i.e. the closing code block tag) to the history.
+@@ -1697,6 +1709,7 @@ class CodeAgent(MultiStepAgent):
+             memory_step.token_usage = chat_message.token_usage
+             memory_step.model_output = output_text
+         except Exception as e:
++            observatory_log.llm_error(step=memory_step.step_number, error=e)
+             raise AgentGenerationError(f"Error in generating model output:\n{e}", self.logger) from e
+ 
+         ### Parse output ###
+diff --git a/src/smolagents/default_tools.py b/src/smolagents/default_tools.py
+index c72679d..eebfe42 100644
+--- a/src/smolagents/default_tools.py
++++ b/src/smolagents/default_tools.py
+@@ -24,6 +24,7 @@ from .local_python_executor import (
+     evaluate_python_code,
+ )
+ from .tools import PipelineTool, Tool
++from . import observatory_log
+ 
+ 
+ @dataclass
+@@ -98,6 +99,7 @@ class UserInputTool(Tool):
+ 
+     def forward(self, question):
+         user_input = input(f"{question} => Type your answer here:")
++        observatory_log.user_input(user_input, prompt=question)
+         return user_input
+ 
+ 

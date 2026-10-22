@@ -1,0 +1,32 @@
+{
+  "logger": "observatory_log",
+  "entry": {
+    "function": "ToyAgent.run",
+    "path": "agent.py",
+    "line": 25,
+    "inputs": ["task"]
+  },
+  "sources": [
+    {
+      "kind": "llm_response",
+      "path": "agent.py",
+      "line": 50,
+      "call": "self.llm.chat",
+      "label": "model call"
+    },
+    {
+      "kind": "tool_response",
+      "path": "agent.py",
+      "line": 63,
+      "call": "self.registry.run",
+      "label": "tool call"
+    },
+    {
+      "kind": "user_input",
+      "path": "agent.py",
+      "line": 33,
+      "call": "input",
+      "label": "prompt"
+    }
+  ]
+}

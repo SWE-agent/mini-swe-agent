@@ -1,0 +1,8 @@
+{
+  "logger": "observatory_log",
+  "entry": {"function": "Agent.run", "path": "src/smolagents/agents.py", "line": 436, "inputs": ["task"]},
+  "sources": [
+    {"kind": "llm_response", "path": "src/smolagents/agents.py", "line": 847, "call": "self.model.generate", "label": "model call"},
+    {"kind": "user_input", "path": "src/smolagents/default_tools.py", "line": 100, "call": "input", "label": "user prompt"}
+  ]
+}
