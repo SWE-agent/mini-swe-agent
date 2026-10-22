@@ -11,9 +11,11 @@ from pathlib import Path
 # Build a minimal anthropic module stub
 _minimal_anthropic = type(sys)("anthropic")
 
+
 class _MinimalAnthropicClient:
     def __init__(self, *args, **kwargs):
         pass
+
     def messages_create(self, *args, **kwargs):
         class FakeContent:
             def __init__(self):
@@ -21,6 +23,7 @@ class _MinimalAnthropicClient:
                     {"type": "text", "text": "Let me run a command.\n"},
                     {"type": "tool_use", "name": "bash", "id": "toolu_bash", "input": {"command": "echo hello"}},
                 ]
+
         class FakeResponse:
             def __init__(self):
                 self.id = "msg_1"
@@ -29,7 +32,9 @@ class _MinimalAnthropicClient:
                     {"type": "text", "text": "Let me run a command.\n"},
                     {"type": "tool_use", "name": "bash", "id": "toolu_bash", "input": {"command": "echo hello"}},
                 ]
+
         return FakeResponse()
+
 
 _minimal_anthropic.Anthropic = _MinimalAnthropicClient
 _minimal_anthropic.Client = _MinimalAnthropicClient
@@ -58,14 +63,12 @@ sys.path.insert(0, str(_OBSERVATORY_DIR))
 # Import observatory_log module FIRST - this ensures the name 'observatory_log'
 # is in sys.modules and will be available when llm.py does "from observatory_log import ..."
 # AND when it references "observatory_log.llm_query(...)"
-import observatory_log
 
 # Also import the names that llm.py will import
-from observatory_log import llm_query, llm_response, tool_start, tool_end, tool_error
 
 print("observatory_log imported and names extracted")
-print("  'observatory_log' in globals:", 'observatory_log' in globals())
-print("  'observatory_log' in sys.modules:", 'observatory_log' in sys.modules)
+print("  'observatory_log' in globals:", "observatory_log" in globals())
+print("  'observatory_log' in sys.modules:", "observatory_log" in sys.modules)
 
 # ------------------------------------------------------------
 # NOW: Import the repo code
@@ -75,11 +78,13 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from agent import ToyAgent
+
 print("Agent imported successfully")
 
 # ------------------------------------------------------------
 # NOW: Run the agent
 # ------------------------------------------------------------
+
 
 def main():
     task = "Say hello world"
@@ -112,4 +117,5 @@ def main():
 
 if __name__ == "__main__":
     import os
+
     main()

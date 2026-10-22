@@ -4,17 +4,17 @@ index 32ddee5..4769050 100644
 +++ b/src/minisweagent/agents/default.py
 @@ -12,8 +12,9 @@ from jinja2 import StrictUndefined, Template
  from pydantic import BaseModel
- 
+
  from minisweagent import Environment, Model, __version__
 -from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
 +from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, Submitted, TimeExceeded
  from minisweagent.utils.serialize import recursive_merge
 +from minisweagent.agents import observatory_log
- 
- 
+
+
  class AgentConfig(BaseModel):
 @@ -87,6 +88,7 @@ class DefaultAgent:
- 
+
      def run(self, task: str = "", **kwargs) -> dict:
          """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
 +        observatory_log.user_input(task)
@@ -65,15 +65,15 @@ index 31aeb68..e90c5e5 100644
 +++ b/src/minisweagent/agents/utils/prompt_user.py
 @@ -3,6 +3,7 @@ from prompt_toolkit.history import FileHistory
  from prompt_toolkit.shortcuts import PromptSession
- 
+
  from minisweagent import global_config_dir
 +from minisweagent.agents import observatory_log
- 
+
  _history = FileHistory(global_config_dir / "interactive_history.txt")
  prompt_session = PromptSession(history=_history)
 @@ -10,7 +11,7 @@ _multiline_prompt_session = PromptSession(history=_history, multiline=True)
- 
- 
+
+
  def _multiline_prompt() -> str:
 -    return _multiline_prompt_session.prompt(
 +    answer = _multiline_prompt_session.prompt(

@@ -1,13 +1,10 @@
-import sys
-from pathlib import Path
-
 namespace = {}
 
 import observatory_log
+
 namespace["observatory_log"] = observatory_log
 print("After import:", "observability_log" in namespace)
 
-from observatory_log import llm_query
 print("After from import:", "observability_log" in namespace)
 
 try:

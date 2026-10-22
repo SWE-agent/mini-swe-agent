@@ -26,7 +26,6 @@ sys.path.insert(0, str(OBSERVATORY_DIR))
 import observability_log
 
 # Also import the specific functions that the agent's llm.py also imports
-from observability_log import llm_query, llm_response, tool_start, tool_end, tool_error
 
 # Verify the module is accessible
 print(f"observability_log imported from: {observability_log.__file__}")
@@ -47,8 +46,10 @@ except Exception as e:
 # Build a minimal anthropic module stub from scratch
 _mock_anthropic = type(sys)("anthropic")
 
+
 class _MockAnthropic:
     """Mock Anthropic client that returns scripted replies."""
+
     def __init__(self, *args, **kwargs):
         pass
 
@@ -73,6 +74,7 @@ class _MockAnthropic:
                 ]
 
         return FakeResponse()
+
 
 # Wire up the mock
 _mock_anthropic.Anthropic = _MockAnthropic
@@ -108,6 +110,7 @@ from agent import ToyAgent
 # ------------------------------------------------------------
 # Run the agent with the mock anthropic client
 # ------------------------------------------------------------
+
 
 def main():
     task = "Say hello world"

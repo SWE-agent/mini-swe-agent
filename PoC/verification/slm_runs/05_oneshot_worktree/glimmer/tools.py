@@ -5,7 +5,6 @@ import subprocess
 import observatory_log
 
 
-
 def bash(command: str) -> str:
     return subprocess.run(command, shell=True, capture_output=True, text=True, errors="replace").stdout
 

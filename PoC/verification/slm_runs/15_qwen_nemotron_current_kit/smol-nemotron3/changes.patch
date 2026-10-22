@@ -5,7 +5,7 @@ index a8f6e52..8588b47 100644
 @@ -30,6 +30,8 @@ from logging import getLogger
  from pathlib import Path
  from typing import TYPE_CHECKING, Any, Literal, Type, TypeAlias, TypedDict, Union
- 
+
 +from .observatory_log import llm_error, llm_query, llm_response, tool_end, tool_error, tool_start
 +
  import yaml
@@ -14,7 +14,7 @@ index a8f6e52..8588b47 100644
 @@ -1480,15 +1482,18 @@ class ToolCallingAgent(MultiStepAgent):
              error_msg = f"Error executing tool '{tool_name}' with arguments {str(arguments)}: {type(e).__name__}: {e}"
              raise AgentToolExecutionError(error_msg, self.logger) from e
- 
+
 +        start = tool_start(tool_name, arguments)
          try:
              # Call tool with appropriate arguments
@@ -53,7 +53,7 @@ index a8f6e52..8588b47 100644
 +                reply=output_text,
 +                response=chat_message,
 +            )
- 
+
              if not self._use_structured_outputs_internally:
                  # This adds the end code sequence (i.e. the closing code block tag) to the history.
 @@ -1697,6 +1709,7 @@ class CodeAgent(MultiStepAgent):
@@ -62,7 +62,7 @@ index a8f6e52..8588b47 100644
          except Exception as e:
 +            observatory_log.llm_error(step=memory_step.step_number, error=e)
              raise AgentGenerationError(f"Error in generating model output:\n{e}", self.logger) from e
- 
+
          ### Parse output ###
 diff --git a/src/smolagents/default_tools.py b/src/smolagents/default_tools.py
 index c72679d..eebfe42 100644
@@ -73,14 +73,14 @@ index c72679d..eebfe42 100644
  )
  from .tools import PipelineTool, Tool
 +from . import observatory_log
- 
- 
+
+
  @dataclass
 @@ -98,6 +99,7 @@ class UserInputTool(Tool):
- 
+
      def forward(self, question):
          user_input = input(f"{question} => Type your answer here:")
 +        observatory_log.user_input(user_input, prompt=question)
          return user_input
- 
- 
+
+

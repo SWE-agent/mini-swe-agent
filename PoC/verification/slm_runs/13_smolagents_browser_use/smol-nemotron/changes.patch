@@ -123,13 +123,13 @@ index a8f6e52..79ef4ab 100644
 +            response=chat_message,
 +        )
 +        return chat_message
- 
+
      def visualize(self):
          """Creates a rich tree visualization of the agent's structure."""
 @@ -1480,26 +1517,18 @@ class ToolCallingAgent(MultiStepAgent):
              error_msg = f"Error executing tool '{tool_name}' with arguments {str(arguments)}: {type(e).__name__}: {e}"
              raise AgentToolExecutionError(error_msg, self.logger) from e
- 
+
 +        start = observatory_log.tool_start(tool_name, arguments)
          try:
              # Call tool with appropriate arguments
@@ -158,8 +158,8 @@ index a8f6e52..79ef4ab 100644
 +            raise
 +        observatory_log.tool_end(start, tool_name, result=out)
 +        return out
- 
- 
+
+
  class CodeAgent(MultiStepAgent):
 @@ -1674,13 +1703,24 @@ class CodeAgent(MultiStepAgent):
                  memory_step.model_output_message = chat_message
@@ -201,13 +201,13 @@ index c72679d..84b157e 100644
  )
 +from .observatory_log import user_input
  from .tools import PipelineTool, Tool
- 
- 
+
+
 @@ -98,6 +99,7 @@ class UserInputTool(Tool):
- 
+
      def forward(self, question):
          user_input = input(f"{question} => Type your answer here:")
 +        observatory_log.user_input(user_input, prompt=question)
          return user_input
- 
- 
+
+

@@ -3,15 +3,15 @@ index 5c08a88..3a42581 100644
 --- a/agent.py
 +++ b/agent.py
 @@ -2,6 +2,7 @@
- 
+
  from llm import LLM
  from tools import Registry
 +import observatory_log
- 
+
  SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
  TOOLS = [
 @@ -25,6 +26,8 @@ class ToyAgent:
- 
+
      def run(self, task: str, max_steps: int = 10) -> str:
          self.messages = [{"role": "user", "content": task}]
 +        observatory_log.tool_start("user_input", {"task": task})
@@ -21,7 +21,7 @@ index 5c08a88..3a42581 100644
              if not reply["calls"]:
 @@ -32,15 +35,22 @@ class ToyAgent:
          return ""
- 
+
      def step(self, n: int) -> dict:
 +        observatory_log.llm_query(n, model=self.model, messages=self.messages)
          try:
@@ -47,6 +47,6 @@ index 5c08a88..3a42581 100644
 +            except Exception as e:
 +                observatory_log.tool_error(start, call["name"], e)
 +        return response
- 
+
      def fallback_query(self, n: int) -> dict:
          return self.llm.chat(self.messages, [], n)

@@ -5,15 +5,15 @@ index 7838897..52992c5 100644
 @@ -84,6 +84,8 @@ from browser_use.utils import (
  	time_execution_sync,
  )
- 
+
 +import browser_use.agent.observatory_log as observatory_log
 +
  logger = logging.getLogger(__name__)
- 
- 
+
+
 @@ -1617,8 +1619,14 @@ class Agent(Generic[Context, AgentStructuredOutput]):
  			kwargs['session_id'] = self.session_id
- 
+
  		try:
 -			response = await self.judge_llm.ainvoke(input_messages, **kwargs)
 +			observatory_log.llm_query(None, model=self.judge_llm.model, messages=input_messages)
@@ -29,7 +29,7 @@ index 7838897..52992c5 100644
  			self.logger.error(f'Judge trace failed: {e}')
 @@ -1952,8 +1960,15 @@ class Agent(Generic[Context, AgentStructuredOutput]):
  		kwargs: dict = {'output_format': self.AgentOutput, 'session_id': self.session_id}
- 
+
  		try:
 -			response = await self.llm.ainvoke(input_messages, **kwargs)
 +			observatory_log.llm_query(self.state.n_steps, model=self.llm.model, messages=input_messages)
@@ -41,13 +41,13 @@ index 7838897..52992c5 100644
  			parsed: AgentOutput = response.completion  # type: ignore[assignment]
 +			actions = [list(a.model_dump(exclude_unset=True).keys())[0] for a in parsed.action] if parsed.action else []
 +			observatory_log.llm_response(self.state.n_steps, actions=actions, reply=parsed, response=response)
- 
+
  			# Replace any shortened URLs in the LLM response back to original URLs
  			if urls_replaced:
 @@ -2508,6 +2523,7 @@ class Agent(Generic[Context, AgentStructuredOutput]):
  	) -> AgentHistoryList[AgentStructuredOutput]:
  		"""Execute the task with maximum number of steps"""
- 
+
 +		observatory_log.user_input(self.task)
  		loop = asyncio.get_event_loop()
  		agent_run_error: str | None = None  # Initialize error tracking variable
@@ -71,7 +71,7 @@ index 7838897..52992c5 100644
 @@ -2963,8 +2985,14 @@ class Agent(Generic[Context, AgentStructuredOutput]):
  				# fall back to text response without parsing
  				self.logger.debug(f'Structured output failed: {structured_error}, falling back to text response')
- 
+
 -				response = await summary_llm.ainvoke(messages, None)
 +				observatory_log.llm_query(None, model=summary_llm.model, messages=messages)
 +				try:
@@ -82,12 +82,12 @@ index 7838897..52992c5 100644
  				response_text = response.completion
 +				observatory_log.llm_response(None, actions=[], reply=response_text, response=response)
  				self.logger.debug(f'LLM text response: {response_text}')
- 
+
  				# Use the text response directly as the summary
 @@ -3072,7 +3100,14 @@ class Agent(Generic[Context, AgentStructuredOutput]):
  		try:
  			import asyncio
- 
+
 -			response = await asyncio.wait_for(llm.ainvoke([SystemMessage(content=system_prompt), user_message]), timeout=120.0)
 +			observatory_log.llm_query(None, model=llm.model, messages=[SystemMessage(content=system_prompt), user_message])
 +			try:
@@ -97,7 +97,7 @@ index 7838897..52992c5 100644
 +				raise
 +
 +			observatory_log.llm_response(None, actions=[], reply=response.completion, response=response)
- 
+
  			current_url = await self.browser_session.get_current_page_url()
  			extracted_content = (
 diff --git a/browser_use/tools/registry/service.py b/browser_use/tools/registry/service.py
@@ -107,14 +107,14 @@ index 1f4e783..5cdd503 100644
 @@ -11,6 +11,8 @@ from typing import Any, Generic, Optional, TypeVar, Union, get_args, get_origin
  import pyotp
  from pydantic import BaseModel, Field, RootModel, create_model
- 
+
 +import browser_use.agent.observatory_log as observatory_log
 +
  from browser_use.browser import BrowserSession
  from browser_use.browser.views import BrowserError
  from browser_use.filesystem.file_system import FileSystem
 @@ -391,9 +393,13 @@ class Registry(Generic[Context]):
- 
+
  			# All functions are now normalized to accept kwargs only
  			# Call with params and unpacked special context
 +			start = observatory_log.tool_start(action_name, params)
@@ -127,5 +127,5 @@ index 1f4e783..5cdd503 100644
 +			except Exception as error:
 +				observatory_log.tool_error(start, action_name, error)
  				raise
- 
+
  		except BrowserError as e:

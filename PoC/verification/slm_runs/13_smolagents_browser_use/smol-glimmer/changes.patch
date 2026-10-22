@@ -4,13 +4,13 @@ index a8f6e52..fbf7102 100644
 +++ b/src/smolagents/agents.py
 @@ -96,6 +96,8 @@ from .utils import (
  )
- 
- 
+
+
 +from . import observatory_log
 +
  logger = getLogger(__name__)
- 
- 
+
+
 @@ -669,8 +671,14 @@ You have been provided with these additional arguments, that you can access dire
                                  output_tokens += event.token_usage.output_tokens
                          yield event
@@ -86,7 +86,7 @@ index a8f6e52..fbf7102 100644
 @@ -1480,14 +1507,18 @@ class ToolCallingAgent(MultiStepAgent):
              error_msg = f"Error executing tool '{tool_name}' with arguments {str(arguments)}: {type(e).__name__}: {e}"
              raise AgentToolExecutionError(error_msg, self.logger) from e
- 
+
 +        start = observatory_log.tool_start(tool_name, arguments)
          try:
              # Call tool with appropriate arguments
@@ -98,7 +98,7 @@ index a8f6e52..fbf7102 100644
 +                out = tool(arguments) if is_managed_agent else tool(arguments, sanitize_inputs_outputs=True)
 +            observatory_log.tool_end(start, tool_name, result=out)
 +            return out
- 
+
          except Exception as e:
 +            observatory_log.tool_error(start, tool_name, e)
              # Handle execution errors
@@ -128,7 +128,7 @@ index a8f6e52..fbf7102 100644
                  output_text = chat_message.content
                  self.logger.log_markdown(
 @@ -1722,8 +1759,10 @@ class CodeAgent(MultiStepAgent):
- 
+
          ### Execute action ###
          self.logger.log_code(title="Executing parsed code:", content=code_action, level=LogLevel.INFO)
 +        start = observatory_log.tool_start("python_interpreter", code_action)

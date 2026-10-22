@@ -4,15 +4,15 @@ index c83ed41..aecb582 100644
 +++ b/llm.py
 @@ -1,6 +1,7 @@
  """LLM client wrapper (Claude)."""
- 
+
  import anthropic
 +import observatory_log
- 
- 
+
+
  class LLM:
 @@ -10,14 +11,20 @@ class LLM:
          self.system = system
- 
+
      def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:
 -        response = self.client.messages.create(
 -            model=self.model,
@@ -36,24 +36,24 @@ index c83ed41..aecb582 100644
          reply = self.parse(response)
 +        observatory_log.llm_response(step, actions=[c["name"] for c in reply["calls"]], reply=reply, response=response)
          return reply
- 
+
      def parse(self, response) -> dict:
 diff --git a/tools.py b/tools.py
 index e94c727..edd1503 100644
 --- a/tools.py
 +++ b/tools.py
 @@ -2,6 +2,8 @@
- 
+
  import subprocess
- 
+
 +import observatory_log
 +
- 
- 
+
+
  def bash(command: str) -> str:
 @@ -19,5 +21,11 @@ class Registry:
          self.tools = {"bash": bash, "python": python}
- 
+
      def run(self, name: str, args: dict) -> str:
 -        out = self.tools[name](**args)
 +        start = observatory_log.tool_start(name, args)

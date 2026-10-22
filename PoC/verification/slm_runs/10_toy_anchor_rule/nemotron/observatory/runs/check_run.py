@@ -20,8 +20,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 if "OBSERVATORY_RUNS" not in os.environ:
     os.environ["OBSERVATORY_RUNS"] = str(PROJECT_ROOT / "observatory/runs")
 
-from agent import ToyAgent
 import llm
+from agent import ToyAgent
 
 
 class _MockToolUseBlock:
@@ -43,7 +43,7 @@ class _MockTextBlock:
 
 
 class _MockResponse:
-    """Mock returned by :meth:`anthropic.Anthropic.messages.create`. """
+    """Mock returned by :meth:`anthropic.Anthropic.messages.create`."""
 
     def __init__(self, blocks):
         self.content = blocks  # list of _MockToolUseBlock or _MockTextBlock
@@ -70,9 +70,7 @@ class _MockClient:
 
         blocks = []
         for call in tool_calls:
-            blocks.append(
-                _MockToolUseBlock(name=call["name"], args=call["args"])
-            )
+            blocks.append(_MockToolUseBlock(name=call["name"], args=call["args"]))
         blocks.append(_MockTextBlock(text_answer))
         return _MockResponse(blocks)
 
@@ -128,7 +126,7 @@ def run_check():
     latest_file = jsonl_files[0]
     print(f"\nReading: {latest_file}")
 
-    with open(latest_file, "r", encoding="utf-8") as f:
+    with open(latest_file, encoding="utf-8") as f:
         lines = f.read().splitlines()
 
     events = []

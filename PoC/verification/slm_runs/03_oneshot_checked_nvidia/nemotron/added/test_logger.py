@@ -11,7 +11,9 @@ import observatory_log
 
 observatory_log._files.clear()
 observatory_log.llm_query(1, model="test", messages=[])
-observatory_log.llm_response(1, actions=[], reply={"content": "hi", "calls": [], "message": {"role": "assistant", "content": "hi"}})
+observatory_log.llm_response(
+    1, actions=[], reply={"content": "hi", "calls": [], "message": {"role": "assistant", "content": "hi"}}
+)
 s = observatory_log.tool_start("bash", {"command": "ls"})
 observatory_log.tool_end(s, "bash", result="listing")
 print("logged OK")

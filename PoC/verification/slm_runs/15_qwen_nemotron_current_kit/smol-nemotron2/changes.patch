@@ -7,8 +7,8 @@ index a8f6e52..3fd1daf 100644
      truncate_content,
  )
 +import observatory_log
- 
- 
+
+
  logger = getLogger(__name__)
 @@ -467,6 +468,7 @@ class MultiStepAgent(ABC):
          """
@@ -66,7 +66,7 @@ index a8f6e52..3fd1daf 100644
              )
 +        observatory_log.llm_response(step, actions=[], reply=chat_message, response=chat_message)
 +        return chat_message
- 
+
      def visualize(self):
          """Creates a rich tree visualization of the agent's structure."""
 @@ -1306,11 +1323,17 @@ class ToolCallingAgent(MultiStepAgent):
@@ -95,7 +95,7 @@ index a8f6e52..3fd1daf 100644
 @@ -1480,26 +1503,17 @@ class ToolCallingAgent(MultiStepAgent):
              error_msg = f"Error executing tool '{tool_name}' with arguments {str(arguments)}: {type(e).__name__}: {e}"
              raise AgentToolExecutionError(error_msg, self.logger) from e
- 
+
 +        start = observatory_log.tool_start(name, arguments)
          try:
              # Call tool with appropriate arguments
@@ -123,8 +123,8 @@ index a8f6e52..3fd1daf 100644
 +            observatory_log.tool_error(start, name, error)
 +            raise
 +        observatory_log.tool_end(start, name, result=out)
- 
- 
+
+
  class CodeAgent(MultiStepAgent):
 @@ -1674,11 +1688,17 @@ class CodeAgent(MultiStepAgent):
                  memory_step.model_output_message = chat_message
@@ -154,10 +154,10 @@ index c72679d..c87de4d 100644
 --- a/src/smolagents/default_tools.py
 +++ b/src/smolagents/default_tools.py
 @@ -98,6 +98,7 @@ class UserInputTool(Tool):
- 
+
      def forward(self, question):
          user_input = input(f"{question} => Type your answer here:")
 +        observatory_log.user_input(user_input, prompt=question)
          return user_input
- 
- 
+
+

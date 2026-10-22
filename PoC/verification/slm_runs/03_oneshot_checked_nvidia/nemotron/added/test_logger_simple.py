@@ -13,7 +13,12 @@ import observatory_log
 # Simple test
 observatory_log._files.clear()
 observatory_log.llm_query(1, model="test-model", messages=[{"role": "user", "content": "test"}])
-observatory_log.llm_response(1, actions=[], reply={"content": "test response", "calls": [], "message": {"role": "assistant", "content": "test response"}}, messages=[{"role": "user", "content": "test"}])
+observatory_log.llm_response(
+    1,
+    actions=[],
+    reply={"content": "test response", "calls": [], "message": {"role": "assistant", "content": "test response"}},
+    messages=[{"role": "user", "content": "test"}],
+)
 start = observatory_log.tool_start("bash", {"command": "echo hello"})
 observatory_log.tool_end(start, "bash", result="hello")
 observatory_log.tool_error(start, "bash", RuntimeError("boom"))

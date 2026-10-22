@@ -1,6 +1,8 @@
 import os
+
 os.environ["OBSERVATORY_RUNS"] = "observatory/runs"
 import sys
+
 sys.path.insert(0, ".")
 from agent import ToyAgent
 

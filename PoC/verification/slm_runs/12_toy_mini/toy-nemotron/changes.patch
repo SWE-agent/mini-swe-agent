@@ -4,26 +4,26 @@ index 5c08a88..d050545 100644
 +++ b/agent.py
 @@ -1,5 +1,6 @@
  """Toy coding agent. Entry: ToyAgent.run"""
- 
+
 +import observatory_log
  from llm import LLM
  from tools import Registry
- 
+
 @@ -24,6 +25,7 @@ class ToyAgent:
          self.messages: list[dict] = []
- 
+
      def run(self, task: str, max_steps: int = 10) -> str:
 +        observatory_log.user_input(task)
          self.messages = [{"role": "user", "content": task}]
          for n in range(1, max_steps + 1):
              reply = self.step(n)
 @@ -47,6 +49,7 @@ class ToyAgent:
- 
+
      def ask_user(self, question: str) -> str:
          answer = input(f"{question} ")
 +        observatory_log.user_input(answer, prompt=question)
          return answer
- 
+
      def confirm(self, answer: str) -> bool:
 diff --git a/llm.py b/llm.py
 index c83ed41..97c7113 100644
@@ -32,14 +32,14 @@ index c83ed41..97c7113 100644
 @@ -1,23 +1,37 @@
 -"""LLM client wrapper (Claude)."""
 +"""LLM client wrapper (Claude).
- 
+
 +The client is provided via the `client` parameter to LLM.__init__().
 +If not provided, a default anthropic client is created.
 +"""
  import anthropic
 +import observatory_log
- 
- 
+
+
  class LLM:
 -    def __init__(self, model: str = "claude-haiku-5-5", system: str = ""):
 -        self.client = anthropic.Anthropic()
@@ -51,7 +51,7 @@ index c83ed41..97c7113 100644
 +            self.client = client
 +        else:
 +            self.client = anthropic.Anthropic()
- 
+
      def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:
 -        response = self.client.messages.create(
 -            model=self.model,
@@ -75,23 +75,23 @@ index c83ed41..97c7113 100644
          reply = self.parse(response)
 +        observatory_log.llm_response(step, actions=[c["name"] for c in reply["calls"]], reply=reply, response=response)
          return reply
- 
+
      def parse(self, response) -> dict:
 diff --git a/tools.py b/tools.py
 index e94c727..f448e5b 100644
 --- a/tools.py
 +++ b/tools.py
 @@ -2,6 +2,7 @@
- 
+
  import subprocess
- 
+
 +import observatory_log
- 
- 
+
+
  def bash(command: str) -> str:
 @@ -19,5 +20,11 @@ class Registry:
          self.tools = {"bash": bash, "python": python}
- 
+
      def run(self, name: str, args: dict) -> str:
 -        out = self.tools[name](**args)
 -        return out

@@ -3,16 +3,16 @@ index 5c08a88..3f62e2c 100644
 --- a/agent.py
 +++ b/agent.py
 @@ -2,6 +2,7 @@
- 
+
  from llm import LLM
  from tools import Registry
 +import observatory_log
- 
+
  SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
  TOOLS = [
 @@ -24,11 +25,18 @@ class ToyAgent:
          self.messages: list[dict] = []
- 
+
      def run(self, task: str, max_steps: int = 10) -> str:
 +        start = observatory_log.tool_start("user_input", {"task": task})
 +        observatory_log.tool_end(start, "user_input", result=task)
@@ -27,7 +27,7 @@ index 5c08a88..3f62e2c 100644
 +        # Log empty return whole
 +        observatory_log.llm_response(max_steps, actions=[], reply={})
          return ""
- 
+
      def step(self, n: int) -> dict:
 @@ -36,17 +44,25 @@ class ToyAgent:
              reply = self.llm.chat(self.messages, TOOLS, n)
@@ -45,16 +45,16 @@ index 5c08a88..3f62e2c 100644
 +                out = self.registry.tools[call["name"]](**call["args"])
 +                observatory_log.tool_end(start, call["name"], result=out)
          return reply
- 
+
      def fallback_query(self, n: int) -> dict:
          return self.llm.chat(self.messages, [], n)
- 
+
      def ask_user(self, question: str) -> str:
 +        start = observatory_log.tool_start("user_input", {"prompt": question})
          answer = input(f"{question} ")
 +        observatory_log.tool_end(start, "user_input", result=answer)
          return answer
- 
+
      def confirm(self, answer: str) -> bool:
 diff --git a/llm.py b/llm.py
 index c83ed41..75057a1 100644
@@ -62,15 +62,15 @@ index c83ed41..75057a1 100644
 +++ b/llm.py
 @@ -1,6 +1,7 @@
  """LLM client wrapper (Claude)."""
- 
+
  import anthropic
 +from observatory_log import llm_query, llm_response, llm_error
- 
- 
+
+
  class LLM:
 @@ -10,14 +11,23 @@ class LLM:
          self.system = system
- 
+
      def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:
 -        response = self.client.messages.create(
 -            model=self.model,
@@ -97,7 +97,7 @@ index c83ed41..75057a1 100644
 +        llm_response(step, actions=[c["name"] for c in reply["calls"]], reply=reply, response=response,
 +                     call_args=call_info)
          return reply
- 
+
      def parse(self, response) -> dict:
 diff --git a/tools.py b/tools.py
 index e94c727..dc79188 100644
@@ -105,7 +105,7 @@ index e94c727..dc79188 100644
 +++ b/tools.py
 @@ -19,5 +19,11 @@ class Registry:
          self.tools = {"bash": bash, "python": python}
- 
+
      def run(self, name: str, args: dict) -> str:
 -        out = self.tools[name](**args)
 +        start = observatory_log.tool_start(name, args)

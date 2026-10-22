@@ -6,19 +6,16 @@ _OBSERVATORY_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_OBSERVATORY_DIR))
 
 # Step 1: Import observatory_log
-import observatory_log
 print("After import observatory_log:")
-print("  'observatory_log' in dir():", 'observatory_log' in dir())
-print("  'observatory_log' in sys.modules:", 'observatory_log' in sys.modules)
+print("  'observatory_log' in dir():", "observatory_log" in dir())
+print("  'observatory_log' in sys.modules:", "observatory_log" in sys.modules)
 
 # Step 2: Import the names
-from observatory_log import llm_query, llm_response, tool_start, tool_end, tool_error
 print("\nAfter from observatory_log import ...")
-print("  'observatory_log' in dir():", 'observatory_log' in dir())
+print("  'observatory_log' in dir():", "observatory_log" in dir())
 
 # Step 3: Try importing agent
 try:
-    from agent import ToyAgent
     print("\nAgent imported successfully")
 except Exception as e:
     print("\nAgent import failed:", type(e).__name__, e)
@@ -26,4 +23,4 @@ except Exception as e:
 
 # Step 4: Check namespace after agent import
 print("\nAfter agent import attempt:")
-print("  'observatory_log' in dir():", 'observatory_log' in dir())
+print("  'observatory_log' in dir():", "observatory_log" in dir())

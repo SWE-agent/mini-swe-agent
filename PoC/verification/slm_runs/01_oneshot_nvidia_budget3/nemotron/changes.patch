@@ -3,15 +3,15 @@ index 5c08a88..8c74279 100644
 --- a/agent.py
 +++ b/agent.py
 @@ -2,6 +2,7 @@
- 
+
  from llm import LLM
  from tools import Registry
 +import observatory_log
- 
+
  SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
  TOOLS = [
 @@ -25,6 +26,9 @@ class ToyAgent:
- 
+
      def run(self, task: str, max_steps: int = 10) -> str:
          self.messages = [{"role": "user", "content": task}]
 +        observatory_log.tool_start("user_input", step=1)
@@ -22,7 +22,7 @@ index 5c08a88..8c74279 100644
              if not reply["calls"]:
 @@ -32,25 +36,39 @@ class ToyAgent:
          return ""
- 
+
      def step(self, n: int) -> dict:
 +        observatory_log.llm_query(n, model=self.model, messages=self.messages)
          try:
@@ -43,24 +43,24 @@ index 5c08a88..8c74279 100644
          if results:
              self.messages.append(self.llm.results_message(results))
          return reply
- 
+
      def fallback_query(self, n: int) -> dict:
 -        return self.llm.chat(self.messages, [], n)
 +        observatory_log.llm_query(n, model=self.model, messages=self.messages)
 +        reply = self.llm.chat(self.messages, [], n)
 +        observatory_log.llm_response(n, actions=[c["name"] for c in reply["calls"]], reply=reply)
 +        return reply
- 
+
      def ask_user(self, question: str) -> str:
 +        observatory_log.tool_start("user_input")
          answer = input(f"{question} ")
 +        observatory_log.tool_end(None, "user_input", result=answer)
          return answer
- 
+
      def confirm(self, answer: str) -> bool:
 -        return self.ask_user(f"Accept '{answer[:40]}'? [y/N]").lower() == "y"
 +        user_in = self.ask_user(f"Accept '{answer[:40]}'? [y/N]")
 +        return user_in.lower() == "y"
- 
- 
+
+
  if __name__ == "__main__":

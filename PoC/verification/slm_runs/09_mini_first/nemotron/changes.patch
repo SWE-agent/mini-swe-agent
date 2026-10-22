@@ -4,16 +4,16 @@ index 32ddee5..600e723 100644
 +++ b/src/minisweagent/agents/default.py
 @@ -12,7 +12,8 @@ from jinja2 import StrictUndefined, Template
  from pydantic import BaseModel
- 
+
  from minisweagent import Environment, Model, __version__
 -from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
 +from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, Submitted, TimeExceeded
 +from minisweagent.agents.observatory_log import llm_query, llm_response, llm_error, tool_end, tool_error, tool_start
  from minisweagent.utils.serialize import recursive_merge
- 
- 
+
+
 @@ -87,6 +88,8 @@ class DefaultAgent:
- 
+
      def run(self, task: str = "", **kwargs) -> dict:
          """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
 +        start = tool_start("user_input", {"task": task})
@@ -86,7 +86,7 @@ index dd1139d..5099229 100644
              self.config.cost_limit = float(input("New cost limit: "))
 +            tool_end(start, "user_input", result=self.config.cost_limit)
              return super().query()
- 
+
      @staticmethod
 @@ -110,13 +114,17 @@ class InteractiveAgent(DefaultAgent):
          # Override the step method to handle user interruption

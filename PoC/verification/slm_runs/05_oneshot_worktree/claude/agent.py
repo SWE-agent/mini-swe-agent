@@ -1,8 +1,8 @@
 """Toy coding agent. Entry: ToyAgent.run"""
 
+import observatory_log
 from llm import LLM
 from tools import Registry
-import observatory_log
 
 SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
 TOOLS = [
@@ -60,9 +60,7 @@ class ToyAgent:
 
 if __name__ == "__main__":
     import io
-    import os
     import sys
-    from pathlib import Path
 
     if not sys.stdin.isatty():  # no terminal (started from the dashboard): answer "y" instead of waiting
         sys.stdin = io.StringIO("y\n")

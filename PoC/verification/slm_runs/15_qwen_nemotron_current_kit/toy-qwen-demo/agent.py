@@ -58,9 +58,7 @@ class ToyAgent:
 
 if __name__ == "__main__":
     import io
-    import os
     import sys
-    from pathlib import Path
 
     if not sys.stdin.isatty():  # no terminal (started from the dashboard): answer "y" instead of waiting
         sys.stdin = io.StringIO("y\n")

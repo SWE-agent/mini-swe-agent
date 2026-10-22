@@ -117,7 +117,7 @@ index a8f6e52..d1ef4b2 100644
                  self.logger.log_markdown(
                      content=str(chat_message.content or chat_message.raw or ""),
 @@ -1482,24 +1527,17 @@ class ToolCallingAgent(MultiStepAgent):
- 
+
          try:
              # Call tool with appropriate arguments
 +            start = observatory_log.tool_start(tool_name, arguments)
@@ -129,7 +129,7 @@ index a8f6e52..d1ef4b2 100644
 +                out = tool(arguments) if is_managed_agent else tool(arguments, sanitize_inputs_outputs=True)
 +            observatory_log.tool_end(start, tool_name, result=out)
 +            return out
- 
+
          except Exception as e:
 -            # Handle execution errors
 -            if is_managed_agent:
@@ -145,8 +145,8 @@ index a8f6e52..d1ef4b2 100644
 -            raise AgentToolExecutionError(error_msg, self.logger) from e
 +            observatory_log.tool_error(start, tool_name, e)
 +            raise
- 
- 
+
+
  class CodeAgent(MultiStepAgent):
 @@ -1674,10 +1712,22 @@ class CodeAgent(MultiStepAgent):
                  memory_step.model_output_message = chat_message
@@ -195,13 +195,13 @@ index c72679d..2509c26 100644
  )
 +from .observatory_log import observatory_log
  from .tools import PipelineTool, Tool
- 
- 
+
+
 @@ -98,6 +99,7 @@ class UserInputTool(Tool):
- 
+
      def forward(self, question):
          user_input = input(f"{question} => Type your answer here:")
 +        observatory_log.user_input(user_input, prompt=question)
          return user_input
- 
- 
+
+

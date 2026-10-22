@@ -7,14 +7,15 @@ _log_mod.llm_response = lambda step, actions=None: "llm_response called"
 sys.modules["observatory_log"] = _log_mod
 
 print("Step 1 - After putting observatory_log in sys.modules:")
-print("  'observatory_log' in sys.modules:", 'observatory_log' in sys.modules)
+print("  'observatory_log' in sys.modules:", "observatory_log" in sys.modules)
 
 # Step 2: Now do from observatory_log import llm_query (simulating what llm.py does)
 from observatory_log import llm_query
+
 print("\nStep 2 - After from observatory_log import llm_query:")
 print("  llm_query:", llm_query)
-print("  'observatory_log' in dir():", 'observatory_log' in dir())
-print("  'observatory_log' in sys.modules:", 'observatory_log' in sys.modules)
+print("  'observatory_log' in dir():", "observatory_log" in dir())
+print("  'observatory_log' in sys.modules:", "observatory_log" in sys.modules)
 
 # Step 3: Can we access observatory_log.llm_query?
 try:

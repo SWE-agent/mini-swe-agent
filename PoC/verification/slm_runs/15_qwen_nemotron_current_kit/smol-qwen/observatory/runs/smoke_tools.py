@@ -46,7 +46,9 @@ def make_chat_message(tool_name, arguments):
         content="",
         raw=None,
         token_usage=None,
-        tool_calls=[SimpleNamespace(function=SimpleNamespace(name=tool_name, arguments=arguments), id=f"call_{tool_name}")],
+        tool_calls=[
+            SimpleNamespace(function=SimpleNamespace(name=tool_name, arguments=arguments), id=f"call_{tool_name}")
+        ],
     )
 
 
@@ -113,7 +115,11 @@ except AgentExecutionError:
     check("ca: error propagated", True)
 
 # ---------- Inspect the log ----------
-lines = [json.loads(line) for line in (sorted(RUNS.glob("*.jsonl"))[0]).read_text(encoding="utf-8").splitlines() if line.strip()]
+lines = [
+    json.loads(line)
+    for line in (sorted(RUNS.glob("*.jsonl"))[0]).read_text(encoding="utf-8").splitlines()
+    if line.strip()
+]
 tool_starts = [l for l in lines if l["kind"] == "tool_start"]
 tool_ends = [l for l in lines if l["kind"] == "tool_end"]
 tool_errors = [l for l in lines if l["kind"] == "tool_error"]
@@ -123,14 +129,22 @@ check("log: 3 tool_end (add, pi print, pi submit)", len(tool_ends) == 3)
 check("log: 2 tool_error (boom, pi division)", len(tool_errors) == 2)
 
 add_start = [t for t in tool_starts if t["data"]["action"] == "add"]
-check("log: add start name/params/step", len(add_start) == 1 and add_start[0]["data"]["params"] == {"a": 1, "b": 2} and add_start[0]["step"] == 1)
+check(
+    "log: add start name/params/step",
+    len(add_start) == 1 and add_start[0]["data"]["params"] == {"a": 1, "b": 2} and add_start[0]["step"] == 1,
+)
 check("log: add start at", add_start[0]["at"].endswith("agents.py:1433"))
 add_end = [t for t in tool_ends if t["data"]["action"] == "add"]
-check("log: add end result=3 + duration", len(add_end) == 1 and add_end[0]["data"]["result"] == 3 and "duration_seconds" in add_end[0]["data"])
+check(
+    "log: add end result=3 + duration",
+    len(add_end) == 1 and add_end[0]["data"]["result"] == 3 and "duration_seconds" in add_end[0]["data"],
+)
 check("log: add end at", add_end[0]["at"].endswith("agents.py:1439"))
 
 boom_error = [t for t in tool_errors if t["data"]["action"] == "boom"]
-check("log: boom error logged", len(boom_error) == 1 and boom_error[0]["data"]["error_type"] == "AgentToolExecutionError")
+check(
+    "log: boom error logged", len(boom_error) == 1 and boom_error[0]["data"]["error_type"] == "AgentToolExecutionError"
+)
 check("log: boom error at", boom_error[0]["at"].endswith("agents.py:1437"))
 
 pi_starts = sorted([t for t in tool_starts if t["data"]["action"] == "python_interpreter"], key=lambda t: t["step"])
@@ -146,12 +160,21 @@ check("log: pi start at", all(t["at"].endswith("agents.py:1789") for t in pi_sta
 
 pi_ends = sorted([t for t in tool_ends if t["data"]["action"] == "python_interpreter"], key=lambda t: t["step"])
 check("log: 2 python_interpreter ends", len(pi_ends) == 2)
-check("log: pi end step1 whole CodeOutput (not final)", pi_ends[0]["step"] == 1 and "is_final_answer=False" in str(pi_ends[0]["data"]["result"]))
-check("log: pi end step2 submit reported as tool_end with whole CodeOutput", pi_ends[1]["step"] == 2 and "is_final_answer=True" in str(pi_ends[1]["data"]["result"]))
+check(
+    "log: pi end step1 whole CodeOutput (not final)",
+    pi_ends[0]["step"] == 1 and "is_final_answer=False" in str(pi_ends[0]["data"]["result"]),
+)
+check(
+    "log: pi end step2 submit reported as tool_end with whole CodeOutput",
+    pi_ends[1]["step"] == 2 and "is_final_answer=True" in str(pi_ends[1]["data"]["result"]),
+)
 check("log: pi end at", all(t["at"].endswith("agents.py:1796") for t in pi_ends))
 
 pi_error = [t for t in tool_errors if t["data"]["action"] == "python_interpreter"]
-check("log: division error logged", len(pi_error) == 1 and pi_error[0]["data"]["error_type"] == "InterpreterError" and pi_error[0]["step"] == 3)
+check(
+    "log: division error logged",
+    len(pi_error) == 1 and pi_error[0]["data"]["error_type"] == "InterpreterError" and pi_error[0]["step"] == 3,
+)
 check("log: pi error at", pi_error[0]["at"].endswith("agents.py:1794"))
 
 # ordering: each tool_start immediately followed by its matching end/error
@@ -159,10 +182,16 @@ ok_order = True
 for i, l in enumerate(lines):
     if l["kind"] == "tool_start":
         nxt = lines[i + 1]
-        ok_order = ok_order and nxt["kind"] in ("tool_end", "tool_error") and nxt["data"]["action"] == l["data"]["action"]
+        ok_order = (
+            ok_order and nxt["kind"] in ("tool_end", "tool_error") and nxt["data"]["action"] == l["data"]["action"]
+        )
 check("log: start immediately followed by matching end/error", ok_order)
 
-llm_resp_1 = [l for l in lines if l["kind"] == "llm_response" and l["step"] == 1 and l["data"]["actions"] == ["python_interpreter"]]
+llm_resp_1 = [
+    l
+    for l in lines
+    if l["kind"] == "llm_response" and l["step"] == 1 and l["data"]["actions"] == ["python_interpreter"]
+]
 check("log: ca llm_response links python_interpreter", len(llm_resp_1) == 1)
 
 print()

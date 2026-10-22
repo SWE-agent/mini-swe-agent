@@ -4,13 +4,13 @@ index 5c08a88..1e75b7e 100644
 +++ b/agent.py
 @@ -1,5 +1,6 @@
  """Toy coding agent. Entry: ToyAgent.run"""
- 
+
 +import observatory_log
  from llm import LLM
  from tools import Registry
- 
+
 @@ -25,25 +26,39 @@ class ToyAgent:
- 
+
      def run(self, task: str, max_steps: int = 10) -> str:
          self.messages = [{"role": "user", "content": task}]
 +        _task_start = observatory_log.tool_start("user_input", {"prompt": task})
@@ -21,7 +21,7 @@ index 5c08a88..1e75b7e 100644
                  return reply["content"] if self.confirm(reply["content"]) else self.ask_user("What next?")
 +        observatory_log.tool_end(_task_start, "user_input", result="completed")
          return ""
- 
+
      def step(self, n: int) -> dict:
 +        observatory_log.llm_query(step=n, model=self.llm.model, messages=self.messages)
          try:
@@ -42,13 +42,13 @@ index 5c08a88..1e75b7e 100644
          if results:
              self.messages.append(self.llm.results_message(results))
          return reply
- 
+
      def fallback_query(self, n: int) -> dict:
 -        return self.llm.chat(self.messages, [], n)
 +        observatory_log.llm_query(step=n, model=self.llm.model, messages=self.messages)
 +        reply = self.llm.chat(self.messages, [], n)
 +        observatory_log.llm_response(step=n, actions=[c["name"] for c in reply["calls"]], reply=reply)
 +        return reply
- 
+
      def ask_user(self, question: str) -> str:
          answer = input(f"{question} ")

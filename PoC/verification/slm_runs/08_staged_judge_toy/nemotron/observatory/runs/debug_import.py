@@ -1,4 +1,5 @@
 """Debug import namespace"""
+
 import sys
 from pathlib import Path
 
@@ -12,8 +13,8 @@ sys.path.insert(0, str(_OBSERVATORY_DIR))
 import observatory_log
 
 print("After import observatory_log:")
-print("  'observatory_log' in dir():", 'observatory_log' in dir())
-print("  'observatory_log' in sys.modules:", 'observatory_log' in sys.modules)
+print("  'observatory_log' in dir():", "observatory_log" in dir())
+print("  'observatory_log' in sys.modules:", "observatory_log" in sys.modules)
 
 # Now stub anthropic
 _mock_anthropic = type(sys)("anthropic")
@@ -22,13 +23,12 @@ sys.modules["anthropic"] = _mock_anthropic
 
 # Now import agent (which imports llm.py)
 print("\nAbout to import agent...")
-from agent import ToyAgent
 print("Agent imported successfully")
 
 # Check namespace
 print("\nAfter agent import:")
-print("  'observatory_log' in dir():", 'observatory_log' in dir())
-print("  'observatory_log' in sys.modules:", 'observatory_log' in sys.modules)
+print("  'observatory_log' in dir():", "observatory_log" in dir())
+print("  'observatory_log' in sys.modules:", "observatory_log" in sys.modules)
 
 # Try calling observability_log.llm_query
 try:

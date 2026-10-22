@@ -4,10 +4,11 @@ This script runs the agent's run function with a scripted model that doesn't
 need an API key or network. It creates a mock anthropic client that returns
 scripted replies, and passes it to the LLM via the client parameter.
 """
+
+import io
 import json
 import os
 import sys
-import io
 from pathlib import Path
 
 # Make stdin non-interactive: always accept 'y' instead of waiting for user input
@@ -30,22 +31,24 @@ class _MockMessages:
             # Create a proper response object that parse() can handle
             class _TB:
                 type = "tool_use"
+
                 def __init__(self, d):
                     self.id = d["id"]
                     self.name = d["name"]
                     self.input = d["input"]
-            return type("Response", (), {"content": [
-                _TB({"id": "tool_1", "name": "bash", "input": {"command": "echo hello"}})
-            ]})()
+
+            return type(
+                "Response", (), {"content": [_TB({"id": "tool_1", "name": "bash", "input": {"command": "echo hello"}})]}
+            )()
         else:
             # Second call: return final text answer
             class _TB2:
                 type = "text"
+
                 def __init__(self, t):
                     self.text = t
-            return type("Response", (), {"content": [
-                _TB2("Task complete: echo hello ran successfully")
-            ]})()
+
+            return type("Response", (), {"content": [_TB2("Task complete: echo hello ran successfully")]})()
 
 
 class _MockAnthropic:
@@ -74,7 +77,6 @@ sys.path.insert(0, str(project_root / "observatory"))
 print(f"project_root: {project_root}")
 print(f"sys.path[0]: {sys.path[0]}")
 
-import observatory_log
 from agent import ToyAgent
 
 

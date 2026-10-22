@@ -5,27 +5,30 @@ that returns a reply asking for one tool call, then a final answer. The observat
 logger will record events to observatory/runs/ for inspection.
 """
 
-import os
-import sys
-import json
 import importlib.util
+import json
+import os
 from pathlib import Path
 
 # Set the OBSERVATORY_RUNS environment variable first
-runs_base = Path(r"C:\Users\USER\AppData\Local\Temp\claude\c--Users-USER-Developments-mini-swe-agent\2b6776a6-acde-42c1-9433-2f8ca7ccb7f5\scratchpad\v3\observatory\runs")
+runs_base = Path(
+    r"C:\Users\USER\AppData\Local\Temp\claude\c--Users-USER-Developments-mini-swe-agent\2b6776a6-acde-42c1-9433-2f8ca7ccb7f5\scratchpad\v3\observatory\runs"
+)
 os.environ["OBSERVATORY_RUNS"] = str(runs_base)
 runs_base.mkdir(parents=True, exist_ok=True)
 
 # Clear any cached logger files so we get a fresh log
-log_files = Path(r"C:\Users\USER\AppData\Local\Temp\claude\c--Users-USER-Developments-mini-swe-agent\2b6776a6-acde-42c1-9433-2f8ca7ccb7f5\scratchpad\v3\observatory\runs").glob("*.jsonl")
+log_files = Path(
+    r"C:\Users\USER\AppData\Local\Temp\claude\c--Users-USER-Developments-mini-swe-agent\2b6776a6-acde-42c1-9433-2f8ca7ccb7f5\scratchpad\v3\observatory\runs"
+).glob("*.jsonl")
 for f in log_files:
     f.unlink()
 
 # Import the logger module directly
-obs_dir = Path(r"C:\Users\USER\AppData\Local\Temp\claude\c--Users-USER-Developments-mini-swe-agent\2b6776a6-acde-42c1-9433-2f8ca7ccb7f5\scratchpad\v3\observatory")
-spec = importlib.util.spec_from_file_location(
-    "observatory_log", str(obs_dir / "observatory_log.py")
+obs_dir = Path(
+    r"C:\Users\USER\AppData\Local\Temp\claude\c--Users-USER-Developments-mini-swe-agent\2b6776a6-acde-42c1-9433-2f8ca7ccb7f5\scratchpad\v3\observatory"
 )
+spec = importlib.util.spec_from_file_location("observatory_log", str(obs_dir / "observatory_log.py"))
 log = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(log)
 
@@ -36,6 +39,7 @@ spec.loader.exec_module(log)
 
 class ScriptedToolCall:
     """Represents a tool use block from the model response."""
+
     def __init__(self, id_, name, args):
         self.id = id_
         self.name = name
@@ -86,7 +90,11 @@ class ScriptedModel:
                 "content": self.first_reply.content,
                 "role": self.first_reply.role,
                 "calls": [
-                    {"id": f"tool_{id(self.first_reply.content[0])}", "name": self.first_reply.content[0]["name"], "args": self.first_reply.content[0]["input"]}
+                    {
+                        "id": f"tool_{id(self.first_reply.content[0])}",
+                        "name": self.first_reply.content[0]["name"],
+                        "args": self.first_reply.content[0]["input"],
+                    }
                 ],
                 "model": self.first_reply.content[0]["name"],
             }

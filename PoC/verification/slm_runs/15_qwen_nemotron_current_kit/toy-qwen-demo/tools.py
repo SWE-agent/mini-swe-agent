@@ -1,8 +1,8 @@
 """Tools and their registry."""
 
 import subprocess
-import observatory_log
 
+import observatory_log
 
 
 def bash(command: str) -> str:

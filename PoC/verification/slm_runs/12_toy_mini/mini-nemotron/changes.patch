@@ -7,11 +7,11 @@ index 32ddee5..f53df48 100644
  from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
  from minisweagent.utils.serialize import recursive_merge
 +from . import observatory_log
- 
- 
+
+
  class AgentConfig(BaseModel):
 @@ -87,6 +88,7 @@ class DefaultAgent:
- 
+
      def run(self, task: str = "", **kwargs) -> dict:
          """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
 +        observatory_log.user_input(task)

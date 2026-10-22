@@ -2,15 +2,15 @@ import sys
 
 # Step 1: Import observatory_log first
 import observatory_log
+
 print("After import observatory_log:")
-print("  observatory_log in sys.modules:", 'observatory_log' in sys.modules)
-print("  'observatory_log' in dir():", 'observatory_log' in dir())
+print("  observatory_log in sys.modules:", "observatory_log" in sys.modules)
+print("  'observatory_log' in dir():", "observatory_log" in dir())
 
 # Step 2: Now import something that does "from observatory_log import ..."
-from observatory_log import llm_query, llm_response, tool_start, tool_end, tool_error
 print("\nAfter from observatory_log import ...")
-print("  'observatory_log' in dir():", 'observatory_log' in dir())
-print("  'observatory_log' in sys.modules:", 'observatory_log' in sys.modules)
+print("  'observatory_log' in dir():", "observatory_log" in dir())
+print("  'observatory_log' in sys.modules:", "observatory_log" in sys.modules)
 
 # Step 3: Now simulate what llm.py does - it references observatory_log.llm_query
 try:

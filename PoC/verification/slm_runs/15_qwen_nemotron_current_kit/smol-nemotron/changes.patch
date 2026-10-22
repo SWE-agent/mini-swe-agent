@@ -79,11 +79,11 @@ index a8f6e52..03ab94e 100644
 +        reply = chat_message
 +        observatory_log.llm_response(step, actions=[], reply=reply, response=messages)
 +        return chat_message
- 
+
      def visualize(self):
          """Creates a rich tree visualization of the agent's structure."""
 @@ -1482,12 +1481,15 @@ class ToolCallingAgent(MultiStepAgent):
- 
+
          try:
              # Call tool with appropriate arguments
 +            start = observatory_log.tool_start(name, arguments)
@@ -156,16 +156,16 @@ index c72679d..7aafcb7 100644
 @@ -17,6 +17,7 @@
  from dataclasses import dataclass
  from typing import Any
- 
+
 +from .observatory_log import observatory_log
  from .local_python_executor import (
      BASE_BUILTIN_MODULES,
      BASE_PYTHON_TOOLS,
 @@ -98,6 +99,7 @@ class UserInputTool(Tool):
- 
+
      def forward(self, question):
          user_input = input(f"{question} => Type your answer here:")
 +        observatory_log.user_input(user_input, prompt=question)
          return user_input
- 
- 
+
+

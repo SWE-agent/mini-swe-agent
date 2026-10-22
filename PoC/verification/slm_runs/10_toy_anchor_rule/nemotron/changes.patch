@@ -4,14 +4,14 @@ index 5c08a88..360eeaa 100644
 +++ b/agent.py
 @@ -1,5 +1,6 @@
  """Toy coding agent. Entry: ToyAgent.run"""
- 
+
 +import observatory_log
  from llm import LLM
  from tools import Registry
- 
+
 @@ -24,6 +25,8 @@ class ToyAgent:
          self.messages: list[dict] = []
- 
+
      def run(self, task: str, max_steps: int = 10) -> str:
 +        start = observatory_log.tool_start("user_input", {"task": task})
 +        observatory_log.tool_end(start, "user_input", result=task)
@@ -20,7 +20,7 @@ index 5c08a88..360eeaa 100644
              reply = self.step(n)
 @@ -32,10 +35,13 @@ class ToyAgent:
          return ""
- 
+
      def step(self, n: int) -> dict:
 +        observatory_log.llm_query(step, model=self.llm.model, messages=self.messages)
          try:
@@ -36,14 +36,14 @@ index 5c08a88..360eeaa 100644
          if results:
 @@ -46,7 +52,9 @@ class ToyAgent:
          return self.llm.chat(self.messages, [], n)
- 
+
      def ask_user(self, question: str) -> str:
 -        answer = input(f"{question} ")
 +        start = observatory_log.tool_start("user_input", {"prompt": question})
 +        answer = input(question)
 +        observatory_log.tool_end(start, "user_input", result=answer)
          return answer
- 
+
      def confirm(self, answer: str) -> bool:
 diff --git a/tools.py b/tools.py
 index e94c727..dc79188 100644
@@ -51,7 +51,7 @@ index e94c727..dc79188 100644
 +++ b/tools.py
 @@ -19,5 +19,11 @@ class Registry:
          self.tools = {"bash": bash, "python": python}
- 
+
      def run(self, name: str, args: dict) -> str:
 -        out = self.tools[name](**args)
 +        start = observatory_log.tool_start(name, args)

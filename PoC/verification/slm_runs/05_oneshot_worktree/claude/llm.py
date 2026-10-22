@@ -1,7 +1,6 @@
 """LLM client wrapper (Claude)."""
 
 import anthropic
-
 import observatory_log
 
 

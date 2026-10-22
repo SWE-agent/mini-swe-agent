@@ -1,25 +1,31 @@
 """Check run script for Agent Observatory logging."""
+
 import sys
 import types
 from pathlib import Path
 
 # Ensure runs directory exists
-Path('observatory/runs').mkdir(parents=True, exist_ok=True)
+Path("observatory/runs").mkdir(parents=True, exist_ok=True)
 
 # Add project root to sys.path so imports work from observatory/runs
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 # Mock llm module to avoid importing anthropic
-llm_module = types.ModuleType('llm')
+llm_module = types.ModuleType("llm")
+
+
 class DummyLLM:
-    def __init__(self, model='dummy', system=''):
+    def __init__(self, model="dummy", system=""):
         self.model = model
         self.system = system
-llm_module.LLM = DummyLLM
-sys.modules['llm'] = llm_module
 
-from agent import ToyAgent
+
+llm_module.LLM = DummyLLM
+sys.modules["llm"] = llm_module
+
 import observatory_log
+from agent import ToyAgent
+
 
 class FakeLLM:
     def __init__(self, system=""):
@@ -33,19 +39,16 @@ class FakeLLM:
             reply = {
                 "content": "I need to run a tool to proceed.",
                 "calls": [{"id": "call-1", "name": "bash", "args": {"command": "echo hello"}}],
-                "message": {"role": "assistant", "content": "tool call"}
+                "message": {"role": "assistant", "content": "tool call"},
             }
         else:
-            reply = {
-                "content": "Final answer.",
-                "calls": [],
-                "message": {"role": "assistant", "content": "final"}
-            }
+            reply = {"content": "Final answer.", "calls": [], "message": {"role": "assistant", "content": "final"}}
         observatory_log.llm_response(step, actions=[c["name"] for c in reply["calls"]], reply=reply)
         return reply
 
     def results_message(self, results):
         return {"role": "user", "content": results}
+
 
 # Create agent with fake LLM
 agent = ToyAgent()

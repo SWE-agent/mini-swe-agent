@@ -4,8 +4,8 @@ Runs DefaultAgent.run()) with a deterministic scripted model and reads
 the JSON-lines log to confirm the event order: user_input, llm_query, llm_response,
 tool_start, tool_end, then the next llm_query.
 """
+
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -13,10 +13,11 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
-from minisweagent.agents.default import DefaultAgent
-from minisweagent import Environment, Model, __version__
-from minisweagent.models.test_models import make_output, DeterministicModel
 from minisweagent.config.default import AgentConfig
+
+from minisweagent import Environment
+from minisweagent.agents.default import DefaultAgent
+from minisweagent.models.test_models import DeterministicModel, make_output
 
 
 class ScriptedEnv(Environment):
@@ -45,7 +46,7 @@ def main():
     # 2. LLM final answer
     outputs = [
         make_output(
-            content='Here is what I found:\n\n```bash\nls\n```\n\nThe files are:',
+            content="Here is what I found:\n\n```bash\nls\n```\n\nThe files are:",
             actions=[{"bash": {"command": "ls"}}],
             cost=0.01,
         ),
@@ -114,9 +115,7 @@ def main():
             break
         actual = events[i]["kind"]
         if actual != expected:
-            print(
-                f"FAIL: Position {i} expected {expected!r}, got {actual!r}"
-            )
+            print(f"FAIL: Position {i} expected {expected!r}, got {actual!r}")
             passed = False
         else:
             print(f"OK: Position {i} = {actual!r}")
@@ -125,7 +124,7 @@ def main():
     if len(events) > 5:
         next_kind = events[5]["kind"]
         if next_kind == "llm_query":
-            print(f"OK: Event at position 5 is llm_query (next cycle)")
+            print("OK: Event at position 5 is llm_query (next cycle)")
         else:
             print(f"INFO: Event at position 5 is {next_kind!r} (expected llm_query)")
 

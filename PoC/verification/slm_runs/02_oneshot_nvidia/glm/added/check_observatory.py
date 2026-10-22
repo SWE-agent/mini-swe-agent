@@ -78,4 +78,6 @@ assert next(e for e in data("llm_error") if e["error_type"] == "TimeoutError")
 first = data("llm_response")[0]
 assert first["actions"] == ["bash"] and first["reply"]["calls"][0]["name"] == "bash" and "response" in first
 assert ends[-1]["result"] == "y"  # the confirmation answer
-print(f"observatory wiring check passed: {file.name} shows every step's llm_query, llm_response and tool events in order")
+print(
+    f"observatory wiring check passed: {file.name} shows every step's llm_query, llm_response and tool events in order"
+)

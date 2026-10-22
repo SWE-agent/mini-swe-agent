@@ -9,6 +9,7 @@ sys.path.insert(0, "/tmp/agent_path")
 
 # Import and run the agent
 from agent import ToyAgent
+
 agent = ToyAgent()
 result = agent.run("what is 2+2")
 print("Result:", result)

@@ -1,6 +1,6 @@
+import json
 import os
 import tempfile
-import json
 from pathlib import Path
 
 os.environ["OBSERVATORY_RUNS"] = str(Path(tempfile.mkdtemp()) / "runs")

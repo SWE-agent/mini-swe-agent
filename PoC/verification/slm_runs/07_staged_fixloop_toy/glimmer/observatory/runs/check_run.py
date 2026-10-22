@@ -1,4 +1,5 @@
 """Run ToyAgent with scripted model to verify observatory logging."""
+
 import builtins
 import sys
 from pathlib import Path
@@ -8,9 +9,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 # Mock anthropic to avoid import errors
 import types
+
 anthropic_mock = types.ModuleType("anthropic")
+
+
 class _DummyAnthropic:
-    def __init__(self, *a, **kw): pass
+    def __init__(self, *a, **kw):
+        pass
+
+
 anthropic_mock.Anthropic = _DummyAnthropic
 sys.modules["anthropic"] = anthropic_mock
 
@@ -19,11 +26,16 @@ from agent import ToyAgent
 
 # Patch input to automatically answer prompts
 _original_input = builtins.input
+
+
 def _fake_input(prompt=""):
     # Always accept
     print(prompt, end="")
     return "y"
+
+
 builtins.input = _fake_input
+
 
 # Scripted LLM that logs like the real one
 class ScriptedLLM:
@@ -56,6 +68,7 @@ class ScriptedLLM:
             "role": "user",
             "content": [{"type": "tool_result", "tool_use_id": i, "content": out} for i, out in results],
         }
+
 
 # Create agent with scripted model
 agent = ToyAgent()

@@ -3,11 +3,11 @@ index 5c08a88..3bcf775 100644
 --- a/agent.py
 +++ b/agent.py
 @@ -2,13 +2,18 @@
- 
+
  from llm import LLM
  from tools import Registry
 +from observatory import observatory_log
- 
+
 +# Basic system prompt for the agent. The bash tool uses cmd.exe.
  SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
 +
@@ -24,7 +24,7 @@ index 5c08a88..3bcf775 100644
          ("bash", "command", "Run a shell command and return its stdout."),
 @@ -24,29 +29,65 @@ class ToyAgent:
          self.messages: list[dict] = []
- 
+
      def run(self, task: str, max_steps: int = 10) -> str:
 +        # Log user task as a tool interaction
 +        start = observatory_log.tool_start("user_input", params={"prompt": "task"})
@@ -42,7 +42,7 @@ index 5c08a88..3bcf775 100644
 +                    # Ask user for the next step
 +                    return self.ask_user("What next?")
          return ""
- 
+
      def step(self, n: int) -> dict:
          try:
 +            observatory_log.llm_query(n, model=self.llm.model, messages=self.messages)
@@ -73,7 +73,7 @@ index 5c08a88..3bcf775 100644
          if results:
              self.messages.append(self.llm.results_message(results))
          return reply
- 
+
      def fallback_query(self, n: int) -> dict:
 -        return self.llm.chat(self.messages, [], n)
 +        try:
@@ -84,23 +84,23 @@ index 5c08a88..3bcf775 100644
 +            raise
 +        observatory_log.llm_response(n, actions=[], reply=reply)
 +        return reply
- 
+
      def ask_user(self, question: str) -> str:
 +        # Log the prompt read from the user
 +        start = observatory_log.tool_start("user_input", params={"prompt": question})
          answer = input(f"{question} ")
 +        observatory_log.tool_end(start, "user_input", result=answer)
          return answer
- 
+
      def confirm(self, answer: str) -> bool:
 @@ -55,10 +96,10 @@ class ToyAgent:
- 
+
  if __name__ == "__main__":
      import io
 -    import os
      import sys
      from pathlib import Path
- 
+
 -    if not sys.stdin.isatty():  # no terminal (started from the dashboard): answer "y" instead of waiting
 +    # When launched from the dashboard (non-interactive), auto-accept decisions
 +    if not sys.stdin.isatty():

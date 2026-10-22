@@ -1,6 +1,6 @@
 """Final test: can we make observatory_log work with both sys.modules and normal import?"""
+
 import sys
-from pathlib import Path
 
 # Step 1: Pre-register observatory_log in sys.modules BEFORE llm.py imports it
 # This ensures that when llm.py does "from observatory_log import ...",
@@ -11,15 +11,17 @@ _log_mod.llm_response = lambda step, actions=None: "llm_response called"
 sys.modules["observatory_log"] = _log_mod
 
 print("Step 1 - Pre-registered observatory_log in sys.modules:")
-print("  'observatory_log' in sys.modules:", 'observatory_log' in sys.modules)
+print("  'observatory_log' in sys.modules:", "observatory_log" in sys.modules)
 
 # Step 2: Also import the module normally so the name 'observatory_log' is in namespace
 import observatory_log as _log_imported
+
 print("Step 2 - After normal import:")
 print("  '_log_imported' type:", type(_log_imported).__name__)
 
 # Step 3: Now simulate what llm.py does - from observatory_log import llm_query
 from observatory_log import llm_query as _imported_llm_query
+
 print("\nStep 3 - After from import:")
 print("  _imported_llm_query:", _imported_llm_query)
 

@@ -1,14 +1,14 @@
 """Toy coding agent. Entry: ToyAgent.run"""
+
 from llm import LLM
-from tools import Registry
 from observatory_log import (
+    llm_error,
     llm_query,
     llm_response,
-    llm_error,
-    tool_start,
     tool_end,
-    tool_error,
+    tool_start,
 )
+from tools import Registry
 
 SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
 
@@ -36,7 +36,9 @@ class ToyAgent:
             reply = self.fallback_query(n)
         self.messages.append(reply["message"])
         if reply["calls"]:
-            llm_response(n, actions=[c["name"] for c in reply["calls"]], reply=reply["message"], response=reply["message"])
+            llm_response(
+                n, actions=[c["name"] for c in reply["calls"]], reply=reply["message"], response=reply["message"]
+            )
         else:
             llm_response(n, actions=[], reply=reply["message"], response=reply["message"])
         results = []
@@ -64,9 +66,7 @@ class ToyAgent:
 
 if __name__ == "__main__":
     import io
-    import os
     import sys
-    from pathlib import Path
 
     if not sys.stdin.isatty():  # no terminal (started from the dashboard): answer "y" instead of waiting
         sys.stdin = io.StringIO("y\n")
