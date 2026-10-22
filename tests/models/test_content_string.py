@@ -79,3 +79,26 @@ class TestGetContentString:
 
     def test_content_list_skips_non_dict_items(self):
         assert get_content_string({"content": ["bare string", 42]}) == ""
+
+    @pytest.mark.parametrize(
+        ("output", "expected"),
+        [
+            ([{"type": "input_text", "text": "hello"}], "hello"),
+            (
+                [
+                    {"type": "input_text", "text": "before"},
+                    {"type": "input_image", "image_url": "https://example.com/image.png"},
+                    {"type": "input_text", "text": "after"},
+                ],
+                "before\n\nafter",
+            ),
+            ([{"type": "input_image", "image_url": "https://example.com/image.png"}], ""),
+            ([], ""),
+            (
+                [{"type": "input_text", "text": '{"returncode": 0, "output": "ok"}'}],
+                "<returncode>\n0\n<output>\nok",
+            ),
+        ],
+    )
+    def test_responses_multimodal_tool_output(self, output, expected):
+        assert get_content_string({"type": "function_call_output", "call_id": "call_1", "output": output}) == expected
