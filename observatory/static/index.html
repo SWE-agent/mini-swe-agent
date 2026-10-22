@@ -42,7 +42,12 @@ section{min-width:0;min-height:0;display:flex;flex-direction:column}
 .diagram{border-right:1px solid var(--line)}
 .bar{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--muted)}
 .bar strong{color:var(--text);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:650}
-iframe{flex:1;width:100%;border:0;background:var(--bg)}
+.loop{flex:1;position:relative;overflow:hidden;cursor:grab;touch-action:none}
+.loop:active{cursor:grabbing}
+.loop .canvas{position:absolute;left:0;top:0;transform-origin:0 0;width:max-content}
+.loop .empty{padding:28px}
+.loop .hit rect,.loop .hit path,.loop .hit polygon,.loop .hit circle{stroke:var(--accent)!important;stroke-width:3px!important}
+.row.at{cursor:pointer}
 select,button{font:inherit;color:var(--text);background:var(--panel-2);border:1px solid var(--line-2);border-radius:7px;padding:5px 9px;min-width:0}
 select{flex:1;max-width:320px;font-size:12px}
 button{cursor:pointer;white-space:nowrap}
@@ -87,7 +92,7 @@ pre.code{margin:6px 0 0;padding:8px 10px;border-radius:6px;background:var(--pane
   .stats{margin-left:0;flex-wrap:wrap}
   .layout{grid-template-columns:1fr;height:auto}
   .diagram{border-right:0;border-bottom:1px solid var(--line)}
-  iframe{height:60vh;flex:none}
+  .loop{height:60vh;flex:none}
   .runtime{min-height:80vh}
 }
 </style>
@@ -111,8 +116,8 @@ pre.code{margin:6px 0 0;padding:8px 10px;border-radius:6px;background:var(--pane
 </header>
 <main class="layout">
   <section class="diagram">
-    <div class="bar"><strong>Architecture</strong><span>Archify · agent loop & call boundaries</span></div>
-    <iframe src="/architecture" title="agent architecture"></iframe>
+    <div class="bar"><strong>Agent loop</strong><span>from the code · wheel to zoom, drag to move, double-click to fit · click a box to open its code</span></div>
+    <div id="loop" class="loop" title="wheel: zoom · drag: move · double-click: fit"></div>
   </section>
   <section class="runtime">
     <div class="bar">
@@ -134,6 +139,74 @@ const EMPTY = '에이전트를 OBSERVATORY_RUNS 환경변수와 함께 실행하
 const USER = 'user_input';  // agents report user input as this tool action
 let state = null, stream = null, followLatest = true;
 const opened = new Set();  // expanded fields, kept across re-renders
+const loopEl = $('#loop'), atNode = {};  // a logger call's `path:line` -> the [LOG] box drawn for it
+const MERMAID = 'https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs';
+
+// The agent loop the checker drew from the code (verify/loop.mmd). A box with `[LOG] <event> @ <path:line>` lines is
+// marked by the events those logger calls report, and opens its first one in VS Code.
+async function drawLoop() {
+  const r = await fetch('/api/loop');
+  if (!r.ok) { loopEl.append(el('div', 'empty', 'No diagram yet: observatory/run.py has the checker draw verify/loop.mmd.')); return; }
+  const g = await r.json();
+  try {
+    const {default: mermaid} = await import(MERMAID);
+    mermaid.initialize({
+      startOnLoad: false, securityLevel: 'loose',
+      theme: matchMedia('(prefers-color-scheme: light)').matches ? 'default' : 'dark',
+      flowchart: {useMaxWidth: false, wrappingWidth: 1000},  // natural size, labels on one line: zoom instead
+    });
+    loopEl.innerHTML = `<div class="canvas">${(await mermaid.render('loop-svg', g.mermaid)).svg}</div>`;
+  } catch (error) {
+    loopEl.append(el('div', 'empty', `The diagram could not be drawn (${error.message}).`), el('pre', 'code', g.mermaid));
+    return;
+  }
+  const view = panZoom(loopEl, loopEl.firstElementChild);
+  for (const node of loopEl.querySelectorAll('g.node')) {
+    const ats = [...node.textContent.matchAll(/\[LOG\][^@]*@\s*(\S+?:\d+)/g)].map(m => m[1]);
+    if (!ats.length) continue;
+    for (const at of ats) atNode[at] = node;
+    node.style.cursor = 'pointer';
+    node.addEventListener('click', () => { if (!view.dragged()) location.href = `vscode://file/${g.root}/${ats[0]}`; });
+  }
+}
+
+// Wheel to zoom around the pointer, drag to move, double-click to fit the panel again.
+function panZoom(frame, canvas) {
+  let s = 1, x = 0, y = 0, drag = null, moved = false;
+  const apply = () => { canvas.style.transform = `translate(${x}px, ${y}px) scale(${s})`; };
+  const fit = () => {
+    const w = canvas.scrollWidth, h = canvas.scrollHeight;
+    s = Math.min(frame.clientWidth / w, frame.clientHeight / h, 1);
+    x = (frame.clientWidth - w * s) / 2; y = 12;
+    apply();
+  };
+  frame.addEventListener('wheel', e => {
+    e.preventDefault();
+    const r = frame.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+    const k = Math.min(Math.max(s * (e.deltaY < 0 ? 1.15 : 1 / 1.15), 0.1), 8) / s;
+    x = mx - (mx - x) * k; y = my - (my - y) * k; s *= k;
+    apply();
+  }, {passive: false});
+  frame.addEventListener('pointerdown', e => { drag = {x: e.clientX - x, y: e.clientY - y, sx: e.clientX, sy: e.clientY}; moved = false; });
+  addEventListener('pointermove', e => {
+    if (!drag) return;
+    moved ||= Math.abs(e.clientX - drag.sx) + Math.abs(e.clientY - drag.sy) > 4;
+    x = e.clientX - drag.x; y = e.clientY - drag.y;
+    apply();
+  });
+  addEventListener('pointerup', () => { drag = null; });
+  frame.addEventListener('dblclick', fit);
+  fit();
+  return {dragged: () => moved};
+}
+
+// Mark the box whose [LOG] line reported an event (its `at`, relative to the agent or absolute).
+function highlight(at) {
+  const key = at && Object.keys(atNode).find(k => at === k || at.endsWith('/' + k) || k.endsWith('/' + at));
+  if (!key) return;
+  loopEl.querySelectorAll('.hit').forEach(n => n.classList.remove('hit'));
+  atNode[key].classList.add('hit');
+}
 
 function el(tag, cls, text) {
   const n = document.createElement(tag);
@@ -175,6 +248,7 @@ function stepOf(n) {
 
 function apply(ev) {
   state.raw.push(ev);
+  highlight(ev.at);
   const d = ev.data || {};
   if (ev.kind === 'llm_query') { state.counts.llm++; stepOf(ev.step).llm.push({query: ev, response: null, error: null}); }
   else if (ev.kind === 'llm_response' || ev.kind === 'llm_error') {
@@ -183,6 +257,10 @@ function apply(ev) {
     if (ev.kind === 'llm_error') state.counts.errors++;
     if (typeof d.cost === 'number') state.counts.cost += d.cost;
   } else if (ev.kind === 'tool_start') { state.counts[d.action === USER ? 'user' : 'tool']++; stepOf(ev.step).tools.push({start: ev, end: null}); }
+  else if (ev.kind === 'user_input') {  // one event: shown like a finished user_input action
+    state.counts.user++;
+    stepOf(ev.step).tools.push({start: {...ev, data: {action: USER, params: d.prompt}}, end: {...ev, kind: 'tool_end', data: {action: USER, result: d.answer}}});
+  }
   else if (ev.kind === 'tool_end' || ev.kind === 'tool_error') {
     const t = stepOf(ev.step).tools.findLast(x => !x.end && x.start.data.action === d.action);
     if (t) t.end = ev;
@@ -235,7 +313,7 @@ function llmRow(c) {
   const meta = el('div', 'meta', r ? cost + fmtDur(r.duration_seconds) : c.error ? fmtDur(c.error.data.duration_seconds) : '');
   meta.append(el('span', `status ${c.response ? 'ok' : c.error ? 'err' : 'pending'}`));
   row.append(el('span', 'tag', 'LLM'), main, meta);
-  return row;
+  return pointsAt(row, c.query.at);
 }
 
 function toolRow(t) {
@@ -252,6 +330,14 @@ function toolRow(t) {
   const meta = el('div', 'meta', e ? fmtDur(e.duration_seconds) : '');
   meta.append(el('span', `status ${failed ? 'err' : t.end ? 'ok' : 'pending'}`));
   row.append(el('span', 'tag', user ? 'USER' : 'TOOL'), main, meta);
+  return pointsAt(row, t.start.at);
+}
+
+function pointsAt(row, at) {
+  if (!at) return row;
+  row.classList.add('at');
+  row.title = at;
+  row.addEventListener('click', e => { if (!e.target.closest('details')) highlight(at); });
   return row;
 }
 
@@ -268,9 +354,9 @@ function renderStep(s) {
 function renderRaw() {
   if (rawEl.hidden) return;
   rawEl.replaceChildren(...state.raw.map(ev => {
-    const kind = ev.kind.startsWith('llm') ? 'llm' : ev.data?.action === USER ? 'user' : 'tool';
+    const kind = ev.kind.startsWith('llm') ? 'llm' : ev.kind === USER || ev.data?.action === USER ? 'user' : 'tool';
     const row = el('div', `log${ev.kind.endsWith('error') ? ' error' : ''}`);
-    row.append(el('span', 't', fmtTime(ev.t)), el('span', `k ${kind}`, kind.toUpperCase()), el('span', 'm', `${ev.kind}${ev.step != null ? ` step=${ev.step}` : ''}\n${JSON.stringify(ev.data)}`));
+    row.append(el('span', 't', fmtTime(ev.t)), el('span', `k ${kind}`, kind.toUpperCase()), el('span', 'm', `${ev.kind}${ev.step != null ? ` step=${ev.step}` : ''}${ev.at ? ` @ ${ev.at}` : ''}\n${JSON.stringify(ev.data)}`));
     return row;
   }));
 }
@@ -312,7 +398,7 @@ $('#task-form').addEventListener('submit', async e => {
 });
 fetch('/api/agent').then(r => r.json()).then(a => { $('#task-form').hidden = !a.enabled; });
 resetState(null);
-refreshRuns();
+drawLoop().then(refreshRuns);
 setInterval(refreshRuns, 2000);
 </script>
 </body>

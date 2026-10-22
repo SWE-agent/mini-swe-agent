@@ -13,7 +13,7 @@ LLM 에이전트(mini-swe-agent, browser-use, smolagents 등)에 로그를 자�
 작업은 두 부분으로 나뉩니다.
 
 1. **Agent Observatory 키트** (`observatory/`): 에이전트 저장소에 넣고 명령 하나를 실행하면, Claude Code 세션이 그 에이전트에 로거를 심고 검증용 기준점(`verify-anchors.json`)과 구조도를 만듭니다. 로그는 대시보드에서 실시간으로 볼 수 있습니다.
-2. **정적 검증기** (`PoC/verification/flow_verify.py`): 기준점에서 출발해 세 값이 코드 안에서 흘러가는 경로를 따라가며, 값이 쓰이기 전에 로그에 통째로 기록되는지 판정합니다. LLM을 쓰지 않는 결정적 분석입니다.
+2. **정적 검증기** (`observatory/flow_verify.py`): 기준점에서 출발해 세 값이 코드 안에서 흘러가는 경로를 따라가며, 값이 쓰이기 전에 로그에 통째로 기록되는지 판정합니다. LLM을 쓰지 않는 결정적 분석입니다.
 
 ```
 에이전트 저장소
@@ -207,7 +207,7 @@ mini-swe-agent에서 세션이 생성한 예:
 ### 4.1 실행
 
 ```bash
-uv run PoC/verification/flow_verify.py <소스 루트> <verify-anchors.json> <출력 폴더> --only <분석할 파일들>
+uv run observatory/flow_verify.py <소스 루트> <verify-anchors.json> <출력 폴더> --only <분석할 파일들>
 ```
 
 출력: `report.html`(흐름별 카드와 경로, 칸을 누르면 VS Code에서 해당 줄이 열림), `report.json`.
@@ -370,7 +370,7 @@ uv run PoC/verification/flow_verify.py <소스 루트> <verify-anchors.json> <�
 | 파일 | 위치 |
 |---|---|
 | 키트 | `mini-swe-agent/observatory/` (다른 에이전트에는 같은 폴더를 복사) |
-| 검증기 | `mini-swe-agent/PoC/verification/flow_verify.py` |
+| 검증기 | `mini-swe-agent/observatory/flow_verify.py` |
 | 런타임 추적 (정답지) | `mini-swe-agent/PoC/verification/flow_trace.py` |
 | toy agent | `mini-swe-agent/PoC/verification/toy_agent/` |
 | 리포트 | `mini-swe-agent/PoC/verification/out_verify*/report.html` |

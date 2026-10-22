@@ -30,17 +30,21 @@ Verdict per (value, use), over every path between them:
   누락        some path does not, and no log call touches the value
 
 usage (repo root):
-  uv run PoC/verification/flow_verify.py PoC/verification/toy_agent \\
+  uv run observatory/flow_verify.py PoC/verification/toy_agent \\
       PoC/verification/toy_agent/observatory/diagram/verify-anchors.json PoC/verification/out_verify \\
       --only agent.py llm.py tools.py
-outputs: report.html, report.json
+outputs: report.html, report.json, graph.json (the graph per function, with its log calls), loop.json and loop.mmd (the agent
+loop of that graph, drawn as a Mermaid flowchart for the dashboard)
 """
 
 import argparse
 import ast
 import builtins
+import copy
 import html
 import json
+import re
+import sys
 from collections import deque
 from pathlib import Path
 
@@ -61,17 +65,42 @@ PURE = {
 }  # fmt: skip
 NO_DATA = {"len", "type", "isinstance", "issubclass", "id", "bool", "hash", "callable", "hasattr"}
 MUTATORS = {"append", "extend", "insert", "update", "add", "setdefault", "appendleft", "put"}
+# library calls that only compute a value from their arguments: no effect outside the process, so never a tool.
+# A whole module, or one function (a constructor or a method of what it builds). Calls not listed may have an effect.
+PURE_MODULES = {
+    "json", "re", "copy", "math", "textwrap", "string", "itertools", "functools", "collections", "base64", "difflib",
+    "html", "operator", "statistics", "fnmatch", "shlex", "unicodedata", "dataclasses", "enum", "typing",
+}  # fmt: skip
+PURE_CALLS = {
+    "pathlib.Path", "pathlib.PurePath", "pathlib.PurePosixPath", "pathlib.PureWindowsPath",
+    "jinja2.Template", "jinja2.Template.render", "jinja2.StrictUndefined",
+    "concurrent.futures.as_completed", "concurrent.futures.wait",
+}  # fmt: skip
+
+
+def pure_library(dotted: str) -> bool:
+    return dotted.split(".")[0] in PURE_MODULES or dotted in PURE_CALLS
 
 
 class Verifier:
     def __init__(self, root: Path, files: list[Path], anchors: dict):
         self.root, self.anchors, self.logger = root, anchors, anchors.get("logger", "observatory_log")
         self.trees = {f.relative_to(root).as_posix(): ast.parse(f.read_text(encoding="utf-8")) for f in files}
+        self.relocate(anchors.get("sources", []))
         self.modules = {self.module_id(f) for f in self.trees}
         self.funcs, self.classes, self.module_funcs, self.imports = {}, {}, {}, {}
         self.parent, self.own_names = {}, {}  # nested function -> enclosing function, names local to it
-        for file, tree in self.trees.items():
-            self.scan(file, tree)
+        entry_file = anchors["entry"]["path"]
+        # the entry's file first: of two classes with the same name, the one the agent runs keeps the plain name
+        for file in sorted(self.trees, key=lambda f: not (f == entry_file or entry_file.endswith(f"/{f}"))):
+            self.scan(file, self.trees[file])
+        self.reaching = self.reaching_anchors(anchors.get("sources", []))
+        self.anchored_impl = set()  # project functions an anchored call runs: their own calls are not tools
+        self.llm_objects = set()  # receivers like self.model whose method reaches an anchor: the LLM's own object
+        self.wrappers = []  # (anchor, project functions it calls): an anchor at a wrapper of the SDK call
+        self.model_calls = []  # (the agent's call on its model object as an anchor, the model methods it reaches)
+        self.anchor_func = {}  # anchor -> the function its call is in
+        self.object_anchors = set()  # (call as written, class) of anchored calls on an object the agent holds
         self.edges, self.info, self.partial = set(), {}, set()
         self.sources, self.sinks, self.logs = set(), set(), set()
         self.var_types, self.field_types = {}, {}
@@ -100,8 +129,158 @@ class Verifier:
         for n, param in self.passed:  # an object changed through a parameter is the caller's object
             if param in self.mutated:
                 self.edge({param}, n)
-        if missing := [a for a in anchors.get("sources", []) if json.dumps(a) not in self.found]:
-            raise SystemExit(f"anchors not found in the code: {missing}")
+        # an anchor the code does not show is left out (and reported), so that the rest is still checked
+        self.missing_anchors = [a for a in anchors.get("sources", []) if json.dumps(a) not in self.found]
+        if self.missing_anchors:
+            print(f"anchors not found in the code: {self.missing_anchors}", file=sys.stderr)
+
+    @classmethod
+    def build(cls, root: Path, files: list[Path], anchors: dict) -> "Verifier":
+        """A verifier whose LLM anchors do not depend on the level they were written at, so that the same code gets the
+        same verdict whichever call the anchors name:
+          - an anchor at a wrapper the agent creates (self.llm.chat -> LLM.chat) moves down to the SDK call inside it;
+          - an anchor at the SDK call inside a model object the agent was given (litellm.completion in
+            LitellmModel.query, reached from self.model.query) moves up to the agent's call on that object, since which
+            model class it gets the code does not show;
+          - an anchor at such a call on the model object (self.model.generate) stands for every call written the
+            same way, so that a call the anchors leave out is followed too."""
+        v = cls.normalized(root, files, anchors)
+        known = {(a["path"], a["line"], a["call"]) for a in v.anchors["sources"]}
+        if extra := [a for a in v.same_calls() if (a["path"], a["line"], a["call"]) not in known]:
+            return cls(root, files, {**anchors, "sources": copy.deepcopy(v.anchors["sources"]) + extra})
+        return v
+
+    def same_calls(self) -> list[dict]:
+        """Every call written like an anchored call on the model object, in the same class, a base or a subclass of it."""
+        found = {
+            (f["file"], n.lineno, ast.unparse(n.func))
+            for f in self.funcs.values()
+            for n in ast.walk(f["node"])
+            if isinstance(n, ast.Call)
+            and any(ast.unparse(n.func) == expr and self.related(f["cls"], cls) for expr, cls in self.object_anchors)
+        }
+        return [{"kind": "llm_response", "path": p, "line": line, "call": call} for p, line, call in sorted(found)]
+
+    @classmethod
+    def normalized(cls, root: Path, files: list[Path], anchors: dict) -> "Verifier":
+        v = cls(root, files, copy.deepcopy(anchors))
+        moved, new = [], []
+        for anchor, targets in v.wrappers:
+            if found := v.inner_calls(targets):
+                moved.append(json.dumps(anchor))
+                new += [a for a in found if a not in new]
+        for call, targets in v.model_calls:
+            inside = v.closure(targets)
+            if lifted := [
+                a for a, q in v.anchor_func.items() if q in inside and json.loads(a)["kind"] == "llm_response"
+            ]:
+                moved += lifted
+                new += [call] if call not in new else []
+        if not moved:
+            return v
+        sources = [a for a in copy.deepcopy(v.anchors["sources"]) if json.dumps(a) not in moved]
+        return cls(root, files, {**anchors, "sources": sources + [a for a in new if a not in sources]})
+
+    def closure(self, funcs) -> set[str]:
+        """These functions and the project functions they call, directly or not."""
+        inside, todo = set(), list(funcs)
+        while todo:
+            if (q := todo.pop()) not in inside:
+                inside.add(q)
+                todo += self.calls.get(q, ())
+        return inside
+
+    def inner_calls(self, targets: list[str]) -> list[dict]:
+        """The SDK calls inside these functions (and what they call): external calls that take what the functions were
+        given (the messages) and whose result reaches what they return, not built from another such call's result (a
+        parser of the reply)."""
+        fwd = {}
+        for a, b in self.edges:
+            fwd.setdefault(a, set()).add(b)
+
+        def reach(starts):
+            seen, todo = set(starts), list(starts)
+            while todo:
+                for m in fwd.get(todo.pop(), ()):
+                    if m not in seen:
+                        seen.add(m)
+                        todo.append(m)
+            return seen
+
+        inside = self.closure(targets)
+        given = reach(
+            {n for t in targets for n in self.info if n.startswith(f"{t}:") and self.info[n]["kind"] == "var"}
+        )
+        rets = {self.ret(t) for t in targets}
+        cands = {
+            k
+            for k, back in self.ext_ret.items()
+            if self.info[k]["func"] in inside and not self.info[k]["cat"] and k in given and reach({back}) & rets
+        }
+        after = reach({self.ext_ret[k] for k in cands}) - {self.ext_ret[k] for k in cands}
+        return [
+            {
+                "kind": "llm_response",
+                "path": self.info[k]["file"],
+                "line": self.info[k]["line"],
+                "call": k.removeprefix("[외부 호출] ").rsplit(" @ ", 1)[0],
+            }
+            for k in sorted(cands - after)
+        ]
+
+    def relocate(self, sources: list[dict]) -> None:
+        """Anchors are written before the logging is added, which moves the lines: find each anchored call again by its
+        file and expression. Of the calls with the same expression, anchors in line order take the calls in line order
+        when there are as many of both, else each the nearest one. A path may carry the repository's subdirectory."""
+        groups = {}
+        for a in sources:
+            a["path"] = next((f for f in self.trees if a["path"] == f or a["path"].endswith(f"/{f}")), a["path"])
+            groups.setdefault((a["path"], a["call"]), []).append(a)
+        for (path, call), group in groups.items():
+            if path not in self.trees:
+                continue
+            lines = sorted(
+                {
+                    n.lineno
+                    for n in ast.walk(self.trees[path])
+                    if isinstance(n, ast.Call) and ast.unparse(n.func) == call
+                }
+            )
+            if not lines or all(a["line"] in lines for a in group):
+                continue
+            group.sort(key=lambda a: a["line"])
+            for i, a in enumerate(group):
+                a["line"] = lines[i] if len(group) == len(lines) else min(lines, key=lambda n: abs(n - a["line"]))
+
+    def reaching_anchors(self, sources: list[dict]) -> set[str]:
+        """Project functions that make an anchored call, directly or through a method of their class or a function of
+        the project they call by name. A method of an object whose type the code does not show (self.model.query) is
+        resolved to these only, so that an anchor at the SDK call inside a model class still reaches the agent."""
+        at = {(a["path"], a["line"], a["call"]) for a in sources}
+        reaching = {
+            q
+            for q, f in self.funcs.items()
+            if any(
+                isinstance(n, ast.Call) and (f["file"], n.lineno, ast.unparse(n.func)) in at
+                for n in ast.walk(f["node"])
+            )
+        }
+        while new := {
+            q
+            for q, f in self.funcs.items()
+            if q not in reaching
+            and any(
+                isinstance(n, ast.Call)
+                and isinstance(n.func, ast.Attribute)
+                and isinstance(n.func.value, ast.Name)
+                and n.func.value.id == "self"
+                and f["cls"]
+                and set(self.method(f["cls"], n.func.attr)) & reaching
+                for n in ast.walk(f["node"])
+            )
+        }:
+            reaching |= new
+        return reaching
 
     # ---------------------------------------------------------------- project structure
     @staticmethod
@@ -142,14 +321,15 @@ class Verifier:
                 self.module_funcs[(module, node.name)] = q
                 self.nested(q)
             elif isinstance(node, ast.ClassDef):
+                name = node.name if node.name not in self.classes else f"{module}:{node.name}"  # a second `Agent`
                 methods = {}
                 for m in node.body:
                     if isinstance(m, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                        methods[m.name] = f"{node.name}.{m.name}"
-                        self.funcs[methods[m.name]] = {"node": m, "file": file, "cls": node.name}
+                        methods[m.name] = f"{name}.{m.name}"
+                        self.funcs[methods[m.name]] = {"node": m, "file": file, "cls": name}
                         self.nested(methods[m.name])
                 bases = [ast.unparse(b).split(".")[-1] for b in node.bases]
-                self.classes[node.name] = {"module": module, "methods": methods, "bases": bases}
+                self.classes[name] = {"module": module, "methods": methods, "bases": bases}
 
     def nested(self, q: str) -> None:
         """Functions defined inside q: registered as q.<name>; names they do not bind are q's (a closure)."""
@@ -266,7 +446,7 @@ class Verifier:
                 t = self.var_types[(self.q, f.id)]
                 return t if t[0] in ("funcs", "ext") else ("value", None)
             if g := self.global_name(f.id):
-                return g if g[0] != "module" else ("value", None)
+                return ("log",) if g[0] == "logger" else g if g[0] != "module" else ("value", None)
             if f.id in NO_DATA:
                 return ("nodata",)
             if f.id in PURE:
@@ -292,6 +472,19 @@ class Verifier:
                 return ("ext", f"{base[1]}.{f.attr}")
             if base and base[0] == "module":
                 return self.module_attr(base[1], f.attr) or ("value", f.value)
+            super_call = isinstance(f.value, ast.Call) and ast.unparse(f.value.func) == "super"
+            if (
+                base is None
+                and not super_call
+                and (
+                    methods := sorted(
+                        m
+                        for name, c in self.classes.items()
+                        if (m := c["methods"].get(f.attr)) in self.reaching and not self.related(name)
+                    )
+                )
+            ):
+                return ("funcs", methods)  # self.model.query: the methods of that name that reach an anchored call
             return ("mutator", f.value) if f.attr in MUTATORS else ("value", f.value)
         if isinstance(f, ast.Subscript):
             base = self.type_of(f.value)
@@ -324,12 +517,19 @@ class Verifier:
         q = e["function"] if e["function"] in self.funcs else next(k for k in self.funcs if k.endswith(e["function"]))
         self.entry_q = q
         self.enter(q)
-        a = self.funcs[q]["node"].args
-        for p in [*a.posonlyargs, *a.args, *a.kwonlyargs]:
-            if p.arg in e.get("inputs", []):
-                src = self.node(f"[User Input] {p.arg} (entry parameter)", "source", p.lineno, cat="user_input")
-                self.sources.add(src)
-                self.edge({src}, self.local(q, p.arg, p.lineno))
+        # the task is a parameter of the entry, or, when the agent gets it when it is built (Agent(task=...).run()),
+        # of its class's __init__
+        inits = self.method(self.funcs[q]["cls"], "__init__") if self.funcs[q]["cls"] else []
+        for f in [q, *inits]:
+            a = self.funcs[f]["node"].args
+            for p in [*a.posonlyargs, *a.args, *a.kwonlyargs]:
+                if p.arg in e.get("inputs", []) and not any(
+                    s.startswith(f"[User Input] {p.arg} ") for s in self.sources
+                ):
+                    where = "entry parameter" if f == q else "constructor parameter"
+                    src = self.node(f"[User Input] {p.arg} ({where})", "source", p.lineno, q=f, cat="user_input")
+                    self.sources.add(src)
+                    self.edge({src}, self.local(f, p.arg, p.lineno))
         out = self.node(f"[최종 출력] return of {q}", "sink", self.funcs[q]["node"].lineno, use="최종 출력")
         self.sinks.add(out)
         self.edge({self.ret(q)}, out)
@@ -442,6 +642,9 @@ class Verifier:
                     self.reads(cond)
             parts = [e.key, e.value] if isinstance(e, ast.DictComp) else [e.elt]
             return set().union(*(self.reads(p) for p in parts))
+        if isinstance(e, ast.IfExp):
+            self.reads(e.test)
+            return self.reads(e.body) | self.reads(e.orelse)  # the condition picks a value, it is not part of it
         if isinstance(e, ast.Compare):
             for x in [e.left, *e.comparators]:
                 self.reads(x)
@@ -472,6 +675,8 @@ class Verifier:
         every = set().union(*pos, *kws.values())
         loc = f"{self.file}:{c.lineno}"
         kind = self.callee(c.func)
+        if kind[0] == "ext" and pure_library(kind[1]):
+            kind = ("pure",)  # json.loads, re.sub, Template(...).render: a value, not an action
         anchor = self.anchor(c)
         if kind[0] == "log":
             log = self.node(f"[LOG] {ast.unparse(c.func)} @ {loc}", "log", c.lineno)
@@ -482,6 +687,23 @@ class Verifier:
             return set()
         if anchor:
             self.found.add(json.dumps(anchor))
+            self.anchor_func[json.dumps(anchor)] = self.q
+            receiver = c.func.value if isinstance(c.func, ast.Attribute) else None
+            if (
+                anchor["kind"] == "llm_response"
+                and kind[0] == "value"
+                and not (receiver is None or (isinstance(receiver, ast.Name) and receiver.id == "self"))
+            ):  # a method of an object the agent holds: self.model.generate
+                self.object_anchors.add((ast.unparse(c.func), self.cls))
+            if kind[0] == "funcs":  # an anchor at a wrapper (self.llm.chat): what it runs inside is the LLM call
+                self.anchored_impl |= set(kind[1])
+                self.wrappers.append((anchor, kind[1]))
+        elif self.reached_model(c.func, kind):  # self.model.query that reaches an anchor: the same as anchored there
+            self.anchored_impl |= set(kind[1])
+            self.llm_objects.add(ast.unparse(c.func.value))
+            call = {"kind": "llm_response", "path": self.file, "line": c.lineno, "call": ast.unparse(c.func)}
+            if self.related(self.cls, self.funcs[self.entry_q]["cls"]):  # the agent's own calls, not a tool's
+                self.model_calls.append((call, kind[1]))
         if kind[0] in ("funcs", "class") and not anchor:
             targets = kind[1] if kind[0] == "funcs" else self.method(kind[1], "__init__")
             for t in targets:
@@ -523,6 +745,24 @@ class Verifier:
         else:
             result = every | (self.reads(kind[1]) if kind[0] == "value" and kind[1] is not None else set())
         return result
+
+    def related(self, cls: str | None, to: str | None = None) -> bool:
+        """cls is `to` (default: the class being read), a base or a subclass of it: an object stored on self is not self."""
+        to = to or self.cls
+        return bool(cls and to) and (cls in self.mro(to) or to in self.mro(cls))
+
+    def reached_model(self, f, kind) -> bool:
+        """A method of an object whose type the code does not show, resolved to the methods that reach an anchor, of a
+        class that is not the agent's own (the entry function's): the model the agent was given, such as self.model."""
+        agent = self.funcs[self.entry_q]["cls"]
+        return (
+            kind[0] == "funcs"
+            and isinstance(f, ast.Attribute)
+            and not (isinstance(f.value, ast.Name) and f.value.id == "self")
+            and self.type_of(f.value) is None
+            and set(kind[1]) <= self.reaching
+            and not any(self.related(self.funcs[m]["cls"], agent) for m in kind[1])
+        )
 
     def coroutine(self, e) -> bool:
         """A call to an anchored or project async function that is not awaited: a coroutine handed to another call."""
@@ -567,7 +807,8 @@ class Verifier:
         """Tool calls: between two LLM calls. They run in the agent loop (a loop that also calls the LLM, directly or
         through the functions it calls), their arguments come from an LLM reply (forward from it) and what they
         return reaches the next LLM call or the final output (backward from those). Methods of the LLM's own object
-        are excluded, and of a chain of such calls only the first after the reply is kept."""
+        are excluded, and so are the calls inside an anchored wrapper (the SDK call in LLM.chat when the anchor is
+        self.llm.chat); of a chain of such calls only the first after the reply is kept."""
         fwd, back = {}, {}
         for a, b in self.edges:
             fwd.setdefault(a, set()).add(b)
@@ -586,7 +827,7 @@ class Verifier:
         replies = {self.ext_ret[k] for k in llm}
         ahead = reach(replies, fwd)
         behind = reach(llm | {k for k in self.sinks if self.info[k]["use"] == "최종 출력"}, back)
-        own = {self.info[k]["recv"] for k in llm}
+        own = {self.info[k]["recv"] for k in llm} | self.llm_objects
 
         def region(loop):  # functions run by one pass of the loop
             funcs, todo = set(), list(self.loop_calls.get(loop, ()))
@@ -601,10 +842,12 @@ class Verifier:
 
         loops = set(self.loop_calls) | {loop for k in self.ext_ret for loop in self.info[k]["loops"]}
         agent = [(loop, f) for loop in loops for f in [region(loop)] if any(in_loop(k, loop, f) for k in llm)]
+        inside_llm = reach(self.anchored_impl, self.calls)
         cands = {
             k
             for k, r in self.ext_ret.items()
             if not self.info[k]["cat"]
+            and self.info[k]["func"] not in inside_llm
             and k in ahead
             and r in behind
             and self.info[k]["recv"] not in own
@@ -647,9 +890,15 @@ class Verifier:
         for a, b in self.edges:
             fwd.setdefault(a, set()).add(b)
             back.setdefault(b, set()).add(a)
-        recorded = {a for a, b in self.edges if b in self.logs and (a, b) not in self.partial}
-        while new := {n for n, param in self.passed if param in recorded} - recorded:  # logged by a helper function
-            recorded |= new
+
+        def recorded_by(logs: set) -> set:
+            r = {a for a, b in self.edges if b in logs and (a, b) not in self.partial}
+            while new := {n for n, param in self.passed if param in r} - r:  # logged by a helper function
+                r |= new
+            return r
+
+        tool_logs = {m for m in self.logs if short(m).removeprefix("[LOG] ").split(".")[-1].startswith("tool_")}
+        recorded, recorded_tool = recorded_by(self.logs), recorded_by(tool_logs)
 
         def reach(start, adj, avoid=frozenset()):
             seen, todo = {start}, [] if start in avoid else [start]
@@ -660,7 +909,7 @@ class Verifier:
                         todo.append(m)
             return seen
 
-        def path(a, b, avoid=frozenset()):
+        def path(a, b, adj, avoid=frozenset()):
             prev, dq = {a: None}, deque([] if a in avoid else [a])
             while dq:
                 n = dq.popleft()
@@ -670,7 +919,7 @@ class Verifier:
                         out.append(n)
                         n = prev[n]
                     return out[::-1]
-                for m in fwd.get(n, ()):
+                for m in adj.get(n, ()):
                     if m not in prev and m not in avoid:
                         prev[m] = n
                         dq.append(m)
@@ -694,30 +943,35 @@ class Verifier:
             self.info[k]["use"] = USE[self.info[k]["cat"]]
         targets = boundary | {k for k in self.sinks if self.info[k]["use"] == "최종 출력"}
         reached = {s: targets & reach(s, fwd) for s in found}
-        for k, r in self.ext_ret.items():  # what a call fills in place does not go back into that same call
-            if r in reached and k in reached[r] and k not in reach(r, fwd, self.filled.get(k, set())):
+
+        def unfilled(s, k):  # what a call fills in place does not go back into that same call
+            return fwd | {s: fwd.get(s, set()) - self.filled.get(k, set())} if self.ext_ret.get(k) == s else fwd
+
+        for k, r in self.ext_ret.items():
+            if r in reached and k in reached[r] and k not in reach(r, unfilled(r, k)):
                 reached[r].discard(k)
 
-        # Around a tool only the tool's own logs count: on the way in, a value recorded whole that goes to tools only
-        # (not the whole LLM reply, which also goes back to the LLM); on the way out, a value recorded whole that comes
-        # from tool results only (not the message list that mixes them with the task and the replies).
-        tool_rets = {self.ext_ret[k] for k in tools}
-        into_others = set().union(*(reach(k, back) for k in targets - tools))
-        from_others = set().union(*(reach(s, fwd) for s in found if s not in tool_rets))
+        # Around a tool only the tool's own logs count (tool_start, tool_end, tool_error): what goes into a tool or comes
+        # out of it is recorded when one of them records it whole, not the LLM reply logged by llm_response nor the
+        # message list logged by llm_query.
+        all_tools = tools | {k for k in boundary if self.info[k]["cat"] == "tool_response"}  # found, or anchored
+        tool_rets = {self.ext_ret[k] for k in all_tools}
 
         rows = []
         for s in sorted(found, key=lambda n: (list(KIND).index(self.info[n]["cat"]), n)):
             down = reach(s, fwd)
             for k in sorted(reached[s]):
                 on_path = down & reach(k, back)
-                own = (on_path - into_others) if k in tools else (on_path - from_others) if s in tool_rets else on_path
-                rec = recorded & own
-                full = {m for n in on_path & rec for m in fwd.get(n, ()) if m in self.logs}
-                pieces = {m for n in own for m in fwd.get(n, ()) if m in self.logs} - full
-                mixed = {m for n in on_path & recorded - own for m in fwd.get(n, ()) if m in self.logs}
-                gap = k in reach(s, fwd, rec)  # a path on which nothing is recorded whole
+                at_tool = k in all_tools or s in tool_rets
+                counted = tool_logs if at_tool else self.logs
+                rec = (recorded_tool if at_tool else recorded) & on_path
+                full = {m for n in rec for m in fwd.get(n, ()) if m in counted}
+                pieces = {m for n in on_path for m in fwd.get(n, ()) if m in counted} - full
+                mixed = {m for n in on_path & recorded - rec for m in fwd.get(n, ()) if m in self.logs - counted}
+                adj = unfilled(s, k)
+                gap = k in reach(s, adj, rec)  # a path on which nothing is recorded whole
                 status = "covered" if not gap else "partial" if pieces else "bypass"
-                p = path(s, k, rec) if gap else path(s, k)
+                p = path(s, k, adj, rec) if gap else path(s, k, adj)
                 steps = [step(n) for n in p]
                 if self.info[k]["use"] == "최종 출력" and len(p) >= 3:  # point at the return statement, not the def
                     line = self.return_lines.get((self.info[k]["func"], p[-3]), self.info[k]["line"])
@@ -749,6 +1003,204 @@ class Verifier:
 
 def short(n: str) -> str:
     return n.split(" @ ")[0]
+
+
+def graph(v: Verifier, rows: list[dict]) -> dict:
+    """The data-flow graph between the anchors and their uses, one node per function, field or external call.
+
+    A node carries its code location and the log calls in it (event, line, the values it records and whether whole), so
+    that a diagram drawn from it shows where each logged event comes from. An edge is a value moving between two nodes.
+    """
+    fwd, back = {}, {}
+    for a, b in v.edges:
+        fwd.setdefault(a, set()).add(b)
+        back.setdefault(b, set()).add(a)
+
+    def reach(starts, adj):
+        seen, todo = set(starts), list(starts)
+        while todo:
+            for m in adj.get(todo.pop(), ()):
+                if m not in seen:
+                    seen.add(m)
+                    todo.append(m)
+        return seen
+
+    on = reach({r["source"] for r in rows}, fwd) & reach({r["sink"] for r in rows}, back)
+    nodes = {}
+
+    def function(q: str) -> str:
+        f = v.funcs[q]["node"]
+        role = "entry" if q == v.entry_q else "function"
+        nodes.setdefault(q, {"id": q, "role": role, "label": q, "path": v.funcs[q]["file"], "line": f.lineno,
+                             "end_line": f.end_lineno, "logs": [], "gaps": []})  # fmt: skip
+        return q
+
+    def group(n: str) -> str:
+        info = v.info[n]
+        if info["kind"] == "var":
+            return function(info["func"])
+        if info["kind"] == "field":
+            gid, extra = n, {"role": "state", "label": n}
+        elif n.startswith("[User Input]"):
+            gid, extra = n, {"role": "user_input", "label": n.split("] ")[1].split(" (")[0]}
+        elif n.startswith("[최종 출력]"):
+            gid, extra = "final output", {"role": "final_output", "label": f"return of {v.entry_q}"}
+        else:
+            call, loc = n.split("] ", 1)[1].split(" @ ")
+            cat = info.get("cat") or v.info.get(f"[외부 호출] {call} @ {loc}", {}).get("cat")
+            gid, extra = f"{call} @ {loc}", {"role": cat or "external", "label": call}
+        nodes.setdefault(
+            gid,
+            {
+                "id": gid,
+                **extra,
+                "path": info["file"],
+                "line": info["line"],
+                "in": info["func"],
+                "logs": [],
+                "gaps": [],
+            },
+        )
+        return gid
+
+    edges = {}
+    for a, b in v.edges:
+        if a in on and b in on and (ga := group(a)) != (gb := group(b)):
+            name = a if v.info[a]["kind"] in ("var", "field") else b
+            edges.setdefault((ga, gb), set()).add(name.split(":")[-1].split(".")[-1].split(" @ ")[0].strip("<>"))
+    for m in sorted(v.logs, key=lambda m: (v.info[m]["file"], v.info[m]["line"])):
+        info = v.info[m]
+        records = sorted({(a.split(":")[-1].split(".")[-1], (a, m) not in v.partial) for a in back.get(m, ())})
+        nodes[function(info["func"])]["logs"].append(
+            {
+                "event": short(m).removeprefix("[LOG] ").split(".")[-1],
+                "at": f"{info['file']}:{info['line']}",
+                "code": v.line(info["file"], info["line"]),
+                "records": [{"value": n, "whole": w} for n, w in records],
+            }
+        )
+    for r in rows:
+        if r["status"] != "covered":
+            for gid in dict.fromkeys(group(s["name"]) for s in r["steps"]):
+                nodes[gid]["gaps"].append(f"{r['value']} → {r['use']}: {STATUS[r['status']]}")
+    return {
+        "entry": v.entry_q,
+        "nodes": list(nodes.values()),
+        "edges": [{"from": a, "to": b, "values": sorted(n)} for (a, b), n in sorted(edges.items())],
+        "calls": sorted([a, b] for a in nodes for b in v.calls.get(a, ()) if b in nodes)
+        + sorted([n["in"], n["id"]] for n in nodes.values() if " @ " in n["id"] and n["in"] in nodes),
+        "verdicts": {s: sum(r["status"] == k for r in rows) for k, s in STATUS.items()},
+        "missing_anchors": v.missing_anchors,
+    }
+
+
+def mermaid(loop: dict) -> str:
+    """The agent loop as a Mermaid flowchart. Each box is a part of the loop; under the name of a function, one line per
+    logger call in it: `[LOG] <event> @ <path:line>` (the dashboard links each to the events it reports). Solid arrows
+    are calls, dashed arrows data only, and a dashed arrow the other way what comes back (a reply, a tool result). A part
+    with gaps is outlined in red."""
+    sid = lambda i: "n" + re.sub(r"\W", "_", i)  # noqa: E731
+    shapes = {"llm_response": '(["{}"])', "tool_response": '[["{}"]]', "user_input": '[/"{}"/]', "state": '[("{}")]'}
+    out = ["flowchart LR"]
+    for n in loop["nodes"]:
+        label = "<br/>".join([n["label"].replace('"', "'"), *(f"[LOG] {l['event']} @ {l['at']}" for l in n["logs"])])
+        out.append(f"  {sid(n['id'])}" + shapes.get(n["role"], '["{}"]').format(label))
+        if n["gaps"]:
+            out.append(f"  style {sid(n['id'])} stroke:#be123c,stroke-dasharray:4 3")
+    label = lambda values: f"|{', '.join(values[:2])}|" if values else ""  # noqa: E731
+    for k in loop["links"]:
+        if k["call"] or k["values"] or not k["returns"]:
+            out.append(f"  {sid(k['from'])} {'-->' if k['call'] else '-.->'}{label(k['values'])} {sid(k['to'])}")
+        if k["returns"]:
+            out.append(f"  {sid(k['to'])} -.->{label(k['back'])} {sid(k['from'])}")
+    return "\n".join(out) + "\n"
+
+
+def loop_view(g: dict) -> dict:
+    """The agent loop of the graph, for the dashboard's diagram.
+
+    Kept: the entry, the functions with log calls, and the LLM, tool and user input calls. Everything else is folded into
+    its neighbours, from the bottom of the call tree up, except a function that calls two or more of what is kept (the
+    loop body: it calls the LLM and runs the tools). A link that another path already shows is left out.
+    A link points from caller to callee where one calls the other, else the way the data moves. It keeps both ways apart:
+    `values` go from `from` to `to`, `back` (with `returns`) come back, such as a reply or a tool result.
+    """
+    nodes = {n["id"]: n for n in g["nodes"] if n["role"] != "final_output"}
+    keep = {
+        i
+        for i, n in nodes.items()
+        if n["logs"] or n["role"] in ("entry", "llm_response", "tool_response", "user_input")
+    }
+    new = lambda call: {"go": set(), "back": set(), "call": call, "fwd": False, "rev": False}  # noqa: E731
+    links = {(a, b): new(True) for a, b in g["calls"] if a in nodes and b in nodes}
+
+    def add(a: str, b: str, values: set, call: bool, data: bool) -> None:
+        if (b, a) in links and (a, b) not in links:  # the other way of an existing link
+            links[(b, a)]["back"] |= values
+            links[(b, a)]["rev"] |= data
+            return
+        entry = links.setdefault((a, b), new(call))
+        entry["go"] |= values
+        entry["fwd"] |= data
+        entry["call"] |= call
+
+    for e in g["edges"]:
+        if e["from"] in nodes and e["to"] in nodes:
+            add(e["from"], e["to"], set(e["values"]) - {"return"}, False, True)
+
+    def callees(h: str) -> set[str]:
+        return {b for (a, b), v in links.items() if a == h != b and v["call"]}
+
+    while rest := sorted(set(nodes) - keep):
+        # bottom up: a node whose callees are all kept (or that is in a cycle of what is left: the smallest first)
+        ready = [h for h in rest if not callees(h) - keep] or [min(rest, key=lambda h: len(callees(h)))]
+        if len(callees(ready[0]) & keep) >= 2:
+            keep.add(ready[0])  # a loop body: it calls two or more of what is kept
+            continue
+        folded = ready[0]
+        ins = {a for a, b in links if b == folded != a}
+        outs = {b for a, b in links if a == folded != b}
+        for a in ins:
+            for b in outs - {a}:
+                x, y = links[(a, folded)], links[(folded, b)]
+                if (x["call"] and y["call"]) or (x["fwd"] and y["fwd"]):
+                    add(a, b, x["go"] | y["go"], x["call"] and y["call"], x["fwd"] and y["fwd"])
+                if x["rev"] and y["rev"]:
+                    add(b, a, x["back"] | y["back"], False, True)
+        links = {k: v for k, v in links.items() if folded not in k}
+        del nodes[folded]
+
+    def shown_otherwise(k: tuple) -> bool:
+        """Whether another path leads from k's start to its end (only through calls, for a call)."""
+        a, b = k
+        seen, todo = {a}, [a]
+        while todo:
+            x0 = todo.pop()
+            for (x, y), v in links.items():
+                if x == x0 and (x, y) != k and y not in seen and (v["call"] or not links[k]["call"]):
+                    if y == b:
+                        return True
+                    seen.add(y)
+                    todo.append(y)
+        return False
+
+    for k in sorted(links, key=lambda k: links[k]["call"]):  # data-only shortcuts go first
+        if shown_otherwise(k):
+            del links[k]
+    return {
+        "nodes": list(nodes.values()),
+        "links": [
+            {
+                "from": a,
+                "to": b,
+                "values": sorted(v["go"]),
+                "call": v["call"],
+                "back": sorted(v["back"]),
+                "returns": v["rev"],
+            }
+            for (a, b), v in sorted(links.items())
+        ],
+    }
 
 
 CSS = """
@@ -877,11 +1329,16 @@ def main() -> None:
     a = p.parse_args()
     anchors = json.loads(a.anchors.read_text(encoding="utf-8"))
     files = [a.src_root / f for f in a.only] if a.only else sorted(a.src_root.rglob("*.py"))
-    v = Verifier(a.src_root, [f for f in files if f.stem != anchors.get("logger", "observatory_log")], anchors)
+    v = Verifier.build(a.src_root, [f for f in files if f.stem != anchors.get("logger", "observatory_log")], anchors)
     rows = v.verdicts()
     a.out_dir.mkdir(parents=True, exist_ok=True)
     (a.out_dir / "report.json").write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
     (a.out_dir / "report.html").write_text(report_html(rows, a.anchors), encoding="utf-8")
+    g = graph(v, rows)
+    (a.out_dir / "graph.json").write_text(json.dumps(g, indent=2, ensure_ascii=False), encoding="utf-8")
+    loop = {"root": a.src_root.resolve().as_posix(), **loop_view(g)}
+    (a.out_dir / "loop.json").write_text(json.dumps(loop, indent=2, ensure_ascii=False), encoding="utf-8")
+    (a.out_dir / "loop.mmd").write_text(mermaid(loop), encoding="utf-8")
     for r in rows:
         mixed = (
             f"   (툴 로그는 없고 섞여서만 기록: {', '.join(m.removeprefix('[LOG] ') for m in r['mixed_logs'])})"

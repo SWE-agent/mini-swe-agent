@@ -10,7 +10,8 @@ It knows nothing about any agent. It only reads the run files (JSON lines) that 
 directory named by OBSERVATORY_RUNS, so start the agent as usual with that variable set, e.g.
 `OBSERVATORY_RUNS=$PWD/observatory/runs <your agent command>`, and watch the history appear live.
 With --agent "<command>", the header gets a task box: each task starts `<command> <task>` with OBSERVATORY_RUNS set.
-The left panel shows diagram/agent-architecture.html next to the runs directory when it exists.
+The left panel shows verify/loop.mmd next to the runs directory, the agent loop flow_verify.py draws from the code; each
+event's `at` (the `path:line` of the logger call) marks the `[LOG] <event> @ <path:line>` box that reported it.
 """
 
 import argparse
@@ -26,7 +27,6 @@ from urllib.parse import parse_qs, urlparse
 
 KIT = Path(__file__).resolve().parent
 LIVE_SECONDS = 10
-NO_DIAGRAM = b"<!doctype html><meta charset=utf-8><body style='font:14px system-ui;color:#8a9ab3;background:#020617;padding:24px'>No architecture diagram yet. Run observatory/run.py with Archify available to generate it.</body>"
 
 
 class Stream:
@@ -58,7 +58,7 @@ class Stream:
         if kind in ("llm_response", "llm_error") and self.query_at is not None and "duration_seconds" not in data:
             data = {**data, "duration_seconds": round(raw["t"] - self.query_at, 3)}
         self.seq += 1
-        return {"seq": self.seq - 1, "t": raw["t"], "kind": kind, "step": step, "data": data}
+        return {"seq": self.seq - 1, "t": raw["t"], "kind": kind, "step": step, "at": raw.get("at"), "data": data}
 
 
 def list_runs(directory: Path) -> list[dict]:
@@ -98,9 +98,14 @@ class Handler(BaseHTTPRequestHandler):
         run = (parse_qs(url.query).get("run") or ["latest"])[0]
         if url.path == "/":
             self.reply(200, "text/html; charset=utf-8", (KIT / "static/index.html").read_bytes())
-        elif url.path == "/architecture":
-            diagram = self.runs_dir.parent / "diagram/agent-architecture.html"
-            self.reply(200, "text/html; charset=utf-8", diagram.read_bytes() if diagram.exists() else NO_DIAGRAM)
+        elif url.path == "/api/loop":
+            drawing = self.runs_dir.parent / "verify/loop.mmd"
+            if drawing.exists():
+                root = self.runs_dir.parent.parent.resolve().as_posix()
+                body = {"root": root, "mermaid": drawing.read_text(encoding="utf-8")}
+                self.reply(200, "application/json", json.dumps(body).encode())
+            else:
+                self.reply(404, "application/json", b'{"detail": "No verify/loop.mmd yet"}')
         elif url.path == "/api/agent":
             self.reply(200, "application/json", json.dumps({"enabled": bool(self.agent)}).encode())
         elif url.path == "/api/runs":

@@ -39,6 +39,7 @@ def test_logger_writes_one_line_per_event(tmp: Path) -> None:
     log.tool_end(start, "bash", result="exit 0")
     log.tool_error(log.tool_start("bash", {"command": "x"}), "bash", RuntimeError("boom"))
     log.llm_error(2, ValueError("bad"))
+    log.user_input("yes", prompt="Accept?")
     (file,) = (tmp / "runs").glob("*.jsonl")
     events = read(file)
     assert [(e["kind"], e["step"]) for e in events] == [
@@ -49,11 +50,15 @@ def test_logger_writes_one_line_per_event(tmp: Path) -> None:
         ("tool_start", None),
         ("tool_error", None),
         ("llm_error", 2),
+        ("user_input", None),
     ]
     assert events[0]["data"] == {"model": "m", "messages": 2, "purpose": "action"}
+    assert {e["at"].rsplit(":", 1)[0].rsplit("/", 1)[-1] for e in events} == {"selftest.py"}
+    assert events[0]["at"] != events[1]["at"]
     assert events[1]["data"]["actions"] == [{"bash": {"command": "ls"}}] and events[1]["data"]["cost"] == 0.01
     assert events[3]["data"]["result"] == "exit 0" and events[3]["data"]["duration_seconds"] >= 0
     assert events[5]["data"]["error_type"] == "RuntimeError" and events[5]["data"]["error"] == "boom"
+    assert events[7]["data"] == {"prompt": "Accept?", "answer": "yes"}
 
 
 def test_logger_scrubs_secrets_and_truncates(tmp: Path) -> None:
@@ -101,7 +106,9 @@ def test_server(tmp: Path) -> None:
     get = lambda path: urllib.request.urlopen(f"http://127.0.0.1:{port}{path}", timeout=5)
     try:
         assert b"Agent Observatory" in get("/").read()
-        assert b"No architecture diagram" in get("/architecture").read() or b"<svg" in get("/architecture").read()
+        (tmp / "verify").mkdir()
+        (tmp / "verify/loop.mmd").write_text("flowchart LR\n  a --> b\n")
+        assert json.load(get("/api/loop"))["mermaid"] == "flowchart LR\n  a --> b\n"
         assert json.load(get("/api/runs"))[0]["id"] == "20260101-000000-1"
         with get("/api/events?run=latest") as stream:
             assert json.loads(stream.readline().split(b"data: ")[1])["kind"] == "llm_query"
