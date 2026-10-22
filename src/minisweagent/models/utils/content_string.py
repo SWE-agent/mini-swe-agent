@@ -83,5 +83,7 @@ def get_content_string(message: dict) -> str:
                             texts.append(text)
                 elif item.get("type") == "function_call":
                     texts.append(_format_tool_call(item.get("arguments", "{}")))
+                elif item.get("type") == "input_text":
+                    texts.append(_format_observation(item.get("text", "")))
 
     return "\n\n".join(t for t in texts if t)

@@ -6,6 +6,7 @@ import time
 from jinja2 import StrictUndefined, Template
 
 from minisweagent.exceptions import FormatError
+from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 
 # OpenRouter/OpenAI Responses API uses a flat structure (no nested "function" key)
 BASH_TOOL_RESPONSE_API = {
@@ -120,6 +121,13 @@ def format_toolcall_observation_messages(
         content = Template(observation_template, undefined=StrictUndefined).render(
             output=output, **(template_vars or {})
         )
+        if multimodal_regex:
+            content = [
+                {"type": "input_text", "text": part["text"]}
+                if part["type"] == "text"
+                else {"type": "input_image", "image_url": part["image_url"]["url"]}
+                for part in expand_multimodal_content(content, pattern=multimodal_regex)
+            ]
         msg: dict = {
             "extra": {
                 "raw_output": output.get("output", ""),
@@ -136,6 +144,6 @@ def format_toolcall_observation_messages(
         else:  # human issued commands
             msg["type"] = "message"
             msg["role"] = "user"
-            msg["content"] = [{"type": "input_text", "text": content}]
+            msg["content"] = [{"type": "input_text", "text": content}] if isinstance(content, str) else content
         results.append(msg)
     return results
