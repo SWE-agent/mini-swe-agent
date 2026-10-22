@@ -2,22 +2,27 @@
 # requires-python = ">=3.10"
 # dependencies = []
 # ///
-"""Static verification of an agent's logging, driven by the anchors the logger-wiring step wrote (verify-anchors.json).
+"""Static verification of an agent's logging from two kinds of anchors only (verify-anchors.json):
+  User Input     the entry function's input parameters (`entry.inputs`) and the calls that read a human's answer
+  LLM Response   the LLM calls
+Tool calls are not given: they are found between two LLM calls.
 
-Starting from the anchors, follow the three values the logging must capture:
-  User Input     the entry function's input parameters, and the anchored user-input calls
-  LLM Response   the value an anchored LLM call returns
-  Tool Response  the value an anchored tool execution returns
-through assignments, arguments -> parameters, return values, self.<field>, containers, loops and comprehensions,
-to every place where one of them leaves the agent's code:
-  external call  a call into code outside the project: an imported library (subprocess.run, client.messages.create,
-                 requests.get, ...) or a builtin with an effect (exec, input, print, open, ...). Decided by where the
-                 callee comes from (import, the type of self.<field>), never by its name.
-  final output   the entry function's return value
+The code is read as a data-flow graph (assignments, arguments -> parameters, return values, self.<field>, containers,
+loops, comprehensions). An anchored call is a boundary: its arguments leave the agent, what it returns is a new value.
+Other calls the code does not show the inside of are tool candidates; until they are chosen, values pass through them:
+  external call   an imported library (subprocess.run, requests.get, ...) or a builtin with an effect (exec, input, ...)
+  unseen call     a method of an object stored on self whose type is not known (self.env.execute), or a function
+                  looked up by key (tool = tools[name]). Decided by where the callee comes from, never by its name.
+A tool is a candidate that runs in the agent loop (a loop that also calls the LLM, directly or through the functions
+it calls), whose arguments come from an LLM reply (forward from it) and whose result reaches the next LLM call or the
+final output (backward from those), that is not a method of the LLM's own object, and that comes first after the
+reply (not downstream of another candidate). Its result then becomes a new value too.
 
 A log call (the anchors' logger module) records a value only when it receives the value itself: a name,
 self.<field>, or a list/tuple/dict of those. A field, slice or derived value (`[c["name"] for c in reply]`,
-`response.stop_reason`, `out[:200]`) records only part of it.
+`response.stop_reason`, `out[:200]`) records only part of it. Around a tool only the tool's own logs count: on the way
+in a value that goes to tools only (not the whole reply, logged by llm_response), on the way out a value that comes
+from tool results only (not the message list, logged by llm_query).
 
 Verdict per (value, use), over every path between them:
   검증 완료  every path passes a value that a log call records whole
@@ -39,8 +44,13 @@ import json
 from collections import deque
 from pathlib import Path
 
-KIND = {"user_input": "User Input", "llm_response": "LLM Response", "tool_response": "Tool Response"}
-USE = {"llm_response": "LLM 입력", "user_input": "사용자에게 표시", "tool_response": "Tool 입력"}
+KIND = {
+    "user_input": "User Input",
+    "llm_response": "LLM Response",
+    "tool_response": "Tool Response",
+    "other": "기타 외부 응답",
+}
+USE = {"llm_response": "LLM 입력", "user_input": "사용자에게 표시", "tool_response": "Tool 입력", "other": "외부 호출"}
 STATUS = {"covered": "검증 완료", "partial": "일부만 기록", "bypass": "누락"}
 # builtins that only compute a value from their arguments (no effect outside the process)
 PURE = {
@@ -59,14 +69,23 @@ class Verifier:
         self.trees = {f.relative_to(root).as_posix(): ast.parse(f.read_text(encoding="utf-8")) for f in files}
         self.modules = {self.module_id(f) for f in self.trees}
         self.funcs, self.classes, self.module_funcs, self.imports = {}, {}, {}, {}
+        self.parent, self.own_names = {}, {}  # nested function -> enclosing function, names local to it
         for file, tree in self.trees.items():
             self.scan(file, tree)
         self.edges, self.info, self.partial = set(), {}, set()
         self.sources, self.sinks, self.logs = set(), set(), set()
         self.var_types, self.field_types = {}, {}
         self.passed = set()  # (caller node, parameter) when the call passes the caller's value itself
+        self.mutated = set()  # nodes whose object is changed in place: x.field = v, x[k] = v, x.append(v)
         self.found = set()  # matched source anchors
+        self.ext_ret = {}  # boundary call node -> node of the value it returns
+        self.calls = {}  # function -> project functions it calls
+        self.containers = set()  # (function, variable) holding a dict/list/set a call may fill in place
+        self.filled = {}  # boundary call node -> the container variables it fills
+        self.through = {}  # candidate call node -> nodes its result is computed from, while it is not a tool
+        self.picked = set()  # (function, variable) holding a value looked up by key: tool = tools[name]
         self.return_lines = {}  # (function, node returned) -> line of that return statement
+        self.loop_calls = {}  # loop (file, line) -> project functions called in its body
         for q, f in self.funcs.items():  # types of self.<field> first: calls through fields resolve with them
             self.enter(q)
             for s in ast.walk(f["node"]):
@@ -78,7 +97,10 @@ class Verifier:
         for q in self.funcs:
             self.enter(q)
             self.stmts(self.funcs[q]["node"].body)
-        if missing := [a for a in anchors["sources"] if json.dumps(a) not in self.found]:
+        for n, param in self.passed:  # an object changed through a parameter is the caller's object
+            if param in self.mutated:
+                self.edge({param}, n)
+        if missing := [a for a in anchors.get("sources", []) if json.dumps(a) not in self.found]:
             raise SystemExit(f"anchors not found in the code: {missing}")
 
     # ---------------------------------------------------------------- project structure
@@ -118,14 +140,36 @@ class Verifier:
                 q = f"{module}.{node.name}"
                 self.funcs[q] = {"node": node, "file": file, "cls": None}
                 self.module_funcs[(module, node.name)] = q
+                self.nested(q)
             elif isinstance(node, ast.ClassDef):
                 methods = {}
                 for m in node.body:
                     if isinstance(m, (ast.FunctionDef, ast.AsyncFunctionDef)):
                         methods[m.name] = f"{node.name}.{m.name}"
                         self.funcs[methods[m.name]] = {"node": m, "file": file, "cls": node.name}
+                        self.nested(methods[m.name])
                 bases = [ast.unparse(b).split(".")[-1] for b in node.bases]
                 self.classes[node.name] = {"module": module, "methods": methods, "bases": bases}
+
+    def nested(self, q: str) -> None:
+        """Functions defined inside q: registered as q.<name>; names they do not bind are q's (a closure)."""
+        todo = list(self.funcs[q]["node"].body)
+        while todo:
+            n = todo.pop()
+            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                inner = f"{q}.{n.name}"
+                self.funcs[inner] = self.funcs[q] | {"node": n}
+                self.parent[inner] = q
+                a = n.args
+                self.own_names[inner] = {
+                    p.arg for p in [*a.posonlyargs, *a.args, *a.kwonlyargs, a.vararg, a.kwarg] if p
+                }
+                self.own_names[inner] |= {
+                    x.id for x in ast.walk(n) if isinstance(x, ast.Name) and isinstance(x.ctx, ast.Store)
+                }
+                self.nested(inner)
+            elif not isinstance(n, (ast.ClassDef, ast.Lambda)):
+                todo += [c for c in ast.iter_child_nodes(n) if isinstance(c, ast.stmt)]
 
     def mro(self, cls: str) -> list[str]:
         out = [cls]
@@ -168,6 +212,7 @@ class Verifier:
     # ---------------------------------------------------------------- types (only what resolution needs)
     def enter(self, q: str) -> None:
         self.q, self.cls, self.file = q, self.funcs[q]["cls"], self.funcs[q]["file"]
+        self.loop = ()  # loops around the statement being read
 
     def is_self_attr(self, e) -> bool:
         return (
@@ -212,6 +257,11 @@ class Verifier:
     def callee(self, f):
         """("log",) ("funcs", [q]) ("class", C) ("ext", dotted) ("pure",) ("nodata",) ("mutator", base) ("value", base)"""
         if isinstance(f, ast.Name):
+            q = self.q
+            while q and f"{q}.{f.id}" not in self.funcs:  # a function defined in this one or an enclosing one
+                q = self.parent.get(q)
+            if q:
+                return ("funcs", [f"{q}.{f.id}"])
             if (self.q, f.id) in self.var_types:
                 t = self.var_types[(self.q, f.id)]
                 return t if t[0] in ("funcs", "ext") else ("value", None)
@@ -226,7 +276,9 @@ class Verifier:
             return ("value", None)
         if isinstance(f, ast.Attribute):
             if isinstance(f.value, ast.Name) and f.value.id == "self" and self.cls:
-                return ("funcs", self.method(self.cls, f.attr, subclasses=True))
+                if methods := self.method(self.cls, f.attr, subclasses=True):
+                    return ("funcs", methods)
+                return ("value", f.value)  # self.executor(code): an object stored on self, called
             if (
                 isinstance(f.value, ast.Name)
                 and self.global_name(f.value.id)
@@ -248,15 +300,21 @@ class Verifier:
         return ("value", None)
 
     # ---------------------------------------------------------------- graph
-    def node(self, name: str, kind: str, line: int, **extra) -> str:
-        self.info.setdefault(name, {"kind": kind, "file": self.file, "line": line, "func": self.q, **extra})
+    def node(self, name: str, kind: str, line: int, q: str | None = None, **extra) -> str:
+        """q: the function the node belongs to when it is not the one being read (a callee's parameter or return)."""
+        file, func = (self.funcs[q]["file"], q) if q else (self.file, self.q)
+        self.info.setdefault(name, {"kind": kind, "file": file, "line": line, "func": func, **extra})
         return name
 
     def local(self, q: str, var: str, line: int) -> str:
+        while q in self.parent and var not in self.own_names[q]:  # a closure reads the enclosing function's name
+            q = self.parent[q]
+        if q != self.q:  # a callee's parameter, bound at the call site: place it at the callee's def
+            return self.node(f"{q}:{var}", "var", self.funcs[q]["node"].lineno, q=q)
         return self.node(f"{q}:{var}", "var", line)
 
     def ret(self, q: str) -> str:
-        return self.node(f"{q}:<return>", "var", self.funcs[q]["node"].lineno)
+        return self.node(f"{q}:<return>", "var", self.funcs[q]["node"].lineno, q=q)
 
     def edge(self, srcs, dst: str) -> None:
         self.edges |= {(s, dst) for s in srcs if s != dst}
@@ -264,6 +322,7 @@ class Verifier:
     def entry(self) -> None:
         e = self.anchors["entry"]
         q = e["function"] if e["function"] in self.funcs else next(k for k in self.funcs if k.endswith(e["function"]))
+        self.entry_q = q
         self.enter(q)
         a = self.funcs[q]["node"].args
         for p in [*a.posonlyargs, *a.args, *a.kwonlyargs]:
@@ -279,7 +338,7 @@ class Verifier:
         return next(
             (
                 a
-                for a in self.anchors["sources"]
+                for a in self.anchors.get("sources", [])
                 if a["path"] == self.file and a["line"] == c.lineno and a["call"] == ast.unparse(c.func)
             ),
             None,
@@ -298,17 +357,27 @@ class Verifier:
             for t in s.targets:
                 if isinstance(t, ast.Name) and (typ := self.type_of(s.value)):
                     self.var_types[(self.q, t.id)] = typ
+                self.container(t, s.value)
+                if isinstance(t, ast.Name) and isinstance(s.value, ast.Subscript):
+                    self.picked.add((self.q, t.id))
                 self.bind(t, v, s.lineno)
         elif isinstance(s, (ast.AugAssign, ast.AnnAssign)) and s.value is not None:
+            self.container(s.target, s.value)
             extra = self.reads(s.target) if isinstance(s, ast.AugAssign) else set()
             self.bind(s.target, self.reads(s.value) | extra, s.lineno)
         elif isinstance(s, ast.Return) and s.value is not None:
             for n in self.reads(s.value):
                 self.return_lines.setdefault((self.q, n), s.lineno)
                 self.edge({n}, self.ret(self.q))
-        elif isinstance(s, (ast.For, ast.AsyncFor)):
-            self.bind(s.target, self.reads(s.iter), s.lineno)
-            self.stmts(s.body + s.orelse)
+        elif isinstance(s, (ast.For, ast.AsyncFor, ast.While)):
+            if isinstance(s, ast.While):
+                self.reads(s.test)
+            else:
+                self.bind(s.target, self.reads(s.iter), s.lineno)
+            self.loop += ((self.file, s.lineno),)
+            self.stmts(s.body)
+            self.loop = self.loop[:-1]
+            self.stmts(s.orelse)
         elif isinstance(s, (ast.With, ast.AsyncWith)):
             for it in s.items:
                 v = self.reads(it.context_expr)
@@ -328,6 +397,16 @@ class Verifier:
             for c in getattr(s, "cases", []) or []:
                 self.stmts(c.body)
 
+    def container(self, target, value) -> None:
+        literal = (ast.Dict, ast.List, ast.Set, ast.DictComp, ast.ListComp, ast.SetComp)
+        built = (
+            isinstance(value, ast.Call)
+            and isinstance(value.func, ast.Name)
+            and value.func.id in ("dict", "list", "set")
+        )
+        if isinstance(target, ast.Name) and (isinstance(value, literal) or built):
+            self.containers.add((self.q, target.id))
+
     def bind(self, target, srcs: set, line: int) -> None:
         if isinstance(target, ast.Name):
             self.edge(srcs, self.local(self.q, target.id, line))
@@ -339,6 +418,7 @@ class Verifier:
         elif isinstance(target, (ast.Subscript, ast.Attribute)):
             for base in self.reads(target.value):
                 self.edge(srcs, base)
+                self.mutated.add(base)
 
     # ---------------------------------------------------------------- expressions
     def reads(self, e) -> set:
@@ -400,33 +480,138 @@ class Verifier:
             whole = set().union(*(self.whole(a) for a in [*c.args, *(k.value for k in c.keywords)]))
             self.partial |= {(n, log) for n in every - whole}
             return set()
-        if kind[0] in ("funcs", "class"):
+        if anchor:
+            self.found.add(json.dumps(anchor))
+        if kind[0] in ("funcs", "class") and not anchor:
             targets = kind[1] if kind[0] == "funcs" else self.method(kind[1], "__init__")
             for t in targets:
                 self.bind_args(t, c, pos, kws)
-            result = {self.ret(t) for t in targets} if kind[0] == "funcs" else set()
-        elif kind[0] == "ext" or (anchor and kind[0] == "value"):  # an anchored call on an object of unknown type
-            use = USE[anchor["kind"]] if anchor else "외부 호출"
-            sink = self.node(f"[{use}] {ast.unparse(c.func)} @ {loc}", "sink", c.lineno, use=use)
+                self.calls.setdefault(self.q, set()).add(t)
+                for loop in self.loop:
+                    self.loop_calls.setdefault(loop, set()).add(t)
+            # a new object carries what it was built from (obj.field reads the object; dataclasses have no __init__)
+            result = {self.ret(t) for t in targets} if kind[0] == "funcs" else every
+        elif kind[0] == "ext" and not anchor and any(self.coroutine(a) for a in c.args):
+            result = every  # asyncio.wait_for(self.step(), ...): runs the coroutine and hands back its result
+        elif kind[0] == "ext" or anchor or self.unseen(c.func, kind):
+            # anchored: a boundary, what comes back is a new value. Otherwise a tool candidate: the value passes
+            # through until verdicts() decides it is a tool.
+            call, cat = ast.unparse(c.func), anchor["kind"] if anchor else None
+            recv = ast.unparse(c.func.value) if isinstance(c.func, ast.Attribute) else None
+            sink = self.node(
+                f"[외부 호출] {call} @ {loc}", "sink", c.lineno, use=None, cat=cat, recv=recv, loops=self.loop
+            )
             self.sinks.add(sink)
             self.edge(every, sink)
-            result = every | (self.reads(c.func.value) if isinstance(c.func, ast.Attribute) else set())
+            back = self.node(f"[외부 응답] {call} @ {loc}", "source", c.lineno, cat=cat)
+            self.ext_ret[sink] = back
+            if not anchor:
+                self.through[sink] = every | (self.reads(c.func.value) if isinstance(c.func, ast.Attribute) else set())
+                self.edge(self.through[sink], back)
+            for a in [*c.args, *(k.value for k in c.keywords)]:  # exec(code, scope) fills `scope` in place
+                if isinstance(a, ast.Name) and (self.q, a.id) in self.containers:
+                    self.edge({back}, self.local(self.q, a.id, c.lineno))
+                    self.filled.setdefault(sink, set()).add(self.local(self.q, a.id, c.lineno))
+            result = {back}
         elif kind[0] == "nodata":
             result = set()
         elif kind[0] == "mutator":
             for base in self.reads(kind[1]):
                 self.edge(every, base)
+                self.mutated.add(base)
             result = set()
         else:
             result = every | (self.reads(kind[1]) if kind[0] == "value" and kind[1] is not None else set())
-        if anchor:
-            self.found.add(json.dumps(anchor))
-            src = self.node(
-                f"[{KIND[anchor['kind']]}] {anchor['call']} @ {loc}", "source", c.lineno, cat=anchor["kind"]
-            )
-            self.sources.add(src)
-            return {src}
         return result
+
+    def coroutine(self, e) -> bool:
+        """A call to an anchored or project async function that is not awaited: a coroutine handed to another call."""
+        if not isinstance(e, ast.Call):
+            return False
+        kind = self.callee(e.func)
+        targets = kind[1] if kind[0] == "funcs" else []
+        return bool(self.anchor(e)) or (
+            bool(targets) and all(isinstance(self.funcs[t]["node"], ast.AsyncFunctionDef) for t in targets)
+        )
+
+    def unseen(self, f, kind) -> bool:
+        """A call whose implementation the code does not show: a method of an object stored on self whose type is
+        not known (a model or environment passed to the constructor), or a function looked up by key (tools[name])."""
+        if kind[0] != "value":
+            return False
+        if isinstance(f, ast.Name):
+            return (self.q, f.id) in self.picked
+        if not isinstance(f, ast.Attribute):
+            return False
+        root = f if self.is_self_attr(f) else f.value  # self.executor(code) or self.env.execute(action)
+        while isinstance(root, ast.Attribute) and not self.is_self_attr(root):
+            root = root.value
+        return self.is_self_attr(root) and not self.data_field(root.attr)
+
+    def data_field(self, attr: str) -> bool:
+        """self.<attr> holds plain data (a list, dict, string ... built in the class), not an object."""
+        data = (ast.List, ast.Dict, ast.Set, ast.Constant, ast.JoinedStr, ast.ListComp, ast.DictComp, ast.SetComp)
+        for c in self.mro(self.cls):
+            for m in self.classes[c]["methods"].values():
+                for s in ast.walk(self.funcs[m]["node"]):
+                    targets = (
+                        s.targets if isinstance(s, ast.Assign) else [s.target] if isinstance(s, ast.AnnAssign) else []
+                    )
+                    if any(isinstance(t, ast.Attribute) and t.attr == attr for t in targets) and isinstance(
+                        s.value, data
+                    ):
+                        return True
+        return False
+
+    def find_tools(self) -> set[str]:
+        """Tool calls: between two LLM calls. They run in the agent loop (a loop that also calls the LLM, directly or
+        through the functions it calls), their arguments come from an LLM reply (forward from it) and what they
+        return reaches the next LLM call or the final output (backward from those). Methods of the LLM's own object
+        are excluded, and of a chain of such calls only the first after the reply is kept."""
+        fwd, back = {}, {}
+        for a, b in self.edges:
+            fwd.setdefault(a, set()).add(b)
+            back.setdefault(b, set()).add(a)
+
+        def reach(starts, adj, avoid=frozenset()):
+            seen, todo = set(starts), [s for s in starts if s not in avoid]
+            while todo:
+                for m in adj.get(todo.pop(), ()):
+                    if m not in seen and m not in avoid:
+                        seen.add(m)
+                        todo.append(m)
+            return seen
+
+        llm = {k for k in self.ext_ret if self.info[k]["cat"] == "llm_response"}
+        replies = {self.ext_ret[k] for k in llm}
+        ahead = reach(replies, fwd)
+        behind = reach(llm | {k for k in self.sinks if self.info[k]["use"] == "최종 출력"}, back)
+        own = {self.info[k]["recv"] for k in llm}
+
+        def region(loop):  # functions run by one pass of the loop
+            funcs, todo = set(), list(self.loop_calls.get(loop, ()))
+            while todo:
+                if (q := todo.pop()) not in funcs:
+                    funcs.add(q)
+                    todo += self.calls.get(q, ())
+            return funcs
+
+        def in_loop(k, loop, funcs):
+            return loop in self.info[k]["loops"] or self.info[k]["func"] in funcs
+
+        loops = set(self.loop_calls) | {loop for k in self.ext_ret for loop in self.info[k]["loops"]}
+        agent = [(loop, f) for loop in loops for f in [region(loop)] if any(in_loop(k, loop, f) for k in llm)]
+        cands = {
+            k
+            for k, r in self.ext_ret.items()
+            if not self.info[k]["cat"]
+            and k in ahead
+            and r in behind
+            and self.info[k]["recv"] not in own
+            and any(in_loop(k, loop, f) for loop, f in agent)
+        }
+        rets = {self.ext_ret[k] for k in cands}
+        return {k for k in cands if k in reach(replies, fwd, rets)}
 
     def bind_args(self, t: str, c: ast.Call, pos: list, kws: dict) -> None:
         a = self.funcs[t]["node"].args
@@ -453,6 +638,11 @@ class Verifier:
 
     # ---------------------------------------------------------------- verdicts
     def verdicts(self) -> list[dict]:
+        tools = self.find_tools()
+        for k in tools:  # a tool's result is a new value: stop passing the arguments through it
+            self.info[k] |= {"cat": "tool_response"}
+            self.info[self.ext_ret[k]]["cat"] = "tool_response"
+            self.edges -= {(a, self.ext_ret[k]) for a in self.through[k]}
         fwd, back = {}, {}
         for a, b in self.edges:
             fwd.setdefault(a, set()).add(b)
@@ -495,16 +685,39 @@ class Verifier:
                 "logs": [self.at(m) | {"log": m, "whole": (n, m) not in self.partial} for m in logs],
             }
 
+        # starting points: the user input, the anchored calls, and the tools found between LLM calls
+        boundary = {k for k in self.ext_ret if self.info[k]["cat"]}
+        found = {s: "기준점 (진입점 인자)" for s in sorted(self.sources)}
+        found |= {self.ext_ret[k]: "기준점" for k in sorted(boundary - tools)}
+        found |= {self.ext_ret[k]: "LLM 응답과 다음 LLM 입력 사이에서 찾음" for k in sorted(tools)}
+        for k in boundary:
+            self.info[k]["use"] = USE[self.info[k]["cat"]]
+        targets = boundary | {k for k in self.sinks if self.info[k]["use"] == "최종 출력"}
+        reached = {s: targets & reach(s, fwd) for s in found}
+        for k, r in self.ext_ret.items():  # what a call fills in place does not go back into that same call
+            if r in reached and k in reached[r] and k not in reach(r, fwd, self.filled.get(k, set())):
+                reached[r].discard(k)
+
+        # Around a tool only the tool's own logs count: on the way in, a value recorded whole that goes to tools only
+        # (not the whole LLM reply, which also goes back to the LLM); on the way out, a value recorded whole that comes
+        # from tool results only (not the message list that mixes them with the task and the replies).
+        tool_rets = {self.ext_ret[k] for k in tools}
+        into_others = set().union(*(reach(k, back) for k in targets - tools))
+        from_others = set().union(*(reach(s, fwd) for s in found if s not in tool_rets))
+
         rows = []
-        for s in sorted(self.sources, key=lambda n: (list(KIND).index(self.info[n]["cat"]), n)):
+        for s in sorted(found, key=lambda n: (list(KIND).index(self.info[n]["cat"]), n)):
             down = reach(s, fwd)
-            for k in sorted(k for k in self.sinks if k in down):
+            for k in sorted(reached[s]):
                 on_path = down & reach(k, back)
-                full = {m for n in on_path & recorded for m in fwd.get(n, ()) if m in self.logs}
-                pieces = {m for n in on_path for m in fwd.get(n, ()) if m in self.logs} - full
-                gap = k in reach(s, fwd, recorded)  # a path on which nothing is recorded whole
+                own = (on_path - into_others) if k in tools else (on_path - from_others) if s in tool_rets else on_path
+                rec = recorded & own
+                full = {m for n in on_path & rec for m in fwd.get(n, ()) if m in self.logs}
+                pieces = {m for n in own for m in fwd.get(n, ()) if m in self.logs} - full
+                mixed = {m for n in on_path & recorded - own for m in fwd.get(n, ()) if m in self.logs}
+                gap = k in reach(s, fwd, rec)  # a path on which nothing is recorded whole
                 status = "covered" if not gap else "partial" if pieces else "bypass"
-                p = path(s, k, recorded) if gap else path(s, k)
+                p = path(s, k, rec) if gap else path(s, k)
                 steps = [step(n) for n in p]
                 if self.info[k]["use"] == "최종 출력" and len(p) >= 3:  # point at the return statement, not the def
                     line = self.return_lines.get((self.info[k]["func"], p[-3]), self.info[k]["line"])
@@ -513,6 +726,8 @@ class Verifier:
                 rows.append(
                     {
                         "value": KIND[self.info[s]["cat"]],
+                        "found": found[s],
+                        "mixed_logs": sorted(short(m) for m in mixed) if gap else [],
                         "source": s,
                         "use": self.info[k]["use"],
                         "sink": k,
@@ -616,8 +831,16 @@ def report_html(rows: list[dict], anchors_path: Path) -> str:
         )
         return (
             f'<div class="card {r["status"]}"><div class="head"><span class="badge {r["status"]}">{STATUS[r["status"]]}</span>'
-            f"<span>{e(step_label(r['source']))} → {e(r['use'])}: <code>{e(step_label(r['sink']))}</code></span></div>"
-            f'<div class="chain">{chain}</div></div>'
+            f"<span>{e(step_label(r['source']))} → {e(r['use'])}: <code>{e(step_label(r['sink']))}</code></span>"
+            f'<span class="muted" style="font-weight:400;font-size:12px">발견: {e(r["found"])}</span></div>'
+            f'<div class="chain">{chain}</div>'
+            + (
+                f'<div class="muted" style="margin-top:8px;font-size:12px">툴 로그는 없고, 다른 값과 섞여서만 기록됨: '
+                f"{e(', '.join(m.removeprefix('[LOG] ') for m in r['mixed_logs']))}</div>"
+                if r["mixed_logs"]
+                else ""
+            )
+            + "</div>"
         )
 
     tiles = (
@@ -660,7 +883,12 @@ def main() -> None:
     (a.out_dir / "report.json").write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
     (a.out_dir / "report.html").write_text(report_html(rows, a.anchors), encoding="utf-8")
     for r in rows:
-        print(f"{STATUS[r['status']]:<6} {r['value']:<13} {short(r['source'])} → {short(r['sink'])}")
+        mixed = (
+            f"   (툴 로그는 없고 섞여서만 기록: {', '.join(m.removeprefix('[LOG] ') for m in r['mixed_logs'])})"
+            if r["mixed_logs"]
+            else ""
+        )
+        print(f"{STATUS[r['status']]:<6} {r['value']:<13} {short(r['source'])} → {r['use']}: {short(r['sink'])}{mixed}")
     print(f"wrote {a.out_dir / 'report.html'} and report.json")
 
 
