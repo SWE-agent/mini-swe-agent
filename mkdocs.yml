@@ -107,6 +107,7 @@ nav:
       - "SwerexDockerEnvironment": "reference/environments/swerex_docker.md"
       - "BubblewrapEnvironment": "reference/environments/bubblewrap.md"
       - "ContreeEnvironment": "reference/environments/contree.md"
+      - "RuntimeEnvironment": "reference/environments/runtime.md"
       - "SwerexModalEnvironment": "reference/environments/swerex_modal.md"
     - Run Scripts:
       - "Hello World": "reference/run/hello_world.md"
