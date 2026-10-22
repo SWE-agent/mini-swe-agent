@@ -1,0 +1,279 @@
+{
+  "root": "C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron",
+  "nodes": [
+    {
+      "id": "self.registry.execute_action @ browser_use/tools/service.py:2221",
+      "role": "tool_response",
+      "label": "self.registry.execute_action",
+      "path": "browser_use/tools/service.py",
+      "line": 2221,
+      "in": "Tools.act",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "Agent.get_model_output",
+      "role": "function",
+      "label": "Agent.get_model_output",
+      "path": "browser_use/agent/service.py",
+      "line": 1946,
+      "end_line": 1989,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "browser_use/agent/service.py:1956",
+          "code": "observatory_log.llm_query(None, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "browser_use/agent/service.py:1962",
+          "code": "observatory_log.llm_response(None, actions=actions, reply=response, response=response)",
+          "records": [
+            {
+              "value": "actions",
+              "whole": true
+            },
+            {
+              "value": "response",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "browser_use/agent/service.py:1979",
+          "code": "observatory_log.llm_error(None, None)",
+          "records": []
+        },
+        {
+          "event": "llm_error",
+          "at": "browser_use/agent/service.py:1983",
+          "code": "observatory_log.llm_error(None, e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.llm.ainvoke @ browser_use/agent/service.py:1957",
+      "role": "llm_response",
+      "label": "self.llm.ainvoke",
+      "path": "browser_use/agent/service.py",
+      "line": 1957,
+      "in": "Agent.get_model_output",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "Agent.run",
+      "role": "entry",
+      "label": "Agent.run",
+      "path": "browser_use/agent/service.py",
+      "line": 2511,
+      "end_line": 2737,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "browser_use/agent/service.py:2549",
+          "code": "observatory_log.user_input(self.task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "Agent.step",
+      "role": "function",
+      "label": "Agent.step",
+      "path": "browser_use/agent/service.py",
+      "line": 1036,
+      "end_line": 1086,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "pattern.sub @ browser_use/utils.py:121",
+      "role": "tool_response",
+      "label": "pattern.sub",
+      "path": "browser_use/utils.py",
+      "line": 121,
+      "in": "browser_use/utils.redact_sensitive_string",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "[User Input] task (constructor parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "browser_use/agent/service.py",
+      "line": 139,
+      "in": "Agent.__init__",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "Registry.execute_action",
+      "role": "function",
+      "label": "Registry.execute_action",
+      "path": "browser_use/tools/registry/service.py",
+      "line": 332,
+      "end_line": 424,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "browser_use/tools/registry/service.py:348",
+          "code": "start = tool_start(action_name, params)",
+          "records": [
+            {
+              "value": "action_name",
+              "whole": true
+            },
+            {
+              "value": "params",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    }
+  ],
+  "links": [
+    {
+      "from": "Agent.get_model_output",
+      "to": "Agent.get_model_output",
+      "values": [],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.get_model_output",
+      "to": "self.llm.ainvoke @ browser_use/agent/service.py:1957",
+      "values": [
+        "input_messages",
+        "kwargs"
+      ],
+      "call": true,
+      "back": [
+        "kwargs",
+        "response"
+      ],
+      "returns": true
+    },
+    {
+      "from": "Agent.run",
+      "to": "Agent.step",
+      "values": [
+        "current_step",
+        "step_info"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.step",
+      "to": "Agent.get_model_output",
+      "values": [
+        "input_messages",
+        "retry_messages"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.step",
+      "to": "pattern.sub @ browser_use/utils.py:121",
+      "values": [
+        "compaction_input",
+        "item",
+        "message",
+        "step_info",
+        "value"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.step",
+      "to": "self.registry.execute_action @ browser_use/tools/service.py:2221",
+      "values": [
+        "action",
+        "action_name",
+        "file_system",
+        "params",
+        "result",
+        "state"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "[User Input] task (constructor parameter)",
+      "to": "self.registry.execute_action @ browser_use/tools/service.py:2221",
+      "values": [
+        "action",
+        "action_name",
+        "file_system",
+        "initial_actions",
+        "initial_actions_dict",
+        "params",
+        "task"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    }
+  ]
+}

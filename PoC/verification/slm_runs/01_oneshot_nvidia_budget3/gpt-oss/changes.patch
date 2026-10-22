@@ -1,0 +1,108 @@
+diff --git a/agent.py b/agent.py
+index 5c08a88..3bcf775 100644
+--- a/agent.py
++++ b/agent.py
+@@ -2,13 +2,18 @@
+
+ from llm import LLM
+ from tools import Registry
++from observatory import observatory_log
+
++# Basic system prompt for the agent. The bash tool uses cmd.exe.
+ SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
++
++# Define the tools mapping for the agent.
+ TOOLS = [
+     {
+         "name": name,
+         "description": desc,
+-        "input_schema": {"type": "object", "properties": {arg: {"type": "string"}}, "required": [arg]},
++        "input_schema": {"type": "object", "properties": {arg: {"type": "string"}}},
++        "required": [arg],
+     }
+     for name, arg, desc in [
+         ("bash", "command", "Run a shell command and return its stdout."),
+@@ -24,29 +29,65 @@ class ToyAgent:
+         self.messages: list[dict] = []
+
+     def run(self, task: str, max_steps: int = 10) -> str:
++        # Log user task as a tool interaction
++        start = observatory_log.tool_start("user_input", params={"prompt": "task"})
++        observatory_log.tool_end(start, "user_input", result=task)
++
+         self.messages = [{"role": "user", "content": task}]
+         for n in range(1, max_steps + 1):
+             reply = self.step(n)
+             if not reply["calls"]:
+-                return reply["content"] if self.confirm(reply["content"]) else self.ask_user("What next?")
++                confirm_text = reply["content"]
++                if self.confirm(confirm_text):
++                    return confirm_text
++                else:
++                    # Ask user for the next step
++                    return self.ask_user("What next?")
+         return ""
+
+     def step(self, n: int) -> dict:
+         try:
++            observatory_log.llm_query(n, model=self.llm.model, messages=self.messages)
+             reply = self.llm.chat(self.messages, TOOLS, n)
+-        except TimeoutError:
+-            reply = self.fallback_query(n)
++        except Exception as e:
++            observatory_log.llm_error(n, e)
++            raise
++        # Log the parsed LLM response
++        observatory_log.llm_response(n, actions=[c["name"] for c in reply["calls"]], reply=reply)
+         self.messages.append(reply["message"])
+-        results = [(call["id"], self.registry.run(call["name"], call["args"])) for call in reply["calls"]]
++
++        results: list[tuple[str, str]] = []
++        for call in reply["calls"]:
++            action_name = call["name"]
++            action_args = call["args"]
++            start = observatory_log.tool_start(action_name, params=action_args, step=n)
++            try:
++                output = self.registry.run(action_name, action_args)
++            except Exception as e:
++                observatory_log.tool_error(start, action_name, e, step=n)
++                raise
++            observatory_log.tool_end(start, action_name, result=output, step=n)
++            results.append((call["id"], output))
++
+         if results:
+             self.messages.append(self.llm.results_message(results))
+         return reply
+
+     def fallback_query(self, n: int) -> dict:
+-        return self.llm.chat(self.messages, [], n)
++        try:
++            observatory_log.llm_query(n, model=self.llm.model, messages=self.messages)
++            reply = self.llm.chat(self.messages, [], n)
++        except Exception as e:
++            observatory_log.llm_error(n, e)
++            raise
++        observatory_log.llm_response(n, actions=[], reply=reply)
++        return reply
+
+     def ask_user(self, question: str) -> str:
++        # Log the prompt read from the user
++        start = observatory_log.tool_start("user_input", params={"prompt": question})
+         answer = input(f"{question} ")
++        observatory_log.tool_end(start, "user_input", result=answer)
+         return answer
+
+     def confirm(self, answer: str) -> bool:
+@@ -55,10 +96,10 @@ class ToyAgent:
+
+ if __name__ == "__main__":
+     import io
+-    import os
+     import sys
+     from pathlib import Path
+
+-    if not sys.stdin.isatty():  # no terminal (started from the dashboard): answer "y" instead of waiting
++    # When launched from the dashboard (non-interactive), auto-accept decisions
++    if not sys.stdin.isatty():
+         sys.stdin = io.StringIO("y\n")
+     print(ToyAgent().run(" ".join(sys.argv[1:]) or input("Task: ")))

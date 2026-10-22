@@ -1,0 +1,1285 @@
+[
+  {
+    "value": "User Input",
+    "found": "기준점 (진입점 인자)",
+    "mixed_logs": [],
+    "source": "[User Input] task (entry parameter)",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.model.query @ src/minisweagent/agents/default.py:160",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 160,
+      "code": "message = self.model.query(self.messages)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 92,
+            "code": "observatory_log.user_input(task)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:92",
+            "log": "[LOG] observatory_log.user_input @ src/minisweagent/agents/default.py:92",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 47,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:47",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 6,
+        "code": "def recursive_merge(*dictionaries: dict | None) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:6",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:dictionaries",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 16,
+        "code": "for d in dictionaries:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:16",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:d",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 19,
+        "code": "for key, value in d.items():",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:19",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 15,
+        "code": "result: dict[str, Any] = {}",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:15",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 6,
+        "code": "def recursive_merge(*dictionaries: dict | None) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:6",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 54,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:54",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:184",
+        "name": "[외부 응답] self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 72,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:72",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 44,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:44",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 158,
+            "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:158",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:158",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "[외부 호출] self.model.query @ src/minisweagent/agents/default.py:160",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "found": "기준점 (진입점 인자)",
+    "mixed_logs": [],
+    "source": "[User Input] task (entry parameter)",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of DefaultAgent.run",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 127,
+      "code": "return self.messages[-1].get(\"extra\", {})",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:127"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 92,
+            "code": "observatory_log.user_input(task)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:92",
+            "log": "[LOG] observatory_log.user_input @ src/minisweagent/agents/default.py:92",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 47,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:47",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 6,
+        "code": "def recursive_merge(*dictionaries: dict | None) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:6",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:dictionaries",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 16,
+        "code": "for d in dictionaries:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:16",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:d",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 19,
+        "code": "for key, value in d.items():",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:19",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 15,
+        "code": "result: dict[str, Any] = {}",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:15",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 6,
+        "code": "def recursive_merge(*dictionaries: dict | None) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:6",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 54,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:54",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:184",
+        "name": "[외부 응답] self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 72,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:72",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 44,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:44",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 158,
+            "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:158",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:158",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "DefaultAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 127,
+        "code": "return self.messages[-1].get(\"extra\", {})",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:127",
+        "name": "[최종 출력] return of DefaultAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] _multiline_prompt_session.prompt @ src/minisweagent/agents/utils/prompt_user.py:14",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.model.query @ src/minisweagent/agents/default.py:160",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 160,
+      "code": "message = self.model.query(self.messages)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/utils/prompt_user.py",
+        "line": 14,
+        "code": "answer = _multiline_prompt_session.prompt(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/utils/prompt_user.py:14",
+        "name": "[외부 응답] _multiline_prompt_session.prompt @ src/minisweagent/agents/utils/prompt_user.py:14",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/utils/prompt_user.py",
+        "line": 14,
+        "code": "answer = _multiline_prompt_session.prompt(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/utils/prompt_user.py:14",
+        "name": "src/minisweagent/agents/utils/prompt_user._multiline_prompt:answer",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/utils/prompt_user.py",
+            "line": 22,
+            "code": "observatory_log.user_input(answer, prompt=\"\")",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/utils/prompt_user.py:22",
+            "log": "[LOG] observatory_log.user_input @ src/minisweagent/agents/utils/prompt_user.py:22",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/utils/prompt_user.py",
+        "line": 13,
+        "code": "def _multiline_prompt() -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/utils/prompt_user.py:13",
+        "name": "src/minisweagent/agents/utils/prompt_user._multiline_prompt:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/run/mini.py",
+        "line": 94,
+        "code": "if (run_task := config.get(\"run\", {}).get(\"task\", UNSET)) is UNSET:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/run/mini.py:94",
+        "name": "src/minisweagent/run/mini.main:run_task",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 92,
+            "code": "observatory_log.user_input(task)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:92",
+            "log": "[LOG] observatory_log.user_input @ src/minisweagent/agents/default.py:92",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 47,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:47",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 6,
+        "code": "def recursive_merge(*dictionaries: dict | None) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:6",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:dictionaries",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 16,
+        "code": "for d in dictionaries:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:16",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:d",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 19,
+        "code": "for key, value in d.items():",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:19",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 15,
+        "code": "result: dict[str, Any] = {}",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:15",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 6,
+        "code": "def recursive_merge(*dictionaries: dict | None) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:6",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 54,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:54",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:184",
+        "name": "[외부 응답] self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 72,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:72",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 44,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:44",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 158,
+            "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:158",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:158",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "[외부 호출] self.model.query @ src/minisweagent/agents/default.py:160",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] _multiline_prompt_session.prompt @ src/minisweagent/agents/utils/prompt_user.py:14",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of DefaultAgent.run",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 127,
+      "code": "return self.messages[-1].get(\"extra\", {})",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:127"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/utils/prompt_user.py",
+        "line": 14,
+        "code": "answer = _multiline_prompt_session.prompt(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/utils/prompt_user.py:14",
+        "name": "[외부 응답] _multiline_prompt_session.prompt @ src/minisweagent/agents/utils/prompt_user.py:14",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/utils/prompt_user.py",
+        "line": 14,
+        "code": "answer = _multiline_prompt_session.prompt(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/utils/prompt_user.py:14",
+        "name": "src/minisweagent/agents/utils/prompt_user._multiline_prompt:answer",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/utils/prompt_user.py",
+            "line": 22,
+            "code": "observatory_log.user_input(answer, prompt=\"\")",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/utils/prompt_user.py:22",
+            "log": "[LOG] observatory_log.user_input @ src/minisweagent/agents/utils/prompt_user.py:22",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/utils/prompt_user.py",
+        "line": 13,
+        "code": "def _multiline_prompt() -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/utils/prompt_user.py:13",
+        "name": "src/minisweagent/agents/utils/prompt_user._multiline_prompt:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/run/mini.py",
+        "line": 94,
+        "code": "if (run_task := config.get(\"run\", {}).get(\"task\", UNSET)) is UNSET:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/run/mini.py:94",
+        "name": "src/minisweagent/run/mini.main:run_task",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "DefaultAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 92,
+            "code": "observatory_log.user_input(task)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:92",
+            "log": "[LOG] observatory_log.user_input @ src/minisweagent/agents/default.py:92",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 47,
+        "code": "self.extra_template_vars = {}",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:47",
+        "name": "DefaultAgent.extra_template_vars",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 6,
+        "code": "def recursive_merge(*dictionaries: dict | None) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:6",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:dictionaries",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 16,
+        "code": "for d in dictionaries:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:16",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:d",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 19,
+        "code": "for key, value in d.items():",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:19",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 15,
+        "code": "result: dict[str, Any] = {}",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:15",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/utils/serialize.py",
+        "line": 6,
+        "code": "def recursive_merge(*dictionaries: dict | None) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/utils/serialize.py:6",
+        "name": "src/minisweagent/utils/serialize.recursive_merge:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 54,
+        "code": "def get_template_vars(self, **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:54",
+        "name": "DefaultAgent.get_template_vars:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:184",
+        "name": "[외부 응답] self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 72,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:72",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 44,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:44",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 158,
+            "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:158",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:158",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "DefaultAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 127,
+        "code": "return self.messages[-1].get(\"extra\", {})",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:127",
+        "name": "[최종 출력] return of DefaultAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.model.query @ src/minisweagent/agents/default.py:160",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] self.env.execute @ src/minisweagent/agents/default.py:192",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 192,
+      "code": "output = self.env.execute(action)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:192"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "[외부 응답] self.model.query @ src/minisweagent/agents/default.py:160",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 165,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:165",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:165",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 133,
+        "code": "def query(self) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:133",
+        "name": "DefaultAgent.query:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 181,
+        "code": "def execute_actions(self, message: dict) -> list[dict]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:181",
+        "name": "DefaultAgent.execute_actions:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 183,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:183",
+        "name": "DefaultAgent.execute_actions:action",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 186,
+        "code": "def execute_action(self, action: dict) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:186",
+        "name": "DefaultAgent.execute_action:action",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 190,
+            "code": "start = observatory_log.tool_start(\"bash\", action)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:190",
+            "log": "[LOG] observatory_log.tool_start @ src/minisweagent/agents/default.py:190",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 192,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:192",
+        "name": "[외부 호출] self.env.execute @ src/minisweagent/agents/default.py:192",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.model.query @ src/minisweagent/agents/default.py:160",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.model.query @ src/minisweagent/agents/default.py:160",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 160,
+      "code": "message = self.model.query(self.messages)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "[외부 응답] self.model.query @ src/minisweagent/agents/default.py:160",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 165,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:165",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:165",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 72,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:72",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 44,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:44",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 158,
+            "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:158",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:158",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "[외부 호출] self.model.query @ src/minisweagent/agents/default.py:160",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.model.query @ src/minisweagent/agents/default.py:160",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of DefaultAgent.run",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 127,
+      "code": "return self.messages[-1].get(\"extra\", {})",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:127"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "[외부 응답] self.model.query @ src/minisweagent/agents/default.py:160",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "DefaultAgent.query:message",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 165,
+            "code": "observatory_log.llm_response(",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:165",
+            "log": "[LOG] observatory_log.llm_response @ src/minisweagent/agents/default.py:165",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 72,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:72",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 44,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:44",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 158,
+            "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:158",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:158",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "DefaultAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 127,
+        "code": "return self.messages[-1].get(\"extra\", {})",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:127",
+        "name": "[최종 출력] return of DefaultAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "found": "LLM 응답과 다음 LLM 입력 사이에서 찾음",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.env.execute @ src/minisweagent/agents/default.py:192",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.model.query @ src/minisweagent/agents/default.py:160",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 160,
+      "code": "message = self.model.query(self.messages)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 192,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:192",
+        "name": "[외부 응답] self.env.execute @ src/minisweagent/agents/default.py:192",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 192,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:192",
+        "name": "DefaultAgent.execute_action:output",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 211,
+            "code": "observatory_log.tool_end(start, \"bash\", result=output)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:211",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:211",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 186,
+        "code": "def execute_action(self, action: dict) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:186",
+        "name": "DefaultAgent.execute_action:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 183,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:183",
+        "name": "DefaultAgent.execute_actions:outputs",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:184",
+        "name": "[외부 응답] self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 72,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:72",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 44,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:44",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 158,
+            "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:158",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:158",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 160,
+        "code": "message = self.model.query(self.messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:160",
+        "name": "[외부 호출] self.model.query @ src/minisweagent/agents/default.py:160",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "found": "LLM 응답과 다음 LLM 입력 사이에서 찾음",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.env.execute @ src/minisweagent/agents/default.py:192",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of DefaultAgent.run",
+    "sink_at": {
+      "file": "src/minisweagent/agents/default.py",
+      "line": 127,
+      "code": "return self.messages[-1].get(\"extra\", {})",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:127"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 192,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:192",
+        "name": "[외부 응답] self.env.execute @ src/minisweagent/agents/default.py:192",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 192,
+        "code": "output = self.env.execute(action)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:192",
+        "name": "DefaultAgent.execute_action:output",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 211,
+            "code": "observatory_log.tool_end(start, \"bash\", result=output)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:211",
+            "log": "[LOG] observatory_log.tool_end @ src/minisweagent/agents/default.py:211",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 186,
+        "code": "def execute_action(self, action: dict) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:186",
+        "name": "DefaultAgent.execute_action:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 183,
+        "code": "outputs = [self.execute_action(action) for action in message.get(\"extra\", {}).get(\"actions\", [])]",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:183",
+        "name": "DefaultAgent.execute_actions:outputs",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 184,
+        "code": "return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:184",
+        "name": "[외부 응답] self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 72,
+        "code": "self.logger.debug(messages)  # set log level to debug to see",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:72",
+        "name": "DefaultAgent.add_messages:messages",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 44,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:44",
+        "name": "DefaultAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "src/minisweagent/agents/default.py",
+            "line": 158,
+            "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:158",
+            "log": "[LOG] observatory_log.llm_query @ src/minisweagent/agents/default.py:158",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 90,
+        "code": "def run(self, task: str = \"\", **kwargs) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:90",
+        "name": "DefaultAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "src/minisweagent/agents/default.py",
+        "line": 127,
+        "code": "return self.messages[-1].get(\"extra\", {})",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen/src/minisweagent/agents/default.py:127",
+        "name": "[최종 출력] return of DefaultAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  }
+]

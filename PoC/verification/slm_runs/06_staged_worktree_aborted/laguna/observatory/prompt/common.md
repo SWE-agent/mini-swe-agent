@@ -1,0 +1,7 @@
+This repo is an LLM agent. `{kit}/` contains the Agent Observatory: a dashboard that shows a per-step history of an agent's LLM calls and tool executions, fed by a small logger module, `observatory_log`. The kit connects the agent to the logger in small steps, and this session does one of them, described below. Do only this step: the kit runs the others.
+
+This session is non-interactive: nobody can answer questions, so never ask; carry the step out to the end. Rules for every step:
+- No behavior change besides the logging: never delete, move or rewrite the agent's own code, definitions or user-facing output. Follow AGENTS.md if the repo has one (minimal, concise code, no extra comments).
+- Do not modify anything in `{kit}/` other than the file this step asks for. Do not leave files you create for your own checks (scripts, stubs, notes) in the repo, except in `{kit}/runs/`. Do not commit.
+- Paths are relative to this directory, the agent's root, even if it lies inside a larger Git repository.
+

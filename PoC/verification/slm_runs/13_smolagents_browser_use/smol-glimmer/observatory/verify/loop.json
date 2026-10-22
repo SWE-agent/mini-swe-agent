@@ -1,0 +1,1701 @@
+{
+  "root": "C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/smol-glimmer",
+  "nodes": [
+    {
+      "id": "MultiStepAgent._run_stream",
+      "role": "function",
+      "label": "MultiStepAgent._run_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 542,
+      "end_line": 613,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 일부만 기록",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "CodeAgent._step_stream",
+      "role": "function",
+      "label": "CodeAgent._step_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1669,
+      "end_line": 1804,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1708",
+          "code": "observatory_log.llm_query(memory_step.step_number, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1716",
+          "code": "observatory_log.llm_error(memory_step.step_number, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1718",
+          "code": "observatory_log.llm_response(memory_step.step_number, actions=[], reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "tool_start",
+          "at": "src/smolagents/agents.py:1762",
+          "code": "start = observatory_log.tool_start(\"python_interpreter\", code_action)",
+          "records": [
+            {
+              "value": "code_action",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/smolagents/agents.py:1765",
+          "code": "observatory_log.tool_end(start, \"python_interpreter\", result=code_output)",
+          "records": [
+            {
+              "value": "code_output",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/smolagents/agents.py:1774",
+          "code": "observatory_log.tool_error(start, \"python_interpreter\", e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → LLM 입력: 일부만 기록",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "as_completed @ src/smolagents/agents.py:1458",
+      "role": "tool_response",
+      "label": "as_completed",
+      "path": "src/smolagents/agents.py",
+      "line": 1458,
+      "in": "ToolCallingAgent.process_tool_calls",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "ToolCallingAgent.process_tool_calls",
+      "role": "function",
+      "label": "ToolCallingAgent.process_tool_calls",
+      "path": "src/smolagents/agents.py",
+      "line": 1388,
+      "end_line": 1469,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "MultiStepAgent._generate_planning_step",
+      "role": "function",
+      "label": "MultiStepAgent._generate_planning_step",
+      "path": "src/smolagents/agents.py",
+      "line": 641,
+      "end_line": 761,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:674",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:678",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:681",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message_content, response=plan_message)",
+          "records": [
+            {
+              "value": "plan_message",
+              "whole": true
+            },
+            {
+              "value": "plan_message_content",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:738",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:742",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:745",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message_content, response=plan_message)",
+          "records": [
+            {
+              "value": "plan_message",
+              "whole": true
+            },
+            {
+              "value": "plan_message_content",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:1710",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 1710,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → LLM 입력: 일부만 기록",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "ToolCallingAgent._step_stream",
+      "role": "function",
+      "label": "ToolCallingAgent._step_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1296,
+      "end_line": 1386,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1329",
+          "code": "observatory_log.llm_query(memory_step.step_number, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1337",
+          "code": "observatory_log.llm_error(memory_step.step_number, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1340",
+          "code": "observatory_log.llm_response(memory_step.step_number, actions=actions, reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "actions",
+              "whole": true
+            },
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "MultiStepAgent.step",
+      "role": "function",
+      "label": "MultiStepAgent.step",
+      "path": "src/smolagents/agents.py",
+      "line": 796,
+      "end_line": 801,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "src/smolagents/agents.py",
+      "line": 440,
+      "in": "MultiStepAgent.run",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 일부만 기록"
+      ]
+    },
+    {
+      "id": "MultiStepAgent.run",
+      "role": "entry",
+      "label": "MultiStepAgent.run",
+      "path": "src/smolagents/agents.py",
+      "line": 438,
+      "end_line": 540,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 일부만 기록",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 일부만 기록",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "re.sub @ src/smolagents/local_python_executor.py:350",
+      "role": "tool_response",
+      "label": "re.sub",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 350,
+      "in": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 332,
+      "end_line": 357,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "MultiStepAgent.provide_final_answer",
+      "role": "function",
+      "label": "MultiStepAgent.provide_final_answer",
+      "path": "src/smolagents/agents.py",
+      "line": 824,
+      "end_line": 873,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:860",
+          "code": "observatory_log.llm_query(None, model=self.model, messages=messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:865",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:867",
+          "code": "observatory_log.llm_response(None, actions=[], reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:863",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 863,
+      "in": "MultiStepAgent.provide_final_answer",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "tool @ src/smolagents/agents.py:1516",
+      "role": "tool_response",
+      "label": "tool",
+      "path": "src/smolagents/agents.py",
+      "line": 1516,
+      "in": "ToolCallingAgent.execute_tool_call",
+      "logs": [],
+      "gaps": [
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "ToolCallingAgent.execute_tool_call",
+      "role": "function",
+      "label": "ToolCallingAgent.execute_tool_call",
+      "path": "src/smolagents/agents.py",
+      "line": 1480,
+      "end_line": 1533,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "src/smolagents/agents.py:1510",
+          "code": "start = observatory_log.tool_start(tool_name, arguments)",
+          "records": [
+            {
+              "value": "arguments",
+              "whole": true
+            },
+            {
+              "value": "tool_name",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/smolagents/agents.py:1517",
+          "code": "observatory_log.tool_end(start, tool_name, result=out)",
+          "records": [
+            {
+              "value": "out",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            },
+            {
+              "value": "tool_name",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/smolagents/agents.py:1521",
+          "code": "observatory_log.tool_error(start, tool_name, e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            },
+            {
+              "value": "tool_name",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "tool @ src/smolagents/agents.py:1514",
+      "role": "tool_response",
+      "label": "tool",
+      "path": "src/smolagents/agents.py",
+      "line": 1514,
+      "in": "ToolCallingAgent.execute_tool_call",
+      "logs": [],
+      "gaps": [
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "MultiStepAgent.__call__",
+      "role": "function",
+      "label": "MultiStepAgent.__call__",
+      "path": "src/smolagents/agents.py",
+      "line": 888,
+      "end_line": 910,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:740",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 740,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": [
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:676",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 676,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": [
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:1331",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 1331,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "input @ src/smolagents/default_tools.py:100",
+      "role": "user_input",
+      "label": "input",
+      "path": "src/smolagents/default_tools.py",
+      "line": 100,
+      "in": "UserInputTool.forward",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 일부만 기록"
+      ]
+    },
+    {
+      "id": "compiled_template.render @ src/smolagents/agents.py:107",
+      "role": "tool_response",
+      "label": "compiled_template.render",
+      "path": "src/smolagents/agents.py",
+      "line": 107,
+      "in": "src/smolagents/agents.populate_template",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "re.sub @ src/smolagents/local_python_executor.py:356",
+      "role": "tool_response",
+      "label": "re.sub",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 356,
+      "in": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "json.loads @ src/smolagents/agents.py:1742",
+      "role": "tool_response",
+      "label": "json.loads",
+      "path": "src/smolagents/agents.py",
+      "line": 1742,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.python_executor @ src/smolagents/agents.py:1764",
+      "role": "tool_response",
+      "label": "self.python_executor",
+      "path": "src/smolagents/agents.py",
+      "line": 1764,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "re.findall @ src/smolagents/utils.py:192",
+      "role": "tool_response",
+      "label": "re.findall",
+      "path": "src/smolagents/utils.py",
+      "line": 192,
+      "in": "src/smolagents/utils.extract_code_from_text",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "json.loads @ src/smolagents/agents.py:1742",
+      "values": [
+        "output_text"
+      ],
+      "call": true,
+      "back": [
+        "code_action"
+      ],
+      "returns": true
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "re.findall @ src/smolagents/utils.py:192",
+      "values": [
+        "code_action",
+        "output_text",
+        "text"
+      ],
+      "call": true,
+      "back": [
+        "matches"
+      ],
+      "returns": true
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.model.generate @ src/smolagents/agents.py:1710",
+      "values": [
+        "additional_args",
+        "input_messages",
+        "stop_sequences"
+      ],
+      "call": true,
+      "back": [
+        "additional_args",
+        "chat_message",
+        "stop_sequences"
+      ],
+      "returns": true
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.python_executor @ src/smolagents/agents.py:1764",
+      "values": [
+        "code_action"
+      ],
+      "call": true,
+      "back": [
+        "code_output"
+      ],
+      "returns": true
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "values": [
+        "code_action"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.__call__",
+      "to": "MultiStepAgent.run",
+      "values": [
+        "full_task"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "compiled_template.render @ src/smolagents/agents.py:107",
+      "values": [
+        "task",
+        "variables"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate @ src/smolagents/agents.py:676",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [
+        "input_messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate @ src/smolagents/agents.py:740",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [
+        "input_messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "action_step"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "task"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "task"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "action_step"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.provide_final_answer",
+      "to": "compiled_template.render @ src/smolagents/agents.py:107",
+      "values": [
+        "task",
+        "variables"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.provide_final_answer",
+      "to": "self.model.generate @ src/smolagents/agents.py:863",
+      "values": [
+        "messages"
+      ],
+      "call": true,
+      "back": [
+        "chat_message",
+        "messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "task"
+      ],
+      "call": true,
+      "back": [
+        "action_step",
+        "final_memory_step",
+        "memory",
+        "planning_step",
+        "task"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.step",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "memory_step"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.step",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "memory_step"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "ToolCallingAgent.process_tool_calls",
+      "values": [
+        "chat_message",
+        "memory_step"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "self.model.generate @ src/smolagents/agents.py:1331",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [
+        "chat_message"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent.execute_tool_call",
+      "to": "tool @ src/smolagents/agents.py:1514",
+      "values": [
+        "arguments"
+      ],
+      "call": true,
+      "back": [
+        "out"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent.execute_tool_call",
+      "to": "tool @ src/smolagents/agents.py:1516",
+      "values": [
+        "arguments"
+      ],
+      "call": true,
+      "back": [
+        "out"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls",
+      "to": "ToolCallingAgent.execute_tool_call",
+      "values": [
+        "tool_arguments",
+        "tool_call"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls",
+      "to": "as_completed @ src/smolagents/agents.py:1458",
+      "values": [
+        "futures"
+      ],
+      "call": true,
+      "back": [
+        "future",
+        "futures"
+      ],
+      "returns": true
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "MultiStepAgent.run",
+      "values": [
+        "task"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "to": "re.sub @ src/smolagents/local_python_executor.py:350",
+      "values": [
+        "code"
+      ],
+      "call": true,
+      "back": [
+        "code"
+      ],
+      "returns": true
+    },
+    {
+      "from": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "to": "re.sub @ src/smolagents/local_python_executor.py:356",
+      "values": [
+        "code"
+      ],
+      "call": true,
+      "back": [
+        "code"
+      ],
+      "returns": true
+    }
+  ]
+}

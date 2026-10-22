@@ -1,0 +1,22 @@
+flowchart LR
+  nself_registry_execute_action___browser_use_tools_service_py_2221[["self.registry.execute_action"]]
+  style nself_registry_execute_action___browser_use_tools_service_py_2221 stroke:#be123c,stroke-dasharray:4 3
+  nAgent_get_model_output["Agent.get_model_output<br/>[LOG] llm_query @ browser_use/agent/service.py:1956<br/>[LOG] llm_response @ browser_use/agent/service.py:1962<br/>[LOG] llm_error @ browser_use/agent/service.py:1979<br/>[LOG] llm_error @ browser_use/agent/service.py:1983"]
+  style nAgent_get_model_output stroke:#be123c,stroke-dasharray:4 3
+  nself_llm_ainvoke___browser_use_agent_service_py_1957(["self.llm.ainvoke"])
+  style nself_llm_ainvoke___browser_use_agent_service_py_1957 stroke:#be123c,stroke-dasharray:4 3
+  nAgent_run["Agent.run<br/>[LOG] user_input @ browser_use/agent/service.py:2549"]
+  nAgent_step["Agent.step"]
+  npattern_sub___browser_use_utils_py_121[["pattern.sub"]]
+  style npattern_sub___browser_use_utils_py_121 stroke:#be123c,stroke-dasharray:4 3
+  n_User_Input__task__constructor_parameter_[/"task"/]
+  style n_User_Input__task__constructor_parameter_ stroke:#be123c,stroke-dasharray:4 3
+  nRegistry_execute_action["Registry.execute_action<br/>[LOG] tool_start @ browser_use/tools/registry/service.py:348"]
+  nAgent_get_model_output --> nAgent_get_model_output
+  nAgent_get_model_output -->|input_messages, kwargs| nself_llm_ainvoke___browser_use_agent_service_py_1957
+  nself_llm_ainvoke___browser_use_agent_service_py_1957 -.->|kwargs, response| nAgent_get_model_output
+  nAgent_run -->|current_step, step_info| nAgent_step
+  nAgent_step -->|input_messages, retry_messages| nAgent_get_model_output
+  nAgent_step -->|compaction_input, item| npattern_sub___browser_use_utils_py_121
+  nAgent_step -->|action, action_name| nself_registry_execute_action___browser_use_tools_service_py_2221
+  n_User_Input__task__constructor_parameter_ -.->|action, action_name| nself_registry_execute_action___browser_use_tools_service_py_2221

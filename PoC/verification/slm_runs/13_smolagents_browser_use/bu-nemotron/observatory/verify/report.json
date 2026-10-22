@@ -1,0 +1,2223 @@
+[
+  {
+    "value": "User Input",
+    "found": "기준점 (진입점 인자)",
+    "mixed_logs": [
+      "[LOG] observatory_log.user_input"
+    ],
+    "source": "[User Input] task (constructor parameter)",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] pattern.sub @ browser_use/utils.py:121",
+    "sink_at": {
+      "file": "browser_use/utils.py",
+      "line": 121,
+      "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 139,
+        "code": "task: str,",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:139",
+        "name": "[User Input] task (constructor parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 137,
+        "code": "def __init__(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:137",
+        "name": "Agent.__init__:task",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 612,
+        "code": "def _enhance_task_with_schema(self, task: str, output_model_schema: type[AgentStructuredOutput] | None) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:612",
+        "name": "Agent._enhance_task_with_schema:task",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 612,
+        "code": "def _enhance_task_with_schema(self, task: str, output_model_schema: type[AgentStructuredOutput] | None) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:612",
+        "name": "Agent._enhance_task_with_schema:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 375,
+        "code": "self.task = self._enhance_task_with_schema(task, output_model_schema)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:375",
+        "name": "Agent.task",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "browser_use/agent/service.py",
+            "line": 2549,
+            "code": "observatory_log.user_input(self.task)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2549",
+            "log": "[LOG] observatory_log.user_input @ browser_use/agent/service.py:2549",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2297,
+        "code": "def _extract_start_url(self, task: str) -> str | None:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2297",
+        "name": "Agent._extract_start_url:task",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2303,
+        "code": "task_without_emails = re.sub(r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b', '', task)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2303",
+        "name": "[외부 응답] re.sub @ browser_use/agent/service.py:2303",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2303,
+        "code": "task_without_emails = re.sub(r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b', '', task)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2303",
+        "name": "Agent._extract_start_url:task_without_emails",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2387,
+        "code": "matches = re.finditer(pattern, task_without_emails)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2387",
+        "name": "[외부 응답] re.finditer @ browser_use/agent/service.py:2387",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2387,
+        "code": "matches = re.finditer(pattern, task_without_emails)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2387",
+        "name": "Agent._extract_start_url:matches",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2388,
+        "code": "for match in matches:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2388",
+        "name": "Agent._extract_start_url:match",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2389,
+        "code": "url = match.group(0)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2389",
+        "name": "Agent._extract_start_url:url",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2384,
+        "code": "found_urls = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2384",
+        "name": "Agent._extract_start_url:found_urls",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2434,
+        "code": "unique_urls = list(set(found_urls))",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2434",
+        "name": "Agent._extract_start_url:unique_urls",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2297,
+        "code": "def _extract_start_url(self, task: str) -> str | None:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2297",
+        "name": "Agent._extract_start_url:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 460,
+        "code": "initial_url = None",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:460",
+        "name": "Agent.__init__:initial_url",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 463,
+        "code": "if self.directly_open_url and not self.state.follow_up_task and not initial_actions:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:463",
+        "name": "Agent.__init__:initial_actions",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 471,
+        "code": "self.initial_actions = self._convert_initial_actions(initial_actions) if initial_actions else None",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:471",
+        "name": "Agent.initial_actions",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2741,
+        "code": "async def multi_act(self, actions: list[ActionModel]) -> list[ActionResult]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2741",
+        "name": "Agent.multi_act:actions",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2766,
+        "code": "for i, action in enumerate(actions):",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2766",
+        "name": "Agent.multi_act:action",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:action",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2200,
+        "code": "for action_name, params in action.model_dump(exclude_unset=True).items():",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2200",
+        "name": "Tools.act:action_name",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2220,
+        "code": "result = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2220",
+        "name": "Tools.act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2793,
+        "code": "result = await self.tools.act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2793",
+        "name": "Agent.multi_act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2750,
+        "code": "results: list[ActionResult] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2750",
+        "name": "Agent.multi_act:results",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2741,
+        "code": "async def multi_act(self, actions: list[ActionModel]) -> list[ActionResult]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2741",
+        "name": "Agent.multi_act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 3299,
+        "code": "result = await self.multi_act(self.initial_actions)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:3299",
+        "name": "Agent._execute_initial_actions:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 437,
+        "code": "self.state = injected_agent_state or AgentState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:437",
+        "name": "Agent.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 107,
+        "code": "def __init__(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:107",
+        "name": "MessageManager.__init__:state",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 128,
+        "code": "self.state = state if state is not None else MessageManagerState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:128",
+        "name": "MessageManager.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 248,
+        "code": "compaction_sections = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:248",
+        "name": "MessageManager.maybe_compact_messages:compaction_sections",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 256,
+        "code": "compaction_input = '\\n\\n'.join(compaction_sections)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:256",
+        "name": "MessageManager.maybe_compact_messages:compaction_input",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 577,
+        "code": "def _filter_sensitive_data(self, message: BaseMessage) -> BaseMessage:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:577",
+        "name": "MessageManager._filter_sensitive_data:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 580,
+        "code": "def replace_sensitive(value: str) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:580",
+        "name": "MessageManager._filter_sensitive_data.replace_sensitive:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 108,
+        "code": "def redact_sensitive_string(value: str, sensitive_values: dict[str, str]) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:108",
+        "name": "browser_use/utils.redact_sensitive_string:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 121,
+        "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121",
+        "name": "[외부 호출] pattern.sub @ browser_use/utils.py:121",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "found": "기준점 (진입점 인자)",
+    "mixed_logs": [],
+    "source": "[User Input] task (constructor parameter)",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+    "sink_at": {
+      "file": "browser_use/agent/service.py",
+      "line": 1957,
+      "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 139,
+        "code": "task: str,",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:139",
+        "name": "[User Input] task (constructor parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 137,
+        "code": "def __init__(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:137",
+        "name": "Agent.__init__:task",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 612,
+        "code": "def _enhance_task_with_schema(self, task: str, output_model_schema: type[AgentStructuredOutput] | None) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:612",
+        "name": "Agent._enhance_task_with_schema:task",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 612,
+        "code": "def _enhance_task_with_schema(self, task: str, output_model_schema: type[AgentStructuredOutput] | None) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:612",
+        "name": "Agent._enhance_task_with_schema:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 375,
+        "code": "self.task = self._enhance_task_with_schema(task, output_model_schema)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:375",
+        "name": "Agent.task",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "browser_use/agent/service.py",
+            "line": 2549,
+            "code": "observatory_log.user_input(self.task)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2549",
+            "log": "[LOG] observatory_log.user_input @ browser_use/agent/service.py:2549",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2297,
+        "code": "def _extract_start_url(self, task: str) -> str | None:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2297",
+        "name": "Agent._extract_start_url:task",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2303,
+        "code": "task_without_emails = re.sub(r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b', '', task)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2303",
+        "name": "[외부 응답] re.sub @ browser_use/agent/service.py:2303",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2303,
+        "code": "task_without_emails = re.sub(r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b', '', task)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2303",
+        "name": "Agent._extract_start_url:task_without_emails",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2387,
+        "code": "matches = re.finditer(pattern, task_without_emails)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2387",
+        "name": "[외부 응답] re.finditer @ browser_use/agent/service.py:2387",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2387,
+        "code": "matches = re.finditer(pattern, task_without_emails)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2387",
+        "name": "Agent._extract_start_url:matches",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2388,
+        "code": "for match in matches:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2388",
+        "name": "Agent._extract_start_url:match",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2389,
+        "code": "url = match.group(0)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2389",
+        "name": "Agent._extract_start_url:url",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2384,
+        "code": "found_urls = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2384",
+        "name": "Agent._extract_start_url:found_urls",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2434,
+        "code": "unique_urls = list(set(found_urls))",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2434",
+        "name": "Agent._extract_start_url:unique_urls",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2297,
+        "code": "def _extract_start_url(self, task: str) -> str | None:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2297",
+        "name": "Agent._extract_start_url:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 460,
+        "code": "initial_url = None",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:460",
+        "name": "Agent.__init__:initial_url",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 463,
+        "code": "if self.directly_open_url and not self.state.follow_up_task and not initial_actions:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:463",
+        "name": "Agent.__init__:initial_actions",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 471,
+        "code": "self.initial_actions = self._convert_initial_actions(initial_actions) if initial_actions else None",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:471",
+        "name": "Agent.initial_actions",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2741,
+        "code": "async def multi_act(self, actions: list[ActionModel]) -> list[ActionResult]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2741",
+        "name": "Agent.multi_act:actions",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2766,
+        "code": "for i, action in enumerate(actions):",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2766",
+        "name": "Agent.multi_act:action",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:action",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2200,
+        "code": "for action_name, params in action.model_dump(exclude_unset=True).items():",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2200",
+        "name": "Tools.act:action_name",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2220,
+        "code": "result = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2220",
+        "name": "Tools.act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2793,
+        "code": "result = await self.tools.act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2793",
+        "name": "Agent.multi_act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2750,
+        "code": "results: list[ActionResult] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2750",
+        "name": "Agent.multi_act:results",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2741,
+        "code": "async def multi_act(self, actions: list[ActionModel]) -> list[ActionResult]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2741",
+        "name": "Agent.multi_act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 3299,
+        "code": "result = await self.multi_act(self.initial_actions)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:3299",
+        "name": "Agent._execute_initial_actions:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 437,
+        "code": "self.state = injected_agent_state or AgentState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:437",
+        "name": "Agent.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 107,
+        "code": "def __init__(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:107",
+        "name": "MessageManager.__init__:state",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 128,
+        "code": "self.state = state if state is not None else MessageManagerState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:128",
+        "name": "MessageManager.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 553,
+        "code": "self.last_input_messages = self.state.history.get_messages()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:553",
+        "name": "[외부 응답] self.state.history.get_messages @ browser_use/agent/message_manager/service.py:553",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 146,
+        "code": "self.last_input_messages = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:146",
+        "name": "MessageManager.last_input_messages",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 548,
+        "code": "def get_messages(self) -> list[BaseMessage]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:548",
+        "name": "MessageManager.get_messages:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1179,
+        "code": "input_messages = self._message_manager.get_messages()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1179",
+        "name": "Agent._get_next_action:input_messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1671,
+        "code": "async def _get_model_output_with_retry(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1671",
+        "name": "Agent._get_model_output_with_retry:input_messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1946,
+        "code": "async def get_model_output(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1946",
+        "name": "Agent.get_model_output:input_messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "browser_use/agent/service.py",
+            "line": 1956,
+            "code": "observatory_log.llm_query(None, model=self.model, messages=input_messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1956",
+            "log": "[LOG] observatory_log.llm_query @ browser_use/agent/service.py:1956",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1957,
+        "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957",
+        "name": "[외부 호출] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "found": "기준점 (진입점 인자)",
+    "mixed_logs": [
+      "[LOG] observatory_log.user_input"
+    ],
+    "source": "[User Input] task (constructor parameter)",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] self.registry.execute_action @ browser_use/tools/service.py:2221",
+    "sink_at": {
+      "file": "browser_use/tools/service.py",
+      "line": 2221,
+      "code": "self.registry.execute_action(",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2221"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 139,
+        "code": "task: str,",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:139",
+        "name": "[User Input] task (constructor parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 137,
+        "code": "def __init__(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:137",
+        "name": "Agent.__init__:task",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 612,
+        "code": "def _enhance_task_with_schema(self, task: str, output_model_schema: type[AgentStructuredOutput] | None) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:612",
+        "name": "Agent._enhance_task_with_schema:task",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 612,
+        "code": "def _enhance_task_with_schema(self, task: str, output_model_schema: type[AgentStructuredOutput] | None) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:612",
+        "name": "Agent._enhance_task_with_schema:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 375,
+        "code": "self.task = self._enhance_task_with_schema(task, output_model_schema)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:375",
+        "name": "Agent.task",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "browser_use/agent/service.py",
+            "line": 2549,
+            "code": "observatory_log.user_input(self.task)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2549",
+            "log": "[LOG] observatory_log.user_input @ browser_use/agent/service.py:2549",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2297,
+        "code": "def _extract_start_url(self, task: str) -> str | None:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2297",
+        "name": "Agent._extract_start_url:task",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2303,
+        "code": "task_without_emails = re.sub(r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b', '', task)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2303",
+        "name": "[외부 응답] re.sub @ browser_use/agent/service.py:2303",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2303,
+        "code": "task_without_emails = re.sub(r'\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b', '', task)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2303",
+        "name": "Agent._extract_start_url:task_without_emails",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2387,
+        "code": "matches = re.finditer(pattern, task_without_emails)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2387",
+        "name": "[외부 응답] re.finditer @ browser_use/agent/service.py:2387",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2387,
+        "code": "matches = re.finditer(pattern, task_without_emails)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2387",
+        "name": "Agent._extract_start_url:matches",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2388,
+        "code": "for match in matches:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2388",
+        "name": "Agent._extract_start_url:match",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2389,
+        "code": "url = match.group(0)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2389",
+        "name": "Agent._extract_start_url:url",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2384,
+        "code": "found_urls = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2384",
+        "name": "Agent._extract_start_url:found_urls",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2434,
+        "code": "unique_urls = list(set(found_urls))",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2434",
+        "name": "Agent._extract_start_url:unique_urls",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2297,
+        "code": "def _extract_start_url(self, task: str) -> str | None:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2297",
+        "name": "Agent._extract_start_url:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 460,
+        "code": "initial_url = None",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:460",
+        "name": "Agent.__init__:initial_url",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 463,
+        "code": "if self.directly_open_url and not self.state.follow_up_task and not initial_actions:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:463",
+        "name": "Agent.__init__:initial_actions",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 471,
+        "code": "self.initial_actions = self._convert_initial_actions(initial_actions) if initial_actions else None",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:471",
+        "name": "Agent.initial_actions",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2741,
+        "code": "async def multi_act(self, actions: list[ActionModel]) -> list[ActionResult]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2741",
+        "name": "Agent.multi_act:actions",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2766,
+        "code": "for i, action in enumerate(actions):",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2766",
+        "name": "Agent.multi_act:action",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:action",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2200,
+        "code": "for action_name, params in action.model_dump(exclude_unset=True).items():",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2200",
+        "name": "Tools.act:params",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2221,
+        "code": "self.registry.execute_action(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2221",
+        "name": "[외부 호출] self.registry.execute_action @ browser_use/tools/service.py:2221",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [
+      "[LOG] observatory_log.llm_response"
+    ],
+    "source": "[외부 응답] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] pattern.sub @ browser_use/utils.py:121",
+    "sink_at": {
+      "file": "browser_use/utils.py",
+      "line": 121,
+      "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1957,
+        "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957",
+        "name": "[외부 응답] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1957,
+        "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957",
+        "name": "Agent.get_model_output:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "browser_use/agent/service.py",
+            "line": 1962,
+            "code": "observatory_log.llm_response(None, actions=actions, reply=response, response=response)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1962",
+            "log": "[LOG] observatory_log.llm_response @ browser_use/agent/service.py:1962",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1958,
+        "code": "parsed: AgentOutput = response.completion  # type: ignore[assignment]",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1958",
+        "name": "Agent.get_model_output:parsed",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1946,
+        "code": "async def get_model_output(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1946",
+        "name": "Agent.get_model_output:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1673,
+        "code": "model_output = await self.get_model_output(input_messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1673",
+        "name": "Agent._get_model_output_with_retry:model_output",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1671,
+        "code": "async def _get_model_output_with_retry(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1671",
+        "name": "Agent._get_model_output_with_retry:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1185,
+        "code": "model_output = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1185",
+        "name": "Agent._get_next_action:model_output",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 437,
+        "code": "self.state = injected_agent_state or AgentState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:437",
+        "name": "Agent.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 107,
+        "code": "def __init__(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:107",
+        "name": "MessageManager.__init__:state",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 128,
+        "code": "self.state = state if state is not None else MessageManagerState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:128",
+        "name": "MessageManager.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 248,
+        "code": "compaction_sections = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:248",
+        "name": "MessageManager.maybe_compact_messages:compaction_sections",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 256,
+        "code": "compaction_input = '\\n\\n'.join(compaction_sections)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:256",
+        "name": "MessageManager.maybe_compact_messages:compaction_input",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 577,
+        "code": "def _filter_sensitive_data(self, message: BaseMessage) -> BaseMessage:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:577",
+        "name": "MessageManager._filter_sensitive_data:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 580,
+        "code": "def replace_sensitive(value: str) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:580",
+        "name": "MessageManager._filter_sensitive_data.replace_sensitive:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 108,
+        "code": "def redact_sensitive_string(value: str, sensitive_values: dict[str, str]) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:108",
+        "name": "browser_use/utils.redact_sensitive_string:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 121,
+        "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121",
+        "name": "[외부 호출] pattern.sub @ browser_use/utils.py:121",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+    "sink_at": {
+      "file": "browser_use/agent/service.py",
+      "line": 1957,
+      "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1957,
+        "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957",
+        "name": "[외부 응답] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1953,
+        "code": "kwargs: dict = {'output_format': self.AgentOutput, 'session_id': self.session_id}",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1953",
+        "name": "Agent.get_model_output:kwargs",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1957,
+        "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957",
+        "name": "[외부 호출] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [
+      "[LOG] observatory_log.llm_response"
+    ],
+    "source": "[외부 응답] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] self.registry.execute_action @ browser_use/tools/service.py:2221",
+    "sink_at": {
+      "file": "browser_use/tools/service.py",
+      "line": 2221,
+      "code": "self.registry.execute_action(",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2221"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1957,
+        "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957",
+        "name": "[외부 응답] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1957,
+        "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957",
+        "name": "Agent.get_model_output:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "browser_use/agent/service.py",
+            "line": 1962,
+            "code": "observatory_log.llm_response(None, actions=actions, reply=response, response=response)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1962",
+            "log": "[LOG] observatory_log.llm_response @ browser_use/agent/service.py:1962",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1958,
+        "code": "parsed: AgentOutput = response.completion  # type: ignore[assignment]",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1958",
+        "name": "Agent.get_model_output:parsed",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1946,
+        "code": "async def get_model_output(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1946",
+        "name": "Agent.get_model_output:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1673,
+        "code": "model_output = await self.get_model_output(input_messages)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1673",
+        "name": "Agent._get_model_output_with_retry:model_output",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1671,
+        "code": "async def _get_model_output_with_retry(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1671",
+        "name": "Agent._get_model_output_with_retry:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1185,
+        "code": "model_output = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1185",
+        "name": "Agent._get_next_action:model_output",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 437,
+        "code": "self.state = injected_agent_state or AgentState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:437",
+        "name": "Agent.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 491,
+        "code": "f'{\" +file_system\" if self.file_system else \"\"}'",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:491",
+        "name": "Agent.file_system",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:file_system",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2221,
+        "code": "self.registry.execute_action(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2221",
+        "name": "[외부 호출] self.registry.execute_action @ browser_use/tools/service.py:2221",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "found": "LLM 응답과 다음 LLM 입력 사이에서 찾음",
+    "mixed_logs": [],
+    "source": "[외부 응답] pattern.sub @ browser_use/utils.py:121",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] pattern.sub @ browser_use/utils.py:121",
+    "sink_at": {
+      "file": "browser_use/utils.py",
+      "line": 121,
+      "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/utils.py",
+        "line": 121,
+        "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121",
+        "name": "[외부 응답] pattern.sub @ browser_use/utils.py:121",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 108,
+        "code": "def redact_sensitive_string(value: str, sensitive_values: dict[str, str]) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:108",
+        "name": "browser_use/utils.redact_sensitive_string:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 580,
+        "code": "def replace_sensitive(value: str) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:580",
+        "name": "MessageManager._filter_sensitive_data.replace_sensitive:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 577,
+        "code": "def _filter_sensitive_data(self, message: BaseMessage) -> BaseMessage:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:577",
+        "name": "MessageManager._filter_sensitive_data:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 580,
+        "code": "def replace_sensitive(value: str) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:580",
+        "name": "MessageManager._filter_sensitive_data.replace_sensitive:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 108,
+        "code": "def redact_sensitive_string(value: str, sensitive_values: dict[str, str]) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:108",
+        "name": "browser_use/utils.redact_sensitive_string:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 121,
+        "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121",
+        "name": "[외부 호출] pattern.sub @ browser_use/utils.py:121",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "found": "LLM 응답과 다음 LLM 입력 사이에서 찾음",
+    "mixed_logs": [
+      "[LOG] observatory_log.llm_query"
+    ],
+    "source": "[외부 응답] pattern.sub @ browser_use/utils.py:121",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+    "sink_at": {
+      "file": "browser_use/agent/service.py",
+      "line": 1957,
+      "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/utils.py",
+        "line": 121,
+        "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121",
+        "name": "[외부 응답] pattern.sub @ browser_use/utils.py:121",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 108,
+        "code": "def redact_sensitive_string(value: str, sensitive_values: dict[str, str]) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:108",
+        "name": "browser_use/utils.redact_sensitive_string:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 580,
+        "code": "def replace_sensitive(value: str) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:580",
+        "name": "MessageManager._filter_sensitive_data.replace_sensitive:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 577,
+        "code": "def _filter_sensitive_data(self, message: BaseMessage) -> BaseMessage:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:577",
+        "name": "MessageManager._filter_sensitive_data:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 556,
+        "code": "def _set_message_with_type(self, message: BaseMessage, message_type: Literal['system', 'state']) -> None:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:556",
+        "name": "MessageManager._set_message_with_type:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 128,
+        "code": "self.state = state if state is not None else MessageManagerState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:128",
+        "name": "MessageManager.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 553,
+        "code": "self.last_input_messages = self.state.history.get_messages()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:553",
+        "name": "[외부 응답] self.state.history.get_messages @ browser_use/agent/message_manager/service.py:553",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 146,
+        "code": "self.last_input_messages = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:146",
+        "name": "MessageManager.last_input_messages",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 548,
+        "code": "def get_messages(self) -> list[BaseMessage]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:548",
+        "name": "MessageManager.get_messages:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1179,
+        "code": "input_messages = self._message_manager.get_messages()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1179",
+        "name": "Agent._get_next_action:input_messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1671,
+        "code": "async def _get_model_output_with_retry(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1671",
+        "name": "Agent._get_model_output_with_retry:input_messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1946,
+        "code": "async def get_model_output(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1946",
+        "name": "Agent.get_model_output:input_messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "browser_use/agent/service.py",
+            "line": 1956,
+            "code": "observatory_log.llm_query(None, model=self.model, messages=input_messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1956",
+            "log": "[LOG] observatory_log.llm_query @ browser_use/agent/service.py:1956",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1957,
+        "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957",
+        "name": "[외부 호출] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "found": "LLM 응답과 다음 LLM 입력 사이에서 찾음",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.registry.execute_action @ browser_use/tools/service.py:2221",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] pattern.sub @ browser_use/utils.py:121",
+    "sink_at": {
+      "file": "browser_use/utils.py",
+      "line": 121,
+      "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2221,
+        "code": "self.registry.execute_action(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2221",
+        "name": "[외부 응답] self.registry.execute_action @ browser_use/tools/service.py:2221",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2220,
+        "code": "result = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2220",
+        "name": "[외부 응답] asyncio.wait_for @ browser_use/tools/service.py:2220",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2220,
+        "code": "result = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2220",
+        "name": "Tools.act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2793,
+        "code": "result = await self.tools.act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2793",
+        "name": "Agent.multi_act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2750,
+        "code": "results: list[ActionResult] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2750",
+        "name": "Agent.multi_act:results",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2741,
+        "code": "async def multi_act(self, actions: list[ActionModel]) -> list[ActionResult]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2741",
+        "name": "Agent.multi_act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 3299,
+        "code": "result = await self.multi_act(self.initial_actions)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:3299",
+        "name": "Agent._execute_initial_actions:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 437,
+        "code": "self.state = injected_agent_state or AgentState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:437",
+        "name": "Agent.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 107,
+        "code": "def __init__(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:107",
+        "name": "MessageManager.__init__:state",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 128,
+        "code": "self.state = state if state is not None else MessageManagerState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:128",
+        "name": "MessageManager.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 248,
+        "code": "compaction_sections = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:248",
+        "name": "MessageManager.maybe_compact_messages:compaction_sections",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 256,
+        "code": "compaction_input = '\\n\\n'.join(compaction_sections)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:256",
+        "name": "MessageManager.maybe_compact_messages:compaction_input",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 577,
+        "code": "def _filter_sensitive_data(self, message: BaseMessage) -> BaseMessage:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:577",
+        "name": "MessageManager._filter_sensitive_data:message",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 580,
+        "code": "def replace_sensitive(value: str) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:580",
+        "name": "MessageManager._filter_sensitive_data.replace_sensitive:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 108,
+        "code": "def redact_sensitive_string(value: str, sensitive_values: dict[str, str]) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:108",
+        "name": "browser_use/utils.redact_sensitive_string:value",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/utils.py",
+        "line": 121,
+        "code": "return pattern.sub(lambda m: f'<secret>{secret_to_key[m.group(0)]}</secret>', value)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/utils.py:121",
+        "name": "[외부 호출] pattern.sub @ browser_use/utils.py:121",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "found": "LLM 응답과 다음 LLM 입력 사이에서 찾음",
+    "mixed_logs": [
+      "[LOG] observatory_log.llm_query"
+    ],
+    "source": "[외부 응답] self.registry.execute_action @ browser_use/tools/service.py:2221",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+    "sink_at": {
+      "file": "browser_use/agent/service.py",
+      "line": 1957,
+      "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2221,
+        "code": "self.registry.execute_action(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2221",
+        "name": "[외부 응답] self.registry.execute_action @ browser_use/tools/service.py:2221",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2220,
+        "code": "result = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2220",
+        "name": "[외부 응답] asyncio.wait_for @ browser_use/tools/service.py:2220",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2220,
+        "code": "result = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2220",
+        "name": "Tools.act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2793,
+        "code": "result = await self.tools.act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2793",
+        "name": "Agent.multi_act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2750,
+        "code": "results: list[ActionResult] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2750",
+        "name": "Agent.multi_act:results",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2741,
+        "code": "async def multi_act(self, actions: list[ActionModel]) -> list[ActionResult]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2741",
+        "name": "Agent.multi_act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 3299,
+        "code": "result = await self.multi_act(self.initial_actions)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:3299",
+        "name": "Agent._execute_initial_actions:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 437,
+        "code": "self.state = injected_agent_state or AgentState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:437",
+        "name": "Agent.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 107,
+        "code": "def __init__(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:107",
+        "name": "MessageManager.__init__:state",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 128,
+        "code": "self.state = state if state is not None else MessageManagerState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:128",
+        "name": "MessageManager.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 553,
+        "code": "self.last_input_messages = self.state.history.get_messages()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:553",
+        "name": "[외부 응답] self.state.history.get_messages @ browser_use/agent/message_manager/service.py:553",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 146,
+        "code": "self.last_input_messages = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:146",
+        "name": "MessageManager.last_input_messages",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/message_manager/service.py",
+        "line": 548,
+        "code": "def get_messages(self) -> list[BaseMessage]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/message_manager/service.py:548",
+        "name": "MessageManager.get_messages:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1179,
+        "code": "input_messages = self._message_manager.get_messages()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1179",
+        "name": "Agent._get_next_action:input_messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1671,
+        "code": "async def _get_model_output_with_retry(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1671",
+        "name": "Agent._get_model_output_with_retry:input_messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1946,
+        "code": "async def get_model_output(self, input_messages: list[BaseMessage]) -> AgentOutput:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1946",
+        "name": "Agent.get_model_output:input_messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "browser_use/agent/service.py",
+            "line": 1956,
+            "code": "observatory_log.llm_query(None, model=self.model, messages=input_messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1956",
+            "log": "[LOG] observatory_log.llm_query @ browser_use/agent/service.py:1956",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 1957,
+        "code": "response = await self.llm.ainvoke(input_messages, **kwargs)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:1957",
+        "name": "[외부 호출] self.llm.ainvoke @ browser_use/agent/service.py:1957",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "found": "LLM 응답과 다음 LLM 입력 사이에서 찾음",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.registry.execute_action @ browser_use/tools/service.py:2221",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] self.registry.execute_action @ browser_use/tools/service.py:2221",
+    "sink_at": {
+      "file": "browser_use/tools/service.py",
+      "line": 2221,
+      "code": "self.registry.execute_action(",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2221"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2221,
+        "code": "self.registry.execute_action(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2221",
+        "name": "[외부 응답] self.registry.execute_action @ browser_use/tools/service.py:2221",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2220,
+        "code": "result = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2220",
+        "name": "[외부 응답] asyncio.wait_for @ browser_use/tools/service.py:2220",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2220,
+        "code": "result = await asyncio.wait_for(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2220",
+        "name": "Tools.act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2793,
+        "code": "result = await self.tools.act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2793",
+        "name": "Agent.multi_act:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2750,
+        "code": "results: list[ActionResult] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2750",
+        "name": "Agent.multi_act:results",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 2741,
+        "code": "async def multi_act(self, actions: list[ActionModel]) -> list[ActionResult]:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:2741",
+        "name": "Agent.multi_act:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 3299,
+        "code": "result = await self.multi_act(self.initial_actions)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:3299",
+        "name": "Agent._execute_initial_actions:result",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 437,
+        "code": "self.state = injected_agent_state or AgentState()",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:437",
+        "name": "Agent.state",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/agent/service.py",
+        "line": 491,
+        "code": "f'{\" +file_system\" if self.file_system else \"\"}'",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/agent/service.py:491",
+        "name": "Agent.file_system",
+        "kind": "field",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2178,
+        "code": "async def act(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2178",
+        "name": "Tools.act:file_system",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "browser_use/tools/service.py",
+        "line": 2221,
+        "code": "self.registry.execute_action(",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-nemotron/browser_use/tools/service.py:2221",
+        "name": "[외부 호출] self.registry.execute_action @ browser_use/tools/service.py:2221",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  }
+]

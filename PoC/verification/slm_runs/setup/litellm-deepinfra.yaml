@@ -1,0 +1,13 @@
+model_list:
+  - model_name: nemotron
+    litellm_params: {model: deepinfra/nvidia/NVIDIA-Nemotron-3.5-Lightning, api_key: os.environ/DEEPINFRA_API_KEY}
+  - model_name: glimmer
+    litellm_params: {model: deepinfra/meta-models/Muse-Glimmer-30B, api_key: os.environ/DEEPINFRA_API_KEY}
+  - model_name: gpt-oss  # the deepinfra/ route leaks tool calls into thinking for this model
+    litellm_params: {model: openai/openai/gpt-oss-20b, api_base: https://api.deepinfra.com/v1/openai, api_key: os.environ/DEEPINFRA_API_KEY}
+  - model_name: qwen
+    litellm_params: {model: deepinfra/Qwen/Qwen3.8-27B, api_key: os.environ/DEEPINFRA_API_KEY}
+  - model_name: Qwen/Qwen3.8-27B  # the full name, for an agent that logs the model it calls
+    litellm_params: {model: deepinfra/Qwen/Qwen3.8-27B, api_key: os.environ/DEEPINFRA_API_KEY}
+litellm_settings: {drop_params: true, num_retries: 3, request_timeout: 600}
+general_settings: {master_key: sk-local-slm-test}  # a local token: the proxy only listens on 127.0.0.1

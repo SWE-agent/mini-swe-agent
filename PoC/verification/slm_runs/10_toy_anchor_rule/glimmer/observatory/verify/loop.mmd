@@ -1,0 +1,24 @@
+flowchart LR
+  nRegistry_run["Registry.run<br/>[LOG] tool_start @ tools.py:23<br/>[LOG] tool_error @ tools.py:27<br/>[LOG] tool_end @ tools.py:29"]
+  nLLM_chat["LLM.chat<br/>[LOG] llm_query @ llm.py:14<br/>[LOG] llm_error @ llm.py:24<br/>[LOG] llm_response @ llm.py:27"]
+  nself_client_messages_create___llm_py_16(["self.client.messages.create"])
+  nToyAgent_run["ToyAgent.run<br/>[LOG] tool_start @ agent.py:28<br/>[LOG] tool_end @ agent.py:29"]
+  nToyAgent_ask_user["ToyAgent.ask_user<br/>[LOG] tool_start @ agent.py:52<br/>[LOG] tool_end @ agent.py:54"]
+  ninput___agent_py_53[/"input"/]
+  nToyAgent_step["ToyAgent.step"]
+  nToyAgent_messages[("ToyAgent.messages")]
+  n_User_Input__task__entry_parameter_[/"task"/]
+  nexec___tools_py_14[["exec"]]
+  nsubprocess_run___tools_py_9[["subprocess.run"]]
+  nLLM_chat -->|messages, response| nself_client_messages_create___llm_py_16
+  nRegistry_run -->|args, code| nexec___tools_py_14
+  nRegistry_run -->|args, command| nsubprocess_run___tools_py_9
+  nToyAgent_ask_user -->|answer, question| ninput___agent_py_53
+  nToyAgent_messages -.->|messages| nLLM_chat
+  nToyAgent_run -->|answer, reply| nToyAgent_ask_user
+  nToyAgent_run -.->|task| nToyAgent_messages
+  nToyAgent_run --> nToyAgent_step
+  nToyAgent_step --> nLLM_chat
+  nToyAgent_step -->|call| nRegistry_run
+  nToyAgent_step -.->|reply, results| nToyAgent_messages
+  n_User_Input__task__entry_parameter_ -.->|task| nToyAgent_run

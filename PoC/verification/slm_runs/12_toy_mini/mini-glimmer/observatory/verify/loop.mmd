@@ -1,0 +1,22 @@
+flowchart LR
+  nself_env_execute___src_minisweagent_agents_default_py_186[["self.env.execute"]]
+  nDefaultAgent_execute_action["DefaultAgent.execute_action<br/>[LOG] tool_start @ src/minisweagent/agents/default.py:184<br/>[LOG] tool_end @ src/minisweagent/agents/default.py:189<br/>[LOG] tool_error @ src/minisweagent/agents/default.py:191<br/>[LOG] tool_end @ src/minisweagent/agents/default.py:199"]
+  nDefaultAgent_run["DefaultAgent.run<br/>[LOG] user_input @ src/minisweagent/agents/default.py:91"]
+  nDefaultAgent_query["DefaultAgent.query<br/>[LOG] llm_query @ src/minisweagent/agents/default.py:157<br/>[LOG] llm_error @ src/minisweagent/agents/default.py:162<br/>[LOG] llm_response @ src/minisweagent/agents/default.py:164"]
+  n_multiline_prompt_session_prompt___src_minisweagent_agents_utils_prompt_user_py_14[/"_multiline_prompt_session.prompt"/]
+  nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt["src/minisweagent/agents/utils/prompt_user._multiline_prompt<br/>[LOG] user_input @ src/minisweagent/agents/utils/prompt_user.py:22"]
+  nsrc_minisweagent_run_mini_main["src/minisweagent/run/mini.main"]
+  nself_model_query___src_minisweagent_agents_default_py_159(["self.model.query"])
+  n_User_Input__task__entry_parameter_[/"task"/]
+  nDefaultAgent_execute_action -->|action| nself_env_execute___src_minisweagent_agents_default_py_186
+  nself_env_execute___src_minisweagent_agents_default_py_186 -.->|output| nDefaultAgent_execute_action
+  nDefaultAgent_query -.->|action| nDefaultAgent_execute_action
+  nDefaultAgent_query -.->|message, messages| nDefaultAgent_run
+  nDefaultAgent_query -->|message, messages| nself_model_query___src_minisweagent_agents_default_py_159
+  nself_model_query___src_minisweagent_agents_default_py_159 -.->|message| nDefaultAgent_query
+  n_User_Input__task__entry_parameter_ -.->|task| nDefaultAgent_run
+  nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt --> n_multiline_prompt_session_prompt___src_minisweagent_agents_utils_prompt_user_py_14
+  n_multiline_prompt_session_prompt___src_minisweagent_agents_utils_prompt_user_py_14 -.->|answer| nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt
+  nsrc_minisweagent_run_mini_main -->|run_task| nDefaultAgent_run
+  nsrc_minisweagent_run_mini_main --> nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt
+  nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt -.-> nsrc_minisweagent_run_mini_main

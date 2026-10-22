@@ -1,0 +1,861 @@
+{
+  "entry": "DefaultAgent.run",
+  "nodes": [
+    {
+      "id": "DefaultAgent.cost",
+      "role": "state",
+      "label": "DefaultAgent.cost",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 49,
+      "in": "DefaultAgent.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/minisweagent/utils/serialize.recursive_merge",
+      "role": "function",
+      "label": "src/minisweagent/utils/serialize.recursive_merge",
+      "path": "src/minisweagent/utils/serialize.py",
+      "line": 6,
+      "end_line": 29,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "role": "function",
+      "label": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "path": "src/minisweagent/agents/utils/prompt_user.py",
+      "line": 13,
+      "end_line": 23,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/utils/prompt_user.py:22",
+          "code": "observatory_log.user_input(answer, prompt=\"\")",
+          "records": [
+            {
+              "value": "answer",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "self.model.format_message @ src/minisweagent/agents/default.py:97",
+      "role": "external",
+      "label": "self.model.format_message",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 97,
+      "in": "DefaultAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.add_messages",
+      "role": "function",
+      "label": "DefaultAgent.add_messages",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 71,
+      "end_line": 74,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.messages",
+      "role": "state",
+      "label": "DefaultAgent.messages",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 44,
+      "in": "DefaultAgent.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.serialize",
+      "role": "function",
+      "label": "DefaultAgent.serialize",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 214,
+      "end_line": 235,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "_multiline_prompt_session.prompt @ src/minisweagent/agents/utils/prompt_user.py:14",
+      "role": "user_input",
+      "label": "_multiline_prompt_session.prompt",
+      "path": "src/minisweagent/agents/utils/prompt_user.py",
+      "line": 14,
+      "in": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.query",
+      "role": "function",
+      "label": "DefaultAgent.query",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 133,
+      "end_line": 179,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/minisweagent/agents/default.py:158",
+          "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "n_calls",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/minisweagent/agents/default.py:163",
+          "code": "observatory_log.llm_error(self.n_calls, e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "n_calls",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/minisweagent/agents/default.py:165",
+          "code": "observatory_log.llm_response(",
+          "records": [
+            {
+              "value": "action",
+              "whole": false
+            },
+            {
+              "value": "message",
+              "whole": true
+            },
+            {
+              "value": "n_calls",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "src/minisweagent/run/benchmarks/swebench.process_instance",
+      "role": "function",
+      "label": "src/minisweagent/run/benchmarks/swebench.process_instance",
+      "path": "src/minisweagent/run/benchmarks/swebench.py",
+      "line": 122,
+      "end_line": 177,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "InteractiveAgent.execute_actions",
+      "role": "function",
+      "label": "InteractiveAgent.execute_actions",
+      "path": "src/minisweagent/agents/interactive.py",
+      "line": 127,
+      "end_line": 142,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.execute_action",
+      "role": "function",
+      "label": "DefaultAgent.execute_action",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 186,
+      "end_line": 212,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "src/minisweagent/agents/default.py:190",
+          "code": "start = observatory_log.tool_start(\"bash\", action)",
+          "records": [
+            {
+              "value": "action",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/minisweagent/agents/default.py:195",
+          "code": "observatory_log.tool_end(start, \"bash\", result=\"submitted\")",
+          "records": [
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/minisweagent/agents/default.py:197",
+          "code": "observatory_log.tool_error(start, \"bash\", e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/minisweagent/agents/default.py:211",
+          "code": "observatory_log.tool_end(start, \"bash\", result=output)",
+          "records": [
+            {
+              "value": "output",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.run",
+      "role": "entry",
+      "label": "DefaultAgent.run",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 90,
+      "end_line": 127,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/default.py:92",
+          "code": "observatory_log.user_input(task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.execute_actions",
+      "role": "function",
+      "label": "DefaultAgent.execute_actions",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 181,
+      "end_line": 184,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+      "role": "external",
+      "label": "self.model.format_observation_messages",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 184,
+      "in": "DefaultAgent.execute_actions",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent._render_template",
+      "role": "function",
+      "label": "DefaultAgent._render_template",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 68,
+      "end_line": 69,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.format_message @ src/minisweagent/agents/default.py:96",
+      "role": "external",
+      "label": "self.model.format_message",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 96,
+      "in": "DefaultAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/minisweagent/run/mini.main",
+      "role": "function",
+      "label": "src/minisweagent/run/mini.main",
+      "path": "src/minisweagent/run/mini.py",
+      "line": 55,
+      "end_line": 105,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.get_template_vars",
+      "role": "function",
+      "label": "DefaultAgent.get_template_vars",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 54,
+      "end_line": 66,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.query @ src/minisweagent/agents/default.py:160",
+      "role": "llm_response",
+      "label": "self.model.query",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 160,
+      "in": "DefaultAgent.query",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 90,
+      "in": "DefaultAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.save",
+      "role": "function",
+      "label": "DefaultAgent.save",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 237,
+      "end_line": 245,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.env.execute @ src/minisweagent/agents/default.py:192",
+      "role": "tool_response",
+      "label": "self.env.execute",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 192,
+      "in": "DefaultAgent.execute_action",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.extra_template_vars",
+      "role": "state",
+      "label": "DefaultAgent.extra_template_vars",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 47,
+      "in": "DefaultAgent.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/minisweagent/run/benchmarks/programbench.process_instance",
+      "role": "function",
+      "label": "src/minisweagent/run/benchmarks/programbench.process_instance",
+      "path": "src/minisweagent/run/benchmarks/programbench.py",
+      "line": 63,
+      "end_line": 117,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "final output",
+      "role": "final_output",
+      "label": "return of DefaultAgent.run",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 90,
+      "in": "DefaultAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "InteractiveAgent.query",
+      "role": "function",
+      "label": "InteractiveAgent.query",
+      "path": "src/minisweagent/agents/interactive.py",
+      "line": 59,
+      "end_line": 97,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/interactive.py:94",
+          "code": "observatory_log.user_input(self.config.step_limit, prompt=\"New step limit: \")",
+          "records": [
+            {
+              "value": "config",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/interactive.py:96",
+          "code": "observatory_log.user_input(self.config.cost_limit, prompt=\"New cost limit: \")",
+          "records": [
+            {
+              "value": "config",
+              "whole": false
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "InteractiveAgent._prompt_and_handle_slash_commands",
+      "role": "function",
+      "label": "InteractiveAgent._prompt_and_handle_slash_commands",
+      "path": "src/minisweagent/agents/interactive.py",
+      "line": 187,
+      "end_line": 213,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/interactive.py:193",
+          "code": "observatory_log.user_input(user_input, prompt=prompt)",
+          "records": [
+            {
+              "value": "prompt",
+              "whole": true
+            },
+            {
+              "value": "user_input",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    }
+  ],
+  "edges": [
+    {
+      "from": "DefaultAgent._render_template",
+      "to": "self.model.format_message @ src/minisweagent/agents/default.py:96",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent._render_template",
+      "to": "self.model.format_message @ src/minisweagent/agents/default.py:97",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent.add_messages",
+      "to": "DefaultAgent.messages",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "DefaultAgent.cost",
+      "to": "DefaultAgent.serialize",
+      "values": [
+        "cost"
+      ]
+    },
+    {
+      "from": "DefaultAgent.cost",
+      "to": "src/minisweagent/utils/serialize.recursive_merge",
+      "values": [
+        "cost"
+      ]
+    },
+    {
+      "from": "DefaultAgent.execute_action",
+      "to": "DefaultAgent.execute_actions",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent.execute_action",
+      "to": "self.env.execute @ src/minisweagent/agents/default.py:192",
+      "values": [
+        "action"
+      ]
+    },
+    {
+      "from": "DefaultAgent.execute_actions",
+      "to": "DefaultAgent.execute_action",
+      "values": [
+        "action"
+      ]
+    },
+    {
+      "from": "DefaultAgent.execute_actions",
+      "to": "self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+      "values": [
+        "message",
+        "outputs"
+      ]
+    },
+    {
+      "from": "DefaultAgent.extra_template_vars",
+      "to": "src/minisweagent/utils/serialize.recursive_merge",
+      "values": [
+        "extra_template_vars"
+      ]
+    },
+    {
+      "from": "DefaultAgent.get_template_vars",
+      "to": "DefaultAgent._render_template",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent.get_template_vars",
+      "to": "self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent.messages",
+      "to": "DefaultAgent.run",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "DefaultAgent.messages",
+      "to": "DefaultAgent.serialize",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "DefaultAgent.messages",
+      "to": "self.model.query @ src/minisweagent/agents/default.py:160",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "DefaultAgent.add_messages",
+      "values": [
+        "message"
+      ]
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "DefaultAgent.cost",
+      "values": [
+        "message"
+      ]
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "DefaultAgent.execute_actions",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "InteractiveAgent.execute_actions",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent.run",
+      "to": "DefaultAgent.extra_template_vars",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "DefaultAgent.run",
+      "to": "final output",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent.run",
+      "to": "src/minisweagent/run/benchmarks/programbench.process_instance",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent.run",
+      "to": "src/minisweagent/run/benchmarks/swebench.process_instance",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "DefaultAgent.save",
+      "to": "DefaultAgent.serialize",
+      "values": [
+        "extra_dicts"
+      ]
+    },
+    {
+      "from": "DefaultAgent.serialize",
+      "to": "src/minisweagent/utils/serialize.recursive_merge",
+      "values": [
+        "agent_data",
+        "extra_dicts"
+      ]
+    },
+    {
+      "from": "InteractiveAgent.execute_actions",
+      "to": "DefaultAgent.execute_action",
+      "values": [
+        "action"
+      ]
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "DefaultAgent.run",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "_multiline_prompt_session.prompt @ src/minisweagent/agents/utils/prompt_user.py:14",
+      "to": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "values": [
+        "answer"
+      ]
+    },
+    {
+      "from": "self.env.execute @ src/minisweagent/agents/default.py:192",
+      "to": "DefaultAgent.execute_action",
+      "values": [
+        "output"
+      ]
+    },
+    {
+      "from": "self.model.format_message @ src/minisweagent/agents/default.py:96",
+      "to": "DefaultAgent.add_messages",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "self.model.format_message @ src/minisweagent/agents/default.py:97",
+      "to": "DefaultAgent.add_messages",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+      "to": "DefaultAgent.add_messages",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "self.model.format_observation_messages @ src/minisweagent/agents/default.py:184",
+      "to": "DefaultAgent.execute_actions",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "self.model.query @ src/minisweagent/agents/default.py:160",
+      "to": "DefaultAgent.query",
+      "values": [
+        "message"
+      ]
+    },
+    {
+      "from": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "to": "src/minisweagent/run/mini.main",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/minisweagent/run/benchmarks/programbench.process_instance",
+      "to": "DefaultAgent.save",
+      "values": [
+        "exit_status"
+      ]
+    },
+    {
+      "from": "src/minisweagent/run/benchmarks/swebench.process_instance",
+      "to": "DefaultAgent.save",
+      "values": [
+        "exit_status",
+        "result"
+      ]
+    },
+    {
+      "from": "src/minisweagent/run/mini.main",
+      "to": "DefaultAgent.run",
+      "values": [
+        "run_task"
+      ]
+    },
+    {
+      "from": "src/minisweagent/utils/serialize.recursive_merge",
+      "to": "DefaultAgent.get_template_vars",
+      "values": [
+        "return"
+      ]
+    }
+  ],
+  "calls": [
+    [
+      "DefaultAgent._render_template",
+      "DefaultAgent.get_template_vars"
+    ],
+    [
+      "DefaultAgent.execute_actions",
+      "DefaultAgent.add_messages"
+    ],
+    [
+      "DefaultAgent.execute_actions",
+      "DefaultAgent.execute_action"
+    ],
+    [
+      "DefaultAgent.execute_actions",
+      "DefaultAgent.get_template_vars"
+    ],
+    [
+      "DefaultAgent.get_template_vars",
+      "src/minisweagent/utils/serialize.recursive_merge"
+    ],
+    [
+      "DefaultAgent.query",
+      "DefaultAgent.add_messages"
+    ],
+    [
+      "DefaultAgent.run",
+      "DefaultAgent._render_template"
+    ],
+    [
+      "DefaultAgent.run",
+      "DefaultAgent.add_messages"
+    ],
+    [
+      "DefaultAgent.run",
+      "DefaultAgent.save"
+    ],
+    [
+      "DefaultAgent.save",
+      "DefaultAgent.serialize"
+    ],
+    [
+      "DefaultAgent.serialize",
+      "src/minisweagent/utils/serialize.recursive_merge"
+    ],
+    [
+      "InteractiveAgent._prompt_and_handle_slash_commands",
+      "InteractiveAgent._prompt_and_handle_slash_commands"
+    ],
+    [
+      "InteractiveAgent._prompt_and_handle_slash_commands",
+      "src/minisweagent/agents/utils/prompt_user._multiline_prompt"
+    ],
+    [
+      "InteractiveAgent.execute_actions",
+      "DefaultAgent.execute_action"
+    ],
+    [
+      "InteractiveAgent.execute_actions",
+      "DefaultAgent.get_template_vars"
+    ],
+    [
+      "InteractiveAgent.query",
+      "InteractiveAgent._prompt_and_handle_slash_commands"
+    ],
+    [
+      "src/minisweagent/run/benchmarks/programbench.process_instance",
+      "DefaultAgent.run"
+    ],
+    [
+      "src/minisweagent/run/benchmarks/programbench.process_instance",
+      "DefaultAgent.save"
+    ],
+    [
+      "src/minisweagent/run/benchmarks/swebench.process_instance",
+      "DefaultAgent.run"
+    ],
+    [
+      "src/minisweagent/run/benchmarks/swebench.process_instance",
+      "DefaultAgent.save"
+    ],
+    [
+      "src/minisweagent/run/mini.main",
+      "DefaultAgent.run"
+    ],
+    [
+      "src/minisweagent/run/mini.main",
+      "src/minisweagent/agents/utils/prompt_user._multiline_prompt"
+    ],
+    [
+      "src/minisweagent/run/mini.main",
+      "src/minisweagent/utils/serialize.recursive_merge"
+    ],
+    [
+      "src/minisweagent/utils/serialize.recursive_merge",
+      "src/minisweagent/utils/serialize.recursive_merge"
+    ],
+    [
+      "DefaultAgent.execute_action",
+      "self.env.execute @ src/minisweagent/agents/default.py:192"
+    ],
+    [
+      "DefaultAgent.execute_actions",
+      "self.model.format_observation_messages @ src/minisweagent/agents/default.py:184"
+    ],
+    [
+      "DefaultAgent.query",
+      "self.model.query @ src/minisweagent/agents/default.py:160"
+    ],
+    [
+      "DefaultAgent.run",
+      "self.model.format_message @ src/minisweagent/agents/default.py:96"
+    ],
+    [
+      "DefaultAgent.run",
+      "self.model.format_message @ src/minisweagent/agents/default.py:97"
+    ],
+    [
+      "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "_multiline_prompt_session.prompt @ src/minisweagent/agents/utils/prompt_user.py:14"
+    ]
+  ],
+  "verdicts": {
+    "검증 완료": 9,
+    "일부만 기록": 0,
+    "누락": 0
+  },
+  "missing_anchors": []
+}

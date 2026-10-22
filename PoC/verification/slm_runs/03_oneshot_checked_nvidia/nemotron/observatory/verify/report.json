@@ -1,0 +1,425 @@
+[
+  {
+    "value": "User Input",
+    "found": "기준점 (진입점 인자)",
+    "mixed_logs": [],
+    "source": "[User Input] task (entry parameter)",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.llm.chat @ agent.py:40",
+    "sink_at": {
+      "file": "agent.py",
+      "line": 40,
+      "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "agent.py",
+        "line": 27,
+        "code": "def run(self, task: str, max_steps: int = 10) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:27",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 27,
+        "code": "def run(self, task: str, max_steps: int = 10) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:27",
+        "name": "ToyAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "agent.py",
+            "line": 29,
+            "code": "observatory_log.tool_start(\"user_input\", {\"task\": task})",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:29",
+            "log": "[LOG] observatory_log.tool_start @ agent.py:29",
+            "whole": true
+          },
+          {
+            "file": "agent.py",
+            "line": 30,
+            "code": "observatory_log.tool_end(None, \"user_input\", result=task)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:30",
+            "log": "[LOG] observatory_log.tool_end @ agent.py:30",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "agent.py",
+        "line": 25,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:25",
+        "name": "ToyAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "agent.py",
+            "line": 38,
+            "code": "observatory_log.llm_query(n, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:38",
+            "log": "[LOG] observatory_log.llm_query @ agent.py:38",
+            "whole": true
+          },
+          {
+            "file": "agent.py",
+            "line": 44,
+            "code": "observatory_log.llm_response(n, actions=[c[\"name\"] for c in response[\"calls\"]], reply=response, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:44",
+            "log": "[LOG] observatory_log.llm_response @ agent.py:44",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "agent.py",
+        "line": 40,
+        "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40",
+        "name": "[외부 호출] self.llm.chat @ agent.py:40",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] input @ agent.py:59",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of ToyAgent.run",
+    "sink_at": {
+      "file": "agent.py",
+      "line": 34,
+      "code": "return reply[\"content\"] if self.confirm(reply[\"content\"]) else self.ask_user(\"What next?\")",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:34"
+    },
+    "status": "bypass",
+    "steps": [
+      {
+        "file": "agent.py",
+        "line": 59,
+        "code": "answer = input(f\"{question} \")",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:59",
+        "name": "[외부 응답] input @ agent.py:59",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 59,
+        "code": "answer = input(f\"{question} \")",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:59",
+        "name": "ToyAgent.ask_user:answer",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 58,
+        "code": "def ask_user(self, question: str) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:58",
+        "name": "ToyAgent.ask_user:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 27,
+        "code": "def run(self, task: str, max_steps: int = 10) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:27",
+        "name": "ToyAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 34,
+        "code": "return reply[\"content\"] if self.confirm(reply[\"content\"]) else self.ask_user(\"What next?\")",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:34",
+        "name": "[최종 출력] return of ToyAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.llm.chat @ agent.py:40",
+    "use": "사용자에게 표시",
+    "sink": "[외부 호출] input @ agent.py:59",
+    "sink_at": {
+      "file": "agent.py",
+      "line": 59,
+      "code": "answer = input(f\"{question} \")",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:59"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "agent.py",
+        "line": 40,
+        "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40",
+        "name": "[외부 응답] self.llm.chat @ agent.py:40",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 40,
+        "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40",
+        "name": "ToyAgent.step:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "agent.py",
+            "line": 44,
+            "code": "observatory_log.llm_response(n, actions=[c[\"name\"] for c in response[\"calls\"]], reply=response, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:44",
+            "log": "[LOG] observatory_log.llm_response @ agent.py:44",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "agent.py",
+        "line": 37,
+        "code": "def step(self, n: int) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:37",
+        "name": "ToyAgent.step:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 32,
+        "code": "reply = self.step(n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:32",
+        "name": "ToyAgent.run:reply",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 62,
+        "code": "def confirm(self, answer: str) -> bool:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:62",
+        "name": "ToyAgent.confirm:answer",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 58,
+        "code": "def ask_user(self, question: str) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:58",
+        "name": "ToyAgent.ask_user:question",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 59,
+        "code": "answer = input(f\"{question} \")",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:59",
+        "name": "[외부 호출] input @ agent.py:59",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.llm.chat @ agent.py:40",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.llm.chat @ agent.py:40",
+    "sink_at": {
+      "file": "agent.py",
+      "line": 40,
+      "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "agent.py",
+        "line": 40,
+        "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40",
+        "name": "[외부 응답] self.llm.chat @ agent.py:40",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 40,
+        "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40",
+        "name": "ToyAgent.step:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "agent.py",
+            "line": 44,
+            "code": "observatory_log.llm_response(n, actions=[c[\"name\"] for c in response[\"calls\"]], reply=response, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:44",
+            "log": "[LOG] observatory_log.llm_response @ agent.py:44",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "agent.py",
+        "line": 25,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:25",
+        "name": "ToyAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "agent.py",
+            "line": 38,
+            "code": "observatory_log.llm_query(n, model=self.model, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:38",
+            "log": "[LOG] observatory_log.llm_query @ agent.py:38",
+            "whole": true
+          },
+          {
+            "file": "agent.py",
+            "line": 44,
+            "code": "observatory_log.llm_response(n, actions=[c[\"name\"] for c in response[\"calls\"]], reply=response, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:44",
+            "log": "[LOG] observatory_log.llm_response @ agent.py:44",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "agent.py",
+        "line": 40,
+        "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40",
+        "name": "[외부 호출] self.llm.chat @ agent.py:40",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.llm.chat @ agent.py:40",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of ToyAgent.run",
+    "sink_at": {
+      "file": "agent.py",
+      "line": 34,
+      "code": "return reply[\"content\"] if self.confirm(reply[\"content\"]) else self.ask_user(\"What next?\")",
+      "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:34"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "agent.py",
+        "line": 40,
+        "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40",
+        "name": "[외부 응답] self.llm.chat @ agent.py:40",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 40,
+        "code": "response = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:40",
+        "name": "ToyAgent.step:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "agent.py",
+            "line": 44,
+            "code": "observatory_log.llm_response(n, actions=[c[\"name\"] for c in response[\"calls\"]], reply=response, messages=self.messages)",
+            "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:44",
+            "log": "[LOG] observatory_log.llm_response @ agent.py:44",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "agent.py",
+        "line": 37,
+        "code": "def step(self, n: int) -> dict:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:37",
+        "name": "ToyAgent.step:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 32,
+        "code": "reply = self.step(n)",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:32",
+        "name": "ToyAgent.run:reply",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 27,
+        "code": "def run(self, task: str, max_steps: int = 10) -> str:",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:27",
+        "name": "ToyAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 34,
+        "code": "return reply[\"content\"] if self.confirm(reply[\"content\"]) else self.ask_user(\"What next?\")",
+        "uri": "vscode://file/C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/slm/v2/nemotron/agent.py:34",
+        "name": "[최종 출력] return of ToyAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  }
+]

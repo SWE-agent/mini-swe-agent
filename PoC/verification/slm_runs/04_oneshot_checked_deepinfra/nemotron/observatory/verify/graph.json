@@ -1,0 +1,363 @@
+{
+  "entry": "ToyAgent.run",
+  "nodes": [
+    {
+      "id": "ToyAgent.run",
+      "role": "entry",
+      "label": "ToyAgent.run",
+      "path": "agent.py",
+      "line": 34,
+      "end_line": 42,
+      "logs": [],
+      "gaps": [
+        "User Input → 사용자에게 표시: 누락",
+        "User Input → LLM 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "LLM Response → 최종 출력: 누락",
+        "Tool Response → 사용자에게 표시: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "ToyAgent.confirm",
+      "role": "function",
+      "label": "ToyAgent.confirm",
+      "path": "agent.py",
+      "line": 73,
+      "end_line": 74,
+      "logs": [],
+      "gaps": [
+        "User Input → 사용자에게 표시: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "Tool Response → 사용자에게 표시: 누락"
+      ]
+    },
+    {
+      "id": "self.llm.results_message @ agent.py:61",
+      "role": "external",
+      "label": "self.llm.results_message",
+      "path": "agent.py",
+      "line": 61,
+      "logs": [],
+      "gaps": [
+        "Tool Response → 사용자에게 표시: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "ToyAgent.messages",
+      "role": "state",
+      "label": "ToyAgent.messages",
+      "path": "agent.py",
+      "line": 32,
+      "logs": [],
+      "gaps": [
+        "User Input → 사용자에게 표시: 누락",
+        "User Input → LLM 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → LLM 입력: 누락",
+        "Tool Response → 사용자에게 표시: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "ToyAgent.ask_user",
+      "role": "function",
+      "label": "ToyAgent.ask_user",
+      "path": "agent.py",
+      "line": 67,
+      "end_line": 71,
+      "logs": [],
+      "gaps": [
+        "User Input → 사용자에게 표시: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "Tool Response → 사용자에게 표시: 누락"
+      ]
+    },
+    {
+      "id": "self.llm.chat @ agent.py:65",
+      "role": "external",
+      "label": "self.llm.chat",
+      "path": "agent.py",
+      "line": 65,
+      "logs": [],
+      "gaps": [
+        "User Input → 사용자에게 표시: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락",
+        "Tool Response → 사용자에게 표시: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "ToyAgent.fallback_query",
+      "role": "function",
+      "label": "ToyAgent.fallback_query",
+      "path": "agent.py",
+      "line": 64,
+      "end_line": 65,
+      "logs": [],
+      "gaps": [
+        "User Input → 사용자에게 표시: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락",
+        "Tool Response → 사용자에게 표시: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "input @ agent.py:69",
+      "role": "user_input",
+      "label": "input",
+      "path": "agent.py",
+      "line": 69,
+      "logs": [],
+      "gaps": [
+        "User Input → 사용자에게 표시: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "Tool Response → 사용자에게 표시: 누락"
+      ]
+    },
+    {
+      "id": "self.llm.chat @ agent.py:47",
+      "role": "llm_response",
+      "label": "self.llm.chat",
+      "path": "agent.py",
+      "line": 47,
+      "logs": [],
+      "gaps": [
+        "User Input → LLM 입력: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → 최종 출력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "ToyAgent.step",
+      "role": "function",
+      "label": "ToyAgent.step",
+      "path": "agent.py",
+      "line": 44,
+      "end_line": 62,
+      "logs": [],
+      "gaps": [
+        "User Input → 사용자에게 표시: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → 최종 출력: 누락",
+        "Tool Response → 사용자에게 표시: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "self.registry.run @ agent.py:57",
+      "role": "tool_response",
+      "label": "self.registry.run",
+      "path": "agent.py",
+      "line": 57,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → 사용자에게 표시: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "final output",
+      "role": "final_output",
+      "label": "return of ToyAgent.run",
+      "path": "agent.py",
+      "line": 34,
+      "logs": [],
+      "gaps": [
+        "User Input → 최종 출력: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → 최종 출력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "agent.py",
+      "line": 34,
+      "logs": [],
+      "gaps": [
+        "User Input → 사용자에게 표시: 누락",
+        "User Input → LLM 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "ToyAgent.ask_user",
+      "to": "ToyAgent.run",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "ToyAgent.ask_user",
+      "to": "input @ agent.py:69",
+      "values": [
+        "question"
+      ]
+    },
+    {
+      "from": "ToyAgent.confirm",
+      "to": "ToyAgent.ask_user",
+      "values": [
+        "answer"
+      ]
+    },
+    {
+      "from": "ToyAgent.fallback_query",
+      "to": "ToyAgent.step",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "ToyAgent.messages",
+      "to": "self.llm.chat @ agent.py:47",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "ToyAgent.messages",
+      "to": "self.llm.chat @ agent.py:65",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "ToyAgent.confirm",
+      "values": [
+        "reply"
+      ]
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "ToyAgent.messages",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "final output",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "ToyAgent.messages",
+      "values": [
+        "reply"
+      ]
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "ToyAgent.run",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "self.llm.results_message @ agent.py:61",
+      "values": [
+        "results"
+      ]
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "self.registry.run @ agent.py:57",
+      "values": [
+        "call"
+      ]
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "ToyAgent.run",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "input @ agent.py:69",
+      "to": "ToyAgent.ask_user",
+      "values": [
+        "answer"
+      ]
+    },
+    {
+      "from": "self.llm.chat @ agent.py:47",
+      "to": "ToyAgent.step",
+      "values": [
+        "reply"
+      ]
+    },
+    {
+      "from": "self.llm.chat @ agent.py:65",
+      "to": "ToyAgent.fallback_query",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.llm.results_message @ agent.py:61",
+      "to": "ToyAgent.messages",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "self.llm.results_message @ agent.py:61",
+      "to": "ToyAgent.step",
+      "values": [
+        "results"
+      ]
+    },
+    {
+      "from": "self.registry.run @ agent.py:57",
+      "to": "ToyAgent.step",
+      "values": [
+        "result"
+      ]
+    }
+  ],
+  "verdicts": {
+    "검증 완료": 0,
+    "일부만 기록": 0,
+    "누락": 13
+  }
+}

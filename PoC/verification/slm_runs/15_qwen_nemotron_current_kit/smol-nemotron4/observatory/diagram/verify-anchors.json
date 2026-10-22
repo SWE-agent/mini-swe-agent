@@ -1,0 +1,7 @@
+{
+  "logger": "observatory_log",
+  "entry": {"function": "MultiStepAgent.run", "path": "src/smolagents/agents.py", "line": 436, "inputs": ["task"]},
+  "sources": [
+    {"kind": "llm_response", "path": "src/smolagents/agents.py", "line": 672, "call": "self.model.generate", "label": "model call"}
+  ]
+}

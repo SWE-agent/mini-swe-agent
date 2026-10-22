@@ -1,0 +1,124 @@
+diff --git a/src/minisweagent/agents/default.py b/src/minisweagent/agents/default.py
+index 32ddee5..600e723 100644
+--- a/src/minisweagent/agents/default.py
++++ b/src/minisweagent/agents/default.py
+@@ -12,7 +12,8 @@ from jinja2 import StrictUndefined, Template
+ from pydantic import BaseModel
+
+ from minisweagent import Environment, Model, __version__
+-from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
++from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, Submitted, TimeExceeded
++from minisweagent.agents.observatory_log import llm_query, llm_response, llm_error, tool_end, tool_error, tool_start
+ from minisweagent.utils.serialize import recursive_merge
+
+
+@@ -87,6 +88,8 @@ class DefaultAgent:
+
+     def run(self, task: str = "", **kwargs) -> dict:
+         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
++        start = tool_start("user_input", {"task": task})
++        tool_end(start, "user_input", result=task)
+         self.extra_template_vars |= {"task": task, **kwargs}
+         self.messages = []
+         self.add_messages(
+@@ -146,17 +149,18 @@ class DefaultAgent:
+                 }
+             )
+         self.n_calls += 1
+-        self.logger.debug(
+-            "[LLM_QUERY] step=%s model=%s messages=%s",
+-            self.n_calls,
+-            getattr(self.model.config, "model_name", None),
+-            len(self.messages),
+-        )
++        step = self.n_calls
++        model_name = getattr(self.model.config, "model_name", None)
++        messages = self.messages
++        llm_query(step, model=model_name, messages=messages)
+         try:
+             message = self.model.query(self.messages)
+         except Exception as e:
+-            self.logger.debug("[LLM_ERROR] step=%s error_type=%s", self.n_calls, type(e).__name__)
++            llm_error(step, error=e)
+             raise
++        reply = message
++        actions = reply.get("extra", {}).get("actions", [])
++        llm_response(step, actions=actions, reply=reply, response=message)
+         self.cost += message.get("extra", {}).get("cost", 0.0)
+         self.logger.debug(
+             "[LLM_RESPONSE] step=%s actions=%s cost=%s",
+@@ -175,17 +179,17 @@ class DefaultAgent:
+     def execute_action(self, action: dict) -> dict:
+         """Execute a single action in the environment. Every agent runs its actions through here."""
+         self.logger.debug("[TOOL_EXECUTION_START] action=%s params=%s", "bash", action)
++        start = tool_start("bash", action)
+         start_time = time.time()
+         try:
+             output = self.env.execute(action)
++        except Submitted as e:
++            tool_end(start, "bash", result="submitted", duration_seconds=round(time.time() - start_time, 3))
++            raise
+         except Exception as e:
+-            self.logger.debug(
+-                "[TOOL_EXECUTION_ERROR] action=%s error_type=%s duration_seconds=%.3f",
+-                "bash",
+-                type(e).__name__,
+-                time.time() - start_time,
+-            )
++            tool_error(start, "bash", e)
+             raise
++        tool_end(start, "bash", result=output, duration_seconds=round(time.time() - start_time, 3))
+         self.logger.debug(
+             "[TOOL_EXECUTION_END] action=%s returncode=%s duration_seconds=%.3f",
+             "bash",
+diff --git a/src/minisweagent/agents/interactive.py b/src/minisweagent/agents/interactive.py
+index dd1139d..5099229 100644
+--- a/src/minisweagent/agents/interactive.py
++++ b/src/minisweagent/agents/interactive.py
+@@ -89,8 +89,12 @@ class InteractiveAgent(DefaultAgent):
+                 f"Limits exceeded. Limits: {self.config.step_limit} steps, ${self.config.cost_limit}.\n"
+                 f"Current spend: {self.n_calls} steps, ${self.cost:.2f}."
+             )
++            start = tool_start("user_input", {"prompt": "New step limit"})
+             self.config.step_limit = int(input("New step limit: "))
++            tool_end(start, "user_input", result=self.config.step_limit)
++            start = tool_start("user_input", {"prompt": "New cost limit"})
+             self.config.cost_limit = float(input("New cost limit: "))
++            tool_end(start, "user_input", result=self.config.cost_limit)
+             return super().query()
+
+     @staticmethod
+@@ -110,13 +114,17 @@ class InteractiveAgent(DefaultAgent):
+         # Override the step method to handle user interruption
+         try:
+             console.print(Rule())
++            start = tool_start("user_input", {"prompt": "user command"})
++            tool_end(start, "user_input", result="command_prompted")
+             return super().step()
+         except KeyboardInterrupt:
++            start = tool_start("user_input", {"prompt": "interruption prompt"})
+             interruption_message = self._prompt_and_handle_slash_commands(
+                 "\n\n[bold yellow]Interrupted.[/bold yellow] "
+                 "[green]Type a comment/command[/green] (/h for available commands)"
+                 "\n[bold yellow]>[/bold yellow] "
+             ).strip()
++            tool_end(start, "user_input", result=interruption_message)
+             if not interruption_message or interruption_message in self._MODE_COMMANDS_MAPPING:
+                 interruption_message = "Temporary interruption caught."
+             self._interrupt(f"Interrupted by user: {interruption_message}")
+@@ -144,6 +152,7 @@ class InteractiveAgent(DefaultAgent):
+     def _check_for_new_task_or_submit(self, e: Submitted) -> NoReturn:
+         """Check if user wants to add a new task or submit."""
+         if self.config.confirm_exit:
++            start = tool_start("user_input", {"prompt": "new task or quit"})
+             message = (
+                 "[bold yellow]Agent wants to finish.[/bold yellow] "
+                 "[bold green]Type new task[/bold green] or [bold]Enter[/bold] to quit "
+@@ -151,6 +160,7 @@ class InteractiveAgent(DefaultAgent):
+                 "[bold yellow]>[/bold yellow] "
+             )
+             user_input = self._prompt_and_handle_slash_commands(message).strip()
++            tool_end(start, "user_input", result=user_input)
+             if user_input == "/u":  # directly continue
+                 self._interrupt("Switched to human mode.")
+             elif user_input in self._MODE_COMMANDS_MAPPING:  # ask again

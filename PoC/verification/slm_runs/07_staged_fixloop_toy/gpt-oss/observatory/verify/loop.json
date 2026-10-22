@@ -1,0 +1,250 @@
+{
+  "root": "C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v3/gpt-oss",
+  "nodes": [
+    {
+      "id": "ToyAgent.step",
+      "role": "function",
+      "label": "ToyAgent.step",
+      "path": "agent.py",
+      "line": 34,
+      "end_line": 43,
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → 최종 출력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "ToyAgent.messages",
+      "role": "state",
+      "label": "ToyAgent.messages",
+      "path": "agent.py",
+      "line": 24,
+      "in": "ToyAgent.__init__",
+      "logs": [],
+      "gaps": [
+        "User Input → LLM 입력: 누락",
+        "LLM Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "LLM.chat",
+      "role": "function",
+      "label": "LLM.chat",
+      "path": "llm.py",
+      "line": 12,
+      "end_line": 21,
+      "logs": [],
+      "gaps": [
+        "User Input → LLM 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → 최종 출력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "ToyAgent.run",
+      "role": "entry",
+      "label": "ToyAgent.run",
+      "path": "agent.py",
+      "line": 26,
+      "end_line": 32,
+      "logs": [],
+      "gaps": [
+        "User Input → LLM 입력: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "LLM Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "agent.py",
+      "line": 26,
+      "in": "ToyAgent.run",
+      "logs": [],
+      "gaps": [
+        "User Input → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "Registry.run",
+      "role": "function",
+      "label": "Registry.run",
+      "path": "tools.py",
+      "line": 21,
+      "end_line": 23,
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "subprocess.run @ tools.py:8",
+      "role": "tool_response",
+      "label": "subprocess.run",
+      "path": "tools.py",
+      "line": 8,
+      "in": "tools.bash",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "input @ agent.py:49",
+      "role": "user_input",
+      "label": "input",
+      "path": "agent.py",
+      "line": 49,
+      "in": "ToyAgent.ask_user",
+      "logs": [],
+      "gaps": [
+        "User Input → 최종 출력: 누락",
+        "LLM Response → 사용자에게 표시: 누락"
+      ]
+    },
+    {
+      "id": "exec @ tools.py:13",
+      "role": "tool_response",
+      "label": "exec",
+      "path": "tools.py",
+      "line": 13,
+      "in": "tools.python",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.client.messages.create @ llm.py:13",
+      "role": "llm_response",
+      "label": "self.client.messages.create",
+      "path": "llm.py",
+      "line": 13,
+      "in": "LLM.chat",
+      "logs": [],
+      "gaps": [
+        "User Input → LLM 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → 사용자에게 표시: 누락",
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → 최종 출력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "from": "LLM.chat",
+      "to": "self.client.messages.create @ llm.py:13",
+      "values": [
+        "messages",
+        "response"
+      ],
+      "call": true
+    },
+    {
+      "from": "Registry.run",
+      "to": "exec @ tools.py:13",
+      "values": [
+        "args",
+        "code",
+        "scope"
+      ],
+      "call": true
+    },
+    {
+      "from": "Registry.run",
+      "to": "subprocess.run @ tools.py:8",
+      "values": [
+        "args",
+        "command"
+      ],
+      "call": true
+    },
+    {
+      "from": "ToyAgent.messages",
+      "to": "LLM.chat",
+      "values": [
+        "messages"
+      ],
+      "call": false
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "ToyAgent.messages",
+      "values": [
+        "task"
+      ],
+      "call": false
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "ToyAgent.step",
+      "values": [],
+      "call": true
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "input @ agent.py:49",
+      "values": [
+        "answer",
+        "question",
+        "reply"
+      ],
+      "call": true
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "LLM.chat",
+      "values": [],
+      "call": true
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "Registry.run",
+      "values": [
+        "call"
+      ],
+      "call": true
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "ToyAgent.messages",
+      "values": [
+        "reply",
+        "results"
+      ],
+      "call": false
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "ToyAgent.run",
+      "values": [
+        "task"
+      ],
+      "call": false
+    }
+  ]
+}

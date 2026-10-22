@@ -1,0 +1,56 @@
+diff --git a/src/minisweagent/agents/default.py b/src/minisweagent/agents/default.py
+index 32ddee5..f53df48 100644
+--- a/src/minisweagent/agents/default.py
++++ b/src/minisweagent/agents/default.py
+@@ -14,6 +14,7 @@ from pydantic import BaseModel
+ from minisweagent import Environment, Model, __version__
+ from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
+ from minisweagent.utils.serialize import recursive_merge
++from . import observatory_log
+
+
+ class AgentConfig(BaseModel):
+@@ -87,6 +88,7 @@ class DefaultAgent:
+
+     def run(self, task: str = "", **kwargs) -> dict:
+         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
++        observatory_log.user_input(task)
+         self.extra_template_vars |= {"task": task, **kwargs}
+         self.messages = []
+         self.add_messages(
+@@ -152,11 +154,19 @@ class DefaultAgent:
+             getattr(self.model.config, "model_name", None),
+             len(self.messages),
+         )
++        observatory_log.llm_query(step=self.n_calls, model=self.model, messages=self.messages)
+         try:
+             message = self.model.query(self.messages)
+         except Exception as e:
++            observatory_log.llm_error(step=self.n_calls, error=e)
+             self.logger.debug("[LLM_ERROR] step=%s error_type=%s", self.n_calls, type(e).__name__)
+             raise
++        observatory_log.llm_response(
++            step=self.n_calls,
++            actions=message.get("extra", {}).get("actions", []),
++            reply=message,
++            response=message,
++        )
+         self.cost += message.get("extra", {}).get("cost", 0.0)
+         self.logger.debug(
+             "[LLM_RESPONSE] step=%s actions=%s cost=%s",
+@@ -179,13 +189,9 @@ class DefaultAgent:
+         try:
+             output = self.env.execute(action)
+         except Exception as e:
+-            self.logger.debug(
+-                "[TOOL_EXECUTION_ERROR] action=%s error_type=%s duration_seconds=%.3f",
+-                "bash",
+-                type(e).__name__,
+-                time.time() - start_time,
+-            )
++            observatory_log.tool_error(start_time, "execute", e)
+             raise
++        observatory_log.tool_end(start_time, "execute", result=output)
+         self.logger.debug(
+             "[TOOL_EXECUTION_END] action=%s returncode=%s duration_seconds=%.3f",
+             "bash",

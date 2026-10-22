@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "ToyAgent Loop",
+    "output": "diagram/agent-architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/NiceGuy1313/mini-swe-agent",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "1fa1c9960055aa2ef7e081d204e4d64474e9cd39"
+    }
+  },
+  "components": [
+    {
+      "id": "task",
+      "type": "external",
+      "label": "Task",
+      "sublabel": "dashboard / CLI input",
+      "pos": [20, 330],
+      "size": [140, 64],
+      "sources": [{"path": "agent.py", "line": 27, "label": "task parameter"}]
+    },
+    {
+      "id": "run",
+      "type": "backend",
+      "label": "ToyAgent.run",
+      "sublabel": "step loop + exit routing",
+      "tag": "tool_start tool_end",
+      "pos": [200, 330],
+      "size": [170, 64],
+      "sources": [
+        {"path": "agent.py", "line": 27, "end_line": 35, "label": "run loop"},
+        {"path": "agent.py", "line": 28, "label": "tool_start"},
+        {"path": "agent.py", "line": 29, "label": "tool_end"}
+      ]
+    },
+    {
+      "id": "messages",
+      "type": "database",
+      "label": "ToyAgent.messages",
+      "sublabel": "conversation history",
+      "pos": [460, 120],
+      "size": [200, 72],
+      "sources": [
+        {"path": "agent.py", "line": 25, "label": "messages field"},
+        {"path": "llm.py", "line": 37, "end_line": 41, "label": "results_message"}
+      ]
+    },
+    {
+      "id": "query",
+      "type": "cloud",
+      "label": "LLM.chat",
+      "sublabel": "query, parse, log",
+      "tag": "llm_query llm_response llm_error",
+      "pos": [460, 330],
+      "size": [200, 72],
+      "sources": [
+        {"path": "llm.py", "line": 14, "end_line": 29, "label": "LLM.chat"},
+        {"path": "llm.py", "line": 31, "end_line": 34, "label": "parse"}
+      ]
+    },
+    {
+      "id": "step",
+      "type": "backend",
+      "label": "ToyAgent.step",
+      "sublabel": "dispatch calls, append results",
+      "pos": [740, 120],
+      "size": [190, 72],
+      "sources": [
+        {"path": "agent.py", "line": 37, "end_line": 46, "label": "step"},
+        {"path": "agent.py", "line": 48, "end_line": 49, "label": "fallback_query"}
+      ]
+    },
+    {
+      "id": "model_api",
+      "type": "external",
+      "label": "messages.create",
+      "sublabel": "Anthropic API call",
+      "pos": [740, 330],
+      "size": [200, 72],
+      "sources": [{"path": "llm.py", "line": 17, "label": "messages.create"}]
+    },
+    {
+      "id": "actions",
+      "type": "security",
+      "label": "Registry.run",
+      "sublabel": "bash / python dispatch",
+      "tag": "tool_start tool_error tool_end",
+      "pos": [1020, 120],
+      "size": [210, 72],
+      "sources": [
+        {"path": "tools.py", "line": 22, "end_line": 30, "label": "Registry.run"},
+        {"path": "tools.py", "line": 8, "end_line": 9, "label": "bash"},
+        {"path": "tools.py", "line": 12, "end_line": 15, "label": "python"}
+      ]
+    },
+    {
+      "id": "subprocess_run",
+      "type": "external",
+      "label": "subprocess.run",
+      "sublabel": "shell command",
+      "pos": [1260, 60],
+      "size": [190, 72],
+      "sources": [{"path": "tools.py", "line": 9, "label": "subprocess.run"}]
+    },
+    {
+      "id": "python_exec",
+      "type": "external",
+      "label": "exec",
+      "sublabel": "exec(code, scope)",
+      "pos": [1260, 190],
+      "size": [190, 72],
+      "sources": [{"path": "tools.py", "line": 14, "label": "exec"}]
+    },
+    {
+      "id": "ask_user",
+      "type": "frontend",
+      "label": "ToyAgent.ask_user",
+      "sublabel": "confirm / ask via input()",
+      "tag": "tool_start tool_end",
+      "pos": [220, 560],
+      "size": [200, 72],
+      "sources": [
+        {"path": "agent.py", "line": 51, "end_line": 55, "label": "ask_user"},
+        {"path": "agent.py", "line": 57, "end_line": 58, "label": "confirm"}
+      ]
+    },
+    {
+      "id": "input_call",
+      "type": "external",
+      "label": "input()",
+      "sublabel": "terminal prompt",
+      "pos": [470, 560],
+      "size": [180, 64],
+      "sources": [{"path": "agent.py", "line": 53, "label": "input"}]
+    },
+    {
+      "id": "final_output",
+      "type": "external",
+      "label": "Final output",
+      "sublabel": "return of ToyAgent.run",
+      "pos": [20, 560],
+      "size": [160, 64],
+      "sources": [{"path": "agent.py", "line": 27, "label": "return of run"}]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "ToyAgent.step: one step",
+      "wraps": ["messages", "query", "step", "model_api", "actions", "subprocess_run", "python_exec"],
+      "pad": 24
+    }
+  ],
+  "connections": [
+    {"from": "task", "to": "run", "label": "task", "variant": "emphasis", "fromSide": "right", "toSide": "left"},
+    {"from": "run", "to": "messages", "label": "task", "variant": "emphasis"},
+    {"from": "messages", "to": "query", "label": "messages", "variant": "emphasis", "fromSide": "bottom", "toSide": "top"},
+    {"from": "query", "to": "model_api", "label": "messages", "variant": "emphasis", "fromSide": "right", "toSide": "left"},
+    {"from": "model_api", "to": "query", "label": "response", "variant": "emphasis", "fromSide": "left", "toSide": "right"},
+    {"from": "query", "to": "step", "label": "reply", "variant": "emphasis"},
+    {"from": "step", "to": "actions", "label": "call", "variant": "emphasis", "fromSide": "right", "toSide": "left"},
+    {"from": "actions", "to": "step", "label": "result", "variant": "emphasis", "fromSide": "left", "toSide": "right"},
+    {"from": "actions", "to": "subprocess_run", "label": "command", "variant": "default"},
+    {"from": "subprocess_run", "to": "actions", "label": "stdout", "variant": "default"},
+    {"from": "actions", "to": "python_exec", "label": "code", "variant": "default"},
+    {"from": "python_exec", "to": "actions", "label": "scope", "variant": "default"},
+    {"from": "step", "to": "messages", "label": "reply, results", "variant": "dashed", "fromSide": "left", "toSide": "right"},
+    {"from": "step", "to": "run", "label": "reply", "variant": "emphasis"},
+    {"from": "run", "to": "ask_user", "label": "content", "variant": "default", "fromSide": "bottom", "toSide": "top"},
+    {"from": "ask_user", "to": "input_call", "label": "question", "variant": "default", "fromSide": "right", "toSide": "left", "labelDy": -35},
+    {"from": "input_call", "to": "ask_user", "label": "answer", "variant": "default", "fromSide": "left", "toSide": "right"},
+    {"from": "ask_user", "to": "run", "label": "answer", "variant": "default", "fromSide": "top", "toSide": "bottom"},
+    {"from": "run", "to": "final_output", "label": "return", "variant": "emphasis"}
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "LLM boundary",
+      "items": [
+        "Every step, ToyAgent.step calls LLM.chat once; LLM.chat calls self.client.messages.create and parses the reply into text + tool calls",
+        "llm_query before the call, llm_response with the parsed actions after, llm_error (then re-raised) if the call throws",
+        "On TimeoutError, step retries once via fallback_query, which calls LLM.chat with no tools"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "tool boundary",
+      "items": [
+        "Registry.run dispatches each tool call by name to bash (subprocess.run) or python (exec)",
+        "tool_start before running it, tool_end with the result, tool_error (then re-raised) if it throws",
+        "Tool results are collected into one results_message and appended to messages for the next step"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "observation points",
+      "items": [
+        "agent.py: tool_start/tool_end log the incoming task itself (28-29) and every ask_user prompt/answer (52, 54)",
+        "tools.py: tool_start/tool_error/tool_end wrap Registry.run (23, 27, 29)",
+        "llm.py: llm_query/llm_error/llm_response wrap LLM.chat (15, 25, 28)"
+      ]
+    }
+  ]
+}

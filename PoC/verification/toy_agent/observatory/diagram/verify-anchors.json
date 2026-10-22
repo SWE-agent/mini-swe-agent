@@ -1,0 +1,71 @@
+{
+  "logger": "observatory_log",
+  "entry": {
+    "function": "ToyAgent.run",
+    "path": "agent.py",
+    "line": 42,
+    "inputs": [
+      "task"
+    ]
+  },
+  "wrappers": [
+    {
+      "label": "LLM.chat",
+      "events": [
+        "llm_query",
+        "llm_response",
+        "llm_error"
+      ],
+      "path": "llm.py",
+      "line": 13,
+      "end_line": 34
+    },
+    {
+      "label": "Registry.run",
+      "events": [
+        "tool_start",
+        "tool_end",
+        "tool_error"
+      ],
+      "path": "tools.py",
+      "line": 22,
+      "end_line": 30
+    },
+    {
+      "label": "ToyAgent.run (task)",
+      "events": [
+        "tool_start",
+        "tool_end"
+      ],
+      "path": "agent.py",
+      "line": 43,
+      "end_line": 44
+    },
+    {
+      "label": "ToyAgent.ask_user",
+      "events": [
+        "tool_start",
+        "tool_end"
+      ],
+      "path": "agent.py",
+      "line": 66,
+      "end_line": 70
+    }
+  ],
+  "sources": [
+    {
+      "kind": "llm_response",
+      "path": "llm.py",
+      "line": 16,
+      "call": "self.client.messages.create",
+      "label": "Claude messages API"
+    },
+    {
+      "kind": "user_input",
+      "path": "agent.py",
+      "line": 68,
+      "call": "input",
+      "label": "ask_user prompt"
+    }
+  ]
+}

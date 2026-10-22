@@ -1,0 +1,18 @@
+flowchart LR
+  nDefaultAgent_execute_action["DefaultAgent.execute_action<br/>[LOG] tool_error @ src/minisweagent/agents/default.py:192<br/>[LOG] tool_end @ src/minisweagent/agents/default.py:194"]
+  style nDefaultAgent_execute_action stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent_query["DefaultAgent.query<br/>[LOG] llm_query @ src/minisweagent/agents/default.py:157<br/>[LOG] llm_error @ src/minisweagent/agents/default.py:161<br/>[LOG] llm_response @ src/minisweagent/agents/default.py:164"]
+  style nDefaultAgent_query stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent_run["DefaultAgent.run<br/>[LOG] user_input @ src/minisweagent/agents/default.py:91"]
+  n_User_Input__task__entry_parameter_[/"task"/]
+  nself_model_query___src_minisweagent_agents_default_py_159(["self.model.query"])
+  style nself_model_query___src_minisweagent_agents_default_py_159 stroke:#be123c,stroke-dasharray:4 3
+  nself_env_execute___src_minisweagent_agents_default_py_190[["self.env.execute"]]
+  style nself_env_execute___src_minisweagent_agents_default_py_190 stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent_execute_action -->|action| nself_env_execute___src_minisweagent_agents_default_py_190
+  nself_env_execute___src_minisweagent_agents_default_py_190 -.->|output| nDefaultAgent_execute_action
+  nDefaultAgent_query -.->|action| nDefaultAgent_execute_action
+  nDefaultAgent_query -.->|message, messages| nDefaultAgent_run
+  nDefaultAgent_query -->|message, messages| nself_model_query___src_minisweagent_agents_default_py_159
+  nself_model_query___src_minisweagent_agents_default_py_159 -.->|message| nDefaultAgent_query
+  n_User_Input__task__entry_parameter_ -.->|task| nDefaultAgent_run

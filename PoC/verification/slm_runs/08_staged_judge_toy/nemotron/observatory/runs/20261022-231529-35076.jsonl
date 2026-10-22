@@ -1,0 +1,3 @@
+{"t": 1792678529.4326954, "kind": "llm_query", "step": 1, "at": "observatory/runs/check_run.py:40", "data": {"model": "m", "messages": []}}
+{"t": 1792678529.4383621, "kind": "tool_start", "step": null, "at": "agent.py:29", "data": {"action": "user_input", "params": {"task": "Say hello world"}}}
+{"t": 1792678529.4389274, "kind": "tool_end", "step": null, "at": "agent.py:30", "data": {"action": "user_input", "result": "Say hello world", "duration_seconds": 0.0}}
