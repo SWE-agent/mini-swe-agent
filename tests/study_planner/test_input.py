@@ -35,15 +35,29 @@ def test_parse_tasks_rejects_invalid_json_and_schema():
 
 
 def test_parse_availability_validates_json_into_shared_schema():
-    blocks = parse_availability(json.dumps([{"start": "2026-10-20T18:00:00", "end": "2026-10-20T21:00:00"}]))
+    blocks = parse_availability(
+        json.dumps([{"start": "2026-10-20T18:00:00+00:00", "end": "2026-10-20T21:00:00+00:00"}])
+    )
 
     assert len(blocks) == 1
     assert isinstance(blocks[0], AvailabilityBlock)
-    assert blocks[0].end > blocks[0].start
+    assert blocks[0].start == datetime.fromisoformat("2026-10-20T18:00:00+00:00")
+    assert blocks[0].end == datetime.fromisoformat("2026-10-20T21:00:00+00:00")
 
 
-def test_parse_availability_rejects_invalid_json_and_time_range():
-    with pytest.raises(ValueError, match="Invalid availability input"):
-        parse_availability("not json")
-    with pytest.raises(ValueError, match="Invalid availability input"):
-        parse_availability(json.dumps([{"start": "2026-10-20T21:00:00", "end": "2026-10-20T18:00:00"}]))
+@pytest.mark.parametrize(
+    ("raw_input", "message"),
+    [
+        ("not json", "Invalid availability input"),
+        (json.dumps([{"start": "2026-10-20T18:00:00"}]), "end"),
+        (json.dumps([{"start": "not a datetime", "end": "2026-10-20T21:00:00"}]), "start"),
+        (
+            json.dumps([{"start": "2026-10-20T18:00:00+00:00", "end": "2026-10-20T21:00:00"}]),
+            "both include a timezone",
+        ),
+        (json.dumps([{"start": "2026-10-20T21:00:00", "end": "2026-10-20T18:00:00"}]), "end must be after start"),
+    ],
+)
+def test_parse_availability_rejects_invalid_input(raw_input, message):
+    with pytest.raises(ValueError, match=message):
+        parse_availability(raw_input)
