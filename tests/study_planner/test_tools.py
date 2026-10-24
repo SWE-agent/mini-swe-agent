@@ -16,17 +16,15 @@ def make_schedule(*blocks: tuple[str, datetime, datetime]) -> Schedule:
 
 
 @pytest.mark.parametrize(
-    ("blocks",),
+    "blocks",
     [
-        ([],),
-        ([("cs_midterm", datetime(2026, 10, 26, 14, 0), datetime(2026, 10, 26, 16, 0))],),
-        ([("cs_midterm", datetime(2026, 10, 27, 10, 0), datetime(2026, 10, 27, 12, 0))],),
-        (
-            [
-                ("cs_midterm", datetime(2026, 10, 26, 9, 0), datetime(2026, 10, 26, 10, 0)),
-                ("math_hw", datetime(2026, 10, 29, 9, 0), datetime(2026, 10, 29, 10, 0)),
-            ],
-        ),
+        [],
+        [("cs_midterm", datetime(2026, 10, 26, 14, 0), datetime(2026, 10, 26, 16, 0))],
+        [("cs_midterm", datetime(2026, 10, 27, 10, 0), datetime(2026, 10, 27, 12, 0))],
+        [
+            ("cs_midterm", datetime(2026, 10, 26, 9, 0), datetime(2026, 10, 26, 10, 0)),
+            ("math_hw", datetime(2026, 10, 29, 9, 0), datetime(2026, 10, 29, 10, 0)),
+        ],
     ],
 )
 def test_validate_deadlines_valid(blocks):
