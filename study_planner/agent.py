@@ -5,7 +5,6 @@ from jinja2 import Template
 
 from study_planner.input import build_planner_context, load_planner_input
 
-
 CONFIG_PATH = Path("study_planner/config/study_planner.yaml")
 
 
