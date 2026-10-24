@@ -2,6 +2,7 @@ from pathlib import Path
 
 import yaml
 
+
 CONFIG_PATH = Path("study_planner/config/study_planner.yaml")
 
 
