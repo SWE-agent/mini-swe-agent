@@ -1,0 +1,43 @@
+{
+    "id": "multiple_priority",
+    "description": "A week with a high priority task due earlier than a low priority task.",
+    "tasks": [
+        {
+            "id": "cs_midterm",
+            "name": "Study for CS Midterm",
+            "course": "CS100",
+            "deadline": "2026-10-27T17:00:00",
+            "estimated_minutes": 120,
+            "priority": 1
+        },
+        {
+            "id": "math_midterm",
+            "name": "Study for Math Midterm",
+            "course": "MATH100",
+            "deadline": "2026-10-30T17:00:00",
+            "estimated_minutes": 120,
+            "priority": 3
+        }
+    ],
+    "availability": [
+        {
+            "start": "2026-10-26T14:00:00",
+            "end": "2026-10-26T16:00:00"
+        },
+        {
+            "start": "2026-10-27T14:00:00",
+            "end": "2026-10-27T16:00:00"
+        }
+    ],
+    "expected_output": {
+        "feasible": true,
+        "checks": [
+            "all_tasks_scheduled",
+            "within_availability",
+            "before_deadlines",
+            "no_overlapping_tasks",
+            "estimated_duration_met",
+            "priority_respected"
+        ]
+    }
+}
