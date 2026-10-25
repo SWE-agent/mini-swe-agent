@@ -122,7 +122,7 @@ def unset(key: str | None = Argument(None, help="The key to unset")):
 @app.command()
 def edit():
     """Edit the global config file."""
-    editor = os.getenv("EDITOR", "nano")
+    editor = os.getenv("EDITOR", "notepad" if os.name == "nt" else "nano")
     subprocess.run([editor, global_config_file])
     _reload_config()
 
