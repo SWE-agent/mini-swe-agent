@@ -42,7 +42,8 @@ def main():
         if args[0] in aliases:
             return import_module(module_path).app(args[1:], prog_name=f"mini-extra {aliases[0]}")
 
-    return Console().print(get_docstring())
+    Console(stderr=True).print(f"Unknown command: {args[0]}. Run 'mini-extra --help' for help.", markup=False)
+    raise SystemExit(2)
 
 
 if __name__ == "__main__":
