@@ -13,6 +13,7 @@ Put this `observatory/` folder in the root of the agent repository, then:
     uv run observatory/run.py --serve          # ... and start the dashboard afterwards
     uv run observatory/run.py --serve-only     # later: just start the dashboard
     uv run observatory/run.py --no-claude      # only check the wiring again and redraw the loop
+    uv run observatory/run.py --scope a.py b.py  # the anchors are chosen from the calls of these files only
 
 The dashboard (dashboard.py), the logger (observatory_log.py) and the checker are the same for every agent. What
 differs per agent is done by Claude Code: where the logger calls go.
@@ -187,6 +188,18 @@ def code_errors(files: list[str]) -> list[str]:
     return errors
 
 
+def scope(files: list[str]) -> str:
+    """The anchors step's view of the agent: the chosen files, and every call in them an anchor can be."""
+    from candidates import listing
+
+    return (
+        f"The agent is in these files: {', '.join(f'`{f}`' for f in files)}. Read only these. Every call in them whose "
+        "implementation they do not show is listed below; these are the only calls an anchor can be. Take each "
+        "`llm_response` and `user_input` anchor from this list, with its path, line and call exactly as listed, and "
+        f"the entry from the functions of these files.\n\n{listing(REPO, files)}\n\n"
+    )
+
+
 def sites(*roles: str) -> str:
     """The graph's calls of these roles, one line each, for a step's prompt, and the anchors of these kinds the graph
     does not show (a value it cannot follow, such as user text carried by an exception)."""
@@ -289,6 +302,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--no-claude", action="store_true", help="skip the Claude Code sessions (the agent is already wired)"
     )
+    parser.add_argument(
+        "--scope", nargs="+", help="the files that make up the agent: the anchors are chosen from their calls"
+    )
     parser.add_argument("--test", help="a command to run in the repository at the end, for example 'uv run pytest -q'")
     args = parser.parse_args()
     print(f"Repository: {REPO}")
@@ -307,7 +323,7 @@ if __name__ == "__main__":
     checker, baseline = (KIT / "flow_verify.py").read_bytes(), set()
     if not args.no_claude:
         step("1/4 Claude Code: finding the anchors (where the task, the LLM replies and the user input come in)")
-        session("anchors")
+        session("anchors", scope=scope(args.scope) if args.scope else "")
         if ANCHORS.exists():
             logger = copy_logger()
             baseline = flows(verify(quiet=True))  # the value flows of the agent before any logging

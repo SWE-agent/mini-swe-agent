@@ -1,6 +1,6 @@
 ## This step: find the anchors (read the code, change no code)
 
-Write `{kit}/diagram/verify-anchors.json`: where the agent's run starts, and the calls whose return value is an LLM reply or text a user typed. After the logging is added in the next steps, a static checker starts from these anchors to verify that it records those values; the lines may move then, the checker finds the calls again.
+{scope}Write `{kit}/diagram/verify-anchors.json`: where the agent's run starts, and the calls whose return value is an LLM reply or text a user typed. After the logging is added in the next steps, a static checker starts from these anchors to verify that it records those values; the lines may move then, the checker finds the calls again.
 
 ```json
 {

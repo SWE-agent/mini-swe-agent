@@ -10,6 +10,7 @@
 | `flow_verify.py` | 정적 검증기. 기준점에서 값의 흐름을 따라가 로그가 통째로 기록하는지 판정하고, 에이전트 루프 그림(`verify/loop.mmd`)을 그린다 | 같음 |
 | `dashboard.py`, `static/index.html` | dashboard 서버와 화면. 왼쪽은 `verify/loop.mmd`의 에이전트 루프, 오른쪽은 실행 기록 | 같음 |
 | `run.py`, `prompt/*.md`, `selftest.py` | 실행 스크립트, 단계별 Claude 요청, 키트 자체 테스트 | 같음 |
+| `candidates.py` | `--scope`로 고른 파일에서 기준점이 될 수 있는 호출(구현이 보이지 않는 호출)을 모두 뽑아 1단계에 넘긴다 | 같음 |
 | `diagram/verify-anchors.json` | 검증기의 기준점 (진입 함수, LLM 응답과 사용자 입력이 들어오는 호출) | **Claude가 작성** |
 | 에이전트 코드 안의 로거 호출 | LLM 호출, tool 실행, 사용자 입력 위치에 심는 호출 | **Claude가 추가** |
 
@@ -69,6 +70,7 @@ OBSERVATORY_RUNS=$PWD/observatory/runs <에이전트 실행 명령>
 | `--serve`, `--serve-only`, `--port` | dashboard를 실행(기본 8000). `--serve-only`는 다시 띄울 때 |
 | `--no-claude` | Claude 세션 없이 판정과 루프 그림만 다시 (값 흐름과 지워진 줄 비교는 세션이 있을 때만) |
 | `--model`, `--budget` | Claude 모델(기본 `sonnet`)과 세션당 최대 비용 USD(기본 3, 0이면 제한 없음) |
+| `--scope <파일...>` | 에이전트를 이루는 파일. 1단계 세션은 이 파일만 읽고, 그 안에서 구현이 보이지 않는 호출 목록에서 기준점을 고른다 |
 | `--test "<명령>"` | 끝나고 저장소에서 실행할 테스트 명령 (예: `"uv run pytest -q"`) |
 
 ## 알아 둘 점
