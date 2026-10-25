@@ -1,0 +1,1224 @@
+[
+  {
+    "value": "User Input",
+    "found": "기준점 (진입점 인자)",
+    "mixed_logs": [],
+    "source": "[User Input] task (entry parameter)",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.client.messages.create @ llm.py:16",
+    "sink_at": {
+      "file": "llm.py",
+      "line": 16,
+      "code": "response = self.client.messages.create(",
+      "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "agent.py",
+        "line": 27,
+        "code": "def run(self, task: str, max_steps: int = 10) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:27",
+        "name": "[User Input] task (entry parameter)",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 27,
+        "code": "def run(self, task: str, max_steps: int = 10) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:27",
+        "name": "ToyAgent.run:task",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "agent.py",
+            "line": 28,
+            "code": "observatory_log.user_input(task)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:28",
+            "log": "[LOG] observatory_log.user_input @ agent.py:28",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "agent.py",
+        "line": 25,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:25",
+        "name": "ToyAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 13,
+        "code": "def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:13",
+        "name": "LLM.chat:messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 14,
+            "code": "observatory_log.llm_query(step, model=self.model, messages=messages)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:14",
+            "log": "[LOG] observatory_log.llm_query @ llm.py:14",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "[외부 호출] self.client.messages.create @ llm.py:16",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "User Input",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] input @ agent.py:51",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of ToyAgent.run",
+    "sink_at": {
+      "file": "agent.py",
+      "line": 33,
+      "code": "return reply[\"content\"] if self.confirm(reply[\"content\"]) else self.ask_user(\"What next?\")",
+      "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:33"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "agent.py",
+        "line": 51,
+        "code": "answer = input(f\"{question} \")",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:51",
+        "name": "[외부 응답] input @ agent.py:51",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 51,
+        "code": "answer = input(f\"{question} \")",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:51",
+        "name": "ToyAgent.ask_user:answer",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "agent.py",
+            "line": 52,
+            "code": "observatory_log.user_input(answer, prompt=question)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:52",
+            "log": "[LOG] observatory_log.user_input @ agent.py:52",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "agent.py",
+        "line": 50,
+        "code": "def ask_user(self, question: str) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:50",
+        "name": "ToyAgent.ask_user:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 27,
+        "code": "def run(self, task: str, max_steps: int = 10) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:27",
+        "name": "ToyAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 33,
+        "code": "return reply[\"content\"] if self.confirm(reply[\"content\"]) else self.ask_user(\"What next?\")",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:33",
+        "name": "[최종 출력] return of ToyAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.client.messages.create @ llm.py:16",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] exec @ tools.py:14",
+    "sink_at": {
+      "file": "tools.py",
+      "line": 14,
+      "code": "exec(code, scope)",
+      "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:14"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "[외부 응답] self.client.messages.create @ llm.py:16",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "LLM.chat:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:response",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 26,
+        "code": "reply = self.parse(response)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:26",
+        "name": "LLM.chat:reply",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 13,
+        "code": "def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:13",
+        "name": "LLM.chat:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 38,
+        "code": "reply = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:38",
+        "name": "ToyAgent.step:reply",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 42,
+        "code": "results = [(call[\"id\"], self.registry.run(call[\"name\"], call[\"args\"])) for call in reply[\"calls\"]]",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:42",
+        "name": "ToyAgent.step:call",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "tools.py",
+        "line": 22,
+        "code": "def run(self, name: str, args: dict) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:22",
+        "name": "Registry.run:args",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "tools.py",
+            "line": 23,
+            "code": "start = observatory_log.tool_start(name, args)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:23",
+            "log": "[LOG] observatory_log.tool_start @ tools.py:23",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "tools.py",
+        "line": 14,
+        "code": "exec(code, scope)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:14",
+        "name": "tools.python:code",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "tools.py",
+        "line": 14,
+        "code": "exec(code, scope)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:14",
+        "name": "[외부 호출] exec @ tools.py:14",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.client.messages.create @ llm.py:16",
+    "use": "사용자에게 표시",
+    "sink": "[외부 호출] input @ agent.py:51",
+    "sink_at": {
+      "file": "agent.py",
+      "line": 51,
+      "code": "answer = input(f\"{question} \")",
+      "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:51"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "[외부 응답] self.client.messages.create @ llm.py:16",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "LLM.chat:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:response",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 26,
+        "code": "reply = self.parse(response)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:26",
+        "name": "LLM.chat:reply",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 13,
+        "code": "def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:13",
+        "name": "LLM.chat:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 38,
+        "code": "reply = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:38",
+        "name": "ToyAgent.step:reply",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 36,
+        "code": "def step(self, n: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:36",
+        "name": "ToyAgent.step:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 31,
+        "code": "reply = self.step(n)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:31",
+        "name": "ToyAgent.run:reply",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 55,
+        "code": "def confirm(self, answer: str) -> bool:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:55",
+        "name": "ToyAgent.confirm:answer",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 50,
+        "code": "def ask_user(self, question: str) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:50",
+        "name": "ToyAgent.ask_user:question",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "agent.py",
+            "line": 52,
+            "code": "observatory_log.user_input(answer, prompt=question)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:52",
+            "log": "[LOG] observatory_log.user_input @ agent.py:52",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "agent.py",
+        "line": 51,
+        "code": "answer = input(f\"{question} \")",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:51",
+        "name": "[외부 호출] input @ agent.py:51",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.client.messages.create @ llm.py:16",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.client.messages.create @ llm.py:16",
+    "sink_at": {
+      "file": "llm.py",
+      "line": 16,
+      "code": "response = self.client.messages.create(",
+      "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "[외부 응답] self.client.messages.create @ llm.py:16",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "LLM.chat:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:response",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 26,
+        "code": "reply = self.parse(response)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:26",
+        "name": "LLM.chat:reply",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 13,
+        "code": "def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:13",
+        "name": "LLM.chat:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 38,
+        "code": "reply = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:38",
+        "name": "ToyAgent.step:reply",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 25,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:25",
+        "name": "ToyAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 13,
+        "code": "def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:13",
+        "name": "LLM.chat:messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 14,
+            "code": "observatory_log.llm_query(step, model=self.model, messages=messages)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:14",
+            "log": "[LOG] observatory_log.llm_query @ llm.py:14",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "[외부 호출] self.client.messages.create @ llm.py:16",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.client.messages.create @ llm.py:16",
+    "use": "Tool 입력",
+    "sink": "[외부 호출] subprocess.run @ tools.py:9",
+    "sink_at": {
+      "file": "tools.py",
+      "line": 9,
+      "code": "return subprocess.run(command, shell=True, capture_output=True, text=True, errors=\"replace\").stdout",
+      "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:9"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "[외부 응답] self.client.messages.create @ llm.py:16",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "LLM.chat:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:response",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 26,
+        "code": "reply = self.parse(response)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:26",
+        "name": "LLM.chat:reply",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 13,
+        "code": "def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:13",
+        "name": "LLM.chat:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 38,
+        "code": "reply = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:38",
+        "name": "ToyAgent.step:reply",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 42,
+        "code": "results = [(call[\"id\"], self.registry.run(call[\"name\"], call[\"args\"])) for call in reply[\"calls\"]]",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:42",
+        "name": "ToyAgent.step:call",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "tools.py",
+        "line": 22,
+        "code": "def run(self, name: str, args: dict) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:22",
+        "name": "Registry.run:args",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "tools.py",
+            "line": 23,
+            "code": "start = observatory_log.tool_start(name, args)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:23",
+            "log": "[LOG] observatory_log.tool_start @ tools.py:23",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "tools.py",
+        "line": 9,
+        "code": "return subprocess.run(command, shell=True, capture_output=True, text=True, errors=\"replace\").stdout",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:9",
+        "name": "tools.bash:command",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "tools.py",
+        "line": 9,
+        "code": "return subprocess.run(command, shell=True, capture_output=True, text=True, errors=\"replace\").stdout",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:9",
+        "name": "[외부 호출] subprocess.run @ tools.py:9",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "LLM Response",
+    "found": "기준점",
+    "mixed_logs": [],
+    "source": "[외부 응답] self.client.messages.create @ llm.py:16",
+    "use": "최종 출력",
+    "sink": "[최종 출력] return of ToyAgent.run",
+    "sink_at": {
+      "file": "agent.py",
+      "line": 33,
+      "code": "return reply[\"content\"] if self.confirm(reply[\"content\"]) else self.ask_user(\"What next?\")",
+      "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:33"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "[외부 응답] self.client.messages.create @ llm.py:16",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "LLM.chat:response",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:response",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 30,
+        "code": "def parse(self, response) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:30",
+        "name": "LLM.parse:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 26,
+        "code": "reply = self.parse(response)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:26",
+        "name": "LLM.chat:reply",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 27,
+            "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:27",
+            "log": "[LOG] observatory_log.llm_response @ llm.py:27",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 13,
+        "code": "def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:13",
+        "name": "LLM.chat:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 38,
+        "code": "reply = self.llm.chat(self.messages, TOOLS, n)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:38",
+        "name": "ToyAgent.step:reply",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 36,
+        "code": "def step(self, n: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:36",
+        "name": "ToyAgent.step:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 31,
+        "code": "reply = self.step(n)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:31",
+        "name": "ToyAgent.run:reply",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 27,
+        "code": "def run(self, task: str, max_steps: int = 10) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:27",
+        "name": "ToyAgent.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 33,
+        "code": "return reply[\"content\"] if self.confirm(reply[\"content\"]) else self.ask_user(\"What next?\")",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:33",
+        "name": "[최종 출력] return of ToyAgent.run",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "found": "LLM 응답과 다음 LLM 입력 사이에서 찾음",
+    "mixed_logs": [],
+    "source": "[외부 응답] exec @ tools.py:14",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.client.messages.create @ llm.py:16",
+    "sink_at": {
+      "file": "llm.py",
+      "line": 16,
+      "code": "response = self.client.messages.create(",
+      "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "tools.py",
+        "line": 14,
+        "code": "exec(code, scope)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:14",
+        "name": "[외부 응답] exec @ tools.py:14",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "tools.py",
+        "line": 13,
+        "code": "scope: dict = {}",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:13",
+        "name": "tools.python:scope",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "tools.py",
+        "line": 12,
+        "code": "def python(code: str) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:12",
+        "name": "tools.python:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "tools.py",
+        "line": 25,
+        "code": "out = self.tools[name](**args)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:25",
+        "name": "Registry.run:out",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "tools.py",
+            "line": 29,
+            "code": "observatory_log.tool_end(start, name, result=out)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:29",
+            "log": "[LOG] observatory_log.tool_end @ tools.py:29",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "tools.py",
+        "line": 22,
+        "code": "def run(self, name: str, args: dict) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:22",
+        "name": "Registry.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 42,
+        "code": "results = [(call[\"id\"], self.registry.run(call[\"name\"], call[\"args\"])) for call in reply[\"calls\"]]",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:42",
+        "name": "ToyAgent.step:results",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 36,
+        "code": "def results_message(results: list[tuple[str, str]]) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:36",
+        "name": "LLM.results_message:results",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 39,
+        "code": "\"content\": [{\"type\": \"tool_result\", \"tool_use_id\": i, \"content\": out} for i, out in results],",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:39",
+        "name": "LLM.results_message:i",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 36,
+        "code": "def results_message(results: list[tuple[str, str]]) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:36",
+        "name": "LLM.results_message:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 25,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:25",
+        "name": "ToyAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 13,
+        "code": "def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:13",
+        "name": "LLM.chat:messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 14,
+            "code": "observatory_log.llm_query(step, model=self.model, messages=messages)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:14",
+            "log": "[LOG] observatory_log.llm_query @ llm.py:14",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "[외부 호출] self.client.messages.create @ llm.py:16",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  },
+  {
+    "value": "Tool Response",
+    "found": "LLM 응답과 다음 LLM 입력 사이에서 찾음",
+    "mixed_logs": [],
+    "source": "[외부 응답] subprocess.run @ tools.py:9",
+    "use": "LLM 입력",
+    "sink": "[외부 호출] self.client.messages.create @ llm.py:16",
+    "sink_at": {
+      "file": "llm.py",
+      "line": 16,
+      "code": "response = self.client.messages.create(",
+      "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16"
+    },
+    "status": "covered",
+    "steps": [
+      {
+        "file": "tools.py",
+        "line": 9,
+        "code": "return subprocess.run(command, shell=True, capture_output=True, text=True, errors=\"replace\").stdout",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:9",
+        "name": "[외부 응답] subprocess.run @ tools.py:9",
+        "kind": "source",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "tools.py",
+        "line": 8,
+        "code": "def bash(command: str) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:8",
+        "name": "tools.bash:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "tools.py",
+        "line": 25,
+        "code": "out = self.tools[name](**args)",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:25",
+        "name": "Registry.run:out",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "tools.py",
+            "line": 29,
+            "code": "observatory_log.tool_end(start, name, result=out)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:29",
+            "log": "[LOG] observatory_log.tool_end @ tools.py:29",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "tools.py",
+        "line": 22,
+        "code": "def run(self, name: str, args: dict) -> str:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/tools.py:22",
+        "name": "Registry.run:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 42,
+        "code": "results = [(call[\"id\"], self.registry.run(call[\"name\"], call[\"args\"])) for call in reply[\"calls\"]]",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:42",
+        "name": "ToyAgent.step:results",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 36,
+        "code": "def results_message(results: list[tuple[str, str]]) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:36",
+        "name": "LLM.results_message:results",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 39,
+        "code": "\"content\": [{\"type\": \"tool_result\", \"tool_use_id\": i, \"content\": out} for i, out in results],",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:39",
+        "name": "LLM.results_message:i",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 36,
+        "code": "def results_message(results: list[tuple[str, str]]) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:36",
+        "name": "LLM.results_message:<return>",
+        "kind": "var",
+        "recorded": false,
+        "logs": []
+      },
+      {
+        "file": "agent.py",
+        "line": 25,
+        "code": "self.messages: list[dict] = []",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/agent.py:25",
+        "name": "ToyAgent.messages",
+        "kind": "field",
+        "recorded": true,
+        "logs": []
+      },
+      {
+        "file": "llm.py",
+        "line": 13,
+        "code": "def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:13",
+        "name": "LLM.chat:messages",
+        "kind": "var",
+        "recorded": true,
+        "logs": [
+          {
+            "file": "llm.py",
+            "line": 14,
+            "code": "observatory_log.llm_query(step, model=self.model, messages=messages)",
+            "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:14",
+            "log": "[LOG] observatory_log.llm_query @ llm.py:14",
+            "whole": true
+          }
+        ]
+      },
+      {
+        "file": "llm.py",
+        "line": 16,
+        "code": "response = self.client.messages.create(",
+        "uri": "vscode://file//private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-claude/llm.py:16",
+        "name": "[외부 호출] self.client.messages.create @ llm.py:16",
+        "kind": "sink",
+        "recorded": false,
+        "logs": []
+      }
+    ]
+  }
+]

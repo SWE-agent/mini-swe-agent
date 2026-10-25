@@ -1,0 +1,114 @@
+1. src/minisweagent/agents/default.py:41  `config_class`  in DefaultAgent.__init__ (callable value)
+     self.config = config_class(**kwargs)
+2. src/minisweagent/agents/default.py:46  `logging.getLogger`  in DefaultAgent.__init__ (imported)
+     self.logger = logging.getLogger("agent")
+3. src/minisweagent/agents/default.py:50  `time.time`  in DefaultAgent.__init__ (imported)
+     self._start_time = time.time()
+4. src/minisweagent/agents/default.py:53  `recursive_merge`  in DefaultAgent.get_template_vars (imported)
+     return recursive_merge(
+5. src/minisweagent/agents/default.py:54  `self.config.model_dump`  in DefaultAgent.get_template_vars (object method)
+     self.config.model_dump(),
+6. src/minisweagent/agents/default.py:55  `self.env.get_template_vars`  in DefaultAgent.get_template_vars (object method)
+     self.env.get_template_vars(),
+7. src/minisweagent/agents/default.py:56  `self.model.get_template_vars`  in DefaultAgent.get_template_vars (object method)
+     self.model.get_template_vars(),
+8. src/minisweagent/agents/default.py:60  `time.time`  in DefaultAgent.get_template_vars (imported)
+     "elapsed_seconds": int(time.time() - self._start_time),
+9. src/minisweagent/agents/default.py:70  `self.logger.debug`  in DefaultAgent.add_messages (imported)
+     self.logger.debug(messages)  # set log level to debug to see
+10. src/minisweagent/agents/default.py:76  `self.model.format_message`  in DefaultAgent.handle_uncaught_exception (object method)
+     self.model.format_message(
+11. src/minisweagent/agents/default.py:83  `traceback.format_exc`  in DefaultAgent.handle_uncaught_exception (imported)
+     "traceback": traceback.format_exc(),
+12. src/minisweagent/agents/default.py:93  `self.model.format_message`  in DefaultAgent.run (object method)
+     self.model.format_message(role="system", content=self._render_template(self.config.system_template)),
+13. src/minisweagent/agents/default.py:94  `self.model.format_message`  in DefaultAgent.run (object method)
+     self.model.format_message(role="user", content=self._render_template(self.config.instance_template)),
+14. src/minisweagent/agents/default.py:102  `e.messages[0].get`  in DefaultAgent.run (object method)
+     self.cost += e.messages[0].get("extra", {}).get("cost", 0.0)
+15. src/minisweagent/agents/default.py:133  `LimitsExceeded`  in DefaultAgent.query (imported)
+     raise LimitsExceeded(
+16. src/minisweagent/agents/default.py:140  `time.time`  in DefaultAgent.query (imported)
+     if 0 < self.config.wall_time_limit_seconds <= int(time.time() - self._start_time):
+17. src/minisweagent/agents/default.py:141  `TimeExceeded`  in DefaultAgent.query (imported)
+     raise TimeExceeded(
+18. src/minisweagent/agents/default.py:149  `self.logger.debug`  in DefaultAgent.query (imported)
+     self.logger.debug(
+19. src/minisweagent/agents/default.py:156  `self.model.query`  in DefaultAgent.query (object method)
+     message = self.model.query(self.messages)
+20. src/minisweagent/agents/default.py:158  `self.logger.debug`  in DefaultAgent.query (imported)
+     self.logger.debug("[LLM_ERROR] step=%s error_type=%s", self.n_calls, type(e).__name__)
+21. src/minisweagent/agents/default.py:161  `self.logger.debug`  in DefaultAgent.query (imported)
+     self.logger.debug(
+22. src/minisweagent/agents/default.py:172  `message.get`  in DefaultAgent.execute_actions (object method)
+     outputs = [self.execute_action(action) for action in message.get("extra", {}).get("actions", [])]
+23. src/minisweagent/agents/default.py:173  `self.model.format_observation_messages`  in DefaultAgent.execute_actions (object method)
+     return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))
+24. src/minisweagent/agents/default.py:177  `self.logger.debug`  in DefaultAgent.execute_action (imported)
+     self.logger.debug("[TOOL_EXECUTION_START] action=%s params=%s", "bash", action)
+25. src/minisweagent/agents/default.py:178  `time.time`  in DefaultAgent.execute_action (imported)
+     start_time = time.time()
+26. src/minisweagent/agents/default.py:180  `self.env.execute`  in DefaultAgent.execute_action (object method)
+     output = self.env.execute(action)
+27. src/minisweagent/agents/default.py:182  `self.logger.debug`  in DefaultAgent.execute_action (imported)
+     self.logger.debug(
+28. src/minisweagent/agents/default.py:186  `time.time`  in DefaultAgent.execute_action (imported)
+     time.time() - start_time,
+29. src/minisweagent/agents/default.py:189  `self.logger.debug`  in DefaultAgent.execute_action (imported)
+     self.logger.debug(
+30. src/minisweagent/agents/default.py:193  `time.time`  in DefaultAgent.execute_action (imported)
+     time.time() - start_time,
+31. src/minisweagent/agents/default.py:208  `self.config.model_dump`  in DefaultAgent.serialize (object method)
+     "agent": self.config.model_dump(mode="json"),
+32. src/minisweagent/agents/default.py:218  `recursive_merge`  in DefaultAgent.serialize (imported)
+     return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)
+33. src/minisweagent/agents/default.py:218  `self.model.serialize`  in DefaultAgent.serialize (object method)
+     return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)
+34. src/minisweagent/agents/default.py:218  `self.env.serialize`  in DefaultAgent.serialize (object method)
+     return recursive_merge(agent_data, self.model.serialize(), self.env.serialize(), *extra_dicts)
+35. src/minisweagent/agents/default.py:226  `path.parent.mkdir`  in DefaultAgent.save (object method)
+     path.parent.mkdir(parents=True, exist_ok=True)
+36. src/minisweagent/agents/default.py:227  `path.write_text`  in DefaultAgent.save (object method)
+     path.write_text(json.dumps(data, indent=2))
+37. src/minisweagent/agents/interactive.py:41  `UserInterruption`  in InteractiveAgent._interrupt (imported)
+     raise UserInterruption({"role": "user", "content": content, "extra": {"interrupt_type": itype}})
+38. src/minisweagent/agents/interactive.py:46  `get_content_string`  in InteractiveAgent.add_messages (imported)
+     role, content = msg.get("role") or msg.get("type", "unknown"), get_content_string(msg)
+39. src/minisweagent/agents/interactive.py:48  `console.print`  in InteractiveAgent.add_messages (object method)
+     console.print(
+40. src/minisweagent/agents/interactive.py:54  `console.print`  in InteractiveAgent.add_messages (object method)
+     console.print(f"\n[bold green]{role.capitalize()}[/bold green]:\n", end="", highlight=False)
+41. src/minisweagent/agents/interactive.py:55  `console.print`  in InteractiveAgent.add_messages (object method)
+     console.print(content, highlight=False, markup=False)
+42. src/minisweagent/agents/interactive.py:73  `console.status`  in InteractiveAgent.query (object method)
+     with console.status("Waiting for the LM to respond..."):
+43. src/minisweagent/agents/interactive.py:88  `console.print`  in InteractiveAgent.query (object method)
+     console.print(
+44. src/minisweagent/agents/interactive.py:92  `input`  in InteractiveAgent.query (builtin)
+     self.config.step_limit = int(input("New step limit: "))
+45. src/minisweagent/agents/interactive.py:93  `input`  in InteractiveAgent.query (builtin)
+     self.config.cost_limit = float(input("New cost limit: "))
+46. src/minisweagent/agents/interactive.py:105  `sys.stdin.isatty`  in InteractiveAgent._stdin_is_interactive (imported)
+     return sys.stdin is not None and sys.stdin.isatty()
+47. src/minisweagent/agents/interactive.py:112  `console.print`  in InteractiveAgent.step (object method)
+     console.print(Rule())
+48. src/minisweagent/agents/interactive.py:112  `Rule`  in InteractiveAgent.step (imported)
+     console.print(Rule())
+49. src/minisweagent/agents/interactive.py:126  `message.get`  in InteractiveAgent.execute_actions (object method)
+     actions = message.get("extra", {}).get("actions", [])
+50. src/minisweagent/agents/interactive.py:137  `self.model.format_observation_messages`  in InteractiveAgent.execute_actions (object method)
+     *self.model.format_observation_messages(message, outputs, self.get_template_vars())
+51. src/minisweagent/agents/interactive.py:142  `self.model.format_observation_messages`  in InteractiveAgent._add_observation_messages (object method)
+     return self.add_messages(*self.model.format_observation_messages(message, outputs, self.get_template_vars()))
+52. src/minisweagent/agents/interactive.py:186  `console.print`  in InteractiveAgent._prompt_and_handle_slash_commands (object method)
+     console.print(prompt, end="")
+53. src/minisweagent/agents/interactive.py:189  `prompt_session.prompt`  in InteractiveAgent._prompt_and_handle_slash_commands (object method)
+     user_input = prompt_session.prompt("")
+54. src/minisweagent/agents/interactive.py:193  `console.print`  in InteractiveAgent._prompt_and_handle_slash_commands (object method)
+     console.print(
+55. src/minisweagent/agents/interactive.py:207  `console.print`  in InteractiveAgent._prompt_and_handle_slash_commands (object method)
+     console.print(f"Switched to [bold green]{self.config.mode}[/bold green] mode.")
+56. src/minisweagent/agents/utils/prompt_user.py:13  `_multiline_prompt_session.prompt`  in src/minisweagent/agents/utils/prompt_user._multiline_prompt (object method)
+     return _multiline_prompt_session.prompt(
+57. src/minisweagent/agents/utils/prompt_user.py:15  `HTML`  in src/minisweagent/agents/utils/prompt_user._multiline_prompt (imported)
+     bottom_toolbar=HTML(

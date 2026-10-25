@@ -1,0 +1,72 @@
+flowchart LR
+  nCodeAgent__step_stream["CodeAgent._step_stream<br/>[LOG] llm_query @ src/smolagents/agents.py:1709<br/>[LOG] llm_error @ src/smolagents/agents.py:1729<br/>[LOG] llm_response @ src/smolagents/agents.py:1731<br/>[LOG] llm_error @ src/smolagents/agents.py:1740<br/>[LOG] llm_response @ src/smolagents/agents.py:1742<br/>[LOG] tool_start @ src/smolagents/agents.py:1786<br/>[LOG] tool_end @ src/smolagents/agents.py:1789<br/>[LOG] tool_error @ src/smolagents/agents.py:1798"]
+  style nCodeAgent__step_stream stroke:#be123c,stroke-dasharray:4 3
+  nMultiStepAgent__run_stream["MultiStepAgent._run_stream"]
+  nToolCallingAgent__step_stream["ToolCallingAgent._step_stream<br/>[LOG] llm_query @ src/smolagents/agents.py:1325<br/>[LOG] llm_error @ src/smolagents/agents.py:1344<br/>[LOG] llm_response @ src/smolagents/agents.py:1346<br/>[LOG] llm_error @ src/smolagents/agents.py:1355<br/>[LOG] llm_response @ src/smolagents/agents.py:1357"]
+  nMultiStepAgent_step["MultiStepAgent.step"]
+  nMultiStepAgent__generate_planning_step["MultiStepAgent._generate_planning_step<br/>[LOG] llm_query @ src/smolagents/agents.py:663<br/>[LOG] llm_error @ src/smolagents/agents.py:677<br/>[LOG] llm_response @ src/smolagents/agents.py:679<br/>[LOG] llm_query @ src/smolagents/agents.py:681<br/>[LOG] llm_error @ src/smolagents/agents.py:685<br/>[LOG] llm_response @ src/smolagents/agents.py:687<br/>[LOG] llm_query @ src/smolagents/agents.py:732<br/>[LOG] llm_error @ src/smolagents/agents.py:747<br/>[LOG] llm_response @ src/smolagents/agents.py:749<br/>[LOG] llm_query @ src/smolagents/agents.py:751<br/>[LOG] llm_error @ src/smolagents/agents.py:755<br/>[LOG] llm_response @ src/smolagents/agents.py:757"]
+  nToolCallingAgent_process_tool_calls_process_single_tool_call["ToolCallingAgent.process_tool_calls.process_single_tool_call<br/>[LOG] tool_start @ src/smolagents/agents.py:1434<br/>[LOG] tool_error @ src/smolagents/agents.py:1438<br/>[LOG] tool_end @ src/smolagents/agents.py:1440"]
+  nMultiStepAgent_run["MultiStepAgent.run<br/>[LOG] user_input @ src/smolagents/agents.py:470"]
+  nself_model_generate_stream___src_smolagents_agents_py_1712(["self.model.generate_stream"])
+  style nself_model_generate_stream___src_smolagents_agents_py_1712 stroke:#be123c,stroke-dasharray:4 3
+  nMultiStepAgent_provide_final_answer["MultiStepAgent.provide_final_answer<br/>[LOG] llm_query @ src/smolagents/agents.py:873<br/>[LOG] llm_error @ src/smolagents/agents.py:878<br/>[LOG] llm_response @ src/smolagents/agents.py:880"]
+  nself_model_generate___src_smolagents_agents_py_1734(["self.model.generate"])
+  style nself_model_generate___src_smolagents_agents_py_1734 stroke:#be123c,stroke-dasharray:4 3
+  nself_model_generate_stream___src_smolagents_agents_py_1328(["self.model.generate_stream"])
+  nToolCallingAgent_execute_tool_call["ToolCallingAgent.execute_tool_call"]
+  nself_model_generate___src_smolagents_agents_py_876(["self.model.generate"])
+  ntool___src_smolagents_agents_py_1538[["tool"]]
+  nself_python_executor___src_smolagents_agents_py_1788[["self.python_executor"]]
+  nUserInputTool_forward["UserInputTool.forward<br/>[LOG] user_input @ src/smolagents/default_tools.py:102"]
+  n_User_Input__task__entry_parameter_[/"task"/]
+  nself_model_generate_stream___src_smolagents_agents_py_665(["self.model.generate_stream"])
+  nself_model_generate___src_smolagents_agents_py_1349(["self.model.generate"])
+  nself_model_generate_stream___src_smolagents_agents_py_735(["self.model.generate_stream"])
+  ntool___src_smolagents_agents_py_1536[["tool"]]
+  ninput___src_smolagents_default_tools_py_101[/"input"/]
+  nself_model_generate___src_smolagents_agents_py_753(["self.model.generate"])
+  nself_model_generate___src_smolagents_agents_py_683(["self.model.generate"])
+  nCodeAgent__step_stream -->|additional_args, input_messages| nself_model_generate___src_smolagents_agents_py_1734
+  nself_model_generate___src_smolagents_agents_py_1734 -.->|additional_args, chat_message| nCodeAgent__step_stream
+  nCodeAgent__step_stream -->|additional_args, input_messages| nself_model_generate_stream___src_smolagents_agents_py_1712
+  nself_model_generate_stream___src_smolagents_agents_py_1712 -.->|additional_args, output_stream| nCodeAgent__step_stream
+  nCodeAgent__step_stream -->|code_action| nself_python_executor___src_smolagents_agents_py_1788
+  nself_python_executor___src_smolagents_agents_py_1788 -.->|code_output| nCodeAgent__step_stream
+  nMultiStepAgent__generate_planning_step -->|input_messages| nself_model_generate___src_smolagents_agents_py_683
+  nself_model_generate___src_smolagents_agents_py_683 -.->|input_messages| nMultiStepAgent__generate_planning_step
+  nMultiStepAgent__generate_planning_step -->|input_messages| nself_model_generate___src_smolagents_agents_py_753
+  nself_model_generate___src_smolagents_agents_py_753 -.->|input_messages| nMultiStepAgent__generate_planning_step
+  nMultiStepAgent__generate_planning_step -->|input_messages| nself_model_generate_stream___src_smolagents_agents_py_665
+  nself_model_generate_stream___src_smolagents_agents_py_665 -.->|input_messages| nMultiStepAgent__generate_planning_step
+  nMultiStepAgent__generate_planning_step -->|input_messages| nself_model_generate_stream___src_smolagents_agents_py_735
+  nself_model_generate_stream___src_smolagents_agents_py_735 -.->|input_messages| nMultiStepAgent__generate_planning_step
+  nMultiStepAgent__run_stream -->|action_step| nCodeAgent__step_stream
+  nCodeAgent__step_stream -.->|memory_step| nMultiStepAgent__run_stream
+  nMultiStepAgent__run_stream -->|task| nMultiStepAgent__generate_planning_step
+  nMultiStepAgent__run_stream -->|task| nMultiStepAgent_provide_final_answer
+  nMultiStepAgent_provide_final_answer -.-> nMultiStepAgent__run_stream
+  nMultiStepAgent__run_stream -->|action_step| nToolCallingAgent__step_stream
+  nToolCallingAgent__step_stream -.->|memory_step| nMultiStepAgent__run_stream
+  nMultiStepAgent_provide_final_answer -->|messages| nself_model_generate___src_smolagents_agents_py_876
+  nself_model_generate___src_smolagents_agents_py_876 -.->|chat_message, messages| nMultiStepAgent_provide_final_answer
+  nMultiStepAgent_run -->|task| nMultiStepAgent__run_stream
+  nMultiStepAgent__run_stream -.->|action_step, final_memory_step| nMultiStepAgent_run
+  nMultiStepAgent_step -->|memory_step| nCodeAgent__step_stream
+  nCodeAgent__step_stream -.->|memory_step| nMultiStepAgent_step
+  nMultiStepAgent_step -->|memory_step| nToolCallingAgent__step_stream
+  nToolCallingAgent__step_stream -.->|memory_step| nMultiStepAgent_step
+  nToolCallingAgent__step_stream -->|chat_message, memory_step| nToolCallingAgent_process_tool_calls_process_single_tool_call
+  nToolCallingAgent_process_tool_calls_process_single_tool_call -.->|memory_step| nToolCallingAgent__step_stream
+  nToolCallingAgent__step_stream -->|input_messages| nself_model_generate___src_smolagents_agents_py_1349
+  nself_model_generate___src_smolagents_agents_py_1349 -.->|chat_message| nToolCallingAgent__step_stream
+  nToolCallingAgent__step_stream -->|input_messages| nself_model_generate_stream___src_smolagents_agents_py_1328
+  nself_model_generate_stream___src_smolagents_agents_py_1328 -.->|output_stream| nToolCallingAgent__step_stream
+  nToolCallingAgent_execute_tool_call -->|arguments| ntool___src_smolagents_agents_py_1536
+  ntool___src_smolagents_agents_py_1536 -.-> nToolCallingAgent_execute_tool_call
+  nToolCallingAgent_execute_tool_call -->|arguments| ntool___src_smolagents_agents_py_1538
+  ntool___src_smolagents_agents_py_1538 -.-> nToolCallingAgent_execute_tool_call
+  nToolCallingAgent_process_tool_calls_process_single_tool_call -->|tool_arguments| nToolCallingAgent_execute_tool_call
+  nToolCallingAgent_execute_tool_call -.-> nToolCallingAgent_process_tool_calls_process_single_tool_call
+  nUserInputTool_forward --> ninput___src_smolagents_default_tools_py_101
+  ninput___src_smolagents_default_tools_py_101 -.->|user_input| nUserInputTool_forward
+  n_User_Input__task__entry_parameter_ -.->|task| nMultiStepAgent_run

@@ -1,0 +1,10 @@
+1. agent.py:49  `input`  in ToyAgent.ask_user (builtin)
+     answer = input(f"{question} ")
+2. llm.py:8  `anthropic.Anthropic`  in LLM.__init__ (imported)
+     self.client = anthropic.Anthropic()
+3. llm.py:13  `self.client.messages.create`  in LLM.chat (imported)
+     response = self.client.messages.create(
+4. tools.py:8  `subprocess.run`  in tools.bash (imported)
+     return subprocess.run(command, shell=True, capture_output=True, text=True, errors="replace").stdout
+5. tools.py:13  `exec`  in tools.python (builtin)
+     exec(code, scope)

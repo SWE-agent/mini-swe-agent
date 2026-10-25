@@ -1,0 +1,5567 @@
+{
+  "entry": "MultiStepAgent.run",
+  "nodes": [
+    {
+      "id": "src/smolagents/utils.parse_code_blobs",
+      "role": "function",
+      "label": "src/smolagents/utils.parse_code_blobs",
+      "path": "src/smolagents/utils.py",
+      "line": 198,
+      "end_line": 251,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "CodeAgent._step_stream",
+      "role": "function",
+      "label": "CodeAgent._step_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1688,
+      "end_line": 1828,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1709",
+          "code": "observatory_log.llm_query(memory_step.step_number, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1729",
+          "code": "observatory_log.llm_error(memory_step.step_number, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1731",
+          "code": "observatory_log.llm_response(memory_step.step_number, actions=[], reply=chat_message, response=output_stream)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            },
+            {
+              "value": "output_stream",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1740",
+          "code": "observatory_log.llm_error(memory_step.step_number, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1742",
+          "code": "observatory_log.llm_response(memory_step.step_number, actions=[], reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "tool_start",
+          "at": "src/smolagents/agents.py:1786",
+          "code": "start = observatory_log.tool_start(\"python_interpreter\", code_action)",
+          "records": [
+            {
+              "value": "code_action",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/smolagents/agents.py:1789",
+          "code": "observatory_log.tool_end(start, \"python_interpreter\", result=code_output)",
+          "records": [
+            {
+              "value": "code_output",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/smolagents/agents.py:1798",
+          "code": "observatory_log.tool_error(start, \"python_interpreter\", e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → LLM 입력: 일부만 기록",
+        "LLM Response → LLM 입력: 일부만 기록"
+      ]
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_assign",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_assign",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 770,
+      "end_line": 791,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.set_value",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.set_value",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 794,
+      "end_line": 822,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/utils.truncate_content",
+      "role": "function",
+      "label": "src/smolagents/utils.truncate_content",
+      "path": "src/smolagents/utils.py",
+      "line": 257,
+      "end_line": 265,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.get_safe_module",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.get_safe_module",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1271,
+      "end_line": 1306,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_import",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_import",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1309,
+      "end_line": 1342,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_augassign",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_augassign",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 638,
+      "end_line": 707,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent._run_stream",
+      "role": "function",
+      "label": "MultiStepAgent._run_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 543,
+      "end_line": 614,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/agent_types.handle_agent_output_types",
+      "role": "function",
+      "label": "src/smolagents/agent_types.handle_agent_output_types",
+      "path": "src/smolagents/agent_types.py",
+      "line": 263,
+      "end_line": 281,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_python_code",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_python_code",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1583,
+      "end_line": 1667,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_binop",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_binop",
+      "path": "tests/test_local_python_executor.py",
+      "line": 374,
+      "end_line": 379,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent.process_tool_calls",
+      "role": "function",
+      "label": "ToolCallingAgent.process_tool_calls",
+      "path": "src/smolagents/agents.py",
+      "line": 1405,
+      "end_line": 1492,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_ast",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_ast",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1417,
+      "end_line": 1569,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_binop",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_binop",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 730,
+      "end_line": 767,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent._step_stream",
+      "role": "function",
+      "label": "ToolCallingAgent._step_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1309,
+      "end_line": 1403,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1325",
+          "code": "observatory_log.llm_query(memory_step.step_number, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1344",
+          "code": "observatory_log.llm_error(memory_step.step_number, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1346",
+          "code": "observatory_log.llm_response(memory_step.step_number, actions=[tc.function.name for tc in (chat_message.tool_calls or [])], reply=chat_message, response=output_stream)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            },
+            {
+              "value": "output_stream",
+              "whole": true
+            },
+            {
+              "value": "tc",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1355",
+          "code": "observatory_log.llm_error(memory_step.step_number, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1357",
+          "code": "observatory_log.llm_response(memory_step.step_number, actions=[tc.function.name for tc in (chat_message.tool_calls or [])], reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "memory_step",
+              "whole": false
+            },
+            {
+              "value": "tc",
+              "whole": false
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.step",
+      "role": "function",
+      "label": "MultiStepAgent.step",
+      "path": "src/smolagents/agents.py",
+      "line": 809,
+      "end_line": 814,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.create_function",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.create_function",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 462,
+      "end_line": 526,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.__call__",
+      "role": "function",
+      "label": "MultiStepAgent.__call__",
+      "path": "src/smolagents/agents.py",
+      "line": 901,
+      "end_line": 923,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_call",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_call",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 825,
+      "end_line": 918,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/models.agglomerate_stream_deltas",
+      "role": "function",
+      "label": "src/smolagents/models.agglomerate_stream_deltas",
+      "path": "src/smolagents/models.py",
+      "line": 220,
+      "end_line": 279,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_pandas",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_pandas",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1286,
+      "end_line": 1335,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "SpeechToTextTool.forward",
+      "role": "function",
+      "label": "SpeechToTextTool.forward",
+      "path": "src/smolagents/default_tools.py",
+      "line": 673,
+      "end_line": 674,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "Tool.__call__",
+      "role": "function",
+      "label": "Tool.__call__",
+      "path": "src/smolagents/tools.py",
+      "line": 231,
+      "end_line": 249,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_annassign",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_annassign",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 621,
+      "end_line": 635,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_augassign_number",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_augassign_number",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1683,
+      "end_line": 1690,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.create_function.new_func",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.create_function.new_func",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 471,
+      "end_line": 519,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_if",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_if",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1004,
+      "end_line": 1023,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "PipelineTool.__call__",
+      "role": "function",
+      "label": "PipelineTool.__call__",
+      "path": "src/smolagents/tools.py",
+      "line": 1312,
+      "end_line": 1332,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "PipelineTool.forward",
+      "role": "function",
+      "label": "PipelineTool.forward",
+      "path": "src/smolagents/tools.py",
+      "line": 1297,
+      "end_line": 1304,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_return",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_return",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1241,
+      "end_line": 1268,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent._generate_planning_step",
+      "role": "function",
+      "label": "MultiStepAgent._generate_planning_step",
+      "path": "src/smolagents/agents.py",
+      "line": 642,
+      "end_line": 774,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:663",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:677",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:679",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message_content, response=output_stream)",
+          "records": [
+            {
+              "value": "output_stream",
+              "whole": true
+            },
+            {
+              "value": "plan_message_content",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:681",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:685",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:687",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message, response=plan_message)",
+          "records": [
+            {
+              "value": "plan_message",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:732",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:747",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:749",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message_content)",
+          "records": [
+            {
+              "value": "plan_message_content",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:751",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:755",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:757",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message, response=plan_message)",
+          "records": [
+            {
+              "value": "plan_message",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "role": "function",
+      "label": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "path": "src/smolagents/agents.py",
+      "line": 1427,
+      "end_line": 1464,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "src/smolagents/agents.py:1434",
+          "code": "start = observatory_log.tool_start(tool_name, tool_arguments)",
+          "records": [
+            {
+              "value": "tool_arguments",
+              "whole": true
+            },
+            {
+              "value": "tool_name",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/smolagents/agents.py:1438",
+          "code": "observatory_log.tool_error(start, tool_name, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            },
+            {
+              "value": "tool_name",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/smolagents/agents.py:1440",
+          "code": "observatory_log.tool_end(start, tool_name, result=tool_call_result)",
+          "records": [
+            {
+              "value": "start",
+              "whole": true
+            },
+            {
+              "value": "tool_call_result",
+              "whole": true
+            },
+            {
+              "value": "tool_name",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.run",
+      "role": "entry",
+      "label": "MultiStepAgent.run",
+      "path": "src/smolagents/agents.py",
+      "line": 438,
+      "end_line": 541,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/smolagents/agents.py:470",
+          "code": "observatory_log.user_input(task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "GradioUI._stream_response",
+      "role": "function",
+      "label": "GradioUI._stream_response",
+      "path": "src/smolagents/gradio_ui.py",
+      "line": 378,
+      "end_line": 420,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_lambda",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_lambda",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 416,
+      "end_line": 437,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_name",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_name",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 941,
+      "end_line": 959,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent._substitute_state_variables",
+      "role": "function",
+      "label": "ToolCallingAgent._substitute_state_variables",
+      "path": "src/smolagents/agents.py",
+      "line": 1494,
+      "end_line": 1501,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_listcomp",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_listcomp",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1099,
+      "end_line": 1115,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:1712",
+      "role": "llm_response",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1712,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "LLM Response → LLM 입력: 일부만 기록",
+        "LLM Response → LLM 입력: 일부만 기록"
+      ]
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_with",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_with",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1236,
+      "end_line": 1268,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_f_string_with_complex_format",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_f_string_with_complex_format",
+      "path": "tests/test_local_python_executor.py",
+      "line": 291,
+      "end_line": 305,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_types_as_objects",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_types_as_objects",
+      "path": "tests/test_local_python_executor.py",
+      "line": 955,
+      "end_line": 961,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/agents.populate_template",
+      "role": "function",
+      "label": "src/smolagents/agents.populate_template",
+      "path": "src/smolagents/agents.py",
+      "line": 104,
+      "end_line": 109,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_for",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_for",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1026,
+      "end_line": 1053,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "BytesIO @ src/smolagents/agent_types.py:231",
+      "role": "external",
+      "label": "BytesIO",
+      "path": "src/smolagents/agent_types.py",
+      "line": 231,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "sf.read @ src/smolagents/agent_types.py:231",
+      "role": "external",
+      "label": "sf.read",
+      "path": "src/smolagents/agent_types.py",
+      "line": 231,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "AgentAudio.__init__",
+      "role": "function",
+      "label": "AgentAudio.__init__",
+      "path": "src/smolagents/agent_types.py",
+      "line": 181,
+      "end_line": 206,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "AgentAudio._path",
+      "role": "state",
+      "label": "AgentAudio._path",
+      "path": "src/smolagents/agent_types.py",
+      "line": 191,
+      "in": "AgentAudio.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "func @ src/smolagents/local_python_executor.py:918",
+      "role": "external",
+      "label": "func",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 918,
+      "in": "src/smolagents/local_python_executor.evaluate_call",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_nested_for_loop",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_nested_for_loop",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1270,
+      "end_line": 1284,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "requests.get @ src/smolagents/agent_types.py:229",
+      "role": "external",
+      "label": "requests.get",
+      "path": "src/smolagents/agent_types.py",
+      "line": 229,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 645,
+      "end_line": 660,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_class_def",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_class_def",
+      "path": "tests/test_local_python_executor.py",
+      "line": 209,
+      "end_line": 226,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestMultiStepAgent.test_finalize_step_callbacks_with_list",
+      "role": "function",
+      "label": "TestMultiStepAgent.test_finalize_step_callbacks_with_list",
+      "path": "tests/test_agents.py",
+      "line": 1112,
+      "end_line": 1145,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent._finalize_step",
+      "role": "function",
+      "label": "MultiStepAgent._finalize_step",
+      "path": "src/smolagents/agents.py",
+      "line": 623,
+      "end_line": 626,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_while",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_while",
+      "path": "tests/test_local_python_executor.py",
+      "line": 648,
+      "end_line": 669,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_expression",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_expression",
+      "path": "tests/test_local_python_executor.py",
+      "line": 266,
+      "end_line": 272,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.post_processor @ src/smolagents/tools.py:1310",
+      "role": "external",
+      "label": "self.post_processor",
+      "path": "src/smolagents/tools.py",
+      "line": 1310,
+      "in": "PipelineTool.decode",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "PipelineTool.decode",
+      "role": "function",
+      "label": "PipelineTool.decode",
+      "path": "src/smolagents/tools.py",
+      "line": 1306,
+      "end_line": 1310,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_subscript_call",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_subscript_call",
+      "path": "tests/test_local_python_executor.py",
+      "line": 83,
+      "end_line": 89,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_function_def",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_function_def",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 529,
+      "end_line": 537,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_assert",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_assert",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1218,
+      "end_line": 1233,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_class_def",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_class_def",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 540,
+      "end_line": 618,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1352,
+      "end_line": 1375,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_condition",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_condition",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 962,
+      "end_line": 1001,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_setcomp",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_setcomp",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1118,
+      "end_line": 1134,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1056,
+      "end_line": 1096,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_classes",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_classes",
+      "path": "tests/test_local_python_executor.py",
+      "line": 838,
+      "end_line": 918,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent._handle_max_steps_reached",
+      "role": "function",
+      "label": "MultiStepAgent._handle_max_steps_reached",
+      "path": "src/smolagents/agents.py",
+      "line": 628,
+      "end_line": 640,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_delete",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_delete",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1380,
+      "end_line": 1413,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/default_tools.py:674",
+      "role": "external",
+      "label": "self.model.generate",
+      "path": "src/smolagents/default_tools.py",
+      "line": 674,
+      "in": "SpeechToTextTool.forward",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_attribute",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_attribute",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 383,
+      "end_line": 393,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/utils.extract_code_from_text",
+      "role": "function",
+      "label": "src/smolagents/utils.extract_code_from_text",
+      "path": "src/smolagents/utils.py",
+      "line": 189,
+      "end_line": 195,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "import_module @ src/smolagents/local_python_executor.py:1313",
+      "role": "external",
+      "label": "import_module",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1313,
+      "in": "src/smolagents/local_python_executor.evaluate_import",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_unaryop",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_unaryop",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 396,
+      "end_line": 413,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.write_memory_to_messages",
+      "role": "function",
+      "label": "MultiStepAgent.write_memory_to_messages",
+      "path": "src/smolagents/agents.py",
+      "line": 785,
+      "end_line": 797,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.provide_final_answer",
+      "role": "function",
+      "label": "MultiStepAgent.provide_final_answer",
+      "path": "src/smolagents/agents.py",
+      "line": 837,
+      "end_line": 886,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:873",
+          "code": "observatory_log.llm_query(None, model=self.model, messages=messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:878",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:880",
+          "code": "observatory_log.llm_response(None, actions=[], reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_try",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_try",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1159,
+      "end_line": 1191,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 332,
+      "end_line": 357,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:1734",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 1734,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "LLM Response → LLM 입력: 일부만 기록",
+        "LLM Response → LLM 입력: 일부만 기록"
+      ]
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:1328",
+      "role": "llm_response",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1328,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent.execute_tool_call",
+      "role": "function",
+      "label": "ToolCallingAgent.execute_tool_call",
+      "path": "src/smolagents/agents.py",
+      "line": 1503,
+      "end_line": 1552,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1137,
+      "end_line": 1156,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:876",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 876,
+      "in": "MultiStepAgent.provide_final_answer",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_constant",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_constant",
+      "path": "tests/test_local_python_executor.py",
+      "line": 250,
+      "end_line": 255,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_class_def_with_enum",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_class_def_with_enum",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1566,
+      "end_line": 1596,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ast.unparse @ src/smolagents/local_python_executor.py:469",
+      "role": "external",
+      "label": "ast.unparse",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 469,
+      "in": "src/smolagents/local_python_executor.create_function",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_augassign",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_augassign",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1661,
+      "end_line": 1664,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestMultiStepAgent.test_finalize_step_callbacks_by_type",
+      "role": "function",
+      "label": "TestMultiStepAgent.test_finalize_step_callbacks_by_type",
+      "path": "tests/test_agents.py",
+      "line": 1147,
+      "end_line": 1216,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ModuleType @ src/smolagents/local_python_executor.py:1288",
+      "role": "external",
+      "label": "ModuleType",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1288,
+      "in": "src/smolagents/local_python_executor.get_safe_module",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "AgentAudio.to_raw",
+      "role": "function",
+      "label": "AgentAudio.to_raw",
+      "path": "src/smolagents/agent_types.py",
+      "line": 216,
+      "end_line": 235,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "torch.tensor @ src/smolagents/agent_types.py:234",
+      "role": "external",
+      "label": "torch.tensor",
+      "path": "src/smolagents/agent_types.py",
+      "line": 234,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_assign",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_assign",
+      "path": "tests/test_local_python_executor.py",
+      "line": 58,
+      "end_line": 75,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent.state",
+      "role": "state",
+      "label": "ToolCallingAgent.state",
+      "path": "src/smolagents/agents.py",
+      "line": 1398,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 425,
+      "end_line": 435,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_while",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_while",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 440,
+      "end_line": 459,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_print",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_print",
+      "path": "tests/test_local_python_executor.py",
+      "line": 949,
+      "end_line": 953,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "SpeechToTextTool.decode",
+      "role": "function",
+      "label": "SpeechToTextTool.decode",
+      "path": "src/smolagents/default_tools.py",
+      "line": 676,
+      "end_line": 677,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.pre_processor.batch_decode @ src/smolagents/default_tools.py:677",
+      "role": "external",
+      "label": "self.pre_processor.batch_decode",
+      "path": "src/smolagents/default_tools.py",
+      "line": 677,
+      "in": "SpeechToTextTool.decode",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.memory",
+      "role": "state",
+      "label": "MultiStepAgent.memory",
+      "path": "src/smolagents/agents.py",
+      "line": 345,
+      "in": "MultiStepAgent.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_set",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_set",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1229,
+      "end_line": 1239,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_subscript",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_subscript",
+      "path": "tests/test_local_python_executor.py",
+      "line": 335,
+      "end_line": 353,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "torch.from_numpy @ src/smolagents/agent_types.py:202",
+      "role": "external",
+      "label": "torch.from_numpy",
+      "path": "src/smolagents/agent_types.py",
+      "line": 202,
+      "in": "AgentAudio.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "AgentAudio._tensor",
+      "role": "state",
+      "label": "AgentAudio._tensor",
+      "path": "src/smolagents/agent_types.py",
+      "line": 192,
+      "in": "AgentAudio.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1345,
+      "end_line": 1377,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "tool @ src/smolagents/agents.py:1538",
+      "role": "tool_response",
+      "label": "tool",
+      "path": "src/smolagents/agents.py",
+      "line": 1538,
+      "in": "ToolCallingAgent.execute_tool_call",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_augassign_custom",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_augassign_custom",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1709,
+      "end_line": 1738,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.python_executor @ src/smolagents/agents.py:1788",
+      "role": "tool_response",
+      "label": "self.python_executor",
+      "path": "src/smolagents/agents.py",
+      "line": 1788,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_with_context_manager",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_with_context_manager",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1030,
+      "end_line": 1052,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_f_string",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_f_string",
+      "path": "tests/test_local_python_executor.py",
+      "line": 274,
+      "end_line": 280,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_if_conditions",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_if_conditions",
+      "path": "tests/test_local_python_executor.py",
+      "line": 713,
+      "end_line": 719,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_subscript",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_subscript",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 921,
+      "end_line": 938,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_name",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_name",
+      "path": "tests/test_local_python_executor.py",
+      "line": 328,
+      "end_line": 333,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_variable_args",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_variable_args",
+      "path": "tests/test_local_python_executor.py",
+      "line": 920,
+      "end_line": 929,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_exceptions",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_exceptions",
+      "path": "tests/test_local_python_executor.py",
+      "line": 931,
+      "end_line": 947,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_list",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_list",
+      "path": "tests/test_local_python_executor.py",
+      "line": 321,
+      "end_line": 326,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_nonsimple_augassign",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_nonsimple_augassign",
+      "path": "tests/test_local_python_executor.py",
+      "line": 972,
+      "end_line": 990,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.parse_tool_calls @ src/smolagents/agents.py:1373",
+      "role": "external",
+      "label": "self.model.parse_tool_calls",
+      "path": "src/smolagents/agents.py",
+      "line": 1373,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "UserInputTool.forward",
+      "role": "function",
+      "label": "UserInputTool.forward",
+      "path": "src/smolagents/default_tools.py",
+      "line": 100,
+      "end_line": 103,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/smolagents/default_tools.py:102",
+          "code": "observatory_log.user_input(user_input, prompt=question)",
+          "records": [
+            {
+              "value": "question",
+              "whole": true
+            },
+            {
+              "value": "user_input",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_boolop",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_boolop",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 710,
+      "end_line": 727,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_delete",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_delete",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1775,
+      "end_line": 1779,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "send_to_device @ src/smolagents/tools.py:1328",
+      "role": "external",
+      "label": "send_to_device",
+      "path": "src/smolagents/tools.py",
+      "line": 1328,
+      "in": "PipelineTool.__call__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "src/smolagents/agents.py",
+      "line": 440,
+      "in": "MultiStepAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:665",
+      "role": "llm_response",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 665,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_f_string_with_format",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_f_string_with_format",
+      "path": "tests/test_local_python_executor.py",
+      "line": 282,
+      "end_line": 289,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:1349",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 1349,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "torch.tensor @ src/smolagents/agent_types.py:204",
+      "role": "external",
+      "label": "torch.tensor",
+      "path": "src/smolagents/agent_types.py",
+      "line": 204,
+      "in": "AgentAudio.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_raise",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_raise",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1194,
+      "end_line": 1215,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "LocalPythonExecutor.state",
+      "role": "state",
+      "label": "LocalPythonExecutor.state",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1716,
+      "in": "LocalPythonExecutor.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "__import__ @ src/smolagents/local_python_executor.py:1322",
+      "role": "external",
+      "label": "__import__",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1322,
+      "in": "src/smolagents/local_python_executor.evaluate_import",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_for",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_for",
+      "path": "tests/test_local_python_executor.py",
+      "line": 367,
+      "end_line": 372,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_dict",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_dict",
+      "path": "tests/test_local_python_executor.py",
+      "line": 257,
+      "end_line": 264,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_call",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_call",
+      "path": "tests/test_local_python_executor.py",
+      "line": 91,
+      "end_line": 100,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "final output",
+      "role": "final_output",
+      "label": "return of MultiStepAgent.run",
+      "path": "src/smolagents/agents.py",
+      "line": 438,
+      "in": "MultiStepAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:735",
+      "role": "llm_response",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 735,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_class_def_with_assign_attribute_target",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_class_def_with_assign_attribute_target",
+      "path": "tests/test_local_python_executor.py",
+      "line": 228,
+      "end_line": 248,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_print_output",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_print_output",
+      "path": "tests/test_local_python_executor.py",
+      "line": 806,
+      "end_line": 831,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_tuple_id",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_tuple_id",
+      "path": "tests/test_local_python_executor.py",
+      "line": 963,
+      "end_line": 970,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/gradio_ui.stream_to_gradio",
+      "role": "function",
+      "label": "src/smolagents/gradio_ui.stream_to_gradio",
+      "path": "src/smolagents/gradio_ui.py",
+      "line": 248,
+      "end_line": 276,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "tool @ src/smolagents/agents.py:1536",
+      "role": "tool_response",
+      "label": "tool",
+      "path": "src/smolagents/agents.py",
+      "line": 1536,
+      "in": "ToolCallingAgent.execute_tool_call",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model @ src/smolagents/tools.py:1304",
+      "role": "external",
+      "label": "self.model",
+      "path": "src/smolagents/tools.py",
+      "line": 1304,
+      "in": "PipelineTool.forward",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.task",
+      "role": "state",
+      "label": "MultiStepAgent.task",
+      "path": "src/smolagents/agents.py",
+      "line": 344,
+      "in": "MultiStepAgent.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestToolCallingAgent.test_process_tool_calls",
+      "role": "function",
+      "label": "TestToolCallingAgent.test_process_tool_calls",
+      "path": "tests/test_agents.py",
+      "line": 2065,
+      "end_line": 2089,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_subscript",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_subscript",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1538,
+      "end_line": 1564,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_name",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_name",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1482,
+      "end_line": 1510,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "sf.read @ src/smolagents/agent_types.py:233",
+      "role": "external",
+      "label": "sf.read",
+      "path": "src/smolagents/agent_types.py",
+      "line": 233,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_operations_count",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_operations_count",
+      "path": "tests/test_local_python_executor.py",
+      "line": 410,
+      "end_line": 422,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_access_attributes",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_access_attributes",
+      "path": "tests/test_local_python_executor.py",
+      "line": 434,
+      "end_line": 440,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_if",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_if",
+      "path": "tests/test_local_python_executor.py",
+      "line": 307,
+      "end_line": 319,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_class_def_with_pass",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_class_def_with_pass",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1469,
+      "end_line": 1480,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "SpeechToTextTool.encode",
+      "role": "function",
+      "label": "SpeechToTextTool.encode",
+      "path": "src/smolagents/default_tools.py",
+      "line": 667,
+      "end_line": 671,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "input @ src/smolagents/default_tools.py:101",
+      "role": "user_input",
+      "label": "input",
+      "path": "src/smolagents/default_tools.py",
+      "line": 101,
+      "in": "UserInputTool.forward",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_attribute",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_attribute",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1512,
+      "end_line": 1536,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.pre_processor @ src/smolagents/default_tools.py:671",
+      "role": "external",
+      "label": "self.pre_processor",
+      "path": "src/smolagents/default_tools.py",
+      "line": 671,
+      "in": "SpeechToTextTool.encode",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:753",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 753,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "send_to_device @ src/smolagents/tools.py:1326",
+      "role": "external",
+      "label": "send_to_device",
+      "path": "src/smolagents/tools.py",
+      "line": 1326,
+      "in": "PipelineTool.__call__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:683",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 683,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_generatorexp_with_infinite_sequence",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_generatorexp_with_infinite_sequence",
+      "path": "tests/test_local_python_executor.py",
+      "line": 579,
+      "end_line": 609,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "TestEvaluatePythonCode.test_evaluate_annassign",
+      "role": "function",
+      "label": "TestEvaluatePythonCode.test_evaluate_annassign",
+      "path": "tests/test_local_python_executor.py",
+      "line": 1598,
+      "end_line": 1625,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.memory.system_prompt.to_messages @ src/smolagents/agents.py:794",
+      "role": "external",
+      "label": "self.memory.system_prompt.to_messages",
+      "path": "src/smolagents/agents.py",
+      "line": 794,
+      "in": "MultiStepAgent.write_memory_to_messages",
+      "logs": [],
+      "gaps": []
+    }
+  ],
+  "edges": [
+    {
+      "from": "AgentAudio.__init__",
+      "to": "AgentAudio._path",
+      "values": [
+        "value"
+      ]
+    },
+    {
+      "from": "AgentAudio.__init__",
+      "to": "AgentAudio._tensor",
+      "values": [
+        "value"
+      ]
+    },
+    {
+      "from": "AgentAudio.__init__",
+      "to": "torch.from_numpy @ src/smolagents/agent_types.py:202",
+      "values": [
+        "value"
+      ]
+    },
+    {
+      "from": "AgentAudio.__init__",
+      "to": "torch.tensor @ src/smolagents/agent_types.py:204",
+      "values": [
+        "value"
+      ]
+    },
+    {
+      "from": "AgentAudio._path",
+      "to": "requests.get @ src/smolagents/agent_types.py:229",
+      "values": [
+        "_path"
+      ]
+    },
+    {
+      "from": "AgentAudio._path",
+      "to": "sf.read @ src/smolagents/agent_types.py:233",
+      "values": [
+        "_path"
+      ]
+    },
+    {
+      "from": "AgentAudio._tensor",
+      "to": "AgentAudio.to_raw",
+      "values": [
+        "_tensor"
+      ]
+    },
+    {
+      "from": "AgentAudio.to_raw",
+      "to": "BytesIO @ src/smolagents/agent_types.py:231",
+      "values": [
+        "response"
+      ]
+    },
+    {
+      "from": "AgentAudio.to_raw",
+      "to": "SpeechToTextTool.encode",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "AgentAudio.to_raw",
+      "to": "torch.tensor @ src/smolagents/agent_types.py:234",
+      "values": [
+        "tensor"
+      ]
+    },
+    {
+      "from": "BytesIO @ src/smolagents/agent_types.py:231",
+      "to": "sf.read @ src/smolagents/agent_types.py:231",
+      "values": [
+        "231"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "MultiStepAgent.step",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.model.generate @ src/smolagents/agents.py:1734",
+      "values": [
+        "additional_args",
+        "input_messages",
+        "stop_sequences"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:1712",
+      "values": [
+        "additional_args",
+        "input_messages",
+        "stop_sequences"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.python_executor @ src/smolagents/agents.py:1788",
+      "values": [
+        "code_action"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "values": [
+        "code_action"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/models.agglomerate_stream_deltas",
+      "values": [
+        "chat_message_stream_deltas"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/utils.extract_code_from_text",
+      "values": [
+        "code_action"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/utils.parse_code_blobs",
+      "values": [
+        "output_text"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/utils.truncate_content",
+      "values": [
+        "code_output"
+      ]
+    },
+    {
+      "from": "GradioUI._stream_response",
+      "to": "src/smolagents/models.agglomerate_stream_deltas",
+      "values": [
+        "accumulated_events"
+      ]
+    },
+    {
+      "from": "LocalPythonExecutor.state",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "ModuleType @ src/smolagents/local_python_executor.py:1288",
+      "to": "src/smolagents/local_python_executor.get_safe_module",
+      "values": [
+        "safe_module"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.__call__",
+      "to": "MultiStepAgent.run",
+      "values": [
+        "full_task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.__call__",
+      "to": "src/smolagents/agents.populate_template",
+      "values": [
+        "report"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.__call__",
+      "to": "src/smolagents/utils.truncate_content",
+      "values": [
+        "content"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._finalize_step",
+      "to": "MultiStepAgent._handle_max_steps_reached",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._finalize_step",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._finalize_step",
+      "to": "TestMultiStepAgent.test_finalize_step_callbacks_by_type",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._finalize_step",
+      "to": "TestMultiStepAgent.test_finalize_step_callbacks_with_list",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate @ src/smolagents/agents.py:683",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate @ src/smolagents/agents.py:753",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:665",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:735",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "src/smolagents/agents.populate_template",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._handle_max_steps_reached",
+      "to": "MultiStepAgent._finalize_step",
+      "values": [
+        "final_memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._handle_max_steps_reached",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._handle_max_steps_reached",
+      "to": "MultiStepAgent.memory",
+      "values": [
+        "final_memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._handle_max_steps_reached",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "action_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent._finalize_step",
+      "values": [
+        "action_step",
+        "final_answer_step",
+        "planning_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent._handle_max_steps_reached",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent.memory",
+      "values": [
+        "action_step",
+        "planning_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "action_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "src/smolagents/agent_types.handle_agent_output_types",
+      "values": [
+        "final_answer"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.memory",
+      "to": "MultiStepAgent.run",
+      "values": [
+        "memory"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.memory",
+      "to": "MultiStepAgent.write_memory_to_messages",
+      "values": [
+        "memory"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.memory",
+      "to": "self.memory.system_prompt.to_messages @ src/smolagents/agents.py:794",
+      "values": [
+        "memory"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.provide_final_answer",
+      "to": "MultiStepAgent._handle_max_steps_reached",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.provide_final_answer",
+      "to": "self.model.generate @ src/smolagents/agents.py:876",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.provide_final_answer",
+      "to": "src/smolagents/agents.populate_template",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "GradioUI._stream_response",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "MultiStepAgent.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "MultiStepAgent.task",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "final output",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "src/smolagents/gradio_ui.stream_to_gradio",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.step",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.step",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.task",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.task",
+      "to": "MultiStepAgent.memory",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "MultiStepAgent.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "PipelineTool.decode",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "PipelineTool.forward",
+      "values": [
+        "encoded_inputs",
+        "non_tensor_inputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "SpeechToTextTool.decode",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "SpeechToTextTool.forward",
+      "values": [
+        "encoded_inputs",
+        "non_tensor_inputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "send_to_device @ src/smolagents/tools.py:1326",
+      "values": [
+        "tensor_inputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "send_to_device @ src/smolagents/tools.py:1328",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "src/smolagents/agent_types.handle_agent_output_types",
+      "values": [
+        "decoded_outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.decode",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "PipelineTool.decode",
+      "to": "self.post_processor @ src/smolagents/tools.py:1310",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.forward",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "PipelineTool.forward",
+      "to": "Tool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "PipelineTool.forward",
+      "to": "self.model @ src/smolagents/tools.py:1304",
+      "values": [
+        "inputs"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.decode",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.decode",
+      "to": "self.pre_processor.batch_decode @ src/smolagents/default_tools.py:677",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.encode",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.encode",
+      "to": "self.pre_processor @ src/smolagents/default_tools.py:671",
+      "values": [
+        "audio"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.forward",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.forward",
+      "to": "Tool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.forward",
+      "to": "self.model.generate @ src/smolagents/default_tools.py:674",
+      "values": [
+        "inputs"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_access_attributes",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "A"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_classes",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_annassign",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_assign",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_augassign",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_augassign_custom",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_augassign_number",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_binop",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_call",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_class_def",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_attribute",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_name",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_subscript",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_class_def_with_assign_attribute_target",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_class_def_with_enum",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_class_def_with_pass",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_constant",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_delete",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_dict",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_expression",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_f_string",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_f_string_with_complex_format",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_f_string_with_format",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_for",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_if",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_list",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_name",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_evaluate_subscript",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_exceptions",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_generatorexp_with_infinite_sequence",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_if_conditions",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_nested_for_loop",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_nonsimple_augassign",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_operations_count",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_pandas",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_print",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_print_output",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_return",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_set",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_subscript_call",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_tuple_id",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_types_as_objects",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_variable_args",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_while",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestEvaluatePythonCode.test_with_context_manager",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "TestMultiStepAgent.test_finalize_step_callbacks_by_type",
+      "to": "MultiStepAgent._finalize_step",
+      "values": [
+        "action_step",
+        "final_answer_step",
+        "planning_step"
+      ]
+    },
+    {
+      "from": "TestMultiStepAgent.test_finalize_step_callbacks_with_list",
+      "to": "MultiStepAgent._finalize_step",
+      "values": [
+        "action_step",
+        "planning_step"
+      ]
+    },
+    {
+      "from": "TestToolCallingAgent.test_process_tool_calls",
+      "to": "ToolCallingAgent.process_tool_calls",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "Tool.__call__",
+      "to": "src/smolagents/agent_types.handle_agent_output_types",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "MultiStepAgent.step",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "ToolCallingAgent.process_tool_calls",
+      "values": [
+        "chat_message",
+        "memory_step"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "self.model.generate @ src/smolagents/agents.py:1349",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:1328",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "self.model.parse_tool_calls @ src/smolagents/agents.py:1373",
+      "values": [
+        "chat_message"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "src/smolagents/models.agglomerate_stream_deltas",
+      "values": [
+        "chat_message_stream_deltas"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._substitute_state_variables",
+      "to": "ToolCallingAgent.execute_tool_call",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.execute_tool_call",
+      "to": "ToolCallingAgent._substitute_state_variables",
+      "values": [
+        "arguments"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.execute_tool_call",
+      "to": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.execute_tool_call",
+      "to": "tool @ src/smolagents/agents.py:1536",
+      "values": [
+        "arguments"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.execute_tool_call",
+      "to": "tool @ src/smolagents/agents.py:1538",
+      "values": [
+        "arguments"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls",
+      "to": "TestToolCallingAgent.test_process_tool_calls",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls",
+      "to": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "values": [
+        "tool_call"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "to": "ToolCallingAgent.execute_tool_call",
+      "values": [
+        "tool_arguments"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "to": "ToolCallingAgent.process_tool_calls",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "to": "ToolCallingAgent.state",
+      "values": [
+        "tool_call_result"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.state",
+      "to": "ToolCallingAgent._substitute_state_variables",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "UserInputTool.forward",
+      "to": "Tool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "MultiStepAgent.run",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "__import__ @ src/smolagents/local_python_executor.py:1322",
+      "to": "src/smolagents/local_python_executor.evaluate_import",
+      "values": [
+        "raw_module"
+      ]
+    },
+    {
+      "from": "ast.unparse @ src/smolagents/local_python_executor.py:469",
+      "to": "src/smolagents/local_python_executor.create_function",
+      "values": [
+        "source_code"
+      ]
+    },
+    {
+      "from": "func @ src/smolagents/local_python_executor.py:918",
+      "to": "src/smolagents/local_python_executor.evaluate_call",
+      "values": [
+        "kwargs",
+        "return"
+      ]
+    },
+    {
+      "from": "import_module @ src/smolagents/local_python_executor.py:1313",
+      "to": "src/smolagents/local_python_executor.evaluate_import",
+      "values": [
+        "raw_module"
+      ]
+    },
+    {
+      "from": "input @ src/smolagents/default_tools.py:101",
+      "to": "UserInputTool.forward",
+      "values": [
+        "user_input"
+      ]
+    },
+    {
+      "from": "requests.get @ src/smolagents/agent_types.py:229",
+      "to": "AgentAudio.to_raw",
+      "values": [
+        "response"
+      ]
+    },
+    {
+      "from": "self.memory.system_prompt.to_messages @ src/smolagents/agents.py:794",
+      "to": "MultiStepAgent.write_memory_to_messages",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "self.model @ src/smolagents/tools.py:1304",
+      "to": "PipelineTool.forward",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:1349",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "chat_message"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:1734",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "additional_args",
+        "chat_message",
+        "stop_sequences"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:683",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:753",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:876",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "chat_message",
+        "messages"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/default_tools.py:674",
+      "to": "SpeechToTextTool.forward",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.model.generate_stream @ src/smolagents/agents.py:1328",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "output_stream"
+      ]
+    },
+    {
+      "from": "self.model.generate_stream @ src/smolagents/agents.py:1712",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "additional_args",
+        "output_stream",
+        "stop_sequences"
+      ]
+    },
+    {
+      "from": "self.model.generate_stream @ src/smolagents/agents.py:665",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "self.model.generate_stream @ src/smolagents/agents.py:735",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "self.model.parse_tool_calls @ src/smolagents/agents.py:1373",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "chat_message"
+      ]
+    },
+    {
+      "from": "self.post_processor @ src/smolagents/tools.py:1310",
+      "to": "PipelineTool.decode",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.pre_processor @ src/smolagents/default_tools.py:671",
+      "to": "SpeechToTextTool.encode",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.pre_processor.batch_decode @ src/smolagents/default_tools.py:677",
+      "to": "SpeechToTextTool.decode",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.python_executor @ src/smolagents/agents.py:1788",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "code_output"
+      ]
+    },
+    {
+      "from": "send_to_device @ src/smolagents/tools.py:1326",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "encoded_inputs",
+        "tensor_inputs"
+      ]
+    },
+    {
+      "from": "send_to_device @ src/smolagents/tools.py:1328",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "sf.read @ src/smolagents/agent_types.py:231",
+      "to": "AgentAudio.to_raw",
+      "values": [
+        "tensor"
+      ]
+    },
+    {
+      "from": "sf.read @ src/smolagents/agent_types.py:233",
+      "to": "AgentAudio.to_raw",
+      "values": [
+        "tensor"
+      ]
+    },
+    {
+      "from": "src/smolagents/agent_types.handle_agent_output_types",
+      "to": "AgentAudio.__init__",
+      "values": [
+        "output"
+      ]
+    },
+    {
+      "from": "src/smolagents/agent_types.handle_agent_output_types",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agent_types.handle_agent_output_types",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agent_types.handle_agent_output_types",
+      "to": "Tool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agents.populate_template",
+      "to": "MultiStepAgent.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agents.populate_template",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agents.populate_template",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/gradio_ui.stream_to_gradio",
+      "to": "src/smolagents/models.agglomerate_stream_deltas",
+      "values": [
+        "accumulated_events"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "comprehension",
+        "if_clause",
+        "new_state",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "comprehension",
+        "new_state",
+        "value"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function",
+      "to": "ast.unparse @ src/smolagents/local_python_executor.py:469",
+      "values": [
+        "func_def"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function",
+      "to": "src/smolagents/local_python_executor.create_function.new_func",
+      "values": [
+        "func_def",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "custom_tools",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function",
+      "to": "src/smolagents/local_python_executor.evaluate_function_def",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function.new_func",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "d",
+        "func_state",
+        "stmt"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_annassign",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "annassign",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_annassign",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "annassign",
+        "state",
+        "value"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_assert",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "assert_node",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_assign",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "assign",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_assign",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "result",
+        "state",
+        "target",
+        "tgt",
+        "val"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.create_function",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.create_function.new_func",
+      "values": [
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_annassign",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_assert",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_assign",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_attribute",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_binop",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_boolop",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_call",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_class_def",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_condition",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_delete",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_for",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_function_def",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "values": [
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_if",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_import",
+      "values": [
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_lambda",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_listcomp",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_name",
+      "values": [
+        "common_params"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_raise",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_setcomp",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_subscript",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_try",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_unaryop",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_while",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_with",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_attribute",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "values": [
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "current_value",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "target"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_binop",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "binop",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_boolop",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "return",
+        "state",
+        "value"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_call",
+      "to": "func @ src/smolagents/local_python_executor.py:918",
+      "values": [
+        "args",
+        "kwargs"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_call",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "arg",
+        "call",
+        "keyword",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_class_def",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "base",
+        "class_dict",
+        "return",
+        "state",
+        "stmt",
+        "target"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_condition",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "comparator",
+        "condition",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_delete",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "state",
+        "target"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "dictcomp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_for",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "for_loop",
+        "node",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_for",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "counter",
+        "for_loop",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_function_def",
+      "to": "src/smolagents/local_python_executor.create_function",
+      "values": [
+        "custom_tools",
+        "func_def",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_function_def",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "genexp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "to": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "values": [
+        "genexp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "gen",
+        "if_clause",
+        "new_state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "gen",
+        "new_state",
+        "value"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_if",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "if_statement",
+        "line",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_import",
+      "to": "__import__ @ src/smolagents/local_python_executor.py:1322",
+      "values": [
+        "alias",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_import",
+      "to": "import_module @ src/smolagents/local_python_executor.py:1313",
+      "values": [
+        "alias"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_import",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_import",
+      "to": "src/smolagents/local_python_executor.get_safe_module",
+      "values": [
+        "raw_module"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_lambda",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "lambda_expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_lambda",
+      "to": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "values": [
+        "args",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "new_state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_listcomp",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "listcomp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_name",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "LocalPythonExecutor.state",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_access_attributes",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_classes",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_annassign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_assign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_augassign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_augassign_custom",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_augassign_number",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_binop",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_call",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_class_def",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_attribute",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_name",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_subscript",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_class_def_with_assign_attribute_target",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_class_def_with_enum",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_class_def_with_pass",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_constant",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_delete",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_dict",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_expression",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_f_string",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_f_string_with_complex_format",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_f_string_with_format",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_for",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_if",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_list",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_name",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_evaluate_subscript",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_exceptions",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_generatorexp_with_infinite_sequence",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_if_conditions",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_nested_for_loop",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_nonsimple_augassign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_operations_count",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_pandas",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_print",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_print_output",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_return",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_set",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_subscript_call",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_tuple_id",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_types_as_objects",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_variable_args",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_while",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "TestEvaluatePythonCode.test_with_context_manager",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "src/smolagents/utils.truncate_content",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_raise",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "raise_node",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_setcomp",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "setcomp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_subscript",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "return",
+        "state",
+        "subscript"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_try",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "handler",
+        "state",
+        "stmt"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_unaryop",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_while",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "node",
+        "state",
+        "while_loop"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_with",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "item",
+        "state",
+        "stmt"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.get_safe_module",
+      "to": "ModuleType @ src/smolagents/local_python_executor.py:1288",
+      "values": [
+        "raw_module"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.get_safe_module",
+      "to": "src/smolagents/local_python_executor.evaluate_import",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_annassign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_assign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "state",
+        "target"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_for",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/models.agglomerate_stream_deltas",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/models.agglomerate_stream_deltas",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.extract_code_from_text",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.extract_code_from_text",
+      "to": "src/smolagents/utils.parse_code_blobs",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.parse_code_blobs",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.parse_code_blobs",
+      "to": "src/smolagents/utils.extract_code_from_text",
+      "values": [
+        "text"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.truncate_content",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.truncate_content",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "tool @ src/smolagents/agents.py:1536",
+      "to": "ToolCallingAgent.execute_tool_call",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "tool @ src/smolagents/agents.py:1538",
+      "to": "ToolCallingAgent.execute_tool_call",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "torch.from_numpy @ src/smolagents/agent_types.py:202",
+      "to": "AgentAudio._tensor",
+      "values": [
+        "_tensor"
+      ]
+    },
+    {
+      "from": "torch.tensor @ src/smolagents/agent_types.py:204",
+      "to": "AgentAudio._tensor",
+      "values": [
+        "_tensor"
+      ]
+    },
+    {
+      "from": "torch.tensor @ src/smolagents/agent_types.py:234",
+      "to": "AgentAudio._tensor",
+      "values": [
+        "_tensor"
+      ]
+    }
+  ],
+  "calls": [
+    [
+      "CodeAgent._step_stream",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/local_python_executor.fix_final_answer_code"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/models.agglomerate_stream_deltas"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/utils.extract_code_from_text"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/utils.parse_code_blobs"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/utils.truncate_content"
+    ],
+    [
+      "GradioUI._stream_response",
+      "MultiStepAgent.run"
+    ],
+    [
+      "GradioUI._stream_response",
+      "src/smolagents/models.agglomerate_stream_deltas"
+    ],
+    [
+      "MultiStepAgent.__call__",
+      "MultiStepAgent.run"
+    ],
+    [
+      "MultiStepAgent.__call__",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "MultiStepAgent.__call__",
+      "src/smolagents/agents.populate_template"
+    ],
+    [
+      "MultiStepAgent.__call__",
+      "src/smolagents/utils.truncate_content"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "src/smolagents/agents.populate_template"
+    ],
+    [
+      "MultiStepAgent._handle_max_steps_reached",
+      "MultiStepAgent._finalize_step"
+    ],
+    [
+      "MultiStepAgent._handle_max_steps_reached",
+      "MultiStepAgent.provide_final_answer"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "CodeAgent._step_stream"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "MultiStepAgent._finalize_step"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "MultiStepAgent._generate_planning_step"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "MultiStepAgent._handle_max_steps_reached"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "ToolCallingAgent._step_stream"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "src/smolagents/agent_types.handle_agent_output_types"
+    ],
+    [
+      "MultiStepAgent.provide_final_answer",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "MultiStepAgent.provide_final_answer",
+      "src/smolagents/agents.populate_template"
+    ],
+    [
+      "MultiStepAgent.run",
+      "MultiStepAgent._run_stream"
+    ],
+    [
+      "MultiStepAgent.step",
+      "CodeAgent._step_stream"
+    ],
+    [
+      "MultiStepAgent.step",
+      "ToolCallingAgent._step_stream"
+    ],
+    [
+      "PipelineTool.__call__",
+      "PipelineTool.decode"
+    ],
+    [
+      "PipelineTool.__call__",
+      "PipelineTool.forward"
+    ],
+    [
+      "PipelineTool.__call__",
+      "SpeechToTextTool.decode"
+    ],
+    [
+      "PipelineTool.__call__",
+      "SpeechToTextTool.encode"
+    ],
+    [
+      "PipelineTool.__call__",
+      "SpeechToTextTool.forward"
+    ],
+    [
+      "PipelineTool.__call__",
+      "src/smolagents/agent_types.handle_agent_output_types"
+    ],
+    [
+      "SpeechToTextTool.encode",
+      "AgentAudio.to_raw"
+    ],
+    [
+      "TestEvaluatePythonCode.test_access_attributes",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_classes",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_annassign",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_assign",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_augassign",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_augassign_custom",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_augassign_number",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_binop",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_call",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_class_def",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_attribute",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_name",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_class_def_with_ann_assign_subscript",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_class_def_with_assign_attribute_target",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_class_def_with_enum",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_class_def_with_pass",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_constant",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_delete",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_dict",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_expression",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_f_string",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_f_string_with_complex_format",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_f_string_with_format",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_for",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_if",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_list",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_name",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_evaluate_subscript",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_exceptions",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_generatorexp_with_infinite_sequence",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_if_conditions",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_nested_for_loop",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_nonsimple_augassign",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_operations_count",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_pandas",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_print",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_print_output",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_return",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_set",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_subscript_call",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_tuple_id",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_types_as_objects",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_variable_args",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_while",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestEvaluatePythonCode.test_with_context_manager",
+      "src/smolagents/local_python_executor.evaluate_python_code"
+    ],
+    [
+      "TestMultiStepAgent.test_finalize_step_callbacks_by_type",
+      "MultiStepAgent._finalize_step"
+    ],
+    [
+      "TestMultiStepAgent.test_finalize_step_callbacks_with_list",
+      "MultiStepAgent._finalize_step"
+    ],
+    [
+      "TestToolCallingAgent.test_process_tool_calls",
+      "ToolCallingAgent.process_tool_calls"
+    ],
+    [
+      "Tool.__call__",
+      "PipelineTool.forward"
+    ],
+    [
+      "Tool.__call__",
+      "SpeechToTextTool.forward"
+    ],
+    [
+      "Tool.__call__",
+      "UserInputTool.forward"
+    ],
+    [
+      "Tool.__call__",
+      "src/smolagents/agent_types.handle_agent_output_types"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "ToolCallingAgent.process_tool_calls"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "src/smolagents/models.agglomerate_stream_deltas"
+    ],
+    [
+      "ToolCallingAgent.execute_tool_call",
+      "ToolCallingAgent._substitute_state_variables"
+    ],
+    [
+      "ToolCallingAgent.process_tool_calls",
+      "ToolCallingAgent.process_tool_calls.process_single_tool_call"
+    ],
+    [
+      "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "ToolCallingAgent.execute_tool_call"
+    ],
+    [
+      "src/smolagents/agent_types.handle_agent_output_types",
+      "AgentAudio.__init__"
+    ],
+    [
+      "src/smolagents/gradio_ui.stream_to_gradio",
+      "MultiStepAgent.run"
+    ],
+    [
+      "src/smolagents/gradio_ui.stream_to_gradio",
+      "src/smolagents/models.agglomerate_stream_deltas"
+    ],
+    [
+      "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "src/smolagents/local_python_executor._evaluate_comprehensions"
+    ],
+    [
+      "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.create_function.new_func",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_annassign",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_annassign",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_assert",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_assign",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_assign",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_annassign"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_assert"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_assign"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_attribute"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_augassign"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_binop"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_boolop"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_call"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_class_def"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_condition"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_delete"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_dictcomp"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_for"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_function_def"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_generatorexp"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_if"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_import"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_lambda"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_listcomp"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_name"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_raise"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_setcomp"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_subscript"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_try"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_unaryop"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_while"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_with"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_attribute",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign",
+      "src/smolagents/local_python_executor.evaluate_augassign.get_current_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "src/smolagents/local_python_executor.evaluate_augassign.get_current_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_binop",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_boolop",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_call",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_class_def",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_condition",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_delete",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "src/smolagents/local_python_executor._evaluate_comprehensions"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_for",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_for",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_function_def",
+      "src/smolagents/local_python_executor.create_function"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "src/smolagents/local_python_executor.evaluate_generatorexp.generator"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_if",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_import",
+      "src/smolagents/local_python_executor.get_safe_module"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_listcomp",
+      "src/smolagents/local_python_executor._evaluate_comprehensions"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_raise",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_setcomp",
+      "src/smolagents/local_python_executor._evaluate_comprehensions"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_subscript",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_try",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_unaryop",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_while",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_with",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.get_safe_module",
+      "src/smolagents/local_python_executor.get_safe_module"
+    ],
+    [
+      "src/smolagents/local_python_executor.set_value",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.set_value",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/utils.parse_code_blobs",
+      "src/smolagents/utils.extract_code_from_text"
+    ],
+    [
+      "AgentAudio.__init__",
+      "torch.from_numpy @ src/smolagents/agent_types.py:202"
+    ],
+    [
+      "AgentAudio.__init__",
+      "torch.tensor @ src/smolagents/agent_types.py:204"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "BytesIO @ src/smolagents/agent_types.py:231"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "requests.get @ src/smolagents/agent_types.py:229"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "sf.read @ src/smolagents/agent_types.py:231"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "sf.read @ src/smolagents/agent_types.py:233"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "torch.tensor @ src/smolagents/agent_types.py:234"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "self.model.generate @ src/smolagents/agents.py:1734"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "self.model.generate_stream @ src/smolagents/agents.py:1712"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "self.python_executor @ src/smolagents/agents.py:1788"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "self.model.generate @ src/smolagents/agents.py:683"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "self.model.generate @ src/smolagents/agents.py:753"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "self.model.generate_stream @ src/smolagents/agents.py:665"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "self.model.generate_stream @ src/smolagents/agents.py:735"
+    ],
+    [
+      "MultiStepAgent.provide_final_answer",
+      "self.model.generate @ src/smolagents/agents.py:876"
+    ],
+    [
+      "MultiStepAgent.write_memory_to_messages",
+      "self.memory.system_prompt.to_messages @ src/smolagents/agents.py:794"
+    ],
+    [
+      "PipelineTool.__call__",
+      "send_to_device @ src/smolagents/tools.py:1326"
+    ],
+    [
+      "PipelineTool.__call__",
+      "send_to_device @ src/smolagents/tools.py:1328"
+    ],
+    [
+      "PipelineTool.decode",
+      "self.post_processor @ src/smolagents/tools.py:1310"
+    ],
+    [
+      "PipelineTool.forward",
+      "self.model @ src/smolagents/tools.py:1304"
+    ],
+    [
+      "SpeechToTextTool.decode",
+      "self.pre_processor.batch_decode @ src/smolagents/default_tools.py:677"
+    ],
+    [
+      "SpeechToTextTool.encode",
+      "self.pre_processor @ src/smolagents/default_tools.py:671"
+    ],
+    [
+      "SpeechToTextTool.forward",
+      "self.model.generate @ src/smolagents/default_tools.py:674"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "self.model.generate @ src/smolagents/agents.py:1349"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "self.model.generate_stream @ src/smolagents/agents.py:1328"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "self.model.parse_tool_calls @ src/smolagents/agents.py:1373"
+    ],
+    [
+      "ToolCallingAgent.execute_tool_call",
+      "tool @ src/smolagents/agents.py:1536"
+    ],
+    [
+      "ToolCallingAgent.execute_tool_call",
+      "tool @ src/smolagents/agents.py:1538"
+    ],
+    [
+      "UserInputTool.forward",
+      "input @ src/smolagents/default_tools.py:101"
+    ],
+    [
+      "src/smolagents/local_python_executor.create_function",
+      "ast.unparse @ src/smolagents/local_python_executor.py:469"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_call",
+      "func @ src/smolagents/local_python_executor.py:918"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_import",
+      "__import__ @ src/smolagents/local_python_executor.py:1322"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_import",
+      "import_module @ src/smolagents/local_python_executor.py:1313"
+    ],
+    [
+      "src/smolagents/local_python_executor.get_safe_module",
+      "ModuleType @ src/smolagents/local_python_executor.py:1288"
+    ]
+  ],
+  "verdicts": {
+    "검증 완료": 140,
+    "일부만 기록": 2,
+    "누락": 0
+  },
+  "missing_anchors": []
+}

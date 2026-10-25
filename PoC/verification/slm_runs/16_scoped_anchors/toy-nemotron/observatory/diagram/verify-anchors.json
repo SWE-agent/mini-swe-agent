@@ -1,0 +1,8 @@
+{
+  "logger": "observatory_log",
+  "entry": {"function": "ToyAgent.run", "path": "agent.py", "line": 24, "inputs": ["task"]},
+  "sources": [
+    {"kind": "llm_response", "path": "llm.py", "line": 13, "call": "self.client.messages.create", "label": "model call"},
+    {"kind": "user_input", "path": "agent.py", "line": 49, "call": "input", "label": "confirm prompt"}
+  ]
+}

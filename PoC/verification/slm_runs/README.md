@@ -132,3 +132,35 @@ Qwen3.8-27B (toy, mini, smolagents) and nemotron 4 times on smolagents, same kit
 - `smol-nemotron2`: [report](smol-nemotron2/observatory/verify/report.html)
 - `smol-nemotron3`
 - `smol-nemotron4`: [report](smol-nemotron4/observatory/verify/report.html)
+
+## 16_scoped_anchors
+
+`--scope`: the anchors session reads only the agent's files and picks the anchors from every call in them whose implementation they do not show (`candidates-*.txt`, made by `observatory/candidates.py`). Steps 2-4 and the verdict as in 14 and 15. Claude is `sonnet`, the others go through DeepInfra (`setup/`). Step 1 and steps 2-4 were run one after the other, and the verdict afterwards for all twelve; `observatory/baseline.json` holds the value flows before the logging, which the verdict compares against.
+
+Scopes:
+
+- toy: `agent.py llm.py tools.py`
+- mini: `src/minisweagent/agents/default.py src/minisweagent/agents/interactive.py src/minisweagent/agents/utils/prompt_user.py`
+- smolagents: `src/smolagents/agents.py src/smolagents/default_tools.py`
+
+| | claude | qwen | glimmer | nemotron |
+|---|---|---|---|---|
+| anchors toy / mini / smol (of 2 / 5 / 10) | 2 / 5 / 10 | 2 / 5 / 10 | 2 / 5 / 10 | 2 / 2 / 2 |
+| toy | PASS 9/9 | PASS 9/9 | PASS 9/9 | 5/9, `observatory_log` undefined in tools.py |
+| mini | PASS 9/9 | PASS 9/9 (second try: the first stopped on a DeepInfra timeout) | 9/9, step and cost limit lines split | SyntaxError in interactive.py, logger.debug blocks removed |
+| smolagents | 140/142 | 140/142 | stopped in step 3 (context window), 78/142 | 74/74, agent code removed, `import observatory_log` inside the package |
+
+The 2 left for Claude and Qwen on smolagents are the checker's: `**additional_args`, passed to both `generate` and `generate_stream`, is taken for a dict the call may fill.
+
+- `toy-claude`: [report](toy-claude/observatory/verify/report.html)
+- `toy-qwen`: [report](toy-qwen/observatory/verify/report.html)
+- `toy-glimmer`: [report](toy-glimmer/observatory/verify/report.html)
+- `toy-nemotron`: [report](toy-nemotron/observatory/verify/report.html)
+- `mini-claude`: [report](mini-claude/observatory/verify/report.html)
+- `mini-qwen`: [report](mini-qwen/observatory/verify/report.html)
+- `mini-glimmer`: [report](mini-glimmer/observatory/verify/report.html)
+- `mini-nemotron` (no report: the checker cannot read the SyntaxError)
+- `smol-claude`: [report](smol-claude/observatory/verify/report.html)
+- `smol-qwen`: [report](smol-qwen/observatory/verify/report.html)
+- `smol-glimmer`: [report](smol-glimmer/observatory/verify/report.html)
+- `smol-nemotron`: [report](smol-nemotron/observatory/verify/report.html)

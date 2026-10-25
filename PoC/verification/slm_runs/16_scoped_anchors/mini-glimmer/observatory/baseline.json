@@ -1,0 +1,56 @@
+[
+ [
+  "LLM Response",
+  "[외부 응답] self.model.query",
+  "LLM 입력",
+  "[외부 호출] self.model.query"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.query",
+  "Tool 입력",
+  "[외부 호출] self.env.execute"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.query",
+  "최종 출력",
+  "[최종 출력] return of DefaultAgent.run"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] self.env.execute",
+  "LLM 입력",
+  "[외부 호출] self.model.query"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] self.env.execute",
+  "최종 출력",
+  "[최종 출력] return of DefaultAgent.run"
+ ],
+ [
+  "User Input",
+  "[User Input] task (entry parameter)",
+  "LLM 입력",
+  "[외부 호출] self.model.query"
+ ],
+ [
+  "User Input",
+  "[User Input] task (entry parameter)",
+  "최종 출력",
+  "[최종 출력] return of DefaultAgent.run"
+ ],
+ [
+  "User Input",
+  "[외부 응답] _multiline_prompt_session.prompt",
+  "LLM 입력",
+  "[외부 호출] self.model.query"
+ ],
+ [
+  "User Input",
+  "[외부 응답] _multiline_prompt_session.prompt",
+  "최종 출력",
+  "[최종 출력] return of DefaultAgent.run"
+ ]
+]

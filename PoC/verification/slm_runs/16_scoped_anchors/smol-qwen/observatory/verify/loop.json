@@ -1,0 +1,1054 @@
+{
+  "root": "/private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/smol-qwen",
+  "nodes": [
+    {
+      "id": "MultiStepAgent._generate_planning_step",
+      "role": "function",
+      "label": "MultiStepAgent._generate_planning_step",
+      "path": "src/smolagents/agents.py",
+      "line": 641,
+      "end_line": 775,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:662",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:676",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:678",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message_content, response=output_stream)",
+          "records": [
+            {
+              "value": "output_stream",
+              "whole": true
+            },
+            {
+              "value": "plan_message_content",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:680",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:684",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:687",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message_content, response=plan_message)",
+          "records": [
+            {
+              "value": "plan_message",
+              "whole": true
+            },
+            {
+              "value": "plan_message_content",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:731",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:746",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:748",
+          "code": "observatory_log.llm_response(",
+          "records": [
+            {
+              "value": "plan_message_content",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:752",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:756",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:759",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message_content, response=plan_message)",
+          "records": [
+            {
+              "value": "plan_message",
+              "whole": true
+            },
+            {
+              "value": "plan_message_content",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "CodeAgent._step_stream",
+      "role": "function",
+      "label": "CodeAgent._step_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1698,
+      "end_line": 1843,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1720",
+          "code": "observatory_log.llm_query(None, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1736",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1741",
+          "code": "observatory_log.llm_response(",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "output_stream",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1745",
+          "code": "observatory_log.llm_query(None, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1753",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1762",
+          "code": "observatory_log.llm_response(",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_start",
+          "at": "src/smolagents/agents.py:1801",
+          "code": "start = observatory_log.tool_start(\"python_interpreter\", code_action)",
+          "records": [
+            {
+              "value": "code_action",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/smolagents/agents.py:1812",
+          "code": "observatory_log.tool_error(start, \"python_interpreter\", e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/smolagents/agents.py:1830",
+          "code": "observatory_log.tool_end(start, \"python_interpreter\", result=code_output)",
+          "records": [
+            {
+              "value": "code_output",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:1722",
+      "role": "llm_response",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1722,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:754",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 754,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.run",
+      "role": "entry",
+      "label": "MultiStepAgent.run",
+      "path": "src/smolagents/agents.py",
+      "line": 437,
+      "end_line": 540,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/smolagents/agents.py:469",
+          "code": "observatory_log.user_input(task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent.execute_tool_call",
+      "role": "function",
+      "label": "ToolCallingAgent.execute_tool_call",
+      "path": "src/smolagents/agents.py",
+      "line": 1509,
+      "end_line": 1562,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "src/smolagents/agents.py:1539",
+          "code": "start = observatory_log.tool_start(tool_name, arguments)",
+          "records": [
+            {
+              "value": "arguments",
+              "whole": true
+            },
+            {
+              "value": "tool_name",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/smolagents/agents.py:1548",
+          "code": "observatory_log.tool_error(start, tool_name, e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            },
+            {
+              "value": "tool_name",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/smolagents/agents.py:1561",
+          "code": "observatory_log.tool_end(start, tool_name, result=out)",
+          "records": [
+            {
+              "value": "out",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            },
+            {
+              "value": "tool_name",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent._run_stream",
+      "role": "function",
+      "label": "MultiStepAgent._run_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 542,
+      "end_line": 613,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.step",
+      "role": "function",
+      "label": "MultiStepAgent.step",
+      "path": "src/smolagents/agents.py",
+      "line": 810,
+      "end_line": 815,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent._step_stream",
+      "role": "function",
+      "label": "ToolCallingAgent._step_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1310,
+      "end_line": 1415,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1327",
+          "code": "observatory_log.llm_query(None, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1344",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1347",
+          "code": "observatory_log.llm_response(",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "output_stream",
+              "whole": true
+            },
+            {
+              "value": "tool_call",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1354",
+          "code": "observatory_log.llm_query(None, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1362",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1369",
+          "code": "observatory_log.llm_response(",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "tool_call",
+              "whole": false
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:877",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 877,
+      "in": "MultiStepAgent.provide_final_answer",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.provide_final_answer",
+      "role": "function",
+      "label": "MultiStepAgent.provide_final_answer",
+      "path": "src/smolagents/agents.py",
+      "line": 838,
+      "end_line": 887,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:874",
+          "code": "observatory_log.llm_query(None, model=self.model, messages=messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:879",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:881",
+          "code": "observatory_log.llm_response(None, actions=[], reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:734",
+      "role": "llm_response",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 734,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:1356",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 1356,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:1747",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 1747,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "LLM Response → LLM 입력: 누락",
+        "LLM Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:682",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 682,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:664",
+      "role": "llm_response",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 664,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "tool @ src/smolagents/agents.py:1543",
+      "role": "tool_response",
+      "label": "tool",
+      "path": "src/smolagents/agents.py",
+      "line": 1543,
+      "in": "ToolCallingAgent.execute_tool_call",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "input @ src/smolagents/default_tools.py:101",
+      "role": "user_input",
+      "label": "input",
+      "path": "src/smolagents/default_tools.py",
+      "line": 101,
+      "in": "UserInputTool.forward",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "UserInputTool.forward",
+      "role": "function",
+      "label": "UserInputTool.forward",
+      "path": "src/smolagents/default_tools.py",
+      "line": 100,
+      "end_line": 103,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/smolagents/default_tools.py:102",
+          "code": "observatory_log.user_input(user_input, prompt=question)",
+          "records": [
+            {
+              "value": "question",
+              "whole": true
+            },
+            {
+              "value": "user_input",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "tool @ src/smolagents/agents.py:1545",
+      "role": "tool_response",
+      "label": "tool",
+      "path": "src/smolagents/agents.py",
+      "line": 1545,
+      "in": "ToolCallingAgent.execute_tool_call",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:1329",
+      "role": "llm_response",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1329,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "src/smolagents/agents.py",
+      "line": 439,
+      "in": "MultiStepAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.python_executor @ src/smolagents/agents.py:1803",
+      "role": "tool_response",
+      "label": "self.python_executor",
+      "path": "src/smolagents/agents.py",
+      "line": 1803,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    }
+  ],
+  "links": [
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.model.generate @ src/smolagents/agents.py:1747",
+      "values": [
+        "additional_args",
+        "input_messages",
+        "stop_sequences"
+      ],
+      "call": true,
+      "back": [
+        "additional_args",
+        "chat_message",
+        "stop_sequences"
+      ],
+      "returns": true
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:1722",
+      "values": [
+        "additional_args",
+        "input_messages",
+        "stop_sequences"
+      ],
+      "call": true,
+      "back": [
+        "additional_args",
+        "output_stream",
+        "stop_sequences"
+      ],
+      "returns": true
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.python_executor @ src/smolagents/agents.py:1803",
+      "values": [
+        "code_action"
+      ],
+      "call": true,
+      "back": [
+        "code_output"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate @ src/smolagents/agents.py:682",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [
+        "input_messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate @ src/smolagents/agents.py:754",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [
+        "input_messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:664",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [
+        "input_messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:734",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [
+        "input_messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "action_step"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "task"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "task"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "action_step"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.provide_final_answer",
+      "to": "self.model.generate @ src/smolagents/agents.py:877",
+      "values": [
+        "messages"
+      ],
+      "call": true,
+      "back": [
+        "chat_message",
+        "messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "task"
+      ],
+      "call": true,
+      "back": [
+        "action_step",
+        "final_memory_step",
+        "memory",
+        "planning_step",
+        "task"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.step",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "memory_step"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "MultiStepAgent.step",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "memory_step"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "ToolCallingAgent.execute_tool_call",
+      "values": [
+        "chat_message",
+        "memory_step",
+        "tool_arguments",
+        "tool_call"
+      ],
+      "call": true,
+      "back": [
+        "memory_step"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "self.model.generate @ src/smolagents/agents.py:1356",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [
+        "chat_message"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:1329",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [
+        "output_stream"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent.execute_tool_call",
+      "to": "tool @ src/smolagents/agents.py:1543",
+      "values": [
+        "arguments"
+      ],
+      "call": true,
+      "back": [
+        "out"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToolCallingAgent.execute_tool_call",
+      "to": "tool @ src/smolagents/agents.py:1545",
+      "values": [
+        "arguments"
+      ],
+      "call": true,
+      "back": [
+        "out"
+      ],
+      "returns": true
+    },
+    {
+      "from": "UserInputTool.forward",
+      "to": "input @ src/smolagents/default_tools.py:101",
+      "values": [],
+      "call": true,
+      "back": [
+        "user_input"
+      ],
+      "returns": true
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "MultiStepAgent.run",
+      "values": [
+        "task"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    }
+  ]
+}
