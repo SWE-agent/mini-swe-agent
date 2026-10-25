@@ -1,0 +1,56 @@
+[
+ [
+  "LLM Response",
+  "[외부 응답] self.client.messages.create",
+  "LLM 입력",
+  "[외부 호출] self.client.messages.create"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.client.messages.create",
+  "Tool 입력",
+  "[외부 호출] exec"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.client.messages.create",
+  "Tool 입력",
+  "[외부 호출] subprocess.run"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.client.messages.create",
+  "사용자에게 표시",
+  "[외부 호출] input"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.client.messages.create",
+  "최종 출력",
+  "[최종 출력] return of ToyAgent.run"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] exec",
+  "LLM 입력",
+  "[외부 호출] self.client.messages.create"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] subprocess.run",
+  "LLM 입력",
+  "[외부 호출] self.client.messages.create"
+ ],
+ [
+  "User Input",
+  "[User Input] task (entry parameter)",
+  "LLM 입력",
+  "[외부 호출] self.client.messages.create"
+ ],
+ [
+  "User Input",
+  "[외부 응답] input",
+  "최종 출력",
+  "[최종 출력] return of ToyAgent.run"
+ ]
+]

@@ -1,0 +1,582 @@
+1. src/smolagents/agents.py:107  `Exception`  in src/smolagents/agents.populate_template (builtin)
+     raise Exception(f"Error during jinja template rendering: {type(e).__name__}: {e}")
+2. src/smolagents/agents.py:221  `ValueError`  in RunResult.__init__ (builtin)
+     raise ValueError("Cannot specify both 'messages' and 'steps' parameters. Use 'steps' instead.")
+3. src/smolagents/agents.py:222  `warnings.warn`  in RunResult.__init__ (imported)
+     warnings.warn(
+4. src/smolagents/agents.py:239  `warnings.warn`  in RunResult.messages (imported)
+     warnings.warn(
+5. src/smolagents/agents.py:251  `self.token_usage.dict`  in RunResult.dict (object method)
+     "token_usage": self.token_usage.dict() if self.token_usage is not None else None,
+6. src/smolagents/agents.py:252  `self.timing.dict`  in RunResult.dict (object method)
+     "timing": self.timing.dict(),
+7. src/smolagents/agents.py:317  `EMPTY_PROMPT_TEMPLATES.keys`  in MultiStepAgent.__init__ (object method)
+     missing_keys = set(EMPTY_PROMPT_TEMPLATES.keys()) - set(prompt_templates.keys())
+8. src/smolagents/agents.py:317  `prompt_templates.keys`  in MultiStepAgent.__init__ (object method)
+     missing_keys = set(EMPTY_PROMPT_TEMPLATES.keys()) - set(prompt_templates.keys())
+9. src/smolagents/agents.py:321  `EMPTY_PROMPT_TEMPLATES.items`  in MultiStepAgent.__init__ (object method)
+     for key, value in EMPTY_PROMPT_TEMPLATES.items():
+10. src/smolagents/agents.py:324  `prompt_templates.keys`  in MultiStepAgent.__init__ (object method)
+     assert key in prompt_templates.keys() and (subkey in prompt_templates[key].keys()), (
+11. src/smolagents/agents.py:324  `prompt_templates[key].keys`  in MultiStepAgent.__init__ (object method)
+     assert key in prompt_templates.keys() and (subkey in prompt_templates[key].keys()), (
+12. src/smolagents/agents.py:343  `AgentMemory`  in MultiStepAgent.__init__ (imported)
+     self.memory = AgentMemory(self.system_prompt)
+13. src/smolagents/agents.py:346  `AgentLogger`  in MultiStepAgent.__init__ (imported)
+     self.logger = AgentLogger(level=verbosity_level)
+14. src/smolagents/agents.py:350  `Monitor`  in MultiStepAgent.__init__ (imported)
+     self.monitor = Monitor(self.model, self.logger)
+15. src/smolagents/agents.py:360  `AttributeError`  in MultiStepAgent.system_prompt (builtin)
+     raise AttributeError(
+16. src/smolagents/agents.py:365  `is_valid_name`  in MultiStepAgent._validate_name (imported)
+     if name is not None and not is_valid_name(name):
+17. src/smolagents/agents.py:366  `ValueError`  in MultiStepAgent._validate_name (builtin)
+     raise ValueError(f"Agent name '{name}' must be a valid Python identifier and not a reserved keyword.")
+18. src/smolagents/agents.py:397  `cls`  in MultiStepAgent._setup_tools (callable value)
+     name: cls()
+19. src/smolagents/agents.py:398  `TOOL_MAPPING.items`  in MultiStepAgent._setup_tools (object method)
+     for name, cls in TOOL_MAPPING.items()
+20. src/smolagents/agents.py:411  `ValueError`  in MultiStepAgent._validate_tools_and_managed_agents (builtin)
+     raise ValueError(
+21. src/smolagents/agents.py:418  `CallbackRegistry`  in MultiStepAgent._setup_step_callbacks (imported)
+     self.step_callbacks = CallbackRegistry()
+22. src/smolagents/agents.py:423  `self.step_callbacks.register`  in MultiStepAgent._setup_step_callbacks (imported)
+     self.step_callbacks.register(ActionStep, callback)
+23. src/smolagents/agents.py:426  `step_callbacks.items`  in MultiStepAgent._setup_step_callbacks (object method)
+     for step_cls, callbacks in step_callbacks.items():
+24. src/smolagents/agents.py:430  `self.step_callbacks.register`  in MultiStepAgent._setup_step_callbacks (imported)
+     self.step_callbacks.register(step_cls, callback)
+25. src/smolagents/agents.py:432  `ValueError`  in MultiStepAgent._setup_step_callbacks (builtin)
+     raise ValueError("step_callbacks must be a list or a dict")
+26. src/smolagents/agents.py:434  `self.step_callbacks.register`  in MultiStepAgent._setup_step_callbacks (imported)
+     self.step_callbacks.register(ActionStep, self.monitor.update_metrics)
+27. src/smolagents/agents.py:477  `SystemPromptStep`  in MultiStepAgent.run (imported)
+     self.memory.system_prompt = SystemPromptStep(system_prompt=self.system_prompt)
+28. src/smolagents/agents.py:479  `self.memory.reset`  in MultiStepAgent.run (imported)
+     self.memory.reset()
+29. src/smolagents/agents.py:480  `self.monitor.reset`  in MultiStepAgent.run (imported)
+     self.monitor.reset()
+30. src/smolagents/agents.py:482  `self.logger.log_task`  in MultiStepAgent.run (imported)
+     self.logger.log_task(
+31. src/smolagents/agents.py:488  `self.memory.steps.append`  in MultiStepAgent.run (imported)
+     self.memory.steps.append(TaskStep(task=self.task, task_images=images))
+32. src/smolagents/agents.py:488  `TaskStep`  in MultiStepAgent.run (imported)
+     self.memory.steps.append(TaskStep(task=self.task, task_images=images))
+33. src/smolagents/agents.py:491  `self.python_executor.send_variables`  in MultiStepAgent.run (object method)
+     self.python_executor.send_variables(variables=self.state)
+34. src/smolagents/agents.py:492  `self.python_executor.send_tools`  in MultiStepAgent.run (object method)
+     self.python_executor.send_tools({**self.tools, **self.managed_agents})
+35. src/smolagents/agents.py:498  `time.time`  in MultiStepAgent.run (imported)
+     run_start_time = time.time()
+36. src/smolagents/agents.py:519  `TokenUsage`  in MultiStepAgent.run (imported)
+     token_usage = TokenUsage(input_tokens=total_input_tokens, output_tokens=total_output_tokens)
+37. src/smolagents/agents.py:528  `self.memory.get_full_steps`  in MultiStepAgent.run (imported)
+     step_dicts = self.memory.get_full_steps()
+38. src/smolagents/agents.py:534  `Timing`  in MultiStepAgent.run (imported)
+     timing=Timing(start_time=run_start_time, end_time=time.time()),
+39. src/smolagents/agents.py:534  `time.time`  in MultiStepAgent.run (imported)
+     timing=Timing(start_time=run_start_time, end_time=time.time()),
+40. src/smolagents/agents.py:547  `AgentError`  in MultiStepAgent._run_stream (imported)
+     raise AgentError("Agent interrupted.", self.logger)
+41. src/smolagents/agents.py:553  `time.time`  in MultiStepAgent._run_stream (imported)
+     planning_start_time = time.time()
+42. src/smolagents/agents.py:561  `time.time`  in MultiStepAgent._run_stream (imported)
+     planning_end_time = time.time()
+43. src/smolagents/agents.py:562  `Timing`  in MultiStepAgent._run_stream (imported)
+     planning_step.timing = Timing(
+44. src/smolagents/agents.py:567  `self.memory.steps.append`  in MultiStepAgent._run_stream (imported)
+     self.memory.steps.append(planning_step)
+45. src/smolagents/agents.py:570  `time.time`  in MultiStepAgent._run_stream (imported)
+     action_step_start_time = time.time()
+46. src/smolagents/agents.py:571  `ActionStep`  in MultiStepAgent._run_stream (imported)
+     action_step = ActionStep(
+47. src/smolagents/agents.py:573  `Timing`  in MultiStepAgent._run_stream (imported)
+     timing=Timing(start_time=action_step_start_time),
+48. src/smolagents/agents.py:576  `self.logger.log_rule`  in MultiStepAgent._run_stream (imported)
+     self.logger.log_rule(f"Step {self.step_number}", level=LogLevel.INFO)
+49. src/smolagents/agents.py:584  `self.logger.log`  in MultiStepAgent._run_stream (imported)
+     self.logger.log(
+50. src/smolagents/agents.py:585  `Text`  in MultiStepAgent._run_stream (imported)
+     Text(f"Final answer: {final_answer}", style=f"bold {YELLOW_HEX}"),
+51. src/smolagents/agents.py:602  `self.memory.steps.append`  in MultiStepAgent._run_stream (imported)
+     self.memory.steps.append(action_step)
+52. src/smolagents/agents.py:609  `FinalAnswerStep`  in MultiStepAgent._run_stream (imported)
+     final_answer_step = FinalAnswerStep(handle_agent_output_types(final_answer))
+53. src/smolagents/agents.py:609  `handle_agent_output_types`  in MultiStepAgent._run_stream (imported)
+     final_answer_step = FinalAnswerStep(handle_agent_output_types(final_answer))
+54. src/smolagents/agents.py:616  `check_function`  in MultiStepAgent._validate_final_answer (callable value)
+     assert check_function(final_answer, self.memory, agent=self)
+55. src/smolagents/agents.py:618  `AgentError`  in MultiStepAgent._validate_final_answer (imported)
+     raise AgentError(f"Check {check_function.__name__} failed with error: {e}", self.logger)
+56. src/smolagents/agents.py:622  `time.time`  in MultiStepAgent._finalize_step (imported)
+     memory_step.timing.end_time = time.time()
+57. src/smolagents/agents.py:623  `self.step_callbacks.callback`  in MultiStepAgent._finalize_step (imported)
+     self.step_callbacks.callback(memory_step, agent=self)
+58. src/smolagents/agents.py:626  `time.time`  in MultiStepAgent._handle_max_steps_reached (imported)
+     action_step_start_time = time.time()
+59. src/smolagents/agents.py:628  `ActionStep`  in MultiStepAgent._handle_max_steps_reached (imported)
+     final_memory_step = ActionStep(
+60. src/smolagents/agents.py:630  `AgentMaxStepsError`  in MultiStepAgent._handle_max_steps_reached (imported)
+     error=AgentMaxStepsError("Reached max steps.", self.logger),
+61. src/smolagents/agents.py:631  `Timing`  in MultiStepAgent._handle_max_steps_reached (imported)
+     timing=Timing(start_time=action_step_start_time, end_time=time.time()),
+62. src/smolagents/agents.py:631  `time.time`  in MultiStepAgent._handle_max_steps_reached (imported)
+     timing=Timing(start_time=action_step_start_time, end_time=time.time()),
+63. src/smolagents/agents.py:636  `self.memory.steps.append`  in MultiStepAgent._handle_max_steps_reached (imported)
+     self.memory.steps.append(final_memory_step)
+64. src/smolagents/agents.py:642  `time.time`  in MultiStepAgent._generate_planning_step (imported)
+     start_time = time.time()
+65. src/smolagents/agents.py:645  `ChatMessage`  in MultiStepAgent._generate_planning_step (imported)
+     ChatMessage(
+66. src/smolagents/agents.py:660  `self.model.generate_stream`  in MultiStepAgent._generate_planning_step (object method)
+     output_stream = self.model.generate_stream(input_messages, stop_sequences=["<end_plan>"])  # type: ignore
+67. src/smolagents/agents.py:662  `Live`  in MultiStepAgent._generate_planning_step (imported)
+     with Live("", console=self.logger.console, vertical_overflow="visible") as live:
+68. src/smolagents/agents.py:666  `Markdown`  in MultiStepAgent._generate_planning_step (imported)
+     live.update(Markdown(plan_message_content))
+69. src/smolagents/agents.py:672  `self.model.generate`  in MultiStepAgent._generate_planning_step (object method)
+     plan_message = self.model.generate(input_messages, stop_sequences=["<end_plan>"])
+70. src/smolagents/agents.py:685  `ChatMessage`  in MultiStepAgent._generate_planning_step (imported)
+     plan_update_pre = ChatMessage(
+71. src/smolagents/agents.py:696  `ChatMessage`  in MultiStepAgent._generate_planning_step (imported)
+     plan_update_post = ChatMessage(
+72. src/smolagents/agents.py:717  `Live`  in MultiStepAgent._generate_planning_step (imported)
+     with Live("", console=self.logger.console, vertical_overflow="visible") as live:
+73. src/smolagents/agents.py:718  `self.model.generate_stream`  in MultiStepAgent._generate_planning_step (object method)
+     for event in self.model.generate_stream(
+74. src/smolagents/agents.py:724  `Markdown`  in MultiStepAgent._generate_planning_step (imported)
+     live.update(Markdown(plan_message_content))
+75. src/smolagents/agents.py:730  `self.model.generate`  in MultiStepAgent._generate_planning_step (object method)
+     plan_message = self.model.generate(input_messages, stop_sequences=["<end_plan>"])
+76. src/smolagents/agents.py:740  `self.logger.log`  in MultiStepAgent._generate_planning_step (imported)
+     self.logger.log(Rule(f"[bold]{log_headline}", style="orange"), Text(plan), level=LogLevel.INFO)
+77. src/smolagents/agents.py:740  `Rule`  in MultiStepAgent._generate_planning_step (imported)
+     self.logger.log(Rule(f"[bold]{log_headline}", style="orange"), Text(plan), level=LogLevel.INFO)
+78. src/smolagents/agents.py:740  `Text`  in MultiStepAgent._generate_planning_step (imported)
+     self.logger.log(Rule(f"[bold]{log_headline}", style="orange"), Text(plan), level=LogLevel.INFO)
+79. src/smolagents/agents.py:741  `PlanningStep`  in MultiStepAgent._generate_planning_step (imported)
+     yield PlanningStep(
+80. src/smolagents/agents.py:744  `ChatMessage`  in MultiStepAgent._generate_planning_step (imported)
+     model_output_message=ChatMessage(role=MessageRole.ASSISTANT, content=plan_message_content),
+81. src/smolagents/agents.py:745  `TokenUsage`  in MultiStepAgent._generate_planning_step (imported)
+     token_usage=TokenUsage(input_tokens=input_tokens, output_tokens=output_tokens),
+82. src/smolagents/agents.py:746  `Timing`  in MultiStepAgent._generate_planning_step (imported)
+     timing=Timing(start_time=start_time, end_time=time.time()),
+83. src/smolagents/agents.py:746  `time.time`  in MultiStepAgent._generate_planning_step (imported)
+     timing=Timing(start_time=start_time, end_time=time.time()),
+84. src/smolagents/agents.py:767  `self.memory.system_prompt.to_messages`  in MultiStepAgent.write_memory_to_messages (imported)
+     messages = self.memory.system_prompt.to_messages(summary_mode=summary_mode)
+85. src/smolagents/agents.py:769  `messages.extend`  in MultiStepAgent.write_memory_to_messages (imported)
+     messages.extend(memory_step.to_messages(summary_mode=summary_mode))
+86. src/smolagents/agents.py:780  `NotImplementedError`  in MultiStepAgent._step_stream (builtin)
+     raise NotImplementedError("This method should be implemented in child classes")
+87. src/smolagents/agents.py:798  `model_output.split`  in MultiStepAgent.extract_action (object method)
+     split = model_output.split(split_token)
+88. src/smolagents/agents.py:804  `AgentParsingError`  in MultiStepAgent.extract_action (imported)
+     raise AgentParsingError(
+89. src/smolagents/agents.py:822  `ChatMessage`  in MultiStepAgent.provide_final_answer (imported)
+     ChatMessage(
+90. src/smolagents/agents.py:834  `ChatMessage`  in MultiStepAgent.provide_final_answer (imported)
+     ChatMessage(
+91. src/smolagents/agents.py:847  `self.model.generate`  in MultiStepAgent.provide_final_answer (object method)
+     chat_message: ChatMessage = self.model.generate(messages)
+92. src/smolagents/agents.py:850  `ChatMessage`  in MultiStepAgent.provide_final_answer (imported)
+     return ChatMessage(
+93. src/smolagents/agents.py:857  `self.logger.visualize_agent_tree`  in MultiStepAgent.visualize (imported)
+     self.logger.visualize_agent_tree(self)
+94. src/smolagents/agents.py:866  `self.memory.replay`  in MultiStepAgent.replay (imported)
+     self.memory.replay(self.logger, detailed=detailed)
+95. src/smolagents/agents.py:888  `truncate_content`  in MultiStepAgent.__call__ (imported)
+     answer += "\n" + truncate_content(str(content)) + "\n---"
+96. src/smolagents/agents.py:907  `make_init_file`  in MultiStepAgent.save (imported)
+     make_init_file(output_dir)
+97. src/smolagents/agents.py:911  `make_init_file`  in MultiStepAgent.save (imported)
+     make_init_file(os.path.join(output_dir, "managed_agents"))
+98. src/smolagents/agents.py:911  `os.path.join`  in MultiStepAgent.save (imported)
+     make_init_file(os.path.join(output_dir, "managed_agents"))
+99. src/smolagents/agents.py:916  `os.path.join`  in MultiStepAgent.save (imported)
+     agent.save(os.path.join(output_dir, "managed_agents", agent_name), relative_path=agent_suffix)
+100. src/smolagents/agents.py:922  `make_init_file`  in MultiStepAgent.save (imported)
+     make_init_file(os.path.join(output_dir, "tools"))
+101. src/smolagents/agents.py:922  `os.path.join`  in MultiStepAgent.save (imported)
+     make_init_file(os.path.join(output_dir, "tools"))
+102. src/smolagents/agents.py:923  `os.path.join`  in MultiStepAgent.save (imported)
+     tool.save(os.path.join(output_dir, "tools"), tool_file_name=tool.name, make_gradio_app=False)
+103. src/smolagents/agents.py:926  `yaml.safe_dump`  in MultiStepAgent.save (imported)
+     yaml_prompts = yaml.safe_dump(
+104. src/smolagents/agents.py:936  `open`  in MultiStepAgent.save (builtin)
+     with open(os.path.join(output_dir, "prompts.yaml"), "w", encoding="utf-8") as f:
+105. src/smolagents/agents.py:936  `os.path.join`  in MultiStepAgent.save (imported)
+     with open(os.path.join(output_dir, "prompts.yaml"), "w", encoding="utf-8") as f:
+106. src/smolagents/agents.py:943  `open`  in MultiStepAgent.save (builtin)
+     with open(os.path.join(output_dir, "agent.json"), "w", encoding="utf-8") as f:
+107. src/smolagents/agents.py:943  `os.path.join`  in MultiStepAgent.save (imported)
+     with open(os.path.join(output_dir, "agent.json"), "w", encoding="utf-8") as f:
+108. src/smolagents/agents.py:947  `open`  in MultiStepAgent.save (builtin)
+     with open(os.path.join(output_dir, "requirements.txt"), "w", encoding="utf-8") as f:
+109. src/smolagents/agents.py:947  `os.path.join`  in MultiStepAgent.save (imported)
+     with open(os.path.join(output_dir, "requirements.txt"), "w", encoding="utf-8") as f:
+110. src/smolagents/agents.py:953  `create_agent_gradio_app_template`  in MultiStepAgent.save (imported)
+     app_template = create_agent_gradio_app_template()
+111. src/smolagents/agents.py:956  `app_template.render`  in MultiStepAgent.save (imported)
+     app_text = app_template.render(
+112. src/smolagents/agents.py:967  `open`  in MultiStepAgent.save (builtin)
+     with open(os.path.join(output_dir, "app.py"), "w", encoding="utf-8") as f:
+113. src/smolagents/agents.py:967  `os.path.join`  in MultiStepAgent.save (imported)
+     with open(os.path.join(output_dir, "app.py"), "w", encoding="utf-8") as f:
+114. src/smolagents/agents.py:979  `self.logger.log`  in MultiStepAgent.to_dict (imported)
+     self.logger.log(f"This agent has {attr}: they will be ignored by this method.", LogLevel.INFO)
+115. src/smolagents/agents.py:997  `self.model.to_dict`  in MultiStepAgent.to_dict (object method)
+     "data": self.model.to_dict(),
+116. src/smolagents/agents.py:1023  `MODEL_REGISTRY.get`  in MultiStepAgent.from_dict (imported)
+     model_class = MODEL_REGISTRY.get(model_info["class"])
+117. src/smolagents/agents.py:1025  `ValueError`  in MultiStepAgent.from_dict (builtin)
+     raise ValueError(
+118. src/smolagents/agents.py:1027  `MODEL_REGISTRY.keys`  in MultiStepAgent.from_dict (imported)
+     f"Supported models: {', '.join(sorted(MODEL_REGISTRY.keys()))}"
+119. src/smolagents/agents.py:1029  `model_class.from_dict`  in MultiStepAgent.from_dict (imported)
+     model = model_class.from_dict(model_info["data"])
+120. src/smolagents/agents.py:1033  `Tool.from_code`  in MultiStepAgent.from_dict (imported)
+     tools.append(Tool.from_code(tool_info["code"]))
+121. src/smolagents/agents.py:1037  `AGENT_REGISTRY.get`  in MultiStepAgent.from_dict (object method)
+     agent_class = AGENT_REGISTRY.get(managed_agent_dict["class"])
+122. src/smolagents/agents.py:1039  `ValueError`  in MultiStepAgent.from_dict (builtin)
+     raise ValueError(
+123. src/smolagents/agents.py:1041  `AGENT_REGISTRY.keys`  in MultiStepAgent.from_dict (object method)
+     f"Supported agents: {', '.join(sorted(AGENT_REGISTRY.keys()))}"
+124. src/smolagents/agents.py:1050  `agent_dict.get`  in MultiStepAgent.from_dict (object method)
+     "prompt_templates": agent_dict.get("prompt_templates"),
+125. src/smolagents/agents.py:1051  `agent_dict.get`  in MultiStepAgent.from_dict (object method)
+     "max_steps": agent_dict.get("max_steps"),
+126. src/smolagents/agents.py:1052  `agent_dict.get`  in MultiStepAgent.from_dict (object method)
+     "verbosity_level": agent_dict.get("verbosity_level"),
+127. src/smolagents/agents.py:1053  `agent_dict.get`  in MultiStepAgent.from_dict (object method)
+     "planning_interval": agent_dict.get("planning_interval"),
+128. src/smolagents/agents.py:1054  `agent_dict.get`  in MultiStepAgent.from_dict (object method)
+     "name": agent_dict.get("name"),
+129. src/smolagents/agents.py:1055  `agent_dict.get`  in MultiStepAgent.from_dict (object method)
+     "description": agent_dict.get("description"),
+130. src/smolagents/agents.py:1062  `cls`  in MultiStepAgent.from_dict (callable value)
+     return cls(**agent_args)
+131. src/smolagents/agents.py:1098  `ValueError`  in MultiStepAgent.from_hub (builtin)
+     raise ValueError(
+132. src/smolagents/agents.py:1104  `kwargs.pop`  in MultiStepAgent.from_hub (object method)
+     key: kwargs.pop(key)
+133. src/smolagents/agents.py:1115  `snapshot_download`  in MultiStepAgent.from_hub (imported)
+     download_folder = Path(snapshot_download(repo_id=repo_id, **download_kwargs))
+134. src/smolagents/agents.py:1116  `cls.from_folder`  in MultiStepAgent.from_hub (object method)
+     return cls.from_folder(download_folder, **kwargs)
+135. src/smolagents/agents.py:1132  `logger.warning`  in MultiStepAgent.from_folder (object method)
+     logger.warning(
+136. src/smolagents/agents.py:1138  `AGENT_REGISTRY.get`  in MultiStepAgent.from_folder (object method)
+     agent_cls = AGENT_REGISTRY.get(managed_agent_class_name)
+137. src/smolagents/agents.py:1140  `ValueError`  in MultiStepAgent.from_folder (builtin)
+     raise ValueError(
+138. src/smolagents/agents.py:1142  `AGENT_REGISTRY.keys`  in MultiStepAgent.from_folder (object method)
+     f"Supported agents: {', '.join(sorted(AGENT_REGISTRY.keys()))}"
+139. src/smolagents/agents.py:1158  `cls.from_dict`  in MultiStepAgent.from_folder (object method)
+     return cls.from_dict(agent_dict, **kwargs)
+140. src/smolagents/agents.py:1185  `create_repo`  in MultiStepAgent.push_to_hub (imported)
+     repo_url = create_repo(
+141. src/smolagents/agents.py:1194  `metadata_update`  in MultiStepAgent.push_to_hub (imported)
+     metadata_update(
+142. src/smolagents/agents.py:1202  `tempfile.TemporaryDirectory`  in MultiStepAgent.push_to_hub (imported)
+     with tempfile.TemporaryDirectory() as work_dir:
+143. src/smolagents/agents.py:1204  `logger.info`  in MultiStepAgent.push_to_hub (object method)
+     logger.info(f"Uploading the following files to {repo_id}: {','.join(os.listdir(work_dir))}")
+144. src/smolagents/agents.py:1204  `os.listdir`  in MultiStepAgent.push_to_hub (imported)
+     logger.info(f"Uploading the following files to {repo_id}: {','.join(os.listdir(work_dir))}")
+145. src/smolagents/agents.py:1205  `upload_folder`  in MultiStepAgent.push_to_hub (imported)
+     return upload_folder(
+146. src/smolagents/agents.py:1241  `yaml.safe_load`  in ToolCallingAgent.__init__ (imported)
+     prompt_templates = prompt_templates or yaml.safe_load(
+147. src/smolagents/agents.py:1242  `importlib.resources.files('smolagents.prompts').joinpath('toolcalling_agent.yaml').read_text`  in ToolCallingAgent.__init__ (imported)
+     importlib.resources.files("smolagents.prompts").joinpath("toolcalling_agent.yaml").read_text()
+148. src/smolagents/agents.py:1242  `importlib.resources.files('smolagents.prompts').joinpath`  in ToolCallingAgent.__init__ (imported)
+     importlib.resources.files("smolagents.prompts").joinpath("toolcalling_agent.yaml").read_text()
+149. src/smolagents/agents.py:1242  `importlib.resources.files`  in ToolCallingAgent.__init__ (imported)
+     importlib.resources.files("smolagents.prompts").joinpath("toolcalling_agent.yaml").read_text()
+150. src/smolagents/agents.py:1254  `ValueError`  in ToolCallingAgent.__init__ (builtin)
+     raise ValueError(
+151. src/smolagents/agents.py:1293  `self.model.generate_stream`  in ToolCallingAgent._step_stream (object method)
+     output_stream = self.model.generate_stream(
+152. src/smolagents/agents.py:1300  `Live`  in ToolCallingAgent._step_stream (imported)
+     with Live("", console=self.logger.console, vertical_overflow="visible") as live:
+153. src/smolagents/agents.py:1304  `Markdown`  in ToolCallingAgent._step_stream (imported)
+     Markdown(agglomerate_stream_deltas(chat_message_stream_deltas).render_as_markdown())
+154. src/smolagents/agents.py:1304  `agglomerate_stream_deltas(chat_message_stream_deltas).render_as_markdown`  in ToolCallingAgent._step_stream (imported)
+     Markdown(agglomerate_stream_deltas(chat_message_stream_deltas).render_as_markdown())
+155. src/smolagents/agents.py:1304  `agglomerate_stream_deltas`  in ToolCallingAgent._step_stream (imported)
+     Markdown(agglomerate_stream_deltas(chat_message_stream_deltas).render_as_markdown())
+156. src/smolagents/agents.py:1307  `agglomerate_stream_deltas`  in ToolCallingAgent._step_stream (imported)
+     chat_message = agglomerate_stream_deltas(chat_message_stream_deltas)
+157. src/smolagents/agents.py:1309  `self.model.generate`  in ToolCallingAgent._step_stream (object method)
+     chat_message: ChatMessage = self.model.generate(
+158. src/smolagents/agents.py:1314  `self.logger.log_markdown`  in ToolCallingAgent._step_stream (imported)
+     self.logger.log_markdown(
+159. src/smolagents/agents.py:1325  `AgentGenerationError`  in ToolCallingAgent._step_stream (imported)
+     raise AgentGenerationError(f"Error while generating output:\n{e}", self.logger) from e
+160. src/smolagents/agents.py:1329  `self.model.parse_tool_calls`  in ToolCallingAgent._step_stream (object method)
+     chat_message = self.model.parse_tool_calls(chat_message)
+161. src/smolagents/agents.py:1331  `AgentParsingError`  in ToolCallingAgent._step_stream (imported)
+     raise AgentParsingError(f"Error while parsing tool call from model output: {e}", self.logger)
+162. src/smolagents/agents.py:1334  `parse_json_if_needed`  in ToolCallingAgent._step_stream (imported)
+     tool_call.function.arguments = parse_json_if_needed(tool_call.function.arguments)
+163. src/smolagents/agents.py:1341  `AgentExecutionError`  in ToolCallingAgent._step_stream (imported)
+     raise AgentExecutionError(
+164. src/smolagents/agents.py:1346  `AgentToolExecutionError`  in ToolCallingAgent._step_stream (imported)
+     raise AgentToolExecutionError(
+165. src/smolagents/agents.py:1376  `ToolCall`  in ToolCallingAgent.process_tool_calls (imported)
+     tool_call = ToolCall(
+166. src/smolagents/agents.py:1386  `self.logger.log`  in ToolCallingAgent.process_tool_calls (imported)
+     self.logger.log(
+167. src/smolagents/agents.py:1387  `Panel`  in ToolCallingAgent.process_tool_calls (imported)
+     Panel(Text(f"Calling tool: '{tool_name}' with arguments: {tool_arguments}")),
+168. src/smolagents/agents.py:1387  `Text`  in ToolCallingAgent.process_tool_calls (imported)
+     Panel(Text(f"Calling tool: '{tool_name}' with arguments: {tool_arguments}")),
+169. src/smolagents/agents.py:1402  `self.logger.log`  in ToolCallingAgent.process_tool_calls (imported)
+     self.logger.log(
+170. src/smolagents/agents.py:1426  `ThreadPoolExecutor`  in ToolCallingAgent.process_tool_calls (imported)
+     with ThreadPoolExecutor(self.max_tool_threads) as executor:
+171. src/smolagents/agents.py:1429  `copy_context`  in ToolCallingAgent.process_tool_calls (imported)
+     ctx = copy_context()
+172. src/smolagents/agents.py:1441  `memory_step.observations.rstrip`  in ToolCallingAgent.process_tool_calls (object method)
+     memory_step.observations.rstrip("\n") if memory_step.observations else memory_step.observations
+173. src/smolagents/agents.py:1449  `arguments.items`  in ToolCallingAgent._substitute_state_variables (object method)
+     for key, value in arguments.items()
+174. src/smolagents/agents.py:1466  `AgentToolExecutionError`  in ToolCallingAgent.execute_tool_call (imported)
+     raise AgentToolExecutionError(
+175. src/smolagents/agents.py:1476  `validate_tool_arguments`  in ToolCallingAgent.execute_tool_call (imported)
+     validate_tool_arguments(tool, arguments)
+176. src/smolagents/agents.py:1478  `AgentToolCallError`  in ToolCallingAgent.execute_tool_call (imported)
+     raise AgentToolCallError(str(e), self.logger) from e
+177. src/smolagents/agents.py:1481  `AgentToolExecutionError`  in ToolCallingAgent.execute_tool_call (imported)
+     raise AgentToolExecutionError(error_msg, self.logger) from e
+178. src/smolagents/agents.py:1486  `tool`  in ToolCallingAgent.execute_tool_call (callable value)
+     return tool(**arguments) if is_managed_agent else tool(**arguments, sanitize_inputs_outputs=True)
+179. src/smolagents/agents.py:1488  `tool`  in ToolCallingAgent.execute_tool_call (callable value)
+     return tool(arguments) if is_managed_agent else tool(arguments, sanitize_inputs_outputs=True)
+180. src/smolagents/agents.py:1502  `AgentToolExecutionError`  in ToolCallingAgent.execute_tool_call (imported)
+     raise AgentToolExecutionError(error_msg, self.logger) from e
+181. src/smolagents/agents.py:1548  `yaml.safe_load`  in CodeAgent.__init__ (imported)
+     prompt_templates = prompt_templates or yaml.safe_load(
+182. src/smolagents/agents.py:1549  `importlib.resources.files('smolagents.prompts').joinpath('structured_code_agent.yaml').read_text`  in CodeAgent.__init__ (imported)
+     importlib.resources.files("smolagents.prompts").joinpath("structured_code_agent.yaml").read_text()
+183. src/smolagents/agents.py:1549  `importlib.resources.files('smolagents.prompts').joinpath`  in CodeAgent.__init__ (imported)
+     importlib.resources.files("smolagents.prompts").joinpath("structured_code_agent.yaml").read_text()
+184. src/smolagents/agents.py:1549  `importlib.resources.files`  in CodeAgent.__init__ (imported)
+     importlib.resources.files("smolagents.prompts").joinpath("structured_code_agent.yaml").read_text()
+185. src/smolagents/agents.py:1552  `yaml.safe_load`  in CodeAgent.__init__ (imported)
+     prompt_templates = prompt_templates or yaml.safe_load(
+186. src/smolagents/agents.py:1553  `importlib.resources.files('smolagents.prompts').joinpath('code_agent.yaml').read_text`  in CodeAgent.__init__ (imported)
+     importlib.resources.files("smolagents.prompts").joinpath("code_agent.yaml").read_text()
+187. src/smolagents/agents.py:1553  `importlib.resources.files('smolagents.prompts').joinpath`  in CodeAgent.__init__ (imported)
+     importlib.resources.files("smolagents.prompts").joinpath("code_agent.yaml").read_text()
+188. src/smolagents/agents.py:1553  `importlib.resources.files`  in CodeAgent.__init__ (imported)
+     importlib.resources.files("smolagents.prompts").joinpath("code_agent.yaml").read_text()
+189. src/smolagents/agents.py:1557  `ValueError`  in CodeAgent.__init__ (builtin)
+     raise ValueError("Only 'markdown' is supported for a string argument to `code_block_tags`.")
+190. src/smolagents/agents.py:1575  `ValueError`  in CodeAgent.__init__ (builtin)
+     raise ValueError(
+191. src/smolagents/agents.py:1579  `self.logger.log`  in CodeAgent.__init__ (imported)
+     self.logger.log(
+192. src/smolagents/agents.py:1596  `self.python_executor.cleanup`  in CodeAgent.cleanup (object method)
+     self.python_executor.cleanup()
+193. src/smolagents/agents.py:1600  `ValueError`  in CodeAgent.create_python_executor (builtin)
+     raise ValueError(f"Unsupported executor type: {self.executor_type}")
+194. src/smolagents/agents.py:1603  `LocalPythonExecutor`  in CodeAgent.create_python_executor (imported)
+     return LocalPythonExecutor(
+195. src/smolagents/agents.py:1609  `Exception`  in CodeAgent.create_python_executor (builtin)
+     raise Exception("Managed agents are not yet supported with remote code execution.")
+196. src/smolagents/agents.py:1616  `remote_executors[self.executor_type]`  in CodeAgent.create_python_executor (object method)
+     return remote_executors[self.executor_type](
+197. src/smolagents/agents.py:1660  `self.model.generate_stream`  in CodeAgent._step_stream (object method)
+     output_stream = self.model.generate_stream(
+198. src/smolagents/agents.py:1666  `Live`  in CodeAgent._step_stream (imported)
+     with Live("", console=self.logger.console, vertical_overflow="visible") as live:
+199. src/smolagents/agents.py:1670  `Markdown`  in CodeAgent._step_stream (imported)
+     Markdown(agglomerate_stream_deltas(chat_message_stream_deltas).render_as_markdown())
+200. src/smolagents/agents.py:1670  `agglomerate_stream_deltas(chat_message_stream_deltas).render_as_markdown`  in CodeAgent._step_stream (imported)
+     Markdown(agglomerate_stream_deltas(chat_message_stream_deltas).render_as_markdown())
+201. src/smolagents/agents.py:1670  `agglomerate_stream_deltas`  in CodeAgent._step_stream (imported)
+     Markdown(agglomerate_stream_deltas(chat_message_stream_deltas).render_as_markdown())
+202. src/smolagents/agents.py:1673  `agglomerate_stream_deltas`  in CodeAgent._step_stream (imported)
+     chat_message = agglomerate_stream_deltas(chat_message_stream_deltas)
+203. src/smolagents/agents.py:1677  `self.model.generate`  in CodeAgent._step_stream (object method)
+     chat_message: ChatMessage = self.model.generate(
+204. src/smolagents/agents.py:1684  `self.logger.log_markdown`  in CodeAgent._step_stream (imported)
+     self.logger.log_markdown(
+205. src/smolagents/agents.py:1693  `output_text.strip().endswith`  in CodeAgent._step_stream (imported)
+     if output_text and not output_text.strip().endswith(self.code_block_tags[1]):
+206. src/smolagents/agents.py:1693  `output_text.strip`  in CodeAgent._step_stream (imported)
+     if output_text and not output_text.strip().endswith(self.code_block_tags[1]):
+207. src/smolagents/agents.py:1700  `AgentGenerationError`  in CodeAgent._step_stream (imported)
+     raise AgentGenerationError(f"Error in generating model output:\n{e}", self.logger) from e
+208. src/smolagents/agents.py:1706  `extract_code_from_text`  in CodeAgent._step_stream (imported)
+     code_action = extract_code_from_text(code_action, self.code_block_tags) or code_action
+209. src/smolagents/agents.py:1708  `parse_code_blobs`  in CodeAgent._step_stream (imported)
+     code_action = parse_code_blobs(output_text, self.code_block_tags)
+210. src/smolagents/agents.py:1709  `fix_final_answer_code`  in CodeAgent._step_stream (imported)
+     code_action = fix_final_answer_code(code_action)
+211. src/smolagents/agents.py:1713  `AgentParsingError`  in CodeAgent._step_stream (imported)
+     raise AgentParsingError(error_msg, self.logger)
+212. src/smolagents/agents.py:1715  `ToolCall`  in CodeAgent._step_stream (imported)
+     tool_call = ToolCall(
+213. src/smolagents/agents.py:1724  `self.logger.log_code`  in CodeAgent._step_stream (imported)
+     self.logger.log_code(title="Executing parsed code:", content=code_action, level=LogLevel.INFO)
+214. src/smolagents/agents.py:1726  `self.python_executor`  in CodeAgent._step_stream (object method)
+     code_output = self.python_executor(code_action)
+215. src/smolagents/agents.py:1730  `Text`  in CodeAgent._step_stream (imported)
+     Text("Execution logs:", style="bold"),
+216. src/smolagents/agents.py:1731  `Text`  in CodeAgent._step_stream (imported)
+     Text(code_output.logs),
+217. src/smolagents/agents.py:1739  `Text`  in CodeAgent._step_stream (imported)
+     Text("Execution logs:", style="bold"),
+218. src/smolagents/agents.py:1740  `Text`  in CodeAgent._step_stream (imported)
+     Text(execution_logs),
+219. src/smolagents/agents.py:1743  `self.logger.log`  in CodeAgent._step_stream (imported)
+     self.logger.log(Group(*execution_outputs_console), level=LogLevel.INFO)
+220. src/smolagents/agents.py:1743  `Group`  in CodeAgent._step_stream (imported)
+     self.logger.log(Group(*execution_outputs_console), level=LogLevel.INFO)
+221. src/smolagents/agents.py:1746  `self.logger.log`  in CodeAgent._step_stream (imported)
+     self.logger.log(
+222. src/smolagents/agents.py:1750  `AgentExecutionError`  in CodeAgent._step_stream (imported)
+     raise AgentExecutionError(error_msg, self.logger)
+223. src/smolagents/agents.py:1752  `truncate_content`  in CodeAgent._step_stream (imported)
+     truncated_output = truncate_content(str(code_output.output))
+224. src/smolagents/agents.py:1758  `Text`  in CodeAgent._step_stream (imported)
+     Text(
+225. src/smolagents/agents.py:1762  `self.logger.log`  in CodeAgent._step_stream (imported)
+     self.logger.log(Group(*execution_outputs_console), level=LogLevel.INFO)
+226. src/smolagents/agents.py:1762  `Group`  in CodeAgent._step_stream (imported)
+     self.logger.log(Group(*execution_outputs_console), level=LogLevel.INFO)
+227. src/smolagents/agents.py:1792  `agent_dict.get`  in CodeAgent.from_dict (object method)
+     "additional_authorized_imports": agent_dict.get("authorized_imports"),
+228. src/smolagents/agents.py:1793  `agent_dict.get`  in CodeAgent.from_dict (object method)
+     "executor_type": agent_dict.get("executor_type"),
+229. src/smolagents/agents.py:1794  `agent_dict.get`  in CodeAgent.from_dict (object method)
+     "executor_kwargs": agent_dict.get("executor_kwargs"),
+230. src/smolagents/agents.py:1795  `agent_dict.get`  in CodeAgent.from_dict (object method)
+     "max_print_outputs_length": agent_dict.get("max_print_outputs_length"),
+231. src/smolagents/agents.py:1796  `agent_dict.get`  in CodeAgent.from_dict (object method)
+     "code_block_tags": agent_dict.get("code_block_tags"),
+232. src/smolagents/default_tools.py:72  `self.python_evaluator`  in PythonInterpreterTool.forward (object method)
+     self.python_evaluator(
+233. src/smolagents/default_tools.py:100  `input`  in UserInputTool.forward (builtin)
+     user_input = input(f"{question} => Type your answer here:")
+234. src/smolagents/default_tools.py:135  `ImportError`  in DuckDuckGoSearchTool.__init__ (builtin)
+     raise ImportError(
+235. src/smolagents/default_tools.py:138  `DDGS`  in DuckDuckGoSearchTool.__init__ (imported)
+     self.ddgs = DDGS(**kwargs)
+236. src/smolagents/default_tools.py:142  `self.ddgs.text`  in DuckDuckGoSearchTool.forward (imported)
+     results = self.ddgs.text(query, max_results=self.max_results)
+237. src/smolagents/default_tools.py:144  `Exception`  in DuckDuckGoSearchTool.forward (builtin)
+     raise Exception("No results found! Try a less restrictive/shorter query.")
+238. src/smolagents/default_tools.py:155  `time.time`  in DuckDuckGoSearchTool._enforce_rate_limit (imported)
+     now = time.time()
+239. src/smolagents/default_tools.py:158  `time.sleep`  in DuckDuckGoSearchTool._enforce_rate_limit (imported)
+     time.sleep(self._min_interval - elapsed)
+240. src/smolagents/default_tools.py:159  `time.time`  in DuckDuckGoSearchTool._enforce_rate_limit (imported)
+     self._last_request_time = time.time()
+241. src/smolagents/default_tools.py:186  `os.getenv`  in GoogleSearchTool.__init__ (imported)
+     self.api_key = os.getenv(api_key_env_name)
+242. src/smolagents/default_tools.py:188  `ValueError`  in GoogleSearchTool.__init__ (builtin)
+     raise ValueError(f"Missing API key. Make sure you have '{api_key_env_name}' in your env variables.")
+243. src/smolagents/default_tools.py:210  `requests.get`  in GoogleSearchTool.forward (imported)
+     response = requests.get(base_url, params=params)
+244. src/smolagents/default_tools.py:213  `response.json`  in GoogleSearchTool.forward (imported)
+     results = response.json()
+245. src/smolagents/default_tools.py:215  `ValueError`  in GoogleSearchTool.forward (builtin)
+     raise ValueError(response.json())
+246. src/smolagents/default_tools.py:215  `response.json`  in GoogleSearchTool.forward (imported)
+     raise ValueError(response.json())
+247. src/smolagents/default_tools.py:217  `results.keys`  in GoogleSearchTool.forward (imported)
+     if self.organic_key not in results.keys():
+248. src/smolagents/default_tools.py:219  `Exception`  in GoogleSearchTool.forward (builtin)
+     raise Exception(
+249. src/smolagents/default_tools.py:223  `Exception`  in GoogleSearchTool.forward (builtin)
+     raise Exception(f"No results found for query: '{query}'. Use a less restrictive query.")
+250. src/smolagents/default_tools.py:292  `os.getenv`  in ApiWebSearchTool.__init__ (imported)
+     self.api_key = api_key or os.getenv(self.api_key_name)
+251. src/smolagents/default_tools.py:306  `time.time`  in ApiWebSearchTool._enforce_rate_limit (imported)
+     now = time.time()
+252. src/smolagents/default_tools.py:309  `time.sleep`  in ApiWebSearchTool._enforce_rate_limit (imported)
+     time.sleep(self._min_interval - elapsed)
+253. src/smolagents/default_tools.py:310  `time.time`  in ApiWebSearchTool._enforce_rate_limit (imported)
+     self._last_request_time = time.time()
+254. src/smolagents/default_tools.py:317  `requests.get`  in ApiWebSearchTool.forward (imported)
+     response = requests.get(self.endpoint, headers=self.headers, params=params)
+255. src/smolagents/default_tools.py:318  `response.raise_for_status`  in ApiWebSearchTool.forward (imported)
+     response.raise_for_status()
+256. src/smolagents/default_tools.py:319  `response.json`  in ApiWebSearchTool.forward (imported)
+     data = response.json()
+257. src/smolagents/default_tools.py:325  `data.get`  in ApiWebSearchTool.extract_results (object method)
+     for result in data.get("web", {}).get("results", []):
+258. src/smolagents/default_tools.py:356  `Exception`  in WebSearchTool.forward (builtin)
+     raise Exception("No results found! Try a less restrictive/shorter query.")
+259. src/smolagents/default_tools.py:367  `ValueError`  in WebSearchTool.search (builtin)
+     raise ValueError(f"Unsupported engine: {self.engine}")
+260. src/smolagents/default_tools.py:377  `requests.get`  in WebSearchTool.search_duckduckgo (imported)
+     response = requests.get(
+261. src/smolagents/default_tools.py:382  `response.raise_for_status`  in WebSearchTool.search_duckduckgo (imported)
+     response.raise_for_status()
+262. src/smolagents/default_tools.py:424  `data.strip`  in WebSearchTool._create_duckduckgo_parser (object method)
+     self.current["title"] = data.strip()
+263. src/smolagents/default_tools.py:427  `data.strip`  in WebSearchTool._create_duckduckgo_parser (object method)
+     self.current["description"].append(data.strip())
+264. src/smolagents/default_tools.py:429  `data.strip`  in WebSearchTool._create_duckduckgo_parser (object method)
+     self.current["link"] = "https://" + data.strip()
+265. src/smolagents/default_tools.py:431  `SimpleResultParser`  in WebSearchTool._create_duckduckgo_parser (callable value)
+     return SimpleResultParser()
+266. src/smolagents/default_tools.py:438  `requests.get`  in WebSearchTool.search_bing (imported)
+     response = requests.get(
+267. src/smolagents/default_tools.py:442  `response.raise_for_status`  in WebSearchTool.search_bing (imported)
+     response.raise_for_status()
+268. src/smolagents/default_tools.py:443  `ET.fromstring`  in WebSearchTool.search_bing (imported)
+     root = ET.fromstring(response.text)
+269. src/smolagents/default_tools.py:444  `root.findall`  in WebSearchTool.search_bing (imported)
+     items = root.findall(".//item")
+270. src/smolagents/default_tools.py:461  `os.getenv`  in WebSearchTool.search_exa (imported)
+     api_key = os.getenv("EXA_API_KEY")
+271. src/smolagents/default_tools.py:463  `ValueError`  in WebSearchTool.search_exa (builtin)
+     raise ValueError("Missing API key. Make sure you have 'EXA_API_KEY' in your env variables.")
+272. src/smolagents/default_tools.py:465  `requests.post`  in WebSearchTool.search_exa (imported)
+     response = requests.post(
+273. src/smolagents/default_tools.py:479  `response.raise_for_status`  in WebSearchTool.search_exa (imported)
+     response.raise_for_status()
+274. src/smolagents/default_tools.py:480  `response.json`  in WebSearchTool.search_exa (imported)
+     data = response.json()
+275. src/smolagents/default_tools.py:487  `data.get`  in WebSearchTool.search_exa (imported)
+     for result in data.get("results", [])
+276. src/smolagents/default_tools.py:523  `ImportError`  in VisitWebpageTool.forward (builtin)
+     raise ImportError(
+277. src/smolagents/default_tools.py:528  `requests.get`  in VisitWebpageTool.forward (imported)
+     response = requests.get(url, timeout=20)
+278. src/smolagents/default_tools.py:529  `response.raise_for_status`  in VisitWebpageTool.forward (imported)
+     response.raise_for_status()  # Raise an exception for bad status codes
+279. src/smolagents/default_tools.py:532  `markdownify(response.text).strip`  in VisitWebpageTool.forward (imported)
+     markdown_content = markdownify(response.text).strip()
+280. src/smolagents/default_tools.py:532  `markdownify`  in VisitWebpageTool.forward (imported)
+     markdown_content = markdownify(response.text).strip()
+281. src/smolagents/default_tools.py:598  `ImportError`  in WikipediaSearchTool.__init__ (builtin)
+     raise ImportError(
+282. src/smolagents/default_tools.py:602  `ValueError`  in WikipediaSearchTool.__init__ (builtin)
+     raise ValueError("User-agent is required. Provide a meaningful identifier for your project.")
+283. src/smolagents/default_tools.py:615  `ValueError`  in WikipediaSearchTool.__init__ (builtin)
+     raise ValueError("Invalid extract_format. Choose between 'WIKI' or 'HTML'.")
+284. src/smolagents/default_tools.py:619  `wikipediaapi.Wikipedia`  in WikipediaSearchTool.__init__ (imported)
+     self.wiki = wikipediaapi.Wikipedia(
+285. src/smolagents/default_tools.py:625  `self.wiki.page`  in WikipediaSearchTool.forward (imported)
+     page = self.wiki.page(query)
+286. src/smolagents/default_tools.py:627  `page.exists`  in WikipediaSearchTool.forward (imported)
+     if not page.exists():
+287. src/smolagents/default_tools.py:668  `AgentAudio(audio).to_raw`  in SpeechToTextTool.encode (imported)
+     audio = AgentAudio(audio).to_raw()
+288. src/smolagents/default_tools.py:668  `AgentAudio`  in SpeechToTextTool.encode (imported)
+     audio = AgentAudio(audio).to_raw()
+289. src/smolagents/default_tools.py:669  `self.pre_processor`  in SpeechToTextTool.encode (object method)
+     return self.pre_processor(audio, return_tensors="pt")
+290. src/smolagents/default_tools.py:672  `self.model.generate`  in SpeechToTextTool.forward (object method)
+     return self.model.generate(inputs["input_features"])
+291. src/smolagents/default_tools.py:675  `self.pre_processor.batch_decode`  in SpeechToTextTool.decode (object method)
+     return self.pre_processor.batch_decode(outputs, skip_special_tokens=True)[0]

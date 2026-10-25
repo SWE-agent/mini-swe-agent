@@ -1,0 +1,76 @@
+{
+  "logger": "observatory_log",
+  "entry": {
+    "function": "DefaultAgent.run",
+    "path": "src/minisweagent/agents/default.py",
+    "line": 88,
+    "inputs": ["task"]
+  },
+  "sources": [
+    {
+      "kind": "llm_response",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 161,
+      "call": "self.model.query",
+      "label": "model call"
+    },
+    {
+      "kind": "tool_response",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 193,
+      "call": "self.env.execute",
+      "label": "tool call"
+    },
+    {
+      "kind": "user_input",
+      "path": "src/minisweagent/agents/interactive.py",
+      "line": 195,
+      "call": "prompt_session.prompt",
+      "label": "interactive prompt"
+    },
+    {
+      "kind": "user_input",
+      "path": "src/minisweagent/agents/interactive.py",
+      "line": 94,
+      "call": "input",
+      "label": "new step limit prompt"
+    }
+  ],
+  "wrappers": [
+    {
+      "label": "DefaultAgent.run",
+      "events": ["tool_start", "tool_end"],
+      "path": "src/minisweagent/agents/default.py",
+      "line": 88,
+      "end_line": 126
+    },
+    {
+      "label": "DefaultAgent.query",
+      "events": ["llm_query", "llm_response", "llm_error"],
+      "path": "src/minisweagent/agents/default.py",
+      "line": 132,
+      "end_line": 180
+    },
+    {
+      "label": "DefaultAgent.execute_action",
+      "events": ["tool_start", "tool_end", "tool_error"],
+      "path": "src/minisweagent/agents/default.py",
+      "line": 187,
+      "end_line": 213
+    },
+    {
+      "label": "InteractiveAgent.query",
+      "events": ["tool_start", "tool_end"],
+      "path": "src/minisweagent/agents/interactive.py",
+      "line": 59,
+      "end_line": 101
+    },
+    {
+      "label": "InteractiveAgent._prompt_and_handle_slash_commands",
+      "events": ["tool_start", "tool_end"],
+      "path": "src/minisweagent/agents/interactive.py",
+      "line": 191,
+      "end_line": 218
+    }
+  ]
+}

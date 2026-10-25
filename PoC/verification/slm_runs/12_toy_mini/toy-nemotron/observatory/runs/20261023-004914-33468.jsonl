@@ -1,0 +1,2 @@
+{"t": 1792684154.2925742, "kind": "user_input", "step": null, "at": "agent.py:28", "data": {"prompt": null, "answer": "Run a simple command"}}
+{"t": 1792684154.293292, "kind": "llm_query", "step": 1, "at": "llm.py:22", "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "Run a simple command"}]}}

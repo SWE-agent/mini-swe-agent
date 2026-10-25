@@ -1,0 +1,105 @@
+diff --git a/src/minisweagent/agents/default.py b/src/minisweagent/agents/default.py
+index 32ddee5..c8d0aa1 100644
+--- a/src/minisweagent/agents/default.py
++++ b/src/minisweagent/agents/default.py
+@@ -14,6 +14,7 @@ from pydantic import BaseModel
+ from minisweagent import Environment, Model, __version__
+ from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
+ from minisweagent.utils.serialize import recursive_merge
++from minisweagent.agents.observability_log import observability_log
+
+
+ class AgentConfig(BaseModel):
+@@ -146,17 +147,18 @@ class DefaultAgent:
+                 }
+             )
+         self.n_calls += 1
+-        self.logger.debug(
+-            "[LLM_QUERY] step=%s model=%s messages=%s",
+-            self.n_calls,
+-            getattr(self.model.config, "model_name", None),
+-            len(self.messages),
+-        )
++        observability_log.llm_query(step=self.n_calls, model=self.model, messages=self.messages)
+         try:
+             message = self.model.query(self.messages)
+         except Exception as e:
+-            self.logger.debug("[LLM_ERROR] step=%s error_type=%s", self.n_calls, type(e).__name__)
++            observability_log.llm_error(step=self.n_calls, error=e)
+             raise
++        observability_log.llm_response(
++            step=self.n_calls,
++            actions=message.get("extra", {}).get("actions", []),
++            reply=message,
++            response=message,
++        )
+         self.cost += message.get("extra", {}).get("cost", 0.0)
+         self.logger.debug(
+             "[LLM_RESPONSE] step=%s actions=%s cost=%s",
+@@ -175,17 +177,14 @@ class DefaultAgent:
+     def execute_action(self, action: dict) -> dict:
+         """Execute a single action in the environment. Every agent runs its actions through here."""
+         self.logger.debug("[TOOL_EXECUTION_START] action=%s params=%s", "bash", action)
++        start = observability_log.tool_start(action)
+         start_time = time.time()
+         try:
+             output = self.env.execute(action)
+         except Exception as e:
+-            self.logger.debug(
+-                "[TOOL_EXECUTION_ERROR] action=%s error_type=%s duration_seconds=%.3f",
+-                "bash",
+-                type(e).__name__,
+-                time.time() - start_time,
+-            )
++            observability_log.tool_error(start, action, e)
+             raise
++        observability_log.tool_end(start, action, result=output)
+         self.logger.debug(
+             "[TOOL_EXECUTION_END] action=%s returncode=%s duration_seconds=%.3f",
+             "bash",
+diff --git a/src/minisweagent/agents/interactive.py b/src/minisweagent/agents/interactive.py
+index dd1139d..73b6510 100644
+--- a/src/minisweagent/agents/interactive.py
++++ b/src/minisweagent/agents/interactive.py
+@@ -90,7 +90,9 @@ class InteractiveAgent(DefaultAgent):
+                 f"Current spend: {self.n_calls} steps, ${self.cost:.2f}."
+             )
+             self.config.step_limit = int(input("New step limit: "))
++            observatory_log.user_input(self.config.step_limit, prompt="New step limit: ")
+             self.config.cost_limit = float(input("New cost limit: "))
++            observatory_log.user_input(self.config.cost_limit, prompt="New cost limit: ")
+             return super().query()
+
+     @staticmethod
+@@ -117,6 +119,7 @@ class InteractiveAgent(DefaultAgent):
+                 "[green]Type a comment/command[/green] (/h for available commands)"
+                 "\n[bold yellow]>[/bold yellow] "
+             ).strip()
++            observatory_log.user_input(interruption_message, prompt="Interrupted. Type a comment/command")
+             if not interruption_message or interruption_message in self._MODE_COMMANDS_MAPPING:
+                 interruption_message = "Temporary interruption caught."
+             self._interrupt(f"Interrupted by user: {interruption_message}")
+@@ -151,6 +154,7 @@ class InteractiveAgent(DefaultAgent):
+                 "[bold yellow]>[/bold yellow] "
+             )
+             user_input = self._prompt_and_handle_slash_commands(message).strip()
++            observatory_log.user_input(user_input, prompt=message)
+             if user_input == "/u":  # directly continue
+                 self._interrupt("Switched to human mode.")
+             elif user_input in self._MODE_COMMANDS_MAPPING:  # ask again
+@@ -171,6 +175,7 @@ class InteractiveAgent(DefaultAgent):
+             "[bold yellow]>[/bold yellow] "
+         )
+         match user_input := self._prompt_and_handle_slash_commands(prompt).strip():
++            observatory_log.user_input(user_input, prompt=prompt)
+             case "" | "/y":
+                 pass  # confirmed, do nothing
+             case "/u":  # Skip execution action and get back to query
+@@ -187,6 +192,7 @@ class InteractiveAgent(DefaultAgent):
+         if _multiline:
+             return _multiline_prompt()
+         user_input = prompt_session.prompt("")
++        observatory_log.user_input(user_input, prompt=prompt)
+         if user_input == "/m":
+             return self._prompt_and_handle_slash_commands(prompt, _multiline=True)
+         if user_input == "/h":

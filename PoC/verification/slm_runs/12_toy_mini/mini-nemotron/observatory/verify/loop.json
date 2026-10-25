@@ -1,0 +1,226 @@
+{
+  "root": "C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v8/mini-nemotron",
+  "nodes": [
+    {
+      "id": "DefaultAgent.execute_action",
+      "role": "function",
+      "label": "DefaultAgent.execute_action",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 185,
+      "end_line": 201,
+      "logs": [
+        {
+          "event": "tool_error",
+          "at": "src/minisweagent/agents/default.py:192",
+          "code": "observatory_log.tool_error(start_time, \"execute\", e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start_time",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/minisweagent/agents/default.py:194",
+          "code": "observatory_log.tool_end(start_time, \"execute\", result=output)",
+          "records": [
+            {
+              "value": "output",
+              "whole": true
+            },
+            {
+              "value": "start_time",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "DefaultAgent.query",
+      "role": "function",
+      "label": "DefaultAgent.query",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 132,
+      "end_line": 178,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/minisweagent/agents/default.py:157",
+          "code": "observatory_log.llm_query(step=self.n_calls, model=self.model, messages=self.messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "n_calls",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/minisweagent/agents/default.py:161",
+          "code": "observatory_log.llm_error(step=self.n_calls, error=e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "n_calls",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/minisweagent/agents/default.py:164",
+          "code": "observatory_log.llm_response(",
+          "records": [
+            {
+              "value": "message",
+              "whole": true
+            },
+            {
+              "value": "n_calls",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "DefaultAgent.run",
+      "role": "entry",
+      "label": "DefaultAgent.run",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 89,
+      "end_line": 126,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/default.py:91",
+          "code": "observatory_log.user_input(task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 89,
+      "in": "DefaultAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.query @ src/minisweagent/agents/default.py:159",
+      "role": "llm_response",
+      "label": "self.model.query",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 159,
+      "in": "DefaultAgent.query",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.env.execute @ src/minisweagent/agents/default.py:190",
+      "role": "tool_response",
+      "label": "self.env.execute",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 190,
+      "in": "DefaultAgent.execute_action",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "from": "DefaultAgent.execute_action",
+      "to": "self.env.execute @ src/minisweagent/agents/default.py:190",
+      "values": [
+        "action"
+      ],
+      "call": true,
+      "back": [
+        "output"
+      ],
+      "returns": true
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "DefaultAgent.execute_action",
+      "values": [
+        "action"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "DefaultAgent.run",
+      "values": [
+        "message",
+        "messages",
+        "outputs"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "self.model.query @ src/minisweagent/agents/default.py:159",
+      "values": [
+        "message",
+        "messages",
+        "outputs"
+      ],
+      "call": true,
+      "back": [
+        "message"
+      ],
+      "returns": true
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "DefaultAgent.run",
+      "values": [
+        "task"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    }
+  ]
+}

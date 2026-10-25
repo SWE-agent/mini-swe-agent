@@ -13,6 +13,7 @@ from typing import Literal, NoReturn
 from rich.console import Console
 from rich.rule import Rule
 
+from minisweagent import observatory_log
 from minisweagent.agents.default import AgentConfig, DefaultAgent
 from minisweagent.agents.utils.prompt_user import _multiline_prompt, prompt_session
 from minisweagent.exceptions import LimitsExceeded, Submitted, TimeExceeded, UserInterruption
@@ -89,8 +90,14 @@ class InteractiveAgent(DefaultAgent):
                 f"Limits exceeded. Limits: {self.config.step_limit} steps, ${self.config.cost_limit}.\n"
                 f"Current spend: {self.n_calls} steps, ${self.cost:.2f}."
             )
-            self.config.step_limit = int(input("New step limit: "))
-            self.config.cost_limit = float(input("New cost limit: "))
+            start = observatory_log.tool_start("user_input", "new step and cost limits", step=self.n_calls)
+            step_limit_input = input("New step limit: ")
+            cost_limit_input = input("New cost limit: ")
+            self.config.step_limit = int(step_limit_input)
+            self.config.cost_limit = float(cost_limit_input)
+            observatory_log.tool_end(
+                start, "user_input", result=[step_limit_input, cost_limit_input], step=self.n_calls
+            )
             return super().query()
 
     @staticmethod
@@ -129,7 +136,7 @@ class InteractiveAgent(DefaultAgent):
         try:
             self._ask_confirmation_or_interrupt(commands)
             for action in actions:
-                outputs.append(self.env.execute(action))
+                outputs.append(self.execute_action(action))
         except Submitted as e:
             self._check_for_new_task_or_submit(e)
         finally:
@@ -184,9 +191,11 @@ class InteractiveAgent(DefaultAgent):
     def _prompt_and_handle_slash_commands(self, prompt: str, *, _multiline: bool = False) -> str:
         """Prompts the user, takes care of /h (followed by requery) and sets the mode. Returns the user input."""
         console.print(prompt, end="")
+        start = observatory_log.tool_start("user_input", prompt, step=self.n_calls)
+        user_input = _multiline_prompt() if _multiline else prompt_session.prompt("")
+        observatory_log.tool_end(start, "user_input", result=user_input, step=self.n_calls)
         if _multiline:
-            return _multiline_prompt()
-        user_input = prompt_session.prompt("")
+            return user_input
         if user_input == "/m":
             return self._prompt_and_handle_slash_commands(prompt, _multiline=True)
         if user_input == "/h":

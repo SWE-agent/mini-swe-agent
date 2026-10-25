@@ -1,0 +1,20 @@
+{"t": 1792657735.3780887, "kind": "tool_start", "step": null, "data": {"action": "user_input", "params": "list the files"}}
+{"t": 1792657735.3785112, "kind": "tool_end", "step": null, "data": {"action": "user_input", "result": "list the files", "duration_seconds": 0.0}}
+{"t": 1792657735.3788722, "kind": "llm_query", "step": 1, "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "list the files"}], "purpose": "chat"}}
+{"t": 1792657735.3792436, "kind": "llm_error", "step": 1, "data": {"error_type": "TimeoutError", "error": "model timed out", "model": "claude-haiku-5-5"}}
+{"t": 1792657735.3796258, "kind": "llm_query", "step": 1, "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "list the files"}], "purpose": "chat"}}
+{"t": 1792657735.379958, "kind": "llm_response", "step": 1, "data": {"actions": ["bash", "python"], "reply": {"content": "", "calls": [{"id": "t1", "name": "bash", "args": {"command": "echo hi"}}, {"id": "t2", "name": "python", "args": {"code": "1 + 1"}}], "message": {"role": "assistant", "content": ["<__main__.ToolUse object at 0x000001875D667230>", "<__main__.ToolUse object at 0x000001875DCB2490>"]}}, "response": "<__main__.Response object at 0x000001875DCDDBE0>"}}
+{"t": 1792657735.38031, "kind": "tool_start", "step": null, "data": {"action": "bash", "params": {"command": "echo hi"}}}
+{"t": 1792657735.4146993, "kind": "tool_end", "step": null, "data": {"action": "bash", "result": "hi\n", "duration_seconds": 0.034}}
+{"t": 1792657735.4151413, "kind": "tool_start", "step": null, "data": {"action": "python", "params": {"code": "1 + 1"}}}
+{"t": 1792657735.4155436, "kind": "tool_end", "step": null, "data": {"action": "python", "result": "", "duration_seconds": 0.0}}
+{"t": 1792657735.4158347, "kind": "llm_query", "step": 2, "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "list the files"}, {"role": "assistant", "content": ["<__main__.ToolUse object at 0x000001875D667230>", "<__main__.ToolUse object at 0x000001875DCB2490>"]}, {"role": "user", "content": [{"type": "tool_result", "tool_use_id": "t1", "content": "hi\n"}, {"type": "tool_result", "tool_use_id": "t2", "content": ""}]}], "purpose": "chat"}}
+{"t": 1792657735.4161294, "kind": "llm_response", "step": 2, "data": {"actions": [], "reply": {"content": "done", "calls": [], "message": {"role": "assistant", "content": ["<__main__.Text object at 0x000001875DCDE120>"]}}, "response": "<__main__.Response object at 0x000001875DCB2710>"}}
+{"t": 1792657735.4163964, "kind": "tool_start", "step": null, "data": {"action": "user_input", "params": "Accept 'done'? [y/N]"}}
+{"t": 1792657735.4167047, "kind": "tool_end", "step": null, "data": {"action": "user_input", "result": "y", "duration_seconds": 0.0}}
+{"t": 1792657735.416973, "kind": "tool_start", "step": null, "data": {"action": "user_input", "params": "break something"}}
+{"t": 1792657735.417213, "kind": "tool_end", "step": null, "data": {"action": "user_input", "result": "break something", "duration_seconds": 0.0}}
+{"t": 1792657735.4175174, "kind": "llm_query", "step": 1, "data": {"model": "claude-haiku-5-5", "messages": [{"role": "user", "content": "break something"}], "purpose": "chat"}}
+{"t": 1792657735.4179072, "kind": "llm_response", "step": 1, "data": {"actions": ["python"], "reply": {"content": "", "calls": [{"id": "t3", "name": "python", "args": {"code": "raise ValueError('boom')"}}], "message": {"role": "assistant", "content": ["<__main__.ToolUse object at 0x000001875DCB2710>"]}}, "response": "<__main__.Response object at 0x000001875DCB2D50>"}}
+{"t": 1792657735.4181767, "kind": "tool_start", "step": null, "data": {"action": "python", "params": {"code": "raise ValueError('boom')"}}}
+{"t": 1792657735.4184768, "kind": "tool_error", "step": null, "data": {"action": "python", "error_type": "ValueError", "error": "boom", "duration_seconds": 0.0}}

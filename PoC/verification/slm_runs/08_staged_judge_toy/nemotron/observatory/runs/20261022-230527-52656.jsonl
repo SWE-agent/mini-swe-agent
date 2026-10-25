@@ -1,0 +1,2 @@
+{"t": 1792677927.231719, "kind": "tool_start", "step": null, "at": "agent.py:29", "data": {"action": "user_input", "params": {"task": "Say hello world"}}}
+{"t": 1792677927.2323215, "kind": "tool_end", "step": null, "at": "agent.py:30", "data": {"action": "user_input", "result": "Say hello world", "duration_seconds": 0.0}}

@@ -1,0 +1,27 @@
+flowchart LR
+  nDefaultAgent_execute_action["DefaultAgent.execute_action<br/>[LOG] tool_start @ src/minisweagent/agents/default.py:185<br/>[LOG] tool_end @ src/minisweagent/agents/default.py:196<br/>[LOG] tool_error @ src/minisweagent/agents/default.py:198<br/>[LOG] tool_end @ src/minisweagent/agents/default.py:206"]
+  nDefaultAgent_run["DefaultAgent.run<br/>[LOG] user_input @ src/minisweagent/agents/default.py:92"]
+  nDefaultAgent_query["DefaultAgent.query<br/>[LOG] llm_query @ src/minisweagent/agents/default.py:158<br/>[LOG] llm_error @ src/minisweagent/agents/default.py:163<br/>[LOG] llm_response @ src/minisweagent/agents/default.py:172"]
+  nself_env_execute___src_minisweagent_agents_default_py_187[["self.env.execute"]]
+  nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt["src/minisweagent/agents/utils/prompt_user._multiline_prompt<br/>[LOG] user_input @ src/minisweagent/agents/utils/prompt_user.py:22"]
+  nsrc_minisweagent_run_mini_main["src/minisweagent/run/mini.main"]
+  nself_model_query___src_minisweagent_agents_default_py_160(["self.model.query"])
+  n_User_Input__task__entry_parameter_[/"task"/]
+  n_multiline_prompt_session_prompt___src_minisweagent_agents_utils_prompt_user_py_14[/"_multiline_prompt_session.prompt"/]
+  nInteractiveAgent_query["InteractiveAgent.query<br/>[LOG] user_input @ src/minisweagent/agents/interactive.py:94<br/>[LOG] user_input @ src/minisweagent/agents/interactive.py:96"]
+  nInteractiveAgent__prompt_and_handle_slash_commands["InteractiveAgent._prompt_and_handle_slash_commands<br/>[LOG] user_input @ src/minisweagent/agents/interactive.py:193"]
+  nDefaultAgent_execute_action -->|action| nself_env_execute___src_minisweagent_agents_default_py_187
+  nself_env_execute___src_minisweagent_agents_default_py_187 -.->|output| nDefaultAgent_execute_action
+  nDefaultAgent_query -.->|action| nDefaultAgent_execute_action
+  nDefaultAgent_query -.->|message, messages| nDefaultAgent_run
+  nDefaultAgent_query -->|message, messages| nself_model_query___src_minisweagent_agents_default_py_160
+  nself_model_query___src_minisweagent_agents_default_py_160 -.->|message| nDefaultAgent_query
+  nInteractiveAgent__prompt_and_handle_slash_commands --> nInteractiveAgent__prompt_and_handle_slash_commands
+  nInteractiveAgent__prompt_and_handle_slash_commands --> nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt
+  nInteractiveAgent_query --> nInteractiveAgent__prompt_and_handle_slash_commands
+  n_User_Input__task__entry_parameter_ -.->|task| nDefaultAgent_run
+  nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt --> n_multiline_prompt_session_prompt___src_minisweagent_agents_utils_prompt_user_py_14
+  n_multiline_prompt_session_prompt___src_minisweagent_agents_utils_prompt_user_py_14 -.->|result| nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt
+  nsrc_minisweagent_run_mini_main -->|run_task| nDefaultAgent_run
+  nsrc_minisweagent_run_mini_main --> nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt
+  nsrc_minisweagent_agents_utils_prompt_user__multiline_prompt -.-> nsrc_minisweagent_run_mini_main

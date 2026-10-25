@@ -1,0 +1,660 @@
+{
+  "root": "C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v9/bu-glimmer",
+  "nodes": [
+    {
+      "id": "summary_llm.ainvoke @ browser_use/agent/service.py:2975",
+      "role": "llm_response",
+      "label": "summary_llm.ainvoke",
+      "path": "browser_use/agent/service.py",
+      "line": 2975,
+      "in": "Agent._generate_rerun_summary",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "Agent._generate_rerun_summary",
+      "role": "function",
+      "label": "Agent._generate_rerun_summary",
+      "path": "browser_use/agent/service.py",
+      "line": 2923,
+      "end_line": 3024,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "browser_use/agent/service.py:2973",
+          "code": "observatory_log.llm_query(None, model=summary_llm.model, messages=messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "summary_llm",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "browser_use/agent/service.py:2977",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "browser_use/agent/service.py:2980",
+          "code": "observatory_log.llm_response(None, actions=[], reply=summary, response=response)",
+          "records": [
+            {
+              "value": "response",
+              "whole": true
+            },
+            {
+              "value": "summary",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "browser_use/agent/service.py:2988",
+          "code": "observatory_log.llm_query(None, model=summary_llm.model, messages=messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "summary_llm",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "browser_use/agent/service.py:2992",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "browser_use/agent/service.py:2995",
+          "code": "observatory_log.llm_response(None, actions=[], reply=response_text, response=response)",
+          "records": [
+            {
+              "value": "response",
+              "whole": true
+            },
+            {
+              "value": "response_text",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "pattern.sub @ browser_use/utils.py:121",
+      "role": "tool_response",
+      "label": "pattern.sub",
+      "path": "browser_use/utils.py",
+      "line": 121,
+      "in": "browser_use/utils.redact_sensitive_string",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "Agent.run",
+      "role": "entry",
+      "label": "Agent.run",
+      "path": "browser_use/agent/service.py",
+      "line": 2518,
+      "end_line": 2742,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "browser_use/agent/service.py:2526",
+          "code": "observatory_log.user_input(self.task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "Agent._judge_trace",
+      "role": "function",
+      "label": "Agent._judge_trace",
+      "path": "browser_use/agent/service.py",
+      "line": 1595,
+      "end_line": 1634,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "browser_use/agent/service.py:1622",
+          "code": "observatory_log.llm_query(None, model=self.judge_llm.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "judge_llm",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "browser_use/agent/service.py:1626",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "browser_use/agent/service.py:1629",
+          "code": "observatory_log.llm_response(None, actions=[], reply=judgement, response=response)",
+          "records": [
+            {
+              "value": "judgement",
+              "whole": true
+            },
+            {
+              "value": "response",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "summary_llm.ainvoke @ browser_use/agent/service.py:2990",
+      "role": "llm_response",
+      "label": "summary_llm.ainvoke",
+      "path": "browser_use/agent/service.py",
+      "line": 2990,
+      "in": "Agent._generate_rerun_summary",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "json.dumps @ browser_use/agent/views.py:896",
+      "role": "tool_response",
+      "label": "json.dumps",
+      "path": "browser_use/agent/views.py",
+      "line": 896,
+      "in": "AgentHistoryList.agent_steps",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.llm.ainvoke @ browser_use/agent/service.py:1965",
+      "role": "llm_response",
+      "label": "self.llm.ainvoke",
+      "path": "browser_use/agent/service.py",
+      "line": 1965,
+      "in": "Agent.get_model_output",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → LLM 입력: 일부만 기록",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "Agent.get_model_output",
+      "role": "function",
+      "label": "Agent.get_model_output",
+      "path": "browser_use/agent/service.py",
+      "line": 1953,
+      "end_line": 1996,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "browser_use/agent/service.py:1963",
+          "code": "observatory_log.llm_query(self.state.n_steps, model=self.llm.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "llm",
+              "whole": false
+            },
+            {
+              "value": "state",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "browser_use/agent/service.py:1967",
+          "code": "observatory_log.llm_error(self.state.n_steps, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "state",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "browser_use/agent/service.py:1971",
+          "code": "observatory_log.llm_response(self.state.n_steps, actions=actions, reply=parsed, response=response)",
+          "records": [
+            {
+              "value": "actions",
+              "whole": true
+            },
+            {
+              "value": "parsed",
+              "whole": true
+            },
+            {
+              "value": "response",
+              "whole": true
+            },
+            {
+              "value": "state",
+              "whole": false
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → LLM 입력: 일부만 기록",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.registry.execute_action @ browser_use/tools/service.py:2221",
+      "role": "tool_response",
+      "label": "self.registry.execute_action",
+      "path": "browser_use/tools/service.py",
+      "line": 2221,
+      "in": "Tools.act",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.judge_llm.ainvoke @ browser_use/agent/service.py:1624",
+      "role": "llm_response",
+      "label": "self.judge_llm.ainvoke",
+      "path": "browser_use/agent/service.py",
+      "line": 1624,
+      "in": "Agent._judge_trace",
+      "logs": [],
+      "gaps": [
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "Agent.step",
+      "role": "function",
+      "label": "Agent.step",
+      "path": "browser_use/agent/service.py",
+      "line": 1037,
+      "end_line": 1087,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "Path @ browser_use/agent/judge.py:24",
+      "role": "tool_response",
+      "label": "Path",
+      "path": "browser_use/agent/judge.py",
+      "line": 24,
+      "in": "browser_use/agent/judge._encode_image",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "Agent._execute_ai_step",
+      "role": "function",
+      "label": "Agent._execute_ai_step",
+      "path": "browser_use/agent/service.py",
+      "line": 3026,
+      "end_line": 3136,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "browser_use/agent/service.py:3103",
+          "code": "observatory_log.llm_query(None, model=llm.model, messages=[SystemMessage(content=system_prompt), user_message])",
+          "records": [
+            {
+              "value": "llm",
+              "whole": false
+            },
+            {
+              "value": "system_prompt",
+              "whole": false
+            },
+            {
+              "value": "user_message",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "browser_use/agent/service.py:3107",
+          "code": "observatory_log.llm_error(None, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "browser_use/agent/service.py:3110",
+          "code": "observatory_log.llm_response(None, actions=[], reply=response.completion, response=response)",
+          "records": [
+            {
+              "value": "response",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "Registry.execute_action",
+      "role": "function",
+      "label": "Registry.execute_action",
+      "path": "browser_use/tools/registry/service.py",
+      "line": 333,
+      "end_line": 425,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "browser_use/tools/registry/service.py:396",
+          "code": "start = observatory_log.tool_start(action_name, params)",
+          "records": [
+            {
+              "value": "action_name",
+              "whole": true
+            },
+            {
+              "value": "params",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "browser_use/tools/registry/service.py:399",
+          "code": "observatory_log.tool_end(start, action_name, result=out)",
+          "records": [
+            {
+              "value": "action_name",
+              "whole": true
+            },
+            {
+              "value": "out",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "browser_use/tools/registry/service.py:402",
+          "code": "observatory_log.tool_error(start, action_name, error)",
+          "records": [
+            {
+              "value": "action_name",
+              "whole": true
+            },
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    }
+  ],
+  "links": [
+    {
+      "from": "Agent._generate_rerun_summary",
+      "to": "summary_llm.ainvoke @ browser_use/agent/service.py:2975",
+      "values": [
+        "kwargs",
+        "messages"
+      ],
+      "call": true,
+      "back": [
+        "kwargs",
+        "messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "Agent._generate_rerun_summary",
+      "to": "summary_llm.ainvoke @ browser_use/agent/service.py:2990",
+      "values": [
+        "messages"
+      ],
+      "call": true,
+      "back": [
+        "messages"
+      ],
+      "returns": true
+    },
+    {
+      "from": "Agent._judge_trace",
+      "to": "Path @ browser_use/agent/judge.py:24",
+      "values": [
+        "agent_steps",
+        "final_result",
+        "image_path",
+        "img_path",
+        "screenshot_paths"
+      ],
+      "call": true,
+      "back": [
+        "path"
+      ],
+      "returns": true
+    },
+    {
+      "from": "Agent._judge_trace",
+      "to": "json.dumps @ browser_use/agent/views.py:896",
+      "values": [
+        "actions_list"
+      ],
+      "call": true,
+      "back": [
+        "action_json",
+        "actions_list"
+      ],
+      "returns": true
+    },
+    {
+      "from": "Agent._judge_trace",
+      "to": "self.judge_llm.ainvoke @ browser_use/agent/service.py:1624",
+      "values": [
+        "input_messages"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.get_model_output",
+      "to": "Agent.get_model_output",
+      "values": [],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.get_model_output",
+      "to": "self.llm.ainvoke @ browser_use/agent/service.py:1965",
+      "values": [
+        "input_messages",
+        "kwargs"
+      ],
+      "call": true,
+      "back": [
+        "kwargs",
+        "response"
+      ],
+      "returns": true
+    },
+    {
+      "from": "Agent.run",
+      "to": "Agent.step",
+      "values": [
+        "current_step",
+        "step_info"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.run",
+      "to": "json.dumps @ browser_use/agent/views.py:896",
+      "values": [
+        "_message_manager",
+        "actions_list",
+        "current_step",
+        "error_msg",
+        "file_system",
+        "history",
+        "history_item",
+        "metadata",
+        "state",
+        "step_info"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.step",
+      "to": "Agent.get_model_output",
+      "values": [
+        "input_messages",
+        "retry_messages"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.step",
+      "to": "pattern.sub @ browser_use/utils.py:121",
+      "values": [
+        "compaction_input",
+        "item",
+        "message",
+        "step_info",
+        "value"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "Agent.step",
+      "to": "self.registry.execute_action @ browser_use/tools/service.py:2221",
+      "values": [
+        "action",
+        "action_name",
+        "file_system",
+        "params",
+        "result",
+        "state"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    }
+  ]
+}

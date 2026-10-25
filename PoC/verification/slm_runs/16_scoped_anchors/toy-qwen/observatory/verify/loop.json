@@ -1,0 +1,347 @@
+{
+  "root": "/private/tmp/claude-501/-Users-jinhoshin-Development-sslab-mini-swe-agent/76dd43f5-20ab-4a3f-80be-f2a2227b0dcf/scratchpad/v12/toy-qwen",
+  "nodes": [
+    {
+      "id": "ToyAgent.ask_user",
+      "role": "function",
+      "label": "ToyAgent.ask_user",
+      "path": "agent.py",
+      "line": 50,
+      "end_line": 53,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "agent.py:52",
+          "code": "observatory_log.user_input(answer, prompt=question)",
+          "records": [
+            {
+              "value": "answer",
+              "whole": true
+            },
+            {
+              "value": "question",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "LLM.chat",
+      "role": "function",
+      "label": "LLM.chat",
+      "path": "llm.py",
+      "line": 14,
+      "end_line": 29,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "llm.py:15",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "llm.py:25",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "llm.py:28",
+          "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in reply[\"calls\"]], reply=reply, response=response)",
+          "records": [
+            {
+              "value": "c",
+              "whole": false
+            },
+            {
+              "value": "reply",
+              "whole": true
+            },
+            {
+              "value": "response",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "ToyAgent.step",
+      "role": "function",
+      "label": "ToyAgent.step",
+      "path": "agent.py",
+      "line": 36,
+      "end_line": 45,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "Registry.run",
+      "role": "function",
+      "label": "Registry.run",
+      "path": "tools.py",
+      "line": 23,
+      "end_line": 31,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "tools.py:24",
+          "code": "start = observatory_log.tool_start(name, args)",
+          "records": [
+            {
+              "value": "args",
+              "whole": true
+            },
+            {
+              "value": "name",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "tools.py:28",
+          "code": "observatory_log.tool_error(start, name, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "name",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "tools.py:30",
+          "code": "observatory_log.tool_end(start, name, result=out)",
+          "records": [
+            {
+              "value": "name",
+              "whole": true
+            },
+            {
+              "value": "out",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "self.client.messages.create @ llm.py:17",
+      "role": "llm_response",
+      "label": "self.client.messages.create",
+      "path": "llm.py",
+      "line": 17,
+      "in": "LLM.chat",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToyAgent.run",
+      "role": "entry",
+      "label": "ToyAgent.run",
+      "path": "agent.py",
+      "line": 27,
+      "end_line": 34,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "agent.py:28",
+          "code": "observatory_log.user_input(task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "input @ agent.py:51",
+      "role": "user_input",
+      "label": "input",
+      "path": "agent.py",
+      "line": 51,
+      "in": "ToyAgent.ask_user",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "agent.py",
+      "line": 27,
+      "in": "ToyAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "subprocess.run @ tools.py:10",
+      "role": "tool_response",
+      "label": "subprocess.run",
+      "path": "tools.py",
+      "line": 10,
+      "in": "tools.bash",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "exec @ tools.py:15",
+      "role": "tool_response",
+      "label": "exec",
+      "path": "tools.py",
+      "line": 15,
+      "in": "tools.python",
+      "logs": [],
+      "gaps": []
+    }
+  ],
+  "links": [
+    {
+      "from": "LLM.chat",
+      "to": "self.client.messages.create @ llm.py:17",
+      "values": [
+        "messages"
+      ],
+      "call": true,
+      "back": [
+        "response"
+      ],
+      "returns": true
+    },
+    {
+      "from": "Registry.run",
+      "to": "exec @ tools.py:15",
+      "values": [
+        "args",
+        "code",
+        "scope"
+      ],
+      "call": true,
+      "back": [
+        "scope"
+      ],
+      "returns": true
+    },
+    {
+      "from": "Registry.run",
+      "to": "subprocess.run @ tools.py:10",
+      "values": [
+        "args",
+        "command"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "ToyAgent.ask_user",
+      "to": "input @ agent.py:51",
+      "values": [
+        "question"
+      ],
+      "call": true,
+      "back": [
+        "answer"
+      ],
+      "returns": true
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "ToyAgent.ask_user",
+      "values": [
+        "answer",
+        "reply"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "ToyAgent.step",
+      "values": [],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "LLM.chat",
+      "values": [
+        "messages",
+        "reply",
+        "results"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "Registry.run",
+      "values": [
+        "call"
+      ],
+      "call": true,
+      "back": [],
+      "returns": true
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "ToyAgent.run",
+      "values": [
+        "task"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    }
+  ]
+}

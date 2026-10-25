@@ -1,0 +1,397 @@
+{
+  "root": "C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v10/mini-qwen",
+  "nodes": [
+    {
+      "id": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "role": "function",
+      "label": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "path": "src/minisweagent/agents/utils/prompt_user.py",
+      "line": 13,
+      "end_line": 23,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/utils/prompt_user.py:22",
+          "code": "observatory_log.user_input(answer, prompt=\"\")",
+          "records": [
+            {
+              "value": "answer",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "_multiline_prompt_session.prompt @ src/minisweagent/agents/utils/prompt_user.py:14",
+      "role": "user_input",
+      "label": "_multiline_prompt_session.prompt",
+      "path": "src/minisweagent/agents/utils/prompt_user.py",
+      "line": 14,
+      "in": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.query",
+      "role": "function",
+      "label": "DefaultAgent.query",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 133,
+      "end_line": 179,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/minisweagent/agents/default.py:158",
+          "code": "observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "n_calls",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/minisweagent/agents/default.py:163",
+          "code": "observatory_log.llm_error(self.n_calls, e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "n_calls",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/minisweagent/agents/default.py:165",
+          "code": "observatory_log.llm_response(",
+          "records": [
+            {
+              "value": "action",
+              "whole": false
+            },
+            {
+              "value": "message",
+              "whole": true
+            },
+            {
+              "value": "n_calls",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.execute_action",
+      "role": "function",
+      "label": "DefaultAgent.execute_action",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 186,
+      "end_line": 212,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "src/minisweagent/agents/default.py:190",
+          "code": "start = observatory_log.tool_start(\"bash\", action)",
+          "records": [
+            {
+              "value": "action",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/minisweagent/agents/default.py:195",
+          "code": "observatory_log.tool_end(start, \"bash\", result=\"submitted\")",
+          "records": [
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/minisweagent/agents/default.py:197",
+          "code": "observatory_log.tool_error(start, \"bash\", e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/minisweagent/agents/default.py:211",
+          "code": "observatory_log.tool_end(start, \"bash\", result=output)",
+          "records": [
+            {
+              "value": "output",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.run",
+      "role": "entry",
+      "label": "DefaultAgent.run",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 90,
+      "end_line": 127,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/default.py:92",
+          "code": "observatory_log.user_input(task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "src/minisweagent/run/mini.main",
+      "role": "function",
+      "label": "src/minisweagent/run/mini.main",
+      "path": "src/minisweagent/run/mini.py",
+      "line": 55,
+      "end_line": 105,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.query @ src/minisweagent/agents/default.py:160",
+      "role": "llm_response",
+      "label": "self.model.query",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 160,
+      "in": "DefaultAgent.query",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 90,
+      "in": "DefaultAgent.run",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.env.execute @ src/minisweagent/agents/default.py:192",
+      "role": "tool_response",
+      "label": "self.env.execute",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 192,
+      "in": "DefaultAgent.execute_action",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "InteractiveAgent.query",
+      "role": "function",
+      "label": "InteractiveAgent.query",
+      "path": "src/minisweagent/agents/interactive.py",
+      "line": 59,
+      "end_line": 97,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/interactive.py:94",
+          "code": "observatory_log.user_input(self.config.step_limit, prompt=\"New step limit: \")",
+          "records": [
+            {
+              "value": "config",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/interactive.py:96",
+          "code": "observatory_log.user_input(self.config.cost_limit, prompt=\"New cost limit: \")",
+          "records": [
+            {
+              "value": "config",
+              "whole": false
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "InteractiveAgent._prompt_and_handle_slash_commands",
+      "role": "function",
+      "label": "InteractiveAgent._prompt_and_handle_slash_commands",
+      "path": "src/minisweagent/agents/interactive.py",
+      "line": 187,
+      "end_line": 213,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/minisweagent/agents/interactive.py:193",
+          "code": "observatory_log.user_input(user_input, prompt=prompt)",
+          "records": [
+            {
+              "value": "prompt",
+              "whole": true
+            },
+            {
+              "value": "user_input",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    }
+  ],
+  "links": [
+    {
+      "from": "DefaultAgent.execute_action",
+      "to": "self.env.execute @ src/minisweagent/agents/default.py:192",
+      "values": [
+        "action"
+      ],
+      "call": true,
+      "back": [
+        "output"
+      ],
+      "returns": true
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "DefaultAgent.execute_action",
+      "values": [
+        "action"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "DefaultAgent.run",
+      "values": [
+        "message",
+        "messages",
+        "outputs"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "DefaultAgent.query",
+      "to": "self.model.query @ src/minisweagent/agents/default.py:160",
+      "values": [
+        "message",
+        "messages",
+        "outputs"
+      ],
+      "call": true,
+      "back": [
+        "message"
+      ],
+      "returns": true
+    },
+    {
+      "from": "InteractiveAgent._prompt_and_handle_slash_commands",
+      "to": "InteractiveAgent._prompt_and_handle_slash_commands",
+      "values": [],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "InteractiveAgent._prompt_and_handle_slash_commands",
+      "to": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "values": [],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "InteractiveAgent.query",
+      "to": "InteractiveAgent._prompt_and_handle_slash_commands",
+      "values": [],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "DefaultAgent.run",
+      "values": [
+        "task"
+      ],
+      "call": false,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "to": "_multiline_prompt_session.prompt @ src/minisweagent/agents/utils/prompt_user.py:14",
+      "values": [],
+      "call": true,
+      "back": [
+        "answer"
+      ],
+      "returns": true
+    },
+    {
+      "from": "src/minisweagent/run/mini.main",
+      "to": "DefaultAgent.run",
+      "values": [
+        "run_task"
+      ],
+      "call": true,
+      "back": [],
+      "returns": false
+    },
+    {
+      "from": "src/minisweagent/run/mini.main",
+      "to": "src/minisweagent/agents/utils/prompt_user._multiline_prompt",
+      "values": [],
+      "call": true,
+      "back": [],
+      "returns": true
+    }
+  ]
+}

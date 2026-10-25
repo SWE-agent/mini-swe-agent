@@ -1,0 +1,182 @@
+[
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate",
+  "LLM 입력",
+  "[외부 호출] self.model.generate"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate",
+  "LLM 입력",
+  "[외부 호출] self.model.generate_stream"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate",
+  "Tool 입력",
+  "[외부 호출] self.python_executor"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate",
+  "Tool 입력",
+  "[외부 호출] tool"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate",
+  "최종 출력",
+  "[최종 출력] return of MultiStepAgent.run"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate_stream",
+  "LLM 입력",
+  "[외부 호출] self.model.generate"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate_stream",
+  "LLM 입력",
+  "[외부 호출] self.model.generate_stream"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate_stream",
+  "Tool 입력",
+  "[외부 호출] self.python_executor"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate_stream",
+  "Tool 입력",
+  "[외부 호출] tool"
+ ],
+ [
+  "LLM Response",
+  "[외부 응답] self.model.generate_stream",
+  "최종 출력",
+  "[최종 출력] return of MultiStepAgent.run"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] self.python_executor",
+  "LLM 입력",
+  "[외부 호출] self.model.generate"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] self.python_executor",
+  "LLM 입력",
+  "[외부 호출] self.model.generate_stream"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] self.python_executor",
+  "Tool 입력",
+  "[외부 호출] self.python_executor"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] self.python_executor",
+  "Tool 입력",
+  "[외부 호출] tool"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] self.python_executor",
+  "최종 출력",
+  "[최종 출력] return of MultiStepAgent.run"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] tool",
+  "LLM 입력",
+  "[외부 호출] self.model.generate"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] tool",
+  "LLM 입력",
+  "[외부 호출] self.model.generate_stream"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] tool",
+  "Tool 입력",
+  "[외부 호출] self.python_executor"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] tool",
+  "Tool 입력",
+  "[외부 호출] tool"
+ ],
+ [
+  "Tool Response",
+  "[외부 응답] tool",
+  "최종 출력",
+  "[최종 출력] return of MultiStepAgent.run"
+ ],
+ [
+  "User Input",
+  "[User Input] task (entry parameter)",
+  "LLM 입력",
+  "[외부 호출] self.model.generate"
+ ],
+ [
+  "User Input",
+  "[User Input] task (entry parameter)",
+  "LLM 입력",
+  "[외부 호출] self.model.generate_stream"
+ ],
+ [
+  "User Input",
+  "[User Input] task (entry parameter)",
+  "Tool 입력",
+  "[외부 호출] self.python_executor"
+ ],
+ [
+  "User Input",
+  "[User Input] task (entry parameter)",
+  "Tool 입력",
+  "[외부 호출] tool"
+ ],
+ [
+  "User Input",
+  "[User Input] task (entry parameter)",
+  "최종 출력",
+  "[최종 출력] return of MultiStepAgent.run"
+ ],
+ [
+  "User Input",
+  "[외부 응답] input",
+  "LLM 입력",
+  "[외부 호출] self.model.generate"
+ ],
+ [
+  "User Input",
+  "[외부 응답] input",
+  "LLM 입력",
+  "[외부 호출] self.model.generate_stream"
+ ],
+ [
+  "User Input",
+  "[외부 응답] input",
+  "Tool 입력",
+  "[외부 호출] self.python_executor"
+ ],
+ [
+  "User Input",
+  "[외부 응답] input",
+  "Tool 입력",
+  "[외부 호출] tool"
+ ],
+ [
+  "User Input",
+  "[외부 응답] input",
+  "최종 출력",
+  "[최종 출력] return of MultiStepAgent.run"
+ ]
+]

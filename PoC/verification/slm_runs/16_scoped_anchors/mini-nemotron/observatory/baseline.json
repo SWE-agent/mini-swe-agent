@@ -1,0 +1,8 @@
+[
+ [
+  "LLM Response",
+  "[외부 응답] self.model.query",
+  "LLM 입력",
+  "[외부 호출] self.model.query"
+ ]
+]

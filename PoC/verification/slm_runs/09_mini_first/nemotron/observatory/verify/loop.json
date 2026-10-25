@@ -1,0 +1,153 @@
+{
+  "root": "C:/Users/USER/AppData/Local/Temp/claude/c--Users-USER-Developments-mini-swe-agent/2b6776a6-acde-42c1-9433-2f8ca7ccb7f5/scratchpad/v5/nemotron",
+  "nodes": [
+    {
+      "id": "DefaultAgent.query",
+      "role": "function",
+      "label": "DefaultAgent.query",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 131,
+      "end_line": 170,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/minisweagent/agents/default.py:153",
+          "code": "llm_query(step, model=model_name, messages=messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model_name",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/minisweagent/agents/default.py:157",
+          "code": "llm_error(step, error=e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/minisweagent/agents/default.py:161",
+          "code": "llm_response(step, actions=actions, reply=reply, response=message)",
+          "records": [
+            {
+              "value": "actions",
+              "whole": true
+            },
+            {
+              "value": "message",
+              "whole": true
+            },
+            {
+              "value": "reply",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "DefaultAgent.execute_action",
+      "role": "function",
+      "label": "DefaultAgent.execute_action",
+      "path": "src/minisweagent/agents/default.py",
+      "line": 177,
+      "end_line": 197,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "src/minisweagent/agents/default.py:180",
+          "code": "start = tool_start(\"bash\", action)",
+          "records": [
+            {
+              "value": "action",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/minisweagent/agents/default.py:185",
+          "code": "tool_end(start, \"bash\", result=\"submitted\", duration_seconds=round(time.time() - start_time, 3))",
+          "records": [
+            {
+              "value": "185",
+              "whole": false
+            },
+            {
+              "value": "start",
+              "whole": true
+            },
+            {
+              "value": "start_time",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/minisweagent/agents/default.py:188",
+          "code": "tool_error(start, \"bash\", e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/minisweagent/agents/default.py:190",
+          "code": "tool_end(start, \"bash\", result=output, duration_seconds=round(time.time() - start_time, 3))",
+          "records": [
+            {
+              "value": "190",
+              "whole": false
+            },
+            {
+              "value": "output",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            },
+            {
+              "value": "start_time",
+              "whole": false
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    }
+  ],
+  "links": []
+}

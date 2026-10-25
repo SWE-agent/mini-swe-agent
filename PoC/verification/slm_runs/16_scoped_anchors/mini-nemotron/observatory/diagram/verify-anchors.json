@@ -1,0 +1,8 @@
+{
+  "logger": "observatory_log",
+  "entry": {"function": "Agent.run", "path": "src/minisweagent/agents/default.py", "line": 88, "inputs": ["task"]},
+  "sources": [
+    {"kind": "llm_response", "path": "src/minisweagent/agents/default.py", "line": 156, "call": "self.model.query", "label": "model call"},
+    {"kind": "user_input", "path": "src/minisweagent/agents/interactive.py", "line": 92, "call": "input", "label": "confirm prompt"}
+  ]
+}

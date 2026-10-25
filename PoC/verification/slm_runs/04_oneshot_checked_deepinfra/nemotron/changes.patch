@@ -1,0 +1,51 @@
+diff --git a/agent.py b/agent.py
+index 5c08a88..80f0e9c 100644
+--- a/agent.py
++++ b/agent.py
+@@ -2,6 +2,14 @@
+
+ from llm import LLM
+ from tools import Registry
++from observatory_log import (
++    llm_query,
++    llm_response,
++    llm_error,
++    tool_start,
++    tool_end,
++    tool_error,
++)
+
+ SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
+ TOOLS = [
+@@ -33,11 +41,20 @@ class ToyAgent:
+
+     def step(self, n: int) -> dict:
+         try:
++            llm_query(n, model=self.llm.model, messages=self.messages)
+             reply = self.llm.chat(self.messages, TOOLS, n)
+         except TimeoutError:
++            llm_error(n, model=self.llm.model, messages=self.messages, error=TimeoutError("model call timed out"))
+             reply = self.fallback_query(n)
+         self.messages.append(reply["message"])
+-        results = [(call["id"], self.registry.run(call["name"], call["args"])) for call in reply["calls"]]
++        llm_response(n, actions=[c["name"] for c in reply["calls"]], reply=reply, response=reply)
++        results = []
++        if reply["calls"]:
++            for call in reply["calls"]:
++                start = tool_start(call["name"], call["args"], n)
++                result = self.registry.run(call["name"], call["args"])
++                tool_end(start, call["name"], result=result, step=n)
++                results.append((call["id"], result))
+         if results:
+             self.messages.append(self.llm.results_message(results))
+         return reply
+@@ -46,7 +63,9 @@ class ToyAgent:
+         return self.llm.chat(self.messages, [], n)
+
+     def ask_user(self, question: str) -> str:
++        start = tool_start("user_input", {"question": question}, 0)
+         answer = input(f"{question} ")
++        tool_end(start, "user_input", result=answer, step=0)
+         return answer
+
+     def confirm(self, answer: str) -> bool:

@@ -1,0 +1,122 @@
+diff --git a/src/minisweagent/agents/default.py b/src/minisweagent/agents/default.py
+index 32ddee5..a61964b 100644
+--- a/src/minisweagent/agents/default.py
++++ b/src/minisweagent/agents/default.py
+@@ -12,7 +12,9 @@ from jinja2 import StrictUndefined, Template
+ from pydantic import BaseModel
+
+ from minisweagent import Environment, Model, __version__
++from minisweagent.agents import observatory_log
+ from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
++from minisweagent.exceptions import Submitted
+ from minisweagent.utils.serialize import recursive_merge
+
+
+@@ -87,6 +89,7 @@ class DefaultAgent:
+
+     def run(self, task: str = "", **kwargs) -> dict:
+         """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
++        observatory_log.user_input(task)
+         self.extra_template_vars |= {"task": task, **kwargs}
+         self.messages = []
+         self.add_messages(
+@@ -152,11 +155,19 @@ class DefaultAgent:
+             getattr(self.model.config, "model_name", None),
+             len(self.messages),
+         )
++        observatory_log.llm_query(self.n_calls, model=self.model, messages=self.messages)
+         try:
+             message = self.model.query(self.messages)
+         except Exception as e:
+             self.logger.debug("[LLM_ERROR] step=%s error_type=%s", self.n_calls, type(e).__name__)
++            observatory_log.llm_error(self.n_calls, e)
+             raise
++        observatory_log.llm_response(
++            self.n_calls,
++            actions=[action.get("name", "bash") for action in message.get("extra", {}).get("actions", [])],
++            reply=message,
++            response=message,
++        )
+         self.cost += message.get("extra", {}).get("cost", 0.0)
+         self.logger.debug(
+             "[LLM_RESPONSE] step=%s actions=%s cost=%s",
+@@ -176,9 +187,14 @@ class DefaultAgent:
+         """Execute a single action in the environment. Every agent runs its actions through here."""
+         self.logger.debug("[TOOL_EXECUTION_START] action=%s params=%s", "bash", action)
+         start_time = time.time()
++        start = observatory_log.tool_start("bash", action)
+         try:
+             output = self.env.execute(action)
+         except Exception as e:
++            if isinstance(e, Submitted):
++                observatory_log.tool_end(start, "bash", result="submitted")
++            else:
++                observatory_log.tool_error(start, "bash", e)
+             self.logger.debug(
+                 "[TOOL_EXECUTION_ERROR] action=%s error_type=%s duration_seconds=%.3f",
+                 "bash",
+@@ -192,6 +208,7 @@ class DefaultAgent:
+             output.get("returncode"),
+             time.time() - start_time,
+         )
++        observatory_log.tool_end(start, "bash", result=output)
+         return output
+
+     def serialize(self, *extra_dicts) -> dict:
+diff --git a/src/minisweagent/agents/interactive.py b/src/minisweagent/agents/interactive.py
+index dd1139d..7266abf 100644
+--- a/src/minisweagent/agents/interactive.py
++++ b/src/minisweagent/agents/interactive.py
+@@ -13,6 +13,7 @@ from typing import Literal, NoReturn
+ from rich.console import Console
+ from rich.rule import Rule
+
++from minisweagent.agents import observatory_log
+ from minisweagent.agents.default import AgentConfig, DefaultAgent
+ from minisweagent.agents.utils.prompt_user import _multiline_prompt, prompt_session
+ from minisweagent.exceptions import LimitsExceeded, Submitted, TimeExceeded, UserInterruption
+@@ -90,7 +91,9 @@ class InteractiveAgent(DefaultAgent):
+                 f"Current spend: {self.n_calls} steps, ${self.cost:.2f}."
+             )
+             self.config.step_limit = int(input("New step limit: "))
++            observatory_log.user_input(self.config.step_limit, prompt="New step limit: ")
+             self.config.cost_limit = float(input("New cost limit: "))
++            observatory_log.user_input(self.config.cost_limit, prompt="New cost limit: ")
+             return super().query()
+
+     @staticmethod
+@@ -187,6 +190,7 @@ class InteractiveAgent(DefaultAgent):
+         if _multiline:
+             return _multiline_prompt()
+         user_input = prompt_session.prompt("")
++        observatory_log.user_input(user_input, prompt=prompt)
+         if user_input == "/m":
+             return self._prompt_and_handle_slash_commands(prompt, _multiline=True)
+         if user_input == "/h":
+diff --git a/src/minisweagent/agents/utils/prompt_user.py b/src/minisweagent/agents/utils/prompt_user.py
+index 31aeb68..e90c5e5 100644
+--- a/src/minisweagent/agents/utils/prompt_user.py
++++ b/src/minisweagent/agents/utils/prompt_user.py
+@@ -3,6 +3,7 @@ from prompt_toolkit.history import FileHistory
+ from prompt_toolkit.shortcuts import PromptSession
+
+ from minisweagent import global_config_dir
++from minisweagent.agents import observatory_log
+
+ _history = FileHistory(global_config_dir / "interactive_history.txt")
+ prompt_session = PromptSession(history=_history)
+@@ -10,7 +11,7 @@ _multiline_prompt_session = PromptSession(history=_history, multiline=True)
+
+
+ def _multiline_prompt() -> str:
+-    return _multiline_prompt_session.prompt(
++    answer = _multiline_prompt_session.prompt(
+         "",
+         bottom_toolbar=HTML(
+             "Submit message: <b fg='yellow' bg='black'>Esc, then Enter</b> | "
+@@ -18,3 +19,5 @@ def _multiline_prompt() -> str:
+             "Search history: <b fg='yellow' bg='black'>Ctrl+R</b>"
+         ),
+     )
++    observatory_log.user_input(answer, prompt="")
++    return answer

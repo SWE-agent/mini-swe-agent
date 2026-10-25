@@ -1,0 +1,3994 @@
+{
+  "entry": "MultiStepAgent.run",
+  "nodes": [
+    {
+      "id": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1056,
+      "end_line": 1096,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_ast",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_ast",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1417,
+      "end_line": 1569,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_annassign",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_annassign",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 621,
+      "end_line": 635,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "AgentAudio.__init__",
+      "role": "function",
+      "label": "AgentAudio.__init__",
+      "path": "src/smolagents/agent_types.py",
+      "line": 181,
+      "end_line": 206,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "torch.tensor @ src/smolagents/agent_types.py:204",
+      "role": "external",
+      "label": "torch.tensor",
+      "path": "src/smolagents/agent_types.py",
+      "line": 204,
+      "in": "AgentAudio.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_setcomp",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_setcomp",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1118,
+      "end_line": 1134,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_call",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_call",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 825,
+      "end_line": 918,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_lambda",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_lambda",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 416,
+      "end_line": 437,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.get_safe_module",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.get_safe_module",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1271,
+      "end_line": 1306,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.create_function",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.create_function",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 462,
+      "end_line": 526,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_for",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_for",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1026,
+      "end_line": 1053,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "src/smolagents/agents.py",
+      "line": 439,
+      "in": "MultiStepAgent.run",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "MultiStepAgent.run",
+      "role": "entry",
+      "label": "MultiStepAgent.run",
+      "path": "src/smolagents/agents.py",
+      "line": 437,
+      "end_line": 540,
+      "logs": [
+        {
+          "event": "user_input",
+          "at": "src/smolagents/agents.py:471",
+          "code": "observatory_log.user_input(task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/local_python_executor.set_value",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.set_value",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 794,
+      "end_line": 822,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_assign",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_assign",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 770,
+      "end_line": 791,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.__call__",
+      "role": "function",
+      "label": "MultiStepAgent.__call__",
+      "path": "src/smolagents/agents.py",
+      "line": 885,
+      "end_line": 907,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.memory",
+      "role": "state",
+      "label": "MultiStepAgent.memory",
+      "path": "src/smolagents/agents.py",
+      "line": 344,
+      "in": "MultiStepAgent.__init__",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "send_to_device @ src/smolagents/tools.py:1328",
+      "role": "external",
+      "label": "send_to_device",
+      "path": "src/smolagents/tools.py",
+      "line": 1328,
+      "in": "PipelineTool.__call__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "PipelineTool.__call__",
+      "role": "function",
+      "label": "PipelineTool.__call__",
+      "path": "src/smolagents/tools.py",
+      "line": 1312,
+      "end_line": 1332,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_raise",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_raise",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1194,
+      "end_line": 1215,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_try",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_try",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1159,
+      "end_line": 1191,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_with",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_with",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1236,
+      "end_line": 1268,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_while",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_while",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 440,
+      "end_line": 459,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "final output",
+      "role": "final_output",
+      "label": "return of MultiStepAgent.run",
+      "path": "src/smolagents/agents.py",
+      "line": 437,
+      "in": "MultiStepAgent.run",
+      "logs": [],
+      "gaps": [
+        "User Input → 최종 출력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_import",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_import",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1309,
+      "end_line": 1342,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "__import__ @ src/smolagents/local_python_executor.py:1322",
+      "role": "external",
+      "label": "__import__",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1322,
+      "in": "src/smolagents/local_python_executor.evaluate_import",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_subscript",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_subscript",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 921,
+      "end_line": 938,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_condition",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_condition",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 962,
+      "end_line": 1001,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "send_to_device @ src/smolagents/tools.py:1326",
+      "role": "external",
+      "label": "send_to_device",
+      "path": "src/smolagents/tools.py",
+      "line": 1326,
+      "in": "PipelineTool.__call__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_unaryop",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_unaryop",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 396,
+      "end_line": 413,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.parse_tool_calls @ src/smolagents/agents.py:1352",
+      "role": "external",
+      "label": "self.model.parse_tool_calls",
+      "path": "src/smolagents/agents.py",
+      "line": 1352,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent._step_stream",
+      "role": "function",
+      "label": "ToolCallingAgent._step_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1293,
+      "end_line": 1382,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1326",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1334",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1336",
+          "code": "observatory_log.llm_response(step, actions=[c[\"name\"] for c in chat_message.tool_calls] if chat_message.tool_calls else [], reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "c",
+              "whole": false
+            },
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "SpeechToTextTool.forward",
+      "role": "function",
+      "label": "SpeechToTextTool.forward",
+      "path": "src/smolagents/default_tools.py",
+      "line": 672,
+      "end_line": 673,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_function_def",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_function_def",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 529,
+      "end_line": 537,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "CodeAgent._step_stream",
+      "role": "function",
+      "label": "CodeAgent._step_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1652,
+      "end_line": 1784,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:1691",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:1699",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:1701",
+          "code": "observatory_log.llm_response(step, actions=[], reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "self.memory.system_prompt.to_messages @ src/smolagents/agents.py:781",
+      "role": "external",
+      "label": "self.memory.system_prompt.to_messages",
+      "path": "src/smolagents/agents.py",
+      "line": 781,
+      "in": "MultiStepAgent.write_memory_to_messages",
+      "logs": [],
+      "gaps": [
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_class_def",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_class_def",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 540,
+      "end_line": 618,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "AgentAudio._tensor",
+      "role": "state",
+      "label": "AgentAudio._tensor",
+      "path": "src/smolagents/agent_types.py",
+      "line": 192,
+      "in": "AgentAudio.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_assert",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_assert",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1218,
+      "end_line": 1233,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.provide_final_answer",
+      "role": "function",
+      "label": "MultiStepAgent.provide_final_answer",
+      "path": "src/smolagents/agents.py",
+      "line": 824,
+      "end_line": 870,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:860",
+          "code": "observatory_log.llm_query(step=None, model=self.model, messages=messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:864",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:869",
+          "code": "observatory_log.llm_response(step, actions=[], reply=chat_message, response=chat_message)",
+          "records": [
+            {
+              "value": "chat_message",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_if",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_if",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1004,
+      "end_line": 1023,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_binop",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_binop",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 730,
+      "end_line": 767,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1345,
+      "end_line": 1377,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1352,
+      "end_line": 1375,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "import_module @ src/smolagents/local_python_executor.py:1313",
+      "role": "external",
+      "label": "import_module",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1313,
+      "in": "src/smolagents/local_python_executor.evaluate_import",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_augassign",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_augassign",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 638,
+      "end_line": 707,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 645,
+      "end_line": 660,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "sf.read @ src/smolagents/agent_types.py:233",
+      "role": "external",
+      "label": "sf.read",
+      "path": "src/smolagents/agent_types.py",
+      "line": 233,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "AgentAudio.to_raw",
+      "role": "function",
+      "label": "AgentAudio.to_raw",
+      "path": "src/smolagents/agent_types.py",
+      "line": 216,
+      "end_line": 235,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent._run_stream",
+      "role": "function",
+      "label": "MultiStepAgent._run_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 542,
+      "end_line": 613,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "MultiStepAgent._handle_max_steps_reached",
+      "role": "function",
+      "label": "MultiStepAgent._handle_max_steps_reached",
+      "path": "src/smolagents/agents.py",
+      "line": 627,
+      "end_line": 639,
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/gradio_ui.stream_to_gradio",
+      "role": "function",
+      "label": "src/smolagents/gradio_ui.stream_to_gradio",
+      "path": "src/smolagents/gradio_ui.py",
+      "line": 248,
+      "end_line": 276,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/utils.parse_code_blobs",
+      "role": "function",
+      "label": "src/smolagents/utils.parse_code_blobs",
+      "path": "src/smolagents/utils.py",
+      "line": 198,
+      "end_line": 251,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/agents.populate_template",
+      "role": "function",
+      "label": "src/smolagents/agents.populate_template",
+      "path": "src/smolagents/agents.py",
+      "line": 103,
+      "end_line": 108,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ast.unparse @ src/smolagents/local_python_executor.py:469",
+      "role": "external",
+      "label": "ast.unparse",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 469,
+      "in": "src/smolagents/local_python_executor.create_function",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_name",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_name",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 941,
+      "end_line": 959,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "func @ src/smolagents/local_python_executor.py:918",
+      "role": "external",
+      "label": "func",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 918,
+      "in": "src/smolagents/local_python_executor.evaluate_call",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "Tool.__call__",
+      "role": "function",
+      "label": "Tool.__call__",
+      "path": "src/smolagents/tools.py",
+      "line": 231,
+      "end_line": 249,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "ToolCallingAgent.process_tool_calls",
+      "role": "function",
+      "label": "ToolCallingAgent.process_tool_calls",
+      "path": "src/smolagents/agents.py",
+      "line": 1384,
+      "end_line": 1465,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:1693",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 1693,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_attribute",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_attribute",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 383,
+      "end_line": 393,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/models.agglomerate_stream_deltas",
+      "role": "function",
+      "label": "src/smolagents/models.agglomerate_stream_deltas",
+      "path": "src/smolagents/models.py",
+      "line": 220,
+      "end_line": 279,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:662",
+      "role": "external",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 662,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent._generate_planning_step",
+      "role": "function",
+      "label": "MultiStepAgent._generate_planning_step",
+      "path": "src/smolagents/agents.py",
+      "line": 641,
+      "end_line": 761,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:674",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:678",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:680",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message, response=plan_message)",
+          "records": [
+            {
+              "value": "plan_message",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_query",
+          "at": "src/smolagents/agents.py:738",
+          "code": "observatory_log.llm_query(step, model=self.model, messages=input_messages)",
+          "records": [
+            {
+              "value": "input_messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "src/smolagents/agents.py:742",
+          "code": "observatory_log.llm_error(step, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "src/smolagents/agents.py:744",
+          "code": "observatory_log.llm_response(step, actions=[], reply=plan_message, response=plan_message)",
+          "records": [
+            {
+              "value": "plan_message",
+              "whole": true
+            },
+            {
+              "value": "step",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/utils.extract_code_from_text",
+      "role": "function",
+      "label": "src/smolagents/utils.extract_code_from_text",
+      "path": "src/smolagents/utils.py",
+      "line": 189,
+      "end_line": 195,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.create_function.new_func",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.create_function.new_func",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 471,
+      "end_line": 519,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_delete",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_delete",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1380,
+      "end_line": 1413,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_boolop",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_boolop",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 710,
+      "end_line": 727,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:1674",
+      "role": "external",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1674,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent._finalize_step",
+      "role": "function",
+      "label": "MultiStepAgent._finalize_step",
+      "path": "src/smolagents/agents.py",
+      "line": 622,
+      "end_line": 625,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/utils.truncate_content",
+      "role": "function",
+      "label": "src/smolagents/utils.truncate_content",
+      "path": "src/smolagents/utils.py",
+      "line": 257,
+      "end_line": 265,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/agent_types.handle_agent_output_types",
+      "role": "function",
+      "label": "src/smolagents/agent_types.handle_agent_output_types",
+      "path": "src/smolagents/agent_types.py",
+      "line": 263,
+      "end_line": 281,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "PipelineTool.decode",
+      "role": "function",
+      "label": "PipelineTool.decode",
+      "path": "src/smolagents/tools.py",
+      "line": 1306,
+      "end_line": 1310,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "UserInputTool.forward",
+      "role": "function",
+      "label": "UserInputTool.forward",
+      "path": "src/smolagents/default_tools.py",
+      "line": 99,
+      "end_line": 102,
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "MultiStepAgent.write_memory_to_messages",
+      "role": "function",
+      "label": "MultiStepAgent.write_memory_to_messages",
+      "path": "src/smolagents/agents.py",
+      "line": 772,
+      "end_line": 784,
+      "logs": [],
+      "gaps": [
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "self.post_processor @ src/smolagents/tools.py:1310",
+      "role": "external",
+      "label": "self.post_processor",
+      "path": "src/smolagents/tools.py",
+      "line": 1310,
+      "in": "PipelineTool.decode",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:740",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 740,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": [
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "PipelineTool.forward",
+      "role": "function",
+      "label": "PipelineTool.forward",
+      "path": "src/smolagents/tools.py",
+      "line": 1297,
+      "end_line": 1304,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1137,
+      "end_line": 1156,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ModuleType @ src/smolagents/local_python_executor.py:1288",
+      "role": "external",
+      "label": "ModuleType",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1288,
+      "in": "src/smolagents/local_python_executor.get_safe_module",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 425,
+      "end_line": 435,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "requests.get @ src/smolagents/agent_types.py:229",
+      "role": "external",
+      "label": "requests.get",
+      "path": "src/smolagents/agent_types.py",
+      "line": 229,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:1328",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 1328,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "MultiStepAgent.task",
+      "role": "state",
+      "label": "MultiStepAgent.task",
+      "path": "src/smolagents/agents.py",
+      "line": 343,
+      "in": "MultiStepAgent.__init__",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락"
+      ]
+    },
+    {
+      "id": "SpeechToTextTool.encode",
+      "role": "function",
+      "label": "SpeechToTextTool.encode",
+      "path": "src/smolagents/default_tools.py",
+      "line": 666,
+      "end_line": 670,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.pre_processor @ src/smolagents/default_tools.py:670",
+      "role": "external",
+      "label": "self.pre_processor",
+      "path": "src/smolagents/default_tools.py",
+      "line": 670,
+      "in": "SpeechToTextTool.encode",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "MultiStepAgent.step",
+      "role": "function",
+      "label": "MultiStepAgent.step",
+      "path": "src/smolagents/agents.py",
+      "line": 796,
+      "end_line": 801,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "LocalPythonExecutor.state",
+      "role": "state",
+      "label": "LocalPythonExecutor.state",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1716,
+      "in": "LocalPythonExecutor.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_python_code",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_python_code",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1583,
+      "end_line": 1667,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:1310",
+      "role": "external",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 1310,
+      "in": "ToolCallingAgent._step_stream",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "BytesIO @ src/smolagents/agent_types.py:231",
+      "role": "external",
+      "label": "BytesIO",
+      "path": "src/smolagents/agent_types.py",
+      "line": 231,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "AgentAudio._path",
+      "role": "state",
+      "label": "AgentAudio._path",
+      "path": "src/smolagents/agent_types.py",
+      "line": 191,
+      "in": "AgentAudio.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate_stream @ src/smolagents/agents.py:726",
+      "role": "external",
+      "label": "self.model.generate_stream",
+      "path": "src/smolagents/agents.py",
+      "line": 726,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "torch.from_numpy @ src/smolagents/agent_types.py:202",
+      "role": "external",
+      "label": "torch.from_numpy",
+      "path": "src/smolagents/agent_types.py",
+      "line": 202,
+      "in": "AgentAudio.__init__",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:862",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 862,
+      "in": "MultiStepAgent.provide_final_answer",
+      "logs": [],
+      "gaps": [
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "GradioUI._stream_response",
+      "role": "function",
+      "label": "GradioUI._stream_response",
+      "path": "src/smolagents/gradio_ui.py",
+      "line": 378,
+      "end_line": 420,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model @ src/smolagents/tools.py:1304",
+      "role": "external",
+      "label": "self.model",
+      "path": "src/smolagents/tools.py",
+      "line": 1304,
+      "in": "PipelineTool.forward",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/agents.py:676",
+      "role": "llm_response",
+      "label": "self.model.generate",
+      "path": "src/smolagents/agents.py",
+      "line": 676,
+      "in": "MultiStepAgent._generate_planning_step",
+      "logs": [],
+      "gaps": [
+        "Tool Response → LLM 입력: 누락"
+      ]
+    },
+    {
+      "id": "src/smolagents/local_python_executor.evaluate_listcomp",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.evaluate_listcomp",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 1099,
+      "end_line": 1115,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.model.generate @ src/smolagents/default_tools.py:673",
+      "role": "external",
+      "label": "self.model.generate",
+      "path": "src/smolagents/default_tools.py",
+      "line": 673,
+      "in": "SpeechToTextTool.forward",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "SpeechToTextTool.decode",
+      "role": "function",
+      "label": "SpeechToTextTool.decode",
+      "path": "src/smolagents/default_tools.py",
+      "line": 675,
+      "end_line": 676,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.pre_processor.batch_decode @ src/smolagents/default_tools.py:676",
+      "role": "external",
+      "label": "self.pre_processor.batch_decode",
+      "path": "src/smolagents/default_tools.py",
+      "line": 676,
+      "in": "SpeechToTextTool.decode",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "torch.tensor @ src/smolagents/agent_types.py:234",
+      "role": "external",
+      "label": "torch.tensor",
+      "path": "src/smolagents/agent_types.py",
+      "line": 234,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "role": "function",
+      "label": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "path": "src/smolagents/agents.py",
+      "line": 1406,
+      "end_line": 1437,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "role": "function",
+      "label": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "path": "src/smolagents/local_python_executor.py",
+      "line": 332,
+      "end_line": 357,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "input @ src/smolagents/default_tools.py:100",
+      "role": "user_input",
+      "label": "input",
+      "path": "src/smolagents/default_tools.py",
+      "line": 100,
+      "in": "UserInputTool.forward",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "sf.read @ src/smolagents/agent_types.py:231",
+      "role": "external",
+      "label": "sf.read",
+      "path": "src/smolagents/agent_types.py",
+      "line": 231,
+      "in": "AgentAudio.to_raw",
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "self.python_executor @ src/smolagents/agents.py:1746",
+      "role": "tool_response",
+      "label": "self.python_executor",
+      "path": "src/smolagents/agents.py",
+      "line": 1746,
+      "in": "CodeAgent._step_stream",
+      "logs": [],
+      "gaps": [
+        "User Input → Tool 입력: 누락",
+        "User Input → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "LLM Response → Tool 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → LLM 입력: 누락",
+        "Tool Response → Tool 입력: 누락",
+        "Tool Response → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "ToolCallingAgent.execute_tool_call",
+      "role": "function",
+      "label": "ToolCallingAgent.execute_tool_call",
+      "path": "src/smolagents/agents.py",
+      "line": 1476,
+      "end_line": 1516,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "src/smolagents/agents.py:1506",
+          "code": "start = observatory_log.tool_start(name, arguments)",
+          "records": [
+            {
+              "value": "arguments",
+              "whole": true
+            },
+            {
+              "value": "name",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "src/smolagents/agents.py:1514",
+          "code": "observatory_log.tool_error(start, name, error)",
+          "records": [
+            {
+              "value": "error",
+              "whole": true
+            },
+            {
+              "value": "name",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "src/smolagents/agents.py:1516",
+          "code": "observatory_log.tool_end(start, name, result=out)",
+          "records": [
+            {
+              "value": "name",
+              "whole": true
+            },
+            {
+              "value": "out",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    }
+  ],
+  "edges": [
+    {
+      "from": "AgentAudio.__init__",
+      "to": "AgentAudio._path",
+      "values": [
+        "value"
+      ]
+    },
+    {
+      "from": "AgentAudio.__init__",
+      "to": "AgentAudio._tensor",
+      "values": [
+        "value"
+      ]
+    },
+    {
+      "from": "AgentAudio.__init__",
+      "to": "torch.from_numpy @ src/smolagents/agent_types.py:202",
+      "values": [
+        "value"
+      ]
+    },
+    {
+      "from": "AgentAudio.__init__",
+      "to": "torch.tensor @ src/smolagents/agent_types.py:204",
+      "values": [
+        "value"
+      ]
+    },
+    {
+      "from": "AgentAudio._path",
+      "to": "requests.get @ src/smolagents/agent_types.py:229",
+      "values": [
+        "_path"
+      ]
+    },
+    {
+      "from": "AgentAudio._path",
+      "to": "sf.read @ src/smolagents/agent_types.py:233",
+      "values": [
+        "_path"
+      ]
+    },
+    {
+      "from": "AgentAudio._tensor",
+      "to": "AgentAudio.to_raw",
+      "values": [
+        "_tensor"
+      ]
+    },
+    {
+      "from": "AgentAudio.to_raw",
+      "to": "BytesIO @ src/smolagents/agent_types.py:231",
+      "values": [
+        "response"
+      ]
+    },
+    {
+      "from": "AgentAudio.to_raw",
+      "to": "SpeechToTextTool.encode",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "AgentAudio.to_raw",
+      "to": "torch.tensor @ src/smolagents/agent_types.py:234",
+      "values": [
+        "tensor"
+      ]
+    },
+    {
+      "from": "BytesIO @ src/smolagents/agent_types.py:231",
+      "to": "sf.read @ src/smolagents/agent_types.py:231",
+      "values": [
+        "231"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "MultiStepAgent.step",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.model.generate @ src/smolagents/agents.py:1693",
+      "values": [
+        "additional_args",
+        "input_messages",
+        "stop_sequences"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:1674",
+      "values": [
+        "additional_args",
+        "input_messages",
+        "stop_sequences"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "self.python_executor @ src/smolagents/agents.py:1746",
+      "values": [
+        "code_action"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "values": [
+        "code_action"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/models.agglomerate_stream_deltas",
+      "values": [
+        "chat_message_stream_deltas"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/utils.extract_code_from_text",
+      "values": [
+        "code_action"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/utils.parse_code_blobs",
+      "values": [
+        "output_text"
+      ]
+    },
+    {
+      "from": "CodeAgent._step_stream",
+      "to": "src/smolagents/utils.truncate_content",
+      "values": [
+        "code_output"
+      ]
+    },
+    {
+      "from": "GradioUI._stream_response",
+      "to": "src/smolagents/models.agglomerate_stream_deltas",
+      "values": [
+        "accumulated_events"
+      ]
+    },
+    {
+      "from": "LocalPythonExecutor.state",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "ModuleType @ src/smolagents/local_python_executor.py:1288",
+      "to": "src/smolagents/local_python_executor.get_safe_module",
+      "values": [
+        "safe_module"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.__call__",
+      "to": "MultiStepAgent.run",
+      "values": [
+        "full_task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.__call__",
+      "to": "src/smolagents/agents.populate_template",
+      "values": [
+        "report"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.__call__",
+      "to": "src/smolagents/utils.truncate_content",
+      "values": [
+        "content"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._finalize_step",
+      "to": "MultiStepAgent._handle_max_steps_reached",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._finalize_step",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate @ src/smolagents/agents.py:676",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate @ src/smolagents/agents.py:740",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:662",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:726",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._generate_planning_step",
+      "to": "src/smolagents/agents.populate_template",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._handle_max_steps_reached",
+      "to": "MultiStepAgent._finalize_step",
+      "values": [
+        "final_memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._handle_max_steps_reached",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._handle_max_steps_reached",
+      "to": "MultiStepAgent.memory",
+      "values": [
+        "final_memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._handle_max_steps_reached",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "action_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent._finalize_step",
+      "values": [
+        "action_step",
+        "final_answer_step",
+        "planning_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent._handle_max_steps_reached",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "MultiStepAgent.memory",
+      "values": [
+        "action_step",
+        "planning_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "action_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent._run_stream",
+      "to": "src/smolagents/agent_types.handle_agent_output_types",
+      "values": [
+        "final_answer"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.memory",
+      "to": "MultiStepAgent.run",
+      "values": [
+        "memory"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.memory",
+      "to": "MultiStepAgent.write_memory_to_messages",
+      "values": [
+        "memory"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.memory",
+      "to": "self.memory.system_prompt.to_messages @ src/smolagents/agents.py:781",
+      "values": [
+        "memory"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.provide_final_answer",
+      "to": "MultiStepAgent._handle_max_steps_reached",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.provide_final_answer",
+      "to": "self.model.generate @ src/smolagents/agents.py:862",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.provide_final_answer",
+      "to": "src/smolagents/agents.populate_template",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "GradioUI._stream_response",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "MultiStepAgent.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "MultiStepAgent.task",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "final output",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.run",
+      "to": "src/smolagents/gradio_ui.stream_to_gradio",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.step",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.step",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.task",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.task",
+      "to": "MultiStepAgent.memory",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "MultiStepAgent.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "MultiStepAgent.write_memory_to_messages",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "PipelineTool.decode",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "PipelineTool.forward",
+      "values": [
+        "encoded_inputs",
+        "non_tensor_inputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "SpeechToTextTool.decode",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "SpeechToTextTool.forward",
+      "values": [
+        "encoded_inputs",
+        "non_tensor_inputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "send_to_device @ src/smolagents/tools.py:1326",
+      "values": [
+        "tensor_inputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "send_to_device @ src/smolagents/tools.py:1328",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.__call__",
+      "to": "src/smolagents/agent_types.handle_agent_output_types",
+      "values": [
+        "decoded_outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.decode",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "PipelineTool.decode",
+      "to": "self.post_processor @ src/smolagents/tools.py:1310",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "PipelineTool.forward",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "PipelineTool.forward",
+      "to": "Tool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "PipelineTool.forward",
+      "to": "self.model @ src/smolagents/tools.py:1304",
+      "values": [
+        "inputs"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.decode",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.decode",
+      "to": "self.pre_processor.batch_decode @ src/smolagents/default_tools.py:676",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.encode",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.encode",
+      "to": "self.pre_processor @ src/smolagents/default_tools.py:670",
+      "values": [
+        "audio"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.forward",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.forward",
+      "to": "Tool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "SpeechToTextTool.forward",
+      "to": "self.model.generate @ src/smolagents/default_tools.py:673",
+      "values": [
+        "inputs"
+      ]
+    },
+    {
+      "from": "Tool.__call__",
+      "to": "src/smolagents/agent_types.handle_agent_output_types",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "MultiStepAgent.step",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "ToolCallingAgent.process_tool_calls",
+      "values": [
+        "chat_message",
+        "memory_step"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "self.model.generate @ src/smolagents/agents.py:1328",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "self.model.generate_stream @ src/smolagents/agents.py:1310",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "self.model.parse_tool_calls @ src/smolagents/agents.py:1352",
+      "values": [
+        "chat_message"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent._step_stream",
+      "to": "src/smolagents/models.agglomerate_stream_deltas",
+      "values": [
+        "chat_message_stream_deltas"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "memory_step"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls",
+      "to": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "values": [
+        "tool_call"
+      ]
+    },
+    {
+      "from": "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "to": "ToolCallingAgent.process_tool_calls",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "UserInputTool.forward",
+      "to": "Tool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "MultiStepAgent.run",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "__import__ @ src/smolagents/local_python_executor.py:1322",
+      "to": "src/smolagents/local_python_executor.evaluate_import",
+      "values": [
+        "raw_module"
+      ]
+    },
+    {
+      "from": "ast.unparse @ src/smolagents/local_python_executor.py:469",
+      "to": "src/smolagents/local_python_executor.create_function",
+      "values": [
+        "source_code"
+      ]
+    },
+    {
+      "from": "func @ src/smolagents/local_python_executor.py:918",
+      "to": "src/smolagents/local_python_executor.evaluate_call",
+      "values": [
+        "kwargs",
+        "return"
+      ]
+    },
+    {
+      "from": "import_module @ src/smolagents/local_python_executor.py:1313",
+      "to": "src/smolagents/local_python_executor.evaluate_import",
+      "values": [
+        "raw_module"
+      ]
+    },
+    {
+      "from": "input @ src/smolagents/default_tools.py:100",
+      "to": "UserInputTool.forward",
+      "values": [
+        "user_input"
+      ]
+    },
+    {
+      "from": "requests.get @ src/smolagents/agent_types.py:229",
+      "to": "AgentAudio.to_raw",
+      "values": [
+        "response"
+      ]
+    },
+    {
+      "from": "self.memory.system_prompt.to_messages @ src/smolagents/agents.py:781",
+      "to": "MultiStepAgent.write_memory_to_messages",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "self.model @ src/smolagents/tools.py:1304",
+      "to": "PipelineTool.forward",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:1328",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "chat_message"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:1693",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "additional_args",
+        "chat_message",
+        "stop_sequences"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:676",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:740",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/agents.py:862",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "chat_message",
+        "messages"
+      ]
+    },
+    {
+      "from": "self.model.generate @ src/smolagents/default_tools.py:673",
+      "to": "SpeechToTextTool.forward",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.model.generate_stream @ src/smolagents/agents.py:1310",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "output_stream"
+      ]
+    },
+    {
+      "from": "self.model.generate_stream @ src/smolagents/agents.py:1674",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "additional_args",
+        "output_stream",
+        "stop_sequences"
+      ]
+    },
+    {
+      "from": "self.model.generate_stream @ src/smolagents/agents.py:662",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "self.model.generate_stream @ src/smolagents/agents.py:726",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "input_messages"
+      ]
+    },
+    {
+      "from": "self.model.parse_tool_calls @ src/smolagents/agents.py:1352",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "chat_message"
+      ]
+    },
+    {
+      "from": "self.post_processor @ src/smolagents/tools.py:1310",
+      "to": "PipelineTool.decode",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.pre_processor @ src/smolagents/default_tools.py:670",
+      "to": "SpeechToTextTool.encode",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.pre_processor.batch_decode @ src/smolagents/default_tools.py:676",
+      "to": "SpeechToTextTool.decode",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "self.python_executor @ src/smolagents/agents.py:1746",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "code_output"
+      ]
+    },
+    {
+      "from": "send_to_device @ src/smolagents/tools.py:1326",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "encoded_inputs",
+        "tensor_inputs"
+      ]
+    },
+    {
+      "from": "send_to_device @ src/smolagents/tools.py:1328",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "outputs"
+      ]
+    },
+    {
+      "from": "sf.read @ src/smolagents/agent_types.py:231",
+      "to": "AgentAudio.to_raw",
+      "values": [
+        "tensor"
+      ]
+    },
+    {
+      "from": "sf.read @ src/smolagents/agent_types.py:233",
+      "to": "AgentAudio.to_raw",
+      "values": [
+        "tensor"
+      ]
+    },
+    {
+      "from": "src/smolagents/agent_types.handle_agent_output_types",
+      "to": "AgentAudio.__init__",
+      "values": [
+        "output"
+      ]
+    },
+    {
+      "from": "src/smolagents/agent_types.handle_agent_output_types",
+      "to": "MultiStepAgent._run_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agent_types.handle_agent_output_types",
+      "to": "PipelineTool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agent_types.handle_agent_output_types",
+      "to": "Tool.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agents.populate_template",
+      "to": "MultiStepAgent.__call__",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agents.populate_template",
+      "to": "MultiStepAgent._generate_planning_step",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/agents.populate_template",
+      "to": "MultiStepAgent.provide_final_answer",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/gradio_ui.stream_to_gradio",
+      "to": "src/smolagents/models.agglomerate_stream_deltas",
+      "values": [
+        "accumulated_events"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "comprehension",
+        "if_clause",
+        "new_state",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "comprehension",
+        "new_state",
+        "value"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function",
+      "to": "ast.unparse @ src/smolagents/local_python_executor.py:469",
+      "values": [
+        "func_def"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function",
+      "to": "src/smolagents/local_python_executor.create_function.new_func",
+      "values": [
+        "func_def",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "custom_tools",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function",
+      "to": "src/smolagents/local_python_executor.evaluate_function_def",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.create_function.new_func",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "d",
+        "func_state",
+        "stmt"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_annassign",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "annassign",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_annassign",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "annassign",
+        "state",
+        "value"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_assert",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "assert_node",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_assign",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "assign",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_assign",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "result",
+        "state",
+        "target",
+        "tgt",
+        "val"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.create_function",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.create_function.new_func",
+      "values": [
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_annassign",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_assert",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_assign",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_attribute",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_binop",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_boolop",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_call",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_class_def",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_condition",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_delete",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_for",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_function_def",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "values": [
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_if",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_import",
+      "values": [
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_lambda",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_listcomp",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_name",
+      "values": [
+        "common_params"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_raise",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_setcomp",
+      "values": [
+        "common_params",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_subscript",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_try",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_unaryop",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_while",
+      "values": [
+        "common_params",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.evaluate_with",
+      "values": [
+        "common_params",
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_ast",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_attribute",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "values": [
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "current_value",
+        "expression",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "target"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_binop",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "binop",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_boolop",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "return",
+        "state",
+        "value"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_call",
+      "to": "func @ src/smolagents/local_python_executor.py:918",
+      "values": [
+        "args",
+        "kwargs"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_call",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "arg",
+        "call",
+        "keyword",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_class_def",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "base",
+        "class_dict",
+        "return",
+        "state",
+        "stmt",
+        "target"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_condition",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "comparator",
+        "condition",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_delete",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "state",
+        "target"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "dictcomp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_for",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "for_loop",
+        "node",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_for",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "counter",
+        "for_loop",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_function_def",
+      "to": "src/smolagents/local_python_executor.create_function",
+      "values": [
+        "custom_tools",
+        "func_def",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_function_def",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "genexp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "to": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "values": [
+        "genexp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "gen",
+        "if_clause",
+        "new_state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "to": "src/smolagents/local_python_executor.set_value",
+      "values": [
+        "gen",
+        "new_state",
+        "value"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_if",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "if_statement",
+        "line",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_import",
+      "to": "__import__ @ src/smolagents/local_python_executor.py:1322",
+      "values": [
+        "alias",
+        "expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_import",
+      "to": "import_module @ src/smolagents/local_python_executor.py:1313",
+      "values": [
+        "alias"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_import",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_import",
+      "to": "src/smolagents/local_python_executor.get_safe_module",
+      "values": [
+        "raw_module"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_lambda",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "lambda_expression"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_lambda",
+      "to": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "values": [
+        "args",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "new_state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_listcomp",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "listcomp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_name",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "LocalPythonExecutor.state",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_python_code",
+      "to": "src/smolagents/utils.truncate_content",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_raise",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "raise_node",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_setcomp",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "setcomp",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_subscript",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "return",
+        "state",
+        "subscript"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_try",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "handler",
+        "state",
+        "stmt"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_unaryop",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "expression",
+        "return",
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_while",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "node",
+        "state",
+        "while_loop"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.evaluate_with",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "item",
+        "state",
+        "stmt"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.fix_final_answer_code",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.get_safe_module",
+      "to": "ModuleType @ src/smolagents/local_python_executor.py:1288",
+      "values": [
+        "raw_module"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.get_safe_module",
+      "to": "src/smolagents/local_python_executor.evaluate_import",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_annassign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_assign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_ast",
+      "values": [
+        "state",
+        "target"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_augassign",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_for",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/local_python_executor.set_value",
+      "to": "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "values": [
+        "state"
+      ]
+    },
+    {
+      "from": "src/smolagents/models.agglomerate_stream_deltas",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/models.agglomerate_stream_deltas",
+      "to": "ToolCallingAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.extract_code_from_text",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.extract_code_from_text",
+      "to": "src/smolagents/utils.parse_code_blobs",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.parse_code_blobs",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.parse_code_blobs",
+      "to": "src/smolagents/utils.extract_code_from_text",
+      "values": [
+        "text"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.truncate_content",
+      "to": "CodeAgent._step_stream",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "src/smolagents/utils.truncate_content",
+      "to": "src/smolagents/local_python_executor.evaluate_python_code",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "torch.from_numpy @ src/smolagents/agent_types.py:202",
+      "to": "AgentAudio._tensor",
+      "values": [
+        "_tensor"
+      ]
+    },
+    {
+      "from": "torch.tensor @ src/smolagents/agent_types.py:204",
+      "to": "AgentAudio._tensor",
+      "values": [
+        "_tensor"
+      ]
+    },
+    {
+      "from": "torch.tensor @ src/smolagents/agent_types.py:234",
+      "to": "AgentAudio._tensor",
+      "values": [
+        "_tensor"
+      ]
+    }
+  ],
+  "calls": [
+    [
+      "CodeAgent._step_stream",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/local_python_executor.fix_final_answer_code"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/models.agglomerate_stream_deltas"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/utils.extract_code_from_text"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/utils.parse_code_blobs"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "src/smolagents/utils.truncate_content"
+    ],
+    [
+      "GradioUI._stream_response",
+      "MultiStepAgent.run"
+    ],
+    [
+      "GradioUI._stream_response",
+      "src/smolagents/models.agglomerate_stream_deltas"
+    ],
+    [
+      "MultiStepAgent.__call__",
+      "MultiStepAgent.run"
+    ],
+    [
+      "MultiStepAgent.__call__",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "MultiStepAgent.__call__",
+      "src/smolagents/agents.populate_template"
+    ],
+    [
+      "MultiStepAgent.__call__",
+      "src/smolagents/utils.truncate_content"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "src/smolagents/agents.populate_template"
+    ],
+    [
+      "MultiStepAgent._handle_max_steps_reached",
+      "MultiStepAgent._finalize_step"
+    ],
+    [
+      "MultiStepAgent._handle_max_steps_reached",
+      "MultiStepAgent.provide_final_answer"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "CodeAgent._step_stream"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "MultiStepAgent._finalize_step"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "MultiStepAgent._generate_planning_step"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "MultiStepAgent._handle_max_steps_reached"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "ToolCallingAgent._step_stream"
+    ],
+    [
+      "MultiStepAgent._run_stream",
+      "src/smolagents/agent_types.handle_agent_output_types"
+    ],
+    [
+      "MultiStepAgent.provide_final_answer",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "MultiStepAgent.provide_final_answer",
+      "src/smolagents/agents.populate_template"
+    ],
+    [
+      "MultiStepAgent.run",
+      "MultiStepAgent._run_stream"
+    ],
+    [
+      "MultiStepAgent.step",
+      "CodeAgent._step_stream"
+    ],
+    [
+      "MultiStepAgent.step",
+      "ToolCallingAgent._step_stream"
+    ],
+    [
+      "PipelineTool.__call__",
+      "PipelineTool.decode"
+    ],
+    [
+      "PipelineTool.__call__",
+      "PipelineTool.forward"
+    ],
+    [
+      "PipelineTool.__call__",
+      "SpeechToTextTool.decode"
+    ],
+    [
+      "PipelineTool.__call__",
+      "SpeechToTextTool.encode"
+    ],
+    [
+      "PipelineTool.__call__",
+      "SpeechToTextTool.forward"
+    ],
+    [
+      "PipelineTool.__call__",
+      "src/smolagents/agent_types.handle_agent_output_types"
+    ],
+    [
+      "SpeechToTextTool.encode",
+      "AgentAudio.to_raw"
+    ],
+    [
+      "Tool.__call__",
+      "PipelineTool.forward"
+    ],
+    [
+      "Tool.__call__",
+      "SpeechToTextTool.forward"
+    ],
+    [
+      "Tool.__call__",
+      "UserInputTool.forward"
+    ],
+    [
+      "Tool.__call__",
+      "src/smolagents/agent_types.handle_agent_output_types"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "MultiStepAgent.write_memory_to_messages"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "ToolCallingAgent.process_tool_calls"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "src/smolagents/models.agglomerate_stream_deltas"
+    ],
+    [
+      "ToolCallingAgent.process_tool_calls",
+      "ToolCallingAgent.process_tool_calls.process_single_tool_call"
+    ],
+    [
+      "ToolCallingAgent.process_tool_calls.process_single_tool_call",
+      "ToolCallingAgent.execute_tool_call"
+    ],
+    [
+      "src/smolagents/agent_types.handle_agent_output_types",
+      "AgentAudio.__init__"
+    ],
+    [
+      "src/smolagents/gradio_ui.stream_to_gradio",
+      "MultiStepAgent.run"
+    ],
+    [
+      "src/smolagents/gradio_ui.stream_to_gradio",
+      "src/smolagents/models.agglomerate_stream_deltas"
+    ],
+    [
+      "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "src/smolagents/local_python_executor._evaluate_comprehensions"
+    ],
+    [
+      "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor._evaluate_comprehensions",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.create_function.new_func",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_annassign",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_annassign",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_assert",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_assign",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_assign",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_annassign"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_assert"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_assign"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_attribute"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_augassign"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_binop"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_boolop"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_call"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_class_def"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_condition"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_delete"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_dictcomp"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_for"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_function_def"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_generatorexp"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_if"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_import"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_lambda"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_listcomp"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_name"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_raise"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_setcomp"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_subscript"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_try"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_unaryop"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_while"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_ast",
+      "src/smolagents/local_python_executor.evaluate_with"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_attribute",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign",
+      "src/smolagents/local_python_executor.evaluate_augassign.get_current_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_augassign.get_current_value",
+      "src/smolagents/local_python_executor.evaluate_augassign.get_current_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_binop",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_boolop",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_call",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_class_def",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_condition",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_delete",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_dictcomp",
+      "src/smolagents/local_python_executor._evaluate_comprehensions"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_for",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_for",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_function_def",
+      "src/smolagents/local_python_executor.create_function"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_generatorexp",
+      "src/smolagents/local_python_executor.evaluate_generatorexp.generator"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_generatorexp.generator",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_if",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_import",
+      "src/smolagents/local_python_executor.get_safe_module"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_lambda.lambda_func",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_listcomp",
+      "src/smolagents/local_python_executor._evaluate_comprehensions"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_raise",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_setcomp",
+      "src/smolagents/local_python_executor._evaluate_comprehensions"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_subscript",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_try",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_unaryop",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_while",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_with",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.get_safe_module",
+      "src/smolagents/local_python_executor.get_safe_module"
+    ],
+    [
+      "src/smolagents/local_python_executor.set_value",
+      "src/smolagents/local_python_executor.evaluate_ast"
+    ],
+    [
+      "src/smolagents/local_python_executor.set_value",
+      "src/smolagents/local_python_executor.set_value"
+    ],
+    [
+      "src/smolagents/utils.parse_code_blobs",
+      "src/smolagents/utils.extract_code_from_text"
+    ],
+    [
+      "AgentAudio.__init__",
+      "torch.from_numpy @ src/smolagents/agent_types.py:202"
+    ],
+    [
+      "AgentAudio.__init__",
+      "torch.tensor @ src/smolagents/agent_types.py:204"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "BytesIO @ src/smolagents/agent_types.py:231"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "requests.get @ src/smolagents/agent_types.py:229"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "sf.read @ src/smolagents/agent_types.py:231"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "sf.read @ src/smolagents/agent_types.py:233"
+    ],
+    [
+      "AgentAudio.to_raw",
+      "torch.tensor @ src/smolagents/agent_types.py:234"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "self.model.generate @ src/smolagents/agents.py:1693"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "self.model.generate_stream @ src/smolagents/agents.py:1674"
+    ],
+    [
+      "CodeAgent._step_stream",
+      "self.python_executor @ src/smolagents/agents.py:1746"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "self.model.generate @ src/smolagents/agents.py:676"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "self.model.generate @ src/smolagents/agents.py:740"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "self.model.generate_stream @ src/smolagents/agents.py:662"
+    ],
+    [
+      "MultiStepAgent._generate_planning_step",
+      "self.model.generate_stream @ src/smolagents/agents.py:726"
+    ],
+    [
+      "MultiStepAgent.provide_final_answer",
+      "self.model.generate @ src/smolagents/agents.py:862"
+    ],
+    [
+      "MultiStepAgent.write_memory_to_messages",
+      "self.memory.system_prompt.to_messages @ src/smolagents/agents.py:781"
+    ],
+    [
+      "PipelineTool.__call__",
+      "send_to_device @ src/smolagents/tools.py:1326"
+    ],
+    [
+      "PipelineTool.__call__",
+      "send_to_device @ src/smolagents/tools.py:1328"
+    ],
+    [
+      "PipelineTool.decode",
+      "self.post_processor @ src/smolagents/tools.py:1310"
+    ],
+    [
+      "PipelineTool.forward",
+      "self.model @ src/smolagents/tools.py:1304"
+    ],
+    [
+      "SpeechToTextTool.decode",
+      "self.pre_processor.batch_decode @ src/smolagents/default_tools.py:676"
+    ],
+    [
+      "SpeechToTextTool.encode",
+      "self.pre_processor @ src/smolagents/default_tools.py:670"
+    ],
+    [
+      "SpeechToTextTool.forward",
+      "self.model.generate @ src/smolagents/default_tools.py:673"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "self.model.generate @ src/smolagents/agents.py:1328"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "self.model.generate_stream @ src/smolagents/agents.py:1310"
+    ],
+    [
+      "ToolCallingAgent._step_stream",
+      "self.model.parse_tool_calls @ src/smolagents/agents.py:1352"
+    ],
+    [
+      "UserInputTool.forward",
+      "input @ src/smolagents/default_tools.py:100"
+    ],
+    [
+      "src/smolagents/local_python_executor.create_function",
+      "ast.unparse @ src/smolagents/local_python_executor.py:469"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_call",
+      "func @ src/smolagents/local_python_executor.py:918"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_import",
+      "__import__ @ src/smolagents/local_python_executor.py:1322"
+    ],
+    [
+      "src/smolagents/local_python_executor.evaluate_import",
+      "import_module @ src/smolagents/local_python_executor.py:1313"
+    ],
+    [
+      "src/smolagents/local_python_executor.get_safe_module",
+      "ModuleType @ src/smolagents/local_python_executor.py:1288"
+    ]
+  ],
+  "verdicts": {
+    "검증 완료": 31,
+    "일부만 기록": 0,
+    "누락": 13
+  },
+  "missing_anchors": []
+}

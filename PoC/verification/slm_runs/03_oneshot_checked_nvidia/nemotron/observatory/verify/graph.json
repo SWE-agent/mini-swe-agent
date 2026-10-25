@@ -1,0 +1,319 @@
+{
+  "entry": "ToyAgent.run",
+  "nodes": [
+    {
+      "id": "ToyAgent.run",
+      "role": "entry",
+      "label": "ToyAgent.run",
+      "path": "agent.py",
+      "line": 27,
+      "end_line": 35,
+      "logs": [
+        {
+          "event": "tool_start",
+          "at": "agent.py:29",
+          "code": "observatory_log.tool_start(\"user_input\", {\"task\": task})",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "agent.py:30",
+          "code": "observatory_log.tool_end(None, \"user_input\", result=task)",
+          "records": [
+            {
+              "value": "task",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": [
+        "User Input → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "ToyAgent.confirm",
+      "role": "function",
+      "label": "ToyAgent.confirm",
+      "path": "agent.py",
+      "line": 62,
+      "end_line": 63,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToyAgent.ask_user",
+      "role": "function",
+      "label": "ToyAgent.ask_user",
+      "path": "agent.py",
+      "line": 58,
+      "end_line": 60,
+      "logs": [],
+      "gaps": [
+        "User Input → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "self.llm.chat @ agent.py:40",
+      "role": "llm_response",
+      "label": "self.llm.chat",
+      "path": "agent.py",
+      "line": 40,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "ToyAgent.step",
+      "role": "function",
+      "label": "ToyAgent.step",
+      "path": "agent.py",
+      "line": 37,
+      "end_line": 53,
+      "logs": [
+        {
+          "event": "llm_query",
+          "at": "agent.py:38",
+          "code": "observatory_log.llm_query(n, model=self.model, messages=self.messages)",
+          "records": [
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "model",
+              "whole": true
+            },
+            {
+              "value": "n",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_error",
+          "at": "agent.py:42",
+          "code": "observatory_log.llm_error(n, e)",
+          "records": [
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "n",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "llm_response",
+          "at": "agent.py:44",
+          "code": "observatory_log.llm_response(n, actions=[c[\"name\"] for c in response[\"calls\"]], reply=response, messages=self.messages)",
+          "records": [
+            {
+              "value": "c",
+              "whole": false
+            },
+            {
+              "value": "messages",
+              "whole": true
+            },
+            {
+              "value": "n",
+              "whole": true
+            },
+            {
+              "value": "response",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_start",
+          "at": "agent.py:47",
+          "code": "start = observatory_log.tool_start(call[\"name\"], call[\"args\"])",
+          "records": [
+            {
+              "value": "call",
+              "whole": false
+            }
+          ]
+        },
+        {
+          "event": "tool_end",
+          "at": "agent.py:50",
+          "code": "observatory_log.tool_end(start, call[\"name\"], result=result)",
+          "records": [
+            {
+              "value": "call",
+              "whole": false
+            },
+            {
+              "value": "result",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        },
+        {
+          "event": "tool_error",
+          "at": "agent.py:52",
+          "code": "observatory_log.tool_error(start, call[\"name\"], e)",
+          "records": [
+            {
+              "value": "call",
+              "whole": false
+            },
+            {
+              "value": "e",
+              "whole": true
+            },
+            {
+              "value": "start",
+              "whole": true
+            }
+          ]
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "id": "input @ agent.py:59",
+      "role": "user_input",
+      "label": "input",
+      "path": "agent.py",
+      "line": 59,
+      "logs": [],
+      "gaps": [
+        "User Input → 최종 출력: 누락"
+      ]
+    },
+    {
+      "id": "ToyAgent.messages",
+      "role": "state",
+      "label": "ToyAgent.messages",
+      "path": "agent.py",
+      "line": 25,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "[User Input] task (entry parameter)",
+      "role": "user_input",
+      "label": "task",
+      "path": "agent.py",
+      "line": 27,
+      "logs": [],
+      "gaps": []
+    },
+    {
+      "id": "final output",
+      "role": "final_output",
+      "label": "return of ToyAgent.run",
+      "path": "agent.py",
+      "line": 27,
+      "logs": [],
+      "gaps": [
+        "User Input → 최종 출력: 누락"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "ToyAgent.ask_user",
+      "to": "ToyAgent.run",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "ToyAgent.ask_user",
+      "to": "input @ agent.py:59",
+      "values": [
+        "question"
+      ]
+    },
+    {
+      "from": "ToyAgent.confirm",
+      "to": "ToyAgent.ask_user",
+      "values": [
+        "answer"
+      ]
+    },
+    {
+      "from": "ToyAgent.messages",
+      "to": "self.llm.chat @ agent.py:40",
+      "values": [
+        "messages"
+      ]
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "ToyAgent.confirm",
+      "values": [
+        "reply"
+      ]
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "ToyAgent.messages",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "ToyAgent.run",
+      "to": "final output",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "ToyAgent.messages",
+      "values": [
+        "response"
+      ]
+    },
+    {
+      "from": "ToyAgent.step",
+      "to": "ToyAgent.run",
+      "values": [
+        "return"
+      ]
+    },
+    {
+      "from": "[User Input] task (entry parameter)",
+      "to": "ToyAgent.run",
+      "values": [
+        "task"
+      ]
+    },
+    {
+      "from": "input @ agent.py:59",
+      "to": "ToyAgent.ask_user",
+      "values": [
+        "answer"
+      ]
+    },
+    {
+      "from": "self.llm.chat @ agent.py:40",
+      "to": "ToyAgent.step",
+      "values": [
+        "response"
+      ]
+    }
+  ],
+  "verdicts": {
+    "검증 완료": 4,
+    "일부만 기록": 0,
+    "누락": 1
+  }
+}

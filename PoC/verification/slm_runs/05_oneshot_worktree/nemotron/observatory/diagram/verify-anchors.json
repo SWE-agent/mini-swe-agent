@@ -1,0 +1,8 @@
+{
+  "logger": "observatory_log",
+  "entry": {"function": "ToyAgent.run", "path": "PoC/verification/toy_agent/agent.py", "line": 1, "inputs": ["task"]},
+  "sources": [
+    {"kind": "llm_response", "path": "PoC/verification/toy_agent/agent.py", "line": 32, "call": "self.llm.chat", "label": "model call"},
+    {"kind": "user_input", "path": "PoC/verification/toy_agent/agent.py", "line": 56, "call": "input", "label": "prompt"}
+  ]
+}

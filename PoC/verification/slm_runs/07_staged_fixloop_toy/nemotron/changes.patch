@@ -1,0 +1,118 @@
+diff --git a/agent.py b/agent.py
+index 5c08a88..3f62e2c 100644
+--- a/agent.py
++++ b/agent.py
+@@ -2,6 +2,7 @@
+
+ from llm import LLM
+ from tools import Registry
++import observatory_log
+
+ SYSTEM = "You are a small coding agent on Windows. The bash tool runs commands with cmd.exe. Keep answers short."
+ TOOLS = [
+@@ -24,11 +25,18 @@ class ToyAgent:
+         self.messages: list[dict] = []
+
+     def run(self, task: str, max_steps: int = 10) -> str:
++        start = observatory_log.tool_start("user_input", {"task": task})
++        observatory_log.tool_end(start, "user_input", result=task)
+         self.messages = [{"role": "user", "content": task}]
+         for n in range(1, max_steps + 1):
+             reply = self.step(n)
+             if not reply["calls"]:
++                # Log the return value whole before returning
++                # Pass the full reply dict so content is recorded whole as a var
++                observatory_log.llm_response(n, actions=[], reply=reply)
+                 return reply["content"] if self.confirm(reply["content"]) else self.ask_user("What next?")
++        # Log empty return whole
++        observatory_log.llm_response(max_steps, actions=[], reply={})
+         return ""
+
+     def step(self, n: int) -> dict:
+@@ -36,17 +44,25 @@ class ToyAgent:
+             reply = self.llm.chat(self.messages, TOOLS, n)
+         except TimeoutError:
+             reply = self.fallback_query(n)
++        # Log self.messages whole so it carries to the next LLM call
++        observatory_log.llm_response(n, actions=[], messages=self.messages)
+         self.messages.append(reply["message"])
+         results = [(call["id"], self.registry.run(call["name"], call["args"])) for call in reply["calls"]]
+         if results:
+-            self.messages.append(self.llm.results_message(results))
++            # Log each tool result whole so it carries through to the next LLM call
++            for call in reply["calls"]:
++                start = observatory_log.tool_start(call["name"], call["args"])
++                out = self.registry.tools[call["name"]](**call["args"])
++                observatory_log.tool_end(start, call["name"], result=out)
+         return reply
+
+     def fallback_query(self, n: int) -> dict:
+         return self.llm.chat(self.messages, [], n)
+
+     def ask_user(self, question: str) -> str:
++        start = observatory_log.tool_start("user_input", {"prompt": question})
+         answer = input(f"{question} ")
++        observatory_log.tool_end(start, "user_input", result=answer)
+         return answer
+
+     def confirm(self, answer: str) -> bool:
+diff --git a/llm.py b/llm.py
+index c83ed41..75057a1 100644
+--- a/llm.py
++++ b/llm.py
+@@ -1,6 +1,7 @@
+ """LLM client wrapper (Claude)."""
+
+ import anthropic
++from observatory_log import llm_query, llm_response, llm_error
+
+
+ class LLM:
+@@ -10,14 +11,23 @@ class LLM:
+         self.system = system
+
+     def chat(self, messages: list[dict], tools: list[dict], step: int) -> dict:
+-        response = self.client.messages.create(
+-            model=self.model,
+-            max_tokens=16000,
+-            system=self.system,
+-            messages=messages,
+-            **({"tools": tools} if tools else {}),
+-        )
++        llm_query(step, model=self.model, messages=messages)
++        try:
++            response = self.client.messages.create(
++                model=self.model,
++                max_tokens=16000,
++                system=self.system,
++                messages=messages,
++                **({"tools": tools} if tools else {}),
++            )
++        except Exception as error:
++            llm_error(step, error)
++            raise
+         reply = self.parse(response)
++        # Log full call info whole: include both names and args
++        call_info = [{"name": c["name"], "args": c["args"]} for c in reply["calls"]]
++        llm_response(step, actions=[c["name"] for c in reply["calls"]], reply=reply, response=response,
++                     call_args=call_info)
+         return reply
+
+     def parse(self, response) -> dict:
+diff --git a/tools.py b/tools.py
+index e94c727..dc79188 100644
+--- a/tools.py
++++ b/tools.py
+@@ -19,5 +19,11 @@ class Registry:
+         self.tools = {"bash": bash, "python": python}
+
+     def run(self, name: str, args: dict) -> str:
+-        out = self.tools[name](**args)
++        start = observatory_log.tool_start(name, args)
++        try:
++            out = self.tools[name](**args)
++        except Exception as error:
++            observatory_log.tool_error(start, name, error)
++            raise
++        observatory_log.tool_end(start, name, result=out)
+         return out

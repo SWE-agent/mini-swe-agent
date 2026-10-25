@@ -1,0 +1,54 @@
+flowchart LR
+  nDefaultAgent_get_template_vars["DefaultAgent.get_template_vars"]
+  style nDefaultAgent_get_template_vars stroke:#be123c,stroke-dasharray:4 3
+  nself_model_format_observation_messages___src_minisweagent_agents_default_py_173["self.model.format_observation_messages"]
+  style nself_model_format_observation_messages___src_minisweagent_agents_default_py_173 stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent_serialize["DefaultAgent.serialize"]
+  nsrc_minisweagent_utils_serialize_recursive_merge["src/minisweagent/utils/serialize.recursive_merge"]
+  style nsrc_minisweagent_utils_serialize_recursive_merge stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent__render_template["DefaultAgent._render_template"]
+  nself_model_format_message___src_minisweagent_agents_default_py_94["self.model.format_message"]
+  n_User_Input__task__entry_parameter_[/"task"/]
+  style n_User_Input__task__entry_parameter_ stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent_run["DefaultAgent.run"]
+  style nDefaultAgent_run stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent_extra_template_vars[("DefaultAgent.extra_template_vars")]
+  style nDefaultAgent_extra_template_vars stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent_add_messages["DefaultAgent.add_messages"]
+  style nDefaultAgent_add_messages stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent_messages[("DefaultAgent.messages")]
+  style nDefaultAgent_messages stroke:#be123c,stroke-dasharray:4 3
+  nDefaultAgent_execute_actions["DefaultAgent.execute_actions"]
+  nDefaultAgent_query["DefaultAgent.query"]
+  nself_model_format_message___src_minisweagent_agents_default_py_93["self.model.format_message"]
+  nDefaultAgent_cost[("DefaultAgent.cost")]
+  nDefaultAgent__render_template --> nDefaultAgent_get_template_vars
+  nDefaultAgent__render_template -.-> nself_model_format_message___src_minisweagent_agents_default_py_93
+  nDefaultAgent__render_template -.-> nself_model_format_message___src_minisweagent_agents_default_py_94
+  nDefaultAgent_add_messages -.->|messages| nDefaultAgent_messages
+  nDefaultAgent_cost -.->|cost| nDefaultAgent_serialize
+  nDefaultAgent_cost -.->|cost| nsrc_minisweagent_utils_serialize_recursive_merge
+  nDefaultAgent_execute_actions --> nDefaultAgent_add_messages
+  nDefaultAgent_execute_actions --> nDefaultAgent_get_template_vars
+  nDefaultAgent_execute_actions -->|message, outputs| nself_model_format_observation_messages___src_minisweagent_agents_default_py_173
+  nDefaultAgent_extra_template_vars -.->|extra_template_vars| nsrc_minisweagent_utils_serialize_recursive_merge
+  nDefaultAgent_get_template_vars -.-> nself_model_format_observation_messages___src_minisweagent_agents_default_py_173
+  nDefaultAgent_get_template_vars --> nsrc_minisweagent_utils_serialize_recursive_merge
+  nDefaultAgent_messages -.->|messages| nDefaultAgent_run
+  nDefaultAgent_messages -.->|messages| nDefaultAgent_serialize
+  nDefaultAgent_query -->|message| nDefaultAgent_add_messages
+  nDefaultAgent_query -.->|message| nDefaultAgent_cost
+  nDefaultAgent_query -.-> nDefaultAgent_execute_actions
+  nDefaultAgent_query -.-> nDefaultAgent_get_template_vars
+  nDefaultAgent_run --> nDefaultAgent__render_template
+  nDefaultAgent_run --> nDefaultAgent_add_messages
+  nDefaultAgent_run -.->|task| nDefaultAgent_extra_template_vars
+  nDefaultAgent_run -->|extra_dicts| nDefaultAgent_serialize
+  nDefaultAgent_run --> nself_model_format_message___src_minisweagent_agents_default_py_93
+  nDefaultAgent_run --> nself_model_format_message___src_minisweagent_agents_default_py_94
+  nDefaultAgent_serialize -->|agent_data, extra_dicts| nsrc_minisweagent_utils_serialize_recursive_merge
+  n_User_Input__task__entry_parameter_ -.->|task| nDefaultAgent_run
+  nself_model_format_message___src_minisweagent_agents_default_py_93 -.->|messages| nDefaultAgent_add_messages
+  nself_model_format_message___src_minisweagent_agents_default_py_94 -.->|messages| nDefaultAgent_add_messages
+  nself_model_format_observation_messages___src_minisweagent_agents_default_py_173 -.->|messages| nDefaultAgent_add_messages
+  nsrc_minisweagent_utils_serialize_recursive_merge --> nsrc_minisweagent_utils_serialize_recursive_merge
