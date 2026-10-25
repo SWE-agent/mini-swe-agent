@@ -4,16 +4,16 @@ index 32ddee5..968944d 100644
 +++ b/src/minisweagent/agents/default.py
 @@ -12,7 +12,9 @@ from jinja2 import StrictUndefined, Template
  from pydantic import BaseModel
- 
+
  from minisweagent import Environment, Model, __version__
 +from minisweagent.agents import observatory_log
  from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
 +from minisweagent.exceptions import Submitted
  from minisweagent.utils.serialize import recursive_merge
- 
- 
+
+
 @@ -87,6 +89,7 @@ class DefaultAgent:
- 
+
      def run(self, task: str = "", **kwargs) -> dict:
          """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
 +        observatory_log.user_input(task)
@@ -40,7 +40,7 @@ index 32ddee5..968944d 100644
 +        observatory_log.llm_response(self.n_calls, actions=[a.get("name", "bash") for a in message.get("extra", {}).get("actions", [])], reply=message, response=message)
          self.add_messages(message)
          return message
- 
+
 @@ -176,6 +182,7 @@ class DefaultAgent:
          """Execute a single action in the environment. Every agent runs its actions through here."""
          self.logger.debug("[TOOL_EXECUTION_START] action=%s params=%s", "bash", action)
@@ -66,7 +66,7 @@ index 32ddee5..968944d 100644
          )
 +        observatory_log.tool_end(start, action.get("name", "bash"), result=output)
          return output
- 
+
      def serialize(self, *extra_dicts) -> dict:
 diff --git a/src/minisweagent/agents/interactive.py b/src/minisweagent/agents/interactive.py
 index dd1139d..7266abf 100644
@@ -75,7 +75,7 @@ index dd1139d..7266abf 100644
 @@ -13,6 +13,7 @@ from typing import Literal, NoReturn
  from rich.console import Console
  from rich.rule import Rule
- 
+
 +from minisweagent.agents import observatory_log
  from minisweagent.agents.default import AgentConfig, DefaultAgent
  from minisweagent.agents.utils.prompt_user import _multiline_prompt, prompt_session
@@ -88,7 +88,7 @@ index dd1139d..7266abf 100644
              self.config.cost_limit = float(input("New cost limit: "))
 +            observatory_log.user_input(self.config.cost_limit, prompt="New cost limit: ")
              return super().query()
- 
+
      @staticmethod
 @@ -187,6 +190,7 @@ class InteractiveAgent(DefaultAgent):
          if _multiline:
@@ -104,15 +104,15 @@ index 31aeb68..278b8cc 100644
 +++ b/src/minisweagent/agents/utils/prompt_user.py
 @@ -3,6 +3,7 @@ from prompt_toolkit.history import FileHistory
  from prompt_toolkit.shortcuts import PromptSession
- 
+
  from minisweagent import global_config_dir
 +from minisweagent.agents import observatory_log
- 
+
  _history = FileHistory(global_config_dir / "interactive_history.txt")
  prompt_session = PromptSession(history=_history)
 @@ -10,7 +11,7 @@ _multiline_prompt_session = PromptSession(history=_history, multiline=True)
- 
- 
+
+
  def _multiline_prompt() -> str:
 -    return _multiline_prompt_session.prompt(
 +    result = _multiline_prompt_session.prompt(

@@ -5,7 +5,7 @@ index a8f6e52..658b94a 100644
 @@ -44,6 +44,7 @@ from rich.text import Text
  if TYPE_CHECKING:
      import PIL.Image
- 
+
 +from . import observatory_log
  from .agent_types import AgentAudio, AgentImage, handle_agent_output_types
  from .default_tools import TOOL_MAPPING, FinalAnswerTool
@@ -129,7 +129,7 @@ index a8f6e52..658b94a 100644
          except Exception as e:
              return ChatMessage(
 @@ -1290,32 +1324,54 @@ class ToolCallingAgent(MultiStepAgent):
- 
+
          try:
              if self.stream_outputs and hasattr(self.model, "generate_stream"):
 -                output_stream = self.model.generate_stream(
@@ -199,13 +199,13 @@ index a8f6e52..658b94a 100644
 +                    reply=chat_message,
 +                    response=chat_message,
 +                )
- 
+
              # Record model output
              memory_step.model_output_message = chat_message
 @@ -1480,14 +1536,16 @@ class ToolCallingAgent(MultiStepAgent):
              error_msg = f"Error executing tool '{tool_name}' with arguments {str(arguments)}: {type(e).__name__}: {e}"
              raise AgentToolExecutionError(error_msg, self.logger) from e
- 
+
 +        start = observatory_log.tool_start(tool_name, arguments)
          try:
              # Call tool with appropriate arguments
@@ -215,7 +215,7 @@ index a8f6e52..658b94a 100644
              else:
 -                return tool(arguments) if is_managed_agent else tool(arguments, sanitize_inputs_outputs=True)
 +                out = tool(arguments) if is_managed_agent else tool(arguments, sanitize_inputs_outputs=True)
- 
+
          except Exception as e:
 +            observatory_log.tool_error(start, tool_name, e)
              # Handle execution errors
@@ -227,8 +227,8 @@ index a8f6e52..658b94a 100644
              raise AgentToolExecutionError(error_msg, self.logger) from e
 +        observatory_log.tool_end(start, tool_name, result=out)
 +        return out
- 
- 
+
+
  class CodeAgent(MultiStepAgent):
 @@ -1657,28 +1717,41 @@ class CodeAgent(MultiStepAgent):
              if self._use_structured_outputs_internally:
@@ -297,11 +297,11 @@ index a8f6e52..658b94a 100644
 +                observatory_log.llm_response(
 +                    None, actions=["python_interpreter"], reply=chat_message, response=chat_message
 +                )
- 
+
              if not self._use_structured_outputs_internally:
                  # This adds the end code sequence (i.e. the closing code block tag) to the history.
 @@ -1722,6 +1798,7 @@ class CodeAgent(MultiStepAgent):
- 
+
          ### Execute action ###
          self.logger.log_code(title="Executing parsed code:", content=code_action, level=LogLevel.INFO)
 +        start = observatory_log.tool_start("python_interpreter", code_action)
@@ -319,7 +319,7 @@ index a8f6e52..658b94a 100644
 @@ -1749,6 +1827,7 @@ class CodeAgent(MultiStepAgent):
                  )
              raise AgentExecutionError(error_msg, self.logger)
- 
+
 +        observatory_log.tool_end(start, "python_interpreter", result=code_output)
          truncated_output = truncate_content(str(code_output.output))
          observation += "Last output from code snippet:\n" + truncated_output
@@ -331,16 +331,16 @@ index c72679d..3ed6687 100644
 @@ -17,6 +17,7 @@
  from dataclasses import dataclass
  from typing import Any
- 
+
 +from . import observatory_log
  from .local_python_executor import (
      BASE_BUILTIN_MODULES,
      BASE_PYTHON_TOOLS,
 @@ -98,6 +99,7 @@ class UserInputTool(Tool):
- 
+
      def forward(self, question):
          user_input = input(f"{question} => Type your answer here:")
 +        observatory_log.user_input(user_input, prompt=question)
          return user_input
- 
- 
+
+

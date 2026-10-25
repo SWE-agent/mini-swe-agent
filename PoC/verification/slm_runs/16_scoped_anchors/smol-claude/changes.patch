@@ -15,8 +15,8 @@ index a8f6e52..0cf1fb1 100644
      truncate_content,
  )
 +from . import observatory_log
- 
- 
+
+
  logger = getLogger(__name__)
 @@ -465,6 +467,7 @@ class MultiStepAgent(ABC):
          agent.run("What is the result of 2 power 3.7384?")
@@ -134,7 +134,7 @@ index a8f6e52..0cf1fb1 100644
              return ChatMessage(
 @@ -1289,28 +1322,39 @@ class ToolCallingAgent(MultiStepAgent):
          memory_step.model_input_messages = input_messages
- 
+
          try:
 +            observatory_log.llm_query(memory_step.step_number, model=self.model, messages=input_messages)
              if self.stream_outputs and hasattr(self.model, "generate_stream"):
@@ -270,7 +270,7 @@ index a8f6e52..0cf1fb1 100644
                  output_text = chat_message.content
                  self.logger.log_markdown(
 @@ -1722,8 +1783,10 @@ class CodeAgent(MultiStepAgent):
- 
+
          ### Execute action ###
          self.logger.log_code(title="Executing parsed code:", content=code_action, level=LogLevel.INFO)
 +        start = observatory_log.tool_start("python_interpreter", code_action)
@@ -297,14 +297,14 @@ index c72679d..eebfe42 100644
  )
  from .tools import PipelineTool, Tool
 +from . import observatory_log
- 
- 
+
+
  @dataclass
 @@ -98,6 +99,7 @@ class UserInputTool(Tool):
- 
+
      def forward(self, question):
          user_input = input(f"{question} => Type your answer here:")
 +        observatory_log.user_input(user_input, prompt=question)
          return user_input
- 
- 
+
+

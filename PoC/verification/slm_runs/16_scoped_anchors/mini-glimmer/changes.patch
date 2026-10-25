@@ -4,16 +4,16 @@ index 32ddee5..bae6fb7 100644
 +++ b/src/minisweagent/agents/default.py
 @@ -12,7 +12,8 @@ from jinja2 import StrictUndefined, Template
  from pydantic import BaseModel
- 
+
  from minisweagent import Environment, Model, __version__
 -from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
 +from minisweagent.agents import observatory_log
 +from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded, Submitted
  from minisweagent.utils.serialize import recursive_merge
- 
- 
+
+
 @@ -87,6 +88,7 @@ class DefaultAgent:
- 
+
      def run(self, task: str = "", **kwargs) -> dict:
          """Run step() until agent is finished. Returns dictionary with exit_status, submission keys."""
 +        observatory_log.user_input(task)
@@ -70,7 +70,7 @@ index dd1139d..b1ab4f0 100644
 +++ b/src/minisweagent/agents/interactive.py
 @@ -14,6 +14,7 @@ from rich.console import Console
  from rich.rule import Rule
- 
+
  from minisweagent.agents.default import AgentConfig, DefaultAgent
 +from minisweagent.agents import observatory_log
  from minisweagent.agents.utils.prompt_user import _multiline_prompt, prompt_session
@@ -89,7 +89,7 @@ index dd1139d..b1ab4f0 100644
 +            observatory_log.user_input(answer, prompt="New cost limit: ")
 +            self.config.cost_limit = float(answer)
              return super().query()
- 
+
      @staticmethod
 @@ -187,6 +192,7 @@ class InteractiveAgent(DefaultAgent):
          if _multiline:
@@ -105,15 +105,15 @@ index 31aeb68..e90c5e5 100644
 +++ b/src/minisweagent/agents/utils/prompt_user.py
 @@ -3,6 +3,7 @@ from prompt_toolkit.history import FileHistory
  from prompt_toolkit.shortcuts import PromptSession
- 
+
  from minisweagent import global_config_dir
 +from minisweagent.agents import observatory_log
- 
+
  _history = FileHistory(global_config_dir / "interactive_history.txt")
  prompt_session = PromptSession(history=_history)
 @@ -10,7 +11,7 @@ _multiline_prompt_session = PromptSession(history=_history, multiline=True)
- 
- 
+
+
  def _multiline_prompt() -> str:
 -    return _multiline_prompt_session.prompt(
 +    answer = _multiline_prompt_session.prompt(

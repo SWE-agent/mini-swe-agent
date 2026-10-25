@@ -96,11 +96,11 @@ index a8f6e52..34e7f83 100644
                  role=MessageRole.ASSISTANT,
                  content=[{"type": "text", "text": f"Error in generating final LLM output: {e}"}],
 @@ -1287,9 +1316,11 @@ class ToolCallingAgent(MultiStepAgent):
- 
+
          # Add new step in logs
          memory_step.model_input_messages = input_messages
 +        step = memory_step.step_number
- 
+
          try:
              if self.stream_outputs and hasattr(self.model, "generate_stream"):
 +                llm_query(step, model=self.model, messages=input_messages)
@@ -131,7 +131,7 @@ index a8f6e52..34e7f83 100644
          except Exception as e:
 +            llm_error(step, e)
              raise AgentGenerationError(f"Error while generating output:\n{e}", self.logger) from e
- 
+
          if chat_message.tool_calls is None or len(chat_message.tool_calls) == 0:
 @@ -1652,11 +1689,13 @@ class CodeAgent(MultiStepAgent):
          if self.code_block_tags[1] not in self.code_block_tags[0]:
@@ -171,5 +171,5 @@ index a8f6e52..34e7f83 100644
          except Exception as e:
 +            llm_error(step, e)
              raise AgentGenerationError(f"Error in generating model output:\n{e}", self.logger) from e
- 
+
          ### Parse output ###

@@ -7,8 +7,8 @@ index 32ddee5..c8d0aa1 100644
  from minisweagent.exceptions import FormatError, InterruptAgentFlow, LimitsExceeded, TimeExceeded
  from minisweagent.utils.serialize import recursive_merge
 +from minisweagent.agents.observability_log import observability_log
- 
- 
+
+
  class AgentConfig(BaseModel):
 @@ -146,17 +147,18 @@ class DefaultAgent:
                  }
@@ -69,7 +69,7 @@ index dd1139d..73b6510 100644
              self.config.cost_limit = float(input("New cost limit: "))
 +            observatory_log.user_input(self.config.cost_limit, prompt="New cost limit: ")
              return super().query()
- 
+
      @staticmethod
 @@ -117,6 +119,7 @@ class InteractiveAgent(DefaultAgent):
                  "[green]Type a comment/command[/green] (/h for available commands)"

@@ -11,7 +11,7 @@ index a8f6e52..7e006c9 100644
 +
 +import observatory_log
  from typing import TYPE_CHECKING, Any, Literal, Type, TypeAlias, TypedDict, Union
- 
+
  import yaml
 @@ -443,6 +447,7 @@ class MultiStepAgent(ABC):
          max_steps: int | None = None,
@@ -20,7 +20,7 @@ index a8f6e52..7e006c9 100644
 +        observatory_user_input(task)
          """
          Run the agent for the given task.
- 
+
 @@ -669,6 +674,7 @@ You have been provided with these additional arguments, that you can access dire
                                  output_tokens += event.token_usage.output_tokens
                          yield event
@@ -52,7 +52,7 @@ index a8f6e52..7e006c9 100644
 -            )
 +            observatory_log.llm_error(None, e)
 +            raise
- 
+
      def visualize(self):
          """Creates a rich tree visualization of the agent's structure."""
 @@ -1306,11 +1313,13 @@ class ToolCallingAgent(MultiStepAgent):
@@ -72,7 +72,7 @@ index a8f6e52..7e006c9 100644
 @@ -1480,14 +1489,15 @@ class ToolCallingAgent(MultiStepAgent):
              error_msg = f"Error executing tool '{tool_name}' with arguments {str(arguments)}: {type(e).__name__}: {e}"
              raise AgentToolExecutionError(error_msg, self.logger) from e
- 
+
 +        start = observatory_log.tool_start(tool_name, arguments)
          try:
              # Call tool with appropriate arguments
@@ -94,8 +94,8 @@ index a8f6e52..7e006c9 100644
              raise AgentToolExecutionError(error_msg, self.logger) from e
 +        observatory_log.tool_end(start, tool_name, result=out)
 +        return out
- 
- 
+
+
  class CodeAgent(MultiStepAgent):
 @@ -1674,6 +1686,7 @@ class CodeAgent(MultiStepAgent):
                  memory_step.model_output_message = chat_message
@@ -116,7 +116,7 @@ index a8f6e52..7e006c9 100644
 @@ -1720,10 +1734,10 @@ class CodeAgent(MultiStepAgent):
          yield tool_call
          memory_step.tool_calls = [tool_call]
- 
+
 -        ### Execute action ###
 -        self.logger.log_code(title="Executing parsed code:", content=code_action, level=LogLevel.INFO)
 +        start = observatory_log.tool_start("python_interpreter", {"code": code_action})
@@ -144,13 +144,13 @@ index c72679d..c72aed2 100644
  )
 +from .observatory_log import user_input as observatory_user_input
  from .tools import PipelineTool, Tool
- 
- 
+
+
 @@ -98,6 +99,7 @@ class UserInputTool(Tool):
- 
+
      def forward(self, question):
          user_input = input(f"{question} => Type your answer here:")
 +        observatory_user_input(user_input, prompt=question)
          return user_input
- 
- 
+
+
