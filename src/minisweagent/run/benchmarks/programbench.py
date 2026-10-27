@@ -26,6 +26,7 @@ Output is compatible with [bold green]programbench eval[/bold green].
 
 DEFAULT_CONFIG_FILE = builtin_config_dir / "benchmarks" / "programbench.yaml"
 _IMAGE_TAG = "task_cleanroom_v6"
+_REFERENCE_EXECUTABLE = "/opt/programbench-reference/executable"
 
 app = typer.Typer(rich_markup_mode="rich", add_completion=False)
 
@@ -60,6 +61,32 @@ def copy_submission(env, dest: Path, *, src: str = "/workspace") -> None:
     )
 
 
+def preserve_reference_executable(env) -> None:
+    container_id = getattr(env, "container_id", None)
+    executable = getattr(getattr(env, "config", None), "executable", None)
+    if not container_id or not executable:
+        raise RuntimeError("preserve_reference_executable requires a Docker environment with container_id")
+    subprocess.run(
+        [
+            executable,
+            "exec",
+            "--user",
+            "root",
+            container_id,
+            "bash",
+            "-ceu",
+            (
+                "install -d -o root -g root -m 711 /opt/programbench-reference; "
+                f"install -o root -g root -m 111 /workspace/executable {_REFERENCE_EXECUTABLE}; "
+                "rm /workspace/executable"
+            ),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
 def process_instance(
     instance: dict,
     output_dir: Path,
@@ -84,6 +111,7 @@ def process_instance(
     try:
         model = get_model(config=inst_config.get("model", {}))
         env = get_environment(inst_config.get("environment", {}), default_type="docker")
+        preserve_reference_executable(env)
         env.execute(
             {"command": 'git config user.name "mini-swe-agent" && git config user.email "mini-swe-agent@proton.me"'}
         )

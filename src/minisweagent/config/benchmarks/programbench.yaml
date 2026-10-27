@@ -6,7 +6,7 @@ agent:
     You are a helpful assistant that can interact with a computer.
 
     Your task is to recreate a program from scratch based only on its observable behavior and bundled documentation.
-    You are given a reference executable and its documentation.
+    You are given a reference executable at `/opt/programbench-reference/executable` and its documentation.
     Treat the reference executable as a specification you can query through its normal user interface.
 
     Your submission must be an independent implementation.
@@ -32,25 +32,25 @@ agent:
 
     ### 2. Wrapping or reusing the reference executable
 
-    Your submission must be a genuine reimplementation. The reference `./executable` is for
+    Your submission must be a genuine reimplementation. The reference `/opt/programbench-reference/executable` is for
     observation only — your final solution must not depend on it or any other pre-built version
     of the same tool at runtime.
 
     This includes but is not limited to:
     - Writing a wrapper script that delegates to the reference executable (e.g., `exec zstd "$@"`)
     - Installing the tool from a package manager and shimming to it (e.g., `apt-get install nnn && cp $(which nnn) ./executable`)
-    - Writing a `compile.sh` that only runs `chmod +x ./executable` or copies the reference executable (`cp ./executable ./executable`)
+    - Writing a `compile.sh` that only runs `chmod +x ./executable` or copies the reference executable
     - Building a binary whose main function shells out to an external tool (e.g., `Command::new("miniserve").args(args).exec()`)
     - Re-linking prebuilt `.o` object files found in the workspace without writing new source code
 
     ### 3. How the reference executable may be observed
 
-    All information about the reference `./executable` must be obtained by interacting with it
+    All information about the reference `/opt/programbench-reference/executable` must be obtained by interacting with it
     through its normal user interface (CLI flags, stdin/stdout, etc.).
-    - You MUST NOT decompile `./executable` or use disassemblers (objdump, Ghidra, etc.) on it
-    - You MUST NOT use strace, ltrace, or similar tracing/instrumentation tools on `./executable`
+    - You MUST NOT decompile `/opt/programbench-reference/executable` or use disassemblers (objdump, Ghidra, etc.) on it
+    - You MUST NOT use strace, ltrace, or similar tracing/instrumentation tools on `/opt/programbench-reference/executable`
 
-    Note: this restriction applies ONLY to the reference `./executable`. You are free to use any
+    Note: this restriction applies ONLY to the reference `/opt/programbench-reference/executable`. You are free to use any
     analysis tools on binaries that you produce yourself during development.
 
     ## What IS allowed
@@ -62,7 +62,9 @@ agent:
     ## Task context
 
     Build a new implementation from scratch that matches the behavior of the reference executable.
-    The executable is located at `./executable` in the workspace root.
+    The reference executable is located at `/opt/programbench-reference/executable`.
+    The same path is available through `$PROGRAMBENCH_REFERENCE_EXECUTABLE`.
+    The workspace path `./executable` is reserved for the candidate produced by `compile.sh`.
 
     You also have access to the existing documentation.
 
@@ -97,7 +99,7 @@ agent:
     ## Recommended Workflow
 
     1. Explore all documentation files
-    2. Play with the executable to understand its behavior (however, you MUST NOT decompile `./executable` or perform any other form of binary or strace/ltrace analysis on it)
+    2. Play with the reference executable to understand its behavior (however, you MUST NOT decompile it or perform any other form of binary or strace/ltrace analysis on it)
     3. Write the source code to implement the behavior
 
     ## Command Execution Rules
@@ -201,6 +203,7 @@ environment:
     - "--cap-drop"
     - "SYS_PTRACE"
   env:
+    PROGRAMBENCH_REFERENCE_EXECUTABLE: /opt/programbench-reference/executable
     PAGER: cat
     MANPAGER: cat
     LESS: -R
