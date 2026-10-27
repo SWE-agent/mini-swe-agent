@@ -9,6 +9,7 @@ actually ships — they're skipped via ``pytest.importorskip`` when not availabl
 """
 
 import json
+import subprocess
 import tarfile
 from unittest.mock import MagicMock, patch
 
@@ -19,7 +20,12 @@ from pydantic import BaseModel
 from minisweagent import package_dir
 from minisweagent.environments.docker import DockerEnvironment
 from minisweagent.exceptions import Submitted
-from minisweagent.run.benchmarks.programbench import copy_submission, main
+from minisweagent.run.benchmarks.programbench import (
+    _REFERENCE_EXECUTABLE,
+    copy_submission,
+    main,
+    preserve_reference_executable,
+)
 
 # Lightweight image used for the real-docker tests. Already cached on machines
 # that run mini-swe-agent's docker test suite (see tests/environments/test_docker.py).
@@ -89,6 +95,43 @@ def test_copy_submission_rejects_non_docker_env(tmp_path):
         copy_submission(env, tmp_path / "submission.tar.gz")
 
 
+@pytest.mark.slow
+def test_preserve_reference_executable_real_container(docker_env):
+    docker_env.execute({"command": "mkdir -p /workspace && chmod 777 /workspace && cp /bin/echo /workspace/executable"})
+
+    preserve_reference_executable(docker_env)
+
+    result = subprocess.run(
+        [
+            docker_env.config.executable,
+            "exec",
+            "--user",
+            "65534:65534",
+            docker_env.container_id,
+            "bash",
+            "-c",
+            (
+                f"output=$({_REFERENCE_EXECUTABLE} oracle); execute_rc=$?; "
+                f"cat {_REFERENCE_EXECUTABLE} >/dev/null 2>&1; read_rc=$?; "
+                f"rm {_REFERENCE_EXECUTABLE} 2>/dev/null; remove_rc=$?; "
+                "printf '#!/bin/sh\\necho candidate\\n' > /workspace/executable; "
+                "chmod +x /workspace/executable; "
+                'printf "%s|%s|%s|%s" "$output" "$execute_rc" "$read_rc" "$remove_rc"'
+            ),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.stdout == "oracle|0|1|1"
+    assert docker_env.execute({"command": f"stat -c '%U:%G:%a' {_REFERENCE_EXECUTABLE}"})["output"].strip() == (
+        "root:root:111"
+    )
+    assert docker_env.execute({"command": f"{_REFERENCE_EXECUTABLE} oracle"})["output"].strip() == "oracle"
+    assert docker_env.execute({"command": "/workspace/executable"})["output"].strip() == "candidate"
+
+
 # ---------------------------------------------------------------------------
 # Network isolation: containers must not have internet access
 # ---------------------------------------------------------------------------
@@ -100,6 +143,14 @@ def test_default_config_disables_network():
     run_args = cfg["environment"]["run_args"]
     assert "--network" in run_args
     assert run_args[run_args.index("--network") + 1] == "none"
+
+
+def test_default_config_separates_reference_and_candidate_paths():
+    cfg = yaml.safe_load((package_dir / "config" / "benchmarks" / "programbench.yaml").read_text())
+    assert cfg["environment"]["env"]["PROGRAMBENCH_REFERENCE_EXECUTABLE"] == _REFERENCE_EXECUTABLE
+    assert _REFERENCE_EXECUTABLE in cfg["agent"]["system_template"]
+    assert _REFERENCE_EXECUTABLE in cfg["agent"]["instance_template"]
+    assert "workspace path `./executable` is reserved for the candidate" in cfg["agent"]["instance_template"]
 
 
 @pytest.mark.slow
