@@ -9,6 +9,37 @@ import typer
 from minisweagent.run.utilities.inspector import TrajectoryInspector, main
 
 
+@pytest.mark.parametrize(
+    ("first_message", "observation_role"),
+    [
+        ({"role": "assistant"}, "tool"),
+        ({"type": "assistant", "extra": {"actions": [{"command": "pwd"}]}}, "user"),
+    ],
+)
+async def test_inspector_starts_on_first_turn_without_preamble(tmp_path, first_message, observation_role):
+    trajectory = tmp_path / "cropped.traj.json"
+    trajectory.write_text(
+        json.dumps(
+            [
+                {**first_message, "content": "First turn"},
+                {"role": observation_role, "content": "Observation"},
+                {"role": "assistant", "content": "Second turn"},
+            ]
+        )
+    )
+    app = TrajectoryInspector([trajectory])
+    async with app.run_test() as pilot:
+        assert app.n_steps == 2
+        assert "Step 1/2" in app.title
+        assert "First turn" in get_screen_text(app)
+        assert "Observation" in get_screen_text(app)
+        await pilot.press("l")
+        assert "Step 2/2" in app.title
+        assert "Second turn" in get_screen_text(app)
+        await pilot.press("h")
+        assert "First turn" in get_screen_text(app)
+
+
 def get_screen_text(app: TrajectoryInspector) -> str:
     """Extract all text content from the app's UI."""
     text_parts = []

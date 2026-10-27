@@ -29,7 +29,8 @@ def _messages_to_steps(messages: list[dict]) -> list[list[dict]]:
     for message in messages:
         # Start new step with new tool uses
         if message.get("extra", {}).get("actions") or message.get("role") == "assistant":
-            steps.append(current_step)
+            if current_step:
+                steps.append(current_step)
             current_step = [message]
         else:
             current_step.append(message)
