@@ -94,3 +94,66 @@ class TestLitellmModel:
         model = LitellmModel(model_name="gpt-4")
         result = model.format_observation_messages({"extra": {}}, [])
         assert result == []
+
+
+class TestLitellmModelStreaming:
+    @patch("minisweagent.models.litellm_model.litellm.stream_chunk_builder")
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    def test_query_streams_and_rebuilds_response(self, mock_cost, mock_completion, mock_builder):
+        tool_call = MagicMock()
+        tool_call.function.name = "bash"
+        tool_call.function.arguments = '{"command": "echo test"}'
+        tool_call.id = "call_1"
+        rebuilt = _mock_litellm_response([tool_call])
+        rebuilt.choices[0].finish_reason = "tool_calls"
+        mock_builder.return_value = rebuilt
+        mock_completion.return_value = iter([MagicMock(), MagicMock()])
+        mock_cost.return_value = 0.001
+
+        model = LitellmModel(model_name="gpt-4", stream=True)
+        result = model.query([{"role": "user", "content": "test"}])
+
+        mock_completion.assert_called_once()
+        assert mock_completion.call_args.kwargs["stream"] is True
+        assert mock_completion.call_args.kwargs["stream_options"] == {"include_usage": True}
+        mock_builder.assert_called_once()
+        assert mock_builder.call_args.kwargs["messages"] == [{"role": "user", "content": "test"}]
+        assert result["extra"]["actions"] == [{"command": "echo test", "tool_call_id": "call_1"}]
+
+    @patch("minisweagent.models.litellm_model.litellm.stream_chunk_builder")
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    @patch("minisweagent.models.litellm_model.litellm.cost_calculator.completion_cost")
+    def test_query_stream_not_requested_by_default(self, mock_cost, mock_completion, mock_builder):
+        mock_completion.return_value = _mock_litellm_response(None)
+        mock_cost.return_value = 0.001
+
+        model = LitellmModel(model_name="gpt-4")
+        with pytest.raises(FormatError):
+            model.query([{"role": "user", "content": "test"}])
+
+        assert "stream" not in mock_completion.call_args.kwargs
+        assert "stream_options" not in mock_completion.call_args.kwargs
+        mock_builder.assert_not_called()
+
+    @patch("minisweagent.models.litellm_model.litellm.stream_chunk_builder")
+    @patch("minisweagent.models.litellm_model.litellm.completion")
+    def test_query_stream_merges_model_kwargs(self, mock_completion, mock_builder):
+        mock_completion.return_value = iter([])
+        mock_builder.return_value = _mock_litellm_response([])
+
+        model = LitellmModel(
+            model_name="gpt-4",
+            stream=True,
+            model_kwargs={
+                "temperature": 0.0,
+                "stream_options": {"include_usage": False},
+            },
+        )
+        model._query([{"role": "user", "content": "test"}])
+
+        kwargs = mock_completion.call_args.kwargs
+        assert kwargs["temperature"] == 0.0
+        # An explicit stream_options from model_kwargs wins over the default.
+        assert kwargs["stream_options"] == {"include_usage": False}
+        assert kwargs["stream"] is True

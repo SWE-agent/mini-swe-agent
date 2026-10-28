@@ -146,6 +146,21 @@ Here's a few general examples:
 
     Here, `drop_params` is used to drop any parameters that are not supported by the model.
 
+=== "Streaming"
+
+    Some API intermediaries terminate connections that send no bytes for a
+    while (e.g. Cloudflare's Proxy Read Timeout of ~125 seconds in front of
+    an API proxy). Long reasoning steps can exceed that window on a
+    non-streaming call, killing the request after the model already did the
+    work. Set the `stream` key to consume the SSE stream and rebuild the
+    regular response (token usage is kept via `stream_options`):
+
+    ```yaml
+    model:
+      model_name: "anthropic/claude-sonnet-4-5-20250929"
+      stream: true
+    ```
+
 === "GPT-5 with Responses API"
 
     For OpenAI models that support the Responses API, you can use the `litellm_response_toolcall` model class:
