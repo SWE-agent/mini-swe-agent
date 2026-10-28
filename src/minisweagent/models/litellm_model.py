@@ -29,6 +29,14 @@ class LitellmModelConfig(BaseModel):
     """Model name. Highly recommended to include the provider in the model name, e.g., `anthropic/claude-sonnet-4-5-20250929`."""
     model_kwargs: dict[str, Any] = {}
     """Additional arguments passed to the API."""
+    stream: bool = False
+    """Stream the completion and rebuild a normal response with
+    ``litellm.stream_chunk_builder`` before returning it, so ``query()``
+    still receives a regular response object (usage preserved via
+    ``stream_options={"include_usage": True}`` unless overridden in
+    ``model_kwargs``). Useful with intermediaries that kill connections that
+    stay silent for too long (e.g. Cloudflare's ~125s Proxy Read Timeout):
+    streaming keeps bytes flowing while the model thinks."""
     litellm_model_registry: Path | str | None = os.getenv("LITELLM_MODEL_REGISTRY_PATH")
     """Model registry for cost tracking and model metadata. See the local model guide (https://mini-swe-agent.com/latest/models/local_models/) for more details."""
     set_cache_control: Literal["default_end"] | None = None
@@ -63,6 +71,17 @@ class LitellmModel:
 
     def _query(self, messages: list[dict[str, str]], **kwargs):
         try:
+            if self.config.stream:
+                merged = dict(self.config.model_kwargs) | dict(kwargs)
+                merged.setdefault("stream_options", {"include_usage": True})
+                stream = litellm.completion(
+                    model=self.config.model_name,
+                    messages=messages,
+                    tools=[BASH_TOOL],
+                    stream=True,
+                    **merged,
+                )
+                return litellm.stream_chunk_builder(list(stream), messages=messages)
             return litellm.completion(
                 model=self.config.model_name,
                 messages=messages,
