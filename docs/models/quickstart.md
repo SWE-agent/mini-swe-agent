@@ -125,8 +125,8 @@ Here's a few general examples:
     ```yaml
     model:
       model_name: "anthropic/claude-sonnet-4-5-20250929"
-        model_kwargs:
-          temperature: 0.0
+      model_kwargs:
+        temperature: 0.0
     ```
 
     Note that temperature isn't supported by all models.
