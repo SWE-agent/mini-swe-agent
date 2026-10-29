@@ -286,6 +286,51 @@ An agent that validates actions before execution (also an example of how to use 
     )
     ```
 
+### Running on a shared host
+
+The `local` environment executes commands in your own shell, so the model can do everything you can, including stopping
+or removing containers that belong to other people on the same machine. In
+[#992](https://github.com/SWE-agent/mini-swe-agent/issues/992) a run that kept hitting build timeouts recovered with
+`docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)` and removed eight containers it had not created.
+
+The real boundary is isolation: run the agent in a container that cannot reach the host docker socket, or give the run
+its own daemon. If you cannot do that, you can at least block the unscoped commands:
+
+=== "Guarding docker commands"
+
+    ```python
+    import re
+
+    from minisweagent.environments.local import LocalEnvironment, LocalEnvironmentConfig
+
+    class GuardedLocalEnvironmentConfig(LocalEnvironmentConfig):
+        forbidden_patterns: list[str] = [
+            r"docker\s+(?:container\s+)?(?:rm|kill|stop)\b[^\n]*(?:\$\(|`)",  # docker rm $(docker ps -a -q)
+            r"docker\s+(?:system|container|image|volume|network)\s+prune",
+            r"\|\s*xargs\b[^\n]*\bdocker\s+(?:rm|kill|stop)",  # docker ps -q | xargs docker rm -f
+        ]
+
+    class GuardedLocalEnvironment(LocalEnvironment):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs, config_class=GuardedLocalEnvironmentConfig)
+
+        def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict:
+            command = action.get("command", "")
+            for pattern in self.config.forbidden_patterns:
+                if re.search(pattern, command):
+                    return {
+                        "output": "Action blocked: this command would affect containers the run did not create.",
+                        "returncode": 1,
+                    }
+            return super().execute(action, cwd, timeout=timeout)
+    ```
+
+    Commands that only touch containers the run created itself, such as `docker rm -f build-temp`, still go through.
+    The same override works for `DockerEnvironment`.
+
+This is a guardrail, not a security boundary: the model writes the command and the same cleanup can be spelled
+differently. It stops the common reflex of clearing the host, so use it on top of isolation, not instead of it.
+
 ### Running mini-swe-agent on Ray
 
 [This blog post](https://www.anyscale.com/blog/massively-parallel-agentic-simulations-with-ray)

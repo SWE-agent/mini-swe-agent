@@ -30,3 +30,10 @@ On top, there are a few more specialized environment classes that you can use:
 
 * **`contree`** ([`ContreeEnvironment`](../reference/environments/contree.md)) - Uses [ConTree](https://contree.dev/) for safe code execution sandboxing. Platform that built for agents and supports Git-like execution.
 
+!!! warning "Shared hosts"
+
+    The `local` environment executes commands in your own shell, so the model has your permissions: on a shared machine
+    that includes stopping or removing containers belonging to other users.
+    Run untrusted tasks in a container instead, and see [Running on a shared host](cookbook.md#running-on-a-shared-host)
+    if you want to keep the local environment but block unscoped docker commands.
+
