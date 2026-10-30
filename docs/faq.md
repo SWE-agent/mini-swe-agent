@@ -30,7 +30,7 @@
 
     `mini` is simpler than `swe-agent` because it:
 
-    - Does not have any tools other than bash — it doesn't even use the tool-calling interface of the LMs.
+    - Uses a single bash tool, invoked through the model's native tool-calling interface by default.
       This means you don't have to install anything in any environment you're running in. `bash` is all you need.
     - Has a completely linear history — every step of the agent just appends to the messages and that's it.
     - Executes actions with `subprocess.run` — every action is completely independent (as opposed to keeping a stateful shell session running).
@@ -42,7 +42,8 @@
     As reflected in the high SWE-bench scores, none of the following limitations are a problem in practice.
 
     - No tools other than bash
-    - Actions are parsed from triple-backtick blocks (rather than assuming a function calling/tool calling format)
+    - The default model backend requires native tool calling. For models without it, use text-based parsing with
+      `mini -c mini_textbased.yaml`; see [Tool calling](advanced/v2_migration.md#tool-calling) for both modes.
     - By default, actions are executed as `subprocess.run`, i.e., every action is independent of the previous ones.
       (meaning that the agent cannot change directories or export environment variables; however environment variables
       can be set per-action). This [avoids so many issues](#why-no-shell-session), trust me.
