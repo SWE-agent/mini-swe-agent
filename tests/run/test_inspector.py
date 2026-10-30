@@ -320,12 +320,12 @@ def test_trajectory_inspector_unrecognized_format():
 
 
 @pytest.mark.parametrize(
-    "data",
+    ("data",),  # noqa: PT006
     [
-        {"messages": None},
-        {"messages": {"role": "user", "content": "invalid"}},
-        {"messages": [None]},
-        ["invalid message"],
+        ({"messages": None},),
+        ({"messages": {"role": "user", "content": "invalid"}},),
+        ({"messages": [None]},),
+        (["invalid message"],),
     ],
 )
 async def test_trajectory_inspector_recovers_from_invalid_messages(tmp_path, data):
