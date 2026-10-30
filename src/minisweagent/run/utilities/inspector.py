@@ -168,6 +168,8 @@ class TrajectoryInspector(App):
             else:
                 raise ValueError("Unrecognized trajectory format")
 
+            if not isinstance(self.messages, list) or any(not isinstance(message, dict) for message in self.messages):
+                raise ValueError("Expected a list of message objects")
             self.steps = _messages_to_steps(self.messages)
             self._i_step = 0
         except (json.JSONDecodeError, FileNotFoundError, ValueError) as e:
