@@ -20,7 +20,7 @@ def _setup_root_logger() -> None:
 
 def add_file_handler(path: Path | str, level: int = logging.DEBUG, *, print_path: bool = True) -> None:
     logger = logging.getLogger("minisweagent")
-    handler = logging.FileHandler(path)
+    handler = logging.FileHandler(path, encoding="utf-8")
     handler.setLevel(level)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
