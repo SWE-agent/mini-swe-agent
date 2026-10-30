@@ -319,6 +319,34 @@ def test_trajectory_inspector_unrecognized_format():
         assert app.steps == []
 
 
+@pytest.mark.parametrize(
+    ("data",),  # noqa: PT006
+    [
+        ({"messages": None},),
+        ({"messages": {"role": "user", "content": "invalid"}},),
+        ({"messages": [None]},),
+        (["invalid message"],),
+    ],
+)
+async def test_trajectory_inspector_recovers_from_invalid_messages(tmp_path, data):
+    invalid = tmp_path / "invalid.traj.json"
+    invalid.write_text(json.dumps(data))
+    valid = tmp_path / "valid.traj.json"
+    valid.write_text(json.dumps([{"role": "user", "content": "Valid trajectory"}]))
+    app = TrajectoryInspector([invalid, valid])
+
+    async with app.run_test() as pilot:
+        assert app.messages == []
+        assert app.steps == []
+        assert "No Data" in app.title
+        await pilot.press("L")
+        assert "Valid trajectory" in get_screen_text(app)
+        await pilot.press("H")
+        assert app.messages == []
+        assert app.steps == []
+        assert "No Data" in app.title
+
+
 def test_trajectory_inspector_current_trajectory_name():
     """Test current_trajectory_name property."""
     with tempfile.TemporaryDirectory() as temp_dir:
