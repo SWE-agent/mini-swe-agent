@@ -4,6 +4,9 @@ or https://minimal-agent.com for a tutorial on the basic building principles.
 
 import json
 import logging
+import os
+import stat
+import tempfile
 import time
 import traceback
 from pathlib import Path
@@ -185,6 +188,20 @@ class DefaultAgent:
         """
         data = self.serialize(*extra_dicts)
         if path:
+            contents = json.dumps(data, indent=2)
+            path = path.resolve()
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(json.dumps(data, indent=2))
+            mode = None
+            if path.exists():
+                fd = os.open(path, os.O_WRONLY)
+                try:
+                    mode = stat.S_IMODE(os.fstat(fd).st_mode)
+                finally:
+                    os.close(fd)
+            with tempfile.TemporaryDirectory(dir=path.parent, ignore_cleanup_errors=True) as temporary_dir:
+                temporary_path = Path(temporary_dir) / path.name
+                temporary_path.write_text(contents)
+                if mode is not None:
+                    temporary_path.chmod(mode)
+                temporary_path.replace(path)
         return data
