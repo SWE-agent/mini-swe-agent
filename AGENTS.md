@@ -16,6 +16,24 @@ minisweagent/run  # Run scripts that serve as an entry point
 - The project embraces polymorphism: Every individual class should be simple, but we offer alternatives
 - Every use case should start with a run script, that picks one agent, environment, and model class to run
 
+# Verification
+
+CI is the ground truth: it installs `pip install -e '.[full]'` and runs pytest and the pinned ruff hooks on Linux. `.[dev]` alone
+cannot even collect `tests/environments/extra/test_contree.py` (it needs `contree-sdk`).
+
+```bash
+pip install -e '.[full]'                 # once; matches CI
+pytest -m "not slow" -x -q               # fast loop (seconds)
+pytest tests/agents/test_default.py -q   # single file while iterating
+pytest -n auto                           # full suite (~3 min)
+pre-commit run --all-files               # style; pins the ruff version
+```
+
+On Windows, `LocalEnvironment` runs commands through `cmd.exe` while many tests assume a POSIX shell
+(quoting included), so expect failures that do not indicate real bugs. Run the suite in WSL/container
+when it matters. Never run `pytest tests/test_fire.py --run-fire` without an explicit human request:
+it makes real, paid API calls.
+
 # Style guide
 
 1. Target python 3.10 or higher
