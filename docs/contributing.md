@@ -27,5 +27,6 @@ We happily accept contributions!
 Make sure to follow the dev setup instructions in [quickstart.md](quickstart.md).
 
 After that you can run `pytest` with `pytest -n auto` (this parallelizes the tests across all cores for speedup).
+CI runs on Linux; on Windows, `LocalEnvironment` uses `cmd.exe` while some tests assume a POSIX shell, so run the suite in WSL or a container for reliable results.
 
 {% include-markdown "_footer.md" %}
