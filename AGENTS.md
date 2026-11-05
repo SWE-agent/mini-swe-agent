@@ -6,11 +6,11 @@
 The project is structured as
 
 ```bash
-minisweagent/__init__  # Protocols/interfaces for all base classes
-minisweagent/agents  # Agent control flow & loop
-minisweagent/environments  # Executing agent actions
-minisweagent/models  # LM interfaces
-minisweagent/run  # Run scripts that serve as an entry point
+src/minisweagent/__init__.py  # Protocols/interfaces for all base classes
+src/minisweagent/agents  # Agent control flow & loop
+src/minisweagent/environments  # Executing agent actions
+src/minisweagent/models  # LM interfaces
+src/minisweagent/run  # Run scripts that serve as an entry point
 ```
 
 - The project embraces polymorphism: Every individual class should be simple, but we offer alternatives
@@ -18,21 +18,24 @@ minisweagent/run  # Run scripts that serve as an entry point
 
 # Verification
 
-CI is the ground truth: it installs `pip install -e '.[full]'` and runs pytest and the pinned ruff hooks on Linux. `.[dev]` alone
-cannot even collect `tests/environments/extra/test_contree.py` (it needs `contree-sdk`).
+CI is the ground truth: on Linux with Python 3.11, it installs `pip install -e '.[full]'` and runs
+pytest, `pylint --errors-only`, and the ruff hooks pinned by pre-commit. `.[dev]` alone cannot even
+collect `tests/environments/extra/test_contree.py` (it needs `contree-sdk`).
 
 ```bash
 pip install -e '.[full]'                 # once; matches CI
-pytest -m "not slow" -x -q               # fast loop (seconds)
+pytest -m "not slow" -x -q               # fast loop (unit tests)
 pytest tests/agents/test_default.py -q   # single file while iterating
-pytest -n auto                           # full suite (~3 min)
+pytest -n auto                           # full default suite (~3 min in CI)
 pre-commit run --all-files               # style; pins the ruff version
 ```
 
-On Windows, `LocalEnvironment` runs commands through `cmd.exe` while many tests assume a POSIX shell
-(quoting included), so expect failures that do not indicate real bugs. Run the suite in WSL/container
-when it matters. Never run `pytest tests/test_fire.py --run-fire` without an explicit human request:
-it makes real, paid API calls.
+Container/VM tests (docker, podman, bubblewrap, singularity, swerex) skip when the tool is missing,
+and the paid fire tests only run with `--run-fire`, so a local green run does not cover everything CI
+covers. On Windows, `LocalEnvironment` runs commands through `cmd.exe` while many tests assume a POSIX
+shell (quoting included), so expect failures that do not indicate real bugs. Run the suite in
+WSL/container when it matters. Never run `pytest tests/test_fire.py --run-fire` without an explicit
+human request: it makes real, paid API calls.
 
 # Style guide
 
