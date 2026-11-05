@@ -7,20 +7,26 @@
 
 ## Hello world
 
+Load the bundled `mini` configuration to provide the required agent prompt templates and the matching model configuration.
+Set up your model's API key as described in [model quickstart](../models/quickstart.md).
+
 ```python
 import logging
 
 from minisweagent.agents.default import DefaultAgent
+from minisweagent.config import get_config_from_spec
 from minisweagent.models import get_model
 from minisweagent.environments.local import LocalEnvironment
 
 logging.basicConfig(level=logging.DEBUG)
 task = "Write a hello world program"
 model_name = "anthropic/claude-sonnet-4-5-20250929"
+config = get_config_from_spec("mini")
 
 agent = DefaultAgent(
-    get_model(input_model_name=model_name),
+    get_model(input_model_name=model_name, config=config["model"]),
     LocalEnvironment(),
+    **config["agent"],
 )
 
 # Run the agent
