@@ -134,7 +134,7 @@ An agent that uses python function for some actions:
 
     def python_function(*args) -> dict:
         ...
-        return {"output": "..."}
+        return {"output": "...", "returncode": 0, "exception_info": ""}
 
     class AgentWithPythonFunctions(DefaultAgent):
         def execute_actions(self, message: dict) -> list[dict]:
@@ -142,7 +142,7 @@ An agent that uses python function for some actions:
                 command = action.get("command", "")
                 if command.startswith("python_function"):
                     args = shlex.split(command.removeprefix("python_function").strip())
-                    return self.add_messages(self.model.format_observation_messages(
+                    return self.add_messages(*self.model.format_observation_messages(
                         message, [python_function(*args)], self.get_template_vars()
                     ))
             # everything else works as usual
@@ -159,7 +159,7 @@ An agent that uses python function for some actions:
 
     def python_function(*args) -> dict:
         ...
-        return {"output": "..."}
+        return {"output": "...", "returncode": 0, "exception_info": ""}
 
     class EnvironmentWithPythonFunctions(LocalEnvironment):
         def execute(self, action: dict, cwd: str = "") -> dict:
@@ -277,7 +277,7 @@ An agent that validates actions before execution (also an example of how to use 
             command = action.get("command", "")
             for pattern in self.config.forbidden_patterns:
                 if re.search(pattern, command, re.IGNORECASE):
-                    return {"output": "Action blocked: forbidden pattern detected", "returncode": 1}
+                    return {"output": "Action blocked: forbidden pattern detected", "returncode": 1, "exception_info": ""}
             return super().execute(action, cwd)
 
     agent = DefaultAgent(
