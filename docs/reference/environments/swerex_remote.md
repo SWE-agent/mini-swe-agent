@@ -32,9 +32,10 @@ environment:
 
     - **Use one server per worker.** All runs on a server share its filesystem, so parallel or batch runs can mix up each other's changes. The server also runs one command at a time, so a long command makes other clients fail their alive check. Prepare the workspace yourself: benchmark images are not applied.
     - **The agent and other users on the machine can read the token.** It is visible in the server's process list, so it can end up in trajectories. Avoid shared machines, run the server as a separate user and change the token before you share trajectories.
-    - **`swebench.yaml` assumes root.** It sets `BASH_ENV` to `/root/.bashrc`. As any other user, override `environment.env.BASH_ENV`, because the resulting error hides the submission from the agent.
+    - **Anything `bash` prints at startup hides the submission.** A `BASH_ENV` error or a locale warning comes before the submission marker, so the agent keeps going until a limit stops it. `swebench.yaml` sets `BASH_ENV` to `/root/.bashrc`, so override `environment.env.BASH_ENV` if the server doesn't run as root.
     - **Nothing is cleaned up.** Children of a timed-out command keep running, and so does anything else the agent starts.
-    - **Silent network drops are slow to notice.** Without the `ssh` options above, a connection that drops without an error can take up to 5 minutes to fail.
+    - **Silent network drops are slow to notice.** Without the `ssh` options above, a connection that drops without an error can take 5 minutes plus the command timeout to fail.
+    - **Losing the connection ends the run.** If the server can't be reached after a failed command, the run stops with an error, even if the server would have been back seconds later.
     - **Output is not limited.** Very large command output can make the server run out of memory.
 
 ::: minisweagent.environments.extra.swerex_remote
