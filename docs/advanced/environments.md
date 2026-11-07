@@ -26,6 +26,8 @@ On top, there are a few more specialized environment classes that you can use:
 
 * **`swerex_modal`** ([`SwerexModalEnvironment`](../reference/environments/swerex_modal.md)) - [Modal](https://modal.com) cloud execution through [SWE-ReX](https://github.com/swe-agent/swe-rex). Useful for training coding agents at scale with remote execution.
 
+* **`swerex_remote`** ([`SwerexRemoteEnvironment`](../reference/environments/swerex_remote.md)) - Execution on a `swerex-remote` server that you started yourself through [SWE-ReX](https://github.com/swe-agent/swe-rex), for example on a remote machine.
+
 * **`bubblewrap`** ([`BubblewrapEnvironment`](../reference/environments/bubblewrap.md)) - **Linux only**. Uses [bubblewrap](https://github.com/containers/bubblewrap) for lightweight, unprivileged sandboxing. Experimental.
 
 * **`contree`** ([`ContreeEnvironment`](../reference/environments/contree.md)) - Uses [ConTree](https://contree.dev/) for safe code execution sandboxing. Platform that built for agents and supports Git-like execution.

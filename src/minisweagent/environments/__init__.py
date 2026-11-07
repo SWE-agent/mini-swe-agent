@@ -11,6 +11,7 @@ _ENVIRONMENT_MAPPING = {
     "local": "minisweagent.environments.local.LocalEnvironment",
     "swerex_docker": "minisweagent.environments.extra.swerex_docker.SwerexDockerEnvironment",
     "swerex_modal": "minisweagent.environments.extra.swerex_modal.SwerexModalEnvironment",
+    "swerex_remote": "minisweagent.environments.extra.swerex_remote.SwerexRemoteEnvironment",
     "bubblewrap": "minisweagent.environments.extra.bubblewrap.BubblewrapEnvironment",
     "contree": "minisweagent.environments.extra.contree.ContreeEnvironment",
 }
