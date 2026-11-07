@@ -54,8 +54,10 @@ class SwerexRemoteEnvironment(SwerexDockerEnvironment):
         )
         if not (alive := asyncio.run(self.deployment.runtime.is_alive())):
             raise RuntimeError(alive.message)
-        uname = self.execute({"command": "uname -s; uname -r; uname -v; uname -m"})["output"].splitlines()[-4:]
-        self._uname = dict(zip(("system", "release", "version", "machine"), uname))
+        uname = super().execute({"command": "uname -s; uname -r; uname -v; uname -m"})
+        if uname["returncode"] != 0:
+            raise RuntimeError(f"swerex-remote server cannot run commands: {uname['output']}")
+        self._uname = dict(zip(("system", "release", "version", "machine"), uname["output"].splitlines()))
 
     def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command on the server. Raises if the server can no longer be reached."""

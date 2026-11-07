@@ -1,4 +1,5 @@
 import json
+import os
 import platform
 import socket
 import subprocess
@@ -47,7 +48,9 @@ class _FakeServerHandler(BaseHTTPRequestHandler):
         self._send(200, {"is_alive": True, "message": ""})
 
     def do_POST(self):
-        self.rfile.read(int(self.headers["Content-Length"]))
+        if "uname" in self.rfile.read(int(self.headers["Content-Length"])).decode():
+            self._send(200, {"stdout": "Linux\n1\n2\nx86_64\n", "stderr": "", "exit_code": 0})
+            return
         class_path = f"{__name__}.{record_server_error.__name__}"
         self._send(511, {"swerexception": {"message": "server error", "class_path": class_path}})
 
@@ -87,6 +90,7 @@ def port():
         ],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
+        env={**os.environ, "SERVER_MARKER": "kept"},
     )
     deadline = time.time() + 30
     while True:
@@ -118,15 +122,31 @@ def test_execute_runs_on_server_and_honors_cwd(port, tmp_path):
 
 
 def test_env_is_added_to_server_environment(port):
-    assert _env(port, env={"FOO": "a b$c"}).execute({"command": 'echo "$FOO"; command -v bash >/dev/null; echo $?'})[
-        "output"
-    ] == ("a b$c\n0\n")
-
-
-def test_interpreter_runs_the_command(port):
-    assert _env(port, interpreter=[sys.executable, "-c"]).execute({"command": "print('from python')"})["output"] == (
-        "from python\n"
+    assert (
+        _env(port, env={"FOO": "a b$c"}).execute({"command": 'echo "$FOO $SERVER_MARKER"'})["output"] == "a b$c kept\n"
     )
+
+
+def test_interpreter_runs_the_command_but_not_the_startup_probe(port):
+    env = _env(port, interpreter=[sys.executable, "-c"])
+    assert env.execute({"command": "print('from python')"})["output"] == "from python\n"
+    assert env.get_template_vars()["machine"] == platform.machine()
+
+
+def test_template_vars_describe_the_server(port):
+    template_vars = _env(port).get_template_vars()
+    uname = platform.uname()
+    assert [template_vars[key] for key in ("system", "release", "version", "machine")] == [
+        uname.system,
+        uname.release,
+        uname.version,
+        uname.machine,
+    ]
+
+
+def test_broken_cwd_fails_at_startup(port):
+    with pytest.raises(RuntimeError, match="cannot run commands"):
+        _env(port, cwd="/does/not/exist")
 
 
 def test_command_timeout_is_reported_and_server_stays_usable(port):
