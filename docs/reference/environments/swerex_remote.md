@@ -18,7 +18,7 @@ On your machine, install the extras, forward the port and set the same token. Us
 
 ```bash
 pip install "mini-swe-agent[full]"
-ssh -N -L 8000:127.0.0.1:8000 my-remote-machine &
+ssh -N -o ServerAliveInterval=15 -o ExitOnForwardFailure=yes -L 8000:127.0.0.1:8000 my-remote-machine &
 export SWEREX_AUTH_TOKEN=...
 ```
 
@@ -31,9 +31,10 @@ environment:
 !!! warning "Things to keep in mind"
 
     - **Use one server per worker.** All runs on a server share its filesystem, so parallel or batch runs can mix up each other's changes. The server also runs one command at a time, so a long command makes other clients fail their alive check. Prepare the workspace yourself: benchmark images are not applied.
-    - **The agent can read the token.** It is visible in the server's process list, so it can end up in trajectories. Run the server as a separate user and change the token before you share trajectories.
+    - **The agent and other users on the machine can read the token.** It is visible in the server's process list, so it can end up in trajectories. Avoid shared machines, run the server as a separate user and change the token before you share trajectories.
     - **`swebench.yaml` assumes root.** It sets `BASH_ENV` to `/root/.bashrc`. As any other user, override `environment.env.BASH_ENV`, because the resulting error hides the submission from the agent.
     - **Nothing is cleaned up.** Children of a timed-out command keep running, and so does anything else the agent starts.
+    - **Silent network drops are slow to notice.** Without the `ssh` options above, a connection that drops without an error can take up to 5 minutes to fail.
     - **Output is not limited.** Very large command output can make the server run out of memory.
 
 ::: minisweagent.environments.extra.swerex_remote

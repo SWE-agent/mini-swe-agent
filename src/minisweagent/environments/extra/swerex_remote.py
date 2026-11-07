@@ -12,7 +12,7 @@ from minisweagent.environments.extra.swerex_docker import SwerexDockerEnvironmen
 
 
 class SwerexRemoteEnvironmentConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", hide_input_in_errors=True)
 
     host: str = "http://127.0.0.1"
     """Host of the `swerex-remote` server, including the scheme."""
@@ -64,7 +64,9 @@ class SwerexRemoteEnvironment(SwerexDockerEnvironment):
         env = [f"{key}={value}" for key, value in self.config.env.items()]
         command = shlex.join(["env", *env, *self.config.interpreter, action.get("command", "")])
         output = super().execute({"command": command}, cwd, timeout=timeout)
-        if "extra" in output and not asyncio.run(self.deployment.runtime.is_alive()):
+        # The server can't answer while it runs a command, so wait for as long as the command can run.
+        alive_timeout = (timeout or self.config.timeout) + self.config.startup_timeout
+        if "extra" in output and not asyncio.run(self.deployment.runtime.is_alive(timeout=alive_timeout)):
             raise RuntimeError(f"swerex-remote server unreachable: {output['exception_info']}")
         return output
 

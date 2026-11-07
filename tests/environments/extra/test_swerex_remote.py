@@ -248,3 +248,20 @@ def test_server_dying_mid_run_raises(fake_server):
     fake_server.server_close()
     with pytest.raises(RuntimeError, match="unreachable"):
         env.execute({"command": "echo hi"})
+
+
+def test_template_vars_come_from_the_server_not_the_client(fake_server):
+    template_vars = _env(fake_server.server_address[1]).get_template_vars()
+    assert [template_vars[key] for key in ("system", "release", "version", "machine")] == ["Linux", "1", "2", "x86_64"]
+
+
+def test_busy_server_is_not_mistaken_for_a_dead_one(fake_server):
+    env = _env(fake_server.server_address[1], startup_timeout=0.5, timeout=5)
+    fake_server.delay = 1.0
+    assert env.execute({"command": "echo hi"})["returncode"] == -1
+
+
+def test_token_passed_as_config_is_not_echoed_in_the_error():
+    with pytest.raises(ValidationError) as exc_info:
+        _env(1, auth_token=TOKEN)
+    assert TOKEN not in str(exc_info.value)
