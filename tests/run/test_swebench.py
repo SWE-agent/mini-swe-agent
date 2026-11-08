@@ -1,5 +1,9 @@
 import json
+import os
 import re
+import subprocess
+import sys
+from textwrap import dedent
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -333,9 +337,42 @@ def test_remove_from_preds_file_no_file(tmp_path):
 
     # Should not raise an error
     remove_from_preds_file(output_path, "any_instance")
-
-    # File should still not exist
     assert not output_path.exists()
+
+
+@pytest.mark.skipif(os.name != "posix", reason="requires the POSIX file size resource limit")
+@pytest.mark.parametrize(("operation",), [("update",), ("remove",)])  # noqa: PT006
+def test_failed_predictions_write_preserves_previous_results(tmp_path, operation):
+    output_path = tmp_path / "preds.json"
+    update_preds_file(output_path, "keep", "model", "large patch" * 400)
+    update_preds_file(output_path, "remove", "model", "small patch")
+    original = output_path.read_bytes()
+    script = dedent("""
+        import errno
+        import resource
+        import signal
+        import sys
+        from pathlib import Path
+
+        from minisweagent.run.benchmarks.swebench import remove_from_preds_file, update_preds_file
+
+        signal.signal(signal.SIGXFSZ, signal.SIG_IGN)
+        resource.setrlimit(resource.RLIMIT_FSIZE, (1024, 1024))
+        path = Path(sys.argv[1])
+        try:
+            if sys.argv[2] == "update":
+                update_preds_file(path, "new", "model", "new patch")
+            else:
+                remove_from_preds_file(path, "remove")
+        except OSError as exc:
+            assert exc.errno == errno.EFBIG
+        else:
+            raise AssertionError("expected the write to hit RLIMIT_FSIZE")
+    """)
+    subprocess.run([sys.executable, "-c", script, str(output_path), operation], check=True, timeout=20)
+
+    assert output_path.read_bytes() == original
+    assert list(tmp_path.iterdir()) == [output_path]
 
 
 @pytest.mark.slow
