@@ -147,6 +147,93 @@ model:
 
 ## Concrete examples
 
+### Running local models with llama-server (Windows PowerShell)
+
+[`llama-server`](https://github.com/ggml-org/llama.cpp/tree/master/tools/server)
+provides an OpenAI-compatible API that mini-SWE-agent can use through LiteLLM.
+This example was smoke-tested on Windows 11 using mini-SWE-agent 2.4.6,
+LiteLLM 1.105.1, and Qwen3.5-0.8B (Q8_0). It verifies connectivity and shell
+execution, not the model's ability to solve coding tasks autonomously.
+
+Start the model server in a separate PowerShell terminal:
+
+```powershell
+llama.exe serve `
+    -hf ggml-org/Qwen3.5-0.8B-GGUF `
+    --alias local-coder `
+    --host 127.0.0.1 `
+    --port 9931 `
+    --ctx-size 8192 `
+    --jinja `
+    --reasoning off
+```
+
+Alternatively, load your own GGUF file with `-m PATH_TO_MODEL.gguf`. The
+`--alias` must match the model ID used by mini-SWE-agent. The `--jinja` option
+is useful for tool calling. For the tested Qwen model, `--reasoning off`
+prevented replies containing only `reasoning_content` and no final `content`.
+Other model/template combinations may behave differently. Do not expose an
+unauthenticated server to untrusted networks.
+
+Check model discovery in another PowerShell terminal:
+
+```powershell
+(Invoke-RestMethod 'http://127.0.0.1:9931/v1/models').data | Select-Object id
+```
+
+Create `llama-server.yaml` in your working directory:
+
+```yaml
+model:
+  model_name: "openai/local-coder"
+  cost_tracking: "ignore_errors"
+  model_kwargs:
+    api_base: "http://127.0.0.1:9931/v1"
+    api_key: "sk-local"
+```
+
+The `openai/` prefix selects LiteLLM's OpenAI-compatible provider; the API
+key is a placeholder for this unauthenticated local server. If you enable
+server-side authentication, use the configured key instead. The
+`cost_tracking` setting ignores missing local-model price metadata.
+
+Run a harmless connectivity test from a dedicated working directory:
+
+```powershell
+mini --config mini.yaml --config .\llama-server.yaml `
+    --task "Run echo MINI_LLAMA_OK, verify its output, then finish using echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT. Do not modify files."
+```
+
+When using `--config`, explicitly load `mini.yaml` as shown: passing custom
+configuration disables automatic loading of the default YAML file. On first
+run, the global setup wizard may ask for a default model. Enter
+`openai/local-coder`; the API key prompt can be skipped when the key is
+supplied in YAML. Inspect and approve each command before execution.
+
+The tested setup executed `echo MINI_LLAMA_OK` with exit code 0, passed its
+output back to the model, and reached the interactive finish prompt after
+corrective user feedback. The 0.8B model initially tried Unix-specific
+commands; native Windows may use `cmd.exe` rather than Bash. WSL2 is a better
+fit for complex Bash-oriented coding tasks.
+
+Troubleshooting:
+
+- No model is available: Load a GGUF model with `-hf` or `-m`; verify
+  `/v1/models`, port `9931`, and the exact model alias.
+- No requests reach the server: Check the address and port in
+  `api_base`, including the `/v1` suffix, and verify that the override YAML
+  was loaded.
+- Empty `content` and long `reasoning_content`: For supported models,
+  try `--reasoning off`. Increasing `max_tokens` alone may not help.
+- `ModuleNotFoundError: No module named 'mcp'`: A LiteLLM dependency
+  regression has been reported in [mini-SWE-agent issue #1003](https://github.com/SWE-agent/mini-swe-agent/issues/1003).
+  In the tested environment, `python -m pip install "litellm==1.105.1"`
+  worked around this issue; prefer a fixed release when available rather
+  than pinning every installation to this version.
+- Missing or malformed tool calls: Confirm that the model and chat
+  template support OpenAI-compatible tool calling. A successful plain chat
+  request alone does not verify tool-call compatibility.
+
 ### Generating SWE-bench trajectories with vLLM
 
 This example shows how to generate SWE-bench trajectories using [vLLM](https://docs.vllm.ai/en/latest/) as the local inference engine.
