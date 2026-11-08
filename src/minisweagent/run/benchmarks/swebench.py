@@ -7,6 +7,7 @@ import concurrent.futures
 import json
 import random
 import re
+import tempfile
 import threading
 import time
 import traceback
@@ -94,6 +95,17 @@ def get_sb_environment(config: dict, instance: dict) -> Environment:
     return env
 
 
+def _write_preds_file(output_path: Path, data: dict) -> None:
+    file = tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=output_path.parent, delete=False)
+    temporary_path = Path(file.name)
+    try:
+        with file:
+            file.write(json.dumps(data, indent=2))
+        temporary_path.replace(output_path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+
+
 def update_preds_file(output_path: Path, instance_id: str, model_name: str, result: str):
     """Update the output JSON file with results from a single instance."""
     with _OUTPUT_FILE_LOCK:
@@ -105,7 +117,7 @@ def update_preds_file(output_path: Path, instance_id: str, model_name: str, resu
             "instance_id": instance_id,
             "model_patch": result,
         }
-        output_path.write_text(json.dumps(output_data, indent=2))
+        _write_preds_file(output_path, output_data)
 
 
 def remove_from_preds_file(output_path: Path, instance_id: str):
@@ -116,7 +128,7 @@ def remove_from_preds_file(output_path: Path, instance_id: str):
         output_data = json.loads(output_path.read_text())
         if instance_id in output_data:
             del output_data[instance_id]
-            output_path.write_text(json.dumps(output_data, indent=2))
+            _write_preds_file(output_path, output_data)
 
 
 def process_instance(
