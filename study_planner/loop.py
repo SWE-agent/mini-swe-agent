@@ -1,7 +1,11 @@
 from collections.abc import Callable
 from pathlib import Path
 
-from study_planner.agent import build_agent_prompt
+from study_planner.agent import (
+    build_agent_prompt,
+    build_agent_prompt_from_data,
+)
+
 from study_planner.input import load_planner_input
 from study_planner.output import parse_schedule
 from study_planner.schemas import (AvailabilityBlock, Schedule, Task, ValidationResult)
@@ -35,9 +39,31 @@ def format_validation_feedback(results: list[ValidationResult]) -> str:
     return "\n".join(messages)
 
 
-def run_planning_loop(input_path: str | Path, generate: GenerateSchedule, max_iterations: int = 5, record_event: RecordEvent | None = None) -> Schedule:
-    tasks, availability = load_planner_input(input_path)
+def run_planning_loop(
+    input_path: str | Path,
+    generate: GenerateSchedule,
+    max_iterations: int = 5,
+    record_event: RecordEvent | None = None,
+) -> Schedule:
+    tasks, availability = load_planner_input(
+        input_path
+    )
 
+    return run_planning_loop_from_data(
+        tasks,
+        availability,
+        generate,
+        max_iterations=max_iterations,
+        record_event=record_event,
+    )
+
+def run_planning_loop_from_data(
+    tasks: list[Task],
+    availability: list[AvailabilityBlock],
+    generate: GenerateSchedule,
+    max_iterations: int = 5,
+    record_event: RecordEvent | None = None,
+) -> Schedule:
     workload_result = validate_workload(
         tasks,
         availability,
@@ -47,11 +73,16 @@ def run_planning_loop(input_path: str | Path, generate: GenerateSchedule, max_it
         feedback = format_validation_feedback(
             [workload_result]
         )
+
         raise ValueError(
             f"Study plan is infeasible:\n{feedback}"
         )
 
-    initial_prompt = build_agent_prompt(input_path)
+    initial_prompt = build_agent_prompt_from_data(
+        tasks,
+        availability,
+    )
+
     prompt = initial_prompt
 
     for _ in range(max_iterations):
@@ -59,9 +90,11 @@ def run_planning_loop(input_path: str | Path, generate: GenerateSchedule, max_it
 
         try:
             schedule = parse_schedule(raw_output)
+
         except ValueError as exc:
             if record_event:
                 record_event("format_failure")
+
             prompt = (
                 f"{initial_prompt}\n\n"
                 "Your previous response could not be parsed "
@@ -70,6 +103,7 @@ def run_planning_loop(input_path: str | Path, generate: GenerateSchedule, max_it
                 "Return only a corrected schedule using the "
                 "required JSON format."
             )
+
             continue
 
         validation_results = validate_schedule(
@@ -81,7 +115,9 @@ def run_planning_loop(input_path: str | Path, generate: GenerateSchedule, max_it
         if record_event:
             for result in validation_results:
                 if not result.valid:
-                    record_event("validator_failure")
+                    record_event(
+                        "validator_failure"
+                    )
 
         if all(
             result.valid

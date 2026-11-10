@@ -3,6 +3,11 @@ import json
 import pytest
 
 from study_planner.loop import run_planning_loop
+from study_planner.input import load_planner_input
+from study_planner.loop import (
+    run_planning_loop,
+    run_planning_loop_from_data,
+)
 
 
 VALID_SCHEDULE = json.dumps(
@@ -124,6 +129,50 @@ def test_loop_stops_when_workload_is_infeasible():
     ):
         run_planning_loop(
             "eval_cases/overloaded_week.json",
+            generate,
+        )
+
+    assert not called
+
+def test_loop_accepts_structured_input():
+    tasks, availability = load_planner_input(
+        "eval_cases/simple_week.json"
+    )
+
+    def generate(prompt):
+        return VALID_SCHEDULE
+
+    schedule = run_planning_loop_from_data(
+        tasks,
+        availability,
+        generate,
+    )
+
+    assert len(schedule.blocks) == 1
+    assert (
+        schedule.blocks[0].task_id
+        == "cs_midterm"
+    )
+
+def test_structured_loop_detects_infeasible_workload():
+    tasks, availability = load_planner_input(
+        "eval_cases/overloaded_week.json"
+    )
+
+    called = False
+
+    def generate(prompt):
+        nonlocal called
+        called = True
+        return VALID_SCHEDULE
+
+    with pytest.raises(
+        ValueError,
+        match="infeasible",
+    ):
+        run_planning_loop_from_data(
+            tasks,
+            availability,
             generate,
         )
 
