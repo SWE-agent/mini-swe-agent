@@ -45,6 +45,8 @@ dependencies = [
     "prompt_toolkit",
     "datasets",
     "openai != 1.100.0,!=1.100.1",  # https://github.com/SWE-agent/mini-swe-agent/issues/446
+    "fastapi",
+    "uvicorn",
 ]
 
 [project.optional-dependencies]
@@ -75,6 +77,7 @@ dev = [
     "mkdocs-redirects",
     "portkey-ai",
     "swe-rex",
+    "httpx",
 ]
 
 contree = [
