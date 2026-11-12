@@ -45,7 +45,7 @@ Examples:
 
 [bold green]-c swebench.yaml -c model.model_kwargs.temperature=0.5[/bold green]
 
-[bold green]-c swebench.yaml -c agent.max_iterations=50[/bold green]
+[bold green]-c swebench.yaml -c agent.step_limit=50[/bold green]
 """
 
 DEFAULT_CONFIG_FILE = builtin_config_dir / "benchmarks" / "swebench.yaml"
