@@ -1,0 +1,516 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Weekly Study Schedule</title>
+        <style>
+            * {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 30px;
+    background: #f6f7fb;
+    font-family: Arial, sans-serif;
+    color: #252b3b;
+}
+
+.page-title {
+    margin: 0 0 25px;
+    font-size: 28px;
+}
+
+.calendar-scroll {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 12px;
+}
+
+.weekly-calendar {
+    display: grid;
+    grid-template-columns: 65px repeat(7, minmax(125px, 1fr));
+    min-width: 1050px;
+    gap: 8px;
+}
+
+/* time labels on the left */
+
+.time-axis {
+    min-width: 0;
+}
+
+.axis-header {
+    height: 72px;
+}
+
+.time-labels {
+    position: relative;
+}
+
+.time-label {
+    position: absolute;
+    right: 8px;
+    transform: translateY(-8px);
+    color: #8991a3;
+    font-size: 11px;
+}
+
+/* day columns */
+
+.day-column {
+    min-width: 0;
+    background: white;
+    border: 1px solid #e4e7ef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.day-header {
+    height: 72px;
+    padding: 12px 10px;
+    border-bottom: 1px solid #e4e7ef;
+}
+
+.day-header h3 {
+    margin: 0;
+    font-size: 14px;
+}
+
+.day-header p {
+    margin: 6px 0 0;
+    color: #8991a3;
+    font-size: 12px;
+}
+
+/* timeline grid */
+
+.day-timeline {
+    position: relative;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 63px,
+        #e9ebf1 63px,
+        #e9ebf1 64px
+    );
+}
+
+/* study blocks */
+
+.study-block {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    padding: 4px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #333;
+    overflow: hidden;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+.study-block strong {
+    display: block;
+    font-size: 11px;
+    overflow-wrap: break-word;
+}
+
+.study-block small {
+    display: block;
+    margin-top: 3px;
+    font-size: 9px;
+}
+
+.study-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    max-width: calc(100vw - 32px);
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background: white;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    cursor: default;
+}
+
+.study-popup[hidden] {
+    display: none;
+}
+
+.study-popup h3 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    overflow-wrap: anywhere;
+}
+
+.study-popup p {
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.no-blocks {
+    position: absolute;
+    top: 12px;
+    left: 8px;
+    color: #adb3c0;
+    font-size: 11px;
+    font-style: italic;
+}
+
+/* empty schedule */
+
+.empty-schedule {
+    padding: 50px 20px;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    color: #777;
+}
+
+/* smaller screens */
+
+@media (max-width: 700px) {
+    body {
+        padding: 16px;
+    }
+
+    .page-title {
+        font-size: 23px;
+    }
+}
+
+        </style>
+    </head>
+    <body>
+        <h1 class="page-title">My Weekly Study Schedule</h1>
+        
+    <div class="calendar-scroll">
+        <div class="weekly-calendar"
+             style="--timeline-height: 960px;">
+
+            <div class="time-axis">
+                <div class="axis-header"></div>
+                <div class="time-labels" style="height: 960px;">
+                    
+        <div class="time-label" style="top: 0px">
+            12 AM
+        </div>
+        
+        <div class="time-label" style="top: 40px">
+            1 AM
+        </div>
+        
+        <div class="time-label" style="top: 80px">
+            2 AM
+        </div>
+        
+        <div class="time-label" style="top: 120px">
+            3 AM
+        </div>
+        
+        <div class="time-label" style="top: 160px">
+            4 AM
+        </div>
+        
+        <div class="time-label" style="top: 200px">
+            5 AM
+        </div>
+        
+        <div class="time-label" style="top: 240px">
+            6 AM
+        </div>
+        
+        <div class="time-label" style="top: 280px">
+            7 AM
+        </div>
+        
+        <div class="time-label" style="top: 320px">
+            8 AM
+        </div>
+        
+        <div class="time-label" style="top: 360px">
+            9 AM
+        </div>
+        
+        <div class="time-label" style="top: 400px">
+            10 AM
+        </div>
+        
+        <div class="time-label" style="top: 440px">
+            11 AM
+        </div>
+        
+        <div class="time-label" style="top: 480px">
+            12 PM
+        </div>
+        
+        <div class="time-label" style="top: 520px">
+            1 PM
+        </div>
+        
+        <div class="time-label" style="top: 560px">
+            2 PM
+        </div>
+        
+        <div class="time-label" style="top: 600px">
+            3 PM
+        </div>
+        
+        <div class="time-label" style="top: 640px">
+            4 PM
+        </div>
+        
+        <div class="time-label" style="top: 680px">
+            5 PM
+        </div>
+        
+        <div class="time-label" style="top: 720px">
+            6 PM
+        </div>
+        
+        <div class="time-label" style="top: 760px">
+            7 PM
+        </div>
+        
+        <div class="time-label" style="top: 800px">
+            8 PM
+        </div>
+        
+        <div class="time-label" style="top: 840px">
+            9 PM
+        </div>
+        
+        <div class="time-label" style="top: 880px">
+            10 PM
+        </div>
+        
+        <div class="time-label" style="top: 920px">
+            11 PM
+        </div>
+        
+                </div>
+            </div>
+
+            
+        <div class="day-column">
+            <div class="day-header">
+                <h3>Monday</h3>
+                <p>Nov 16</p>
+            </div>
+
+            <div class="day-timeline" style="height: 960px;">
+                
+            <div class="study-block"
+                 style="top: 360.0px;
+                        height: 80.0px;
+                        background-color: #FCE4D6;">
+
+                <strong>Study for CS Midterm</strong>
+                <small>09:00 AM - 11:00 AM</small>
+
+                <div class="study-popup" hidden>
+                    <h3>Study for CS Midterm</h3>
+                    <p><strong>Course:</strong> CS 166</p>
+                    <p><strong>Start:</strong> 09:00 AM</p>
+                    <p><strong>End:</strong> 11:00 AM</p>
+                    <p><strong>Duration:</strong> 120 minutes</p>
+                </div>
+
+            </div>
+            
+            <div class="study-block"
+                 style="top: 520.0px;
+                        height: 60.0px;
+                        background-color: #E4F1DF;">
+
+                <strong>Study for Math Midterm</strong>
+                <small>01:00 PM - 02:30 PM</small>
+
+                <div class="study-popup" hidden>
+                    <h3>Study for Math Midterm</h3>
+                    <p><strong>Course:</strong> MATH 031</p>
+                    <p><strong>Start:</strong> 01:00 PM</p>
+                    <p><strong>End:</strong> 02:30 PM</p>
+                    <p><strong>Duration:</strong> 90 minutes</p>
+                </div>
+
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="day-column">
+            <div class="day-header">
+                <h3>Tuesday</h3>
+                <p>Nov 17</p>
+            </div>
+
+            <div class="day-timeline" style="height: 960px;">
+                
+            <div class="study-block"
+                 style="top: 400.0px;
+                        height: 40.0px;
+                        background-color: #FCE4D6;">
+
+                <strong>Study for CS Midterm</strong>
+                <small>10:00 AM - 11:00 AM</small>
+
+                <div class="study-popup" hidden>
+                    <h3>Study for CS Midterm</h3>
+                    <p><strong>Course:</strong> CS 166</p>
+                    <p><strong>Start:</strong> 10:00 AM</p>
+                    <p><strong>End:</strong> 11:00 AM</p>
+                    <p><strong>Duration:</strong> 60 minutes</p>
+                </div>
+
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="day-column">
+            <div class="day-header">
+                <h3>Wednesday</h3>
+                <p>Nov 18</p>
+            </div>
+
+            <div class="day-timeline" style="height: 960px;">
+                
+            <div class="study-block"
+                 style="top: 560.0px;
+                        height: 80.0px;
+                        background-color: #DCEBFA;">
+
+                <strong>Prepare for Biology Quiz</strong>
+                <small>02:00 PM - 04:00 PM</small>
+
+                <div class="study-popup" hidden>
+                    <h3>Prepare for Biology Quiz</h3>
+                    <p><strong>Course:</strong> BIOL 005</p>
+                    <p><strong>Start:</strong> 02:00 PM</p>
+                    <p><strong>End:</strong> 04:00 PM</p>
+                    <p><strong>Duration:</strong> 120 minutes</p>
+                </div>
+
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="day-column">
+            <div class="day-header">
+                <h3>Thursday</h3>
+                <p>Nov 19</p>
+            </div>
+
+            <div class="day-timeline" style="height: 960px;">
+                
+            <div class="study-block"
+                 style="top: 360.0px;
+                        height: 60.0px;
+                        background-color: #E4F1DF;">
+
+                <strong>Study for Math Midterm</strong>
+                <small>09:00 AM - 10:30 AM</small>
+
+                <div class="study-popup" hidden>
+                    <h3>Study for Math Midterm</h3>
+                    <p><strong>Course:</strong> MATH 031</p>
+                    <p><strong>Start:</strong> 09:00 AM</p>
+                    <p><strong>End:</strong> 10:30 AM</p>
+                    <p><strong>Duration:</strong> 90 minutes</p>
+                </div>
+
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="day-column">
+            <div class="day-header">
+                <h3>Friday</h3>
+                <p>Nov 20</p>
+            </div>
+
+            <div class="day-timeline" style="height: 960px;">
+                <p class="no-blocks">No study sessions</p>
+            </div>
+        </div>
+        
+        <div class="day-column">
+            <div class="day-header">
+                <h3>Saturday</h3>
+                <p>Nov 21</p>
+            </div>
+
+            <div class="day-timeline" style="height: 960px;">
+                <p class="no-blocks">No study sessions</p>
+            </div>
+        </div>
+        
+        <div class="day-column">
+            <div class="day-header">
+                <h3>Sunday</h3>
+                <p>Nov 22</p>
+            </div>
+
+            <div class="day-timeline" style="height: 960px;">
+                <p class="no-blocks">No study sessions</p>
+            </div>
+        </div>
+        
+        </div>
+    </div>
+    
+
+        <script>
+        document.addEventListener("click", function(event) {{
+            const clickedBlock = event.target.closest(".study-block");
+            const clickedPopup = event.target.closest(".study-popup");
+
+            // Clicking inside the popup does nothing.
+            if (clickedPopup) {{
+                return;
+            }}
+
+            // Check whether the clicked task's popup is already open.
+            let alreadyOpen = false;
+
+            if (clickedBlock) {{
+                const popup = clickedBlock.querySelector(".study-popup");
+                alreadyOpen = popup && !popup.hidden;
+            }}
+
+            // Close all popups.
+            document.querySelectorAll(".study-popup").forEach(popup => {{
+                popup.hidden = true;
+            }});
+
+            // Open the clicked task's popup only if it wasn't already open.
+            if (clickedBlock && !alreadyOpen) {{
+                const popup = clickedBlock.querySelector(".study-popup");
+
+                if (popup) {{
+                    popup.hidden = false;
+                }}
+            }}
+        }});
+        </script>
+    </body>
+    </html>
+    
