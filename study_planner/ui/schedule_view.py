@@ -76,7 +76,7 @@ def create_weekly_schedule(schedule: Schedule, tasks: dict) -> str:
             task_name = escape(task.get("name", block.task_id))
             course = escape(task.get("course") or "")
 
-            # split the block at midnight if necessary.``
+            # split the block at midnight if necessary
             segment_start = max(block.start, day_start)
             segment_end = min(block.end, day_end)
 

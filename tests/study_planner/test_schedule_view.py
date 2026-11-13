@@ -37,19 +37,19 @@ def test_empty_schedule_displays_message():
 def test_task_split_across_multiple_days():
     html = create_weekly_schedule(mock_schedule, mock_tasks)
 
-    # CS Midterm appears on both Monday and Tuesday.
+    # CS midterm appears on both monday and tuesday
     assert html.count("<strong>Study for CS Midterm</strong>") == 2
 
 def test_overnight_session_is_split_across_two_days():
     html = create_weekly_schedule(overnight_schedule, mock_tasks)
 
-    # The session should appear as two separate blocks.
+    # the session appears as two separate blocks
     assert html.count('class="study-block"') == 2
 
-    # Monday: 11 PM to midnight.
+    # monday: 11 PM to midnight
     assert "11:00 PM - 12:00 AM" in html
 
-    # Tuesday: midnight to 1 AM.
+    # tuesday: midnight to 1 AM
     assert "12:00 AM - 01:00 AM" in html
 
 
