@@ -69,7 +69,7 @@ def process_instance(
     """Process a single ProgramBench instance."""
     iid = instance["instance_id"]
     instance_dir = output_dir / iid
-    (instance_dir / f"{iid}.traj.json").unlink(missing_ok=True)
+    traj_path = instance_dir / f"{iid}.traj.json"
 
     progress_manager.on_instance_start(iid)
     progress_manager.update_instance_status(iid, "Starting environment")
@@ -89,14 +89,17 @@ def process_instance(
         )
 
         agent_config = dict(inst_config.get("agent", {}))
-        agent_config["output_path"] = str(instance_dir / f"{iid}.traj.json")
-        agent = ProgramBenchAgent(
+        agent_config["output_path"] = str(traj_path)
+        initialized_agent = ProgramBenchAgent(
             model,
             env,
             progress_manager=progress_manager,
             instance_id=iid,
             **agent_config,
         )
+        # Keep the previous trajectory until the new agent is ready to run.
+        traj_path.unlink(missing_ok=True)
+        agent = initialized_agent
         agent.extra_template_vars = {"instance": instance}
         info = agent.run()
         exit_status = info.get("exit_status")
@@ -111,7 +114,6 @@ def process_instance(
             except Exception as e:
                 logger.error(f"Failed to copy submission for {iid}: {e}", exc_info=True)
                 extra_info["submission_copy_error"] = str(e)
-            traj_path = instance_dir / f"{iid}.traj.json"
             agent.save(traj_path, {"info": {"exit_status": exit_status, **extra_info}, "instance_id": iid})
             logger.info(f"Saved trajectory to '{traj_path}'")
         progress_manager.on_instance_end(iid, exit_status)

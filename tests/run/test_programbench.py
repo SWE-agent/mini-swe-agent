@@ -19,7 +19,8 @@ from pydantic import BaseModel
 from minisweagent import package_dir
 from minisweagent.environments.docker import DockerEnvironment
 from minisweagent.exceptions import Submitted
-from minisweagent.run.benchmarks.programbench import copy_submission, main
+from minisweagent.run.benchmarks.programbench import copy_submission, main, process_instance
+from minisweagent.run.benchmarks.utils.batch_progress import RunBatchProgressManager
 
 # Lightweight image used for the real-docker tests. Already cached on machines
 # that run mini-swe-agent's docker test suite (see tests/environments/test_docker.py).
@@ -87,6 +88,34 @@ def test_copy_submission_rejects_non_docker_env(tmp_path):
     env = MagicMock(spec=["execute"])
     with pytest.raises(RuntimeError, match="container_id"):
         copy_submission(env, tmp_path / "submission.tar.gz")
+
+
+def test_failed_redo_startup_preserves_previous_trajectory(tmp_path):
+    iid = "existing-instance"
+    instance_dir = tmp_path / iid
+    instance_dir.mkdir()
+    submission = instance_dir / "submission.tar.gz"
+    with tarfile.open(submission, "w:gz"):
+        pass
+    previous_archive = submission.read_bytes()
+    trajectory = instance_dir / f"{iid}.traj.json"
+    previous_trajectory = {"instance_id": iid, "info": {"exit_status": "Submitted"}}
+    trajectory.write_text(json.dumps(previous_trajectory))
+    report = tmp_path / "exit_statuses.yaml"
+
+    process_instance(
+        {"instance_id": iid, "image_name": "test-image"},
+        tmp_path,
+        {
+            "model": {"model_name": "offline", "model_class": "deterministic", "outputs": []},
+            "environment": {"executable": str(tmp_path / "missing-container-command")},
+        },
+        RunBatchProgressManager(1, report),
+    )
+
+    assert yaml.safe_load(report.read_text()) == {"instances_by_exit_status": {"FileNotFoundError": [iid]}}
+    assert json.loads(trajectory.read_text()) == previous_trajectory
+    assert submission.read_bytes() == previous_archive
 
 
 # ---------------------------------------------------------------------------
