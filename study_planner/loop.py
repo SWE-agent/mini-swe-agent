@@ -6,9 +6,9 @@ from study_planner.agent import (
     build_agent_prompt_from_data,
 )
 
-from study_planner.input import load_planner_input
+from study_planner.input import load_planner_input, load_preferences
 from study_planner.output import parse_schedule
-from study_planner.schemas import (AvailabilityBlock, Schedule, Task, ValidationResult)
+from study_planner.schemas import (AvailabilityBlock, Schedule, SchedulingPreferences, Task, ValidationResult)
 from study_planner.tools.availability import validate_availability
 from study_planner.tools.completion import validate_completion
 from study_planner.tools.deadlines import validate_deadlines
@@ -55,6 +55,7 @@ def run_planning_loop(
         generate,
         max_iterations=max_iterations,
         record_event=record_event,
+        preferences=load_preferences(input_path),
     )
 
 def run_planning_loop_from_data(
@@ -63,6 +64,7 @@ def run_planning_loop_from_data(
     generate: GenerateSchedule,
     max_iterations: int = 5,
     record_event: RecordEvent | None = None,
+    preferences: SchedulingPreferences | None = None,
 ) -> Schedule:
     workload_result = validate_workload(
         tasks,
@@ -81,6 +83,7 @@ def run_planning_loop_from_data(
     initial_prompt = build_agent_prompt_from_data(
         tasks,
         availability,
+        preferences,
     )
 
     prompt = initial_prompt

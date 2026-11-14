@@ -41,6 +41,22 @@ agent:
     deadlines, do not fabricate a valid schedule. Report that the workload is
     infeasible.
 
+    Scheduling preferences:
+
+    The user may provide soft scheduling preferences. Use them only to choose
+    between schedules that already satisfy every rule above. Never break a
+    deadline, availability, completion, or overlap rule to honor a preference.
+
+    - study_period: "morning" (before 12:00), "afternoon" (12:00-17:00),
+      "evening" (after 17:00), or "any". Prefer blocks inside that period.
+    - session_minutes: preferred length of one study block. Split long tasks
+      into blocks of about this length when availability allows. null means
+      no preference.
+    - min_break_minutes: leave at least this many minutes between consecutive
+      study blocks when possible. 0 means no required break.
+    - spread_across_days: if true, prefer spreading a task's work across
+      multiple days instead of doing it all on one day.
+
   instance_template: |
     Create a study schedule using the provided task and availability data.
 
@@ -49,6 +65,9 @@ agent:
 
     Availability:
     {{availability}}
+
+    Scheduling preferences:
+    {{preferences}}
 
     Follow this process:
 

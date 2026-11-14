@@ -3,7 +3,7 @@ from pathlib import Path
 
 from pydantic import TypeAdapter, ValidationError
 
-from study_planner.schemas import AvailabilityBlock, Task
+from study_planner.schemas import AvailabilityBlock, SchedulingPreferences, Task
 
 
 def parse_tasks(raw_input: str) -> list[Task]:
@@ -66,17 +66,32 @@ def parse_planner_input(
     return tasks, availability
 
 
-def load_planner_input(
-    path: str | Path,
-) -> tuple[list[Task], list[AvailabilityBlock]]:
-    path = Path(path)
-
+def parse_preferences(data: dict) -> SchedulingPreferences:
     try:
-        with path.open() as file:
-            data = json.load(file)
+        return SchedulingPreferences.model_validate(
+            data.get("preferences") or {}
+        )
+    except ValidationError as exc:
+        raise ValueError(
+            f"Invalid scheduling preferences: {exc}"
+        ) from exc
+
+
+def _load_json(path: str | Path) -> object:
+    try:
+        with Path(path).open() as file:
+            return json.load(file)
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError(
             f"Unable to load planner input: {exc}"
         ) from exc
 
-    return parse_planner_input(data)
+
+def load_planner_input(
+    path: str | Path,
+) -> tuple[list[Task], list[AvailabilityBlock]]:
+    return parse_planner_input(_load_json(path))
+
+
+def load_preferences(path: str | Path) -> SchedulingPreferences:
+    return parse_preferences(_load_json(path))
