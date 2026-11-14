@@ -1,0 +1,79 @@
+{
+  "results": [
+    {
+      "case_id": "conflicting_deadlines",
+      "expected_feasible": false,
+      "schedule_valid": false,
+      "predicted_feasible": false,
+      "revisions": 0,
+      "validator_failures": 0,
+      "format_failures": 0,
+      "tool_call_failures": 0,
+      "error": "Study plan is infeasible:\n[workload] Infeasible: 240 minutes of work (cs_midterm, math_midterm) due by 2026-10-27T12:00:00, but only 180 minutes available before then"
+    },
+    {
+      "case_id": "multiple_priority",
+      "expected_feasible": true,
+      "schedule_valid": true,
+      "predicted_feasible": true,
+      "revisions": 0,
+      "validator_failures": 0,
+      "format_failures": 0,
+      "tool_call_failures": 0,
+      "error": null
+    },
+    {
+      "case_id": "overloaded_week",
+      "expected_feasible": false,
+      "schedule_valid": false,
+      "predicted_feasible": false,
+      "revisions": 0,
+      "validator_failures": 0,
+      "format_failures": 0,
+      "tool_call_failures": 0,
+      "error": "Study plan is infeasible:\n[workload] Infeasible: 480 minutes of work (cs_midterm, math_midterm) due by 2026-10-27T17:00:00, but only 300 minutes available before then"
+    },
+    {
+      "case_id": "simple_week",
+      "expected_feasible": true,
+      "schedule_valid": true,
+      "predicted_feasible": true,
+      "revisions": 0,
+      "validator_failures": 0,
+      "format_failures": 0,
+      "tool_call_failures": 0,
+      "error": null
+    },
+    {
+      "case_id": "split_task_availability",
+      "expected_feasible": true,
+      "schedule_valid": true,
+      "predicted_feasible": true,
+      "revisions": 0,
+      "validator_failures": 0,
+      "format_failures": 0,
+      "tool_call_failures": 0,
+      "error": null
+    },
+    {
+      "case_id": "tight_deadline",
+      "expected_feasible": true,
+      "schedule_valid": true,
+      "predicted_feasible": true,
+      "revisions": 0,
+      "validator_failures": 0,
+      "format_failures": 0,
+      "tool_call_failures": 0,
+      "error": null
+    }
+  ],
+  "metrics": {
+    "total_runs": 6,
+    "valid_schedule_rate": 1.0,
+    "average_revisions": 0.0,
+    "validator_failures": 0,
+    "infeasible_detection_rate": 1.0,
+    "tool_call_failures": 0,
+    "format_failures": 0
+  }
+}

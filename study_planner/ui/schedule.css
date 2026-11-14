@@ -1,0 +1,187 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 30px;
+  background: #f6f7fb;
+  font-family: Arial, sans-serif;
+  color: #252b3b;
+}
+
+.page-title {
+  margin: 0 0 25px;
+  font-size: 28px;
+}
+
+.calendar-scroll {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.weekly-calendar {
+  display: grid;
+  grid-template-columns: 65px repeat(7, minmax(125px, 1fr));
+  min-width: 1050px;
+  gap: 8px;
+}
+
+/* time labels on the left */
+
+.time-axis {
+  min-width: 0;
+}
+
+.axis-header {
+  height: 72px;
+}
+
+.time-labels {
+  position: relative;
+}
+
+.time-label {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-8px);
+  color: #8991a3;
+  font-size: 11px;
+}
+
+/* day columns */
+
+.day-column {
+  min-width: 0;
+  background: white;
+  border: 1px solid #e4e7ef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.day-header {
+  height: 72px;
+  padding: 12px 10px;
+  border-bottom: 1px solid #e4e7ef;
+}
+
+.day-header h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.day-header p {
+  margin: 6px 0 0;
+  color: #8991a3;
+  font-size: 12px;
+}
+
+/* timeline grid */
+
+.day-timeline {
+  position: relative;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 63px,
+    #e9ebf1 63px,
+    #e9ebf1 64px
+  );
+}
+
+/* study blocks */
+
+.study-block {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  padding: 4px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #333;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.study-block strong {
+  display: block;
+  font-size: 11px;
+  overflow-wrap: break-word;
+}
+
+.study-block small {
+  display: block;
+  margin-top: 3px;
+  font-size: 9px;
+}
+
+.study-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background: white;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  cursor: default;
+}
+
+.study-popup[hidden] {
+  display: none;
+}
+
+.study-popup h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.study-popup p {
+  margin: 10px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.no-blocks {
+  position: absolute;
+  top: 12px;
+  left: 8px;
+  color: #adb3c0;
+  font-size: 11px;
+  font-style: italic;
+}
+
+/* empty schedule */
+
+.empty-schedule {
+  padding: 50px 20px;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  color: #777;
+}
+
+/* smaller screens */
+
+@media (max-width: 700px) {
+  body {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 23px;
+  }
+}

@@ -1,0 +1,29 @@
+{
+    "id": "tight_deadline",
+    "description": "A week with a task that takes up all available time.",
+    "tasks": [
+        {
+            "id": "cs_midterm",
+            "name": "Study for CS Midterm",
+            "course": "CS100",
+            "deadline": "2026-10-27T12:00:00",
+            "estimated_minutes": 120,
+            "priority": 1
+        }
+    ],
+    "availability": [
+        {
+            "start": "2026-10-27T10:00:00",
+            "end": "2026-10-27T12:00:00"
+        }
+    ],
+    "expected_output": {
+        "feasible": true,
+        "checks": [
+            "all_tasks_scheduled",
+            "within_availability",
+            "before_deadlines",
+            "estimated_duration_met"
+        ]
+    }
+}

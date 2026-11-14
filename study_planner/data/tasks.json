@@ -1,0 +1,16 @@
+[
+  {
+    "id": "cs_project",
+    "name": "CS Project",
+    "deadline": "2026-10-20T23:59:00",
+    "estimated_minutes": 120,
+    "priority": 3
+  },
+  {
+    "id": "bio_review",
+    "name": "Biology Review",
+    "deadline": "2026-10-21T18:00:00",
+    "estimated_minutes": 90,
+    "priority": 2
+  }
+]
