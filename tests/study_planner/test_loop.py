@@ -2,13 +2,11 @@ import json
 
 import pytest
 
-from study_planner.loop import run_planning_loop
 from study_planner.input import load_planner_input
 from study_planner.loop import (
     run_planning_loop,
     run_planning_loop_from_data,
 )
-
 
 VALID_SCHEDULE = json.dumps(
     {
@@ -96,11 +94,7 @@ def test_loop_revises_malformed_output():
 
 
 def test_loop_stops_after_iteration_limit():
-    invalid_schedule = json.dumps(
-        {
-            "blocks": []
-        }
-    )
+    invalid_schedule = json.dumps({"blocks": []})
 
     def generate(prompt):
         return invalid_schedule
@@ -114,6 +108,7 @@ def test_loop_stops_after_iteration_limit():
             generate,
             max_iterations=2,
         )
+
 
 def test_loop_stops_when_workload_is_infeasible():
     called = False
@@ -134,10 +129,9 @@ def test_loop_stops_when_workload_is_infeasible():
 
     assert not called
 
+
 def test_loop_accepts_structured_input():
-    tasks, availability = load_planner_input(
-        "eval_cases/simple_week.json"
-    )
+    tasks, availability = load_planner_input("eval_cases/simple_week.json")
 
     def generate(prompt):
         return VALID_SCHEDULE
@@ -149,15 +143,11 @@ def test_loop_accepts_structured_input():
     )
 
     assert len(schedule.blocks) == 1
-    assert (
-        schedule.blocks[0].task_id
-        == "cs_midterm"
-    )
+    assert schedule.blocks[0].task_id == "cs_midterm"
+
 
 def test_structured_loop_detects_infeasible_workload():
-    tasks, availability = load_planner_input(
-        "eval_cases/overloaded_week.json"
-    )
+    tasks, availability = load_planner_input("eval_cases/overloaded_week.json")
 
     called = False
 

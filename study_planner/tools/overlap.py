@@ -16,7 +16,7 @@ def validate_overlaps(
     issues = []
 
     for i, current in enumerate(blocks):
-        for next_block in blocks[i + 1:]:
+        for next_block in blocks[i + 1 :]:
             if next_block.start >= current.end:
                 break
 

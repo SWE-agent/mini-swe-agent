@@ -1,11 +1,10 @@
-from study_planner.ui.mock_data import mock_schedule, mock_tasks, empty_schedule
-from study_planner.ui.schedule_view import create_weekly_schedule
 from study_planner.ui.mock_data import (
+    empty_schedule,
     mock_schedule,
     mock_tasks,
-    empty_schedule,
     overnight_schedule,
 )
+from study_planner.ui.schedule_view import create_weekly_schedule
 
 
 def test_weekly_schedule_displays_all_seven_days():
@@ -39,6 +38,7 @@ def test_task_split_across_multiple_days():
 
     # CS midterm appears on both monday and tuesday
     assert html.count("<strong>Study for CS Midterm</strong>") == 2
+
 
 def test_overnight_session_is_split_across_two_days():
     html = create_weekly_schedule(overnight_schedule, mock_tasks)

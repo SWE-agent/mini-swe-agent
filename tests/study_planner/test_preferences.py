@@ -5,7 +5,7 @@ from study_planner.input import load_planner_input, parse_preferences
 from study_planner.schemas import SchedulingPreferences
 
 
-@pytest.mark.parametrize(("raw",), [({"study_period": "night"},), ({"session_minutes": 0},), ({"unknown": 1},)])
+@pytest.mark.parametrize("raw", [{"study_period": "night"}, {"session_minutes": 0}, {"unknown": 1}])
 def test_parse_preferences(raw):
     assert parse_preferences({}) == SchedulingPreferences()
     with pytest.raises(ValueError, match="Invalid scheduling preferences"):

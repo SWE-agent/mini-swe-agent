@@ -11,17 +11,7 @@ def test_interactive_input_is_validated_and_saved_for_pipeline(tmp_path):
     result = CliRunner().invoke(
         app,
         ["--output", str(output)],
-        input=(
-            "1\n"
-            "Study for final\n"
-            "CS 179\n"
-            "2026-10-28 23:59\n"
-            "120\n"
-            "3\n"
-            "1\n"
-            "2026-10-26 14:00\n"
-            "2026-10-26 16:00\n"
-        ),
+        input=("1\nStudy for final\nCS 179\n2026-10-28 23:59\n120\n3\n1\n2026-10-26 14:00\n2026-10-26 16:00\n"),
     )
 
     assert result.exit_code == 0, result.output
@@ -42,18 +32,7 @@ def test_interactive_input_reprompts_for_invalid_workload(tmp_path):
     result = CliRunner().invoke(
         app,
         ["--output", str(tmp_path / "planner.json")],
-        input=(
-            "1\n"
-            "Read chapter\n"
-            "\n"
-            "2026-10-28 23:59\n"
-            "0\n"
-            "45\n"
-            "2\n"
-            "1\n"
-            "2026-10-26 14:00\n"
-            "2026-10-26 15:00\n"
-        ),
+        input=("1\nRead chapter\n\n2026-10-28 23:59\n0\n45\n2\n1\n2026-10-26 14:00\n2026-10-26 15:00\n"),
     )
 
     assert result.exit_code == 0, result.output

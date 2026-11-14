@@ -18,9 +18,7 @@ def make_schedule(*blocks):
 
 
 def test_no_blocks_is_valid():
-    result = validate_overlaps(
-        Schedule(blocks=[])
-    )
+    result = validate_overlaps(Schedule(blocks=[]))
 
     assert result.validator == "overlap"
     assert result.valid

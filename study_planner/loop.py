@@ -2,26 +2,30 @@ from collections.abc import Callable
 from pathlib import Path
 
 from study_planner.agent import (
-    build_agent_prompt,
     build_agent_prompt_from_data,
 )
-
 from study_planner.input import load_planner_input, load_preferences
 from study_planner.output import parse_schedule
-from study_planner.schemas import (AvailabilityBlock, Schedule, SchedulingPreferences, Task, ValidationResult)
+from study_planner.schemas import AvailabilityBlock, Schedule, SchedulingPreferences, Task, ValidationResult
 from study_planner.tools.availability import validate_availability
 from study_planner.tools.completion import validate_completion
 from study_planner.tools.deadlines import validate_deadlines
-from study_planner.tools.workload import validate_workload
 from study_planner.tools.overlap import validate_overlaps
-
+from study_planner.tools.workload import validate_workload
 
 GenerateSchedule = Callable[[str], str]
 RecordEvent = Callable[[str], None]
 
 
-def validate_schedule(schedule: Schedule, tasks: list[Task], availability: list[AvailabilityBlock]) -> list[ValidationResult]:
-  return [validate_deadlines(schedule, tasks), validate_availability(schedule, availability),validate_completion(schedule, tasks), validate_overlaps(schedule)]
+def validate_schedule(
+    schedule: Schedule, tasks: list[Task], availability: list[AvailabilityBlock]
+) -> list[ValidationResult]:
+    return [
+        validate_deadlines(schedule, tasks),
+        validate_availability(schedule, availability),
+        validate_completion(schedule, tasks),
+        validate_overlaps(schedule),
+    ]
 
 
 def format_validation_feedback(results: list[ValidationResult]) -> str:
@@ -32,9 +36,7 @@ def format_validation_feedback(results: list[ValidationResult]) -> str:
             continue
 
         for issue in result.issues:
-            messages.append(
-                f"[{result.validator}] {issue.message}"
-            )
+            messages.append(f"[{result.validator}] {issue.message}")
 
     return "\n".join(messages)
 
@@ -45,9 +47,7 @@ def run_planning_loop(
     max_iterations: int = 5,
     record_event: RecordEvent | None = None,
 ) -> Schedule:
-    tasks, availability = load_planner_input(
-        input_path
-    )
+    tasks, availability = load_planner_input(input_path)
 
     return run_planning_loop_from_data(
         tasks,
@@ -57,6 +57,7 @@ def run_planning_loop(
         record_event=record_event,
         preferences=load_preferences(input_path),
     )
+
 
 def run_planning_loop_from_data(
     tasks: list[Task],
@@ -72,13 +73,9 @@ def run_planning_loop_from_data(
     )
 
     if not workload_result.valid:
-        feedback = format_validation_feedback(
-            [workload_result]
-        )
+        feedback = format_validation_feedback([workload_result])
 
-        raise ValueError(
-            f"Study plan is infeasible:\n{feedback}"
-        )
+        raise ValueError(f"Study plan is infeasible:\n{feedback}")
 
     initial_prompt = build_agent_prompt_from_data(
         tasks,
@@ -118,19 +115,12 @@ def run_planning_loop_from_data(
         if record_event:
             for result in validation_results:
                 if not result.valid:
-                    record_event(
-                        "validator_failure"
-                    )
+                    record_event("validator_failure")
 
-        if all(
-            result.valid
-            for result in validation_results
-        ):
+        if all(result.valid for result in validation_results):
             return schedule
 
-        feedback = format_validation_feedback(
-            validation_results
-        )
+        feedback = format_validation_feedback(validation_results)
 
         prompt = (
             f"{initial_prompt}\n\n"
@@ -141,7 +131,4 @@ def run_planning_loop_from_data(
             "error and return the corrected schedule."
         )
 
-    raise RuntimeError(
-        "Unable to produce a valid schedule within "
-        f"{max_iterations} iterations"
-    )
+    raise RuntimeError(f"Unable to produce a valid schedule within {max_iterations} iterations")

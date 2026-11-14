@@ -12,7 +12,6 @@ from study_planner.loop import (
 )
 from study_planner.model import generate_schedule
 
-
 app = FastAPI(
     title="Study Planner API",
     version="0.1.0",
@@ -48,9 +47,7 @@ def create_plan(
             generate_schedule,
         )
 
-        return PlanSuccessResponse(
-            schedule=schedule
-        )
+        return PlanSuccessResponse(schedule=schedule)
 
     except ValueError as exc:
         message = str(exc)
@@ -58,24 +55,16 @@ def create_plan(
         if "infeasible" in message.lower():
             return JSONResponse(
                 status_code=422,
-                content=PlanInfeasibleResponse(
-                    message=message
-                ).model_dump(mode="json"),
+                content=PlanInfeasibleResponse(message=message).model_dump(mode="json"),
             )
 
         return JSONResponse(
             status_code=400,
-            content=PlanErrorResponse(
-                message=message
-            ).model_dump(mode="json"),
+            content=PlanErrorResponse(message=message).model_dump(mode="json"),
         )
 
     except Exception:
         return JSONResponse(
             status_code=500,
-            content=PlanErrorResponse(
-                message=(
-                    "Unable to generate study plan."
-                )
-            ).model_dump(mode="json"),
+            content=PlanErrorResponse(message=("Unable to generate study plan.")).model_dump(mode="json"),
         )

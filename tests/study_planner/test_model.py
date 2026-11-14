@@ -27,12 +27,6 @@ def test_build_model_uses_environment_configuration(
 
     assert model.config.model_name == "openai/gpt-oss"
 
-    assert (
-        model.config.model_kwargs["api_key"]
-        == "test-key"
-    )
+    assert model.config.model_kwargs["api_key"] == "test-key"
 
-    assert (
-        model.config.model_kwargs["api_base"]
-        == "https://example.com/v1"
-    )
+    assert model.config.model_kwargs["api_base"] == "https://example.com/v1"

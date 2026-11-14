@@ -1,6 +1,8 @@
 from datetime import timedelta
 from html import escape
+
 from study_planner.schemas import Schedule
+
 
 def create_weekly_schedule(schedule: Schedule, tasks: dict) -> str:
     if not schedule.blocks:
@@ -14,9 +16,9 @@ def create_weekly_schedule(schedule: Schedule, tasks: dict) -> str:
     # find the beginning of the week containing the earliest study block
     earliest_start = min(block.start for block in schedule.blocks)
 
-    week_start = earliest_start.replace(
-        hour=0, minute=0, second=0, microsecond=0
-    ) - timedelta(days=earliest_start.weekday())
+    week_start = earliest_start.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(
+        days=earliest_start.weekday()
+    )
 
     # display the full 24 hours of each day
     start_hour = 0
@@ -26,14 +28,7 @@ def create_weekly_schedule(schedule: Schedule, tasks: dict) -> str:
     timeline_height = (end_hour - start_hour) * hour_height
 
     # assign a different color to each task
-    colors = [
-        "#DCEBFA",
-        "#FCE4D6",
-        "#E4F1DF",
-        "#F2E3F7",
-        "#FFF1C9",
-        "#DDF2F0"
-    ]
+    colors = ["#DCEBFA", "#FCE4D6", "#E4F1DF", "#F2E3F7", "#FFF1C9", "#DDF2F0"]
 
     task_ids = sorted(set(block.task_id for block in schedule.blocks))
 
@@ -84,13 +79,9 @@ def create_weekly_schedule(schedule: Schedule, tasks: dict) -> str:
             end_time = segment_end.strftime("%I:%M %p")
 
             # calculate the block's position and height
-            start_minutes = (
-                segment_start - day_start
-            ).total_seconds() / 60
+            start_minutes = (segment_start - day_start).total_seconds() / 60
 
-            duration_minutes = (
-                segment_end - segment_start
-            ).total_seconds() / 60
+            duration_minutes = (segment_end - segment_start).total_seconds() / 60
 
             top = start_minutes * hour_height / 60
             height = duration_minutes * hour_height / 60

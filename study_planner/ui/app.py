@@ -7,7 +7,6 @@ import typer
 
 from study_planner.input import parse_planner_input
 
-
 app = typer.Typer()
 
 

@@ -4,10 +4,7 @@ from pathlib import Path
 from study_planner.eval import calculate_metrics, evaluate_cases
 from study_planner.model import generate_schedule
 
-
-OUTPUT_PATH = Path(
-    "study_planner/eval/results/mvp_results.json"
-)
+OUTPUT_PATH = Path("study_planner/eval/results/mvp_results.json")
 
 
 def main():
@@ -28,9 +25,7 @@ def main():
         exist_ok=True,
     )
 
-    OUTPUT_PATH.write_text(
-        json.dumps(output, indent=2) + "\n"
-    )
+    OUTPUT_PATH.write_text(json.dumps(output, indent=2) + "\n")
 
     print("\n=== PER-CASE RESULTS ===")
     print(json.dumps(results, indent=2))
@@ -38,9 +33,7 @@ def main():
     print("\n=== MVP METRICS ===")
     print(json.dumps(metrics, indent=2))
 
-    print(
-        f"\nSaved evaluation results to {OUTPUT_PATH}"
-    )
+    print(f"\nSaved evaluation results to {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

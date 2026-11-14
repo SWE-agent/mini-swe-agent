@@ -1,14 +1,16 @@
 import json
-from pathlib import Path
 from collections.abc import Callable
-from study_planner.loop import run_planning_loop
+from pathlib import Path
+
 from study_planner.eval.metrics import calculate_metrics
+from study_planner.loop import run_planning_loop
 
 GenerateSchedule = Callable[[str], str]
 
+
 def load_eval_cases(cases_dir: str | Path | None = None) -> list[tuple[Path, dict]]:
     if cases_dir is None:
-        cases_dir = (Path(__file__).resolve().parents[2] / "eval_cases")
+        cases_dir = Path(__file__).resolve().parents[2] / "eval_cases"
 
     cases_dir = Path(cases_dir)
     cases = []
@@ -88,18 +90,21 @@ def evaluate_cases(generate: GenerateSchedule, cases_dir: str | Path | None = No
         except Exception as exc:
             error = str(exc)
 
-        results.append({
-            "case_id": case["id"],
-            "expected_feasible": expected_feasible,
-            "schedule_valid": schedule_valid,
-            "predicted_feasible": predicted_feasible,
-            "revisions": max(0, attempts - 1),
-            "validator_failures": validator_failures,
-            "format_failures": format_failures,
-            "tool_call_failures": tool_call_failures,
-            "error": error,
-        })
+        results.append(
+            {
+                "case_id": case["id"],
+                "expected_feasible": expected_feasible,
+                "schedule_valid": schedule_valid,
+                "predicted_feasible": predicted_feasible,
+                "revisions": max(0, attempts - 1),
+                "validator_failures": validator_failures,
+                "format_failures": format_failures,
+                "tool_call_failures": tool_call_failures,
+                "error": error,
+            }
+        )
     return results
+
 
 def evaluate(generate, cases_dir=None):
     results = evaluate_cases(generate, cases_dir)

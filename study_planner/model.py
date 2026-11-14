@@ -17,9 +17,7 @@ def build_model() -> LitellmModel:
     )
 
     if not api_key:
-        raise ValueError(
-            "NRP_API_KEY environment variable is not set"
-        )
+        raise ValueError("NRP_API_KEY environment variable is not set")
 
     return LitellmModel(
         model_name=f"openai/{model_name}",
@@ -43,9 +41,7 @@ def generate_schedule(prompt: str) -> str:
     )
 
     if not api_key:
-        raise ValueError(
-            "NRP_API_KEY environment variable is not set"
-        )
+        raise ValueError("NRP_API_KEY environment variable is not set")
 
     response = litellm.completion(
         model=f"openai/{model_name}",
@@ -62,8 +58,6 @@ def generate_schedule(prompt: str) -> str:
     content = response.choices[0].message.content
 
     if not content:
-        raise ValueError(
-            "LLM returned an empty response"
-        )
+        raise ValueError("LLM returned an empty response")
 
     return content

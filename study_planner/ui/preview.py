@@ -1,6 +1,8 @@
 from pathlib import Path
+
 from study_planner.ui.mock_data import mock_schedule, mock_tasks
 from study_planner.ui.schedule_view import create_weekly_schedule
+
 
 def main():
     schedule_html = create_weekly_schedule(
