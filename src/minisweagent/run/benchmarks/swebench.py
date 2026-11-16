@@ -128,9 +128,10 @@ def process_instance(
     """Process a single SWEBench instance."""
     instance_id = instance["instance_id"]
     instance_dir = output_dir / instance_id
+    traj_path = instance_dir / f"{instance_id}.traj.json"
     # avoid inconsistent state if something here fails and there's leftover previous files
     remove_from_preds_file(output_dir / "preds.json", instance_id)
-    (instance_dir / f"{instance_id}.traj.json").unlink(missing_ok=True)
+    traj_path.unlink(missing_ok=True)
     model = get_model(config=config.get("model", {}))
     task = instance["problem_statement"]
 
@@ -149,7 +150,7 @@ def process_instance(
             env,
             progress_manager=progress_manager,
             instance_id=instance_id,
-            **config.get("agent", {}),
+            **(config.get("agent", {}) | {"output_path": traj_path}),
         )
         info = agent.run(task)
         exit_status = info.get("exit_status")
@@ -160,7 +161,6 @@ def process_instance(
         extra_info = {"traceback": traceback.format_exc(), "exception_str": str(e)}
     finally:
         if agent is not None:
-            traj_path = instance_dir / f"{instance_id}.traj.json"
             agent.save(
                 traj_path,
                 {
