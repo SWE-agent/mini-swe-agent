@@ -143,8 +143,9 @@ See [global configuration](../advanced/global_configuration.md) for more details
 
 > What happens to uncompleted tasks when I abort with KeyboardInterrupt?
 
-Trajectories are only saved upon completion, so most likely, you can just rerun the script to complete the tasks next time.
-However, you should still check for `KeyboardInterrupt` in `preds.json` in case some tasks were aborted but saved.
+Each instance saves its trajectory after every step, so a trajectory file may contain an incomplete run.
+Rerunning the batch starts unfinished instances again; it does not resume from these checkpoints.
+Completed instances are identified by `preds.json`. Check for `KeyboardInterrupt` entries there in case some tasks were aborted but saved.
 
 > Certain tasks are being stuck even though I deleted the trajectories.
 
