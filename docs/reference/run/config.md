@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/run/utilities/config.py"
+        --8 < --"src/minisweagent/run/utilities/config.py"
         ```
 
 Utility to manage the global config file via `mini-extra config`.
