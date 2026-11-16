@@ -110,7 +110,17 @@ class DockerEnvironment:
                 cmd.extend(["-e", f"{key}={value}"])
         for key, value in self.config.env.items():
             cmd.extend(["-e", f"{key}={value}"])
-        cmd.extend([self.container_id, *self.config.interpreter, command])
+        cmd.extend(
+            [
+                self.container_id,
+                "timeout",
+                "-s",
+                "KILL",
+                str(timeout or self.config.timeout),
+                *self.config.interpreter,
+                command,
+            ]
+        )
 
         try:
             result = subprocess.run(
