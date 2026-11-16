@@ -79,7 +79,7 @@ class LitellmResponseModel(LitellmModel):
 
     def _parse_actions(self, response) -> list[dict]:
         return parse_toolcall_actions_response(
-            getattr(response, "output", []),
+            response.get("output", []) if isinstance(response, dict) else getattr(response, "output", []),
             format_error_template=self.config.format_error_template,
             template_kwargs={"finish_reason": finish_reason_from_responses_api(response)},
         )
