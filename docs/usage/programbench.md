@@ -97,7 +97,7 @@ docker troubleshooting, singularity backend) apply equally to ProgramBench.
     - [API reference](../reference/run/programbench.md)
 
     ```python
-    --8<-- "src/minisweagent/run/benchmarks/programbench.py"
+    --8 < --"src/minisweagent/run/benchmarks/programbench.py"
     ```
 
 {% include-markdown "../_footer.md" %}

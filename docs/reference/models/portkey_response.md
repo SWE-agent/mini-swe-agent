@@ -9,7 +9,7 @@ This model is used to use [portkey](https://portkey.ai/) with the OpenAI Respons
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/models/portkey_response_model.py"
+        --8 < --"src/minisweagent/models/portkey_response_model.py"
         ```
 
 !!! tip "Guide"
