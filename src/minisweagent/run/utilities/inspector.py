@@ -98,7 +98,7 @@ class TrajectoryInspector(App):
         css_path = os.environ.get(
             "MSWEA_INSPECTOR_STYLE_PATH", str(Path(__file__).parent.parent.parent / "config" / "inspector.tcss")
         )
-        self.__class__.CSS = Path(css_path).read_text()
+        self.__class__.CSS = Path(css_path).read_text(encoding="utf-8")
 
         super().__init__()
         self.show_reasoning = show_reasoning
