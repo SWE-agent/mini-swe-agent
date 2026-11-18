@@ -65,6 +65,10 @@ Take a look at the model registry section of the [local models](local_models.md)
 
 Another common mistake is to not include any or the correct provider in the model name (e.g., `gemini-2.0-flash` instead of `gemini/gemini-2.0-flash`).
 
+If you install the `prices` extra (`pip install 'mini-swe-agent[prices]'`), litellm-based models fall back to the
+[llm-prices](https://github.com/Mattbusel/llm-prices) table when litellm has no price (or a price of 0) for the model.
+Note that for OpenRouter models served by several providers, this is OpenRouter's listed price, which is the cheapest provider.
+
 ## Temperature not supported
 
 Some models (like `o1`, `o3`, `GPT-5` etc.) do not support temperature. The default config no longer specifies a temperature value, so this should work out of the box now.

@@ -18,6 +18,7 @@ from minisweagent.models.utils.actions_toolcall import (
 )
 from minisweagent.models.utils.anthropic_utils import _reorder_anthropic_thinking_blocks
 from minisweagent.models.utils.cache_control import set_cache_control
+from minisweagent.models.utils.fallback_cost import fallback_cost
 from minisweagent.models.utils.openai_multimodal import expand_multimodal_content
 from minisweagent.models.utils.retry import retry
 
@@ -111,6 +112,8 @@ class LitellmModel:
             if cost <= 0.0:
                 raise ValueError(f"Cost must be > 0.0, got {cost}")
         except Exception as e:
+            if (cost := fallback_cost(self.config.model_name, getattr(response, "usage", None))) is not None:
+                return {"cost": cost}
             cost = 0.0
             if self.config.cost_tracking != "ignore_errors":
                 msg = (
