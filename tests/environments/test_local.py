@@ -97,6 +97,27 @@ def test_local_environment_default_cwd():
     assert current_dir in result["output"]
 
 
+@pytest.mark.skipif(os.name == "nt", reason="Windows cannot remove the current working directory")
+def test_local_environment_deleted_cwd(tmp_path):
+    original_cwd = Path.cwd()
+    os.chdir(tmp_path)
+    try:
+        env = LocalEnvironment()
+        assert env.execute({"command": f"rmdir {shlex.quote(str(tmp_path))}"})["returncode"] == 0
+
+        result = env.execute({"command": "echo should-not-run"})
+        assert result["returncode"] == -1
+        assert result["output"] == ""
+        assert result["extra"]["exception_type"] == "FileNotFoundError"
+        assert result["extra"]["exception"] in result["exception_info"]
+
+        expected = {"output": "recovered\n", "returncode": 0, "exception_info": ""}
+        assert env.execute({"command": "echo recovered"}, cwd=str(tmp_path.parent)) == expected
+        assert LocalEnvironment(cwd=str(tmp_path.parent)).execute({"command": "echo recovered"}) == expected
+    finally:
+        os.chdir(original_cwd)
+
+
 def test_local_environment_command_failure():
     """Test that command failures are properly captured."""
     env = LocalEnvironment()
