@@ -24,8 +24,8 @@ class LocalEnvironment:
     def execute(self, action: dict, cwd: str = "", *, timeout: int | None = None) -> dict[str, Any]:
         """Execute a command in the local environment and return the result as a dict."""
         command = action.get("command", "")
-        cwd = cwd or self.config.cwd or os.getcwd()
         try:
+            cwd = cwd or self.config.cwd or os.getcwd()
             result = _run(command, cwd, os.environ | self.config.env, timeout or self.config.timeout)
             output = {"output": result.stdout, "returncode": result.returncode, "exception_info": ""}
         except Exception as e:
