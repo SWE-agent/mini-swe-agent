@@ -86,7 +86,38 @@ def _run(command: str, cwd: str, env: dict[str, str], timeout: int) -> subproces
     try:
         stdout, _ = process.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
-        os.killpg(process.pid, signal.SIGKILL) if os.name == "posix" else process.kill()
-        stdout, _ = process.communicate()
+        _terminate_process_tree(process)
+        # A descendant that inherited the pipe can keep communicate() blocked
+        # even after the shell is gone, so bound this drain to avoid hanging.
+        try:
+            stdout, _ = process.communicate(timeout=5)
+        except subprocess.TimeoutExpired as e:
+            if process.poll() is None:
+                process.kill()
+            stdout = e.output or ""
+            if process.stdout:
+                process.stdout.close()
         raise subprocess.TimeoutExpired(command, timeout, output=stdout)
     return subprocess.CompletedProcess(command, process.returncode, stdout=stdout)
+
+
+def _terminate_process_tree(process: subprocess.Popen[str]) -> None:
+    """Best-effort termination of the shell and its descendants."""
+    if os.name == "posix":
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        return
+    try:
+        subprocess.run(
+            ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=5,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    if process.poll() is None:
+        process.kill()
