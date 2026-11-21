@@ -1,11 +1,11 @@
-﻿"""Tests for the AskUserAgent ask-the-user action."""
+"""Tests for the AskUserAgent ask-the-user action."""
 
-import yaml
 from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+import yaml
 
 from minisweagent.agents.ask_user import AskUserAgent
 from minisweagent.environments.local import LocalEnvironment
@@ -20,23 +20,17 @@ def _patch_prompts(answers):
         return next(it)
 
     with patch("minisweagent.agents.utils.prompt_user.prompt_session.prompt", side_effect=se):
-        with patch(
-            "minisweagent.agents.utils.prompt_user._multiline_prompt_session.prompt", side_effect=se
-        ):
+        with patch("minisweagent.agents.utils.prompt_user._multiline_prompt_session.prompt", side_effect=se):
             yield
 
 
 @pytest.fixture
 def config():
-    return yaml.safe_load(Path("src/minisweagent/config/mini_ask_user.yaml").read_text(encoding="utf-8"))[
-        "agent"
-    ]
+    return yaml.safe_load(Path("src/minisweagent/config/mini_ask_user.yaml").read_text(encoding="utf-8"))["agent"]
 
 
 def _agent(outputs: list[dict], config, **kwargs) -> AskUserAgent:
-    return AskUserAgent(
-        model=DeterministicModel(outputs=outputs), env=LocalEnvironment(), **{**config, **kwargs}
-    )
+    return AskUserAgent(model=DeterministicModel(outputs=outputs), env=LocalEnvironment(), **{**config, **kwargs})
 
 
 def test_ask_user_answer_injected_as_observation(config):
@@ -52,7 +46,8 @@ def test_ask_user_answer_injected_as_observation(config):
                 make_output("Done", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && echo scoped"}]),
             ],
             config,
-            mode="yolo", confirm_exit=False,
+            mode="yolo",
+            confirm_exit=False,
         )
         info = agent.run("Scope the migration")
 
@@ -79,7 +74,8 @@ def test_ask_user_numeric_option_picked(config):
                 make_output("ok", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && echo picked"}]),
             ],
             config,
-            mode="yolo", confirm_exit=False,
+            mode="yolo",
+            confirm_exit=False,
         )
         info = agent.run("Refactor")
 
@@ -99,7 +95,8 @@ def test_ask_user_empty_answer_becomes_placeholder(config):
                 make_output("ok", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && echo done"}]),
             ],
             config,
-            mode="yolo", confirm_exit=False,
+            mode="yolo",
+            confirm_exit=False,
         )
         info = agent.run("Pick a branch")
 
@@ -116,10 +113,9 @@ def test_ask_user_cancelled_becomes_placeholder(config):
     def raise_eof(*a, **k):
         raise EOFError
 
-    with patch(
-        "minisweagent.agents.utils.prompt_user.prompt_session.prompt", side_effect=raise_eof
-    ), patch(
-        "minisweagent.agents.utils.prompt_user._multiline_prompt_session.prompt", side_effect=raise_eof
+    with (
+        patch("minisweagent.agents.utils.prompt_user.prompt_session.prompt", side_effect=raise_eof),
+        patch("minisweagent.agents.utils.prompt_user._multiline_prompt_session.prompt", side_effect=raise_eof),
     ):
         agent = _agent(
             [
@@ -127,7 +123,8 @@ def test_ask_user_cancelled_becomes_placeholder(config):
                 make_output("ok", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && echo kept"}]),
             ],
             config,
-            mode="yolo", confirm_exit=False,
+            mode="yolo",
+            confirm_exit=False,
         )
         info = agent.run("Handle the lockfile")
 
@@ -153,7 +150,8 @@ def test_ask_user_multi_question_pairing(config):
                 make_output("ok", [{"command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT && echo deployed"}]),
             ],
             config,
-            mode="yolo", confirm_exit=False,
+            mode="yolo",
+            confirm_exit=False,
         )
         info = agent.run("Deploy")
 
@@ -181,7 +179,8 @@ def test_ask_user_mixed_with_command(config):
                 ),
             ],
             config,
-            mode="yolo", confirm_exit=False,
+            mode="yolo",
+            confirm_exit=False,
         )
         info = agent.run("Set the colour")
 
@@ -195,7 +194,3 @@ def test_ask_user_registered_agent_class():
     from minisweagent.agents import get_agent_class
 
     assert get_agent_class("ask_user") is AskUserAgent
-
-
-
-
