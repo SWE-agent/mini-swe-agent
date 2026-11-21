@@ -185,3 +185,16 @@ class TestGlobalModelStats:
             GlobalModelStats()
             captured = capsys.readouterr()
             assert "Global cost/call limit" not in captured.out
+
+    @pytest.mark.parametrize("call_limit", [1, 2, 5])
+    def test_call_limit_allows_exactly_the_configured_number_of_calls(self, call_limit):
+        """The call limit is a budget of allowed calls: MSWEA_GLOBAL_CALL_LIMIT=N must allow N calls, N+1 must raise."""
+        with patch.dict(
+            os.environ, {"MSWEA_GLOBAL_CALL_LIMIT": str(call_limit), "MSWEA_SILENT_STARTUP": "1"}, clear=True
+        ):
+            stats = GlobalModelStats()
+        for _ in range(call_limit):
+            stats.add(0.0)
+        assert stats.n_calls == call_limit
+        with pytest.raises(RuntimeError, match="Global cost/call limit exceeded"):
+            stats.add(0.0)
