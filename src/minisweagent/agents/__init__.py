@@ -8,6 +8,7 @@ from minisweagent import Agent, Environment, Model
 _AGENT_MAPPING = {
     "default": "minisweagent.agents.default.DefaultAgent",
     "interactive": "minisweagent.agents.interactive.InteractiveAgent",
+    "ask_user": "minisweagent.agents.ask_user.AskUserAgent",
 }
 
 
