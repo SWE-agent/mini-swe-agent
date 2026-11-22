@@ -82,6 +82,16 @@ def test_copy_submission_real_container(tmp_path, docker_env):
     assert contents["./other.txt"].strip() == "world"
 
 
+@pytest.mark.slow
+def test_copy_submission_rejects_missing_workspace(tmp_path, docker_env):
+    dest = tmp_path / "submission.tar.gz"
+
+    with pytest.raises(RuntimeError, match="/missing-workspace"):
+        copy_submission(docker_env, dest, src="/missing-workspace")
+
+    assert not dest.exists()
+
+
 def test_copy_submission_rejects_non_docker_env(tmp_path):
     """No live container needed for this guardrail check."""
     env = MagicMock(spec=["execute"])
