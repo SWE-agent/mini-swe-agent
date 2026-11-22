@@ -2,6 +2,7 @@
 
 import logging
 import os
+import platform
 import shutil
 import subprocess
 import tempfile
@@ -65,7 +66,7 @@ class SingularityEnvironment:
         return sandbox_dir
 
     def get_template_vars(self, **kwargs) -> dict[str, Any]:
-        return recursive_merge(self.config.model_dump(), kwargs)
+        return recursive_merge(self.config.model_dump(), platform.uname()._asdict(), kwargs)
 
     def serialize(self) -> dict:
         return {

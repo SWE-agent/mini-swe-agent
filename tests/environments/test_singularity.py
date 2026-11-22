@@ -1,9 +1,13 @@
 import os
 import subprocess
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+import yaml
+from jinja2 import StrictUndefined, Template
 
+from minisweagent.config import builtin_config_dir
 from minisweagent.environments.singularity import SingularityEnvironment, SingularityEnvironmentConfig
 
 
@@ -177,3 +181,19 @@ def test_singularity_environment_writable_sandbox():
     result = env.execute({"command": "touch /usr/testfile && ls /usr/testfile"})
     assert result["returncode"] == 0
     assert "/usr/testfile" in result["output"]
+
+
+def test_template_vars_render_the_shipped_mini_config():
+    """The shipped mini.yaml instance_template interpolates the uname fields
+    (``{{system}} {{release}} {{version}} {{machine}}``), so this backend's template vars must
+    carry them; without them every run with the default config dies on an UndefinedError before
+    the first model call. Needs no container: only the template variables are inspected."""
+    with patch.object(SingularityEnvironment, "_build_sandbox", return_value=Path("/tmp/unused-sandbox")):
+        env = SingularityEnvironment(image="docker://python:3.11")
+    config = yaml.safe_load((builtin_config_dir / "mini.yaml").read_text(encoding="utf-8"))
+
+    rendered = Template(config["agent"]["instance_template"], undefined=StrictUndefined).render(
+        task="Say hi", output={}, **env.get_template_vars()
+    )
+
+    assert "Say hi" in rendered
