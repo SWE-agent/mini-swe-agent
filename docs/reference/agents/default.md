@@ -7,7 +7,7 @@
     ??? note "Full source code"
 
         ```python
-        --8<-- "src/minisweagent/agents/default.py"
+        --8 < --"src/minisweagent/agents/default.py"
         ```
 
 !!! tip "Understanding the control flow"
