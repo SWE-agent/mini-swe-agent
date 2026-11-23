@@ -59,7 +59,7 @@ For more configuration options, see [global configuration](../advanced/global_co
     - [API reference](../reference/run/config.md)
 
     ```python
-    --8<-- "src/minisweagent/run/utilities/config.py"
+    --8 < --"src/minisweagent/run/utilities/config.py"
     ```
 
 {% include-markdown "../_footer.md" %}
