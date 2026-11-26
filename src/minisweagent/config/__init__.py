@@ -22,7 +22,7 @@ def get_config_path(config_spec: str | Path) -> Path:
         builtin_config_dir / "benchmarks" / config_spec,
     ]
     for candidate in candidates:
-        if candidate.exists():
+        if candidate.is_file():
             return candidate
 
     raise FileNotFoundError(f"Could not find config file for {config_spec} (tried: {candidates})")

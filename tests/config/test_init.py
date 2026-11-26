@@ -104,6 +104,31 @@ class TestGetConfigFromSpec:
         result = get_config_from_spec("model.max_tokens=500")
         assert result == {"model": {"max_tokens": 500}}
 
+    def test_search_skips_directories(self, tmp_path):
+        (tmp_path / "mini.yaml").mkdir()
+        config_dir = tmp_path / "configs"
+        config_dir.mkdir()
+        (config_dir / "mini.yaml").write_text("key: custom", encoding="utf-8")
+        code = (
+            "from minisweagent.config import get_config_from_spec, get_config_path, builtin_config_dir\n"
+            "from pathlib import Path\n"
+            "import pytest\n"
+            "assert get_config_from_spec('mini') == {'key': 'custom'}\n"
+            f"path = Path({str(config_dir / 'mini.yaml')!r})\n"
+            "path.unlink(); path.mkdir()\n"
+            "assert get_config_path('mini') == builtin_config_dir / 'mini.yaml'\n"
+            "with pytest.raises(FileNotFoundError):\n"
+            "    get_config_path(path)\n"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", code],
+            cwd=tmp_path,
+            env={**os.environ, "MSWEA_CONFIG_DIR": str(config_dir)},
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, result.stderr
+
     def test_loads_yaml_file_when_no_equals(self, tmp_path):
         config_file = tmp_path / "test.yaml"
         config_file.write_text("key: value\nnumber: 42")
