@@ -1,0 +1,43 @@
+{
+  "name": "mini-swe-agent",
+  "version": "1.0.0",
+  "description": "Agent skills for running the mini-SWE-agent CLI, benchmarking on SWE-bench, and using mini-SWE-agent as a Python library with YAML configs.",
+  "author": {
+    "name": "SWE-agent",
+    "url": "https://mini-swe-agent.com/latest/"
+  },
+  "homepage": "https://mini-swe-agent.com/latest/",
+  "repository": "https://github.com/SWE-agent/mini-swe-agent",
+  "license": "MIT",
+  "keywords": [
+    "mini-swe-agent",
+    "swe-agent",
+    "swe-bench",
+    "coding-agent",
+    "litellm",
+    "benchmark",
+    "agent-skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "mini-SWE-agent",
+    "shortDescription": "Bash-only SWE agent",
+    "longDescription": "Skills for mini-SWE-agent, the 100-line, bash-only software engineering agent. Covers installing and configuring the mini CLI (models via litellm, API keys, confirm/yolo/human modes, cost and step limits, the trajectory inspector), running SWE-bench in batch or single-instance mode with isolated environments and evaluating preds.json, and embedding the agent in Python with DefaultAgent, environment classes, YAML configs and Jinja2 prompt templates.",
+    "developerName": "SWE-agent",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://mini-swe-agent.com/latest/",
+    "defaultPrompt": [
+      "Set up mini with my Anthropic key and run it on this bug",
+      "Run mini-SWE-agent on 5 SWE-bench Verified instances in Docker",
+      "Write a YAML config that raises the step limit and shortens observations"
+    ],
+    "brandColor": "#202020",
+    "composerIcon": "./assets/logo.png",
+    "logo": "./assets/logo.png"
+  }
+}

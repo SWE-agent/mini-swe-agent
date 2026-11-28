@@ -1,0 +1,20 @@
+{
+  "name": "mini-swe-agent",
+  "interface": {
+    "displayName": "mini-SWE-agent"
+  },
+  "plugins": [
+    {
+      "name": "mini-swe-agent",
+      "source": {
+        "source": "local",
+        "path": "./plugins/mini-swe-agent"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
