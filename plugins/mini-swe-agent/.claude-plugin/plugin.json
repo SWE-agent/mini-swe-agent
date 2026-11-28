@@ -1,0 +1,22 @@
+{
+  "name": "mini-swe-agent",
+  "version": "1.0.0",
+  "description": "Agent skills for running the mini-SWE-agent CLI, benchmarking on SWE-bench, and using mini-SWE-agent as a Python library with YAML configs.",
+  "author": {
+    "name": "SWE-agent",
+    "url": "https://mini-swe-agent.com/latest/"
+  },
+  "homepage": "https://mini-swe-agent.com/latest/",
+  "repository": "https://github.com/SWE-agent/mini-swe-agent",
+  "license": "MIT",
+  "keywords": [
+    "mini-swe-agent",
+    "swe-agent",
+    "swe-bench",
+    "coding-agent",
+    "litellm",
+    "benchmark",
+    "agent-skills"
+  ],
+  "skills": "./skills/"
+}

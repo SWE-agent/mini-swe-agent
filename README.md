@@ -186,6 +186,12 @@ Read more in our [documentation](https://mini-swe-agent.com/latest/):
 * [FAQ](https://mini-swe-agent.com/latest/faq/)
 * [Contribute!](https://mini-swe-agent.com/latest/contributing/)
 
+### Agent skills
+
+An agent-agnostic plugin marketplace at [`.agents/plugins/marketplace.json`](.agents/plugins/marketplace.json)
+registers [`plugins/mini-swe-agent`](plugins/mini-swe-agent), with [agent skills](https://agentskills.io/) for the `mini` CLI,
+SWE-bench runs and the Python bindings. Codex and Claude Code manifests are in the plugin directory.
+
 ## Attribution
 
 If you found this work helpful, please consider citing the [SWE-agent paper](https://arxiv.org/abs/2405.15793) in your work:
